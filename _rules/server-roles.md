@@ -24,14 +24,10 @@ There are six Staff teams:
 
 * <span class="role-admin">**Admins**</span> oversee the running and management of the server in collaboration with the other Staff teams.
 
----
-
-## Role Hierarchy Diagram
-
+### Channel Roles
 <div class="image-text-wrapper">
   <img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy" class="hierarchy-image image-size-45">
   <div class="hierarchy-explanation">
-    <h3>Channel Roles</h3>
     <p>In the Channels & Roles feature in discord, you can select and change what you would like to be pinged for, including game advertising (by type and character tier) or other such as text role-play.</p>
 
   </div>
