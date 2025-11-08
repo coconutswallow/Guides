@@ -67,7 +67,7 @@ layout: default
             {% comment %} Next Link Logic {% endcomment %}
             {% assign next_item_index = current_index_0 | plus: 1 %}
             {% if next_item_index < collection_items.size %}
-                {% assign next_item = collection_items[next_item_index] %}  <-- **FIX 3: Access the next item by adding 1**
+                {% assign next_item = collection_items[next_item_index] %}  
                 <a href="{{ next_item.url | relative_url }}" class="next-link">
                     <span class="nav-label">{{ next_item.title }}</span>
                     <span class="nav-arrow">›</span>
