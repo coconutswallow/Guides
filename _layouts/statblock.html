@@ -131,6 +131,7 @@
 
     <div id="menu-overlay"></div>
     <div class="page">
+        {{ content }}
         {% if page.image %}
         <div class="monster-image-container">
             <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
@@ -139,7 +140,6 @@
             {% endif %}
         </div>
         {% endif %}
-        {{ content }}
     </div>
 
     <footer class="site-footer">
