@@ -131,12 +131,7 @@
 
     <div id="menu-overlay"></div>
     <div class="page">
-        
         {{ content }}
-        
-        {% if page.creator %}
-        <p class="monster-credit"><strong>Creator:</strong> {{ page.creator }}</p>
-        {% endif %}
         
         {% if page.image %}
         <div class="monster-image-container">
@@ -150,8 +145,9 @@
 
     <footer class="site-footer">
         <div class="footer-content">
-            <p>&copy; {{ 'now' | date: "%Y" }} Hawthorne D&D Guild</p>
-            <p>Built with Jekyll • Hosted on GitHub Pages</p>
+            {% if page.creator %}
+            <p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
+            {% endif %}
         </div>
     </footer>
     
