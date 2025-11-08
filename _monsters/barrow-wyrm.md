@@ -9,8 +9,9 @@ category: 2014 Fair Game
 creator: Toria
 image: https://cdnb.artstation.com/p/assets/images/images/008/212/291/large/phill-berry-root-monster.jpg
 image_credit: "Art by Phill Berry"
-description: |
-  Few remember the story of how the first barrow wyrm came to be, but modern scholars say that it was the work of dubious necromancers who tried to tap into some of the more primal aspects of the Weave in order to use it for their own purposes. In doing so, they might be able to expand their influence over their undead armies and perhaps create something that posed more threat to their rivals and enemies.
+---
+
+Few remember the story of how the first barrow wyrm came to be, but modern scholars say that it was the work of dubious necromancers who tried to tap into some of the more primal aspects of the Weave in order to use it for their own purposes. In doing so, they might be able to expand their influence over their undead armies and perhaps create something that posed more threat to their rivals and enemies.
 
   However, if you were to bring that story over to someone from the witch country of Rashemen, they would dismiss it for a story of their own.
 
@@ -44,7 +45,6 @@ description: |
   - **Summon Spirits.** The spirits of the wyrm are called out in force: the barrow wyrm summons 4 (1d4+2) **sword wraith warriors** to unoccupied spaces within 30 feet of the barrow wyrm that can take their turns immediately. The sword wraith warriors ignore difficult terrain created by the barrow wyrm and immediately disappear after taking their turns.
   
   - **Wall of Nature.** The barrow wyrm creates a wall of stone or plants on a solid surface it can see within 120 feet of it. The wall can be up to 30 feet long, 30 feet high, and 1 foot thick. When the wall appears, each creature within its area is pushed 5 feet out of the wall's space; appearing on whichever side of the wall it wants. Each 10-foot section of the wall has AC 5 and 30 hit points. If the wall is made from plants, it is vulnerable to fire damage, and if it is made of stone, it is vulnerable to thunder damage. Creatures can travel through the plant wall at as if it were difficult terrain. The wall disappears when the wyrm uses this lair action again or when the wyrm dies.
----
 
 ___
 > ## Barrow Wyrm

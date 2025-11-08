@@ -9,9 +9,9 @@ category: 2014 Fair Game
 creator: km.d
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/55a976ff-7886-4ea3-85e6-4c54897e34be/d5kqm8o-77b72293-ad96-46d4-b986-f1f9c031d6e7.png/v1/fill/w_1172,h_682,q_70,strp/killer_by_byzwa_dher_d5kqm8o-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTc0NSIsInBhdGgiOiJcL2ZcLzU1YTk3NmZmLTc4ODYtNGVhMy04NWU2LTRjNTQ4OTdlMzRiZVwvZDVrcW04by03N2I3MjI5My1hZDk2LTQ2ZDQtYjk4Ni1mMWY5YzAzMWQ2ZTcucG5nIiwid2lkdGgiOiI8PTMwMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.NjqDJ95VbpnSW9e877K22X2YpjF9dyXZ9L9cDxQc8NU
 image_credit: Byzwa-Dher
+---
 
-description: |
-  Not all lost travelers in the Shadowfell lose their sense of self and transform into Skulks. Some manage to keep a sliver of their original self, though with a fractured mind. If they somehow manage to survive the unforgiving lands and find a way back to the Material Plane, they are changed both physically and mentally. All aspects of their old personality are lost, creating a void they wish to fill through whatever means necessary.
+Not all lost travelers in the Shadowfell lose their sense of self and transform into Skulks. Some manage to keep a sliver of their original self, though with a fractured mind. If they somehow manage to survive the unforgiving lands and find a way back to the Material Plane, they are changed both physically and mentally. All aspects of their old personality are lost, creating a void they wish to fill through whatever means necessary.
   
   Due to **Slashers** clinging onto their old memories as best they can, they first try to return home to regain some normalcy. After some time, they get unnerved by the small details of their life and find their family can no longer be found. They then move onto the next town, hoping to fill the nothingness that can't be filled.
   
@@ -24,8 +24,6 @@ description: |
 
   #### Note
   A slasher in its lair uses its high mobility and stealth to move freely throughout its lair, supplemented with its Shadow Stealth, Wardrobe Stride, and Lair Actions. It will seek to ambush its victims, such as using its Knife to grapple members of a split party, attacking and slaying its victim without giving them so much as a chance to scream for help.
-
----
 
 ___
 > ## Slasher

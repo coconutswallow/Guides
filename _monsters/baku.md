@@ -8,8 +8,9 @@ category: 2014 Fair Game
 creator: Badwolf
 image: https://cdna.artstation.com/p/assets/images/images/005/726/274/large/deni-prakoso-baby-bestiary-baku-ig.jpg?1557391897
 image_credit: Art by Deni Prakoso (https://www.artstation.com/jdprakoso)
-description: |
-  **Baku** are celestial beings that serve the goddess **Kwan Ying** by traversing the planes and devouring nightmares. While they can be found nearly anywhere on any plane where people dream, their iconography is most frequently found in **Kara-Tur**. According to Shou Lung legend, a person who wakes from a bad dream can call out to a baku three times for it to devour their nightmare. But calling for a baku must be done sparingly because, if it remains hungry after eating the nightmare, it may also devour the dreamer's hopes and desires, leaving behind a shell of a person. There is but only a little truth to this legend, for baku are creatures of good intent.
+---
+
+**Baku** are celestial beings that serve the goddess **Kwan Ying** by traversing the planes and devouring nightmares. While they can be found nearly anywhere on any plane where people dream, their iconography is most frequently found in **Kara-Tur**. According to Shou Lung legend, a person who wakes from a bad dream can call out to a baku three times for it to devour their nightmare. But calling for a baku must be done sparingly because, if it remains hungry after eating the nightmare, it may also devour the dreamer's hopes and desires, leaving behind a shell of a person. There is but only a little truth to this legend, for baku are creatures of good intent.
 
   #### Kwan Ying's Nightmare Eaters
   Baku serve their creator, Kwan Ying, the Sapphire Empress of Kara-Tur's Celestial Bureaucracy. Long ago, shortly after the beginning of humankind, Kwan Ying noticed that many of her followers were suffering in their sleep. Knowing that these bad dreams were destined to be consumed by **Dendar** if nothing was done to prevent them and wanting to end suffering, the Compassionate Kwan Ying traveled to the **Region of Dreams** and created the first baku from stray pieces of dream matter made real through her divine touch. She instructed the baku to travel the planes and ease the suffering of dreamers by devouring nightmares before Dendar could sink her fangs into them.
@@ -27,8 +28,6 @@ description: |
   Baku were created to help end and prevent suffering, not spread it. Ever hungry, they most frequently use their abilities to seek out and consume unpleasant dreams. When baku run into trouble, they prefer to flee or incapacitate their enemies. They only resort to lethal measures when there is no other means of escape or when a nearby dreaming mortal's life is threatened.
 
   **Note** Size can change (shapechanger)
-
----
 
 ___
 > ## Baku

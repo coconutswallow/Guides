@@ -6,8 +6,9 @@ type: Monstrosity
 size: Medium
 category: 2014 Fair Game
 creator: GreenSprout
-description: |
-  The Aether Dreamstalker is a predator that inhabits the Region of Dreams, using the fitful sleep of those in the Material Plane to manifest a corporeal form. Aether Dreamstalkers hunt for consciousness, desiring the waking minds of mortal creatures. This forces them to hunt creatures who gather in groups where some remain awake while others rest.
+---
+
+The Aether Dreamstalker is a predator that inhabits the Region of Dreams, using the fitful sleep of those in the Material Plane to manifest a corporeal form. Aether Dreamstalkers hunt for consciousness, desiring the waking minds of mortal creatures. This forces them to hunt creatures who gather in groups where some remain awake while others rest.
   
   Adventurers are common prey to Aether Dreamstalkers, as the common adventurer strategy of maintaining a single person on watch guarantees plenty of sleeping gates for the Dreamstalker to manifest through, and a single vulnerable target for its prey.
   
@@ -17,7 +18,6 @@ description: |
 
   #### DM Notes: Devour Consciousness
   Creatures that cannot be magically put to sleep, such as elves, are immune to the Devour Consciousness trait. A divine intervention can still awaken a creature whose consciousness has been digested via Devour Consciousness.
----
 
 ___
 > ## Aether Dreamstalker

@@ -7,15 +7,15 @@ type: Fey
 alignment: Chaotic Neutral
 category: 2014 Fair Game
 creator: Shaunuthun
-description: |
-  Gremlins of the Autumn Court are called upon when their masters need a creepy and crawly creature to ambush a nuisance to the Court. They are larger, stronger and more intimidating than their smaller boggle cousins. It is rumoured that boggles that achieve great service to the Court are transformed into these beings. The transformation renders them blind, and they learn to lurk in dark caves and scurry their way through the earth.
+---
+
+Gremlins of the Autumn Court are called upon when their masters need a creepy and crawly creature to ambush a nuisance to the Court. They are larger, stronger and more intimidating than their smaller boggle cousins. It is rumoured that boggles that achieve great service to the Court are transformed into these beings. The transformation renders them blind, and they learn to lurk in dark caves and scurry their way through the earth.
   
    **Earth Shapers**
   All autumn gremlins can burrow fast through the ground. On top of this, they can seemingly create tunnels with mere thoughts and even transport mounds of dirt and rock from the ground into the air in order to crush their enemies.
   
   **Tricksters and Assassins**
   The Gremlins are by nature mischevious, but they can often turn to maliciousness. When left to their own devices, they will often play increasingly cruel tricks on their victims. At first, things will go missing, then animals in the area will begin to seem skittish as the autumn gremlins prod them through tunnels. Eventually, whole communities will go missing with the only thing left being upturned earth in the last place they were seen.
----
 
 ___
 > ## Autumn Gremlin

@@ -7,8 +7,9 @@ size: Large
 alignment: Chaotic Evil
 category: 2014 Fair Game
 creator: Case
-description: |
-  ## Chaos Hound
+---
+
+## Chaos Hound
   Putrid fiends that resemble decaying dogs, **chaos hounds** are found throughout the Abyss and other parts of the Lower Planes. On the Material Plane, they are most commonly seen in the service of powerful demons and other evil creatures that use them as trackers and hunters.
   
   ### Crawling Flesh
@@ -21,7 +22,6 @@ description: |
   A chaos hound may feed on the corpse of a humanoid that it killed that has been dead for less than 10 minutes, devouring both the flesh and soul in doing so. This feeding takes at least 1 minute, and it destroys the victim's body. The victim's soul is trapped in the chaos hound for 24 hours, after which time it is digested. If the chaos hound dies before the soul is digested, the soul is released. While a humanoid's soul is trapped in a chaos hound, any form of revival that could work has only a 50 percent chance of doing so, freeing the soul from the chaos hound if it is successful. Once a creature's soul is digested, however, the creature may only be returned to life by a wish spell or divine intervention.
   
   Creation by Case
----
 
 ___
 > ## Chaos Hound

@@ -7,9 +7,9 @@ size: Medium
 alignment: Any Alignment
 category: 2014 Fair Game
 creator: clay
+---
 
-description: |
-  The Material Plane is no stranger to the appearance of a ghost; haunted, yearning creatures seeking to fulfill a last task or desire. These creatures haunt specific creatures, items, or locations, locked nearby until their final wish can be fulfilled.
+The Material Plane is no stranger to the appearance of a ghost; haunted, yearning creatures seeking to fulfill a last task or desire. These creatures haunt specific creatures, items, or locations, locked nearby until their final wish can be fulfilled.
   
   But in a world of magic and realms, sometimes otherworldly beings can slip through. An object carried by the wrong person at the wrong time, an entire town translocated across time and space, or, in the case of Bouncy Ghost, perhaps it was simply that poor caravan driver, with his pale skin, and constantly illness, that brought it in.
   
@@ -27,7 +27,6 @@ description: |
   
   #### Note
   A Bouncy Ghost is likely to be found in an adventure already possessing another creature, possibly insinuating itself among the party under false pretenses as a friendly NPC given its high Deception score. Such a ruse however is likely to be short-lived given the Bouncy Ghost's Body Rejection trait, and it will seek out other creatures, such as those of the adventuring party, to attempt to possess once its current body expires. Given its capacity to rapidly swap between bodies if needed with its Bounce Around, a Bouncy Ghost can present a deceptively deadly challenge to an adventuring party.
----
 
 ___
 > ## Bouncy Ghost

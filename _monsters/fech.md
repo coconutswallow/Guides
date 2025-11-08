@@ -8,8 +8,9 @@ category: 2014 Fair Game
 creator: MonoxideAtWork
 image: https://64.media.tumblr.com/3df6937e824e2d915024d5fb55e0a6e0/fe8f42cd89faad0a-d5/s1280x1920/e4b5892cb8a41e81446047b64e042327f863f422.jpg
 image_credit: Art by Heather Frazier
-description: |
-  Mankind, for all their logic, reason and academics, are ruled by emotions. Chief among them, fear. This fear colors their dreams to be frought affairs, as the subconcious battles horrifying constructs of its own creation. In order to stay current on the fears and cultural memes of mortals, Lord Samhain, the Pumpkin King of the Autumn Court, took interest on the dreams of his servants who came in contact with mortal humanoids. Eventually, he began using his influence over his own servants to impact their psyche, thus manipulating what kind of creatures would emerge in their dreams. Over time, Lord Samhain found the gremlins of the Autumn Court were the best target for his machinations; unlike his other servants, most of the gremlins would dream of the same horrifying creature under his influence. They gremlins referred to it as ''the Fech''.
+---
+
+Mankind, for all their logic, reason and academics, are ruled by emotions. Chief among them, fear. This fear colors their dreams to be frought affairs, as the subconcious battles horrifying constructs of its own creation. In order to stay current on the fears and cultural memes of mortals, Lord Samhain, the Pumpkin King of the Autumn Court, took interest on the dreams of his servants who came in contact with mortal humanoids. Eventually, he began using his influence over his own servants to impact their psyche, thus manipulating what kind of creatures would emerge in their dreams. Over time, Lord Samhain found the gremlins of the Autumn Court were the best target for his machinations; unlike his other servants, most of the gremlins would dream of the same horrifying creature under his influence. They gremlins referred to it as ''the Fech''.
 
   The fech are fey creatures spawned from the dreams of the gremlins of the Autumn Court. They feed on the fear of
   dreaming humanoids, causing them to have night terrors and insomnia. For a reason yet unknown, these creatures had an
@@ -20,7 +21,6 @@ description: |
 
   The fech, having been created from the spirits of gremlins of the Autumn Court, are fierce combatants in their own
   right, and will fight other dream-eaters for access to plentiful feeding grounds.
----
 
 ___
 > ## Fech

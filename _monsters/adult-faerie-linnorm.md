@@ -7,8 +7,9 @@ type: Dragon
 alignment: typically Chaotic Neutral
 category: 2014 Fair Game
 creator: BadWolf
-description: |
-  Faerie linnorms are an incredibly rare subspecies of linnorm that originate from the twilight-bathed **Plane of Faerie**. While sharing many characteristics with their more cruel and spiteful abyssal-speaking cousins, faerie linnorms are shaped by the potent magic of their home plane, which grants them unique powers and abilities, including the empowerment and distortion of magic that is cast around them.
+---
+
+Faerie linnorms are an incredibly rare subspecies of linnorm that originate from the twilight-bathed **Plane of Faerie**. While sharing many characteristics with their more cruel and spiteful abyssal-speaking cousins, faerie linnorms are shaped by the potent magic of their home plane, which grants them unique powers and abilities, including the empowerment and distortion of magic that is cast around them.
   
   #### Bargain Burners
   Most other linnorm subspecies are infamously honorless and untrustworthy creatures that are known to go back on deals, but to a fey, their word is their bond. It is perhaps true that the first linnorms to find themselves within the Feywild lied and mooched their way through the four courts, but over time, that disdain for deals morphed under faerie magic. Today, linnorms native to the Feywild, like all other faeries, must **uphold the bargains they make**, but they possess the special power to unilaterally end fey deals struck by others—except those made with **Baba Yaga**. Faerie and mortal alike travel far and wide to beseech the local faerie linnorm to end their fey agreement. If the linnorm agrees, it burns the literal contract or something that symbolizes the deal, and the agreement ends without magical consequence for the breacher—though the other party may still seek just reparation for the unjust enrichment.
@@ -25,7 +26,6 @@ description: |
   When the linnorm dies, the creature that killed it must make a DC 17 Charisma saving throw or be cursed. The cursed creature finds it exceedingly difficult to sway others with their words: whenever the creature makes a Charisma check with a DC greater than 10 as part of a social interaction, the creature has disadvantage on the check and additionally gains a level of exhaustion if they succeed on the check.
   
   The linnorm's death curse can only be removed by the casting of a *remove curse*, *greater restoration*, or a similar spell while standing inside of a circle formed of the dead linnorm's hoarded collection of treasures and gold worth at least 1,500 GP. The cursed creature must then succeed on a DC 17 Charisma saving throw to remove the curse. If the curse is successfully removed in this way, the circle magically transforms into a faerie linnorm egg, which then vanishes to a random part of the Feywild. After three failed attempts, the curse's removal by ritual can't be attempted again for a year and a day. Alternatively, the linnorm's curse can be removed by the *wish* spell or by divine intervention without the need for the ritual.
----
 
 ___
 > ## Adult Faerie Linnorm

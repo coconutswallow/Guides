@@ -8,8 +8,9 @@ category: 2014 Fair Game
 creator: km.d
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/478a0e49-5f76-438e-8a19-019a29c7cfbb/dbr04xc-1183927c-ec28-41f1-a410-6ad296be954d.png/v1/fill/w_833,h_959/the_old_hag_by_papaya_style_dbr04xc-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTYxMiIsInBhdGgiOiIvZi80NzhhMGU0OS01Zjc2LTQzOGUtOGExOS0wMTlhMjljN2NmYmIvZGJyMDR4Yy0xMTgzOTI3Yy1lYzI4LTQxZjEtYTQxMC02YWQyOTZiZTk1NGQucG5nIiwid2lkdGgiOiI8PTE0MDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.Cb_s0KhRwJ2Hhx7kw0dWpt6OOGaFjgtrd45Mwb9X-fo
 image_credit: Art by Papaya-Style
-description: |
-  Maras stalk the Region of Dreams for their endless craving for knowledge. They don't care what they learn, so long as it is something new. This knowledge can range from inconsequential, such as a baker using month old flour to create their bread, to valuable like the secret password to open a magical door deep in an ancient temple. For a reason yet unknown, the maras are able to maintain a physical form outside of the Region of Dreams. Some believe it is fueled by their need for knowledge.
+---
+
+Maras stalk the Region of Dreams for their endless craving for knowledge. They don't care what they learn, so long as it is something new. This knowledge can range from inconsequential, such as a baker using month old flour to create their bread, to valuable like the secret password to open a magical door deep in an ancient temple. For a reason yet unknown, the maras are able to maintain a physical form outside of the Region of Dreams. Some believe it is fueled by their need for knowledge.
   
   **Psionic Potential**
   A mara acquires information through questions, riddles or when all else fails, through probing creatures thoughts for whatever it can find. The latter of which it prefers to do so by sitting on a creature's chest while it sleeps where its psionics are at its strongest, breaching through any mind as if the will has faded.
@@ -25,8 +26,6 @@ description: |
   
   **Unusual Nature**
   The mara doesn't require air, food, drink, or sleep.
-
----
 
 ___
 > ## Mara

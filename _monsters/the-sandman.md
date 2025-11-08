@@ -9,8 +9,9 @@ category: 2014 Fair Game
 creator: Rexen
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/073babc3-c21f-4499-94a9-04cfdb55dcd9/dbt1riu-fca68763-6ad4-478c-ac4e-b189f33b4219.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA3M2JhYmMzLWMyMWYtNDQ5OS05NGE5LTA0Y2ZkYjU1ZGNkOVwvZGJ0MXJpdS1mY2E2ODc2My02YWQ0LTQ3OGMtYWM0ZS1iMTg5ZjMzYjQyMTkuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.t3qNHxHlMA7lkHc9576r4nYNslQRUKN3gwMycZ6_Zkg
 image_credit: Art by Emortal982 and Blindnesssinfluenced, inspiration for the lore from The Sand-Man by E. T. A Hoffman
-description: |
-  #### Traditional Myth
+---
+
+#### Traditional Myth
   In traditional tales, the Sandman appears in many stories that parents tell their children. The tiny 'sleep' found on a person's eyes upon waking is supposedly the magical sand or grit sprinkled into a sleeping child’s eyes to get them to sleep peacefully. For the children that are particularly naughty and refuse to fall asleep, the Sandman's "sleep" causes their eyes to fall out, which are then collected and put away in his sack. The Sandman is then said to steal away the naughty child to his castle on the moon, as sustenance for his offspring. Some parents ameliorate the tale so that the Sandman is said to be a supportive but still a capricious helper, using the threat of the Sandman to coerce wakeful children into sleeping. However, the softening of the tale about the mysterious being is a kindness to the Sandman's true nature.
   
   #### Dark Origin
@@ -18,7 +19,6 @@ description: |
   
   #### Nightly Visitor
   The Sandman is said to reside in a wondrous castle that overlooks a sea of liquid sand and is filled with hundreds of life-like, servant constructs. He exists only to serve his daughter, changing the very landscape of his domain to please her, and fetching whatever she desires. Each night, the Sandman scours the planes to haunt people in their sleep and to learn more about those that exist outside of his realm. On occasion, he escapes from his domain and into the world, stealing wakeful children and bringing them to his residence so they can forever reside with his false daughter.
----
 
 ___
 > ## The Sandman

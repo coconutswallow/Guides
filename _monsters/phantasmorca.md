@@ -7,8 +7,9 @@ type: Monstrosity
 alignment: typically Neutral Good
 category: 2014 Fair Game
 creator: Toria
-description: |
-  ***"They say that there are many wonders that goes through the mind when one is in the midst of a well rested slumber.  Through the most pleasant of dreams and most sinister of nightmares, they say that you can hear a certain song calling out for you. Whether you consider this a blessing or an omen is not something you need to do in hindsight. Seeing is believing. Dreaming is in the imagination."***
+---
+
+***"They say that there are many wonders that goes through the mind when one is in the midst of a well rested slumber.  Through the most pleasant of dreams and most sinister of nightmares, they say that you can hear a certain song calling out for you. Whether you consider this a blessing or an omen is not something you need to do in hindsight. Seeing is believing. Dreaming is in the imagination."***
   
   Wandering in the Astral Plane, travellers sometimes encounter a phenomenon where they could see small pockets of space distorting in various places around them. Assuming it might be a normal occurrence in the plane, the travellers think nothing of it and move on. However, little do the foolhardy travellers know, the distortion continues to move closer and closer to them, but it is not giving chase as some sort of predatory creature. Rather, they are in the direct feeding path of a creature large enough to swallow them whole, a creature that they thought they would've seen coming from a mile away.  Sailing through the Astral Plane, a phantasmorca
   resembles an adult humpback whale with glowing fronds and patches on its body. It travels through the plane seemingly in a permanent trance and acts similar to a whale in its demeanor and behavioral patterns. However, most travellers to the Astral Plane are unable to see it for what it is until they are close enough to collide with it or get swallowed up by its massive maw. Unfortunately, the ships who come across a phantasmorca on the Astral Sea usually leads to them being shoved off course simply by being in the wrong place at the wrong time. 
@@ -21,8 +22,7 @@ description: |
   **Paradoxical Existence in a Realm of Dreams.**  Phantasmorca are creatures that originate from within the Region of Dreams and are born when a dreamscape becomes powerful enough to be more than a little short session. When dreams begin to connect and become continuous, a phantasmorca is born and made manifest, resembling an infantile whale calf. While a phantasmorca normally resembles a humpback whale or any other type of baleen whale, an extremely rare variant of the phantasmorca is born as the result of a nightmare going under the same transformation. These nightmare phantasmorca are more aggressive and resemble toothed whales. The phantasmorca resides within the Region of Dreams, but can project itself in the Astral Sea, when it happens, the phantasmorca will exist at the same time both in the Astral Plane and in the Region of Dreams. It appears as an adult within the Astral Plane and as a calf in the Region of Dreams.
   Very few individuals are sure on how long they live, but many can agree that the number of phantasmorca are equal to the amount of closely connected dreams that are created. If a phantasmorca is slain in the Astral Plane, its counterpart in the Region of Dreams also dies. If a phantasmorca is slain in the Region of Dreams, it will reform within 30 days as long as its counterpart in the Astral Plane is still alive.
   
-  **Prized Commodity**. Due to their generally docile nature and rare appearance, phantasmorca are often hunted down for a variety of parts and are a subject of study. Inquisitive scholars are still finding out more things about the phantasmorca while collectors would be willing to pay mountains of gold for one of its baleen combs. 
----
+  **Prized Commodity**. Due to their generally docile nature and rare appearance, phantasmorca are often hunted down for a variety of parts and are a subject of study. Inquisitive scholars are still finding out more things about the phantasmorca while collectors would be willing to pay mountains of gold for one of its baleen combs.
 
 ___
 > ## Phantasmorca

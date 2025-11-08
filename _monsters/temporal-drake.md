@@ -7,8 +7,9 @@ size: Large
 alignment: typically Neutral
 category: 2014 Fair Game
 creator: Hawthorne Dragon Mash 2022
-description: |
-  *Studying the temporal drake has proven difficult. Not only are the creatures dangerous in the extreme, but the source of their many potent abilities is not readily apparent, even to the trained observer. Sages believe their erratic movement and elusive nature stems from some innate ability to manipulate time — hence, their name.*  
+---
+
+*Studying the temporal drake has proven difficult. Not only are the creatures dangerous in the extreme, but the source of their many potent abilities is not readily apparent, even to the trained observer. Sages believe their erratic movement and elusive nature stems from some innate ability to manipulate time — hence, their name.*  
   — Stannis Alensin, Loremaster and Royal Archivist
 
   Temporal drakes are draconic creatures with snake-like elongated bodies, but also have expansive wings, a long tail, and large tearing claws at the ends of their four limbs. A temporal drake seems to blink in and out of sight at unpredictable intervals, their gray scales reflecting light in odd patterns. A typical temporal drake measures 5 feet tall from the shoulder, with an 18-foot wingspan and weighing 1,250 pounds.
@@ -36,7 +37,6 @@ description: |
 
   #### References
   Decker, Jesse. "[Temporal Drake](https://web.archive.org/web/20161101074122/http:/archive.wizards.com/default.asp?x=dnd/mm/20031122a)." *Wizards of the Coast*, 22 November 2003.
----
 
 ___
 > ## Temporal Drake

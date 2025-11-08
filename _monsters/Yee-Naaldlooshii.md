@@ -9,9 +9,9 @@ category: 2014 Fair Game
 creator: Badwolf
 image: https://vignette.wikia.nocookie.net/stephenking/images/2/29/The_Wendigo.jpg/revision/latest?cb=20150316180502
 image_credit: Art By Diana Franco
+---
 
-description: |
-  In the Druidic language, yee naaldlooshii translates to "he who goes on all fours.” For those unfamiliar with the Druidic tongue, they are simply known as "skinwalkers." According to ancient legend, yee naaldlooshii are druids who sought to quickly obtain access to the highest levels of magic through the most nefarious and darkest means, by sacrificing a loved one to the powers of the Shadowfell. They are the twisted reflection of the druids they once were. Where once they represented nature and growth, yee naaldlooshii are the embodiment of corruption and unnatural decay. They perform perverse ceremonies and manipulate natural magic in opposition to the good, natural works druids traditionally perform, using their powers for evil by taking the form of animals to inflict pain and suffering on others.
+In the Druidic language, yee naaldlooshii translates to "he who goes on all fours.” For those unfamiliar with the Druidic tongue, they are simply known as "skinwalkers." According to ancient legend, yee naaldlooshii are druids who sought to quickly obtain access to the highest levels of magic through the most nefarious and darkest means, by sacrificing a loved one to the powers of the Shadowfell. They are the twisted reflection of the druids they once were. Where once they represented nature and growth, yee naaldlooshii are the embodiment of corruption and unnatural decay. They perform perverse ceremonies and manipulate natural magic in opposition to the good, natural works druids traditionally perform, using their powers for evil by taking the form of animals to inflict pain and suffering on others.
   
   Yee Naaldlooshiii are clever and use a variety of methods to lure unsuspecting victims to their death. They may pretend to be an animal snared in a trap or mimic the voice of a young woman crying out for help, only to ambush their rescuer. Occasionally they steal the faces of others, taking on the identity of a common traveler or even a member of an adventuring party traversing through their territory. These mimicries fool many, but a sharp eye and keen ear will recognize them as imitations.
   
@@ -24,7 +24,6 @@ description: |
   A Yee Naaldlooshi enjoys controlling others and manipulating them to its own ends, using its Charm to devastating effect to sow chaos among the ranks of the party and add thralls under its command. It can even bend animals under its will, Charming them and supplementing its control and influence over them from its use of speak with animals to using beast bond to spy on or harass the adventuring party. It is said that entire forests can be held under the thrall of a Yee Naaldlooshii in this way.
   
   A Yee Naaldlooshii presents an exceptional challenge for an adventuring party, as much of the challenge involves ever being in a position to ever corner such a terrifying creature at all, all the while it continues to exhaust the party's resources and send its minions upon them while the party remains within its sights. Such monsters are likely to be the centerpiece monster of any adventure involving them, their presence felt throughout.
----
 
 ___
 > ## Yee Naaldlooshii

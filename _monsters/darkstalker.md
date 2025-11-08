@@ -7,13 +7,12 @@ size: Huge
 alignment: Neutral Evil
 category: 2014 Fair Game
 creator: Lexi
+---
 
-description: |
-  The dark stalker is an evil being tending to stick to the shadows lying in wait for unsuspecting prey to walk by. It has a hatred for the sun, typically hiding in caves and moving under the cover of night. Dark stalkers are drawn to other evil beings of greater power and used as assassins by their "master." A dark stalker will stalk its target for at least a day before making an attempt on the target's life. Their preferred method of ambushing is to lure their target deep into a cave while hiding on the ceiling. When the target passes under it, the dark stalker drops down, cutting off an escape, and begins attacking immediately.
+The dark stalker is an evil being tending to stick to the shadows lying in wait for unsuspecting prey to walk by. It has a hatred for the sun, typically hiding in caves and moving under the cover of night. Dark stalkers are drawn to other evil beings of greater power and used as assassins by their "master." A dark stalker will stalk its target for at least a day before making an attempt on the target's life. Their preferred method of ambushing is to lure their target deep into a cave while hiding on the ceiling. When the target passes under it, the dark stalker drops down, cutting off an escape, and begins attacking immediately.
   
   #### Note
   Dark stalkers are ambush predators and will seek to stalk targets for as long as it needs to and ambush the adventuring party at the opportune time, likely to surprise them. It is also likely to make full use of the environment to its advantage both before and during combat, hiding in the shadows via its Shadow Stealth or skittering out of sight with its Spider Climb.
----
 
 ___
 > ## Dark Stalker

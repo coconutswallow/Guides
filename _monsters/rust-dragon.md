@@ -7,8 +7,9 @@ size: Large
 alignment: typically Lawful Neutral
 category: 2014 Fair Game
 creator: Hawthorne Dragon Mash 2022
-description: |
-  *"I once met a human scholar who had been studying these hideous creatures for years. I raised objections to the name he used for them, but he refused to entertain any of my reasonable suggestions for alternatives. For his insistence, I made him eat every page of his manuscript that contained the objectionable word. Harsh, perhaps, but it had to be done."*  
+---
+
+*"I once met a human scholar who had been studying these hideous creatures for years. I raised objections to the name he used for them, but he refused to entertain any of my reasonable suggestions for alternatives. For his insistence, I made him eat every page of his manuscript that contained the objectionable word. Harsh, perhaps, but it had to be done."*  
   *- Clathaldion, silver dragon.*
 
   Most scholars, naturalists, and dwarven armory guards on the material plane think they have a pretty good understanding of the rust monster life cycle. They hatch from eggs, feed on ferrous metals until the time comes to molt, and then they repeat the process until they die. Unfortunately, that's not quite the complete picture.
@@ -53,7 +54,6 @@ description: |
   |  6  | An artist is enamored with the patterns and colors of a rusty's exoskeleton 'skin'. |
   |  7  | A scholar is determined to study rust dragons, even under threats and harassment by true dragons. |
   |  8  | A rusty bound or hired to guard a dungeon is constantly tormented by hunger for its construct colleagues. |
----
 
 ___
 > ## Mature Rust Dragon

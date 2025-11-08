@@ -9,9 +9,9 @@ category: 2014 Fair Game
 creator: Rexen and inspired by the "Wendigo" by Paizo Inc., for the Pathfinder RPG
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/8ab86111-40c3-4c11-abf4-2c512a9b3c9d/dc1t8em-bafce86d-cece-47e3-a7ef-e13829422997.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzhhYjg2MTExLTQwYzMtNGMxMS1hYmY0LTJjNTEyYTliM2M5ZFwvZGMxdDhlbS1iYWZjZTg2ZC1jZWNlLTQ3ZTMtYTdlZi1lMTM4Mjk0MjI5OTcuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.IIXEKqaaWS5Tyxdux7kYPOvn40MNAgaXyjUU6ka54Lc
 image_credit: Art by Matt Forsyth, Paizo, Inc.
+---
 
-description: |
-  Beings of ancient evil, wendigos haunt the minds of mortals, driving them to desperation and, ultimately, cannibalistic madness. They enjoy whittling down their prey before they strike, trailing victims for days, even weeks, while plaguing their journeys with nightmares and foul weather.
+Beings of ancient evil, wendigos haunt the minds of mortals, driving them to desperation and, ultimately, cannibalistic madness. They enjoy whittling down their prey before they strike, trailing victims for days, even weeks, while plaguing their journeys with nightmares and foul weather.
   
   **Uncaring Spirits**. Tribal humanoids sometimes worship wendigos as gods, bringing them live sacrifices or attempting to appease the creatures by engaging in ritual cannibalism. They mark a wendigo’s territory with fetishes and dress in the furs and hides of whatever animal it most closely resembles. Wendigos take little interest in the practices of their worshippers, and view them only as an ample supply of victims.
   
@@ -38,7 +38,6 @@ description: |
   **Territorial Stalker**. Once a wendigo has manifested in physical form, it begins to stalk all who enter its territory, either consuming its prey to sate its own endless appetite or inflicting its transformative psychosis upon victims to spawn more of its kind. While wendigo spirits are definitely not of this world, in their material forms they are native to the Material Plane and thus must eat in order to survive.
   
   When intelligent prey is scarce, a wendigo will indulge in its bestial desires and hunt weaker animals to feed upon. A wendigo is constantly wracked with intense hunger pangs, manifestations of its ravenous greed that are only temporarily relieved by feasting on such creatures that know fear. It is for this reason that wendigos prefer to feed upon humanoids, magical beasts, and any other creatures that know to be afraid of the dark and shudder at the sound of howling winds.
----
 
 ___
 > ## Wendigo

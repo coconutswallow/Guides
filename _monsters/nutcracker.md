@@ -7,9 +7,9 @@ size: Tiny
 alignment: Chaotic Good (50%) or Chaotic Evil (50%)
 category: 2014 Fair Game
 creator: Shaunuthun
+---
 
-description: |
-  The Nutcrackers are small constructs created by fey and are most often seen during the winter. These deceptively durable dolls are hung from mantle pieces, shelves and trees during Midwinter. However, when it appears nobody is looking, they may be blessed by the fairies and given life.
+The Nutcrackers are small constructs created by fey and are most often seen during the winter. These deceptively durable dolls are hung from mantle pieces, shelves and trees during Midwinter. However, when it appears nobody is looking, they may be blessed by the fairies and given life.
   
   **Slayer of mice**
   For reasons unknown to any but the original creators of the Nutcrackers, these dolls, whether good or evil, have an irrational hatred for small rodents such as mice or rats. They will often drop whatever they are doing and attempt to kill such creatures
@@ -25,7 +25,6 @@ description: |
   
   #### Note 
   Shaunuthun encourages you to run it however is fun for you and the players!
----
 
 ___
 > ## The Nutcracker

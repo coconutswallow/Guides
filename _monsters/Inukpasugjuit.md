@@ -9,9 +9,9 @@ category: 2014 Fair Game
 creator: Kathy
 image: https://i.pinimg.com/originals/ca/bd/9b/cabd9b4b51ffdd9007c12544c8a3c70b.jpg
 image_credit: Art by Kekai Kotaki
+---
 
-description: |
-  The Inukpasugjuit (pronounced *e-nook-pa-soog-ju-it*) are a rare variety of Frost Giants living in the Northern areas of Toril. It is believed these giants are Frost Giants who have developed unusual abilities after completing a ritual which includes an extended stay in the Frostfell before returning to their homes. This rite of passage has made it so locals call them “Frostfell Giants.” Recently, reports of sightings place them in the areas of the Cold Run, the Great Glacier, the Ice Peak, and the Sea of Moving Ice. They are said to be as tall as Frost Giants, but much wider and thicker. Males are generally larger than females. Not much is known of these huge creatures, and it is uncertain if it is because of their scarcity, or if it is because no one lives to talk about them.
+The Inukpasugjuit (pronounced *e-nook-pa-soog-ju-it*) are a rare variety of Frost Giants living in the Northern areas of Toril. It is believed these giants are Frost Giants who have developed unusual abilities after completing a ritual which includes an extended stay in the Frostfell before returning to their homes. This rite of passage has made it so locals call them “Frostfell Giants.” Recently, reports of sightings place them in the areas of the Cold Run, the Great Glacier, the Ice Peak, and the Sea of Moving Ice. They are said to be as tall as Frost Giants, but much wider and thicker. Males are generally larger than females. Not much is known of these huge creatures, and it is uncertain if it is because of their scarcity, or if it is because no one lives to talk about them.
 
   #### Winter Festival
   It is said that Inukpasugjuits go out after the first blizzard of winter as part of a brutish festival celebrating Thrym and pillage the settlements of the area. During these times, they are believed to carry a massive bag in which they capture humanoids after petrifying them to use them as playthings and decorations in their icy caverns. It is the reason they are seen carrying great clubs instead of great axes for this festival—they do not want to slice their future belongings apart.
@@ -21,7 +21,6 @@ description: |
 
   #### Combat Tactics
   When hunting for “friends” during Midwinter, the Inukpasugjuit carries a greatclub. Unless it considers itself to be in danger, the Inukpasugjuit will attempt to incapacitate rather than kill its target, getting more pleasure from petrifying its living victim forever in ice rather than ending its life. Its first step will be to get within reach of the target to hit it with its greatclub, attempting to knock its target out. Whether or not it is successful, it will attempt to grasp its target and use its freezing breath to turn it into ice. When the Inukpasugjuit has frozen one of its victims, it will carefully place this newfound friend into one of its massive bags and carefully bring it home. If the Inukpasugjuit is attacked from range and cannot reach the attacker, it'll throw nearby rocks or boulders. If there are none nearby, it may reluctantly grab one of its “friends” from its bag and throw it at its attacker before trying to close in on the distance and make this new target the replacement for its now broken “friend.”
----
 
 ___
 > ## Inukpasugjuit

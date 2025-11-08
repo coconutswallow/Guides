@@ -8,8 +8,9 @@ alignment: Chaotic Evil
 category: 2014 Fair Game
 image: https://staticdelivery.nexusmods.com/mods/952/images/thumbnails/3612/3612-1554443504-460856515.png
 image_credit: "Art source unknown"
-description: |
-  Blackfrost is a wandering knight that prowls through Icewind Dale. Some say he was once a mortal who met the cruel fate of freezing to death in the harsh winter, while others say he was a paladin twisted by a greater evil for a broken bargain of power. Whatever the truth, one thing is certain—anyone who gazes upon this being feels their hair stand on end.
+---
+
+Blackfrost is a wandering knight that prowls through Icewind Dale. Some say he was once a mortal who met the cruel fate of freezing to death in the harsh winter, while others say he was a paladin twisted by a greater evil for a broken bargain of power. Whatever the truth, one thing is certain—anyone who gazes upon this being feels their hair stand on end.
 
   #### Wild Hunt
   The Wild Hunt warriors were originally a tribe of elves, fey, and celestials ruled over by a king—the Master Hunter. Although they were once a force of good on the Prime Material Plane, other elves came to fear them. Whenever a great force of evil threatened the lands of the Prime, they would hunt it down and annihilate it before returning to the Feywild.  
@@ -27,7 +28,6 @@ description: |
 
   #### Undead Nature
   Blackfrost doesn’t require air, food, drink, or sleep.
----
 
 ___
 > ## Blackfrost
@@ -71,4 +71,4 @@ ___
 > - Unprotected flames (torch-sized or smaller) are extinguished.  
 > - Vapor, gas, and fog that can be dispersed by strong wind are hedged out.  
 > - Ranged weapon attack rolls that pass through the wind have disadvantage.  
-> - The area is difficult terrain for creatures other than Blackfrost.  
+> - The area is difficult terrain for creatures other than Blackfrost.

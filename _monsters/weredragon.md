@@ -9,8 +9,9 @@ category: 2014 Fair Game
 creator: Hawthorne Dragon Mash 2022
 image: https://64.media.tumblr.com/2be365272bcdce44b1f52c86cbdad149/tumblr_nmf2h4dW7d1r7r8d2o1_500.png
 image_credit: Art by #my.art
-description: |
-  A tall human looks up to the full moon slowly, their body gaining scales, a tail, and large leathery wings as they take flight out for the night's hunt.
+---
+
+A tall human looks up to the full moon slowly, their body gaining scales, a tail, and large leathery wings as they take flight out for the night's hunt.
 
   #### Born from Magic
   Before it spread en masse, weredragon lycanthropy was thought to be caused by powerful magic. Some say it came about due to the magic of a powerful magic item known as the *Wonderful Throne* said to have the ability to bestow weredragon lycanthropy, others argue it was due to longstanding efforts by the Cult of the Dragon, while others argue that the first weredragon was a fusion of a humanoid and dragon in a turbulent area of wild magic.
@@ -41,7 +42,6 @@ description: |
   The *Monster Manual* has rules for characters afflicted with lycanthropy. The following text applies to weredragon characters specifically.
 
   **Weredragon:** The character gains the weredragon's senses and a Strength of 20 if his or her score isn't already higher, and a +1 bonus to AC while in hybrid form (from natural armor). Attack and damage rolls for the natural weapons are based on Strength, and the save DC for their Werebreath is equal to 8 + the lycanthrope's proficiency bonus + the lycanthrope's Constitution modifier.
----
 
 ___
 > ## Weredragon

@@ -7,9 +7,9 @@ size: Tiny
 alignment: Chaotic Evil
 category: 2014 Fair Game
 creator: GreenSprout
+---
 
-description: |
-  Frost Fairies are malicious and capricious fey that appear during winter to terrorize the inhabitants of Faerûn wherever frost and snow reach. Myth and legend claim that rather than be summoned by the coming of winter, they are harbingers thereof, given leave by their Queen to savage the world with ice to remind the people of Faerûn to be grateful for the warmth and companionship of friends.
+Frost Fairies are malicious and capricious fey that appear during winter to terrorize the inhabitants of Faerûn wherever frost and snow reach. Myth and legend claim that rather than be summoned by the coming of winter, they are harbingers thereof, given leave by their Queen to savage the world with ice to remind the people of Faerûn to be grateful for the warmth and companionship of friends.
   
   Stronger than their size gives them credit for, they entertain themselves by playing pranks and harassing travelers who have more bravery than sense to risk trekking out in the biting cold. A known menace to Faerûn, they appear as blue globes of light, pelting wanderers with storm of freezing snowballs and burying them in ice. Within the confines of a structure built with iron however, they appear as beautifully sculpted winged figurines made of ice. Prideful and vicious, they enjoy the terror and fear of mortals, but equally treasure veneration and supplication by those creatures. While forbidden from murder or maiming of mortals by the compact with the Queen of Air and Darkness that allows them free reign upon the material plane, Frost Fairies are allowed to defend themselves and kin with lethal retribution. As befits the capricious fey, this retribution might itself have been enabled by a victim's attempt to defend itself from the fairies' harassment.
   
@@ -22,7 +22,6 @@ description: |
 
   #### Variant: Frost Fairy Familiar
   The Fairy can enter into a compact to serve another creature as a familiar, forming a telepathic bond with its willing creature. While the fairy is within 10 feet of its bonded creature, the creature shares the fairy's cold immunity and fire resistance. The fairy can end its service as a familiar at any time on a whim, ending the telepathic bond.
----
 
 ___
 > ## Frost Fairy

@@ -9,13 +9,13 @@ category: 2014 Fair Game
 creator: MonoXideAtWork
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/6ec0d49d-038d-4900-b498-c8cc3863c8e8/d9y5ee4-56c859a1-5709-42ac-984c-86f0b4a5b77b.jpg/v1/fill/w_900,h_632,q_75,strp/jabberwocky_by_irenhorrors_d9y5ee4-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjMyIiwicGF0aCI6Ii9mLzZlYzBkNDlkLTAzOGQtNDkwMC1iNDk4LWM4Y2MzODYzYzhlOC9kOXk1ZWU0LTU2Yzg1OWExLTU3MDktNDJhYy05ODRjLTg2ZjBiNGE1Yjc3Yi5qcGciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.YCB6KhNlusZ-66oXCUv2g2nG75NcFh7eqgyJVpEn4-0
 image_credit: Art by Iren Horrors
-description: |
-  A Gøbblervøki is created from the shadow of a mortal that becomes lost in the Feywild. Over time, the mortal's thoughts and fears coalesce into a wicked winged creature that seeks to unmake everything that its originator stood for. A Gøbblervøki born from a lost hunter or conservationist may attack nearby livestock or farmland, and one created from a lost priest may attack churches or temples.
+---
+
+A Gøbblervøki is created from the shadow of a mortal that becomes lost in the Feywild. Over time, the mortal's thoughts and fears coalesce into a wicked winged creature that seeks to unmake everything that its originator stood for. A Gøbblervøki born from a lost hunter or conservationist may attack nearby livestock or farmland, and one created from a lost priest may attack churches or temples.
   More notably, a Gøbblervøki is sometimes created directly as the result of a punishment by one of the **queens of Faerie**. Mortals that earn the ire of the Queens of Summer and Winter may find themselves bound to servitude, and separated from their shadow, which then becomes a Gøbblervøki free to wreak havoc in the areas of life that the mortal found important in the Material Plane.
   
   #### Gøbblervøki Tactics
   The Gøbblervøki is an ambusher that uses hit-and-run tactics to defeat its foes. A typical encounter begins with the Lashing Shadows, often before the party is even aware of the creature's presence. Then, utilizing its Shadow Stealth and Shadow Stride abilities, it moves around the battlefield picking apart opponents before moving into position and delivering the finishing blow with another big Lashing Shadows.
----
 
 ___
 > ## Gøbblervøki

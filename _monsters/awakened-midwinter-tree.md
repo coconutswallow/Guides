@@ -9,9 +9,9 @@ category: 2014 Fair Game
 creator: Loric
 image: https://i.pinimg.com/564x/43/55/8b/43558b4f0fac4672559e0a169a7e15b2.jpg
 image_credit: ProdigyDuck and sandara (https://www.deviantart.com/prodigyduck/art/Yuletide-Tree-Monster-718191517)
+---
 
-description: |
-  Midwinter is here and its that time of year when worshippers of various gods take the opportunity to pray and have rituals in their honor. Some have joyful and peaceful celebrations, while other creatures are up to something more... sinister.
+Midwinter is here and its that time of year when worshippers of various gods take the opportunity to pray and have rituals in their honor. Some have joyful and peaceful celebrations, while other creatures are up to something more... sinister.
   
   Every Midwinter, a green hag named Grincheuse decorates spruce trees with beautiful ornaments before awakening them and sending them out to villages throughout the land to do her bidding.
   
@@ -27,7 +27,6 @@ description: |
   • If both attacks hit the tree use their engulf ability.
   • Once it has something captured it will attempt to flee home while attacking anything that is hostile towards it.
   • It will use its Winter Balls attack to try to aid its cause by spreading glass everywhere between it and its opponents making it more difficult to chase after it.
----
 
 ___
 > ## Awakened Midwinter Tree

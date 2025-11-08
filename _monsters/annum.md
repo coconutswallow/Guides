@@ -9,9 +9,9 @@ image_credit: Stilith (https://www.deviantart.com/stilith)
 alignment: Neutral
 category: 2014 Fair Game
 creator: Krunk
+---
 
-description: |
-  Annums are strange, floating aberrations spawned from the dreams of an eternally hungry beholder. Born from psychic energy, these creatures feed upon dreams, leaving behind a fog tinted by the emotions they consume. Pink mist trails from pleasant dreams, while black vapor follows the nightmares they devour.
+Annums are strange, floating aberrations spawned from the dreams of an eternally hungry beholder. Born from psychic energy, these creatures feed upon dreams, leaving behind a fog tinted by the emotions they consume. Pink mist trails from pleasant dreams, while black vapor follows the nightmares they devour.
   
   **Eaters of Millions**
   Annums were spawned from the dreams of an eternally hungry beholder whose eternal hunger has been passed on to the annum itself. Because a beholder's mind remains semiconscious even as it dreams, its dreams can become warped and take on a physical form, usually becoming another beholder. In the case of these eternally hungry beholders, an annum is created instead.
@@ -23,7 +23,6 @@ description: |
   
   **Psychic Existence**
   Due to the nature of an annum, they are composed almost entirely of psychic energy. Contact with one for too long can cause massive headaches and extreme paranoia. An annum appears almost translucent except for its red eyes that almost glow in the dark.
----
 
 ___
 > ## Annum

@@ -9,8 +9,9 @@ category: 2014 Fair Game
 creator: Designed by Sprout and inspired by the original creation, Skinner by Pirateba for The Wandering Inn.
 image: https://i.imgur.com/u1WQMI6.png
 image_credit: Art by Demonic-Criminal
-description: |
-  The first Skinner, or Fleshworm, is rumored to have been created as an act of retribution sometime in the year 1303 during the fall of Thar. The city of Corsil, faced with destruction by ogres was converted by the last of its defenders into a vengeance dungeon. Locking themselves away behind the walls of their city, the citizens of Corsil became something else. Something wretched. A great evil laired in the sunken ruins of Corsil: Skinner. The guardian, ruler, and keeper of Skinner's Tomb, once the magnificent city of Corsil wanders the halls of its prison and crypt, ever seeking more flesh to add to its body, as under its rule, the dead of Corsil maintain their lasting vigil.
+---
+
+The first Skinner, or Fleshworm, is rumored to have been created as an act of retribution sometime in the year 1303 during the fall of Thar. The city of Corsil, faced with destruction by ogres was converted by the last of its defenders into a vengeance dungeon. Locking themselves away behind the walls of their city, the citizens of Corsil became something else. Something wretched. A great evil laired in the sunken ruins of Corsil: Skinner. The guardian, ruler, and keeper of Skinner's Tomb, once the magnificent city of Corsil wanders the halls of its prison and crypt, ever seeking more flesh to add to its body, as under its rule, the dead of Corsil maintain their lasting vigil.
   
   ***"Skinner, Skinner! He’ll eat your heads and tear off your skin! He’ll pluck out your eyeballs and devour your kin! Skinner, Skinner! Run while you can! Your flesh will be taken with a touch of his hand! Hide in the darkness, hide in the light. Fighting is useless; Skinner is fright. He takes our hides and hides our bones And makes this place our very last home. Skinner, Skinner, never open his door. Or soon your bones will lie on this floor."***
   - Carved ogre children's poem found on the door to Skinner's Tomb
@@ -45,7 +46,6 @@ description: |
   When faced with either acid or with its barrier defeated, a Skinner will prefer to flee, ordering the undead under its control to overwhelm its pursuers and buy it time to escape to safety where it may isolate a target, and quickly begin rebuilding the coating of flesh around its form.
   
   When facing creatures immune to the paralyzing effect of its frightening gaze, a Skinner will prefer to crush the creature into unconsciousness before relieving the victim of its skin through the use of its Flensing Touch.
----
 
 ___
 > ## Skinner

@@ -7,8 +7,9 @@ type: Plant
 alignment: Neutral Evil
 category: 2014 Fair Game
 creator: TwitterHater
-description: |
-  In the harsh, cold forests of northern Faerûn, occasionally, a coniferous tree will awaken. However, unlike typical treants -- flora blessed by the fey who act as guardians of the wild -- these trees are often awoken through the actions and presence of malevolent entities. Whether it be the machinations of a devil or demon, magical essence from nearby drow, or simply a fey creature of ill intent, the awakening of a conibrr usually results in something that cares far more for destruction than preservation.
+---
+
+In the harsh, cold forests of northern Faerûn, occasionally, a coniferous tree will awaken. However, unlike typical treants -- flora blessed by the fey who act as guardians of the wild -- these trees are often awoken through the actions and presence of malevolent entities. Whether it be the machinations of a devil or demon, magical essence from nearby drow, or simply a fey creature of ill intent, the awakening of a conibrr usually results in something that cares far more for destruction than preservation.
   
   **Twisted Relatives**. A conibrr, much like a treant, is a tree given sapience. Specifically, it is a coniferous tree given sapience through the influence of dark powers. They spend most of their time rooted in the ground, giving the appearance of a normal tree, only uprooting to attack nearby creatures when it suits their mood. Unlike most treants, conibrrs lack eyes, mouths, or faces of any kind, and are unable to speak, hear, read, or write. They do understand the languages of those who awoke them, but the only way to communicate with them is via telepathy, which they do not possess naturally.
   
@@ -21,7 +22,6 @@ description: |
   **Acidic Sap**. The awakening of a conibrr causes its sap to turn into a caustic acid. A thin layer of this sap coats the conibrr, as well as its needles (which it can jettison from itself at will), making direct contact extremely dangerous. Damaging a conibrr often causes this sap to spew forth from the resulting gash, damaging the attacker in kind.
   
   **Photosynthetic Nature**. A conibrr does not need to breathe, but it must remain rooted for at least 12 hours a day in order to meet its required fluid uptake. It gets its energy via sunlight, and is not carnivorous; all destruction it unleashes is entirely for destruction's sake.
----
 
 ___
 > ## Conibrr

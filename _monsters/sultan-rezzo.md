@@ -7,8 +7,9 @@ size: Medium
 alignment: chaotic neutral
 category: 2014 Full DM Only
 creator: Kathy and Luolang
-description: |
-  Sultan Rezzo is a noble marid who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water.
+---
+
+Sultan Rezzo is a noble marid who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water.
   
   Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
 
@@ -35,8 +36,6 @@ description: |
   - Rezzo is a difficult individual to gauge or read and attempts to magically discern his thoughts or know if he is lying are foiled by his ***ring of mind shielding***.
   - He continually maintains the ***tongues*** spell on himself to be able to speak with all manner of visitors from across the planes without issue.
   - He has three ***sending stones*** linked to servants of his court on his person at all times.
-
----
 
 ___
 > ## Sultan Rezzo

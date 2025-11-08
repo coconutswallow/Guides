@@ -8,8 +8,9 @@ category: 2014 Fair Game
 creator: Poutinerie
 image: https://cdnb.artstation.com/p/assets/images/images/002/671/213/large/petar-milivojevic-nightmare.jpg
 image_credit: "Art by Petar Milivojevic / Hawthorne Dream Mash 2021"
-description: |
-  Nothing lasts forever, and the formations that arise in the Region of Dreams are especially ephemeral. When a desert can change to an ocean as quick as a thought, one could almost abandon the concept of permanence altogether.
+---
+
+Nothing lasts forever, and the formations that arise in the Region of Dreams are especially ephemeral. When a desert can change to an ocean as quick as a thought, one could almost abandon the concept of permanence altogether.
 
   Nevertheless, when a dreamscape discorporates into undifferentiated dream-stuff, it is possible for a small part to coagulate together into something more resilient and stable. Of course, without any external stimulus, even these forms are prone to breaking apart at a moment's notice.
 
@@ -29,7 +30,6 @@ description: |
   The cauchemar doesn't require air, food, drink, or sleep. However, if outside the Region of Dreams, it requires a consistent diet of mental energy from hapless victims for sustenance. To gain the benefits of a long rest, it must either spend the entire rest in the Region of Dreams or have gained temporary hit points using its **Pernicious Feeding** trait in the past 24 hours.
 
   For every 24 hours the cauchemar goes without benefiting from a long rest, it must succeed on a DC 15 Constitution saving throw or suffer 2 levels of exhaustion.
----
 
 ___
 > ## Cauchemar

@@ -7,8 +7,9 @@ type: Undead
 alignment: Chaotic Neutral
 category: 2014 Fair Game
 creator: Solkaro
-description: |
-  A Specter of Winters Past is the angry, unfettered spirit of a humanoid that has been prevented from passing to the afterlife. These specters no longer possess connections to who or what they were, yet are condemned to walk the world forever. Some are spawned when dark magic or the touch of a wraith rips a soul from a living body.
+---
+
+A Specter of Winters Past is the angry, unfettered spirit of a humanoid that has been prevented from passing to the afterlife. These specters no longer possess connections to who or what they were, yet are condemned to walk the world forever. Some are spawned when dark magic or the touch of a wraith rips a soul from a living body.
   
   **Beyond Redemption**
   When a ghost's unfinished business is completed, it can rest at last. No such rest or redemption awaits the Specter of Winters Past. It is doomed to the Material Plane, its only end the oblivion that comes with the destruction of its soul. Until then, it bears out its lonely life in forlorn places, carrying on forgotten through the ages of the world.
@@ -21,7 +22,6 @@ description: |
   
   #### Combat Tactics
   The Specter of Winters Past would start combat with its Candle Extinguisher on its head, would use its Summon Spectral Helpers on its first turn of combat. On its second turn, it would remove its Candle Extinguisher from its head, hopefully after enemies have moved in to engage it, causing them to potentially be blinded. It would then try and use its Memory Twist ability, specifically to try and target as many enemies as possible so that its helpers can gang up on stunned targets. It will try and stay within melee range of its foes, using its Blinding Candle to its advantage as it pummels its enemies.
----
 
 ___
 > ## Specter of Winters Past

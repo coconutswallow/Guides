@@ -9,12 +9,11 @@ category: 2014 Fair Game
 image: https://i.imgur.com/8brmN3v.jpg
 image_credit: Art by Alek Sakura
 creator: my1
+---
 
-description: |
-  Many creatures dream at night, and sometimes dreams can be strange and scary experiences. The fluff-puffle’s only desire is to bring happiness and ease to others it comes across in the Region of Dreams. These little handfuls of fluff are drawn to creatures who are stressed or upset and try their darndest to raise their spirits.
+Many creatures dream at night, and sometimes dreams can be strange and scary experiences. The fluff-puffle’s only desire is to bring happiness and ease to others it comes across in the Region of Dreams. These little handfuls of fluff are drawn to creatures who are stressed or upset and try their darndest to raise their spirits.
   
   They dislike aggression and negativity, always attempting to calm any conflict they witness. Those who have met a fluff-puffle describe them as “the softest, friendliest little guys they’ve ever met” and “giving the best cuddles imaginable.” They are made up entirely of impossibly soft fur that emits a soothing warmth. Fluff-puffles like to accompany travelers who enjoy their company, often focusing their comfort on the grumpiest member of a group.
----
 
 ___
 > ## Fluff-Puffle

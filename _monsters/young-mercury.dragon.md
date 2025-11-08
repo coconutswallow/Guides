@@ -7,8 +7,9 @@ size: Large
 alignment: typically Chaotic Neutral
 category: 2014 Fair Game
 creator: Arashi1822
-description: |
-  Mercury dragons are whimsical creatures in both a physical sense and a mental one. They delight in being **unpredictable** and value **variety** above all else before moving onto the next thing that catches their attention.
+---
+
+Mercury dragons are whimsical creatures in both a physical sense and a mental one. They delight in being **unpredictable** and value **variety** above all else before moving onto the next thing that catches their attention.
 
   #### The Spice of Life
   Mercury dragons are a type of dragon with silver metallic scales that closely lock together, almost indiscernible as such from a quick glance. They move quickly and with a notable agility that makes them hard to keep up with. In combat, they are known to favor **unpredictable tactics**, even those that may be considered to be cruel or dishonorable to any outside viewer. In contrast, the dragon sees its apparent cruelty as a way to learn more about the creature before them, their natural curiosity driving them to find out if the creature is more valuable alive or if the dragon in its stale boredom should even keep them alive.
@@ -20,7 +21,6 @@ description: |
 
   #### Creatures of Capriciousness and Cunning
   One of the favored places for a mercury dragon to reside in is a lair that is maintained by another creature, preferably one that can suit its need to have variety. In a sense, they can form business relations with mages, priests, rulers, and possibly more sinister entities. This mutual relationship does not mean that the other party can guarantee the dragon's loyalty. In fact, a mercury dragon is just as likely to simply go against an arrangement if the other party attempts to cheat it, bore it with a lack of variety, or the dragon just wants to do so "just to see what happens."
----
 
 ___
 > ## Young Mercury Dragon

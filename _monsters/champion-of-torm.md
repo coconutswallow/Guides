@@ -7,12 +7,11 @@ size: Medium
 alignment: Lawful Good
 category: 2014 Fair Game
 creator: Case
+---
 
-description: |
-  The **Champion of Torm** represents the military might and unwavering conviction of the various orders that worship the deity of duty and loyalty. These champions are sent throughout the world as beacons of hope and courage.
+The **Champion of Torm** represents the military might and unwavering conviction of the various orders that worship the deity of duty and loyalty. These champions are sent throughout the world as beacons of hope and courage.
   
   They value honesty, loyalty, and truth above all else, offering aid to all those in need. Individual champions are often on some form of penance, seeking to do good in the world to atone for a past event they blame themselves for. Their divine duty includes finding and destroying any cults of Cyric and Bane, and locating and recording any areas of dead or wild magic.
----
 
 ___
 > ## Champion of Torm

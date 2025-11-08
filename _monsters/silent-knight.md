@@ -7,9 +7,9 @@ size: Medium
 alignment: Lawful Neutral
 category: 2014 Fair Game
 creator: Krunk with inspiration from highlevelgames and reddit user 1d6Adventurers
+---
 
-description: |
-  A Silent Knight is a holy warrior, one who has no patience for vocalisation. Its Aura of Silence disrupts nearby spellcasters, and its martial prowess with their longsword is a challenge even to skilled warriors. And if you are bested by this knight, nobody will hear you scream.
+A Silent Knight is a holy warrior, one who has no patience for vocalisation. Its Aura of Silence disrupts nearby spellcasters, and its martial prowess with their longsword is a challenge even to skilled warriors. And if you are bested by this knight, nobody will hear you scream.
   
   **Creations of Dumathoin**. Silent Knights are originally creations of Dumathoin, charged with the collection of secrets. Once a Silent Knight learned a secret, no amount of magic or persuasion could force it to speak it. It could only be heard from them by Dumathoin himself. Though they faithfully serve Dumathoin, if they remain on the material plane too long they may forget their true purpose.
   
@@ -19,7 +19,6 @@ description: |
   
   #### Combat Tactics
   The Silent Knight, while not particularly threatening on its own, makes both a good minion with its willingness to work, and a fair boss threat in the mid lower tiers. It excels at disrupting spellcasters both by engulfing them within its aura of silence, or simply by hitting them to prevent them from speaking. It is just as good for dealing with front line PCs with its martial champion trait and high armor class. For example, some creatures Krunk would use as a boss to the Silent Knight would be an Archmage, one of the Volo's warlock stat blocks, or as it is a friend to dwarves a party of Duergar.
----
 
 ___
 > ## Silent Knight

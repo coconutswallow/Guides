@@ -7,8 +7,9 @@ type: Fey
 alignment: Neutral Evil
 category: 2014 Fair Game
 creator: Rexen, Lore from AD&D Ravenloft
-description: |
-  Jack frosts are fey spirits of ice and cold who play dangerous games with the lives of mortals who wander into their territory. Cruel and capricious, they take great joy in the cold, frigid death of others, and will play elaborate games with the lives of those passing through their lands. Lurking near mountain tops or in arctic terrain, they delight in tormenting helpless creatures and subsist on the body heat that they drain from victims.
+---
+
+Jack frosts are fey spirits of ice and cold who play dangerous games with the lives of mortals who wander into their territory. Cruel and capricious, they take great joy in the cold, frigid death of others, and will play elaborate games with the lives of those passing through their lands. Lurking near mountain tops or in arctic terrain, they delight in tormenting helpless creatures and subsist on the body heat that they drain from victims.
   
   **Deadly Shapechangers**. Jack frosts have several forms and can change from one to another at will. They may appear as a flurry of beautiful and intricately patterned snowflakes, a vaporous white cloud, or as small, pale blue fey with silver eyes and white or silvery icicle-like hair. Even in the heaviest snow or coldest region, they wear only gauzy white clothing and go barefoot. Those who might be identified as males wear tunics and trousers, while those regarded as females
   prefer gowns. They all have mischievous, beguiling smiles, and speak their own language amongst themselves.
@@ -22,7 +23,6 @@ description: |
   
   #### Frostbite
   This disease affects a creature bitten by a jack frost, in which symptoms occur 1d4 hours after infection and involves gangrene setting into a bitten body part. Before the symptoms occur, the infected creature must be tended to by gentle warming lasting for at least 10 minutes, or by spells or effects that remove disease. If not treated, the infected creature gains a **Lingering Injury** and the disease is then removed.
----
 
 ___
 > ## Jack Frost
