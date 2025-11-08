@@ -1,3 +1,8 @@
+---
+layout: doc
+title: "Server Rules"
+order: 1
+---
 ## Basic Rules
 1. Be nice and treat each other with respect.
 
