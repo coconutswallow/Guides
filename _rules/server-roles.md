@@ -31,15 +31,8 @@ There are six Staff teams:
 <div class="image-text-wrapper">
   <img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy" class="hierarchy-image image-size-45">
   <div class="hierarchy-explanation">
-    <h3>Understanding the Hierarchy</h3>
-    <p>The diagram shows the organizational structure of the Hawthorne Guild server, with different levels of roles and responsibilities.</p>
-    
-    <p><strong>At the top</strong> are the Admins who oversee all server operations and work with the various staff teams.</p>
-    
-    <p><strong>Staff teams</strong> include specialized roles like Auditors, Lore Consultants, Player Relations, Rule Architects, and Engineers. Each team has full members and apprentices who are learning the role.</p>
-    
-    <p><strong>The DM track</strong> shows progression from Trial DM to Full DM, with increasing responsibilities and privileges as DMs gain experience running games.</p>
-    
-    <p><strong>Adventurers</strong> form the foundation of the server - all registered players who participate in games and roleplay.</p>
+    <h3>Channel Roles</h3>
+    <p>In the Channels & Roles feature in discord, you can select and change what you would like to be pinged for, including game advertising (by type and character tier) or other such as text role-play.</p>
+
   </div>
 </div>
