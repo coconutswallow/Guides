@@ -59,6 +59,11 @@
     <script>
         // ... (Existing menu JS remains the same) ...
     </script>
+
+    <script>
+        // Passes the Jekyll baseurl variable (which is "/Guides") to JavaScript
+        const BASE_URL = "{{ site.baseurl }}"; 
+    </script>
     
     <script src="{{ '/assets/js/lunr.js' | relative_url }}"></script> 
     <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
