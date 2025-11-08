@@ -1,0 +1,276 @@
+---
+layout: default
+title: Hawthorne Field Guide
+---
+
+<div class="home-hero">
+  <h1>Welcome to the Hawthorne Field Guide</h1>
+  <p class="hero-description">
+    A comprehensive digital compendium of creatures and locations for the Hawthorne Dungeons & Dragons Guild. 
+  </p>
+</div>
+
+<div class="home-section">
+  <h2>
+    <span class="section-icon">🐉</span>
+    Monster Compendium
+  </h2>
+  <p class="section-description">
+    Explore our ever-growing bestiary of unique creatures crafted by the Hawthorne community. 
+  </p>
+  
+  <div class="card-grid">
+    <div class="feature-card">
+      <h3>Browse Monsters</h3>
+      <img src="https://img.photouploads.com/file/PhotoUploads-com/jHlk.png" alt="Browse Monsters" class="card-thumbnail">
+      <a href="{{ site.baseurl }}/monsters/" class="card-button">View Compendium</a>
+    </div>
+    
+    <div class="feature-card">
+      <!-- <img src="{{ site.baseurl }}/assets/images/submit-monster.jpg" alt="Submit Monster" class="card-thumbnail"> -->
+      <h3>Submit Your Monster</h3>
+      <p>Have a creature idea? Learn how to contribute your own creations to the Field Guide.</p>
+      <a href="{{ site.baseurl }}/monsters-submit/" class="card-button">Submission Instructions</a>
+    </div>
+    
+    <div class="feature-card">
+      <!-- <img src="{{ site.baseurl }}/assets/images/statblock-builder.jpg" alt="Statblock Builder" class="card-thumbnail"> -->
+      <h3>Markdown Statblock Builder</h3>
+      <p>Use our interactive tool to create monster statblocks in markdown format that can be uploaded to the Hawthorne Monster Compendium.</p>
+      <a href="{{ site.baseurl }}/generator/" class="card-button">Open Builder</a>
+    </div>
+  </div>
+</div>
+
+<div class="home-section">
+  <h2>
+    <span class="section-icon">🗺️</span>
+    Locations
+  </h2>
+  <p class="section-description">
+  </p>
+  
+  <div class="card-grid">
+    <div class="feature-card">
+      <h3>Arch Fey and the Domains of Delight</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/domains-of-delight.png" alt="Domains of Delight" class="card-thumbnail">
+      <a href="{{ site.baseurl }}/locations/domains-of-delight/" class="card-button">Explore</a>
+    </div>
+    <div class="feature-card">
+      <h3>The Split Tooth Mountains</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/split-tooth-mountains.png" alt="Split Tooth Mountains" class="card-thumbnail">
+      <a href="{{ site.baseurl }}/locations/split-tooth-mountains/" class="card-button">Explore</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>The Region of Dreams</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/Region-of-Dreams.png" alt="Region of Dreams" class="card-thumbnail">
+      <a href="{{ site.baseurl }}/locations/region-of-dreams/" class="card-button">Explore</a>
+    </div>
+    <div class="feature-card">
+      <h3>Earth Nodes</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/Earth-Nodes.png" alt="Earth Nodes" class="card-thumbnail">
+      <a href="{{ site.baseurl }}/locations/earth-nodes/" class="card-button">Explore</a>
+    </div>
+  </div>
+</div>
+
+<div class="home-credits">
+  <h2>Credits</h2>
+  <p>
+    The original <a href="https://drive.google.com/file/d/1CQ508SRkQvzOjmfmpzL2PrVtYOk9MSnc/view">Hawthorne Field Guide</a> was created by <strong>km.d</strong>, <strong>MonoxideAtWork</strong>, 
+    and <strong>Rexen</strong> with the assistance of <strong>Kathy</strong> for updating and formatting using the Homebrewery in collaboration with the Lore Consultants and Rules Architects of the Hawthorne Dungeons & Dragons Guild.
+  </p>
+  <p>
+    This Digital Field Guide was created by the Hawthorne Engineers using the monster content from the original PDF Field Guide.
+  </p>
+</div>
+
+<style>
+.home-hero {
+  background: linear-gradient(135deg, #FDF1DC 0%, #F5E6D3 100%);
+  border: 3px solid #58180D;
+  border-radius: 0px;
+  padding: 3em 2em;
+  margin: 2em 0 3em 0;
+  text-align: center;
+}
+
+.home-hero h1 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 2.5em;
+  margin: 0 0 0.5em 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero-description {
+  font-family: var(--font-body);
+  color: #58180D;
+  font-size: 1.1em;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home-section {
+  margin: 4em 0;
+}
+
+.home-section h2 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 2em;
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  border-bottom: 3px solid #58180D;
+  padding-bottom: 0.3em;
+}
+
+.section-icon {
+  font-size: 1.2em;
+}
+
+.section-description {
+  font-family: var(--font-body);
+  color: #58180D;
+  font-size: 1.05em;
+  line-height: 1.6;
+  margin-bottom: 2em;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2em;
+  margin-top: 2em;
+}
+
+.feature-card {
+  background: #FDF1DC;
+  border: 2px solid #58180D;
+  border-radius: 0px;
+  padding: 2em;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card:not(.coming-soon):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(88, 24, 13, 0.2);
+}
+
+.feature-card.coming-soon {
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.feature-card h3 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 1.4em;
+  margin: 0 0 0.5em 0;
+  text-transform: uppercase;
+}
+
+.feature-card p {
+  font-family: var(--font-body);
+  color: #58180D;
+  line-height: 1.5;
+  flex-grow: 1;
+  margin-bottom: 1.5em;
+}
+
+.card-button {
+  display: inline-block;
+  padding: 0.75em 1.5em;
+  background: #58180D;
+  color: #FDF1DC;
+  text-decoration: none;
+  border-radius: 0px;
+  font-family: var(--font-header);
+  font-size: 0.9em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: background 0.2s;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.card-thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border: 2px solid #58180D;
+  margin-bottom: 1em;
+  display: block;
+}
+
+.card-button:hover {
+  background: #822000;
+}
+
+.card-button.disabled {
+  background: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.home-credits {
+  background: #F5E6D3;
+  border: 2px solid #58180D;
+  border-radius: 0px;
+  padding: 2em;
+  margin: 4em 0 2em 0;
+}
+
+.home-credits h2 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 1.5em;
+  margin: 0 0 1em 0;
+  text-transform: uppercase;
+}
+
+.home-credits p {
+  font-family: var(--font-body);
+  color: #58180D;
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+
+.home-credits p:last-child {
+  margin-bottom: 0;
+}
+
+.home-credits strong {
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .home-hero h1 {
+    font-size: 1.8em;
+  }
+  
+  .hero-description {
+    font-size: 1em;
+  }
+  
+  .home-section h2 {
+    font-size: 1.6em;
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5em;
+  }
+  
+  .home-hero {
+    padding: 2em 1.5em;
+  }
+}
+</style>

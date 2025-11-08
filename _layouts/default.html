@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
+</head>
+<body>
+    <!-- Header: This is the ONLY place the site header should be defined. -->
+    <header class="site-header">
+        <div class="header-content">
+            <!-- Hamburger Menu Button (Must exist here to be functional on ALL pages) -->
+            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <h1 class="site-title">{{ site.title | default: "Hawthorne Field Guide" }}</h1>
+             <!-- Standard Desktop Navigation -->
+            <nav class="site-nav">
+                <!-- Keep top-level links consistent -->
+                <a href="{{ site.baseurl }}/">Home</a>
+                <a href="{{ site.baseurl }}/field-guide/monsters/">Monsters</a>
+                <a href="{{ site.baseurl }}/generator/">Generator</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- OFF-CANVAS SIDEBAR MENU (Must exist ONLY here) -->
+    <div id="sidebar-menu">
+        <div class="sidebar-header">
+            <h3>Navigation</h3>
+            <button id="close-menu" aria-label="Close Navigation Menu">X</button>
+        </div>
+        
+        <!-- START DYNAMIC NAVIGATION LOGIC -->
+        <nav class="nav-sections">
+            <!-- Fixed Top Links -->
+            <a href="{{ site.baseurl }}/" class="nav-link">Home</a>
+            <a href="{{ site.baseurl }}/generator/" class="nav-link">Stat Block Generator</a>
+            <a href="{{ site.baseurl }}/monsters-submit/" class="nav-link">Submit a Monster</a>
+            
+            <hr class="nav-divider">
+            
+            <!-- Loop through ALL Collections (i.e., your Guides) -->
+            {% for collection in site.collections %}
+                {% if collection.label != 'posts' and collection.output %}
+                
+                    {% assign collection_title = collection.label | replace: "-", " " | capitalize %}
+                    {% assign current_title = collection.label %}
+                    
+                    {# Special Grouping for Field Guide: use a custom title if it's 'locations' or 'monsters' #}
+                    {% if collection.label == 'locations' %}
+                        {% assign collection_title = 'Field Guide: Locations' %}
+                    {% elsif collection.label == 'monsters' %}
+                        {% assign collection_title = 'Field Guide: Monsters' %}
+                    {% endif %}
+
+                    <div class="nav-section {% if collection.label == page.collection %}expanded{% endif %}">
+                        <button class="nav-section-toggle" aria-expanded="{% if collection.label == page.collection %}true{% else %}false{% endif %}" aria-controls="{{ current_title }}-submenu">
+                            {{ collection_title }} <span class="toggle-icon">{% if collection.label == page.collection %}▼{% else %}▸{% endif %}</span>
+                        </button>
+                        
+                        <div id="{{ current_title }}-submenu" class="nav-submenu" {% if collection.label == page.collection %}style="max-height: fit-content;"{% endif %}>
+                            
+                            <!-- Loop through all documents (pages) in this collection -->
+                            {% for doc in collection.docs | sort: 'title' %}
+                                <a href="{{ doc.url | relative_url }}" class="nav-link {% if doc.url == page.url %}active{% endif %}">
+                                    {{ doc.title }}
+                                </a>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            
+        </nav>
+        <!-- END DYNAMIC NAVIGATION LOGIC -->
+        
+    </div>
+    
+    <!-- Main Page Content -->
+    <main class="content-area">
+        {{ content }}
+    </main>
+
+    <!-- The original script block for menu functionality and responsiveness -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const closeMenuButton = document.getElementById('close-menu');
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        const body = document.body;
+
+        function toggleMenu() {
+            const isMenuOpen = sidebarMenu.classList.toggle('open');
+            body.classList.toggle('no-scroll', isMenuOpen);
+            menuToggle.setAttribute('aria-expanded', isMenuOpen);
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        closeMenuButton.addEventListener('click', toggleMenu);
+
+        // Close menu on large screens after resizing
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && sidebarMenu && sidebarMenu.classList.contains('open')) {
+                // Use a short delay for smooth execution after resize event
+                setTimeout(toggleMenu, 50); 
+            }
+        });
+
+        // Handle nested menu toggles
+        const sectionToggles = document.querySelectorAll('.nav-section-toggle');
+        
+        sectionToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navSection = this.parentElement;
+                const submenu = navSection.querySelector('.nav-submenu');
+                const icon = this.querySelector('.toggle-icon');
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                
+                // Toggle the section
+                this.setAttribute('aria-expanded', !isExpanded);
+                navSection.classList.toggle('expanded');
+                
+                // Rotate icon and change text
+                if (isExpanded) {
+                    icon.textContent = '▸';
+                } else {
+                    icon.textContent = '▼';
+                }
+                
+                // Animate submenu
+                if (!isExpanded) {
+                    submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                } else {
+                    submenu.style.maxHeight = '0';
+                }
+                
+                // Ensure the list height is recalculated if it's currently expanded
+                if (navSection.classList.contains('expanded')) {
+                    // Update max height after potential content change
+                    submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                }
+            });
+        });
+        
+        // Ensure the correct submenu is initially open if the current page belongs to it
+        document.querySelectorAll('.nav-section').forEach(section => {
+            const isExpanded = section.classList.contains('expanded');
+            if (isExpanded) {
+                const submenu = section.querySelector('.nav-submenu');
+                const icon = section.querySelector('.toggle-icon');
+                submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                icon.textContent = '▼';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+---
+layout: default 
+title: Stat Block Generator 
+permalink: /generator/
+---
+
+<div class="generator-container">
+    <div class="page-intro">
+        <h2>Hawthorne Bestiary: Markdown Generator</h2>
+        <p>Use this tool to create a 2024-compatible statblock that can be added to the Hawthorne Bestiary.  Use the [Preview] button to see how the statblock would look like; then [Download Markdown] the file to submit via #dm-requests to add the monster to the Hawthorne Field Guide.  If you need to make changes afterwards, you can use the [Load Markdown] button to load the .md file for editing.</p>
+    </div>
+    
+    <div id="generator-app">
+        <div style="text-align: center; padding: 20px;">Loading generator...</div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{ '/assets/css/generator.css' | relative_url }}">
+<script src="{{ '/assets/js/statblock-generator.js' | relative_url }}"></script>

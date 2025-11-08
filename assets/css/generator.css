@@ -1,0 +1,463 @@
+/* Generator-specific styles that complement your existing statblock.css */
+
+.generator-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-intro {
+    background: linear-gradient(135deg, #5b0f00 0%, #8b1a0f 100%);
+    color: #FDF1DC;
+    padding: 2em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+.page-intro h2 {
+    color: #FDF1DC;
+    border: none;
+    margin: 0 0 0.5em 0;
+    font-size: 2em;
+}
+
+.page-intro p {
+    margin: 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* Generator Controls */
+.generator-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2em;
+    gap: 1em;
+}
+
+.view-toggles {
+    display: flex;
+    gap: 1em;
+    flex: 1;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 1em;
+    border: 2px solid #58180D;
+    background: white;
+    color: #58180D;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #FDF1DC;
+}
+
+.toggle-btn.active {
+    background: #58180D;
+    color: #FDF1DC;
+}
+
+.download-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 1em 2em;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.download-btn:hover {
+    background: #218838;
+}
+
+.download-btn + .download-btn {
+    background: #007bff;
+}
+
+.download-btn + .download-btn:hover {
+    background: #0056b3;
+}
+
+/* View Containers */
+.view-container {
+    display: none;
+}
+
+.view-container.active {
+    display: block;
+}
+
+/* Validation Messages */
+.preview-messages {
+    margin-bottom: 2em;
+}
+
+.error-box {
+    background: #fee;
+    border-left: 4px solid #c00;
+    padding: 1em;
+    border-radius: 4px;
+}
+
+.error-box h3 {
+    margin-top: 0;
+    color: #c00;
+}
+
+.error-box ul {
+    margin: 0.5em 0 0 0;
+    padding-left: 1.5em;
+}
+
+.success-box {
+    background: #efe;
+    border-left: 4px solid #0a0;
+    padding: 1em;
+    border-radius: 4px;
+    color: #0a0;
+    font-weight: bold;
+}
+
+/* Form Sections */
+.form-section {
+    background: #FDF1DC;
+    border: 2px solid #58180D;
+    border-radius: 8px;
+    padding: 1.5em;
+    margin: 1.5em 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-section h2 {
+    color: #58180D;
+    margin-top: 0;
+    border-bottom: 2px solid #C0AD6A;
+    padding-bottom: 0.5em;
+    font-size: 1.5em;
+}
+
+/* Field Groups */
+.field-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1em;
+    margin-top: 1em;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    color: #58180D;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    padding: 0.6em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+.form-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    outline: none;
+    border-color: #58180D;
+    box-shadow: 0 0 0 2px rgba(88, 24, 13, 0.1);
+}
+
+/* Ability Score Table */
+.ability-group table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+    font-size: 0.95em;
+}
+
+.ability-group th {
+    text-align: left;
+    padding: 0.6em;
+    border-bottom: 2px solid #58180D;
+    font-weight: bold;
+    color: #58180D;
+    background: rgba(88, 24, 13, 0.05);
+}
+
+.ability-group td {
+    padding: 0.6em;
+    border-bottom: 1px solid #ddd;
+}
+
+.ability-group td:first-child {
+    font-weight: bold;
+    width: 15%;
+}
+
+.ability-group td input[type="number"],
+.ability-group td input[type="text"] {
+    width: 80px;
+    text-align: center;
+    padding: 0.4em;
+}
+
+.ability-group th:nth-child(3), 
+.ability-group td:nth-child(3),
+.ability-group th:nth-child(4), 
+.ability-group td:nth-child(4),
+.ability-group th:nth-child(5), 
+.ability-group td:nth-child(5) {
+    text-align: center;
+}
+
+/* Item Lists (Traits, Actions, etc.) */
+.item-list {
+    margin-top: 1em;
+    width: 100%;
+}
+
+.item-entry {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1em;
+    margin-bottom: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.item-header {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+    width: 100%;
+}
+
+.item-name {
+    flex: 1;
+    padding: 0.6em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+.item-description {
+    width: 100%;
+    min-height: 80px;
+    padding: 0.6em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1em;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+.add-button {
+    background: #58180D;
+    color: #FDF1DC;
+    border: none;
+    padding: 0.8em 1.5em;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 1em;
+}
+
+.add-button:hover {
+    background: #7a2010;
+}
+
+.remove-button {
+    background: #c00;
+    color: white;
+    border: none;
+    padding: 0.6em 1em;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.remove-button:hover {
+    background: #a00;
+}
+
+/* Preview Sections */
+.markdown-output,
+.visual-output {
+    margin: 2em 0;
+}
+
+.markdown-output h3,
+.visual-output h3 {
+    color: #58180D;
+    border-bottom: 2px solid #C0AD6A;
+    padding-bottom: 0.5em;
+}
+
+.markdown-output pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.5em;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+/* Visual Stat Block Preview */
+.statblock-visual {
+    background: #FDF1DC;
+    border: 2px solid #58180D;
+    border-radius: 8px;
+    padding: 1.5em;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.statblock-header h1 {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    color: #58180D;
+    margin: 0 0 0.5em 0;
+    text-transform: uppercase;
+}
+
+.statblock-header p {
+    font-style: italic;
+    margin: 0 0 1em 0;
+}
+
+.statblock-section {
+    margin: 1em 0;
+}
+
+.statblock-section h3 {
+    font-family: 'Cinzel', serif;
+    color: #58180D;
+    border-bottom: 1.5px solid #58180D;
+    margin: 1em 0 0.5em 0;
+    padding-bottom: 0.3em;
+    text-transform: uppercase;
+}
+
+.statblock-abilities table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+}
+
+.statblock-abilities th,
+.statblock-abilities td {
+    padding: 0.4em;
+    text-align: center;
+}
+
+.statblock-abilities th {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.statblock-abilities td:nth-child(1),
+.statblock-abilities td:nth-child(5),
+.statblock-abilities td:nth-child(9) {
+    font-weight: bold;
+}
+
+.statblock-abilities td:nth-child(3),
+.statblock-abilities td:nth-child(4),
+.statblock-abilities td:nth-child(7),
+.statblock-abilities td:nth-child(8),
+.statblock-abilities td:nth-child(11),
+.statblock-abilities td:nth-child(12) {
+    background: #dad1ca;
+}
+.statblock-section.lair-actions-section h2,
+.statblock-section.regional-effects-section h2 {
+    /* Uses the same style as other stat block section titles */
+    font-family: 'Cinzel', serif;
+    color: #58180D;
+    border-bottom: 1.5px solid #58180D;
+    margin: 1em 0 0.5em 0;
+    padding-bottom: 0.3em;
+    text-transform: uppercase;
+}
+
+/* Ensure descriptions for these sections also use the stat block font */
+.statblock-section.lair-actions-section p,
+.statblock-section.regional-effects-section p {
+    margin-bottom: 0.5em;
+    line-height: 1.4;
+    font-size: 0.95em;
+}
+
+.statblock-section.lair-actions-section p strong,
+.statblock-section.regional-effects-section p strong {
+    /* Bold part of action/trait */
+    font-weight: 900;
+}
+.statblock-placeholder {
+    text-align: center;
+    color: #999;
+    padding: 2em;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .generator-controls {
+        flex-direction: column;
+    }
+    
+    .view-toggles {
+        width: 100%;
+    }
+    
+    .download-btn {
+        width: 100%;
+    }
+    
+    .field-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .ability-group table {
+        font-size: 0.85em;
+    }
+    
+    .ability-group td input[type="number"],
+    .ability-group td input[type="text"] {
+        width: 60px;
+    }
+}

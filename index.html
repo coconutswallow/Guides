@@ -1,0 +1,97 @@
+---
+layout: default
+title: Hawthorne Field Guide
+---
+
+<div class="home-hero">
+  <h1>Welcome to the Hawthorne Field Guide</h1>
+  <p class="hero-description">
+    A comprehensive digital compendium of guides, creatures, and locations for the Hawthorne Dungeons & Dragons Guild. 
+  </p>
+</div>
+
+<!-- NEW SECTION: ALL GUIDES OVERVIEW -->
+<div class="home-section">
+  <h2>
+    <span class="section-icon">📖</span>
+    Explore the Guides
+  </h2>
+  <p class="section-description">
+    Dive into the dedicated guides for DMs, players, and world lore.
+  </p>
+  
+  <div class="card-grid">
+    
+    <!-- Dynamically generate cards for the main guides -->
+    {% for collection in site.collections %}
+      {% if collection.label != 'posts' and collection.output and collection.label != 'monsters' and collection.label != 'locations' %}
+        <div class="feature-card">
+          <h3>{{ collection.title }}</h3>
+          <p>A collection of resources, rules, and world information dedicated to {{ collection.title | downcase }}.</p>
+          <!-- Use the permalink path from the config, stripping the :title placeholder -->
+          {% assign link_path = collection.permalink | split: '/:title/' | first %}
+          <a href="{{ link_path | relative_url }}" class="card-button">View Guide</a>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+  </div>
+</div>
+<!-- END NEW SECTION -->
+
+<hr style="margin: 4em 0; border-color: #58180D;">
+
+<div class="home-section">
+  <h2>
+    <span class="section-icon">🐉</span>
+    Field Guide: Monster Compendium
+  </h2>
+  <p class="section-description">
+    Explore our ever-growing bestiary of unique creatures crafted by the Hawthorne community. 
+  </p>
+  
+  <div class="card-grid">
+    <div class="feature-card">
+      <h3>Browse Monsters</h3>
+      <img src="https://img.photouploads.com/file/PhotoUploads-com/jHlk.png" onerror="this.onerror=null;this.src='https://placehold.co/400x180/58180D/FDF1DC?text=Monsters';" alt="Browse Monsters" class="card-thumbnail">
+      <a href="{{ site.baseurl }}/field-guide/monsters/" class="card-button">View Compendium</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>Submit Your Monster</h3>
+      <p>Have a creature idea? Learn how to contribute your own creations to the Field Guide.</p>
+      <a href="{{ site.baseurl }}/monsters-submit/" class="card-button">Submission Instructions</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>Stat Block Generator</h3>
+      <p>Use our custom tool to easily create markdown files for submission.</p>
+      <a href="{{ site.baseurl }}/generator/" class="card-button">Open Generator</a>
+    </div>
+  </div>
+</div>
+
+<div class="home-section">
+  <h2>
+    <span class="section-icon">🗺️</span>
+    Field Guide: Locations
+  </h2>
+  <p class="section-description">
+    Discover the major regions, cities, and points of interest in the world.
+  </p>
+  <div class="card-grid">
+    <!-- Link to the main locations collection index -->
+    <div class="feature-card">
+      <h3>Explore Territories</h3>
+      <p>Maps, lore, and history of the known and forgotten lands.</p>
+      {% assign locations_link = site.collections | where: "label", "locations" | first %}
+      {% assign link_path = locations_link.permalink | split: '/:title/' | first %}
+      <a href="{{ link_path | relative_url }}" class="card-button">View Locations</a>
+    </div>
+  </div>
+</div>
+
+
+<div class="home-credits">
+  <p>The Hawthorne Field Guide is a community project created and maintained by its dedicated DMs and players.</p>
+</div>
