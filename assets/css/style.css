@@ -44,6 +44,63 @@
   --shadow-lg: 0 6px 12px rgba(88, 24, 13, 0.2);
 }
 
+/* ============================================\
+   HEADER SEARCH INPUT STYLING
+   ============================================ */
+
+/* Container for positioning within the header */
+.header-search-container {
+    /* Ensures the input doesn't take up too much space on desktop */
+    max-width: 300px; 
+    width: 100%;
+    margin-left: auto; /* Pushes it to the right in the header */
+    padding-right: 15px; /* Spacing from the edge */
+}
+
+/* Style the actual input field */
+#search-input {
+    width: 100%;
+    padding: 8px 12px;
+    
+    /* Use site colors for background, border, and text */
+    background-color: var(--color-bg-light); /* Light background */
+    color: var(--color-text); /* Primary text color */
+    border: 1px solid var(--color-border); /* Primary border color */
+    
+    /* Match site typography */
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1em;
+    line-height: 1.2;
+    border-radius: 4px; /* Slight rounding for a finished look */
+    
+    /* Optional: Remove default focus outline */
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus state for better usability */
+#search-input:focus {
+    /* Use a stronger highlight color/effect when the user is typing */
+    border-color: var(--color-secondary); 
+    box-shadow: 0 0 5px rgba(130, 32, 0, 0.5); /* Soft glow using secondary color */
+}
+
+/* Placeholder text style (for consistency) */
+#search-input::placeholder {
+    color: var(--color-border); /* Use the border color for a subtle placeholder */
+    opacity: 0.7;
+}
+
+/* Small screen adjustment (Optional: You may need media queries from your style.css) */
+/* This is a placeholder for where you might adjust alignment if it clashes with the hamburger menu */
+@media (max-width: 768px) {
+    .header-search-container {
+        /* On small screens, you might want to move the search input */
+        padding: 0 10px 0 0;
+        max-width: 150px; 
+    }
+}
+
 /* ============================================
    Search Results Styling
    ============================================ */
