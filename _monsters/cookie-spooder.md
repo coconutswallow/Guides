@@ -9,9 +9,11 @@ category: 2014 Fair Game
 creator: Aiko
 ---
 
+## The Cookie Spooder
+
 Half cookie, half spider, the cookie spooder was the result of a wizard trying to create the perfect cookie recipe. Unknown to the wizard, a small spider had wandered toward a batch of fresh cookies for a treat. The magical reaction with the spider and the cookies created this strange creature.
-  
-  The cookie spooder subsists on a diet of sweets and confectionaries and weaves webs made of sugar and sweets in its chocolate-y lair. It's a friendly little creature that will usually hide when it first sees a creature. If it deems a creature friendly, it will follow the creature for a short time. When it casts the goodberry spell, it grows up to 10 chocolate chips on its thorax that a creature can consume like a regular goodberry.
+
+The cookie spooder subsists on a diet of sweets and confectionaries and weaves webs made of sugar and sweets in its chocolate-y lair. It's a friendly little creature that will usually hide when it first sees a creature. If it deems a creature friendly, it will follow the creature for a short time. When it casts the goodberry spell, it grows up to 10 chocolate chips on its thorax that a creature can consume like a regular goodberry.
 
 ___
 > ## The Cookie Spooder

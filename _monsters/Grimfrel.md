@@ -11,15 +11,17 @@ image: https://64.media.tumblr.com/2c84e388a2d332a7de370f7fe06e5b00/6ead6ada3aa8
 image_credit: wind0wraith
 ---
 
+## Grimfrel
+
 The Queen of Air and Darkness employs fey spirits of wind and snow to retrieve creatures or items from the Material Plane. These spirits are known as Wind Wraiths, Yule Men, or in the Sylvan tongue, Grimfrel. Making a List. If one were to find themselves pursued by a Grimfrel, then every step the Grimfrel takes brings it closer to its prey or the object of its charge. This charge is detailed on a piece of vellum made from the hide of an evil creature, in magical script that only the Grimfrel can read. Aside from the Grimfrel, a creature with truesight is able to read the list. If a dispel magic is cast upon the list or the vellum, the magic is suppressed and the list disappears for 1 minute, then reappears. Doing this tends to anger the Grimfrel.
 
-  **Checking it Thrice.** Being a fey creature, the Grimfrel is bound by the customs and geases of the Winter Court, as such, it compulsively checks its list to ensure that a new charge hasn't been added or that its current charge hasn't been removed.
+**Checking it Thrice.** Being a fey creature, the Grimfrel is bound by the customs and geases of the Winter Court, as such, it compulsively checks its list to ensure that a new charge hasn't been added or that its current charge hasn't been removed.
 
-  **It knows if you're Naughty or Nice**. In addition to seeking out its charge from the list, the Grimfrel is rumored to delight
-  in the flaying and eating of naughty children, presumably to procure more material to make vellum for its list.
+**It knows if you're Naughty or Nice**. In addition to seeking out its charge from the list, the Grimfrel is rumored to delight
+in the flaying and eating of naughty children, presumably to procure more material to make vellum for its list.
 
-  #### Combat Tactics
-  Grimfrel are employed by the Queen of Air and Darkness to subdue and retrieve those that have   earned the ire of the Unseelie Fey, whether it by offering insult, or breaking a fey bargain. The   Grimfrel tracks its charge invisibly, attacking when the target least expects it. During an ambush, it first strikes with its claws and Frostbite to capitalize upon catching its target sleeping or otherwise unaware. After delivering vicious slashes, it uses its Frigid Visage to sap the creature's stamina, to prevent escape. When the prey begins to falter and stumble, it then freezes it solid with Winter's Grasp, in preparation for transport back to the lands of Winter in the Feywild. Once its charge is captured, it may choose to seek out any nearby   humanoids, rewarding the nice with gifts, while flaying the naughty in their beds, sure to return to the lands of its Queen before the morning light.
+#### Combat Tactics
+Grimfrel are employed by the Queen of Air and Darkness to subdue and retrieve those that have   earned the ire of the Unseelie Fey, whether it by offering insult, or breaking a fey bargain. The   Grimfrel tracks its charge invisibly, attacking when the target least expects it. During an ambush, it first strikes with its claws and Frostbite to capitalize upon catching its target sleeping or otherwise unaware. After delivering vicious slashes, it uses its Frigid Visage to sap the creature's stamina, to prevent escape. When the prey begins to falter and stumble, it then freezes it solid with Winter's Grasp, in preparation for transport back to the lands of Winter in the Feywild. Once its charge is captured, it may choose to seek out any nearby   humanoids, rewarding the nice with gifts, while flaying the naughty in their beds, sure to return to the lands of its Queen before the morning light.
 
 ___
 > ## Grimfrel

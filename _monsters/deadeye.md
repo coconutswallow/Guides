@@ -11,13 +11,15 @@ image_credit: Art by Roman Chaliy (https://www.artstation.com/artwork/Vb658)
 creator: Colt
 ---
 
+## Deadeye
+
 Deadeyes are made from the souls of mortals that have been claimed by devils. A deadeye's soul is imbued into a corpse in the Material Plane by a powerful devil, and it is assigned a bounty to collect. This bounty is a mortal who has cheated the devil out of a contract, and who the devil seeks revenge against. The deadeye reclaims its mortal body and superficially resembles a zombie. However, instead of lifeless eyes, a deadeye's sockets burn with hellfire and flare brightly in the presence of its bounty. If the deadeye's original body was destroyed or is otherwise unavailable, the devil imbues the soul into another humanoid corpse. Regardless of the body the deadeye uses as a vessel, its bounty always recognizes that the deadeye has been sent to slay it.
-  
-  **Like a Man Possessed**. A deadeye has six months, six days and six hours to slay its bounty, and it is armed with a six-chambered hellfire pistol that can send its bounty straight to the Nine Hells. When its bounty is killed, or if the deadeye fails to kill its bounty before its time runs out, the deadeye's soul returns to the devil that owns it. If the bounty is too powerful for a single deadeye to claim by itself, a devil often sends multiple deadeyes for the job.
-  
-  **Unholy Justice.** A deadeye is similar to a revenant, only that it doesn't come back once it is destroyed. A deadeye has to rely on its skill and its cunning to track down a bounty. Often, a deadeye is assigned more than one bounty, and the names are inscribed onto the pistol's cylinder. If the deadeye's body is destroyed, its soul returns to the devil, where it can plead for another chance to complete its task. If a deadeye is successful in negotiations, it can plead for its soul to be released in exchange for damning multiple souls of those that have cheated the devil.
-  
-  **Undead Nature**. A deadeye doesn't require air, food, drink, or sleep.
+
+**Like a Man Possessed**. A deadeye has six months, six days and six hours to slay its bounty, and it is armed with a six-chambered hellfire pistol that can send its bounty straight to the Nine Hells. When its bounty is killed, or if the deadeye fails to kill its bounty before its time runs out, the deadeye's soul returns to the devil that owns it. If the bounty is too powerful for a single deadeye to claim by itself, a devil often sends multiple deadeyes for the job.
+
+**Unholy Justice.** A deadeye is similar to a revenant, only that it doesn't come back once it is destroyed. A deadeye has to rely on its skill and its cunning to track down a bounty. Often, a deadeye is assigned more than one bounty, and the names are inscribed onto the pistol's cylinder. If the deadeye's body is destroyed, its soul returns to the devil, where it can plead for another chance to complete its task. If a deadeye is successful in negotiations, it can plead for its soul to be released in exchange for damning multiple souls of those that have cheated the devil.
+
+**Undead Nature**. A deadeye doesn't require air, food, drink, or sleep.
 
 ___
 > ## Deadeye

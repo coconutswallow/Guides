@@ -9,34 +9,36 @@ category: 2014 Fair Game
 creator: Hawthorne Dragon Mash 2022
 ---
 
+## Temporal Drake
+
 *Studying the temporal drake has proven difficult. Not only are the creatures dangerous in the extreme, but the source of their many potent abilities is not readily apparent, even to the trained observer. Sages believe their erratic movement and elusive nature stems from some innate ability to manipulate time — hence, their name.*  
-  — Stannis Alensin, Loremaster and Royal Archivist
+— Stannis Alensin, Loremaster and Royal Archivist
 
-  Temporal drakes are draconic creatures with snake-like elongated bodies, but also have expansive wings, a long tail, and large tearing claws at the ends of their four limbs. A temporal drake seems to blink in and out of sight at unpredictable intervals, their gray scales reflecting light in odd patterns. A typical temporal drake measures 5 feet tall from the shoulder, with an 18-foot wingspan and weighing 1,250 pounds.
+Temporal drakes are draconic creatures with snake-like elongated bodies, but also have expansive wings, a long tail, and large tearing claws at the ends of their four limbs. A temporal drake seems to blink in and out of sight at unpredictable intervals, their gray scales reflecting light in odd patterns. A typical temporal drake measures 5 feet tall from the shoulder, with an 18-foot wingspan and weighing 1,250 pounds.
 
-  #### Temporal Predators
-  Similar to wyverns, temporal drakes are distant cousins of true dragons. While temporal dragons lack the intellect and size of true dragons, they prove dangerous foes nonetheless owing to their namesake ability to manipulate the flow of time.
+#### Temporal Predators
+Similar to wyverns, temporal drakes are distant cousins of true dragons. While temporal dragons lack the intellect and size of true dragons, they prove dangerous foes nonetheless owing to their namesake ability to manipulate the flow of time.
 
-  A temporal drake can step into and out of time, moving forward and backward in time or even into other times or out of time to a limited degree. While not capable of true time travel, a temporal drake shifts through time to appear as if teleporting while moving, to blink in and out of existence to avoid harm, to anticipate and react to the actions of others, and even to apparently resurrect itself from the dead. Temporal drakes can also shift other creatures out of time by temporarily trapping them in a suspended state separate from the normal time stream.
+A temporal drake can step into and out of time, moving forward and backward in time or even into other times or out of time to a limited degree. While not capable of true time travel, a temporal drake shifts through time to appear as if teleporting while moving, to blink in and out of existence to avoid harm, to anticipate and react to the actions of others, and even to apparently resurrect itself from the dead. Temporal drakes can also shift other creatures out of time by temporarily trapping them in a suspended state separate from the normal time stream.
 
-  Due to their ability to control time, some scholars theorize that temporal drakes draw their ancestry from the mighty and mythical time dragons of ages past. Regardless of the true nature of their origins, temporal drakes are deadly ambush predators, hunting animals and other creatures for food and for sport. Due to its physical prowess and innate capacity to control time, a temporal drake is supremely confident in its ability to assault even large groups of enemies, though it will flee when it finds it is overwhelmed.
+Due to their ability to control time, some scholars theorize that temporal drakes draw their ancestry from the mighty and mythical time dragons of ages past. Regardless of the true nature of their origins, temporal drakes are deadly ambush predators, hunting animals and other creatures for food and for sport. Due to its physical prowess and innate capacity to control time, a temporal drake is supremely confident in its ability to assault even large groups of enemies, though it will flee when it finds it is overwhelmed.
 
-  #### Trained Mounts
-  Most temporal drakes are wild and untamed, but a temporal drake that is hatched or caught from a young age can be trained to act as a mount. Though intelligent beings, a temporal drake requires training to accept a rider, a process that is both costly and dangerous and that takes at least six weeks to complete. Simply acquiring a temporal drake egg itself costs at least 15,000 gp on the open market, with hatchlings fetching in excess of 35,000 gp and more. Additionally, few individuals have the experience and skill to train such creatures, and those that do charge at least 5,000 gp or more for such a service. Once properly trained however, temporal drakes make for highly sought after intelligent mounts given their mobility and powerful supernatural abilities.
+#### Trained Mounts
+Most temporal drakes are wild and untamed, but a temporal drake that is hatched or caught from a young age can be trained to act as a mount. Though intelligent beings, a temporal drake requires training to accept a rider, a process that is both costly and dangerous and that takes at least six weeks to complete. Simply acquiring a temporal drake egg itself costs at least 15,000 gp on the open market, with hatchlings fetching in excess of 35,000 gp and more. Additionally, few individuals have the experience and skill to train such creatures, and those that do charge at least 5,000 gp or more for such a service. Once properly trained however, temporal drakes make for highly sought after intelligent mounts given their mobility and powerful supernatural abilities.
 
-  #### Tactics
-  - Temporal drakes are usually encountered either as a solitary creature or as a pair of drakes. They can also be encountered as trained intelligent mounts of resourceful and powerful enemies, such as of a well-connected **archmage** or **warlord**.
-  - Between its high speed, flight, Temporal Slide, and the flexibility afforded by Saw It Coming, a temporal drake can act as an effective skirmisher to dart in and out of the fray. It won't hesitate to wade into battle, but it will flee if it is outmatched.
-  - A temporal drake fights as a cunning and dangerous ambush predator that prefers to surprise its prey. It can use Time Slip to improve its own Dexterity (Stealth) checks in this regard.
-  - A temporal drake typically uses Time Slip in combat to improve a saving throw or to ensure it hits a key attack against a priority target. Between Time Slip and Progressive Initiative, a drake's initiative count will frequently change from round to round.
-  - A temporal drake prioritizes anyone that looks like a spellcaster in combat. It can potentially interrupt spells being cast by using Saw It Coming to make an attack or using Temporal Inversion in response to a spell being cast within its vicinity.
-  - The temporal drake's Bite removes a creature's ability to take reactions for a round, which can be used to prevent its foes from Readying their actions to attempt to counter Saw It Coming or to remove valuable reaction options from spellcasters.
-  - Temporal Inversion is a powerful ability that a temporal drake freely uses whenever available if a creature is not already under its effect. The drake prioritizes non-spellcasters or other creatures the drake suspects are weak against Wisdom saving throws so it can focus on other priority targets.
-  - Saw It Coming is a temporal drake's most versatile and flexible ability. At a minimum, the drake can use it to make an additional Bite attack each round, but it often prefers to use it defensively or to help grant it a key advantage. A drake can use it to move to a more advantageous position or to chase a fleeing enemy. A drake could also use it to avoid and negate attacks and spells targeted at it by moving out of range or behind total cover. A drake could also use it to Hide after making its attacks and moving behind cover.
-  - The drake that appears due to Recurrence only exists and acts for one round and as such will focus on inflicting as much damage during that round as it can without regard for its survival or well-being.
+#### Tactics
+- Temporal drakes are usually encountered either as a solitary creature or as a pair of drakes. They can also be encountered as trained intelligent mounts of resourceful and powerful enemies, such as of a well-connected **archmage** or **warlord**.
+- Between its high speed, flight, Temporal Slide, and the flexibility afforded by Saw It Coming, a temporal drake can act as an effective skirmisher to dart in and out of the fray. It won't hesitate to wade into battle, but it will flee if it is outmatched.
+- A temporal drake fights as a cunning and dangerous ambush predator that prefers to surprise its prey. It can use Time Slip to improve its own Dexterity (Stealth) checks in this regard.
+- A temporal drake typically uses Time Slip in combat to improve a saving throw or to ensure it hits a key attack against a priority target. Between Time Slip and Progressive Initiative, a drake's initiative count will frequently change from round to round.
+- A temporal drake prioritizes anyone that looks like a spellcaster in combat. It can potentially interrupt spells being cast by using Saw It Coming to make an attack or using Temporal Inversion in response to a spell being cast within its vicinity.
+- The temporal drake's Bite removes a creature's ability to take reactions for a round, which can be used to prevent its foes from Readying their actions to attempt to counter Saw It Coming or to remove valuable reaction options from spellcasters.
+- Temporal Inversion is a powerful ability that a temporal drake freely uses whenever available if a creature is not already under its effect. The drake prioritizes non-spellcasters or other creatures the drake suspects are weak against Wisdom saving throws so it can focus on other priority targets.
+- Saw It Coming is a temporal drake's most versatile and flexible ability. At a minimum, the drake can use it to make an additional Bite attack each round, but it often prefers to use it defensively or to help grant it a key advantage. A drake can use it to move to a more advantageous position or to chase a fleeing enemy. A drake could also use it to avoid and negate attacks and spells targeted at it by moving out of range or behind total cover. A drake could also use it to Hide after making its attacks and moving behind cover.
+- The drake that appears due to Recurrence only exists and acts for one round and as such will focus on inflicting as much damage during that round as it can without regard for its survival or well-being.
 
-  #### References
-  Decker, Jesse. "[Temporal Drake](https://web.archive.org/web/20161101074122/http:/archive.wizards.com/default.asp?x=dnd/mm/20031122a)." *Wizards of the Coast*, 22 November 2003.
+#### References
+Decker, Jesse. "[Temporal Drake](https://web.archive.org/web/20161101074122/http:/archive.wizards.com/default.asp?x=dnd/mm/20031122a)." *Wizards of the Coast*, 22 November 2003.
 
 ___
 > ## Temporal Drake

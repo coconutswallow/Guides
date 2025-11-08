@@ -11,37 +11,39 @@ image: https://64.media.tumblr.com/2be365272bcdce44b1f52c86cbdad149/tumblr_nmf2h
 image_credit: Art by #my.art
 ---
 
+## Weredragon
+
 A tall human looks up to the full moon slowly, their body gaining scales, a tail, and large leathery wings as they take flight out for the night's hunt.
 
-  #### Born from Magic
-  Before it spread en masse, weredragon lycanthropy was thought to be caused by powerful magic. Some say it came about due to the magic of a powerful magic item known as the *Wonderful Throne* said to have the ability to bestow weredragon lycanthropy, others argue it was due to longstanding efforts by the Cult of the Dragon, while others argue that the first weredragon was a fusion of a humanoid and dragon in a turbulent area of wild magic.
+#### Born from Magic
+Before it spread en masse, weredragon lycanthropy was thought to be caused by powerful magic. Some say it came about due to the magic of a powerful magic item known as the *Wonderful Throne* said to have the ability to bestow weredragon lycanthropy, others argue it was due to longstanding efforts by the Cult of the Dragon, while others argue that the first weredragon was a fusion of a humanoid and dragon in a turbulent area of wild magic.
 
-  Ultimately, most modern weredragons are created by a bite from an infected individual.
+Ultimately, most modern weredragons are created by a bite from an infected individual.
 
-  #### Often Confused
-  It was a common assumption that weredragons were song dragons, metallic dragons who choose to live as human women. This is not the case and has often been the cause of infection for whole adventuring parties. Others upon meeting a weredragon have mistaken them for the rare drow-dragons which is another inaccuracy that will often lead to death.
+#### Often Confused
+It was a common assumption that weredragons were song dragons, metallic dragons who choose to live as human women. This is not the case and has often been the cause of infection for whole adventuring parties. Others upon meeting a weredragon have mistaken them for the rare drow-dragons which is another inaccuracy that will often lead to death.
 
-  #### Draconic Urges
-  A weredragon often feels the impulses and inclinations of the kind of dragon their hybrid form is associated with, whether it be the vanity and arrogance of red dragons, the gregarious nature of brass dragons, or so forth. Whether or not a weredragon indulges or resists such urges is a decision each individual weredragon makes for themselves.
+#### Draconic Urges
+A weredragon often feels the impulses and inclinations of the kind of dragon their hybrid form is associated with, whether it be the vanity and arrogance of red dragons, the gregarious nature of brass dragons, or so forth. Whether or not a weredragon indulges or resists such urges is a decision each individual weredragon makes for themselves.
 
-  #### Curse of Lycanthropy
-  A humanoid creature can be afflicted with the curse of lycanthropy after being wounded by a lycanthrope, or if one or both of its parents are lycanthropes. A *remove curse* spell can rid an afflicted lycanthrope of the curse, but a natural born lycanthrope can be freed of the curse only with a *wish*.
+#### Curse of Lycanthropy
+A humanoid creature can be afflicted with the curse of lycanthropy after being wounded by a lycanthrope, or if one or both of its parents are lycanthropes. A *remove curse* spell can rid an afflicted lycanthrope of the curse, but a natural born lycanthrope can be freed of the curse only with a *wish*.
 
-  A lycanthrope can either resist its curse or embrace it. By resisting the curse, a lycanthrope retains its normal alignment and personality while in humanoid form. It lives its life as it always has, burying deep the draconic urges raging inside it. However, when the full moon rises, the curse becomes too strong to resist, transforming the individual into its draconic hybrid form that combines dragon and humanoid traits. When the moon wanes, the dragon within can be controlled once again. Especially if the cursed creature is unaware of its condition, it might not remember the events of its transformation, though those memories often haunt a lycanthrope as vivid dreams.
+A lycanthrope can either resist its curse or embrace it. By resisting the curse, a lycanthrope retains its normal alignment and personality while in humanoid form. It lives its life as it always has, burying deep the draconic urges raging inside it. However, when the full moon rises, the curse becomes too strong to resist, transforming the individual into its draconic hybrid form that combines dragon and humanoid traits. When the moon wanes, the dragon within can be controlled once again. Especially if the cursed creature is unaware of its condition, it might not remember the events of its transformation, though those memories often haunt a lycanthrope as vivid dreams.
 
-  Some individuals see little point in fighting the curse and accept what they are. With time and experience, they learn to master their shapechanging ability and can assume hybrid form at will. Most lycanthropes that embrace their draconic natures succumb to their draconic nature, taking on the characteristics and personality of their draconic form.
+Some individuals see little point in fighting the curse and accept what they are. With time and experience, they learn to master their shapechanging ability and can assume hybrid form at will. Most lycanthropes that embrace their draconic natures succumb to their draconic nature, taking on the characteristics and personality of their draconic form.
 
-  #### Variant: Full Dragon Lycan
-  Some weredragons have ascended beyond the basic hybrid form and can become full dragons instead. If you wish to run a weredragon as a Full Dragon Lycan, replace its Shapechanger trait with the one below. A weredragon with this variant trait who can assume the form of a young dragon of CR 10 or higher should be treated as the CR of that dragon when used in an encounter.
+#### Variant: Full Dragon Lycan
+Some weredragons have ascended beyond the basic hybrid form and can become full dragons instead. If you wish to run a weredragon as a Full Dragon Lycan, replace its Shapechanger trait with the one below. A weredragon with this variant trait who can assume the form of a young dragon of CR 10 or higher should be treated as the CR of that dragon when used in an encounter.
 
-  **Shapechanger (Young Dragon).** The weredragon has an associated young dragon form and can use a bonus action to polymorph into that young dragon, or back into its true form, which is humanoid. When the weredragon assumes its young dragon form, its statistics and capabilities are replaced with the statistics of a young dragon corresponding to the weredragon's Draconic Form (for example, a young amethyst dragon if the associated kind of dragon is an amethyst dragon), except any class features or legendary actions of that form.
+**Shapechanger (Young Dragon).** The weredragon has an associated young dragon form and can use a bonus action to polymorph into that young dragon, or back into its true form, which is humanoid. When the weredragon assumes its young dragon form, its statistics and capabilities are replaced with the statistics of a young dragon corresponding to the weredragon's Draconic Form (for example, a young amethyst dragon if the associated kind of dragon is an amethyst dragon), except any class features or legendary actions of that form.
 
-  In its young dragon form, the weredragon retains its alignment, hit points, Hit Dice, damage immunities, and Intelligence, Wisdom, and Charisma scores, as well as this trait. Any equipment it is wearing or carrying isn't transformed. It reverts to its true form if it dies.
+In its young dragon form, the weredragon retains its alignment, hit points, Hit Dice, damage immunities, and Intelligence, Wisdom, and Charisma scores, as well as this trait. Any equipment it is wearing or carrying isn't transformed. It reverts to its true form if it dies.
 
-  #### Player Characters as Lycanthropes
-  The *Monster Manual* has rules for characters afflicted with lycanthropy. The following text applies to weredragon characters specifically.
+#### Player Characters as Lycanthropes
+The *Monster Manual* has rules for characters afflicted with lycanthropy. The following text applies to weredragon characters specifically.
 
-  **Weredragon:** The character gains the weredragon's senses and a Strength of 20 if his or her score isn't already higher, and a +1 bonus to AC while in hybrid form (from natural armor). Attack and damage rolls for the natural weapons are based on Strength, and the save DC for their Werebreath is equal to 8 + the lycanthrope's proficiency bonus + the lycanthrope's Constitution modifier.
+**Weredragon:** The character gains the weredragon's senses and a Strength of 20 if his or her score isn't already higher, and a +1 bonus to AC while in hybrid form (from natural armor). Attack and damage rolls for the natural weapons are based on Strength, and the save DC for their Werebreath is equal to 8 + the lycanthrope's proficiency bonus + the lycanthrope's Constitution modifier.
 
 ___
 > ## Weredragon

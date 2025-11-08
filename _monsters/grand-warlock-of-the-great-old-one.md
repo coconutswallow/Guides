@@ -9,6 +9,10 @@ category: 2014 Fair Game
 creator: Monoxide At Work
 ---
 
+## Grand Warlock of the Great Old One
+
+
+
 ___
 > ## Grand Warlock of the Great Old One
 > *Medium Humanoid (any race), Any Alignment*

@@ -11,12 +11,14 @@ image: https://www.khwiki.com/images/thumb/0/08/Massive_Possessor_KHD.png/180px-
 image_credit: Art by Square Enix
 ---
 
+## Possessor
+
 A possessor is a type of lesser elemental formed from stray negative emotions and thoughts that have coalesced over a long period of time. It is emotionless and acts purely on instinct to survive by draining the life force of living creatures it comes across, often using its ability to possess objects to its advantage by lying in wait for unsuspecting individuals. That being said, they are quite frail in their naked forms, and thus rely on using objects of varying sizes to beat their prey into submission before moving in to safely feed.
 
-  Though they are not especially intelligent, they often gather in abandoned buildings near small settlements, lying in wait for curious individuals to investigate rumors of "the old haunted house on the hill."
+Though they are not especially intelligent, they often gather in abandoned buildings near small settlements, lying in wait for curious individuals to investigate rumors of "the old haunted house on the hill."
 
-  #### Note on Challenge Rating
-  A Possessor always favors beginning combat inside an object and is likely to surprise the adventuring party given its **False Appearance** trait. Treat the possessor as a **CR 3** (700 XP) if it begins combat already possessing an object.
+#### Note on Challenge Rating
+A Possessor always favors beginning combat inside an object and is likely to surprise the adventuring party given its **False Appearance** trait. Treat the possessor as a **CR 3** (700 XP) if it begins combat already possessing an object.
 
 ___
 > ## Possessor

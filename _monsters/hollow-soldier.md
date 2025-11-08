@@ -9,6 +9,10 @@ category: 2014 Fair Game
 creator: km.d
 ---
 
+## Hollow Soldier
+
+
+
 ___
 > ## Hollow Soldier
 > *Medium Undead, Neutral Evil*

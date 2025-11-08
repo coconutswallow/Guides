@@ -10,22 +10,24 @@ image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/478a0e49-5f76-4
 image_credit: Art by Papaya-Style
 ---
 
+## Mara
+
 Maras stalk the Region of Dreams for their endless craving for knowledge. They don't care what they learn, so long as it is something new. This knowledge can range from inconsequential, such as a baker using month old flour to create their bread, to valuable like the secret password to open a magical door deep in an ancient temple. For a reason yet unknown, the maras are able to maintain a physical form outside of the Region of Dreams. Some believe it is fueled by their need for knowledge.
-  
-  **Psionic Potential**
-  A mara acquires information through questions, riddles or when all else fails, through probing creatures thoughts for whatever it can find. The latter of which it prefers to do so by sitting on a creature's chest while it sleeps where its psionics are at its strongest, breaching through any mind as if the will has faded.
-  
-  **Odd Origins**
-  If the collective curiosity of an area is great enough while dreaming, then a mara is born. When coming into existence they know nothing, and though they don't need to eat they have a hunger inside them to be filled with information. A unique quirk about maras is that they can't understand each other. Therefore, they can't share anything amongst themselves leading to unusual behaviours when interacting with one another.
-  
-  **Silent Stalkers**
-  If a mara finds its way onto the Material Plane, it will wander aimlessly until it finds the closest town or settlement, slips into someone's home and usually cause distress in the process. Because of this, they are wrongly referred to as 'sleep paralysis demons', even though they aren't demonic in nature.
-  
-  **Curious Creatures**
-  Maras are not hostile creatures despite their methods and appearances, striking up conversations with people, granted they don't attack them straight away. If someone tells a mara something they don't know, then they will repay that information in kind with something the donor doesn't. This usually leads to people knowing secrets they shouldn't.
-  
-  **Unusual Nature**
-  The mara doesn't require air, food, drink, or sleep.
+
+**Psionic Potential**
+A mara acquires information through questions, riddles or when all else fails, through probing creatures thoughts for whatever it can find. The latter of which it prefers to do so by sitting on a creature's chest while it sleeps where its psionics are at its strongest, breaching through any mind as if the will has faded.
+
+**Odd Origins**
+If the collective curiosity of an area is great enough while dreaming, then a mara is born. When coming into existence they know nothing, and though they don't need to eat they have a hunger inside them to be filled with information. A unique quirk about maras is that they can't understand each other. Therefore, they can't share anything amongst themselves leading to unusual behaviours when interacting with one another.
+
+**Silent Stalkers**
+If a mara finds its way onto the Material Plane, it will wander aimlessly until it finds the closest town or settlement, slips into someone's home and usually cause distress in the process. Because of this, they are wrongly referred to as 'sleep paralysis demons', even though they aren't demonic in nature.
+
+**Curious Creatures**
+Maras are not hostile creatures despite their methods and appearances, striking up conversations with people, granted they don't attack them straight away. If someone tells a mara something they don't know, then they will repay that information in kind with something the donor doesn't. This usually leads to people knowing secrets they shouldn't.
+
+**Unusual Nature**
+The mara doesn't require air, food, drink, or sleep.
 
 ___
 > ## Mara

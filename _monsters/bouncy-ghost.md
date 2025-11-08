@@ -9,24 +9,26 @@ category: 2014 Fair Game
 creator: clay
 ---
 
+## Bouncy Ghost
+
 The Material Plane is no stranger to the appearance of a ghost; haunted, yearning creatures seeking to fulfill a last task or desire. These creatures haunt specific creatures, items, or locations, locked nearby until their final wish can be fulfilled.
-  
-  But in a world of magic and realms, sometimes otherworldly beings can slip through. An object carried by the wrong person at the wrong time, an entire town translocated across time and space, or, in the case of Bouncy Ghost, perhaps it was simply that poor caravan driver, with his pale skin, and constantly illness, that brought it in.
-  
-  The Bouncy Ghost is a creature driven of pure necessity. Unlike other ghosts, who seek to perform a task or desire before passing on, the Bouncy Ghost's only task is to not pass on at all. It is forever driven by a singular instictive desire; to return to a better life than it had when it died.
-  
-  Such a desire, of course, is almost always unfulfillable. An adventurer cannot simply slay a beast, or solve the ghosts murder to release the Bouncy Ghost, as the Bouncy Ghost demands nothing but life itself. One cannot revive the original corpse of the Bouncy Ghost, because it does not desire to return to the wretched state from which it passed on.
-  
-  So it is with this, the Bouncy Ghost forces itself into the unwilling bodies of those it can. But, its success is always short lived, for the pure malevolent energies of the Bouncy Ghost's eternal selfish ego begins to break down the unfortunate victim almost immediately. The victim finds itself trapped in their own body, aware that their words and actions are no longer their own. Their tongue twisting lies and deceit to ward off clerics and healers seeking to resolve the malady that has beset the poor victim. With this awareness, comes another realization: pain.
-  
-  The victim possessed by the Bouncy Ghost is fully aware that their body is beginning to reject the invader. Skin becomes loose and peels off, teeth rot and fall out, hair dries and twists until it becomes nothing more than dust. Quickly, the body's rejection causes the organs to fail, as the ghost is expelled from the now deceased host, and quickly seeks to find another to give it another brief taste of the life it so demands.
-  
-  It is in this manner that the Bouncy Ghost is named. Forever bouncing between hosts, struggling against its very self to find one powerful enough to survive its possession, yet forever failing. Unlike normal ghosts, there is slim chance of success to be found for the Bouncy Ghost. It will forever seek life, but bring only death.
-  
-  **Undead Nature**. A bouncy ghost doesn't require air, food, drink, or sleep.
-  
-  #### Note
-  A Bouncy Ghost is likely to be found in an adventure already possessing another creature, possibly insinuating itself among the party under false pretenses as a friendly NPC given its high Deception score. Such a ruse however is likely to be short-lived given the Bouncy Ghost's Body Rejection trait, and it will seek out other creatures, such as those of the adventuring party, to attempt to possess once its current body expires. Given its capacity to rapidly swap between bodies if needed with its Bounce Around, a Bouncy Ghost can present a deceptively deadly challenge to an adventuring party.
+
+But in a world of magic and realms, sometimes otherworldly beings can slip through. An object carried by the wrong person at the wrong time, an entire town translocated across time and space, or, in the case of Bouncy Ghost, perhaps it was simply that poor caravan driver, with his pale skin, and constantly illness, that brought it in.
+
+The Bouncy Ghost is a creature driven of pure necessity. Unlike other ghosts, who seek to perform a task or desire before passing on, the Bouncy Ghost's only task is to not pass on at all. It is forever driven by a singular instictive desire; to return to a better life than it had when it died.
+
+Such a desire, of course, is almost always unfulfillable. An adventurer cannot simply slay a beast, or solve the ghosts murder to release the Bouncy Ghost, as the Bouncy Ghost demands nothing but life itself. One cannot revive the original corpse of the Bouncy Ghost, because it does not desire to return to the wretched state from which it passed on.
+
+So it is with this, the Bouncy Ghost forces itself into the unwilling bodies of those it can. But, its success is always short lived, for the pure malevolent energies of the Bouncy Ghost's eternal selfish ego begins to break down the unfortunate victim almost immediately. The victim finds itself trapped in their own body, aware that their words and actions are no longer their own. Their tongue twisting lies and deceit to ward off clerics and healers seeking to resolve the malady that has beset the poor victim. With this awareness, comes another realization: pain.
+
+The victim possessed by the Bouncy Ghost is fully aware that their body is beginning to reject the invader. Skin becomes loose and peels off, teeth rot and fall out, hair dries and twists until it becomes nothing more than dust. Quickly, the body's rejection causes the organs to fail, as the ghost is expelled from the now deceased host, and quickly seeks to find another to give it another brief taste of the life it so demands.
+
+It is in this manner that the Bouncy Ghost is named. Forever bouncing between hosts, struggling against its very self to find one powerful enough to survive its possession, yet forever failing. Unlike normal ghosts, there is slim chance of success to be found for the Bouncy Ghost. It will forever seek life, but bring only death.
+
+**Undead Nature**. A bouncy ghost doesn't require air, food, drink, or sleep.
+
+#### Note
+A Bouncy Ghost is likely to be found in an adventure already possessing another creature, possibly insinuating itself among the party under false pretenses as a friendly NPC given its high Deception score. Such a ruse however is likely to be short-lived given the Bouncy Ghost's Body Rejection trait, and it will seek out other creatures, such as those of the adventuring party, to attempt to possess once its current body expires. Given its capacity to rapidly swap between bodies if needed with its Bounce Around, a Bouncy Ghost can present a deceptively deadly challenge to an adventuring party.
 
 ___
 > ## Bouncy Ghost

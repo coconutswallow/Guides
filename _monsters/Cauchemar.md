@@ -10,26 +10,28 @@ image: https://cdnb.artstation.com/p/assets/images/images/002/671/213/large/peta
 image_credit: "Art by Petar Milivojevic / Hawthorne Dream Mash 2021"
 ---
 
+## Cauchemar
+
 Nothing lasts forever, and the formations that arise in the Region of Dreams are especially ephemeral. When a desert can change to an ocean as quick as a thought, one could almost abandon the concept of permanence altogether.
 
-  Nevertheless, when a dreamscape discorporates into undifferentiated dream-stuff, it is possible for a small part to coagulate together into something more resilient and stable. Of course, without any external stimulus, even these forms are prone to breaking apart at a moment's notice.
+Nevertheless, when a dreamscape discorporates into undifferentiated dream-stuff, it is possible for a small part to coagulate together into something more resilient and stable. Of course, without any external stimulus, even these forms are prone to breaking apart at a moment's notice.
 
-  Occasionally, however, a denizen of the Region of Dreams will gather together a curated selection of these dream-stuff fragments. By combining solidified parts chosen from dreams (or dreamers) sharing similar qualities, it is possible to create something greater than the sum of its parts: a sapient consciousness consisting entirely of dream-stuff.
+Occasionally, however, a denizen of the Region of Dreams will gather together a curated selection of these dream-stuff fragments. By combining solidified parts chosen from dreams (or dreamers) sharing similar qualities, it is possible to create something greater than the sum of its parts: a sapient consciousness consisting entirely of dream-stuff.
 
-  #### Living Nightmares
-  A **cauchemar** is a creature composed of dream-stuff harvested from the dreams of the hateful, the selfish, and the cruel. Typically, it is created with the intent of using it as a servant or something akin to a pet; this goal rarely comes to fruition, as a cauchemar is an intelligent creature, and resents being beholden to another's orders.
+#### Living Nightmares
+A **cauchemar** is a creature composed of dream-stuff harvested from the dreams of the hateful, the selfish, and the cruel. Typically, it is created with the intent of using it as a servant or something akin to a pet; this goal rarely comes to fruition, as a cauchemar is an intelligent creature, and resents being beholden to another's orders.
 
-  Left to its own devices, a cauchemar wanders the Region of Dreams, searching for unsuspecting dreamers to terrorize. Luckily for the dreamers in question, this behaviour has no ramifications for a physical body, so long as the cauchemar stays within the Region of Dreams. This matters to the cauchemar little: traumatizing dreamers is, after all, its own reward.
+Left to its own devices, a cauchemar wanders the Region of Dreams, searching for unsuspecting dreamers to terrorize. Luckily for the dreamers in question, this behaviour has no ramifications for a physical body, so long as the cauchemar stays within the Region of Dreams. This matters to the cauchemar little: traumatizing dreamers is, after all, its own reward.
 
-  #### Psychic Leeches
-  Though not capable of freely travelling between the planes, cauchemars can be transported by others. Outside the Region of Dreams, a cauchemar is faced with a unique challenge posed by its inherently unstable biology. Dream-stuff is as rigid as a sand dune, and a creature composed of dream-stuff is at perpetual risk of fading into nothingness without a constant supply.
+#### Psychic Leeches
+Though not capable of freely travelling between the planes, cauchemars can be transported by others. Outside the Region of Dreams, a cauchemar is faced with a unique challenge posed by its inherently unstable biology. Dream-stuff is as rigid as a sand dune, and a creature composed of dream-stuff is at perpetual risk of fading into nothingness without a constant supply.
 
-  Fortunately for the cauchemar, leaving its home plane is not an automatic death sentence. A cauchemar can keep itself stable by feeding off the psyches of others. It is alarmingly well-adapted to feeding in this manner. A lapse as simple as forgetting the location of one's keys can be all the opening a cauchemar needs to leech energy away from a nearby creature. Indeed, entire households have perished from this, withering away with dementia-like symptoms as an unnoticed cauchemar assaulted their waking and sleeping minds.
+Fortunately for the cauchemar, leaving its home plane is not an automatic death sentence. A cauchemar can keep itself stable by feeding off the psyches of others. It is alarmingly well-adapted to feeding in this manner. A lapse as simple as forgetting the location of one's keys can be all the opening a cauchemar needs to leech energy away from a nearby creature. Indeed, entire households have perished from this, withering away with dementia-like symptoms as an unnoticed cauchemar assaulted their waking and sleeping minds.
 
-  #### Unusual Nature
-  The cauchemar doesn't require air, food, drink, or sleep. However, if outside the Region of Dreams, it requires a consistent diet of mental energy from hapless victims for sustenance. To gain the benefits of a long rest, it must either spend the entire rest in the Region of Dreams or have gained temporary hit points using its **Pernicious Feeding** trait in the past 24 hours.
+#### Unusual Nature
+The cauchemar doesn't require air, food, drink, or sleep. However, if outside the Region of Dreams, it requires a consistent diet of mental energy from hapless victims for sustenance. To gain the benefits of a long rest, it must either spend the entire rest in the Region of Dreams or have gained temporary hit points using its **Pernicious Feeding** trait in the past 24 hours.
 
-  For every 24 hours the cauchemar goes without benefiting from a long rest, it must succeed on a DC 15 Constitution saving throw or suffer 2 levels of exhaustion.
+For every 24 hours the cauchemar goes without benefiting from a long rest, it must succeed on a DC 15 Constitution saving throw or suffer 2 levels of exhaustion.
 
 ___
 > ## Cauchemar

@@ -8,16 +8,18 @@ category: 2014 Fair Game
 creator: GreenSprout
 ---
 
-The Aether Dreamstalker is a predator that inhabits the Region of Dreams, using the fitful sleep of those in the Material Plane to manifest a corporeal form. Aether Dreamstalkers hunt for consciousness, desiring the waking minds of mortal creatures. This forces them to hunt creatures who gather in groups where some remain awake while others rest.
-  
-  Adventurers are common prey to Aether Dreamstalkers, as the common adventurer strategy of maintaining a single person on watch guarantees plenty of sleeping gates for the Dreamstalker to manifest through, and a single vulnerable target for its prey.
-  
-  Once it renders a creature unconscious with its powers, a dreamstalker will begin to feed. When a dreamstalker feeds on a creature it's rendered unconscious, it devours the creature's waking mind, leaving it in a state of magical slumber from which it can't be awoken.
-  
-  Over the period of a week, a dreamstalker will digest the trapped consciousness after which it's destroyed and no mortal magic can return the creature to consciousness. After a consciousness is digested, a young cub dreamstalker buds off of the parent, and begins to grow into a adult dreamstalker over the course of six months.
+## Aether Dreamstalker
 
-  #### DM Notes: Devour Consciousness
-  Creatures that cannot be magically put to sleep, such as elves, are immune to the Devour Consciousness trait. A divine intervention can still awaken a creature whose consciousness has been digested via Devour Consciousness.
+The Aether Dreamstalker is a predator that inhabits the Region of Dreams, using the fitful sleep of those in the Material Plane to manifest a corporeal form. Aether Dreamstalkers hunt for consciousness, desiring the waking minds of mortal creatures. This forces them to hunt creatures who gather in groups where some remain awake while others rest.
+
+Adventurers are common prey to Aether Dreamstalkers, as the common adventurer strategy of maintaining a single person on watch guarantees plenty of sleeping gates for the Dreamstalker to manifest through, and a single vulnerable target for its prey.
+
+Once it renders a creature unconscious with its powers, a dreamstalker will begin to feed. When a dreamstalker feeds on a creature it's rendered unconscious, it devours the creature's waking mind, leaving it in a state of magical slumber from which it can't be awoken.
+
+Over the period of a week, a dreamstalker will digest the trapped consciousness after which it's destroyed and no mortal magic can return the creature to consciousness. After a consciousness is digested, a young cub dreamstalker buds off of the parent, and begins to grow into a adult dreamstalker over the course of six months.
+
+#### DM Notes: Devour Consciousness
+Creatures that cannot be magically put to sleep, such as elves, are immune to the Devour Consciousness trait. A divine intervention can still awaken a creature whose consciousness has been digested via Devour Consciousness.
 
 ___
 > ## Aether Dreamstalker

@@ -9,6 +9,10 @@ category: 2014 Fair Game
 creator: Grimm
 ---
 
+## Fury of the Night
+
+
+
 ___
 > ## Fury of the Night
 > *Large Monstrosity, Chaotic Evil*

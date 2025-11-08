@@ -9,20 +9,22 @@ category: 2014 Fair Game
 creator: Rexen, Lore from AD&D Ravenloft
 ---
 
+## Jack Frost
+
 Jack frosts are fey spirits of ice and cold who play dangerous games with the lives of mortals who wander into their territory. Cruel and capricious, they take great joy in the cold, frigid death of others, and will play elaborate games with the lives of those passing through their lands. Lurking near mountain tops or in arctic terrain, they delight in tormenting helpless creatures and subsist on the body heat that they drain from victims.
-  
-  **Deadly Shapechangers**. Jack frosts have several forms and can change from one to another at will. They may appear as a flurry of beautiful and intricately patterned snowflakes, a vaporous white cloud, or as small, pale blue fey with silver eyes and white or silvery icicle-like hair. Even in the heaviest snow or coldest region, they wear only gauzy white clothing and go barefoot. Those who might be identified as males wear tunics and trousers, while those regarded as females
-  prefer gowns. They all have mischievous, beguiling smiles, and speak their own language amongst themselves.
-  
-  **Chilling Predators**. In their snowflake forms, jack frosts are so beautiful that anyone viewing them falling from the sky and tumbling about are typically hypnotized by their loveliness. Once they have gotten close to their victims through this ruse, these ice spirits are seen as clouds of freezing vapor, and it is not uncommon for several jack frosts to combine and create a larger cloud. In this form they are able to sweep across their victims, chilling them to their very core.
-  After the initial attack, they have been known to change into their true forms to touch victims with chilling grasps, or to nip them with freezing, numbing bites. A jack frost’s touch sends a searing, freezing shock through its victim’s body that drains them of their body heat and prevents them from moving.  A bite from the jack frost renders the part bitten numb, and the favored targets for a jack frost’s bite are the lips, nose, ears, fingertips and the toes. The jack frost’s nip causes frostbite, and if the injured region is not properly tended to within the hour through gentle warming or the like, the part will have to be amputated as gangrene will set in.
-  
-  **Arctic Wanderers**. Jack frosts wander the arctic landscape seeking nourishment in the form of body heat and amusement in the torment of mortals, possessing several powers that endanger travelers in the regions they inhabit.  They have no true society as such, existing to play elaborate games. Their thought processes are completely alien to mortals, being composed of strange yearnings and sly, incomprehensible ploys to “win” the latest game, whatever it may be.
-  
-  **Unusual Ecology**. Jack frosts have no true sexes and reproduce by warming to the point of melting and reforming as two creatures. They often take treasure gained from former victims and strew it about to attract other prey to their current wandering grounds. Other than this, however, they have no use for such trinkets.
-  
-  #### Frostbite
-  This disease affects a creature bitten by a jack frost, in which symptoms occur 1d4 hours after infection and involves gangrene setting into a bitten body part. Before the symptoms occur, the infected creature must be tended to by gentle warming lasting for at least 10 minutes, or by spells or effects that remove disease. If not treated, the infected creature gains a **Lingering Injury** and the disease is then removed.
+
+**Deadly Shapechangers**. Jack frosts have several forms and can change from one to another at will. They may appear as a flurry of beautiful and intricately patterned snowflakes, a vaporous white cloud, or as small, pale blue fey with silver eyes and white or silvery icicle-like hair. Even in the heaviest snow or coldest region, they wear only gauzy white clothing and go barefoot. Those who might be identified as males wear tunics and trousers, while those regarded as females
+prefer gowns. They all have mischievous, beguiling smiles, and speak their own language amongst themselves.
+
+**Chilling Predators**. In their snowflake forms, jack frosts are so beautiful that anyone viewing them falling from the sky and tumbling about are typically hypnotized by their loveliness. Once they have gotten close to their victims through this ruse, these ice spirits are seen as clouds of freezing vapor, and it is not uncommon for several jack frosts to combine and create a larger cloud. In this form they are able to sweep across their victims, chilling them to their very core.
+After the initial attack, they have been known to change into their true forms to touch victims with chilling grasps, or to nip them with freezing, numbing bites. A jack frost’s touch sends a searing, freezing shock through its victim’s body that drains them of their body heat and prevents them from moving.  A bite from the jack frost renders the part bitten numb, and the favored targets for a jack frost’s bite are the lips, nose, ears, fingertips and the toes. The jack frost’s nip causes frostbite, and if the injured region is not properly tended to within the hour through gentle warming or the like, the part will have to be amputated as gangrene will set in.
+
+**Arctic Wanderers**. Jack frosts wander the arctic landscape seeking nourishment in the form of body heat and amusement in the torment of mortals, possessing several powers that endanger travelers in the regions they inhabit.  They have no true society as such, existing to play elaborate games. Their thought processes are completely alien to mortals, being composed of strange yearnings and sly, incomprehensible ploys to “win” the latest game, whatever it may be.
+
+**Unusual Ecology**. Jack frosts have no true sexes and reproduce by warming to the point of melting and reforming as two creatures. They often take treasure gained from former victims and strew it about to attract other prey to their current wandering grounds. Other than this, however, they have no use for such trinkets.
+
+#### Frostbite
+This disease affects a creature bitten by a jack frost, in which symptoms occur 1d4 hours after infection and involves gangrene setting into a bitten body part. Before the symptoms occur, the infected creature must be tended to by gentle warming lasting for at least 10 minutes, or by spells or effects that remove disease. If not treated, the infected creature gains a **Lingering Injury** and the disease is then removed.
 
 ___
 > ## Jack Frost

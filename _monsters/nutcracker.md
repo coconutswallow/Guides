@@ -9,22 +9,24 @@ category: 2014 Fair Game
 creator: Shaunuthun
 ---
 
+## The Nutcracker
+
 The Nutcrackers are small constructs created by fey and are most often seen during the winter. These deceptively durable dolls are hung from mantle pieces, shelves and trees during Midwinter. However, when it appears nobody is looking, they may be blessed by the fairies and given life.
-  
-  **Slayer of mice**
-  For reasons unknown to any but the original creators of the Nutcrackers, these dolls, whether good or evil, have an irrational hatred for small rodents such as mice or rats. They will often drop whatever they are doing and attempt to kill such creatures
 
-  **Protectors or Menace?**
-  Depending on the personality of the fey that gave life to the Nutcracker, it may be a paragon of chivalry, completing tasks like the ideal mortal knight. Stories of 'fairy godmothers' sending such brave soldiers to protect little children during the winter are well known, however, should the fey that makes the Nutcracker be malicious, then these little dolls can be terrors. Waiting till the sun goes down before springing to life to vandalise homes and assault their inhabitants. With that said, even the most evil and diabolical of Nutcrackers is unable to inflict serious harm upon children.
+**Slayer of mice**
+For reasons unknown to any but the original creators of the Nutcrackers, these dolls, whether good or evil, have an irrational hatred for small rodents such as mice or rats. They will often drop whatever they are doing and attempt to kill such creatures
 
-  **Grand performers**
-  When not saving (or ruining) Midwinter, these little dolls enjoy dancing, putting on dazzling displays, and they even have the innate ability to make others join in... whether they're willing or not!
+**Protectors or Menace?**
+Depending on the personality of the fey that gave life to the Nutcracker, it may be a paragon of chivalry, completing tasks like the ideal mortal knight. Stories of 'fairy godmothers' sending such brave soldiers to protect little children during the winter are well known, however, should the fey that makes the Nutcracker be malicious, then these little dolls can be terrors. Waiting till the sun goes down before springing to life to vandalise homes and assault their inhabitants. With that said, even the most evil and diabolical of Nutcrackers is unable to inflict serious harm upon children.
 
-  ### Combat Tactics
-  Before combat, the Nutcrackers will make use of their false appearance to trick their enemy into thinking they're only a simple Midwinter ornament, and surprise them when they least expect it. Then, when engaging into combat, the Nutcrackers will use their innate spellcasting to cast Otto's irresistible dance before going in and attacking with their rapiers, summoning their spiritual weapon on the following turn for additional damage. However, remember that the Nutcracker harbors an unending hatred for rodents. Should there ever be one around, it would become the sole target of its attention!
-  
-  #### Note 
-  Shaunuthun encourages you to run it however is fun for you and the players!
+**Grand performers**
+When not saving (or ruining) Midwinter, these little dolls enjoy dancing, putting on dazzling displays, and they even have the innate ability to make others join in... whether they're willing or not!
+
+### Combat Tactics
+Before combat, the Nutcrackers will make use of their false appearance to trick their enemy into thinking they're only a simple Midwinter ornament, and surprise them when they least expect it. Then, when engaging into combat, the Nutcrackers will use their innate spellcasting to cast Otto's irresistible dance before going in and attacking with their rapiers, summoning their spiritual weapon on the following turn for additional damage. However, remember that the Nutcracker harbors an unending hatred for rodents. Should there ever be one around, it would become the sole target of its attention!
+
+#### Note 
+Shaunuthun encourages you to run it however is fun for you and the players!
 
 ___
 > ## The Nutcracker

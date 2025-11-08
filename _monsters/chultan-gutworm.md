@@ -9,14 +9,16 @@ category: 2014 Fair Game
 creator: Jen and MonoXideAtWork
 ---
 
+## Chultan Gutworm
+
 **Ecology**
-  Chultan Gutworms are said to have originally been a species of parasite that infested small invertebrates, inhabiting the husks of the host and piloting it back to the nest where an endless supply of hosts awaited. In the presence of the Death Curse, a new subspecies emerged. This parasite preyed upon humanoid hosts by virtue of being larger and more aggressive organisms.
-  
-  **Mythology**
-  There are rumors of even larger hosts being infested by dozens of gutworms, perhaps explaining the presence of great zombified beasts in the Chultan jungles. Similar tales mention survivors of the lost tribe of Eshowe, utilizing the gutworms in necromantic rituals with the aim of granting everlasting life, or as some would tell it, a state of intelligent undeath where host and parasite work as one in service of the Nightsinger.
-  
-  #### Note
-  Chultan gutworms are likely to surprise a party adventuring through Chult's jungle, given its Natural Camouflage trait, and multiple gutworms ambushing a surprised adventuring party can be devastating between its Paralytic Stinger and Infest. It is also possible that an encounter with undead in Chult could turn into an unexpected fight, with gutworms bursting out of the corpse!
+Chultan Gutworms are said to have originally been a species of parasite that infested small invertebrates, inhabiting the husks of the host and piloting it back to the nest where an endless supply of hosts awaited. In the presence of the Death Curse, a new subspecies emerged. This parasite preyed upon humanoid hosts by virtue of being larger and more aggressive organisms.
+
+**Mythology**
+There are rumors of even larger hosts being infested by dozens of gutworms, perhaps explaining the presence of great zombified beasts in the Chultan jungles. Similar tales mention survivors of the lost tribe of Eshowe, utilizing the gutworms in necromantic rituals with the aim of granting everlasting life, or as some would tell it, a state of intelligent undeath where host and parasite work as one in service of the Nightsinger.
+
+#### Note
+Chultan gutworms are likely to surprise a party adventuring through Chult's jungle, given its Natural Camouflage trait, and multiple gutworms ambushing a surprised adventuring party can be devastating between its Paralytic Stinger and Infest. It is also possible that an encounter with undead in Chult could turn into an unexpected fight, with gutworms bursting out of the corpse!
 
 ___
 > ## Chultan Gutworm

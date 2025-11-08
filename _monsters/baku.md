@@ -10,24 +10,26 @@ image: https://cdna.artstation.com/p/assets/images/images/005/726/274/large/deni
 image_credit: Art by Deni Prakoso (https://www.artstation.com/jdprakoso)
 ---
 
+## Baku
+
 **Baku** are celestial beings that serve the goddess **Kwan Ying** by traversing the planes and devouring nightmares. While they can be found nearly anywhere on any plane where people dream, their iconography is most frequently found in **Kara-Tur**. According to Shou Lung legend, a person who wakes from a bad dream can call out to a baku three times for it to devour their nightmare. But calling for a baku must be done sparingly because, if it remains hungry after eating the nightmare, it may also devour the dreamer's hopes and desires, leaving behind a shell of a person. There is but only a little truth to this legend, for baku are creatures of good intent.
 
-  #### Kwan Ying's Nightmare Eaters
-  Baku serve their creator, Kwan Ying, the Sapphire Empress of Kara-Tur's Celestial Bureaucracy. Long ago, shortly after the beginning of humankind, Kwan Ying noticed that many of her followers were suffering in their sleep. Knowing that these bad dreams were destined to be consumed by **Dendar** if nothing was done to prevent them and wanting to end suffering, the Compassionate Kwan Ying traveled to the **Region of Dreams** and created the first baku from stray pieces of dream matter made real through her divine touch. She instructed the baku to travel the planes and ease the suffering of dreamers by devouring nightmares before Dendar could sink her fangs into them.
+#### Kwan Ying's Nightmare Eaters
+Baku serve their creator, Kwan Ying, the Sapphire Empress of Kara-Tur's Celestial Bureaucracy. Long ago, shortly after the beginning of humankind, Kwan Ying noticed that many of her followers were suffering in their sleep. Knowing that these bad dreams were destined to be consumed by **Dendar** if nothing was done to prevent them and wanting to end suffering, the Compassionate Kwan Ying traveled to the **Region of Dreams** and created the first baku from stray pieces of dream matter made real through her divine touch. She instructed the baku to travel the planes and ease the suffering of dreamers by devouring nightmares before Dendar could sink her fangs into them.
 
-  #### Celestial Chimera
-  While baku are spiritual beings that hail from the Region of Dreams, they have well-defined physical appearances. A baku is a **chimera**, typically having the body of a bear, trunk of an elephant, paws of a tiger, tail of an ox, and eyes of a rhinoceros. Beyond their chimeric composition, however, baku vary in appearance and coloration. Some baku have several sets of eyes or multiple tusks. And while tiger ears are most common, some baku have ox or elephant ears.
+#### Celestial Chimera
+While baku are spiritual beings that hail from the Region of Dreams, they have well-defined physical appearances. A baku is a **chimera**, typically having the body of a bear, trunk of an elephant, paws of a tiger, tail of an ox, and eyes of a rhinoceros. Beyond their chimeric composition, however, baku vary in appearance and coloration. Some baku have several sets of eyes or multiple tusks. And while tiger ears are most common, some baku have ox or elephant ears.
 
-  #### Dreamscapers
-  The celestial dream eater doesn't just gain sustenance from nightmares and dreams, it can also mold them and change them on a whim. Baku usually use this ability to collect the nightmare energies and create a new dream for the sleeping mortal to enjoy while they eat. In addition, while within the Region of Dreams, a baku can take on the shape of any beast. These two abilities render the baku the ultimate dreamscaper.
+#### Dreamscapers
+The celestial dream eater doesn't just gain sustenance from nightmares and dreams, it can also mold them and change them on a whim. Baku usually use this ability to collect the nightmare energies and create a new dream for the sleeping mortal to enjoy while they eat. In addition, while within the Region of Dreams, a baku can take on the shape of any beast. These two abilities render the baku the ultimate dreamscaper.
 
-  #### A Hunted Species
-  Creatures that thrive on nightmares terrorizing sleeping mortals threaten the baku's existence. Centuries of being hunted by servants of Dendar, night hags, fech, and the like have led to the near extinction of the already rare baku. Today, these servants of Kwan Ying are less trusting of beings they don't know. Baku are likely to remain invisible or disguise themselves as a beast and watch the strangers for a while to determine whether or not they can be trusted. Only after a baku determines that a stranger is unlikely to do it harm will it openly approach them.
+#### A Hunted Species
+Creatures that thrive on nightmares terrorizing sleeping mortals threaten the baku's existence. Centuries of being hunted by servants of Dendar, night hags, fech, and the like have led to the near extinction of the already rare baku. Today, these servants of Kwan Ying are less trusting of beings they don't know. Baku are likely to remain invisible or disguise themselves as a beast and watch the strangers for a while to determine whether or not they can be trusted. Only after a baku determines that a stranger is unlikely to do it harm will it openly approach them.
 
-  #### Beings of Mercy
-  Baku were created to help end and prevent suffering, not spread it. Ever hungry, they most frequently use their abilities to seek out and consume unpleasant dreams. When baku run into trouble, they prefer to flee or incapacitate their enemies. They only resort to lethal measures when there is no other means of escape or when a nearby dreaming mortal's life is threatened.
+#### Beings of Mercy
+Baku were created to help end and prevent suffering, not spread it. Ever hungry, they most frequently use their abilities to seek out and consume unpleasant dreams. When baku run into trouble, they prefer to flee or incapacitate their enemies. They only resort to lethal measures when there is no other means of escape or when a nearby dreaming mortal's life is threatened.
 
-  **Note** Size can change (shapechanger)
+**Note** Size can change (shapechanger)
 
 ___
 > ## Baku

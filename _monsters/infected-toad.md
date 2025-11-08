@@ -9,6 +9,10 @@ category: 2014 Fair Game
 creator: Ithaya
 ---
 
+## Infected Toad
+
+
+
 ___
 > ## Infected Toad
 > *Huge Beast, Unaligned*

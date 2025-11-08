@@ -9,23 +9,29 @@ category: 2014 Fair Game
 creator: BadWolf
 ---
 
+## Adult Faerie Linnorm
+
 Faerie linnorms are an incredibly rare subspecies of linnorm that originate from the twilight-bathed **Plane of Faerie**. While sharing many characteristics with their more cruel and spiteful abyssal-speaking cousins, faerie linnorms are shaped by the potent magic of their home plane, which grants them unique powers and abilities, including the empowerment and distortion of magic that is cast around them.
-  
-  #### Bargain Burners
-  Most other linnorm subspecies are infamously honorless and untrustworthy creatures that are known to go back on deals, but to a fey, their word is their bond. It is perhaps true that the first linnorms to find themselves within the Feywild lied and mooched their way through the four courts, but over time, that disdain for deals morphed under faerie magic. Today, linnorms native to the Feywild, like all other faeries, must **uphold the bargains they make**, but they possess the special power to unilaterally end fey deals struck by others—except those made with **Baba Yaga**. Faerie and mortal alike travel far and wide to beseech the local faerie linnorm to end their fey agreement. If the linnorm agrees, it burns the literal contract or something that symbolizes the deal, and the agreement ends without magical consequence for the breacher—though the other party may still seek just reparation for the unjust enrichment.
-  
-  #### Reclusive Nature
-  Like the majority of their species, faerie linnorms are fiercely territorial and reclusive. Faerie linnorms select secluded and concealed locations for their lairs and outfit them in elaborate, but usually nonlethal, traps. A faerie linnorm may live at the heart of an ever-changing hedge maze, deep within a hall of mirrors, or within a cave covered in disorienting mushrooms. Whatever the case, faerie linnorm seek solitude in their day-to-day lives. For faerie linnorms, isolation is practical. First, in stark contrast to their more evil-natured cousins, faerie linnorms are frequently and actively sought out by fey and mortal alike who wish to have their fey agreements rescinded. This constant bombardment has led them to seek peace and quiet from their earnest petitioners.
-  
-  Secondly, unilaterally ending contracts is dangerous work, potentially earning the ire of a powerful fey who did not want the agreement to end before they received payment. For these reasons faerie linnorm do not frequently burn fey agreements, and if they do, they often require the consent of all parties to the deal … that is, if the parties can first find the faerie linnorm and quell its anger for disturbing its serene solitude.
-  
-  #### A Cursed Death
-  The dangerous nature of their occupation led some of the first faerie linnorm to seek repercussions for those who would kill them and discourage anyone from trying. In an ancient pact, the faerie linnorm sacrificed their ability to burn any deals made by Baba Yaga, who in return, placed a curse upon the blood of all Feywild dwelling linnorm: a creature that kills a faerie linnorm falls victim to a curse. The curse can vary from one faerie linnorm to another, but the most common is one that inhibits the killer's ability to make any more deals in their own favor.
-  
-  #### Adult Faerie Linnorm Death Curse
-  When the linnorm dies, the creature that killed it must make a DC 17 Charisma saving throw or be cursed. The cursed creature finds it exceedingly difficult to sway others with their words: whenever the creature makes a Charisma check with a DC greater than 10 as part of a social interaction, the creature has disadvantage on the check and additionally gains a level of exhaustion if they succeed on the check.
-  
-  The linnorm's death curse can only be removed by the casting of a *remove curse*, *greater restoration*, or a similar spell while standing inside of a circle formed of the dead linnorm's hoarded collection of treasures and gold worth at least 1,500 GP. The cursed creature must then succeed on a DC 17 Charisma saving throw to remove the curse. If the curse is successfully removed in this way, the circle magically transforms into a faerie linnorm egg, which then vanishes to a random part of the Feywild. After three failed attempts, the curse's removal by ritual can't be attempted again for a year and a day. Alternatively, the linnorm's curse can be removed by the *wish* spell or by divine intervention without the need for the ritual.
+
+#### Bargain Burners
+
+Most other linnorm subspecies are infamously honorless and untrustworthy creatures that are known to go back on deals, but to a fey, their word is their bond. It is perhaps true that the first linnorms to find themselves within the Feywild lied and mooched their way through the four courts, but over time, that disdain for deals morphed under faerie magic. Today, linnorms native to the Feywild, like all other faeries, must **uphold the bargains they make**, but they possess the special power to unilaterally end fey deals struck by others—except those made with **Baba Yaga**. Faerie and mortal alike travel far and wide to beseech the local faerie linnorm to end their fey agreement. If the linnorm agrees, it burns the literal contract or something that symbolizes the deal, and the agreement ends without magical consequence for the breacher—though the other party may still seek just reparation for the unjust enrichment.
+
+#### Reclusive Nature
+
+Like the majority of their species, faerie linnorms are fiercely territorial and reclusive. Faerie linnorms select secluded and concealed locations for their lairs and outfit them in elaborate, but usually nonlethal, traps. A faerie linnorm may live at the heart of an ever-changing hedge maze, deep within a hall of mirrors, or within a cave covered in disorienting mushrooms. Whatever the case, faerie linnorm seek solitude in their day-to-day lives. For faerie linnorms, isolation is practical. First, in stark contrast to their more evil-natured cousins, faerie linnorms are frequently and actively sought out by fey and mortal alike who wish to have their fey agreements rescinded. This constant bombardment has led them to seek peace and quiet from their earnest petitioners.
+
+Secondly, unilaterally ending contracts is dangerous work, potentially earning the ire of a powerful fey who did not want the agreement to end before they received payment. For these reasons faerie linnorm do not frequently burn fey agreements, and if they do, they often require the consent of all parties to the deal … that is, if the parties can first find the faerie linnorm and quell its anger for disturbing its serene solitude.
+
+#### A Cursed Death
+
+The dangerous nature of their occupation led some of the first faerie linnorm to seek repercussions for those who would kill them and discourage anyone from trying. In an ancient pact, the faerie linnorm sacrificed their ability to burn any deals made by Baba Yaga, who in return, placed a curse upon the blood of all Feywild dwelling linnorm: a creature that kills a faerie linnorm falls victim to a curse. The curse can vary from one faerie linnorm to another, but the most common is one that inhibits the killer's ability to make any more deals in their own favor.
+
+#### Adult Faerie Linnorm Death Curse
+
+When the linnorm dies, the creature that killed it must make a DC 17 Charisma saving throw or be cursed. The cursed creature finds it exceedingly difficult to sway others with their words: whenever the creature makes a Charisma check with a DC greater than 10 as part of a social interaction, the creature has disadvantage on the check and additionally gains a level of exhaustion if they succeed on the check.
+
+The linnorm's death curse can only be removed by the casting of a *remove curse*, *greater restoration*, or a similar spell while standing inside of a circle formed of the dead linnorm's hoarded collection of treasures and gold worth at least 1,500 GP. The cursed creature must then succeed on a DC 17 Charisma saving throw to remove the curse. If the curse is successfully removed in this way, the circle magically transforms into a faerie linnorm egg, which then vanishes to a random part of the Feywild. After three failed attempts, the curse's removal by ritual can't be attempted again for a year and a day. Alternatively, the linnorm's curse can be removed by the *wish* spell or by divine intervention without the need for the ritual.
 
 ___
 > ## Adult Faerie Linnorm

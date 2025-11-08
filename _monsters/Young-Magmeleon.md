@@ -10,6 +10,9 @@ creator: Chaos-Draco
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e9288725-1432-44ad-b449-16cd4b933f30/denm77m-4e9b552c-1c9a-432d-94e1-8e7daa50c22a.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9lOTI4ODcyNS0xNDMyLTQ0YWQtYjQ0OS0xNmNkNGI5MzNmMzAvZGVubTc3bS00ZTliNTUyYy0xYzlhLTQzMmQtOTRlMS04ZTdkYWE1MGMyMmEuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.lyJvEICD5jNzDdX86mGmZZTnxHRqPNkbHvweo1ENqTQ
 image_credit: Art by Chaos-Draco
 ---
+
+## Young Magmeleon
+
 ## Magmeleon
 Magmeleon are rare lizardlike creatures with small wings protruding from their back and torchlike tail continually aflame. Their eggs are hidden inside volcanoes for safety and hatch only during volcanic eruptions. As such, some followers of **Kossuth** see them as a blessing from the Firelord and a sign of good luck.
 

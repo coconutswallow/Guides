@@ -11,19 +11,21 @@ image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/55a976ff-7886-4
 image_credit: Byzwa-Dher
 ---
 
-Not all lost travelers in the Shadowfell lose their sense of self and transform into Skulks. Some manage to keep a sliver of their original self, though with a fractured mind. If they somehow manage to survive the unforgiving lands and find a way back to the Material Plane, they are changed both physically and mentally. All aspects of their old personality are lost, creating a void they wish to fill through whatever means necessary.
-  
-  Due to **Slashers** clinging onto their old memories as best they can, they first try to return home to regain some normalcy. After some time, they get unnerved by the small details of their life and find their family can no longer be found. They then move onto the next town, hoping to fill the nothingness that can't be filled.
-  
-  #### A Slasher's Lair
-  When a slasher takes residence in any building for at least an hour, be it a castle, a storehouse or a tavern, it becomes the slasher's lair. When fighting in its lair the slasher can invoke its ability to take lair actions. On initiative count 20 (losing initiative ties), the slasher can take one lair action to cause one of the following effects. It can’t use the same effect two rounds in a row:
-  
-  - The floors within the lair becomes unnaturally resonant. Until a different lair action is used, creatures walking within the lair have disadvantage on Dexterity (Stealth) checks made to hide.
-  - The slasher chooses a room within the lair that is no larger in any dimension than 100 feet. Until a different lair action is used, any number of doors and windows it can see open or close as it wishes. Closed doors can be magically locked (needing a successful DC 20 Strength check to force open) until the slasher chooses to end the effect, or until the slasher uses this lair action again.
-  - The slasher chooses a corridor or room within the lair that is no larger in any dimension than 100 feet. All candles, torches or other open non-magical light sources are extinguished.
+## Slasher
 
-  #### Note
-  A slasher in its lair uses its high mobility and stealth to move freely throughout its lair, supplemented with its Shadow Stealth, Wardrobe Stride, and Lair Actions. It will seek to ambush its victims, such as using its Knife to grapple members of a split party, attacking and slaying its victim without giving them so much as a chance to scream for help.
+Not all lost travelers in the Shadowfell lose their sense of self and transform into Skulks. Some manage to keep a sliver of their original self, though with a fractured mind. If they somehow manage to survive the unforgiving lands and find a way back to the Material Plane, they are changed both physically and mentally. All aspects of their old personality are lost, creating a void they wish to fill through whatever means necessary.
+
+Due to **Slashers** clinging onto their old memories as best they can, they first try to return home to regain some normalcy. After some time, they get unnerved by the small details of their life and find their family can no longer be found. They then move onto the next town, hoping to fill the nothingness that can't be filled.
+
+#### A Slasher's Lair
+When a slasher takes residence in any building for at least an hour, be it a castle, a storehouse or a tavern, it becomes the slasher's lair. When fighting in its lair the slasher can invoke its ability to take lair actions. On initiative count 20 (losing initiative ties), the slasher can take one lair action to cause one of the following effects. It can’t use the same effect two rounds in a row:
+
+- The floors within the lair becomes unnaturally resonant. Until a different lair action is used, creatures walking within the lair have disadvantage on Dexterity (Stealth) checks made to hide.
+- The slasher chooses a room within the lair that is no larger in any dimension than 100 feet. Until a different lair action is used, any number of doors and windows it can see open or close as it wishes. Closed doors can be magically locked (needing a successful DC 20 Strength check to force open) until the slasher chooses to end the effect, or until the slasher uses this lair action again.
+- The slasher chooses a corridor or room within the lair that is no larger in any dimension than 100 feet. All candles, torches or other open non-magical light sources are extinguished.
+
+#### Note
+A slasher in its lair uses its high mobility and stealth to move freely throughout its lair, supplemented with its Shadow Stealth, Wardrobe Stride, and Lair Actions. It will seek to ambush its victims, such as using its Knife to grapple members of a split party, attacking and slaying its victim without giving them so much as a chance to scream for help.
 
 ___
 > ## Slasher

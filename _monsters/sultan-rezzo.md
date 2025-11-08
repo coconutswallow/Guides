@@ -9,33 +9,35 @@ category: 2014 Full DM Only
 creator: Kathy and Luolang
 ---
 
+## Sultan Rezzo the Marvelous
+
 Sultan Rezzo is a noble marid who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water.
-  
-  Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
 
-  ### Sultan Rezzo's Palace
-  Sultan Rezzo's palace is a grandiose building covered in coral and algae. It is filled with wonders and sensory delights that goes beyond one's wildest dreams. This opulent palace floats in a deep part of the Plane of Water and contains many luxurious chambers and rooms filled with air for his guests or slaves.
+Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
 
-  ### Roleplaying Sultan Rezzo
-  Rezzo is a Marid who sees himself as a superior being and expects to be treated as such. He wears fine and colorful clothes that resemble outfits usually seen in the Calimshan region.
-  
-  Rezzo has a great sense of self-importance, and considers himself, as well as other Marids, above all other kinds of genies. He tolerates djinn, dislikes dao, and despises efreet. Bribery and flattery are the best means for a humanoid to earn Rezzo's favor. In an adventuring group, whoever praises him the most will be seen by Rezzo as the most intelligent or worthy of the group and assume they are the leader. Rezzo loves to tell stories about himself or legends he knows, and although he will not directly lie about the events he recounts, he will greatly embellish them. He hates being interrupted while telling his stories, and will only offer a single warning before unleashing his wrath should this great offense be done to him.
-  
-  ***Personality Trait.*** There's nothing I like more than finding a new skillful slave.
-  
-  ***Ideal.*** Noble Obligation. It is my duty to protect and care for the people beneath me. (Good)
-  
-  ***Bond.*** I will do anything to prove myself superior to other genies.
-  
-  ***Flaw.*** Flattery brings down my defenses and I tend to be less cautious of those who compliment me.
-  
-  ***Quirk.*** I will always invite the one I deem most worthy in an adventuring group to join my kingdom as a slave.
+### Sultan Rezzo's Palace
+Sultan Rezzo's palace is a grandiose building covered in coral and algae. It is filled with wonders and sensory delights that goes beyond one's wildest dreams. This opulent palace floats in a deep part of the Plane of Water and contains many luxurious chambers and rooms filled with air for his guests or slaves.
 
-  #### Additional Notes
-  - Sultan Rezzo's crown is a ***helm of telepathy***. He frequently scans the surface thoughts of his guests to try and gauge them.
-  - Rezzo is a difficult individual to gauge or read and attempts to magically discern his thoughts or know if he is lying are foiled by his ***ring of mind shielding***.
-  - He continually maintains the ***tongues*** spell on himself to be able to speak with all manner of visitors from across the planes without issue.
-  - He has three ***sending stones*** linked to servants of his court on his person at all times.
+### Roleplaying Sultan Rezzo
+Rezzo is a Marid who sees himself as a superior being and expects to be treated as such. He wears fine and colorful clothes that resemble outfits usually seen in the Calimshan region.
+
+Rezzo has a great sense of self-importance, and considers himself, as well as other Marids, above all other kinds of genies. He tolerates djinn, dislikes dao, and despises efreet. Bribery and flattery are the best means for a humanoid to earn Rezzo's favor. In an adventuring group, whoever praises him the most will be seen by Rezzo as the most intelligent or worthy of the group and assume they are the leader. Rezzo loves to tell stories about himself or legends he knows, and although he will not directly lie about the events he recounts, he will greatly embellish them. He hates being interrupted while telling his stories, and will only offer a single warning before unleashing his wrath should this great offense be done to him.
+
+***Personality Trait.*** There's nothing I like more than finding a new skillful slave.
+
+***Ideal.*** Noble Obligation. It is my duty to protect and care for the people beneath me. (Good)
+
+***Bond.*** I will do anything to prove myself superior to other genies.
+
+***Flaw.*** Flattery brings down my defenses and I tend to be less cautious of those who compliment me.
+
+***Quirk.*** I will always invite the one I deem most worthy in an adventuring group to join my kingdom as a slave.
+
+#### Additional Notes
+- Sultan Rezzo's crown is a ***helm of telepathy***. He frequently scans the surface thoughts of his guests to try and gauge them.
+- Rezzo is a difficult individual to gauge or read and attempts to magically discern his thoughts or know if he is lying are foiled by his ***ring of mind shielding***.
+- He continually maintains the ***tongues*** spell on himself to be able to speak with all manner of visitors from across the planes without issue.
+- He has three ***sending stones*** linked to servants of his court on his person at all times.
 
 ___
 > ## Sultan Rezzo

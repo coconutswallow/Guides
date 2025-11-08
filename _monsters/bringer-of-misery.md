@@ -11,10 +11,12 @@ image-credit: Art by Vincent Lefevre
 creator: Killerspy
 ---
 
+## Bringer of Misery
+
 The Shadowfell is a dark and gloomy place for a person to find themselves in. The foolish who enter the Shadowfell unprepared often find it very unforgiving. Those that are not killed by the creatures that dwell on this plane can fall into despair and think they will never return home. They begin to blame anyone and everyone for their situation as their hopelessness and misery turn into madness. When they finally die, their ghost returns twisted by the plane into a bringer of misery. These undead creatures seek to return to the Material Plane and make everyone as miserable as they were at the end of their life. These creatures are rarely seen on the Material Plane because they did not know a way out of the plane in life so they spend all of their time trying to find one in death. When one does get through, it will use any means necessary to make as many people as miserable as possible. The two most common ways it does this is by killing the friends and family members of others or by haunting them until they slip into insanity.
-  
-  **Undead Nature**. 
-  A bringer of misery doesn't require air, food, drink, or sleep.
+
+**Undead Nature**. 
+A bringer of misery doesn't require air, food, drink, or sleep.
 
 ___
 > ## Bringer of Misery

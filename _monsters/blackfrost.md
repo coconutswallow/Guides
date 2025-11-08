@@ -10,24 +10,26 @@ image: https://staticdelivery.nexusmods.com/mods/952/images/thumbnails/3612/3612
 image_credit: "Art source unknown"
 ---
 
+## Blackfrost
+
 Blackfrost is a wandering knight that prowls through Icewind Dale. Some say he was once a mortal who met the cruel fate of freezing to death in the harsh winter, while others say he was a paladin twisted by a greater evil for a broken bargain of power. Whatever the truth, one thing is certain—anyone who gazes upon this being feels their hair stand on end.
 
-  #### Wild Hunt
-  The Wild Hunt warriors were originally a tribe of elves, fey, and celestials ruled over by a king—the Master Hunter. Although they were once a force of good on the Prime Material Plane, other elves came to fear them. Whenever a great force of evil threatened the lands of the Prime, they would hunt it down and annihilate it before returning to the Feywild.  
+#### Wild Hunt
+The Wild Hunt warriors were originally a tribe of elves, fey, and celestials ruled over by a king—the Master Hunter. Although they were once a force of good on the Prime Material Plane, other elves came to fear them. Whenever a great force of evil threatened the lands of the Prime, they would hunt it down and annihilate it before returning to the Feywild.  
 
-  However, the Master Hunter’s growing ambition and thirst for power corrupted them. Their behavior changed, and they began to threaten the balance between the Prime Material Plane and the Feywild. In response, a group of fey gathered allies and performed rituals to banish the Wild Hunt to the Far Realm. There, the members were warped and corrupted, embracing the madness. The Master Hunter, now known as the Spectral King, became the herald of one of the most destructive forces on Toril.  
+However, the Master Hunter’s growing ambition and thirst for power corrupted them. Their behavior changed, and they began to threaten the balance between the Prime Material Plane and the Feywild. In response, a group of fey gathered allies and performed rituals to banish the Wild Hunt to the Far Realm. There, the members were warped and corrupted, embracing the madness. The Master Hunter, now known as the Spectral King, became the herald of one of the most destructive forces on Toril.  
 
-  #### Fueled by Souls
-  The warriors of the Wild Hunt became juggernauts not only through Far Realm corruption but through their profane consumption of souls. Devouring souls fueled their might and temporarily filled the void within them. This constant hunger drove them to feed endlessly, for if they stopped, the emptiness would consume them.  
+#### Fueled by Souls
+The warriors of the Wild Hunt became juggernauts not only through Far Realm corruption but through their profane consumption of souls. Devouring souls fueled their might and temporarily filled the void within them. This constant hunger drove them to feed endlessly, for if they stopped, the emptiness would consume them.  
 
-  #### Arctic Wanderer
-  Blackfrost wanders the frozen wastes of Icewind Dale, seeking souls to return to the Spectral King in exchange for power—and to extend his own cursed existence.  
+#### Arctic Wanderer
+Blackfrost wanders the frozen wastes of Icewind Dale, seeking souls to return to the Spectral King in exchange for power—and to extend his own cursed existence.  
 
-  #### Soulbound
-  Blackfrost is bound by contract to the Spectral King, allowing him to arise anew even after destruction. Only if the Spectral King releases him—or is destroyed—can Blackfrost truly perish.  
+#### Soulbound
+Blackfrost is bound by contract to the Spectral King, allowing him to arise anew even after destruction. Only if the Spectral King releases him—or is destroyed—can Blackfrost truly perish.  
 
-  #### Undead Nature
-  Blackfrost doesn’t require air, food, drink, or sleep.
+#### Undead Nature
+Blackfrost doesn’t require air, food, drink, or sleep.
 
 ___
 > ## Blackfrost

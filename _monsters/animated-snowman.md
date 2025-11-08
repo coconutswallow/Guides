@@ -11,12 +11,14 @@ image: https://i.pinimg.com/736x/d7/1d/5f/d71d5f745b6cbf89efb11bc612b44dfd.jpg
 image_credit: Unknown (https://ca.pinterest.com/pin/476326098069095049/)
 ---
 
+## Animated Snowman
+
 The **Animated Snowman** is a mindless protector construct, originally built by nomadic gnomes of the High Ice to guard their settlement from marauding monsters. It is a sentinel that never abandons its post, even as the snow around it melts.
-  
-  These creatures create festive displays of snow and foliage to hide in plain sight (**False Appearance**). If a creature is killed near their display, they hide the body within another snowman and use the spilled blood to add macabre "rosy cheeks" and "festive stripes" to the scene. The snowman is highly resistant to physical damage due to its **Compacted Snow** trait, which increases its armor, but it is highly vulnerable to fire.
-  
-  #### Combat Tactics
-  The Animated Snowman relies on its **False Appearance** to ambush anything that doesn't resemble its gnomish creators. In combat, it uses **Winter's Breath** to deal burst cold damage and follows up with **Slam** attacks to quickly increase its armor class with **Compacted Snow**. It may use ranged **Snowball** attacks to slow targets with cold damage. The snowman is compelled to stay within the area it was charged to protect.
+
+These creatures create festive displays of snow and foliage to hide in plain sight (**False Appearance**). If a creature is killed near their display, they hide the body within another snowman and use the spilled blood to add macabre "rosy cheeks" and "festive stripes" to the scene. The snowman is highly resistant to physical damage due to its **Compacted Snow** trait, which increases its armor, but it is highly vulnerable to fire.
+
+#### Combat Tactics
+The Animated Snowman relies on its **False Appearance** to ambush anything that doesn't resemble its gnomish creators. In combat, it uses **Winter's Breath** to deal burst cold damage and follows up with **Slam** attacks to quickly increase its armor class with **Compacted Snow**. It may use ranged **Snowball** attacks to slow targets with cold damage. The snowman is compelled to stay within the area it was charged to protect.
 
 ___
 > ## Animated Snowman
