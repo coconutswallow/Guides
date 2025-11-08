@@ -1,100 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title | default: site.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}"> 
-</head>
-<body>
-    <header class="site-header">
-        <div class="header-content">
-            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <h1 class="site-title">{{ site.title | default: "Hawthorne Guild Guide" }}</h1>
-            
-            <div class="header-search-container">
-                <input type="text" id="search-input" placeholder="Search documents..." aria-label="Search documents">
-            </div>
-            </div>
-    </header>
-
-    <div id="sidebar-menu">
-        <div class="sidebar-header">
-            <h4 class="sidebar-title">Navigation</h4>
-            <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
-        </div>
-        
-        <div class="sidebar-nav">
-            {% for nav_item in site.navigation %}
-                {% if nav_item.url %}
-                    {% elsif nav_item.collection %}
-                    {% elsif nav_item.sections %}
-                    {% elsif nav_item.links %}
-                    {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-
-    <div id="menu-overlay"></div>
-
-    <ul id="search-results">
-      </ul>
-    <div class="page">
-        {{ content }}
-    </div>
-    
-    <footer class="site-footer">
-        <div class="footer-content">
-            <p>&copy; {{ 'now' | date: "%Y" }} Hawthorne D&D Guild</p>
-            <p>Built with Jekyll • Hosted on GitHub Pages</p>
-        </div>
-    </footer>
-    
-    <script>
-        // 1. BASE URL DEFINITION (Needed by search.js)
+<script>
+        // 1. BASE URL DEFINITION (Guaranteed to run first)
         const BASE_URL = "{{ site.baseurl }}"; 
         
-        // 2. MAIN MENU TOGGLE LOGIC (This must run successfully)
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebarMenu = document.getElementById('sidebar-menu');
-        const closeMenuBtn = document.getElementById('close-menu-btn');
-        const menuOverlay = document.getElementById('menu-overlay');
+        // 2. CORE MENU TOGGLE LOGIC (Essential, must run successfully)
+        try {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebarMenu = document.getElementById('sidebar-menu');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const menuOverlay = document.getElementById('menu-overlay');
 
-        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
-            function toggleMenu() {
-                sidebarMenu.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
-                document.body.classList.toggle('no-scroll');
+            if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+                function toggleMenu() {
+                    sidebarMenu.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
+                }
+
+                menuToggle.addEventListener('click', toggleMenu);
+                closeMenuBtn.addEventListener('click', toggleMenu);
+                menuOverlay.addEventListener('click', toggleMenu);
             }
-
-            menuToggle.addEventListener('click', toggleMenu);
-            closeMenuBtn.addEventListener('click', toggleMenu);
-            menuOverlay.addEventListener('click', toggleMenu);
+        } catch (e) {
+            console.error("Core Menu Toggle Failed:", e);
         }
         
-        // 3. PLACE OTHER NAVIGATION LOGIC (e.g., Submenu Toggles) HERE
-        // If your complex sub-menu code is still causing a crash, place it inside 
-        // a try...catch block to ensure the main toggle above is protected.
-        /*
+        // 3. COMPLEX SUBMENU LOGIC (Protected by try...catch)
+        // **Paste your full complex section/subsection toggle code here**
         try {
-             // START of complex submenu logic
-             const sectionToggles = document.querySelectorAll('.nav-section-toggle');
-             // ... rest of complex submenu logic ...
-             // END of complex submenu logic
+            // Handle section toggles
+            const sectionToggles = document.querySelectorAll('.nav-section-toggle');
+            sectionToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const navSection = this.parentElement;
+                    const submenu = navSection.querySelector('.nav-submenu');
+                    const icon = this.querySelector('.toggle-icon');
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
+                    
+                    if (!isExpanded) {
+                        submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                    } else {
+                        submenu.style.maxHeight = '0';
+                    }
+                });
+            });
+            
+            // Handle subsection toggles
+            const subsectionToggles = document.querySelectorAll('.nav-subsection-toggle');
+            subsectionToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const navSubsection = this.parentElement;
+                    const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
+                    const icon = this.querySelector('.toggle-icon');
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
+                    
+                    if (!isExpanded) {
+                        subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
+                    } else {
+                        subsubmenu.style.maxHeight = '0';
+                    }
+                });
+            });
+            
         } catch (e) {
-             console.warn("Submenu JS failed but main menu is protected:", e);
+            // If the submenu code fails (e.g., elements are null on a simple page), it won't break the main menu
+            console.warn("Submenu/Section JS failed to initialize:", e);
         }
-        */
 
     </script>
     
     <script src="{{ '/assets/js/lunr.js' | relative_url }}"></script> 
     <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
-</body>
-</html>
