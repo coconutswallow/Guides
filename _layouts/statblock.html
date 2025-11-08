@@ -131,7 +131,12 @@
 
     <div id="menu-overlay"></div>
     <div class="page">
+        {% if page.creator %}
+        <p class="monster-credit">**Creator:** {{ page.creator }}</p>
+        {% endif %}
+        
         {{ content }}
+        
         {% if page.image %}
         <div class="monster-image-container">
             <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
