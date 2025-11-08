@@ -418,10 +418,6 @@ tbody tr:hover {
 .role-adventurer {
   color: #999999;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
-
 }
 
 .role-trial-dm {
@@ -524,6 +520,7 @@ tbody tr:hover {
    ============================================ */
 .image-text-wrapper {
   display: flex;
+  flex-direction: row;
   gap: 2em;
   margin: 2em 0;
   align-items: flex-start;
@@ -552,6 +549,7 @@ tbody tr:hover {
 /* Text Container Styling (Ensures text wraps and fills remaining space) */
 .hierarchy-explanation {
   flex: 1;
+  min-width: 0;
 }
 
 .hierarchy-explanation h3 {
