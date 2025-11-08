@@ -45,6 +45,38 @@
 }
 
 /* ============================================
+   Search Results Styling
+   ============================================ */
+/* Hide the results list initially */
+#search-results {
+  list-style: none; /* Remove bullet points */
+  padding: 0;
+  margin: 10px auto;
+  max-width: 800px; /* Adjust as needed */
+  background: white; /* Make sure it's visible over content */
+  border: 1px solid #ccc;
+  z-index: 1000; /* Ensure it appears on top */
+  display: none; /* KEY: HIDE BY DEFAULT */
+}
+
+/* Show the results list when the script adds the 'active' class */
+#search-results.active {
+  display: block; 
+}
+
+/* Style individual results */
+#search-results li {
+  padding: 10px;
+  border-bottom: 1px dashed #eee;
+}
+
+#search-results li a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+/* ============================================
    Global Styles
    ============================================ */
 
