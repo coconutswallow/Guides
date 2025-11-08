@@ -522,11 +522,34 @@ tbody tr:hover {
 /* ============================================
    Images
    ============================================ */
-/* Styling for the text container and border */
-.hierarchy-image {
-  border: 2px solid var(--color-border);
+.image-text-wrapper {
+  display: flex;
+  gap: 2em;
+  margin: 2em 0;
+  align-items: flex-start;
 }
 
+/* Base Image Styling (Moved from MD file) */
+.hierarchy-image {
+  height: auto;
+  flex-shrink: 0; /* Prevents the image from being forced to shrink */
+  border: 2px solid var(--color-border); /* Added the border back */
+}
+
+/* Custom Image Sizes (Uses max-width to allow custom sizing) */
+.image-size-60 {
+  max-width: 60%;
+}
+
+.image-size-45 {
+  max-width: 45%;
+}
+
+.image-size-80 {
+  max-width: 80%;
+}
+
+/* Text Container Styling (Ensures text wraps and fills remaining space) */
 .hierarchy-explanation {
   flex: 1;
 }
@@ -540,6 +563,20 @@ tbody tr:hover {
 .hierarchy-explanation p {
   margin-bottom: 1em;
   line-height: 1.6;
+}
+
+/* Responsive Fix: Stack Image and Text on smaller screens */
+@media (max-width: 768px) {
+  .image-text-wrapper {
+    flex-direction: column; /* Forces the stacking */
+  }
+  
+  .hierarchy-image,
+  .image-size-60,
+  .image-size-45,
+  .image-size-80 {
+    max-width: 100%; /* Image fills the container when stacked */
+  }
 }
 
 /* ============================================
@@ -578,14 +615,7 @@ tbody tr:hover {
   th, td {
     padding: 0.5em;
   }
-  .image-text-wrapper {
-    flex-direction: column;
-  }
   
-  /* Use max-width: 100% on small screens so the image fills the space */
-  .hierarchy-image {
-    max-width: 100%;
-  }
 }
 
 @media (max-width: 480px) {
@@ -601,7 +631,21 @@ tbody tr:hover {
     font-size: 0.8em;
   }
 }
-
+@media (max-width: 768px) {
+  .doc-footer-nav {
+    flex-direction: column;
+    gap: 1em;
+  }
+  
+  .prev-link, .next-link {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .next-link {
+    margin-left: 0;
+  }
+}
 
 /* ============================================
    Documentation Footer Navigation
@@ -654,21 +698,7 @@ tbody tr:hover {
   font-size: 0.85em;
 }
 
-@media (max-width: 768px) {
-  .doc-footer-nav {
-    flex-direction: column;
-    gap: 1em;
-  }
-  
-  .prev-link, .next-link {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .next-link {
-    margin-left: 0;
-  }
-}
+
 /* ============================================
    Print Styles
    ============================================ */
