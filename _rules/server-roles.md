@@ -14,13 +14,13 @@ There are six Staff teams:
 
 * <span class="role-auditor">**Auditors**</span> and <span class="role-apprentice">**Auditor Apprentices**</span> oversee character reworks and help ensure server logs are accurate.
 
-* <span class="role-lore">**Lore Consultants**</span> and <span class="role-apprentice">**Lore Apprentices**</span> handle all matters about setting and server specific lore and assist players and DMs in being consistent with both.
+* <span class="role-lore">**Lore Consultants**</span> and <span class="role-auditor-apprentice">**Lore Apprentices**</span> handle all matters about setting and server specific lore and assist players and DMs in being consistent with both.
 
 * <span class="role-pr">**Player Relations**</span> oversees player/DM registration as well as handling server disputes and incident reports, including disciplinary action if necessary.
 
-* <span class="role-rules">**Rule Architects**</span> and <span class="role-apprentice">**Rule Apprentices**</span> handles all matters about official and server specific rules and mechanics, as well as allowed content on the server.
+* <span class="role-rules">**Rule Architects**</span> and <span class="role-rules-apprentice">**Rule Apprentices**</span> handles all matters about official and server specific rules and mechanics, as well as allowed content on the server.
 
-* <span class="role-engineer">**Engineers**</span> maintain the server's bots and backend.
+* <span class="role-engineer">**Engineers**</span> and <span class=".role-engineer-apprentice">**Engineers Apprentices**</span> maintain the server's bots and backend and sites.
 
 <span class="role-admin">**Admins**</span> oversee the running and management of the server in collaboration with the other Staff teams.
 
@@ -47,60 +47,78 @@ There are six Staff teams:
 <style>
 /* Role color styling */
 .role-adventurer {
-  color: #3498db;
+  color: #999999;
   font-weight: 600;
 }
 
 .role-trial-dm {
-  color: #9b59b6;
+  color: #25c059;
   font-weight: 600;
 }
 
 .role-full-dm {
-  color: #8e44ad;
-  font-weight: 600;
-}
-
-.role-staff {
-  color: #e74c3c;
+  color: #1a7939;
   font-weight: 600;
 }
 
 .role-auditor {
-  color: #e67e22;
+  color: #ff9900;
+  font-weight: 600;
+}
+
+.role-auditor-apprentice {
+  color: #d98843;
   font-weight: 600;
 }
 
 .role-lore {
-  color: #16a085;
+  color: #1f628e;
+  font-weight: 600;
+}
+
+.role-lore-apprentice {
+  color: #5296d5;
   font-weight: 600;
 }
 
 .role-pr {
-  color: #27ae60;
+  color: #ffd966;
   font-weight: 600;
+  background-color: #333333; /* Dark gray background */
+  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
+  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
 }
 
 .role-rules {
-  color: #2980b9;
+  color: #f975f2;
+  font-weight: 600;
+  background-color: #333333; /* Dark gray background */
+  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
+  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
+}
+
+.role-rules-apprentice {
+  color: #b179b8;
   font-weight: 600;
 }
 
 .role-engineer {
-  color: #34495e;
-  font-weight: 600;
-}
-
-.role-apprentice {
-  color: #95a5a6;
-  font-weight: 600;
-}
-
-.role-admin {
-  color: #c0392b;
+  color: #1abc9c;
   font-weight: 700;
   text-transform: uppercase;
 }
+
+.role-engineer-apprentice {
+  color: #63a493;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.role-admins {
+  color: #1c1c1c;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 
 /* Image with text wrap */
 .image-text-wrapper {
