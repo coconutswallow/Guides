@@ -8,7 +8,7 @@ url: "https://coconutswallow.github.io"
 collections:
   rules:
     output: true
-    permalink: /rules/:path/
+    permalink: /rules/:path.html
   players_guide:
     output: true
     permalink: /players-guide/:path/
