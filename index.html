@@ -11,6 +11,21 @@ title: Hawthorne Guild
   </p>
 </div>
 
+<!-- DEBUG: List all rules -->
+<div style="background: yellow; padding: 20px; margin: 20px 0;">
+  <h3>Debug: All Rules Pages</h3>
+  <ul>
+  {% for rule in site.rules %}
+    <li>
+      <strong>{{ rule.title }}</strong><br>
+      URL: {{ rule.url }}<br>
+      Path: {{ rule.path }}<br>
+      <a href="{{ rule.url | relative_url }}">Test Link</a>
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+
 <div class="home-section">
   <h2>
     <span class="section-icon">📚</span>
