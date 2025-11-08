@@ -1,4 +1,62 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}"> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-content">
+            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <h1 class="site-title">{{ site.title | default: "Hawthorne Guild Guide" }}</h1>
+            
+            <div class="header-search-container">
+                <input type="text" id="search-input" placeholder="Search documents..." aria-label="Search documents">
+            </div>
+            </div>
+    </header>
+
+    <div id="sidebar-menu">
+        <div class="sidebar-header">
+            <h4 class="sidebar-title">Navigation</h4>
+            <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
+        </div>
+        
+        <div class="sidebar-nav">
+            {% for nav_item in site.navigation %}
+                {% if nav_item.url %}
+                    {% elsif nav_item.collection %}
+                    {% elsif nav_item.sections %}
+                    {% elsif nav_item.links %}
+                    {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="menu-overlay"></div>
+
+    <ul id="search-results">
+      </ul>
+    <div class="page">
+        {{ content }}
+    </div>
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; {{ 'now' | date: "%Y" }} Hawthorne D&D Guild</p>
+            <p>Built with Jekyll • Hosted on GitHub Pages</p>
+        </div>
+    </footer>
+    
+    script>
         // 1. BASE URL DEFINITION (Guaranteed to run first for search.js)
         const BASE_URL = "{{ site.baseurl }}"; 
         
