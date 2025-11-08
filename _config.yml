@@ -28,10 +28,7 @@ collections:
     output: true
     permalink: /monster-compendium/:title/
 
-# ===========================================================================
 # Navigation structure - defines order and hierarchy
-# ===========================================================================
-
 navigation:
   - title: "🏠 Home"
     url: "/"
@@ -40,8 +37,8 @@ navigation:
     collection: rules
     items:
       - server-rules
-      - channel-and-server-roles
-      - privacy-policies
+      - server-roles
+      - privacy-policy
       
   - title: "⚔️ Player's Guide"
     collection: players_guide
@@ -92,7 +89,6 @@ navigation:
       - spells
       
   - title: "📖 Monster Compendium"
-    collection: field_guide
     sections:
       - title: "Monster Compendium"
         url: /monster-compendium/
@@ -100,28 +96,22 @@ navigation:
         url: /monster-compendium/monsters-submit/
       - title: "Statblock Builder"
         url: /monster-compendium/generator/
-      - title: "Locations"
-        folder: locations
         
   - title: "❓ FAQ"
     collection: faq
     
-# ===========================================================================
-# External links (commented but kept in for potential future use)
-# ===========================================================================  
-#  - title: "🔗 Other Resources"
-#    links:
-#      - title: "Old Player Guide"
-#        url: "https://sites.google.com/view/hawthorne-players-guide"
-#        external: true
-#      - title: "Old DM's Guide"
-#        url: "https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing"
-#        external: true
+  # Separator will be added with CSS/HTML
+  
+  - title: "🔗 Other Resources"
+    links:
+      - title: "Old Player Guide"
+        url: "https://sites.google.com/view/hawthorne-players-guide"
+        external: true
+      - title: "Old DM's Guide"
+        url: "https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing"
+        external: true
 
-# ===========================================================================
 # Defaults for front matter
-# ===========================================================================
-
 defaults:
   - scope:
       path: ""
