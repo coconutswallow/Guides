@@ -15,15 +15,15 @@ Sword dragons are a powerful and exceedingly rare variant of dragons, spawned fr
   **Sharp Appearance**. A sword dragon appears to be made out of various bladed weapons, and its scales take the appearance of sharpened daggers that extend to longer blades as it ages. Consuming vast quantities of magical items often causes the dragon to develop powerful traits that make it an epic foe.  The material of the dragon's scales also magically changes as the dragon ages: heavy iron for wyrmlings, tempered steel for young dragons, lightweight mithral for adults, and
   hardened adamantine for ancients. 
   
-  ###Customising a Sword Dragon. 
+  ### Customising a Sword Dragon. 
   To add traits to a sword dragon, choose the sword dragon stat block for the dragon's age category: wyrmling, young, adult or ancient. Then roll once each table for each successive age category the dragon has achieved, starting from wyrmling, to determine its additional traits. If a trait doesm't specify a saving throw DC, use the same DC as the dragon's breath weapon. 
   
   #### Sword Dragon Wyrmling Traits
   *d4 Sword Dragon Wyrmling Trait*
-  * 1 **Alert**. The dragon has advantage on initiative rolls. In addition, the dragon and any of its allies within 30 feet of it can't be surprised.
-  * 2 **Dominating**. The dragon can cast the command and dominate beast spells at will using its Innate Spellcasting.
-  * 3 **Vengeful**. The dragon can use its reaction to make one melee attack against a creature in its reach that dealt damage to it.
-  * 4 **Wrathful**. Once on each of its turns, if the dragon hits a target, each creature of its choice within 5 feet of the target takes 5 (2d4) slashing damage.
+  - 1 **Alert**. The dragon has advantage on initiative rolls. In addition, the dragon and any of its allies within 30 feet of it can't be surprised.
+  - 2 **Dominating**. The dragon can cast the command and dominate beast spells at will using its Innate Spellcasting.
+  - 3 **Vengeful**. The dragon can use its reaction to make one melee attack against a creature in its reach that dealt damage to it.
+  - 4 **Wrathful**. Once on each of its turns, if the dragon hits a target, each creature of its choice within 5 feet of the target takes 5 (2d4) slashing damage.
   
   #### Young Sword Dragon Traits
   *d4 Young Sword Dragon Trait*
@@ -52,7 +52,9 @@ Sword dragons are a powerful and exceedingly rare variant of dragons, spawned fr
   - 4 **Vorpal**. The dragon's attacks and breath weapon ignore resistance to piercing and slashing damage. If the dragon scores a critical hit against a creature, the
   target must succeed on a Constitution saving throw or the dragon cuts off the target's head. The target dies if it can't survive without the lost head. A creature that
   doesn't have or need a head, or has legendary actions, instead takes an extra 27 (6d8) slashing damage.
+
 ---
+
 > ## Ancient Sword Dragon
 > *Gargantuan dragon, typically neutral*
 >
