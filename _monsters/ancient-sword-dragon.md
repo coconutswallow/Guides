@@ -15,17 +15,17 @@ Sword dragons are a powerful and exceedingly rare variant of dragons, spawned fr
   **Sharp Appearance**. A sword dragon appears to be made out of various bladed weapons, and its scales take the appearance of sharpened daggers that extend to longer blades as it ages. Consuming vast quantities of magical items often causes the dragon to develop powerful traits that make it an epic foe.  The material of the dragon's scales also magically changes as the dragon ages: heavy iron for wyrmlings, tempered steel for young dragons, lightweight mithral for adults, and
   hardened adamantine for ancients. 
   
-  ### Customising a Sword Dragon. 
+### Customising a Sword Dragon. 
   To add traits to a sword dragon, choose the sword dragon stat block for the dragon's age category: wyrmling, young, adult or ancient. Then roll once each table for each successive age category the dragon has achieved, starting from wyrmling, to determine its additional traits. If a trait doesm't specify a saving throw DC, use the same DC as the dragon's breath weapon. 
   
-  #### Sword Dragon Wyrmling Traits
+#### Sword Dragon Wyrmling Traits
   *d4 Sword Dragon Wyrmling Trait*
   - 1 **Alert**. The dragon has advantage on initiative rolls. In addition, the dragon and any of its allies within 30 feet of it can't be surprised.
   - 2 **Dominating**. The dragon can cast the command and dominate beast spells at will using its Innate Spellcasting.
   - 3 **Vengeful**. The dragon can use its reaction to make one melee attack against a creature in its reach that dealt damage to it.
   - 4 **Wrathful**. Once on each of its turns, if the dragon hits a target, each creature of its choice within 5 feet of the target takes 5 (2d4) slashing damage.
   
-  #### Young Sword Dragon Traits
+#### Young Sword Dragon Traits
   *d4 Young Sword Dragon Trait*
   - 1 **Baneful**. The dragon has advantage on attack rolls against a particular kind of creature, and those creatures have disadvantage on saving throws against
   the dragon's breath weapon. The kind of creature can be a type, race, or group.
@@ -36,7 +36,7 @@ Sword dragons are a powerful and exceedingly rare variant of dragons, spawned fr
   resistance. 
   - 4 **Vicious**. If the dragon scores a critical hit against a creature, it rolls damage dice three times, instead of twice.
   
-  #### Adult Sword Dragon Traits
+#### Adult Sword Dragon Traits
   *d4 Adult Sword Dragon Trait*
   - 1 **Commanding**. Once on each of its turns, the dragon can enable one other creature within 60 feet of it to make one weapon attack as a reaction, move up to its
   speed as a reaction, or gain the benefits of the Dodge action.
@@ -44,7 +44,7 @@ Sword dragons are a powerful and exceedingly rare variant of dragons, spawned fr
   - 3 **Slaying**. Once on each of its turns, if the dragon hits a creature that has 100 hit points or fewer, the dragon can force the creature to succeed on a DC 15 Constitution saving throw or die. 
   - 4 **Swift**. The dragon can make one attack as a bonus action on each of its turns.
   
-  #### Ancient Sword Dragon Traits
+#### Ancient Sword Dragon Traits
   *d4 Ancient Sword Dragon Trait*
   - 1 **Avenging**. The dragon's attacks deal an additional 11 (2d10) radiant damage. In addition, the dragon and any allies within 30 feet of it have advantage on saving throws against spells and magical effects. 
   - 2 **Lucky**. The dragon has advantage on all saving throws. In addition, the dragon can reroll one attack roll, ability check, or saving throw it dislikes, and it must use the second roll. Once it uses this trait to reroll, it can't do so again until the start of its next turn.
