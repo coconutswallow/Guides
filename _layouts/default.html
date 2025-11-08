@@ -60,32 +60,37 @@
         // 1. BASE URL DEFINITION (Needed by search.js)
         const BASE_URL = "{{ site.baseurl }}"; 
         
-        // 2. MAIN MENU TOGGLE LOGIC WRAPPED IN TRY/CATCH
-        try {
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebarMenu = document.getElementById('sidebar-menu');
-            const closeMenuBtn = document.getElementById('close-menu-btn');
-            const menuOverlay = document.getElementById('menu-overlay');
+        // 2. MAIN MENU TOGGLE LOGIC (This must run successfully)
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const menuOverlay = document.getElementById('menu-overlay');
 
-            if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
-                function toggleMenu() {
-                    sidebarMenu.classList.toggle('active');
-                    menuOverlay.classList.toggle('active');
-                    document.body.classList.toggle('no-scroll');
-                }
-
-                menuToggle.addEventListener('click', toggleMenu);
-                closeMenuBtn.addEventListener('click', toggleMenu);
-                menuOverlay.addEventListener('click', toggleMenu);
+        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+            function toggleMenu() {
+                sidebarMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.classList.toggle('no-scroll');
             }
-            
-            // NOTE: Any other existing, working menu JS (like section/subsection toggles) 
-            // must also be placed inside this script block.
-            
-        } catch (e) {
-            // Logs an error in the console but allows the rest of the scripts to run
-            console.error("Navigation JS failed to load:", e);
+
+            menuToggle.addEventListener('click', toggleMenu);
+            closeMenuBtn.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
         }
+        
+        // 3. PLACE OTHER NAVIGATION LOGIC (e.g., Submenu Toggles) HERE
+        // If your complex sub-menu code is still causing a crash, place it inside 
+        // a try...catch block to ensure the main toggle above is protected.
+        /*
+        try {
+             // START of complex submenu logic
+             const sectionToggles = document.querySelectorAll('.nav-section-toggle');
+             // ... rest of complex submenu logic ...
+             // END of complex submenu logic
+        } catch (e) {
+             console.warn("Submenu JS failed but main menu is protected:", e);
+        }
+        */
 
     </script>
     
