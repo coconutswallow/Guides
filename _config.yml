@@ -26,7 +26,7 @@ collections:
     permalink: /faq/:path/
   monsters:
     output: true
-    permalink: /field-guide/monster-compendium/:title/
+    permalink: /monster-compendium/:title/
 
 # Navigation structure - defines order and hierarchy
 navigation:
@@ -92,7 +92,7 @@ navigation:
     collection: field_guide
     sections:
       - title: "Monsters"
-        url: /field-guide/monsters/
+        url: /field-guide/monster-compendium/
       - title: "Locations"
         folder: locations
         
