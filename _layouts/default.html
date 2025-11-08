@@ -32,7 +32,7 @@
             <a href="{{ site.baseurl }}/" class="nav-link">🏠 Home</a>
             
             <!-- Server Rules -->
-            {% if site.rules.size > 0 %}
+            {% if site.rules and site.rules.size > 0 %}
             <div class="nav-section">
                 <button class="nav-section-toggle" aria-expanded="false">
                     <span class="toggle-icon">▶</span>
@@ -48,7 +48,7 @@
             {% endif %}
             
             <!-- Player's Guide -->
-            {% if site.players_guide.size > 0 %}
+            {% if site.players_guide and site.players_guide.size > 0 %}
             <div class="nav-section">
                 <button class="nav-section-toggle" aria-expanded="false">
                     <span class="toggle-icon">▶</span>
@@ -59,7 +59,7 @@
                     
                     <!-- Getting Started subsection -->
                     {% assign getting_started = pg_pages | where_exp: "item", "item.path contains 'getting-started'" %}
-                    {% if getting_started.size > 0 %}
+                    {% if getting_started and getting_started.size > 0 %}
                     <div class="nav-subsection">
                         <button class="nav-subsection-toggle" aria-expanded="false">
                             <span class="toggle-icon">▶</span>
@@ -75,7 +75,7 @@
                     
                     <!-- Character Creation subsection -->
                     {% assign char_creation = pg_pages | where_exp: "item", "item.path contains 'character-creation'" %}
-                    {% if char_creation.size > 0 %}
+                    {% if char_creation and char_creation.size > 0 %}
                     <div class="nav-subsection">
                         <button class="nav-subsection-toggle" aria-expanded="false">
                             <span class="toggle-icon">▶</span>
@@ -98,7 +98,7 @@
                     
                     <!-- Appendices subsection -->
                     {% assign appendices = pg_pages | where_exp: "item", "item.path contains 'appendices'" %}
-                    {% if appendices.size > 0 %}
+                    {% if appendices and appendices.size > 0 %}
                     <div class="nav-subsection">
                         <button class="nav-subsection-toggle" aria-expanded="false">
                             <span class="toggle-icon">▶</span>
@@ -116,7 +116,7 @@
             {% endif %}
             
             <!-- DM's Guide -->
-            {% if site.dms_guide.size > 0 %}
+            {% if site.dms_guide and site.dms_guide.size > 0 %}
             <div class="nav-section">
                 <button class="nav-section-toggle" aria-expanded="false">
                     <span class="toggle-icon">▶</span>
@@ -134,7 +134,7 @@
                     
                     <!-- Appendices subsection -->
                     {% assign dm_appendices = dm_pages | where_exp: "item", "item.path contains 'appendices'" %}
-                    {% if dm_appendices.size > 0 %}
+                    {% if dm_appendices and dm_appendices.size > 0 %}
                     <div class="nav-subsection">
                         <button class="nav-subsection-toggle" aria-expanded="false">
                             <span class="toggle-icon">▶</span>
@@ -152,7 +152,7 @@
             {% endif %}
             
             <!-- Arcana -->
-            {% if site.arcana.size > 0 %}
+            {% if site.arcana and site.arcana.size > 0 %}
             <div class="nav-section">
                 <button class="nav-section-toggle" aria-expanded="false">
                     <span class="toggle-icon">▶</span>
@@ -179,25 +179,27 @@
                     <a href="{{ site.baseurl }}/generator/">Statblock Builder</a>
                     
                     <!-- Locations subsection -->
-                    {% assign locations = site.field_guide | where_exp: "item", "item.path contains 'locations'" | sort: 'order' %}
-                    {% if locations.size > 0 %}
-                    <div class="nav-subsection">
-                        <button class="nav-subsection-toggle" aria-expanded="false">
-                            <span class="toggle-icon">▶</span>
-                            <span>Locations</span>
-                        </button>
-                        <div class="nav-subsubmenu">
-                            {% for page in locations %}
-                                <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-                            {% endfor %}
+                    {% if site.field_guide %}
+                        {% assign locations = site.field_guide | where_exp: "item", "item.path contains 'locations'" | sort: 'order' %}
+                        {% if locations and locations.size > 0 %}
+                        <div class="nav-subsection">
+                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                <span class="toggle-icon">▶</span>
+                                <span>Locations</span>
+                            </button>
+                            <div class="nav-subsubmenu">
+                                {% for page in locations %}
+                                    <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
             
             <!-- FAQ -->
-            {% if site.faq.size > 0 %}
+            {% if site.faq and site.faq.size > 0 %}
             <div class="nav-section">
                 <button class="nav-section-toggle" aria-expanded="false">
                     <span class="toggle-icon">▶</span>
