@@ -29,7 +29,7 @@ There are six Staff teams:
 ## Role Hierarchy Diagram
 
 <div class="image-text-wrapper">
-  <img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy" class="hierarchy-image image-size-60">
+  <img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy" class="hierarchy-image image-size-45">
   <div class="hierarchy-explanation">
     <h3>Understanding the Hierarchy</h3>
     <p>The diagram shows the organizational structure of the Hawthorne Guild server, with different levels of roles and responsibilities.</p>
