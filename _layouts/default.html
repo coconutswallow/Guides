@@ -40,7 +40,8 @@
                     {% assign collection_name = nav_item.collection %}
                     {% assign collection = site[collection_name] %}
                     
-                    {% if collection and collection.size > 0 %}
+                    {% if collection %}
+                    {% if collection.size > 0 %}
                     <!-- Only process collections where pages use 'default' or 'doc' layout -->
                     {% assign first_page = collection | first %}
                     {% assign page_layout = first_page.layout %}
@@ -110,6 +111,7 @@
                             {% endfor %}
                         </div>
                     </div>
+                    {% endif %}
                     {% endif %}
                     {% endif %}
                 

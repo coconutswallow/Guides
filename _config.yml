@@ -32,7 +32,7 @@ collections:
 # Navigation structure - defines order and hierarchy
 #
 # You only need to set this for top-level navigation, only. The sub-navigation is generated automatically based on what's in the folders 
-# (new files get added to the menu dynamically).
+# (new files get added to the side-nav menu dynamically).
 # ========================================================
 navigation:
   - title: "🏠 Home"
