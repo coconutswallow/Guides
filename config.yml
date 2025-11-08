@@ -1,0 +1,112 @@
+# Site settings
+title: "Hawthorne Guild Guide"
+description: "Comprehensive guide for the Hawthorne D&D Guild"
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
+
+# Collections for different guide sections
+collections:
+  rules:
+    output: true
+    permalink: /rules/:path/
+  players_guide:
+    output: true
+    permalink: /players-guide/:path/
+  dms_guide:
+    output: true
+    permalink: /dms-guide/:path/
+  arcana:
+    output: true
+    permalink: /arcana/:path/
+  field_guide:
+    output: true
+    permalink: /field-guide/:path/
+  monsters:
+    output: true
+    permalink: /field-guide/monsters/:path/
+  faq:
+    output: true
+    permalink: /faq/:path/
+
+# Navigation structure - defines order and hierarchy
+navigation:
+  - title: "Home"
+    url: "/"
+    
+  - title: "Server Rules"
+    collection: rules
+    items:
+      - server-rules
+      - channel-and-server-roles
+      - privacy-policies
+      
+  - title: "Player's Guide"
+    collection: players_guide
+    sections:
+      - title: "Getting Started"
+        folder: getting-started
+        items:
+          - about-hawthorne
+          - registering-as-an-adventurer
+      - title: "Character Creation"
+        folder: character-creation
+        items:
+          - character-creation
+          - your-mal
+      - title: "Playing Games"
+        file: playing-games
+      - title: "Downtime"
+        file: downtime
+      - title: "Appendices"
+        folder: appendices
+        items:
+          - 2024-games
+          - bastions
+          
+  - title: "DM's Guide"
+    collection: dms_guide
+    items:
+      - introduction
+      - hawthorne-dm-tag
+      - preparing-a-game
+      - running-a-game
+      - after-a-game
+      - miscellaneous
+    sections:
+      - title: "Appendices"
+        folder: appendices
+        items:
+          - applications
+          - midsummer-madness-reward-track
+          
+  - title: "Arcana"
+    collection: arcana
+    items:
+      - introduction
+      - backgrounds
+      - races-species
+      - classes-subclasses
+      - spells
+      
+  - title: "Field Guide"
+    collection: field_guide
+    sections:
+      - title: "Monsters"
+        url: /field-guide/monsters/
+      - title: "Locations"
+        folder: locations
+        
+  - title: "FAQ"
+    collection: faq
+
+# Defaults for front matter
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "monsters"
+    values:
+      layout: "statblock"

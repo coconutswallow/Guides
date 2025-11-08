@@ -1,97 +1,317 @@
 ---
 layout: default
-title: Hawthorne Field Guide
+title: Hawthorne Guild Guide
 ---
 
 <div class="home-hero">
-  <h1>Welcome to the Hawthorne Field Guide</h1>
+  <h1>Welcome to the Hawthorne Guild Guide</h1>
   <p class="hero-description">
-    A comprehensive digital compendium of guides, creatures, and locations for the Hawthorne Dungeons & Dragons Guild. 
+    Your comprehensive resource for everything Hawthorne - from server rules to character creation, 
+    DM guidance to monster compendiums, and everything in between.
   </p>
 </div>
 
-<!-- NEW SECTION: ALL GUIDES OVERVIEW -->
 <div class="home-section">
   <h2>
-    <span class="section-icon">📖</span>
-    Explore the Guides
+    <span class="section-icon">📚</span>
+    Getting Started
   </h2>
   <p class="section-description">
-    Dive into the dedicated guides for DMs, players, and world lore.
-  </p>
-  
-  <div class="card-grid">
-    
-    <!-- Dynamically generate cards for the main guides -->
-    {% for collection in site.collections %}
-      {% if collection.label != 'posts' and collection.output and collection.label != 'monsters' and collection.label != 'locations' %}
-        <div class="feature-card">
-          <h3>{{ collection.title }}</h3>
-          <p>A collection of resources, rules, and world information dedicated to {{ collection.title | downcase }}.</p>
-          <!-- Use the permalink path from the config, stripping the :title placeholder -->
-          {% assign link_path = collection.permalink | split: '/:title/' | first %}
-          <a href="{{ link_path | relative_url }}" class="card-button">View Guide</a>
-        </div>
-      {% endif %}
-    {% endfor %}
-
-  </div>
-</div>
-<!-- END NEW SECTION -->
-
-<hr style="margin: 4em 0; border-color: #58180D;">
-
-<div class="home-section">
-  <h2>
-    <span class="section-icon">🐉</span>
-    Field Guide: Monster Compendium
-  </h2>
-  <p class="section-description">
-    Explore our ever-growing bestiary of unique creatures crafted by the Hawthorne community. 
+    New to Hawthorne? Start here to learn about our community and how to begin your adventure.
   </p>
   
   <div class="card-grid">
     <div class="feature-card">
-      <h3>Browse Monsters</h3>
-      <img src="https://img.photouploads.com/file/PhotoUploads-com/jHlk.png" onerror="this.onerror=null;this.src='https://placehold.co/400x180/58180D/FDF1DC?text=Monsters';" alt="Browse Monsters" class="card-thumbnail">
-      <a href="{{ site.baseurl }}/field-guide/monsters/" class="card-button">View Compendium</a>
+      <h3>Server Rules</h3>
+      <p>Familiarize yourself with the rules and expectations of the Hawthorne community.</p>
+      <a href="{{ site.baseurl }}/rules/server-rules/" class="card-button">Read Rules</a>
     </div>
     
     <div class="feature-card">
-      <h3>Submit Your Monster</h3>
-      <p>Have a creature idea? Learn how to contribute your own creations to the Field Guide.</p>
-      <a href="{{ site.baseurl }}/monsters-submit/" class="card-button">Submission Instructions</a>
+      <h3>About Hawthorne</h3>
+      <p>Learn about our West Marches style server, our world, and what makes us unique.</p>
+      <a href="{{ site.baseurl }}/players-guide/getting-started/about-hawthorne/" class="card-button">Learn More</a>
     </div>
     
     <div class="feature-card">
-      <h3>Stat Block Generator</h3>
-      <p>Use our custom tool to easily create markdown files for submission.</p>
-      <a href="{{ site.baseurl }}/generator/" class="card-button">Open Generator</a>
+      <h3>Register as Adventurer</h3>
+      <p>Follow the steps to create your account and join the guild.</p>
+      <a href="{{ site.baseurl }}/players-guide/getting-started/registering-as-an-adventurer/" class="card-button">Get Started</a>
     </div>
   </div>
 </div>
 
 <div class="home-section">
   <h2>
-    <span class="section-icon">🗺️</span>
-    Field Guide: Locations
+    <span class="section-icon">⚔️</span>
+    For Players
   </h2>
   <p class="section-description">
-    Discover the major regions, cities, and points of interest in the world.
+    Everything you need to create characters, understand the rules, and thrive in Hawthorne.
   </p>
+  
   <div class="card-grid">
-    <!-- Link to the main locations collection index -->
     <div class="feature-card">
-      <h3>Explore Territories</h3>
-      <p>Maps, lore, and history of the known and forgotten lands.</p>
-      {% assign locations_link = site.collections | where: "label", "locations" | first %}
-      {% assign link_path = locations_link.permalink | split: '/:title/' | first %}
-      <a href="{{ link_path | relative_url }}" class="card-button">View Locations</a>
+      <h3>Character Creation</h3>
+      <p>Step-by-step guide to creating your Hawthorne character.</p>
+      <a href="{{ site.baseurl }}/players-guide/character-creation/character-creation/" class="card-button">Create Character</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>Playing Games</h3>
+      <p>Learn how to find and join games in the Hawthorne community.</p>
+      <a href="{{ site.baseurl }}/players-guide/playing-games/" class="card-button">Start Playing</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>Downtime Activities</h3>
+      <p>Discover what you can do between sessions to advance your character.</p>
+      <a href="{{ site.baseurl }}/players-guide/downtime/" class="card-button">Learn Downtime</a>
     </div>
   </div>
 </div>
 
+<div class="home-section">
+  <h2>
+    <span class="section-icon">🎲</span>
+    For Dungeon Masters
+  </h2>
+  <p class="section-description">
+    Resources and guidelines for running games in the Hawthorne community.
+  </p>
+  
+  <div class="card-grid">
+    <div class="feature-card">
+      <h3>DM's Guide</h3>
+      <p>Complete guide to preparing, running, and managing games in Hawthorne.</p>
+      <a href="{{ site.baseurl }}/dms-guide/introduction/" class="card-button">Read Guide</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>Monster Compendium</h3>
+      <p>Browse our collection of community-created monsters.</p>
+      <a href="{{ site.baseurl }}/monsters/" class="card-button">View Monsters</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>Statblock Builder</h3>
+      <p>Create professionally formatted monster statblocks for your games.</p>
+      <a href="{{ site.baseurl }}/generator/" class="card-button">Build Statblock</a>
+    </div>
+  </div>
+</div>
+
+<div class="home-section">
+  <h2>
+    <span class="section-icon">✨</span>
+    Game Content
+  </h2>
+  <p class="section-description">
+    Custom and official content available in Hawthorne campaigns.
+  </p>
+  
+  <div class="card-grid">
+    <div class="feature-card">
+      <h3>Arcana</h3>
+      <p>Spells, classes, backgrounds, and other character options.</p>
+      <a href="{{ site.baseurl }}/arcana/introduction/" class="card-button">Explore Arcana</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>Field Guide</h3>
+      <p>Locations, creatures, and lore of the Hawthorne world.</p>
+      <a href="{{ site.baseurl }}/field-guide/locations/domains-of-delight/" class="card-button">Explore World</a>
+    </div>
+    
+    <div class="feature-card">
+      <h3>FAQ</h3>
+      <p>Frequently asked questions about Hawthorne and D&D 5e.</p>
+      <a href="{{ site.baseurl }}/faq/" class="card-button">View FAQ</a>
+    </div>
+  </div>
+</div>
 
 <div class="home-credits">
-  <p>The Hawthorne Field Guide is a community project created and maintained by its dedicated DMs and players.</p>
+  <h2>About This Guide</h2>
+  <p>
+    The Hawthorne Guild Guide is a comprehensive digital resource maintained by the community. 
+    It combines official server documentation, player-created content, and DM resources all in one place.
+  </p>
+  <p>
+    Original Field Guide created by <strong>km.d</strong>, <strong>MonoxideAtWork</strong>, 
+    and <strong>Rexen</strong> with assistance from <strong>Kathy</strong> and the Lore Consultants 
+    and Rules Architects of the Hawthorne D&D Guild.
+  </p>
+  <p>
+    This digital guide maintained by the Hawthorne Engineering Team.
+  </p>
 </div>
+
+<style>
+.home-hero {
+  background: linear-gradient(135deg, #FDF1DC 0%, #F5E6D3 100%);
+  border: 3px solid #58180D;
+  border-radius: 0px;
+  padding: 3em 2em;
+  margin: 2em 0 3em 0;
+  text-align: center;
+}
+
+.home-hero h1 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 2.5em;
+  margin: 0 0 0.5em 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero-description {
+  font-family: var(--font-body);
+  color: #58180D;
+  font-size: 1.1em;
+  line-height: 1.6;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.home-section {
+  margin: 4em 0;
+}
+
+.home-section h2 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 2em;
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  border-bottom: 3px solid #58180D;
+  padding-bottom: 0.3em;
+}
+
+.section-icon {
+  font-size: 1.2em;
+}
+
+.section-description {
+  font-family: var(--font-body);
+  color: #58180D;
+  font-size: 1.05em;
+  line-height: 1.6;
+  margin-bottom: 2em;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2em;
+  margin-top: 2em;
+}
+
+.feature-card {
+  background: #FDF1DC;
+  border: 2px solid #58180D;
+  border-radius: 0px;
+  padding: 2em;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(88, 24, 13, 0.2);
+}
+
+.feature-card h3 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 1.4em;
+  margin: 0 0 0.5em 0;
+  text-transform: uppercase;
+}
+
+.feature-card p {
+  font-family: var(--font-body);
+  color: #58180D;
+  line-height: 1.5;
+  flex-grow: 1;
+  margin-bottom: 1.5em;
+}
+
+.card-button {
+  display: inline-block;
+  padding: 0.75em 1.5em;
+  background: #58180D;
+  color: #FDF1DC;
+  text-decoration: none;
+  border-radius: 0px;
+  font-family: var(--font-header);
+  font-size: 0.9em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: background 0.2s;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.card-button:hover {
+  background: #822000;
+}
+
+.home-credits {
+  background: #F5E6D3;
+  border: 2px solid #58180D;
+  border-radius: 0px;
+  padding: 2em;
+  margin: 4em 0 2em 0;
+}
+
+.home-credits h2 {
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 1.5em;
+  margin: 0 0 1em 0;
+  text-transform: uppercase;
+}
+
+.home-credits p {
+  font-family: var(--font-body);
+  color: #58180D;
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+
+.home-credits p:last-child {
+  margin-bottom: 0;
+}
+
+.home-credits strong {
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .home-hero h1 {
+    font-size: 1.8em;
+  }
+  
+  .hero-description {
+    font-size: 1em;
+  }
+  
+  .home-section h2 {
+    font-size: 1.6em;
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5em;
+  }
+  
+  .home-hero {
+    padding: 2em 1.5em;
+  }
+}
+</style>

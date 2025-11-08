@@ -975,9 +975,484 @@ pre code {
 }
 
 /* ============================================ */
+/* DOCUMENTATION LAYOUT STYLES */
+/* ============================================ */
+
+.doc-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.doc-content {
+    position: relative;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 1em;
+    padding: 0.5em 0;
+}
+
+.breadcrumb a {
+    color: #58180D;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-separator {
+    margin: 0 0.5em;
+    color: #999;
+}
+
+.breadcrumb-item {
+    color: #666;
+}
+
+/* Documentation Title */
+.doc-title {
+    font-family: var(--font-header);
+    color: #58180D;
+    font-size: 2.5em;
+    margin: 0.5em 0;
+    border-bottom: 3px solid #58180D;
+    padding-bottom: 0.3em;
+}
+
+/* Documentation Metadata */
+.doc-meta {
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #ddd;
+}
+
+.doc-author {
+    margin-right: 1em;
+}
+
+.doc-date {
+    font-style: italic;
+}
+
+/* Documentation Body */
+.doc-body {
+    font-family: var(--font-body);
+    line-height: 1.8;
+    color: #2c2c2c;
+}
+
+.doc-body h2 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+.doc-body h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+.doc-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 1.5em 0;
+}
+
+.doc-body table {
+    margin: 1.5em 0;
+}
+
+/* Table of Contents Sidebar */
+.doc-toc {
+    position: sticky;
+    top: 20px;
+    float: right;
+    width: 250px;
+    margin-left: 2em;
+    margin-bottom: 2em;
+    background: #FDF1DC;
+    border: 2px solid #58180D;
+    border-radius: 8px;
+    padding: 1.5em;
+}
+
+.doc-toc h3 {
+    font-family: var(--font-header);
+    font-size: 1.1em;
+    margin: 0 0 1em 0;
+    color: #58180D;
+    text-transform: uppercase;
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    margin: 0.5em 0;
+}
+
+.toc-h3 {
+    margin-left: 1em;
+}
+
+.toc-link {
+    color: #58180D;
+    text-decoration: none;
+    font-size: 0.95em;
+    line-height: 1.4;
+    display: block;
+    padding: 0.25em 0;
+}
+
+.toc-link:hover {
+    color: #822000;
+    text-decoration: underline;
+}
+
+/* Footer Navigation */
+.doc-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3em;
+    padding-top: 2em;
+    border-top: 2px solid #ddd;
+}
+
+.doc-footer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1em;
+    background: #FDF1DC;
+    border: 2px solid #58180D;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #58180D;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    max-width: 45%;
+}
+
+.doc-footer-nav a:hover {
+    background: #58180D;
+    color: #FDF1DC;
+}
+
+.doc-footer-nav .prev-link {
+    margin-right: auto;
+}
+
+.doc-footer-nav .next-link {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+.nav-arrow {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.nav-label {
+    font-weight: 600;
+}
+
+/* Subsection Styling */
+.nav-subsection {
+    margin-left: 0;
+}
+
+.nav-subsection-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px 20px 10px 30px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95em;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.nav-subsection-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-subsubmenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-subsubmenu a {
+    display: block;
+    padding: 8px 20px 8px 60px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.nav-subsubmenu a:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================ */
 /* RESPONSIVE DESIGN - MOBILE */
 /* Adjustments for screens 768px wide or smaller */
 /* ============================================ */
+/* ============================================ */
+/* DOCUMENTATION LAYOUT STYLES */
+/* ============================================ */
+
+.doc-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.doc-content {
+    position: relative;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 1em;
+    padding: 0.5em 0;
+}
+
+.breadcrumb a {
+    color: #58180D;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-separator {
+    margin: 0 0.5em;
+    color: #999;
+}
+
+.breadcrumb-item {
+    color: #666;
+}
+
+/* Documentation Title */
+.doc-title {
+    font-family: var(--font-header);
+    color: #58180D;
+    font-size: 2.5em;
+    margin: 0.5em 0;
+    border-bottom: 3px solid #58180D;
+    padding-bottom: 0.3em;
+}
+
+/* Documentation Metadata */
+.doc-meta {
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #ddd;
+}
+
+.doc-author {
+    margin-right: 1em;
+}
+
+.doc-date {
+    font-style: italic;
+}
+
+/* Documentation Body */
+.doc-body {
+    font-family: var(--font-body);
+    line-height: 1.8;
+    color: #2c2c2c;
+}
+
+.doc-body h2 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+.doc-body h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+.doc-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 1.5em 0;
+}
+
+.doc-body table {
+    margin: 1.5em 0;
+}
+
+/* Table of Contents Sidebar */
+.doc-toc {
+    position: sticky;
+    top: 20px;
+    float: right;
+    width: 250px;
+    margin-left: 2em;
+    margin-bottom: 2em;
+    background: #FDF1DC;
+    border: 2px solid #58180D;
+    border-radius: 8px;
+    padding: 1.5em;
+}
+
+.doc-toc h3 {
+    font-family: var(--font-header);
+    font-size: 1.1em;
+    margin: 0 0 1em 0;
+    color: #58180D;
+    text-transform: uppercase;
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    margin: 0.5em 0;
+}
+
+.toc-h3 {
+    margin-left: 1em;
+}
+
+.toc-link {
+    color: #58180D;
+    text-decoration: none;
+    font-size: 0.95em;
+    line-height: 1.4;
+    display: block;
+    padding: 0.25em 0;
+}
+
+.toc-link:hover {
+    color: #822000;
+    text-decoration: underline;
+}
+
+/* Footer Navigation */
+.doc-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3em;
+    padding-top: 2em;
+    border-top: 2px solid #ddd;
+}
+
+.doc-footer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1em;
+    background: #FDF1DC;
+    border: 2px solid #58180D;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #58180D;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    max-width: 45%;
+}
+
+.doc-footer-nav a:hover {
+    background: #58180D;
+    color: #FDF1DC;
+}
+
+.doc-footer-nav .prev-link {
+    margin-right: auto;
+}
+
+.doc-footer-nav .next-link {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+.nav-arrow {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.nav-label {
+    font-weight: 600;
+}
+
+/* Subsection Styling */
+.nav-subsection {
+    margin-left: 0;
+}
+
+.nav-subsection-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px 20px 10px 30px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95em;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.nav-subsection-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-subsubmenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-subsubmenu a {
+    display: block;
+    padding: 8px 20px 8px 60px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.nav-subsubmenu a:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
 
 @media (max-width: 768px) {
     /* Reduce base font size for mobile */
