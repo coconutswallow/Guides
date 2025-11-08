@@ -131,11 +131,12 @@
 
     <div id="menu-overlay"></div>
     <div class="page">
+        
+        {{ content }}
+        
         {% if page.creator %}
         <p class="monster-credit"><strong>Creator:</strong> {{ page.creator }}</p>
         {% endif %}
-        
-        {{ content }}
         
         {% if page.image %}
         <div class="monster-image-container">
