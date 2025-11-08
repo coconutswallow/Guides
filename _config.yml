@@ -21,9 +21,6 @@ collections:
   field_guide:
     output: true
     permalink: /field-guide/:path/
-  monsters:
-    output: true
-    permalink: /field-guide/monsters/:path/
   faq:
     output: true
     permalink: /faq/:path/
