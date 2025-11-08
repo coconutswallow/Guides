@@ -28,66 +28,36 @@ collections:
     output: true
     permalink: /monster-compendium/:title/
 
+# ========================================================
 # Navigation structure - defines order and hierarchy
+#
+# You only need to set this for top-level navigation, only. The sub-navigation is generated automatically based on what's in the folders 
+# (new files get added to the menu dynamically).
+# ========================================================
 navigation:
   - title: "🏠 Home"
     url: "/"
     
   - title: "📜 Rules & Roles"
     collection: rules
-    items:
-      - server-rules
-      - server-roles
-      - privacy-policy
+
       
   - title: "⚔️ Player's Guide"
     collection: players_guide
-    sections:
-      - title: "Getting Started"
-        folder: getting-started
-        items:
-          - about-hawthorne
-          - registering-as-an-adventurer
-      - title: "Character Creation"
-        folder: character-creation
-        items:
-          - character-creation
-          - your-mal
-      - title: "Playing Games"
-        file: playing-games
-      - title: "Downtime"
-        file: downtime
-      - title: "Appendices"
-        folder: appendices
-        items:
-          - 2024-games
-          - bastions
-          
+         
   - title: "🎲 DM's Guide"
     collection: dms_guide
-    items:
-      - introduction
-      - hawthorne-dm-tag
-      - preparing-a-game
-      - running-a-game
-      - after-a-game
-      - miscellaneous
-    sections:
-      - title: "Appendices"
-        folder: appendices
-        items:
-          - applications
-          - midsummer-madness-reward-track
-          
+  
   - title: "✨ Arcana"
     collection: arcana
-    items:
-      - introduction
-      - backgrounds
-      - races-species
-      - classes-subclasses
-      - spells
       
+  # =========================================================
+  # Monster Compendium Section
+  #
+  # Note that this is setup differently because the dynamic content generator in the compendium means these files are .html files, not markdown.
+  # Repeat this pattern for any future sections that need dynamic content generation.
+  # =========================================================
+
   - title: "📖 Monster Compendium"
     sections:
       - title: "Monster Compendium"
@@ -99,17 +69,19 @@ navigation:
         
   - title: "❓ FAQ"
     collection: faq
-    
+
+  # ========================================================  
   # Separator will be added with CSS/HTML
-  
-  - title: "🔗 Other Resources"
-    links:
-      - title: "Old Player Guide"
-        url: "https://sites.google.com/view/hawthorne-players-guide"
-        external: true
-      - title: "Old DM's Guide"
-        url: "https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing"
-        external: true
+  # Not used, ut just an example of how we can add external links to the menu if needed
+  # ========================================================
+  #- title: "🔗 Other Resources"
+  #  links:
+  #    - title: "Old Player Guide"
+  #      url: "https://sites.google.com/view/hawthorne-players-guide"
+  #      external: true
+  #    - title: "Old DM's Guide"
+  #      url: "https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing"
+  #      external: true
 
 # Defaults for front matter
 defaults:

@@ -36,7 +36,7 @@
                     <a href="{{ nav_item.url | relative_url }}" class="nav-link">{{ nav_item.title }}</a>
                 
                 {% elsif nav_item.collection %}
-                    <!-- Collection-based navigation -->
+                    <!-- Collection-based navigation (folder-based, auto-discovers all pages) -->
                     {% assign collection_name = nav_item.collection %}
                     {% assign collection = site[collection_name] %}
                     
@@ -47,63 +47,70 @@
                             <span>{{ nav_item.title }}</span>
                         </button>
                         <div class="nav-submenu">
-                            {% if nav_item.sections %}
-                                <!-- Has subsections -->
-                                {% for section in nav_item.sections %}
-                                    {% if section.url %}
-                                        <!-- Direct URL link -->
-                                        <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
-                                    {% elsif section.file %}
-                                        <!-- Single file reference -->
-                                        {% assign section_page = collection | where: "slug", section.file | first %}
-                                        {% if section_page %}
-                                            <a href="{{ section_page.url | relative_url }}">{{ section.title }}</a>
-                                        {% endif %}
-                                    {% elsif section.folder %}
-                                        <!-- Folder-based subsection -->
-                                        {% assign folder_pages = collection | where_exp: "item", "item.path contains section.folder" | sort: 'order' %}
-                                        {% if folder_pages and folder_pages.size > 0 %}
-                                        <div class="nav-subsection">
-                                            <button class="nav-subsection-toggle" aria-expanded="false">
-                                                <span class="toggle-icon">▶</span>
-                                                <span>{{ section.title }}</span>
-                                            </button>
-                                            <div class="nav-subsubmenu">
-                                                {% if section.items %}
-                                                    {% for item_slug in section.items %}
-                                                        {% assign item_page = folder_pages | where: "slug", item_slug | first %}
-                                                        {% if item_page %}
-                                                            <a href="{{ item_page.url | relative_url }}">{{ item_page.title }}</a>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% else %}
-                                                    {% for page in folder_pages %}
-                                                        <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-                                                    {% endfor %}
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            {% elsif nav_item.items %}
-                                <!-- Direct items list -->
-                                {% for item_slug in nav_item.items %}
-                                    {% assign item_page = collection | where: "slug", item_slug | first %}
-                                    {% if item_page %}
-                                        <a href="{{ item_page.url | relative_url }}">{{ item_page.title }}</a>
-                                    {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                <!-- No structure defined, list all pages -->
-                                {% assign pages = collection | sort: 'order' %}
-                                {% for page in pages %}
+                            {% assign all_pages = collection | sort: 'order' %}
+                            
+                            <!-- Group pages by folder for hierarchical display -->
+                            {% assign root_pages = all_pages | where_exp: "item", "item.path contains collection_name and item.path contains '/'" %}
+                            {% assign folder_paths = "" | split: "" %}
+                            
+                            <!-- First pass: identify all unique folders -->
+                            {% for page in root_pages %}
+                                {% assign path_parts = page.path | split: "/" %}
+                                {% if path_parts.size > 2 %}
+                                    {% assign folder = path_parts[1] %}
+                                    {% unless folder_paths contains folder %}
+                                        {% assign folder_paths = folder_paths | push: folder %}
+                                    {% endunless %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <!-- Display root-level pages first -->
+                            {% for page in all_pages %}
+                                {% assign path_parts = page.path | split: "/" %}
+                                {% if path_parts.size == 2 %}
                                     <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-                                {% endfor %}
-                            {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <!-- Then display folders with their contents -->
+                            {% for folder in folder_paths %}
+                                {% assign folder_pages = all_pages | where_exp: "item", "item.path contains folder" | sort: 'order' %}
+                                {% if folder_pages and folder_pages.size > 0 %}
+                                    {% assign first_page = folder_pages | first %}
+                                    {% assign folder_title = first_page.folder_title | default: folder | capitalize | replace: "-", " " | replace: "_", " " %}
+                                    
+                                    <div class="nav-subsection">
+                                        <button class="nav-subsection-toggle" aria-expanded="false">
+                                            <span class="toggle-icon">▶</span>
+                                            <span>{{ folder_title }}</span>
+                                        </button>
+                                        <div class="nav-subsubmenu">
+                                            {% for page in folder_pages %}
+                                                <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                     {% endif %}
+                
+                {% elsif nav_item.sections %}
+                    <!-- Sections without a collection (direct URLs) -->
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            <span>{{ nav_item.title }}</span>
+                        </button>
+                        <div class="nav-submenu">
+                            {% for section in nav_item.sections %}
+                                {% if section.url %}
+                                    <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
                 
                 {% elsif nav_item.links %}
                     <!-- External links section -->
