@@ -26,7 +26,7 @@ There are six Staff teams:
 
 ### Channel Roles
 <div class="image-text-wrapper">
-  <img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy" class="hierarchy-image image-size-45">
+  <img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy" class="hierarchy-image image-size-60">
   <div class="hierarchy-explanation">
     <p>In the Channels & Roles feature in discord, you can select and change what you would like to be pinged for, including game advertising (by type and character tier) or other such as text role-play.</p>
 
