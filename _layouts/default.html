@@ -38,12 +38,14 @@
                 {% elsif nav_item.collection %}
                     <!-- Collection-based navigation (folder-based, auto-discovers all pages) -->
                     {% assign collection_name = nav_item.collection %}
+                    {% assign collection = site[collection_name] %}
                     
-                    <!-- Skip monsters collection as it uses a different layout (statblock) -->
-                    {% if collection_name != "monsters" %}
-                        {% assign collection = site[collection_name] %}
+                    {% if collection and collection.size > 0 %}
+                    <!-- Only process collections where pages use 'default' or 'doc' layout -->
+                    {% assign first_page = collection | first %}
+                    {% assign page_layout = first_page.layout | default: "default" %}
                     
-                        {% if collection and collection.size > 0 %}
+                    {% if page_layout == "default" or page_layout == "doc" %}
                     <div class="nav-section">
                         <button class="nav-section-toggle" aria-expanded="false">
                             <span class="toggle-icon">▶</span>
