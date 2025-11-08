@@ -152,70 +152,25 @@
     </footer>
     
     <script>
+        // CORE MENU TOGGLE LOGIC (Main Hamburger/Close Button)
         const menuToggle = document.getElementById('menu-toggle');
         const sidebarMenu = document.getElementById('sidebar-menu');
-        const closeBtn = document.getElementById('close-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
         const menuOverlay = document.getElementById('menu-overlay');
-        const body = document.body;
 
-        function toggleMenu() {
-            if (!sidebarMenu || !menuOverlay) return;
-            const isOpen = sidebarMenu.classList.toggle('open');
-            menuOverlay.classList.toggle('open');
-            body.classList.toggle('menu-open', isOpen);
-        }
-
-        if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
-        if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
-        if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
-        
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768 && sidebarMenu && sidebarMenu.classList.contains('open')) {
-                setTimeout(toggleMenu, 50);
+        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+            function toggleMenu() {
+                sidebarMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
             }
-        });
 
-        // Handle main section toggles
-        const sectionToggles = document.querySelectorAll('.nav-section-toggle');
-        sectionToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const navSection = this.parentElement;
-                const submenu = navSection.querySelector('.nav-submenu');
-                const icon = this.querySelector('.toggle-icon');
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                
-                this.setAttribute('aria-expanded', !isExpanded);
-                icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-                
-                if (!isExpanded) {
-                    submenu.style.maxHeight = submenu.scrollHeight + 'px';
-                } else {
-                    submenu.style.maxHeight = '0';
-                }
-            });
-        });
-        
-        // Handle subsection toggles
-        const subsectionToggles = document.querySelectorAll('.nav-subsection-toggle');
-        subsectionToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const navSubsection = this.parentElement;
-                const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
-                const icon = this.querySelector('.toggle-icon');
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                
-                this.setAttribute('aria-expanded', !isExpanded);
-                icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-                
-                if (!isExpanded) {
-                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
-                } else {
-                    subsubmenu.style.maxHeight = '0';
-                }
-            });
-        });
+            menuToggle.addEventListener('click', toggleMenu);
+            closeMenuBtn.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
+        }
     </script>
+    
+    <script src="{{ '/assets/js/sidebar.js' | relative_url }}"></script>
 </body>
 </html>
