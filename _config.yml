@@ -33,7 +33,7 @@ navigation:
   - title: "Home"
     url: "/"
     
-  - title: "Server Rules"
+  - title: "Rules & Roles"
     collection: rules
     items:
       - server-rules
