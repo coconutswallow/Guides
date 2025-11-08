@@ -21,7 +21,7 @@
             <div class="header-search-container">
                 <input type="text" id="search-input" placeholder="Search documents..." aria-label="Search documents">
             </div>
-            </div>
+        </div>
     </header>
 
     <div id="sidebar-menu">
@@ -78,6 +78,14 @@
             {% endfor %}
         </div>
     </div>
+
+    <div id="menu-overlay"></div>
+
+    <ul id="search-results"></ul>
+
+    <div class="page">
+        {{ content }}
+    </div>
     
     <footer class="site-footer">
         <div class="footer-content">
@@ -86,7 +94,7 @@
         </div>
     </footer>
     
-    script>
+    <script>
         // 1. BASE URL DEFINITION (Guaranteed to run first for search.js)
         const BASE_URL = "{{ site.baseurl }}"; 
         
@@ -100,7 +108,7 @@
             function toggleMenu() {
                 sidebarMenu.classList.toggle('active');
                 menuOverlay.classList.toggle('active');
-                document.body.classList.toggle('no-scroll');
+                document.body.classList.toggle('menu-open');
             }
 
             menuToggle.addEventListener('click', toggleMenu);
