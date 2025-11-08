@@ -130,6 +130,17 @@
     </div>
 
     <div id="menu-overlay"></div>
+    <div class="page">
+        {% if page.image %}
+        <div class="monster-image-container">
+            <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
+            {% if page.image_credit %}
+            <p class="image-credit">{{ page.image_credit }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        {{ content }}
+    </div>
 
     <div class="page">
         {{ content }}
