@@ -40,79 +40,71 @@
                     {% assign collection_name = nav_item.collection %}
                     {% assign collection = site[collection_name] %}
                     
-                    {% if collection %}
-                    {% if collection.size > 0 %}
-                    <!-- Only process collections where pages use 'default' or 'doc' layout -->
-                    {% assign first_page = collection | first %}
-                    {% assign page_layout = first_page.layout %}
-                    {% unless page_layout %}
-                        {% assign page_layout = "default" %}
-                    {% endunless %}
-                    
-                    {% assign is_doc_layout = false %}
-                    {% if page_layout == "default" %}
-                        {% assign is_doc_layout = true %}
-                    {% endif %}
-                    {% if page_layout == "doc" %}
-                        {% assign is_doc_layout = true %}
-                    {% endif %}
-                    
-                    {% if is_doc_layout == true %}
-                    <div class="nav-section">
-                        <button class="nav-section-toggle" aria-expanded="false">
-                            <span class="toggle-icon">▶</span>
-                            <span>{{ nav_item.title }}</span>
-                        </button>
-                        <div class="nav-submenu">
-                            {% assign all_pages = collection | sort: 'order' %}
-                            
-                            <!-- Group pages by folder for hierarchical display -->
-                            {% assign root_pages = all_pages | where_exp: "item", "item.path contains collection_name and item.path contains '/'" %}
-                            {% assign folder_paths = "" | split: "" %}
-                            
-                            <!-- First pass: identify all unique folders -->
-                            {% for page in root_pages %}
-                                {% assign path_parts = page.path | split: "/" %}
-                                {% if path_parts.size > 2 %}
-                                    {% assign folder = path_parts[1] %}
-                                    {% unless folder_paths contains folder %}
-                                        {% assign folder_paths = folder_paths | push: folder %}
-                                    {% endunless %}
-                                {% endif %}
-                            {% endfor %}
-                            
-                            <!-- Display root-level pages first -->
-                            {% for page in all_pages %}
-                                {% assign path_parts = page.path | split: "/" %}
-                                {% if path_parts.size == 2 %}
+                    {% if collection and collection.size > 0 %}
+                        <!-- Only process collections where pages use 'default' or 'doc' layout -->
+                        {% assign first_page = collection | first %}
+                        {% assign page_layout = first_page.layout | default: "default" %}
+                        
+                        {% if page_layout == "default" or page_layout == "doc" %}
+                        <div class="nav-section">
+                            <button class="nav-section-toggle" aria-expanded="false">
+                                <span class="toggle-icon">▶</span>
+                                <span>{{ nav_item.title }}</span>
+                            </button>
+                            <div class="nav-submenu">
+                                {% assign all_pages = collection | sort: 'order' %}
+                                
+                                <!-- Separate root pages from folder pages -->
+                                {% assign root_level_pages = "" | split: "" %}
+                                {% assign folder_map = "" | split: "" %}
+                                
+                                {% for page in all_pages %}
+                                    {% assign path_parts = page.path | split: "/" %}
+                                    {% if path_parts.size == 2 %}
+                                        {% assign root_level_pages = root_level_pages | push: page %}
+                                    {% elsif path_parts.size > 2 %}
+                                        {% assign folder_name = path_parts[1] %}
+                                        {% unless folder_map contains folder_name %}
+                                            {% assign folder_map = folder_map | push: folder_name %}
+                                        {% endunless %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <!-- Display root-level pages first -->
+                                {% for page in root_level_pages %}
                                     <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-                                {% endif %}
-                            {% endfor %}
-                            
-                            <!-- Then display folders with their contents -->
-                            {% for folder in folder_paths %}
-                                {% assign folder_pages = all_pages | where_exp: "item", "item.path contains folder" | sort: 'order' %}
-                                {% if folder_pages and folder_pages.size > 0 %}
-                                    {% assign first_page = folder_pages | first %}
-                                    {% assign folder_title = first_page.folder_title | default: folder | capitalize | replace: "-", " " | replace: "_", " " %}
+                                {% endfor %}
+                                
+                                <!-- Then display folders with their contents -->
+                                {% for folder_name in folder_map %}
+                                    {% assign folder_pages = "" | split: "" %}
+                                    {% for page in all_pages %}
+                                        {% assign page_folder = page.path | split: "/" | slice: 1, 1 | first %}
+                                        {% if page_folder == folder_name %}
+                                            {% assign folder_pages = folder_pages | push: page %}
+                                        {% endif %}
+                                    {% endfor %}
                                     
-                                    <div class="nav-subsection">
-                                        <button class="nav-subsection-toggle" aria-expanded="false">
-                                            <span class="toggle-icon">▶</span>
-                                            <span>{{ folder_title }}</span>
-                                        </button>
-                                        <div class="nav-subsubmenu">
-                                            {% for page in folder_pages %}
-                                                <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-                                            {% endfor %}
+                                    {% if folder_pages.size > 0 %}
+                                        {% assign first_folder_page = folder_pages | first %}
+                                        {% assign folder_title = first_folder_page.folder_title | default: folder_name | capitalize | replace: "-", " " | replace: "_", " " %}
+                                        
+                                        <div class="nav-subsection">
+                                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                                <span class="toggle-icon">▶</span>
+                                                <span>{{ folder_title }}</span>
+                                            </button>
+                                            <div class="nav-subsubmenu">
+                                                {% for page in folder_pages %}
+                                                    <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                                                {% endfor %}
+                                            </div>
                                         </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-                    {% endif %}
+                        {% endif %}
                     {% endif %}
                 
                 {% elsif nav_item.sections %}
