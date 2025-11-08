@@ -6,15 +6,16 @@
 #search-results {
   list-style: none; /* Remove bullet points */
   padding: 0;
-  margin: 15px auto; /* Center it below the header */
-  max-width: 90%; /* Adjust width to fit content */
-  background: white;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 100; /* Ensure it appears above other elements */
   
-  /* KEY: HIDE BY DEFAULT */
-  display: none; 
+  /* Use site colors for a consistent look */
+  background: var(--color-bg-light); /* Light beige background */
+  border: 1px solid var(--color-border); /* Dark reddish-brown border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+  margin: 15px auto; 
+  max-width: 90%; 
+  z-index: 100; 
+  display: none; /* KEY: HIDE BY DEFAULT */
 }
 
 /* Show the list when JavaScript adds the 'active' class */
@@ -25,34 +26,47 @@
 /* Style for individual result items */
 #search-results li {
   padding: 10px 15px;
-  border-bottom: 1px dashed #eee;
+  border-bottom: 1px solid var(--color-bg-medium); /* Use a softer internal divider */
 }
 
 #search-results li:last-child {
   border-bottom: none;
 }
 
+/* Header (Results Count) Styling */
 #search-results li.search-header {
-  background-color: #f4f4f4;
+  /* Use a slightly darker background to distinguish the header */
+  background-color: var(--color-bg-medium); 
   font-size: 0.9em;
-  color: #666;
+  color: var(--color-primary); /* Use primary color for the header text */
   padding: 5px 15px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--color-border);
 }
 
+/* Anchor link container */
 #search-results li a {
   text-decoration: none;
-  color: #333;
+  color: var(--color-text); /* Use primary text color */
   display: block;
+  /* Add hover effect for better user feedback */
+  transition: background-color 0.2s;
 }
 
+#search-results li a:hover {
+  background-color: rgba(88, 24, 13, 0.05); /* Very slight hover effect using primary color opacity */
+}
+
+/* Result Title */
 #search-results li h4 {
   margin: 0 0 5px 0;
-  color: var(--main-color, #007bff); /* Use a primary color */
+  /* Use the primary color for document titles */
+  color: var(--color-primary); 
+  font-family: 'Cinzel', serif; /* Optional: Use a title/heading font */
 }
 
+/* Content Snippet */
 #search-results li p {
   font-size: 0.9em;
-  color: #666;
+  color: var(--color-text); /* Ensure snippets are readable */
   margin: 0;
 }
