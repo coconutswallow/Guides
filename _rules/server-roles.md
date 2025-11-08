@@ -20,9 +20,9 @@ There are six Staff teams:
 
 * <span class="role-rules">**Rule Architects**</span> and <span class="role-rules-apprentice">**Rule Apprentices**</span> handles all matters about official and server specific rules and mechanics, as well as allowed content on the server.
 
-* <span class="role-engineer">**Engineers**</span> and <span class=".role-engineer-apprentice">**Engineers Apprentices**</span> maintain the server's bots and backend and sites.
+* <span class="role-engineer">**Engineers**</span> and <span class="role-engineer-apprentice">**Engineers Apprentices**</span> maintain the server's bots and backend and sites.
 
-<span class="role-admin">**Admins**</span> oversee the running and management of the server in collaboration with the other Staff teams.
+* <span class="role-admin">**Admins**</span> oversee the running and management of the server in collaboration with the other Staff teams.
 
 ---
 
@@ -105,18 +105,15 @@ There are six Staff teams:
 .role-engineer {
   color: #1abc9c;
   font-weight: 700;
-  text-transform: uppercase;
 }
 
 .role-engineer-apprentice {
   color: #63a493;
   font-weight: 700;
-  text-transform: uppercase;
 }
 .role-admins {
   color: #1c1c1c;
   font-weight: 800;
-  text-transform: uppercase;
 }
 
 
