@@ -43,9 +43,20 @@
                     {% if collection and collection.size > 0 %}
                     <!-- Only process collections where pages use 'default' or 'doc' layout -->
                     {% assign first_page = collection | first %}
-                    {% assign page_layout = first_page.layout | default: "default" %}
+                    {% assign page_layout = first_page.layout %}
+                    {% unless page_layout %}
+                        {% assign page_layout = "default" %}
+                    {% endunless %}
                     
-                    {% if page_layout == "default" or page_layout == "doc" %}
+                    {% assign is_doc_layout = false %}
+                    {% if page_layout == "default" %}
+                        {% assign is_doc_layout = true %}
+                    {% endif %}
+                    {% if page_layout == "doc" %}
+                        {% assign is_doc_layout = true %}
+                    {% endif %}
+                    
+                    {% if is_doc_layout == true %}
                     <div class="nav-section">
                         <button class="nav-section-toggle" aria-expanded="false">
                             <span class="toggle-icon">▶</span>
