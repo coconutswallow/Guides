@@ -16,13 +16,17 @@
    ============================================ */
 
 :root {
-  /* Colors */
+  /* Light Mode Colors (Default) */
   --color-primary: #58180D;
   --color-secondary: #822000;
   --color-bg-light: #FDF1DC;
   --color-bg-medium: #F5E6D3;
+  --color-bg-page: #FFFEF9;
   --color-text: #58180D;
+  --color-text-secondary: #2c2c2c;
   --color-border: #58180D;
+  --color-link: #822000;
+  --color-link-hover: #58180D;
   
   /* Fonts */
   --font-header: 'Cinzel', 'Georgia', serif;
@@ -63,6 +67,86 @@
   --shadow-lg: 0 6px 12px rgba(0, 0, 0, 0.5);
 }
 
+/* ============================================
+   APPLY COLORS TO ELEMENTS
+   ============================================ */
+
+/* Body - uses page background color */
+body {
+  background: var(--color-bg-page);
+  color: var(--color-text);
+}
+
+/* Main page container */
+.page {
+  background: var(--color-bg-page);
+  color: var(--color-text);
+}
+
+/* All text elements inherit text color */
+p, li, td, th, span, div {
+  color: var(--color-text);
+}
+
+/* Links */
+a {
+  color: var(--color-link);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+/* Cards */
+.card {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* Tables */
+table {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-bg-medium);
+}
+
+/* Code blocks */
+code {
+  background: var(--color-bg-medium);
+  color: var(--color-text);
+}
+
+pre {
+  background: var(--color-bg-medium);
+  border-color: var(--color-border);
+}
+
+/* Blockquotes */
+blockquote {
+  border-left-color: var(--color-primary);
+  color: var(--color-text-secondary);
+}
+
+/* HR */
+hr {
+  border-top-color: var(--color-border);
+}
+
+/* Buttons */
+.button, .btn {
+  background: var(--color-primary);
+  color: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+.button:hover, .btn:hover {
+  background: var(--color-secondary);
+}
+
 /* Smooth transitions for theme changes */
 body,
 .page,
@@ -73,7 +157,8 @@ blockquote,
 #sidebar-menu,
 .monster-card,
 table,
-.filter-container {
+.filter-container,
+p, li, td, th, a, code, pre {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -142,6 +227,17 @@ table,
 /* ============================================
    DARK MODE SPECIFIC OVERRIDES
    ============================================ */
+
+/* Make sure all text is readable in dark mode */
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] td,
+[data-theme="dark"] th,
+[data-theme="dark"] span,
+[data-theme="dark"] .doc-body,
+[data-theme="dark"] .monster-description {
+  color: var(--color-text);
+}
 
 /* Adjust table styling for dark mode */
 [data-theme="dark"] thead {
@@ -230,6 +326,64 @@ table,
 [data-theme="dark"] .notice-success {
   background: rgba(39, 174, 96, 0.15);
   border-left-color: #27ae60;
+}
+
+/* Adjust filter container for dark mode */
+[data-theme="dark"] .filter-container {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .filter-select,
+[data-theme="dark"] .filter-input {
+  background: var(--color-bg-medium);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .reset-button {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+
+/* Adjust monster cards for dark mode */
+[data-theme="dark"] .monster-card {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .monster-card h3,
+[data-theme="dark"] .monster-card h3 a {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .monster-cr {
+  color: var(--color-secondary);
+}
+
+[data-theme="dark"] .monster-type {
+  color: var(--color-text-secondary);
+}
+
+/* Adjust breadcrumbs for dark mode */
+[data-theme="dark"] .breadcrumb {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .breadcrumb a {
+  color: var(--color-link);
+}
+
+/* Adjust documentation meta for dark mode */
+[data-theme="dark"] .doc-meta {
+  color: var(--color-text-secondary);
+  border-bottom-color: var(--color-border);
+}
+
+/* Adjust TOC for dark mode */
+[data-theme="dark"] .doc-toc {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
 }
 
 /* ============================================
