@@ -24,6 +24,9 @@ collections:
   faq:
     output: true
     permalink: /faq/:path/
+  monsters:
+    output: true
+    permalink: /field-guide/monster-compendium/:title/
 
 # Navigation structure - defines order and hierarchy
 navigation:
