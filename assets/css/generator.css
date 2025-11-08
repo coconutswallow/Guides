@@ -1,13 +1,20 @@
+/* ============================================ */
 /* Generator-specific styles that complement your existing statblock.css */
+/* Uses CSS variables from style.css for consistency */
+/* ============================================ */
 
 .generator-container {
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* ============================================ */
+/* PAGE INTRO SECTION */
+/* ============================================ */
+
 .page-intro {
     background: linear-gradient(135deg, #5b0f00 0%, #8b1a0f 100%);
-    color: #FDF1DC;
+    color: var(--color-bg-light);
     padding: 2em;
     border-radius: 8px;
     margin-bottom: 2em;
@@ -15,7 +22,7 @@
 }
 
 .page-intro h2 {
-    color: #FDF1DC;
+    color: var(--color-bg-light);
     border: none;
     margin: 0 0 0.5em 0;
     font-size: 2em;
@@ -27,7 +34,10 @@
     opacity: 0.9;
 }
 
-/* Generator Controls */
+/* ============================================ */
+/* GENERATOR CONTROLS */
+/* ============================================ */
+
 .generator-controls {
     display: flex;
     justify-content: space-between;
@@ -45,50 +55,72 @@
 .toggle-btn {
     flex: 1;
     padding: 1em;
-    border: 2px solid #58180D;
+    border: 2px solid var(--color-primary);
     background: white;
-    color: #58180D;
+    color: var(--color-primary);
     font-weight: bold;
     font-size: 1em;
     cursor: pointer;
     border-radius: 6px;
     transition: all 0.3s;
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .toggle-btn:hover {
-    background: #FDF1DC;
+    background: var(--color-bg-light);
 }
 
 .toggle-btn.active {
-    background: #58180D;
-    color: #FDF1DC;
+    background: var(--color-primary);
+    color: var(--color-bg-light);
 }
 
 .download-btn {
-    background: #28a745;
-    color: white;
-    border: none;
+    display: inline-block;
     padding: 1em 2em;
+    background: var(--color-primary);
+    color: var(--color-bg-light);
+    text-decoration: none;
     border-radius: 6px;
-    font-weight: bold;
+    font-family: var(--font-header);
+    font-size: 0.9em;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 0.2s;
     cursor: pointer;
-    transition: all 0.3s;
+    border: none;
+    letter-spacing: 0.5px;
+    font-weight: bold;
     white-space: nowrap;
 }
 
 .download-btn:hover {
-    background: #218838;
+    background: var(--color-secondary);
+    color: var(--color-bg-light);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-.download-btn + .download-btn {
-    background: #007bff;
+.download-btn:active {
+    transform: translateY(0);
 }
 
-.download-btn + .download-btn:hover {
-    background: #0056b3;
+/* Secondary download button variant (if needed for distinction) */
+.download-btn.secondary {
+    background: var(--color-secondary);
 }
 
-/* View Containers */
+.download-btn.secondary:hover {
+    background: var(--color-primary);
+}
+
+/* ============================================ */
+/* VIEW CONTAINERS */
+/* ============================================ */
+
 .view-container {
     display: none;
 }
@@ -97,7 +129,10 @@
     display: block;
 }
 
-/* Validation Messages */
+/* ============================================ */
+/* VALIDATION MESSAGES */
+/* ============================================ */
+
 .preview-messages {
     margin-bottom: 2em;
 }
@@ -128,10 +163,13 @@
     font-weight: bold;
 }
 
-/* Form Sections */
+/* ============================================ */
+/* FORM SECTIONS */
+/* ============================================ */
+
 .form-section {
-    background: #FDF1DC;
-    border: 2px solid #58180D;
+    background: var(--color-bg-light);
+    border: 2px solid var(--color-primary);
     border-radius: 8px;
     padding: 1.5em;
     margin: 1.5em 0;
@@ -140,14 +178,17 @@
 }
 
 .form-section h2 {
-    color: #58180D;
+    color: var(--color-primary);
     margin-top: 0;
     border-bottom: 2px solid #C0AD6A;
     padding-bottom: 0.5em;
     font-size: 1.5em;
 }
 
-/* Field Groups */
+/* ============================================ */
+/* FIELD GROUPS */
+/* ============================================ */
+
 .field-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -167,7 +208,7 @@
 .form-field label {
     font-weight: bold;
     margin-bottom: 0.5em;
-    color: #58180D;
+    color: var(--color-primary);
 }
 
 .form-field input,
@@ -189,11 +230,14 @@
 .form-field select:focus,
 .form-field textarea:focus {
     outline: none;
-    border-color: #58180D;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 2px rgba(88, 24, 13, 0.1);
 }
 
-/* Ability Score Table */
+/* ============================================ */
+/* ABILITY SCORE TABLE */
+/* ============================================ */
+
 .ability-group table {
     width: 100%;
     border-collapse: collapse;
@@ -204,9 +248,9 @@
 .ability-group th {
     text-align: left;
     padding: 0.6em;
-    border-bottom: 2px solid #58180D;
+    border-bottom: 2px solid var(--color-primary);
     font-weight: bold;
-    color: #58180D;
+    color: var(--color-primary);
     background: rgba(88, 24, 13, 0.05);
 }
 
@@ -236,7 +280,10 @@
     text-align: center;
 }
 
-/* Item Lists (Traits, Actions, etc.) */
+/* ============================================ */
+/* ITEM LISTS (Traits, Actions, etc.) */
+/* ============================================ */
+
 .item-list {
     margin-top: 1em;
     width: 100%;
@@ -280,10 +327,13 @@
     box-sizing: border-box;
 }
 
-/* Buttons */
+/* ============================================ */
+/* BUTTONS */
+/* ============================================ */
+
 .add-button {
-    background: #58180D;
-    color: #FDF1DC;
+    background: var(--color-primary);
+    color: var(--color-bg-light);
     border: none;
     padding: 0.8em 1.5em;
     border-radius: 6px;
@@ -292,10 +342,15 @@
     transition: all 0.3s;
     width: 100%;
     margin-top: 1em;
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .add-button:hover {
-    background: #7a2010;
+    background: var(--color-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .remove-button {
@@ -314,7 +369,10 @@
     background: #a00;
 }
 
-/* Preview Sections */
+/* ============================================ */
+/* PREVIEW SECTIONS */
+/* ============================================ */
+
 .markdown-output,
 .visual-output {
     margin: 2em 0;
@@ -322,7 +380,7 @@
 
 .markdown-output h3,
 .visual-output h3 {
-    color: #58180D;
+    color: var(--color-primary);
     border-bottom: 2px solid #C0AD6A;
     padding-bottom: 0.5em;
 }
@@ -338,18 +396,21 @@
     line-height: 1.6;
 }
 
-/* Visual Stat Block Preview */
+/* ============================================ */
+/* VISUAL STAT BLOCK PREVIEW */
+/* ============================================ */
+
 .statblock-visual {
-    background: #FDF1DC;
-    border: 2px solid #58180D;
+    background: var(--color-bg-light);
+    border: 2px solid var(--color-primary);
     border-radius: 8px;
     padding: 1.5em;
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: var(--font-body);
 }
 
 .statblock-header h1 {
     font-family: 'Cinzel Decorative', 'Cinzel', serif;
-    color: #58180D;
+    color: var(--color-primary);
     margin: 0 0 0.5em 0;
     text-transform: uppercase;
 }
@@ -364,9 +425,9 @@
 }
 
 .statblock-section h3 {
-    font-family: 'Cinzel', serif;
-    color: #58180D;
-    border-bottom: 1.5px solid #58180D;
+    font-family: var(--font-header);
+    color: var(--color-primary);
+    border-bottom: 1.5px solid var(--color-primary);
     margin: 1em 0 0.5em 0;
     padding-bottom: 0.3em;
     text-transform: uppercase;
@@ -403,18 +464,17 @@
 .statblock-abilities td:nth-child(12) {
     background: #dad1ca;
 }
+
 .statblock-section.lair-actions-section h2,
 .statblock-section.regional-effects-section h2 {
-    /* Uses the same style as other stat block section titles */
-    font-family: 'Cinzel', serif;
-    color: #58180D;
-    border-bottom: 1.5px solid #58180D;
+    font-family: var(--font-header);
+    color: var(--color-primary);
+    border-bottom: 1.5px solid var(--color-primary);
     margin: 1em 0 0.5em 0;
     padding-bottom: 0.3em;
     text-transform: uppercase;
 }
 
-/* Ensure descriptions for these sections also use the stat block font */
 .statblock-section.lair-actions-section p,
 .statblock-section.regional-effects-section p {
     margin-bottom: 0.5em;
@@ -424,9 +484,9 @@
 
 .statblock-section.lair-actions-section p strong,
 .statblock-section.regional-effects-section p strong {
-    /* Bold part of action/trait */
     font-weight: 900;
 }
+
 .statblock-placeholder {
     text-align: center;
     color: #999;
@@ -434,7 +494,10 @@
     font-style: italic;
 }
 
-/* Responsive Design */
+/* ============================================ */
+/* RESPONSIVE DESIGN */
+/* ============================================ */
+
 @media (max-width: 768px) {
     .generator-controls {
         flex-direction: column;
