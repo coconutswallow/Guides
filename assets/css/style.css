@@ -44,6 +44,194 @@
   --shadow-lg: 0 6px 12px rgba(88, 24, 13, 0.2);
 }
 
+/* Dark Mode Colors */
+[data-theme="dark"] {
+  --color-primary: #D4A574;
+  --color-secondary: #E8C5A0;
+  --color-bg-light: #2a2520;
+  --color-bg-medium: #1f1b18;
+  --color-bg-page: #1a1612;
+  --color-text: #E8D5C4;
+  --color-text-secondary: #C4B5A8;
+  --color-border: #5a4a3a;
+  --color-link: #E8C5A0;
+  --color-link-hover: #D4A574;
+  
+  /* Dark mode shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Smooth transitions for theme changes */
+body,
+.page,
+.card,
+blockquote,
+.site-header,
+.site-footer,
+#sidebar-menu,
+.monster-card,
+table,
+.filter-container {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============================================
+   DARK MODE TOGGLE BUTTON
+   Add this CSS to style.css
+   ============================================ */
+
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-border);
+  color: var(--color-bg-light);
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  background: var(--color-secondary);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Icons for light/dark mode */
+.theme-toggle .sun-icon {
+  display: none;
+}
+
+.theme-toggle .moon-icon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle .sun-icon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle .moon-icon {
+  display: none;
+}
+
+/* Mobile positioning */
+@media (max-width: 768px) {
+  .theme-toggle {
+    bottom: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.3em;
+  }
+}
+
+/* ============================================
+   DARK MODE SPECIFIC OVERRIDES
+   ============================================ */
+
+/* Adjust table styling for dark mode */
+[data-theme="dark"] thead {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] tbody tr:hover {
+  background: rgba(212, 165, 116, 0.1);
+}
+
+/* Adjust stat block tables for dark mode */
+[data-theme="dark"] .monster-page blockquote table td:nth-child(3),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(4),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(7),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(8),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(11),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(12),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(3),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(4),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(7),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(8),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(11),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(12) {
+  background: rgba(90, 74, 58, 0.3);
+}
+
+/* Adjust sidebar for dark mode */
+[data-theme="dark"] #sidebar-menu {
+  background: #1a1612;
+  border-right: 1px solid var(--color-border);
+}
+
+[data-theme="dark"] .nav-submenu {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .nav-subsubmenu {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Adjust role colors for dark mode readability */
+[data-theme="dark"] .role-auditor,
+[data-theme="dark"] .role-auditor-apprentice,
+[data-theme="dark"] .role-lore,
+[data-theme="dark"] .role-lore-apprentice,
+[data-theme="dark"] .role-pr,
+[data-theme="dark"] .role-rules,
+[data-theme="dark"] .role-rules-apprentice,
+[data-theme="dark"] .role-engineer,
+[data-theme="dark"] .role-engineer-apprentice {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Adjust code blocks for dark mode */
+[data-theme="dark"] code {
+  background: var(--color-bg-medium);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] pre {
+  background: var(--color-bg-medium);
+  border-color: var(--color-border);
+}
+
+/* Adjust alerts for dark mode */
+[data-theme="dark"] .alert-info,
+[data-theme="dark"] .notice-info {
+  background: rgba(52, 152, 219, 0.15);
+  border-left-color: #3498db;
+}
+
+[data-theme="dark"] .alert-warning,
+[data-theme="dark"] .notice-warning {
+  background: rgba(243, 156, 18, 0.15);
+  border-left-color: #f39c12;
+}
+
+[data-theme="dark"] .alert-danger,
+[data-theme="dark"] .notice-danger {
+  background: rgba(231, 76, 60, 0.15);
+  border-left-color: #e74c3c;
+}
+
+[data-theme="dark"] .alert-success,
+[data-theme="dark"] .notice-success {
+  background: rgba(39, 174, 96, 0.15);
+  border-left-color: #27ae60;
+}
+
 /* ============================================
    Global Styles
    ============================================ */
