@@ -335,27 +335,6 @@ tbody tr:hover {
   padding: var(--spacing-md);
 }
 
-/* This sets the background color outside of the main content frame */
-body {
-    background-color: var(--color-bg-medium); 
-    padding-top: 60px; /* Space for your fixed header */
-    min-height: 100vh;
-}
-
-/* This is the main content frame, restoring the light background */
-.page {
-    background-color: var(--color-bg-light); 
-    padding: 30px;
-    max-width: 1000px; /* Adjust as needed */
-    margin: 0 auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds depth to the frame */
-}
-
-/* Prevent scrolling when menu is open */
-body.no-scroll {
-    overflow: hidden; 
-}
-
 /* ============================================
    SITE HEADER (FIXED)
    ============================================ */
@@ -445,7 +424,6 @@ body.no-scroll {
   border-radius: 2px;
 }
 
-
 /* ============================================
    OFF-CANVAS SIDEBAR MENU
    ============================================ */
@@ -470,7 +448,7 @@ body.no-scroll {
   overflow-y: auto;
 }
 
-#sidebar-menu.active {
+#sidebar-menu.open {
   transform: translateX(0);
 }
 
@@ -491,7 +469,7 @@ body.no-scroll {
   transition: opacity 0.3s ease-in-out, visibility 0.3s;
 }
 
-#menu-overlay.active {
+#menu-overlay.open {
   visibility: visible;
   opacity: 1;
 }
