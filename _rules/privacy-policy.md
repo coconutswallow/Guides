@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Privacy Policy"
-order: 3
+order: 2
 ---
 Your privacy is important to us and we collect only data necessary for the running of the server and guild. This applies to use of the Discord server, the Google Drive and Kanka. This document lays out the processes by which we collect, use and store your data. Please read this document carefully and contact a member of the Admin team if you have any questions.
 
