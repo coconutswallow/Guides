@@ -448,7 +448,7 @@ tbody tr:hover {
   overflow-y: auto;
 }
 
-#sidebar-menu.open {
+#sidebar-menu.active {
   transform: translateX(0);
 }
 
@@ -469,7 +469,7 @@ tbody tr:hover {
   transition: opacity 0.3s ease-in-out, visibility 0.3s;
 }
 
-#menu-overlay.open {
+#menu-overlay.active {
   visibility: visible;
   opacity: 1;
 }
