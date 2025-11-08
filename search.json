@@ -7,10 +7,10 @@ permalink: /search.json
   {% for doc in search_docs %}
     {% if doc.content and doc.url != "/404.html" and doc.exclude_from_search != true %}
       {
-        "title": "{{ doc.title | xml_escape }}",
-        "url": "{{ doc.url | absolute_url }}",
+        "title": {{ doc.title | strip_html | strip_newlines | replace: '\', '\\' | replace: '"', '\"' | jsonify }},
+        "url": "{{ doc.url | absolute_url | xml_escape }}",
         "date": "{{ doc.date | date: "%Y-%m-%d" }}",
-        "content": {{ doc.content | markdownify | strip_html | strip_newlines | jsonify }}
+        "content": {{ doc.content | strip_html | strip_newlines | replace: '\', '\\' | replace: '"', '\"' | jsonify }}
       }
       {% unless forloop.last %},{% endunless %}
     {% endif %}
