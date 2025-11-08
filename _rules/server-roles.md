@@ -14,7 +14,7 @@ There are six Staff teams:
 
 * <span class="role-auditor">**Auditors**</span> and <span class="role-auditor-apprentice">**Auditor Apprentices**</span> oversee character reworks and help ensure server logs are accurate.
 
-* <span class="role-lore">**Lore Consultants**</span> and <span class="role-auditor-apprentice">**Lore Apprentices**</span> handle all matters about setting and server specific lore and assist players and DMs in being consistent with both.
+* <span class="role-lore">**Lore Consultants**</span> and <span class="role-lore-apprentice">**Lore Apprentices**</span> handle all matters about setting and server specific lore and assist players and DMs in being consistent with both.
 
 * <span class="role-pr">**Player Relations**</span> oversees player/DM registration as well as handling server disputes and incident reports, including disciplinary action if necessary.
 

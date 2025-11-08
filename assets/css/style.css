@@ -434,6 +434,25 @@ figcaption {
   text-align: center;
 }
 
+/* Image with text wrap FIX */
+.image-text-wrapper {
+  display: flex;
+  gap: 2em;
+  margin: 2em 0;
+  align-items: flex-start;
+}
+
+.hierarchy-image {
+  max-width: 60%; /* This respects your 60% requirement */
+  height: auto;
+  flex-shrink: 0; /* Important: Prevents the image from shrinking */
+}
+
+.hierarchy-text {
+  flex: 1 1 0; /* Important: Allows the text container to grow and forces it to wrap */
+  min-width: 0; /* Important: Overrides the default text min-size, allowing it to wrap */
+}
+
 /* ============================================
    Responsive Design
    ============================================ */
@@ -485,6 +504,7 @@ figcaption {
     font-size: 0.8em;
   }
 }
+
 
 /* ============================================
    Documentation Footer Navigation
