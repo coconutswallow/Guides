@@ -12,7 +12,7 @@ All registered members of the server have the <span class="role-adventurer">Adve
 
 There are six Staff teams:
 
-* <span class="role-auditor">**Auditors**</span> and <span class="role-apprentice">**Auditor Apprentices**</span> oversee character reworks and help ensure server logs are accurate.
+* <span class="role-auditor">**Auditors**</span> and <span class="role-auditor-apprentice">**Auditor Apprentices**</span> oversee character reworks and help ensure server logs are accurate.
 
 * <span class="role-lore">**Lore Consultants**</span> and <span class="role-auditor-apprentice">**Lore Apprentices**</span> handle all matters about setting and server specific lore and assist players and DMs in being consistent with both.
 
@@ -105,11 +105,17 @@ There are six Staff teams:
 .role-engineer {
   color: #1abc9c;
   font-weight: 700;
+  background-color: #333333; /* Dark gray background */
+  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
+  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
 }
 
 .role-engineer-apprentice {
   color: #63a493;
   font-weight: 700;
+  background-color: #333333; /* Dark gray background */
+  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
+  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
 }
 .role-admins {
   color: #1c1c1c;
