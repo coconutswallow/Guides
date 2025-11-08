@@ -1,8 +1,20 @@
 /* ============================================
    Hawthorne Guild Guide - Main Stylesheet
+   Site-wide styles for all pages
    ============================================ */
 
-/* CSS Variables */
+/* ============================================
+   FONT IMPORTS
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+/* ============================================
+   CSS Variables
+   ============================================ */
+
 :root {
   /* Colors */
   --color-primary: #58180D;
@@ -14,7 +26,7 @@
   
   /* Fonts */
   --font-header: 'Cinzel', 'Georgia', serif;
-  --font-body: 'Crimson Text', 'Georgia', serif;
+  --font-body: 'Crimson Text', 'Source Sans 3', 'Georgia', serif;
   
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -51,6 +63,12 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-top: 85px; /* Space for fixed header */
+}
+
+/* Prevent background scrolling when mobile menu is open */
+body.menu-open {
+  overflow: hidden;
 }
 
 /* ============================================
@@ -229,7 +247,7 @@ tbody tr:hover {
 }
 
 /* ============================================
-   Header
+   SITE HEADER (FIXED)
    ============================================ */
 
 .site-header {
@@ -237,32 +255,57 @@ tbody tr:hover {
   color: var(--color-bg-light);
   padding: 1.5em 0;
   border-bottom: 4px solid var(--color-primary);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 100;
   box-shadow: var(--shadow-md);
 }
 
+/* Dark overlay for header backgrounds (when using background images) */
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .header-content {
+  position: relative;
+  z-index: 2;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 1em;
+  text-align: center;
 }
 
 .site-title {
-  font-family: var(--font-header);
-  font-size: 1.8em;
+  font-family: 'Merriweather', var(--font-header), serif;
+  font-size: clamp(1.3em, 4vw, 1.8em);
   margin: 0;
   color: var(--color-bg-light);
   text-transform: uppercase;
   letter-spacing: 2px;
+  grid-column: 2 / 3;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
-/* Hamburger Menu */
+/* ============================================
+   HAMBURGER MENU BUTTON
+   ============================================ */
+
 #menu-toggle {
+  grid-column: 1 / 2;
   background: none;
   border: 2px solid var(--color-bg-light);
   border-radius: 4px;
@@ -272,21 +315,236 @@ tbody tr:hover {
   flex-direction: column;
   gap: 4px;
   transition: all 0.3s;
+  justify-self: start;
+  width: 32px;
+  height: 32px;
+  justify-content: space-around;
+  align-items: center;
 }
 
 #menu-toggle:hover {
   background: rgba(253, 241, 220, 0.1);
+  opacity: 0.8;
 }
 
 #menu-toggle .bar {
-  width: 25px;
+  width: 100%;
   height: 3px;
   background: var(--color-bg-light);
   transition: all 0.3s;
+  border-radius: 2px;
 }
 
 /* ============================================
-   Footer
+   OFF-CANVAS SIDEBAR MENU
+   ============================================ */
+
+#sidebar-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  max-width: 80vw;
+  height: 100%;
+  background: #5b0f00;
+  color: var(--color-bg-light);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  overflow-y: auto;
+}
+
+#sidebar-menu.open {
+  transform: translateX(0);
+}
+
+/* ============================================
+   MENU OVERLAY
+   ============================================ */
+
+#menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s;
+}
+
+#menu-overlay.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ============================================
+   SIDEBAR CONTENT
+   ============================================ */
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #C0AD6A;
+  margin-bottom: 20px;
+}
+
+.sidebar-title {
+  font-family: var(--font-header);
+  font-size: 1.5rem;
+  color: var(--color-bg-light);
+  margin: 0;
+  border: none;
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--color-bg-light);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* ============================================
+   NAVIGATION LINKS
+   ============================================ */
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.2em;
+}
+
+.nav-link {
+  display: block;
+  padding: 12px 20px;
+  color: var(--color-bg-light);
+  text-decoration: none;
+  transition: background-color 0.2s, padding-left 0.2s, color 0.2s;
+  font-weight: 400;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding-left: 30px;
+  color: #C0AD6A;
+}
+
+/* Navigation Sections */
+.nav-section {
+  margin: 0;
+}
+
+.nav-section-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1em;
+  color: var(--color-bg-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.nav-section-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.toggle-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  font-size: 0.8em;
+}
+
+.nav-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.nav-submenu a {
+  display: block;
+  padding: 10px 20px 10px 45px;
+  color: var(--color-bg-light);
+  text-decoration: none;
+  font-size: 1.1em;
+  transition: background-color 0.2s;
+}
+
+.nav-submenu a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Subsection Styling */
+.nav-subsection {
+  margin-left: 0;
+}
+
+.nav-subsection-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 20px 10px 30px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95em;
+  color: var(--color-bg-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.nav-subsection-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-subsubmenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-subsubmenu a {
+  display: block;
+  padding: 8px 20px 8px 60px;
+  color: var(--color-bg-light);
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.nav-subsubmenu a:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-divider {
+  margin: 15px 20px;
+  border: none;
+  border-top: 1px solid rgba(192, 173, 106, 0.3);
+}
+
+/* ============================================
+   SITE FOOTER
    ============================================ */
 
 .site-footer {
@@ -295,6 +553,7 @@ tbody tr:hover {
   padding: 2em 0;
   margin-top: auto;
   border-top: 4px solid var(--color-secondary);
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
 }
 
 .footer-content {
@@ -302,11 +561,13 @@ tbody tr:hover {
   margin: 0 auto;
   padding: 0 var(--spacing-md);
   text-align: center;
+  font-family: var(--font-body);
 }
 
 .footer-content p {
   margin-bottom: 0.5em;
   font-size: 0.95em;
+  color: var(--color-bg-light);
 }
 
 /* ============================================
@@ -412,9 +673,9 @@ tbody tr:hover {
 }
 
 /* ============================================
-   Server Rolls
-   ============================================ */  
-/* Role color styling */
+   Server Roles
+   ============================================ */
+
 .role-adventurer {
   color: #999999;
   font-weight: 600;
@@ -433,78 +694,75 @@ tbody tr:hover {
 .role-auditor {
   color: #ff9900;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
-
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-auditor-apprentice {
   color: #d98843;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
-
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-lore {
   color: #1f628e;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
-
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-lore-apprentice {
   color: #5296d5;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
-
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-pr {
   color: #ffd966;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-rules {
   color: #f975f2;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-rules-apprentice {
   color: #b179b8;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-engineer {
   color: #1abc9c;
   font-weight: 700;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 .role-engineer-apprentice {
   color: #63a493;
   font-weight: 700;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
+  background-color: #333333;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
+
 .role-admins {
   color: #1c1c1c;
   font-weight: 800;
@@ -513,6 +771,7 @@ tbody tr:hover {
 /* ============================================
    Images
    ============================================ */
+
 .image-text-wrapper {
   display: flex;
   flex-direction: row;
@@ -521,27 +780,24 @@ tbody tr:hover {
   align-items: flex-start;
 }
 
-/* Base Image Styling (Moved from MD file) */
 .hierarchy-image {
   height: auto;
-  flex-shrink: 0; /* Prevents the image from being forced to shrink */
-  border: 2px solid var(--color-border); /* Added the border back */
+  flex-shrink: 0;
+  border: 2px solid var(--color-border);
 }
 
-/* Custom Image Sizes (Uses max-width to allow custom sizing) */
 .image-size-60 {
-  max-width: 60% !important;;
+  max-width: 60% !important;
 }
 
 .image-size-45 {
-  max-width: 45% !important;;
+  max-width: 45% !important;
 }
 
 .image-size-80 {
-  max-width: 80% !important;;
+  max-width: 80% !important;
 }
 
-/* Text Container Styling (Ensures text wraps and fills remaining space) */
 .hierarchy-explanation {
   flex: 1;
   min-width: 0;
@@ -558,18 +814,227 @@ tbody tr:hover {
   line-height: 1.6;
 }
 
-/* Responsive Fix: Stack Image and Text on smaller screens */
-@media (max-width: 768px) {
-  .image-text-wrapper {
-    flex-direction: column; /* Forces the stacking */
-  }
-  
-  .hierarchy-image,
-  .image-size-60,
-  .image-size-45,
-  .image-size-80 {
-    max-width: 100%; /* Image fills the container when stacked */
-  }
+/* ============================================
+   DOCUMENTATION LAYOUT
+   ============================================ */
+
+.doc-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.doc-content {
+  position: relative;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+  font-family: var(--font-body);
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 1em;
+  padding: 0.5em 0;
+}
+
+.breadcrumb a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  margin: 0 0.5em;
+  color: #999;
+}
+
+.breadcrumb-item {
+  color: #666;
+}
+
+/* Documentation Title */
+.doc-title {
+  font-family: var(--font-header);
+  color: var(--color-primary);
+  font-size: 2.5em;
+  margin: 0.5em 0;
+  border-bottom: 3px solid var(--color-primary);
+  padding-bottom: 0.3em;
+}
+
+/* Documentation Metadata */
+.doc-meta {
+  font-family: var(--font-body);
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #ddd;
+}
+
+.doc-author {
+  margin-right: 1em;
+}
+
+.doc-date {
+  font-style: italic;
+}
+
+/* Documentation Body */
+.doc-body {
+  font-family: var(--font-body);
+  line-height: 1.8;
+  color: #2c2c2c;
+}
+
+.doc-body h2 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.doc-body h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.doc-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 1.5em 0;
+}
+
+.doc-body table {
+  margin: 1.5em 0;
+}
+
+/* Table of Contents Sidebar */
+.doc-toc {
+  position: sticky;
+  top: 100px; /* Below fixed header */
+  float: right;
+  width: 250px;
+  margin-left: 2em;
+  margin-bottom: 2em;
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5em;
+}
+
+.doc-toc h3 {
+  font-family: var(--font-header);
+  font-size: 1.1em;
+  margin: 0 0 1em 0;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-item {
+  margin: 0.5em 0;
+}
+
+.toc-h3 {
+  margin-left: 1em;
+}
+
+.toc-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.95em;
+  line-height: 1.4;
+  display: block;
+  padding: 0.25em 0;
+}
+
+.toc-link:hover {
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+
+/* Documentation Footer Navigation */
+.doc-footer-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3em;
+  padding-top: 2em;
+  border-top: 2px solid var(--color-border);
+  gap: 1em;
+}
+
+.prev-link, .next-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1.5em;
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: var(--color-primary);
+  transition: all 0.2s;
+  font-family: var(--font-header);
+  text-transform: uppercase;
+  font-size: 0.9em;
+  max-width: 45%;
+}
+
+.prev-link:hover, .next-link:hover {
+  background: var(--color-primary);
+  color: var(--color-bg-light);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.prev-link {
+  margin-right: auto;
+}
+
+.next-link {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.nav-arrow {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.nav-label {
+  font-size: 0.85em;
+}
+
+/* ============================================
+   PDF Rendering
+   ============================================ */
+
+.pdf-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.pdf-container iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  border: none;
 }
 
 /* ============================================
@@ -579,6 +1044,10 @@ tbody tr:hover {
 @media (max-width: 768px) {
   :root {
     font-size: 14px;
+  }
+  
+  body {
+    padding-top: 70px; /* Smaller header on mobile */
   }
   
   .page {
@@ -609,11 +1078,47 @@ tbody tr:hover {
     padding: 0.5em;
   }
   
+  .image-text-wrapper {
+    flex-direction: column;
+  }
+  
+  .hierarchy-image,
+  .image-size-60,
+  .image-size-45,
+  .image-size-80 {
+    max-width: 100%;
+  }
+  
+  .doc-footer-nav {
+    flex-direction: column;
+    gap: 1em;
+  }
+  
+  .prev-link, .next-link {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+  }
+  
+  .next-link {
+    margin-left: 0;
+  }
+  
+  .doc-toc {
+    position: static;
+    float: none;
+    width: 100%;
+    margin: 2em 0;
+  }
 }
 
 @media (max-width: 480px) {
   :root {
     font-size: 13px;
+  }
+  
+  body {
+    padding-top: 65px;
   }
   
   .page {
@@ -623,74 +1128,12 @@ tbody tr:hover {
   table {
     font-size: 0.8em;
   }
-}
-@media (max-width: 768px) {
-  .doc-footer-nav {
-    flex-direction: column;
-    gap: 1em;
-  }
   
-  .prev-link, .next-link {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .next-link {
-    margin-left: 0;
+  .site-title {
+    font-size: 1.1em;
+    letter-spacing: 1px;
   }
 }
-
-/* ============================================
-   Documentation Footer Navigation
-   ============================================ */
-
-.doc-footer-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 3em;
-  padding-top: 2em;
-  border-top: 2px solid var(--color-border);
-  gap: 1em;
-}
-
-.prev-link, .next-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.75em 1.5em;
-  background: var(--color-bg-light);
-  border: 2px solid var(--color-border);
-  border-radius: var(--border-radius);
-  text-decoration: none;
-  color: var(--color-primary);
-  transition: all 0.2s;
-  font-family: var(--font-header);
-  text-transform: uppercase;
-  font-size: 0.9em;
-}
-
-.prev-link:hover, .next-link:hover {
-  background: var(--color-primary);
-  color: var(--color-bg-light);
-  text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.next-link {
-  margin-left: auto;
-}
-
-.nav-arrow {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.nav-label {
-  font-size: 0.85em;
-}
-
 
 /* ============================================
    Print Styles
@@ -700,12 +1143,14 @@ tbody tr:hover {
   body {
     background: white;
     color: black;
+    padding-top: 0;
   }
   
   .site-header,
   .site-footer,
   #menu-toggle,
   #sidebar-menu,
+  #menu-overlay,
   .button,
   .btn {
     display: none;

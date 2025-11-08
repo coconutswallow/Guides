@@ -1,15 +1,240 @@
----
-layout: default
----
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title | default: site.title }}</title>
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/statblock.css">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
 </head>
-<body>
+<body class="monster-page">
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-content">
+            <!-- Hamburger Menu Button -->
+            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <h1 class="site-title">{{ site.title | default: "Hawthorne Guild Guide" }}</h1>
+        </div>
+    </header>
+
+    <!-- OFF-CANVAS SIDEBAR MENU with Dynamic Navigation -->
+    <div id="sidebar-menu">
+        <div class="sidebar-header">
+            <h4 class="sidebar-title">Navigation</h4>
+            <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
+        </div>
+        
+        <!-- Dynamic Navigation -->
+        <div class="sidebar-nav">
+            <a href="{{ site.baseurl }}/" class="nav-link">🏠 Home</a>
+            
+            <!-- Server Rules -->
+            {% if site.rules and site.rules.size > 0 %}
+            <div class="nav-section">
+                <button class="nav-section-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>📜 Server Rules</span>
+                </button>
+                <div class="nav-submenu">
+                    {% assign rules_pages = site.rules | sort: 'order' %}
+                    {% for page in rules_pages %}
+                        <a href="{{ page.url | relative_url }}">{{ page.title | default: page.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Player's Guide -->
+            {% if site.players_guide and site.players_guide.size > 0 %}
+            <div class="nav-section">
+                <button class="nav-section-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>⚔️ Player's Guide</span>
+                </button>
+                <div class="nav-submenu">
+                    {% assign pg_pages = site.players_guide | sort: 'order' %}
+                    
+                    <!-- Getting Started subsection -->
+                    {% assign getting_started = pg_pages | where_exp: "item", "item.path contains 'getting-started'" %}
+                    {% if getting_started and getting_started.size > 0 %}
+                    <div class="nav-subsection">
+                        <button class="nav-subsection-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            <span>Getting Started</span>
+                        </button>
+                        <div class="nav-subsubmenu">
+                            {% for page in getting_started %}
+                                <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Character Creation subsection -->
+                    {% assign char_creation = pg_pages | where_exp: "item", "item.path contains 'character-creation'" %}
+                    {% if char_creation and char_creation.size > 0 %}
+                    <div class="nav-subsection">
+                        <button class="nav-subsection-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            <span>Character Creation</span>
+                        </button>
+                        <div class="nav-subsubmenu">
+                            {% for page in char_creation %}
+                                <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Root level pages -->
+                    {% for page in pg_pages %}
+                        {% unless page.path contains 'getting-started' or page.path contains 'character-creation' or page.path contains 'appendices' %}
+                            <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                        {% endunless %}
+                    {% endfor %}
+                    
+                    <!-- Appendices subsection -->
+                    {% assign appendices = pg_pages | where_exp: "item", "item.path contains 'appendices'" %}
+                    {% if appendices and appendices.size > 0 %}
+                    <div class="nav-subsection">
+                        <button class="nav-subsection-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            <span>Appendices</span>
+                        </button>
+                        <div class="nav-subsubmenu">
+                            {% for page in appendices %}
+                                <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- DM's Guide -->
+            {% if site.dms_guide and site.dms_guide.size > 0 %}
+            <div class="nav-section">
+                <button class="nav-section-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>🎲 DM's Guide</span>
+                </button>
+                <div class="nav-submenu">
+                    {% assign dm_pages = site.dms_guide | sort: 'order' %}
+                    
+                    <!-- Root level pages -->
+                    {% for page in dm_pages %}
+                        {% unless page.path contains 'appendices' %}
+                            <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                        {% endunless %}
+                    {% endfor %}
+                    
+                    <!-- Appendices subsection -->
+                    {% assign dm_appendices = dm_pages | where_exp: "item", "item.path contains 'appendices'" %}
+                    {% if dm_appendices and dm_appendices.size > 0 %}
+                    <div class="nav-subsection">
+                        <button class="nav-subsection-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            <span>Appendices</span>
+                        </button>
+                        <div class="nav-subsubmenu">
+                            {% for page in dm_appendices %}
+                                <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Arcana -->
+            {% if site.arcana and site.arcana.size > 0 %}
+            <div class="nav-section">
+                <button class="nav-section-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>✨ Arcana</span>
+                </button>
+                <div class="nav-submenu">
+                    {% assign arcana_pages = site.arcana | sort: 'order' %}
+                    {% for page in arcana_pages %}
+                        <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            
+            <div class="nav-section">
+                <button class="nav-section-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>📖 Monster Compendium</span>
+                </button>
+                <div class="nav-submenu">
+                    <a href="{{ site.baseurl }}/monster-compendium/">Monster Compendium</a>
+                    <a href="{{ site.baseurl }}/monster-compendium/monsters-submit/">Submit Monster</a>
+                    <a href="{{ site.baseurl }}/monster-compendium/generator/">Statblock Builder</a>
+                    
+                    <!-- Locations subsection -->
+                    {% if site.field_guide %}
+                        {% assign locations = site.field_guide | where_exp: "item", "item.path contains 'locations'" | sort: 'order' %}
+                        {% if locations and locations.size > 0 %}
+                        <div class="nav-subsection">
+                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                <span class="toggle-icon">▶</span>
+                                <span>Locations</span>
+                            </button>
+                            <div class="nav-subsubmenu">
+                                {% for page in locations %}
+                                    <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- FAQ -->
+            {% if site.faq and site.faq.size > 0 %}
+            <div class="nav-section">
+                <button class="nav-section-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>❓ FAQ</span>
+                </button>
+                <div class="nav-submenu">
+                    {% assign faq_pages = site.faq | sort: 'order' %}
+                    {% for page in faq_pages %}
+                        <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Separator -->
+            <hr class="nav-divider">
+            
+            <!-- External Links -->
+            <div class="nav-section">
+                <button class="nav-section-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>🔗 Other Resources</span>
+                </button>
+                <div class="nav-submenu">
+                    <a href="https://sites.google.com/view/hawthorne-players-guide" target="_blank">Old Player Guide</a>
+                    <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">Old DM's Guide</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay"></div>
+
     <div class="page">
         <div class="export-button-container">
             <button class="export-json-button" onclick="exportToJSON()">Download JSON</button>
@@ -39,6 +264,83 @@ layout: default
         {% endif %}
     </div>
     
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; {{ 'now' | date: "%Y" }} Hawthorne D&D Guild</p>
+            <p>Built with Jekyll • Hosted on GitHub Pages</p>
+        </div>
+    </footer>
+    
+    <!-- JAVASCRIPT FOR MENU INTERACTION -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        const closeBtn = document.getElementById('close-menu-btn');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const body = document.body;
+
+        function toggleMenu() {
+            if (!sidebarMenu || !menuOverlay) return;
+            const isOpen = sidebarMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+            body.classList.toggle('menu-open', isOpen);
+        }
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+        if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
+        
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && sidebarMenu && sidebarMenu.classList.contains('open')) {
+                setTimeout(toggleMenu, 50);
+            }
+        });
+
+        // Handle main section toggles
+        const sectionToggles = document.querySelectorAll('.nav-section-toggle');
+        sectionToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navSection = this.parentElement;
+                const submenu = navSection.querySelector('.nav-submenu');
+                const icon = this.querySelector('.toggle-icon');
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                
+                this.setAttribute('aria-expanded', !isExpanded);
+                icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
+                
+                if (!isExpanded) {
+                    submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                } else {
+                    submenu.style.maxHeight = '0';
+                }
+            });
+        });
+        
+        // Handle subsection toggles
+        const subsectionToggles = document.querySelectorAll('.nav-subsection-toggle');
+        subsectionToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navSubsection = this.parentElement;
+                const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
+                const icon = this.querySelector('.toggle-icon');
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                
+                this.setAttribute('aria-expanded', !isExpanded);
+                icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
+                
+                if (!isExpanded) {
+                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
+                } else {
+                    subsubmenu.style.maxHeight = '0';
+                }
+            });
+        });
+    </script>
+    
+    <!-- JSON Export Script -->
     <script>
     function exportToJSON() {
         // Extract data from the page
@@ -329,5 +631,5 @@ layout: default
         return senses;
     }
     </script>
-    </body>
+</body>
 </html>

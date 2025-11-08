@@ -1,109 +1,31 @@
 /* ============================================ */
-/* D&D 2024 Monster Stat Block Style CSS */
-/* Responsive design for Jekyll/GitHub Pages */
+/* D&D 2024 Monster Stat Block Styles */
+/* Site-wide styles are in style.css */
+/* This file contains ONLY statblock-specific styles */
 /* ============================================ */
 
 /* ============================================ */
-/* FONT IMPORTS */
+/* MONSTER COMPENDIUM PAGE BACKGROUND */
 /* ============================================ */
 
-/* Google Fonts for D&D-style typography:
-   - Cinzel/Cinzel Decorative: Used for headers and titles (medieval/fantasy feel)
-   - Source Sans 3: Clean, readable font for body text
-   - Merriweather: Elegant serif for the site title */
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
-
-/* CSS Variables for consistent font usage throughout the site */
-:root {
-    --font-header: 'Cinzel', 'Cinzel Decorative', Georgia, serif;
-    --font-body: 'Source Sans 3', 'Noto Sans', sans-serif;
+/* Override body background for monster compendium pages */
+body.monster-page {
+  background-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #000000;
 }
 
-/* ============================================ */
-/* BASE PAGE STYLES */
-/* ============================================ */
-
-/* Main body styling with background image */
-body {
-    /* Background image with fallback color if image fails to load */
-    background-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
-    background-size: cover; /* Scale image to cover entire viewport */
-    background-position: center center; /* Center the image */
-    background-repeat: no-repeat; /* Prevent image tiling */
-    background-attachment: fixed; /* Keep background fixed when scrolling */
-    background-color: #000000; /* Fallback color if image fails */
-    
-    margin: 0;
-    padding: 20px;
-    font-family: var(--font-body), 'Book Antiqua', Georgia, serif;
-    color: #000;
-    font-size: 13.5px; /* Base font size for the entire site */
-    line-height: 1.5;
-}
-
-/* Prevent background scrolling when mobile menu is open */
-.menu-open {
-    overflow: hidden;
-}
-
-/* Main content container - the "page" that holds all content */
-.page {
-    max-width: 1000px;
-    margin: 20px auto; /* Center the page horizontally */
-    
-    /* Parchment-like background with subtle texture */
-    background: white url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5ErkJggg==');
-    padding: 20px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.25);
-    border-radius: 6px;
-    position: relative;
-}
-
-/* ============================================ */
-/* TYPOGRAPHY - HEADERS */
-/* ============================================ */
-
-/* Standard headers (h1-h4) outside of stat blocks */
-h1, h2, h3, h4 {
-    font-family: var(--font-header);
-    font-weight: 700;
-    color: #58180D; /* D&D burgundy/dark red color */
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    text-transform: uppercase;
-    letter-spacing: 1px; /* Slight spacing for medieval feel */
-}
-
-/* Page title (largest header) */
-h1 {
-    font-size: 2em;
-    border-bottom: 2px solid #C0AD6A; /* Gold accent border */
-    padding-bottom: 0.2em;
-}
-
-/* Section headers */
-h2 {
-    font-size: 1.8em;
-    border-bottom: 1px solid #C0AD6A; /* Thinner gold border */
-    padding-bottom: 0.2em;
-}
-
-/* Subsection headers */
-h3 {
-    font-size: 1.3em;
-    border-bottom: 1.5px solid #58180D; /* Dark red border */
-    border-top: none;
-}
-
-/* ============================================ */
-/* TYPOGRAPHY - PARAGRAPHS */
-/* ============================================ */
-
-/* Standard paragraph styling */
-p {
-    margin-bottom: 0.8em;
-    font-family: var(--font-body);
+/* Override page container for monster compendium */
+.monster-page .page {
+  max-width: 1000px;
+  background: white url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5ErkJggg==');
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.25);
+  border-radius: 6px;
+  margin: 20px auto;
 }
 
 /* ============================================ */
@@ -111,16 +33,32 @@ p {
 /* ============================================ */
 
 /* The main stat block container - uses blockquote for markdown compatibility */
-blockquote {
-    background: #FDF1DC; /* Parchment background color */
-    border: 2px solid #58180D; /* Dark red border */
-    border-radius: 8px;
-    padding: 0; /* No padding on container; each element inside has its own */
-    margin: 1em 0;
-    box-shadow: 0 0 8px rgba(0,0,0,0.2); /* Subtle shadow for depth */
-    font-family: var(--font-body);
-    overflow: hidden; /* Prevent content from breaking out of rounded corners */
-    page-break-inside: avoid; /* Keep stat block together when printing */
+blockquote.stat-block,
+.stat-block blockquote {
+  background: #FDF1DC;
+  border: 2px solid #58180D;
+  border-radius: 8px;
+  padding: 0;
+  margin: 1em 0;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  font-family: var(--font-body);
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+
+/* Override default blockquote styling for stat blocks */
+blockquote.stat-block,
+.monster-page blockquote {
+  background: #FDF1DC;
+  border: 2px solid #58180D;
+  border-radius: 8px;
+  padding: 0;
+  margin: 1em 0;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  font-family: var(--font-body);
+  overflow: hidden;
+  page-break-inside: avoid;
+  border-left: 2px solid #58180D; /* Override global blockquote left border */
 }
 
 /* ============================================ */
@@ -128,17 +66,18 @@ blockquote {
 /* ============================================ */
 
 /* Monster name header at the top of the stat block */
-blockquote h2 {
-    font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; /* Fancy decorative font */
-    font-size: 1.3em;
-    color: #FDF1DC; /* Light parchment text */
-    background: #58180D; /* Dark red background */
-    border: none; /* Override default h2 border */
-    margin: 0;
-    padding: 8px 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
+.monster-page blockquote h2,
+blockquote.stat-block h2 {
+  font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
+  font-size: 1.3em;
+  color: #FDF1DC;
+  background: #58180D;
+  border: none;
+  margin: 0;
+  padding: 8px 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
 }
 
 /* ============================================ */
@@ -146,9 +85,10 @@ blockquote h2 {
 /* ============================================ */
 
 /* Add horizontal padding to all content inside stat blocks except headers */
-blockquote > *:not(h2):not(h3) {
-    padding-left: 8px;
-    padding-right: 8px;
+.monster-page blockquote > *:not(h2):not(h3),
+blockquote.stat-block > *:not(h2):not(h3) {
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 /* ============================================ */
@@ -156,17 +96,19 @@ blockquote > *:not(h2):not(h3) {
 /* ============================================ */
 
 /* First paragraph in stat block (creature type/size/alignment) */
-blockquote p:first-of-type {
-    font-style: italic;
-    margin: 8px 0 4px 0;
-    font-size: 1em;
+.monster-page blockquote p:first-of-type,
+blockquote.stat-block p:first-of-type {
+  font-style: italic;
+  margin: 8px 0 4px 0;
+  font-size: 1em;
 }
 
 /* All paragraphs within stat blocks */
-blockquote p {
-    margin: 6px 0;
-    font-size: 1em;
-    line-height: 1.4; /* Tighter line height for compact stat blocks */
+.monster-page blockquote p,
+blockquote.stat-block p {
+  margin: 6px 0;
+  font-size: 1em;
+  line-height: 1.4;
 }
 
 /* ============================================ */
@@ -174,18 +116,20 @@ blockquote p {
 /* ============================================ */
 
 /* Section headers within stat blocks (TRAITS, ACTIONS, etc.) */
-blockquote h3 {
-    font-family: var(--font-header);
-    font-size: 1em;
-    color: #58180D;
-    background: none; /* No background (unlike h2) */
-    border: none;
-    border-bottom: 1.5px solid #58180D; /* Bottom border only */
-    margin: 12px 0 8px 0;
-    padding: 5px 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 700;
+.monster-page blockquote h3,
+blockquote.stat-block h3 {
+  font-family: var(--font-header);
+  font-size: 1em;
+  color: #58180D;
+  background: none;
+  border: none;
+  border-bottom: 1.5px solid #58180D;
+  border-top: none;
+  margin: 12px 0 8px 0;
+  padding: 5px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
 }
 
 /* ============================================ */
@@ -193,20 +137,24 @@ blockquote h3 {
 /* ============================================ */
 
 /* Bold text within stat blocks */
-blockquote strong {
-    font-weight: 700;
+.monster-page blockquote strong,
+blockquote.stat-block strong {
+  font-weight: 700;
 }
 
 /* Italic text within stat blocks */
-blockquote em {
-    font-style: italic;
+.monster-page blockquote em,
+blockquote.stat-block em {
+  font-style: italic;
 }
 
 /* Bold italic text (both tags applied) */
-blockquote strong em,
-blockquote em strong {
-    font-weight: 700;
-    font-style: italic;
+.monster-page blockquote strong em,
+.monster-page blockquote em strong,
+blockquote.stat-block strong em,
+blockquote.stat-block em strong {
+  font-weight: 700;
+  font-style: italic;
 }
 
 /* ============================================ */
@@ -214,16 +162,18 @@ blockquote em strong {
 /* ============================================ */
 
 /* Unordered lists inside stat blocks */
-blockquote ul {
-    list-style: none; /* Remove bullet points */
-    padding: 0 8px;
-    margin: 6px 0;
+.monster-page blockquote ul,
+blockquote.stat-block ul {
+  list-style: none;
+  padding: 0 8px;
+  margin: 6px 0;
 }
 
-blockquote ul li {
-    margin: 4px 0;
-    font-size: 1em;
-    line-height: 1.4;
+.monster-page blockquote ul li,
+blockquote.stat-block ul li {
+  margin: 4px 0;
+  font-size: 1em;
+  line-height: 1.4;
 }
 
 /* ============================================ */
@@ -231,37 +181,43 @@ blockquote ul li {
 /* ============================================ */
 
 /* Main ability scores table (STR, DEX, CON, INT, WIS, CHA) */
-blockquote table {
-    width: calc(100% - 16px); /* Full width minus left/right padding */
-    margin: 8px 8px;
-    border-collapse: collapse; /* Remove spacing between cells */
-    font-size: 0.95em;
-    background: none;
-    table-layout: fixed; /* Fixed layout for predictable column widths */
+.monster-page blockquote table,
+blockquote.stat-block table {
+  width: calc(100% - 16px);
+  margin: 8px 8px;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  background: none;
+  table-layout: fixed;
+  border: none;
 }
 
 /* Table headers and cells - basic styling */
-blockquote table th,
-blockquote table td {
-    padding: 4px 1px; /* Minimal horizontal padding for mobile fit */
-    text-align: center;
-    border: none;
-    background: none;
-    min-width: 0;
-    font-family: var(--font-body);
+.monster-page blockquote table th,
+.monster-page blockquote table td,
+blockquote.stat-block table th,
+blockquote.stat-block table td {
+  padding: 4px 1px;
+  text-align: center;
+  border: none;
+  background: none;
+  min-width: 0;
+  font-family: var(--font-body);
 }
 
 /* Table headers (MOD, SAVE labels) */
-blockquote table th {
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.9em;
+.monster-page blockquote table th,
+blockquote.stat-block table th {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9em;
 }
 
 /* Table data cells */
-blockquote table td {
-    font-weight: 400;
+.monster-page blockquote table td,
+blockquote.stat-block table td {
+  font-weight: 400;
 }
 
 /* ============================================ */
@@ -272,33 +228,45 @@ blockquote table td {
 /* ============================================ */
 
 /* Ability name columns (Str, Dex, Con, Int, Wis, Cha) */
-blockquote table td:nth-child(1),
-blockquote table td:nth-child(5),
-blockquote table td:nth-child(9) {
-    width: 12%;
-    text-align: left; /* Left-align ability names */
-    font-weight: 700;
-    padding-left: 6px;
+.monster-page blockquote table td:nth-child(1),
+.monster-page blockquote table td:nth-child(5),
+.monster-page blockquote table td:nth-child(9),
+blockquote.stat-block table td:nth-child(1),
+blockquote.stat-block table td:nth-child(5),
+blockquote.stat-block table td:nth-child(9) {
+  width: 12%;
+  text-align: left;
+  font-weight: 700;
+  padding-left: 6px;
 }
 
 /* Ability score value columns (the actual numbers: 10, 14, etc.) */
-blockquote table td:nth-child(2),
-blockquote table td:nth-child(6),
-blockquote table td:nth-child(10) {
-    width: 8%;
-    font-weight: 600; /* Slightly bolder for emphasis */
+.monster-page blockquote table td:nth-child(2),
+.monster-page blockquote table td:nth-child(6),
+.monster-page blockquote table td:nth-child(10),
+blockquote.stat-block table td:nth-child(2),
+blockquote.stat-block table td:nth-child(6),
+blockquote.stat-block table td:nth-child(10) {
+  width: 8%;
+  font-weight: 600;
 }
 
 /* Modifier and Save columns - gray background for visual separation */
-blockquote table td:nth-child(3),
-blockquote table td:nth-child(4),
-blockquote table td:nth-child(7),
-blockquote table td:nth-child(8),
-blockquote table td:nth-child(11),
-blockquote table td:nth-child(12) {
-    width: 8%;
-    font-weight: 400;
-    background: #dad1ca; /* Light gray background */
+.monster-page blockquote table td:nth-child(3),
+.monster-page blockquote table td:nth-child(4),
+.monster-page blockquote table td:nth-child(7),
+.monster-page blockquote table td:nth-child(8),
+.monster-page blockquote table td:nth-child(11),
+.monster-page blockquote table td:nth-child(12),
+blockquote.stat-block table td:nth-child(3),
+blockquote.stat-block table td:nth-child(4),
+blockquote.stat-block table td:nth-child(7),
+blockquote.stat-block table td:nth-child(8),
+blockquote.stat-block table td:nth-child(11),
+blockquote.stat-block table td:nth-child(12) {
+  width: 8%;
+  font-weight: 400;
+  background: #dad1ca;
 }
 
 /* ============================================ */
@@ -306,10 +274,11 @@ blockquote table td:nth-child(12) {
 /* ============================================ */
 
 /* Horizontal rules within stat blocks */
-blockquote hr {
-    border: none;
-    border-top: 1.5px solid #58180D;
-    margin: 8px 8px;
+.monster-page blockquote hr,
+blockquote.stat-block hr {
+  border: none;
+  border-top: 1.5px solid #58180D;
+  margin: 8px 8px;
 }
 
 /* ============================================ */
@@ -318,16 +287,16 @@ blockquote hr {
 
 /* Creator attribution line at the bottom of stat blocks */
 .statblock-creator {
-    font-family: var(--font-body);
-    font-size: 0.9em;
-    font-style: italic;
-    color: #58180D;
-    padding: 5px 8px;
-    margin: 8px 8px;
-    text-align: center;
-    border-top: 1.5px solid #58180D; /* Top border to separate from content above */
-    border-bottom: none;
-    width: calc(100% - 16px); /* Full width minus padding */
+  font-family: var(--font-body);
+  font-size: 0.9em;
+  font-style: italic;
+  color: #58180D;
+  padding: 5px 8px;
+  margin: 8px 8px;
+  text-align: center;
+  border-top: 1.5px solid #58180D;
+  border-bottom: none;
+  width: calc(100% - 16px);
 }
 
 /* ============================================ */
@@ -336,33 +305,33 @@ blockquote hr {
 
 /* Container for the JSON export button */
 .export-button-container {
-    text-align: right;
-    margin: 1em 0 1.5em 0;
+  text-align: right;
+  margin: 1em 0 1.5em 0;
 }
 
 /* The export button itself */
 .export-json-button {
-    background: #007bff; /* Blue background */
-    color: white;
-    border: none;
-    padding: 1em 2em;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    white-space: nowrap; /* Prevent text wrapping */
-    font-family: var(--font-body);
-    font-size: 1em;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 1em 2em;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: 1em;
 }
 
 /* Button hover effect */
 .export-json-button:hover {
-    background: #0056b3; /* Darker blue */
+  background: #0056b3;
 }
 
 /* Button press effect */
 .export-json-button:active {
-    transform: translateY(1px); /* Slight downward movement */
+  transform: translateY(1px);
 }
 
 /* ============================================ */
@@ -371,15 +340,15 @@ blockquote hr {
 
 /* Horizontal divider lines used throughout the page */
 .statblock-divider {
-    border: 0;
-    height: 1px;
-    background: #ccc; /* Light gray */
-    margin: 10px 0;
+  border: 0;
+  height: 1px;
+  background: #ccc;
+  margin: 10px 0;
 }
 
 /* First divider on the page (optional special styling) */
 .page > .statblock-divider:first-of-type {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 /* ============================================ */
@@ -388,391 +357,26 @@ blockquote hr {
 
 /* Container for monster artwork images */
 .monster-image-container {
-    width: 100%;
-    margin: 2em 0;
-    text-align: center;
+  width: 100%;
+  margin: 2em 0;
+  text-align: center;
 }
 
 /* The image itself - responsive sizing */
 .monster-image-container img {
-    max-width: 100%; /* Scale down to fit container on mobile */
-    height: auto; /* Maintain aspect ratio */
-    border: 5px solid #58180D; /* Thematic dark red border */
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Depth shadow */
+  max-width: 100%;
+  height: auto;
+  border: 5px solid #58180D;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Image credit/attribution text */
 .image-credit {
-    font-size: 0.9em;
-    color: #666;
-    font-style: italic;
-    margin-top: 0.5em;
-}
-
-/* ============================================ */
-/* GENERAL TABLES (OUTSIDE STAT BLOCKS) */
-/* ============================================ */
-
-/* Standard data tables for reference material */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1em 0;
-    background: #FDF1DC; /* Parchment background */
-}
-
-/* Table headers */
-table th {
-    font-family: var(--font-body);
-    background: #E0E5C1; /* Light olive background */
-    padding: 8px;
-    text-align: left;
-    font-weight: 700;
-    border: 1px solid #DDD;
-}
-
-/* Table data cells */
-table td {
-    padding: 8px;
-    border: 1px solid #DDD;
-    font-family: var(--font-body);
-}
-
-/* Alternating row colors for readability */
-table tr:nth-child(even) {
-    background: #FAF7EA; /* Slightly darker parchment */
-}
-
-/* ============================================ */
-/* LINKS */
-/* ============================================ */
-
-/* Standard link styling */
-a {
-    color: #58180D; /* D&D burgundy */
-    text-decoration: underline;
-}
-
-/* Link hover effect */
-a:hover {
-    color: #822000; /* Slightly brighter red */
-}
-
-/* ============================================ */
-/* LISTS (OUTSIDE STAT BLOCKS) */
-/* ============================================ */
-
-/* Unordered and ordered lists */
-ul, ol {
-    margin-left: 1.5em;
-    line-height: 1.6;
-    font-family: var(--font-body);
-}
-
-/* ============================================ */
-/* CODE BLOCKS */
-/* ============================================ */
-
-/* Inline code snippets */
-code {
-    background: #FDF1DC;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
-}
-
-/* Multi-line code blocks */
-pre {
-    background: #FDF1DC;
-    padding: 1em;
-    border-radius: 5px;
-    overflow-x: auto; /* Horizontal scroll for long lines */
-    border: 1px solid #DDD;
-}
-
-/* Code inside pre blocks (remove duplicate styling) */
-pre code {
-    background: none;
-    padding: 0;
-}
-
-/* ============================================ */
-/* PRINT STYLES */
-/* ============================================ */
-
-/* Optimize layout for printing */
-@media print {
-    body {
-        background: white; /* Remove background image/color for printing */
-    }
-
-    .page {
-        box-shadow: none; /* Remove shadows */
-        margin: 0;
-        padding: 0.5in; /* Standard print margins */
-    }
-}
-
-/* ============================================ */
-/* SITE HEADER */
-/* ============================================ */
-
-/* Main header at the top of every page */
-.site-header {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 2rem 0;
-    position: relative;
-    color: #f9f9f9; /* Light text */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    margin-bottom: 20px;
-}
-
-/* Dark overlay to ensure text readability over background image */
-.site-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4); /* 40% black overlay */
-    z-index: 1; /* Behind header content */
-}
-
-/* Header content container */
-.header-content {
-    position: relative;
-    z-index: 2; /* Above the overlay */
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    /* Grid layout: Hamburger | Title (centered) | Spacer (for balance) */
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    text-align: center;
-}
-
-/* Site title in header */
-.site-header .site-title {
-    font-family: 'Merriweather', serif;
-    /* Responsive font size: 30px minimum, scales with viewport, 47px maximum */
-    font-size: clamp(1.875rem, 4vw, 2.9375rem);
-    color: #f9f9f9;
-    margin: 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Text shadow for readability */
-    grid-column: 2 / 3; /* Center column */
-}
-
-/* Hide old desktop navigation (replaced by hamburger menu) */
-.site-nav {
-    display: none;
-}
-
-/* ============================================ */
-/* HAMBURGER MENU BUTTON */
-/* ============================================ */
-
-/* The hamburger icon button */
-#menu-toggle {
-    grid-column: 1 / 2; /* Left column */
-    background: none;
-    border: none;
-    border-radius: 0;
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    width: 32px;
-    height: 32px;
-    transition: opacity 0.3s;
-    z-index: 100; /* Above header overlay */
-    margin: 0;
-    justify-self: start; /* Align to left */
-}
-
-/* Hamburger button hover effect */
-#menu-toggle:hover {
-    opacity: 0.8; /* Slight fade */
-}
-
-/* Individual hamburger bars (three horizontal lines) */
-#menu-toggle .bar {
-    width: 100%;
-    height: 3px;
-    background-color: #f9f9f9;
-    border-radius: 2px;
-    transition: all 0.3s ease-in-out;
-}
-
-/* ============================================ */
-/* OFF-CANVAS SIDEBAR MENU */
-/* ============================================ */
-
-/* The sliding sidebar navigation menu */
-#sidebar-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px; /* Fixed width */
-    max-width: 80vw; /* Don't exceed 80% of viewport on small screens */
-    height: 100%;
-    background: #5b0f00; /* Dark burgundy background */
-    color: #FDF1DC; /* Parchment text color */
-    transform: translateX(-100%); /* Start hidden off-screen to the left */
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
-    z-index: 1000; /* Above everything except overlay */
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    font-family: var(--font-body);
-}
-
-/* Sidebar visible state - slide in from left */
-#sidebar-menu.open {
-    transform: translateX(0);
-}
-
-/* ============================================ */
-/* MENU OVERLAY (DARK BACKGROUND) */
-/* ============================================ */
-
-/* Semi-transparent dark overlay behind the menu */
-#menu-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* 70% black */
-    z-index: 999; /* Below sidebar, above content */
-    visibility: hidden; /* Hidden by default */
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s;
-}
-
-/* Overlay visible state */
-#menu-overlay.open {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* ============================================ */
-/* SIDEBAR CONTENT */
-/* ============================================ */
-
-/* Sidebar header with title and close button */
-.sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #C0AD6A; /* Gold accent */
-    margin-bottom: 20px;
-}
-
-/* Sidebar title */
-.sidebar-title {
-    font-family: var(--font-header);
-    font-size: 1.5rem;
-    color: #FDF1DC;
-    margin: 0;
-    border: none;
-    padding: 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Close button (X) in sidebar */
-.close-btn {
-    background: none;
-    border: none;
-    color: #FDF1DC;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 5px;
-}
-
-/* Navigation links container */
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Individual navigation links */
-.sidebar-nav a {
-    color: #FDF1DC;
-    text-decoration: none;
-    font-size: 1.1rem;
-    padding: 10px 0;
-    transition: background-color 0.2s, padding-left 0.2s, color 0.2s;
-    font-weight: 400;
-}
-
-/* Link hover effect - slight background and indent */
-.sidebar-nav a:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding-left: 10px; /* Indent on hover */
-    color: #C0AD6A; /* Gold color */
-}
-
-/* Remove border from last link */
-.sidebar-nav a:last-child {
-    border-bottom: none;
-}
-
-/* Divider line in sidebar */
-.sidebar-divider {
-    height: 1px;
-    background-color: #C0AD6A; /* Gold line */
-    margin: 20px 0;
-}
-
-/* External links section title */
-.external-links-title {
-    font-family: var(--font-header);
-    font-size: 0.9rem;
-    color: #C0AD6A; /* Gold */
-    text-transform: uppercase;
-    margin: 0 0 10px 0;
-    border: none;
-    padding: 0;
-    letter-spacing: 1px;
-}
-
-/* ============================================ */
-/* SITE FOOTER */
-/* ============================================ */
-
-/* Footer at the bottom of every page */
-.site-footer {
-    background: #5b0f00; /* Dark burgundy (matches sidebar) */
-    color: #FDF1DC; /* Parchment text */
-    padding: 2em 0;
-    margin-top: 40px;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.3); /* Top shadow */
-}
-
-/* Footer content container */
-.footer-content {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 20px;
-    text-align: center;
-    font-family: var(--font-body);
-}
-
-/* Footer paragraphs */
-.footer-content p {
-    margin: 0.5em 0;
-    color: #FDF1DC;
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+  margin-top: 0.5em;
 }
 
 /* ============================================ */
@@ -781,36 +385,36 @@ pre code {
 
 /* Monster lore description section (separate from stat block) */
 .monster-description {
-    font-family: var(--font-body);
-    font-size: 1em;
-    line-height: 1.7;
-    color: #2c2c2c; /* Dark gray text */
-    padding: 2em 1em;
-    margin-top: 2em;
-    background: #ffffff; /* Pure white background */
-    border: none;
-    border-radius: 0;
-    text-align: justify; /* Justified text for paragraph blocks */
+  font-family: var(--font-body);
+  font-size: 1em;
+  line-height: 1.7;
+  color: #2c2c2c;
+  padding: 2em 1em;
+  margin-top: 2em;
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  text-align: justify;
 }
 
 /* Headers within monster descriptions */
 .monster-description h4 {
-    font-family: var(--font-header);
-    color: #58180D;
-    font-size: 1.4em;
-    margin-top: 1.2em;
-    margin-bottom: 0.5em;
-    text-transform: uppercase;
+  font-family: var(--font-header);
+  color: #58180D;
+  font-size: 1.4em;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
 }
 
 /* First paragraph in description (no top margin) */
 .monster-description p:first-child {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 /* Paragraphs in description */
 .monster-description p {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 /* ============================================ */
@@ -819,707 +423,167 @@ pre code {
 
 /* Grid of monster cards on the index page */
 .monster-list {
-    display: grid;
-    grid-template-columns: 1fr; /* Single column layout */
-    gap: 10px;
-    margin: 1em 0 2em 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 1em 0 2em 0;
 }
 
 /* Individual monster card */
 .monster-card {
-    background: #FDF1DC; /* Parchment background */
-    border: 2px solid #58180D; /* Dark red border */
-    border-radius: 8px;
-    padding: 0.5em;
-    transition: transform 0.2s, box-shadow 0.2s; /* Smooth hover animation */
+  background: #FDF1DC;
+  border: 2px solid #58180D;
+  border-radius: 8px;
+  padding: 0.5em;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 /* Card hover effect - lift up slightly */
 .monster-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 /* Monster name in card */
 .monster-card h3 {
-    font-family: var(--font-header);
-    margin-top: 0;
-    margin-bottom: 0.2em;
-    border: none;
-    font-size: 1.3em;
+  font-family: var(--font-header);
+  margin-top: 0;
+  margin-bottom: 0.2em;
+  border: none;
+  font-size: 1.3em;
 }
 
 /* Monster name link */
 .monster-card h3 a {
-    color: #58180D;
-    text-decoration: none;
+  color: #58180D;
+  text-decoration: none;
 }
 
 /* Monster name link hover */
 .monster-card h3 a:hover {
-    color: #822000; /* Brighter red */
+  color: #822000;
 }
 
 /* Challenge Rating display */
 .monster-cr {
-    font-family: var(--font-body);
-    font-weight: bold;
-    color: #822000;
-    margin: 0.3em 0;
-    font-size: 0.95em;
+  font-family: var(--font-body);
+  font-weight: bold;
+  color: #822000;
+  margin: 0.3em 0;
+  font-size: 0.95em;
 }
 
 /* Monster type display (Beast, Dragon, etc.) */
 .monster-type {
-    font-family: var(--font-body);
-    font-style: italic;
-    color: #666;
-    margin: 0.3em 0;
-    font-size: 0.9em;
-}
-
-/* ============================================ */
-/* PDF Rendering */
-/* ============================================ */
-
-.pdf-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100vh; /* full viewport height, optional */
-}
-
-.pdf-container iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  border: none;
-}
-
-/* ============================================ */
-/* Nested Navigation Styles */
-/* ============================================ */
-.sidebar-nav {
-    font-size: 1.2em;
-}
-
-.nav-link {
-    display: block;
-    padding: 12px 20px;
-    color: inherit;
-    text-decoration: none;
-    transition: background-color 0.2s;
-}
-
-.nav-link:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.nav-section {
-    margin: 0;
-}
-
-.nav-section-toggle {
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 12px 20px;
-    text-align: left;
-    cursor: pointer;
-    font-size: 1em;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.2s;
-}
-
-.nav-section-toggle:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.toggle-icon {
-    display: inline-block;
-    transition: transform 0.3s ease;
-    font-size: 0.8em;
-}
-
-.nav-submenu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    background-color: rgba(0, 0, 0, 0.03);
-}
-
-.nav-submenu a {
-    display: block;
-    padding: 10px 20px 10px 45px;
-    color: inherit;
-    text-decoration: none;
-    font-size: 1.1em;
-    transition: background-color 0.2s;
-}
-
-.nav-submenu a:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.nav-divider {
-    margin: 15px 20px;
-    border: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* ============================================ */
-/* DOCUMENTATION LAYOUT STYLES */
-/* ============================================ */
-
-.doc-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.doc-content {
-    position: relative;
-}
-
-/* Breadcrumb Navigation */
-.breadcrumb {
-    font-family: var(--font-body);
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 1em;
-    padding: 0.5em 0;
-}
-
-.breadcrumb a {
-    color: #58180D;
-    text-decoration: none;
-}
-
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.breadcrumb-separator {
-    margin: 0 0.5em;
-    color: #999;
-}
-
-.breadcrumb-item {
-    color: #666;
-}
-
-/* Documentation Title */
-.doc-title {
-    font-family: var(--font-header);
-    color: #58180D;
-    font-size: 2.5em;
-    margin: 0.5em 0;
-    border-bottom: 3px solid #58180D;
-    padding-bottom: 0.3em;
-}
-
-/* Documentation Metadata */
-.doc-meta {
-    font-family: var(--font-body);
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 2em;
-    padding-bottom: 1em;
-    border-bottom: 1px solid #ddd;
-}
-
-.doc-author {
-    margin-right: 1em;
-}
-
-.doc-date {
-    font-style: italic;
-}
-
-/* Documentation Body */
-.doc-body {
-    font-family: var(--font-body);
-    line-height: 1.8;
-    color: #2c2c2c;
-}
-
-.doc-body h2 {
-    margin-top: 2em;
-    margin-bottom: 1em;
-}
-
-.doc-body h3 {
-    margin-top: 1.5em;
-    margin-bottom: 0.75em;
-}
-
-.doc-body img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin: 1.5em 0;
-}
-
-.doc-body table {
-    margin: 1.5em 0;
-}
-
-/* Table of Contents Sidebar */
-.doc-toc {
-    position: sticky;
-    top: 20px;
-    float: right;
-    width: 250px;
-    margin-left: 2em;
-    margin-bottom: 2em;
-    background: #FDF1DC;
-    border: 2px solid #58180D;
-    border-radius: 8px;
-    padding: 1.5em;
-}
-
-.doc-toc h3 {
-    font-family: var(--font-header);
-    font-size: 1.1em;
-    margin: 0 0 1em 0;
-    color: #58180D;
-    text-transform: uppercase;
-}
-
-.toc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.toc-item {
-    margin: 0.5em 0;
-}
-
-.toc-h3 {
-    margin-left: 1em;
-}
-
-.toc-link {
-    color: #58180D;
-    text-decoration: none;
-    font-size: 0.95em;
-    line-height: 1.4;
-    display: block;
-    padding: 0.25em 0;
-}
-
-.toc-link:hover {
-    color: #822000;
-    text-decoration: underline;
-}
-
-/* Footer Navigation */
-.doc-footer-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 3em;
-    padding-top: 2em;
-    border-top: 2px solid #ddd;
-}
-
-.doc-footer-nav a {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 1em;
-    background: #FDF1DC;
-    border: 2px solid #58180D;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #58180D;
-    font-family: var(--font-body);
-    transition: all 0.2s;
-    max-width: 45%;
-}
-
-.doc-footer-nav a:hover {
-    background: #58180D;
-    color: #FDF1DC;
-}
-
-.doc-footer-nav .prev-link {
-    margin-right: auto;
-}
-
-.doc-footer-nav .next-link {
-    margin-left: auto;
-    flex-direction: row-reverse;
-}
-
-.nav-arrow {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.nav-label {
-    font-weight: 600;
-}
-
-/* Subsection Styling */
-.nav-subsection {
-    margin-left: 0;
-}
-
-.nav-subsection-toggle {
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 10px 20px 10px 30px;
-    text-align: left;
-    cursor: pointer;
-    font-size: 0.95em;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.2s;
-}
-
-.nav-subsection-toggle:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.nav-subsubmenu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.nav-subsubmenu a {
-    display: block;
-    padding: 8px 20px 8px 60px;
-    color: inherit;
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: background-color 0.2s;
-}
-
-.nav-subsubmenu a:hover {
-    background-color: rgba(0, 0, 0, 0.08);
+  font-family: var(--font-body);
+  font-style: italic;
+  color: #666;
+  margin: 0.3em 0;
+  font-size: 0.9em;
 }
 
 /* ============================================ */
 /* RESPONSIVE DESIGN - MOBILE */
 /* Adjustments for screens 768px wide or smaller */
 /* ============================================ */
-/* ============================================ */
-/* DOCUMENTATION LAYOUT STYLES */
-/* ============================================ */
-
-.doc-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.doc-content {
-    position: relative;
-}
-
-/* Breadcrumb Navigation */
-.breadcrumb {
-    font-family: var(--font-body);
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 1em;
-    padding: 0.5em 0;
-}
-
-.breadcrumb a {
-    color: #58180D;
-    text-decoration: none;
-}
-
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.breadcrumb-separator {
-    margin: 0 0.5em;
-    color: #999;
-}
-
-.breadcrumb-item {
-    color: #666;
-}
-
-/* Documentation Title */
-.doc-title {
-    font-family: var(--font-header);
-    color: #58180D;
-    font-size: 2.5em;
-    margin: 0.5em 0;
-    border-bottom: 3px solid #58180D;
-    padding-bottom: 0.3em;
-}
-
-/* Documentation Metadata */
-.doc-meta {
-    font-family: var(--font-body);
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 2em;
-    padding-bottom: 1em;
-    border-bottom: 1px solid #ddd;
-}
-
-.doc-author {
-    margin-right: 1em;
-}
-
-.doc-date {
-    font-style: italic;
-}
-
-/* Documentation Body */
-.doc-body {
-    font-family: var(--font-body);
-    line-height: 1.8;
-    color: #2c2c2c;
-}
-
-.doc-body h2 {
-    margin-top: 2em;
-    margin-bottom: 1em;
-}
-
-.doc-body h3 {
-    margin-top: 1.5em;
-    margin-bottom: 0.75em;
-}
-
-.doc-body img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin: 1.5em 0;
-}
-
-.doc-body table {
-    margin: 1.5em 0;
-}
-
-/* Table of Contents Sidebar */
-.doc-toc {
-    position: sticky;
-    top: 20px;
-    float: right;
-    width: 250px;
-    margin-left: 2em;
-    margin-bottom: 2em;
-    background: #FDF1DC;
-    border: 2px solid #58180D;
-    border-radius: 8px;
-    padding: 1.5em;
-}
-
-.doc-toc h3 {
-    font-family: var(--font-header);
-    font-size: 1.1em;
-    margin: 0 0 1em 0;
-    color: #58180D;
-    text-transform: uppercase;
-}
-
-.toc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.toc-item {
-    margin: 0.5em 0;
-}
-
-.toc-h3 {
-    margin-left: 1em;
-}
-
-.toc-link {
-    color: #58180D;
-    text-decoration: none;
-    font-size: 0.95em;
-    line-height: 1.4;
-    display: block;
-    padding: 0.25em 0;
-}
-
-.toc-link:hover {
-    color: #822000;
-    text-decoration: underline;
-}
-
-/* Footer Navigation */
-.doc-footer-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 3em;
-    padding-top: 2em;
-    border-top: 2px solid #ddd;
-}
-
-.doc-footer-nav a {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 1em;
-    background: #FDF1DC;
-    border: 2px solid #58180D;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #58180D;
-    font-family: var(--font-body);
-    transition: all 0.2s;
-    max-width: 45%;
-}
-
-.doc-footer-nav a:hover {
-    background: #58180D;
-    color: #FDF1DC;
-}
-
-.doc-footer-nav .prev-link {
-    margin-right: auto;
-}
-
-.doc-footer-nav .next-link {
-    margin-left: auto;
-    flex-direction: row-reverse;
-}
-
-.nav-arrow {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.nav-label {
-    font-weight: 600;
-}
-
-/* Subsection Styling */
-.nav-subsection {
-    margin-left: 0;
-}
-
-.nav-subsection-toggle {
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 10px 20px 10px 30px;
-    text-align: left;
-    cursor: pointer;
-    font-size: 0.95em;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.2s;
-}
-
-.nav-subsection-toggle:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.nav-subsubmenu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.nav-subsubmenu a {
-    display: block;
-    padding: 8px 20px 8px 60px;
-    color: inherit;
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: background-color 0.2s;
-}
-
-.nav-subsubmenu a:hover {
-    background-color: rgba(0, 0, 0, 0.08);
-}
 
 @media (max-width: 768px) {
-    /* Reduce base font size for mobile */
-    body {
-        font-size: 12px;
-        padding: 10px;
-    }
+  /* Reduce base font size for mobile on monster pages */
+  .monster-page {
+    font-size: 12px;
+    padding: 10px;
+  }
 
-    /* Full-width page container on mobile */
-    .page {
-        padding: 12px;
-        margin: 0;
-        box-shadow: none;
-        border-radius: 0; /* Square corners on mobile */
-    }
+  /* Full-width page container on mobile */
+  .monster-page .page {
+    padding: 12px;
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
 
-    /* Slightly smaller stat block borders */
-    blockquote {
-        border-width: 1.5px;
-        margin: 0.8em 0;
-        border-radius: 6px;
-    }
+  /* Slightly smaller stat block borders */
+  .monster-page blockquote,
+  blockquote.stat-block {
+    border-width: 1.5px;
+    margin: 0.8em 0;
+    border-radius: 6px;
+  }
 
-    /* Smaller monster name header */
-    blockquote h2 {
-        font-size: 1.1em;
-        padding: 6px 8px;
-    }
+  /* Smaller monster name header */
+  .monster-page blockquote h2,
+  blockquote.stat-block h2 {
+    font-size: 1.1em;
+    padding: 6px 8px;
+  }
 
-    /* Smaller section headers */
-    blockquote h3 {
-        font-size: 0.9em;
-        padding: 4px 8px;
-        border-bottom: 1px solid #58180D;
-        border-top: none;
-    }
+  /* Smaller section headers */
+  .monster-page blockquote h3,
+  blockquote.stat-block h3 {
+    font-size: 0.9em;
+    padding: 4px 8px;
+    border-bottom: 1px solid #58180D;
+    border-top: none;
+  }
 
-    /* Make table scrollable horizontally if needed (though fixed widths should prevent this) */
-    blockquote table {
-        font-size: 0.8em;
-        display: block;
-        overflow-x: auto; /* Allow horizontal scroll if absolutely necessary */
-        white-space: nowrap; /* Prevent text wrapping in cells */
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    }
+  /* Make table scrollable horizontally if needed */
+  .monster-page blockquote table,
+  blockquote.stat-block table {
+    font-size: 0.8em;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
 
-    /* Reduced table cell padding on mobile */
-    blockquote table th,
-    blockquote table td {
-        padding: 3px 5px;
-    }
+  /* Reduced table cell padding on mobile */
+  .monster-page blockquote table th,
+  .monster-page blockquote table td,
+  blockquote.stat-block table th,
+  blockquote.stat-block table td {
+    padding: 3px 5px;
+  }
 
-    /* Adjust monster description padding for mobile */
-    .monster-description {
-        padding: 1.5em 0.8em; /* Reduced padding for smaller screens */
-        font-size: 1em; /* Maintain readability on mobile */
-    }
+  /* Adjust monster description padding for mobile */
+  .monster-description {
+    padding: 1.5em 0.8em;
+    font-size: 1em;
+  }
 
-    /* Single column layout for monster cards on mobile */
-    .monster-list {
-        grid-template-columns: 1fr;
-        gap: 15px; /* Slightly larger gap for better separation */
-    }
-    
-    /* Increase padding for better touch targets on mobile */
-    .monster-card {
-        padding: 1em;
-    }
-    
+  /* Single column layout for monster cards on mobile */
+  .monster-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  /* Increase padding for better touch targets on mobile */
+  .monster-card {
+    padding: 1em;
+  }
+}
+
+/* ============================================ */
+/* PRINT STYLES FOR STAT BLOCKS */
+/* ============================================ */
+
+@media print {
+  .monster-page {
+    background: white;
+  }
+
+  .monster-page .page {
+    box-shadow: none;
+    margin: 0;
+    padding: 0.5in;
+  }
+  
+  .export-button-container,
+  .export-json-button {
+    display: none;
+  }
+  
+  blockquote.stat-block,
+  .monster-page blockquote {
+    page-break-inside: avoid;
+  }
 }
