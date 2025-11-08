@@ -17,17 +17,17 @@ order: 1
 6. Don’t cheat.
 
 ## Server Code of Conduct
-Compliance with Discord Rules
+**Compliance with Discord Rules**  
 All server members must comply with the Discord Community Guidelines and Terms of Service.  Violations can result in immediate server ban.
 
 ### Respect
 All server members should treat each other with respect. You are not required to be friends but should treat each other in ways that help create an atmosphere of positivity and integrity.
 
-No Harassment. Harassment of other players is not tolerated, which includes: name calling, spreading rumors, publicly disparaging others, abuse of Discord’s private message or pinging features, stalking, trolling, or passive aggressive comments.
+**No Harassment**. Harassment of other players is not tolerated, which includes: name calling, spreading rumors, publicly disparaging others, abuse of Discord’s private message or pinging features, stalking, trolling, or passive aggressive comments.
 
 Sexual harassment is grounds for immediate server ban, including unwelcome sexual advances, requests for sexual favors, and persistent conduct of a sexual nature despite objections from the affected party.
 
-No Disruptive Behavior.  Disruptive behavior includes racism, sexism, bigotry of any kind, backseat DMing, and interrupting another player’s scene or injecting yourself into it without the DM or player’s consent.
+**No Disruptive Behavior**.  Disruptive behavior includes racism, sexism, bigotry of any kind, backseat DMing, and interrupting another player’s scene or injecting yourself into it without the DM or player’s consent.
 
 ### Privacy
 Do not share the personal information or private messages of others without their permission. The only exceptions are to contact PR with this information if there is a concern for the health and safety of another player or to provide evidence if you are being harassed.
