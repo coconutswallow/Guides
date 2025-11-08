@@ -123,5 +123,51 @@
     </script>
     
     <script src="{{ '/assets/js/sidebar.js' | relative_url }}"></script>
+    
+    <script>
+        // Export stat block to JSON
+        function exportToJSON() {
+            const statBlock = {
+                name: "{{ page.title }}",
+                source: "{{ page.source | default: 'Hawthorne Guild' }}",
+                page: {{ page.page | default: 0 }},
+                size: "{{ page.size }}",
+                type: "{{ page.type }}",
+                alignment: "{{ page.alignment }}",
+                ac: {{ page.ac | default: 10 }},
+                hp: {{ page.hp | default: 1 }},
+                speed: "{{ page.speed }}",
+                str: {{ page.str | default: 10 }},
+                dex: {{ page.dex | default: 10 }},
+                con: {{ page.con | default: 10 }},
+                int: {{ page.int | default: 10 }},
+                wis: {{ page.wis | default: 10 }},
+                cha: {{ page.cha | default: 10 }},
+                cr: "{{ page.cr | default: '0' }}"
+            };
+            
+            // Add optional fields if they exist
+            {% if page.saves %}statBlock.saves = "{{ page.saves }}";{% endif %}
+            {% if page.skills %}statBlock.skills = "{{ page.skills }}";{% endif %}
+            {% if page.senses %}statBlock.senses = "{{ page.senses }}";{% endif %}
+            {% if page.languages %}statBlock.languages = "{{ page.languages }}";{% endif %}
+            {% if page.damage_immunities %}statBlock.damageImmunities = "{{ page.damage_immunities }}";{% endif %}
+            {% if page.damage_resistances %}statBlock.damageResistances = "{{ page.damage_resistances }}";{% endif %}
+            {% if page.damage_vulnerabilities %}statBlock.damageVulnerabilities = "{{ page.damage_vulnerabilities }}";{% endif %}
+            {% if page.condition_immunities %}statBlock.conditionImmunities = "{{ page.condition_immunities }}";{% endif %}
+            {% if page.creator %}statBlock.creator = "{{ page.creator }}";{% endif %}
+            
+            const dataStr = JSON.stringify(statBlock, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = '{{ page.title | slugify }}.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>
