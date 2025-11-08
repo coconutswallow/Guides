@@ -60,66 +60,32 @@
         // 1. BASE URL DEFINITION (Needed by search.js)
         const BASE_URL = "{{ site.baseurl }}"; 
         
-        // 2. MAIN MENU TOGGLE LOGIC (Existing menu JS)
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebarMenu = document.getElementById('sidebar-menu');
-        const closeMenuBtn = document.getElementById('close-menu-btn');
-        const menuOverlay = document.getElementById('menu-overlay');
+        // 2. MAIN MENU TOGGLE LOGIC WRAPPED IN TRY/CATCH
+        try {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebarMenu = document.getElementById('sidebar-menu');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const menuOverlay = document.getElementById('menu-overlay');
 
-        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
-            function toggleMenu() {
-                sidebarMenu.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
-                document.body.classList.toggle('no-scroll');
+            if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+                function toggleMenu() {
+                    sidebarMenu.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
+                }
+
+                menuToggle.addEventListener('click', toggleMenu);
+                closeMenuBtn.addEventListener('click', toggleMenu);
+                menuOverlay.addEventListener('click', toggleMenu);
             }
-
-            menuToggle.addEventListener('click', toggleMenu);
-            closeMenuBtn.addEventListener('click', toggleMenu);
-            menuOverlay.addEventListener('click', toggleMenu);
+            
+            // NOTE: Any other existing, working menu JS (like section/subsection toggles) 
+            // must also be placed inside this script block.
+            
+        } catch (e) {
+            // Logs an error in the console but allows the rest of the scripts to run
+            console.error("Navigation JS failed to load:", e);
         }
-        
-        // 3. NAVIGATION SECTION TOGGLE LOGIC (Existing menu JS)
-        // Handle section toggles
-        const sectionToggles = document.querySelectorAll('.nav-section-toggle');
-        sectionToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const navSection = this.parentElement;
-                const submenu = navSection.querySelector('.nav-submenu');
-                const icon = this.querySelector('.toggle-icon');
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                
-                this.setAttribute('aria-expanded', !isExpanded);
-                icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-                
-                if (!isExpanded) {
-                    submenu.style.maxHeight = submenu.scrollHeight + 'px';
-                } else {
-                    submenu.style.maxHeight = '0';
-                }
-            });
-        });
-        
-        // Handle subsection toggles
-        const subsectionToggles = document.querySelectorAll('.nav-subsection-toggle');
-        subsectionToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const navSubsection = this.parentElement;
-                const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
-                const icon = this.querySelector('.toggle-icon');
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                
-                this.setAttribute('aria-expanded', !isExpanded);
-                icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-                
-                if (!isExpanded) {
-                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
-                } else {
-                    subsubmenu.style.maxHeight = '0';
-                }
-            });
-        });
 
     </script>
     
