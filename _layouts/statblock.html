@@ -78,6 +78,12 @@
     <div class="page">
         {{ content }}
         
+        {% if page.layout == "statblock" %}
+        <div class="export-button-container">
+            <button class="export-json-button" onclick="exportToJSON()">Export as JSON</button>
+        </div>
+        {% endif %}
+        
         {% if page.image %}
         <div class="monster-image-container">
             <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">

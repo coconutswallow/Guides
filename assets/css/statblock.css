@@ -43,7 +43,8 @@ blockquote.stat-block,
   padding: 0;
   margin: 1em 0;
   box-shadow: 0 0 8px rgba(0,0,0,0.2);
-  font-family: var(--font-body);
+  font-family: 'Source Sans 3', Arial, sans-serif; /* Changed to clean sans-serif */
+  font-style: normal; /* Ensure no italic */
   overflow: hidden;
   page-break-inside: avoid;
 }
@@ -65,6 +66,7 @@ blockquote.stat-block h2 {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
+  font-style: normal; /* Ensure no italic */
 }
 
 /* ============================================ */
@@ -85,7 +87,7 @@ blockquote.stat-block > *:not(h2):not(h3) {
 /* First paragraph in stat block (creature type/size/alignment) */
 .monster-page blockquote p:first-of-type,
 blockquote.stat-block p:first-of-type {
-  font-style: italic;
+  font-style: italic; /* This one SHOULD be italic */
   margin: 8px 0 4px 0;
   font-size: 1em;
 }
@@ -96,6 +98,7 @@ blockquote.stat-block p {
   margin: 6px 0;
   font-size: 1em;
   line-height: 1.4;
+  font-style: normal; /* Override any inherited italic */
 }
 
 /* ============================================ */
@@ -117,6 +120,7 @@ blockquote.stat-block h3 {
   text-transform: uppercase;
   letter-spacing: 0.8px;
   font-weight: 700;
+  font-style: normal; /* Ensure no italic */
 }
 
 /* ============================================ */
@@ -127,6 +131,7 @@ blockquote.stat-block h3 {
 .monster-page blockquote strong,
 blockquote.stat-block strong {
   font-weight: 700;
+  font-style: normal; /* Ensure no italic unless explicitly set */
 }
 
 /* Italic text within stat blocks */
@@ -161,6 +166,7 @@ blockquote.stat-block ul li {
   margin: 4px 0;
   font-size: 1em;
   line-height: 1.4;
+  font-style: normal; /* Ensure no italic */
 }
 
 /* ============================================ */
@@ -189,7 +195,8 @@ blockquote.stat-block table td {
   border: none;
   background: none;
   min-width: 0;
-  font-family: var(--font-body);
+  font-family: 'Source Sans 3', Arial, sans-serif; /* Clean sans-serif for tables */
+  font-style: normal; /* Ensure no italic */
 }
 
 /* Table headers (MOD, SAVE labels) */
@@ -274,7 +281,7 @@ blockquote.stat-block hr {
 
 /* Creator attribution line at the bottom of stat blocks */
 .statblock-creator {
-  font-family: var(--font-body);
+  font-family: 'Source Sans 3', Arial, sans-serif;
   font-size: 0.9em;
   font-style: italic;
   color: var(--color-primary);
@@ -461,7 +468,7 @@ blockquote.stat-block hr {
 
 /* Challenge Rating display */
 .monster-cr {
-  font-family: var(--font-body);
+  font-family: 'Source Sans 3', Arial, sans-serif;
   font-weight: bold;
   color: var(--color-secondary);
   margin: 0.3em 0;
@@ -470,7 +477,7 @@ blockquote.stat-block hr {
 
 /* Monster type display (Beast, Dragon, etc.) */
 .monster-type {
-  font-family: var(--font-body);
+  font-family: 'Source Sans 3', Arial, sans-serif;
   font-style: italic;
   color: #666;
   margin: 0.3em 0;
