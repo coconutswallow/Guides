@@ -49,13 +49,13 @@ layout: default
 
             {% for item in collection_items %}
                 {% if item.url == page.url %}
-                    {% assign current_index_0 = forloop.index0 %}  <-- **FIX 1: Capture the 0-based index**
+                    {% assign current_index_0 = forloop.index0 %}
                     {% break %}
                 {% endif %}
             {% endfor %}
             
             {% comment %} Previous Link Logic {% endcomment %}
-            {% if current_index_0 > 0 %}  <-- **FIX 2: Check if 0-based index is greater than 0**
+            {% if current_index_0 > 0 %} 
                 {% assign prev_item_index = current_index_0 | minus: 1 %}
                 {% assign prev_item = collection_items[prev_item_index] %}
                 <a href="{{ prev_item.url | relative_url }}" class="prev-link">
