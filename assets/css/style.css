@@ -423,19 +423,11 @@ tbody tr:hover {
 .role-trial-dm {
   color: #25c059;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
-
 }
 
 .role-full-dm {
   color: #1a7939;
   font-weight: 600;
-  background-color: #333333; /* Dark gray background */
-  padding: 2px 4px; /* Optional: Adds a little space around the text and background */
-  border-radius: 3px; /* Optional: Gives the background slightly rounded corners */
-
 }
 
 .role-auditor {
