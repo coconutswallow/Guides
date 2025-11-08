@@ -1,0 +1,525 @@
+/* ============================================
+   Hawthorne Guild Guide - Main Stylesheet
+   ============================================ */
+
+/* CSS Variables */
+:root {
+  /* Colors */
+  --color-primary: #58180D;
+  --color-secondary: #822000;
+  --color-bg-light: #FDF1DC;
+  --color-bg-medium: #F5E6D3;
+  --color-text: #58180D;
+  --color-border: #58180D;
+  
+  /* Fonts */
+  --font-header: 'Cinzel', 'Georgia', serif;
+  --font-body: 'Crimson Text', 'Georgia', serif;
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+  --spacing-xl: 4rem;
+  
+  /* Border radius */
+  --border-radius: 0px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(88, 24, 13, 0.1);
+  --shadow-md: 0 4px 8px rgba(88, 24, 13, 0.15);
+  --shadow-lg: 0 6px 12px rgba(88, 24, 13, 0.2);
+}
+
+/* ============================================
+   Global Styles
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: #FFFEF9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-header);
+  color: var(--color-primary);
+  line-height: 1.3;
+  margin-bottom: 0.5em;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2.5em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-size: 2em;
+  border-bottom: 3px solid var(--color-border);
+  padding-bottom: 0.3em;
+  margin-top: 1.5em;
+}
+
+h3 {
+  font-size: 1.5em;
+  text-transform: uppercase;
+  margin-top: 1.2em;
+}
+
+h4 {
+  font-size: 1.3em;
+  margin-top: 1em;
+}
+
+h5 {
+  font-size: 1.1em;
+}
+
+h6 {
+  font-size: 1em;
+}
+
+p {
+  margin-bottom: 1em;
+  font-size: 1.05em;
+}
+
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+strong, b {
+  font-weight: 700;
+}
+
+em, i {
+  font-style: italic;
+}
+
+code {
+  background: var(--color-bg-medium);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+pre {
+  background: var(--color-bg-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 1em;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1em;
+  margin: 1em 0;
+  font-style: italic;
+  color: #5a3a2a;
+}
+
+hr {
+  border: none;
+  border-top: 2px solid var(--color-border);
+  margin: 2em 0;
+}
+
+/* ============================================
+   Lists
+   ============================================ */
+
+ul, ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+ul li, ol li {
+  margin-bottom: 0.5em;
+  font-size: 1.05em;
+}
+
+ul ul, ol ol, ul ol, ol ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+}
+
+thead {
+  background: var(--color-primary);
+  color: var(--color-bg-light);
+}
+
+th {
+  padding: 0.75em;
+  text-align: left;
+  font-family: var(--font-header);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 0.75em;
+  border-top: 1px solid var(--color-border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-bg-medium);
+}
+
+tbody tr:hover {
+  background: #F0E0C8;
+}
+
+/* ============================================
+   Page Structure
+   ============================================ */
+
+.page {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+/* ============================================
+   Header
+   ============================================ */
+
+.site-header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: var(--color-bg-light);
+  padding: 1.5em 0;
+  border-bottom: 4px solid var(--color-primary);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.site-title {
+  font-family: var(--font-header);
+  font-size: 1.8em;
+  margin: 0;
+  color: var(--color-bg-light);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Hamburger Menu */
+#menu-toggle {
+  background: none;
+  border: 2px solid var(--color-bg-light);
+  border-radius: 4px;
+  padding: 0.5em;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.3s;
+}
+
+#menu-toggle:hover {
+  background: rgba(253, 241, 220, 0.1);
+}
+
+#menu-toggle .bar {
+  width: 25px;
+  height: 3px;
+  background: var(--color-bg-light);
+  transition: all 0.3s;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+
+.site-footer {
+  background: var(--color-primary);
+  color: var(--color-bg-light);
+  padding: 2em 0;
+  margin-top: auto;
+  border-top: 4px solid var(--color-secondary);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  text-align: center;
+}
+
+.footer-content p {
+  margin-bottom: 0.5em;
+  font-size: 0.95em;
+}
+
+/* ============================================
+   Buttons & Links
+   ============================================ */
+
+.button, .btn {
+  display: inline-block;
+  padding: 0.75em 1.5em;
+  background: var(--color-primary);
+  color: var(--color-bg-light);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  font-family: var(--font-header);
+  font-size: 0.9em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  letter-spacing: 0.5px;
+}
+
+.button:hover, .btn:hover {
+  background: var(--color-secondary);
+  color: var(--color-bg-light);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.button-secondary {
+  background: var(--color-bg-medium);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.button-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-bg-light);
+}
+
+/* ============================================
+   Cards & Containers
+   ============================================ */
+
+.card {
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  transition: all 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-title {
+  font-family: var(--font-header);
+  color: var(--color-primary);
+  font-size: 1.4em;
+  margin: 0 0 0.5em 0;
+  text-transform: uppercase;
+}
+
+.card-content {
+  line-height: 1.6;
+}
+
+/* ============================================
+   Alerts & Notices
+   ============================================ */
+
+.alert, .notice {
+  padding: 1em 1.5em;
+  margin: 1.5em 0;
+  border-left: 4px solid;
+  border-radius: var(--border-radius);
+  background: var(--color-bg-light);
+}
+
+.alert-info, .notice-info {
+  border-left-color: #3498db;
+  background: #e3f2fd;
+}
+
+.alert-warning, .notice-warning {
+  border-left-color: #f39c12;
+  background: #fff3cd;
+}
+
+.alert-danger, .notice-danger {
+  border-left-color: #e74c3c;
+  background: #f8d7da;
+}
+
+.alert-success, .notice-success {
+  border-left-color: #27ae60;
+  background: #d4edda;
+}
+
+/* ============================================
+   Images
+   ============================================ */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em 0;
+}
+
+figure {
+  margin: 1.5em 0;
+}
+
+figcaption {
+  font-style: italic;
+  font-size: 0.9em;
+  color: #5a3a2a;
+  margin-top: 0.5em;
+  text-align: center;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+  
+  .page {
+    padding: var(--spacing-sm);
+  }
+  
+  h1 {
+    font-size: 2em;
+  }
+  
+  h2 {
+    font-size: 1.6em;
+  }
+  
+  h3 {
+    font-size: 1.3em;
+  }
+  
+  .site-title {
+    font-size: 1.3em;
+  }
+  
+  table {
+    font-size: 0.9em;
+  }
+  
+  th, td {
+    padding: 0.5em;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 13px;
+  }
+  
+  .page {
+    padding: var(--spacing-xs);
+  }
+  
+  table {
+    font-size: 0.8em;
+  }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .site-header,
+  .site-footer,
+  #menu-toggle,
+  #sidebar-menu,
+  .button,
+  .btn {
+    display: none;
+  }
+  
+  .page {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: black;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  table, figure, img {
+    page-break-inside: avoid;
+  }
+}
