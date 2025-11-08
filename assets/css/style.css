@@ -442,10 +442,25 @@ figcaption {
   align-items: flex-start;
 }
 
+
 .hierarchy-image {
-  max-width: 60%; /* This respects your 60% requirement */
   height: auto;
-  flex-shrink: 0; /* Important: Prevents the image from shrinking */
+  flex-shrink: 0; /* Ensures the image doesn't shrink when space is tight */
+  /* Remove the max-width: 60%; line */
+}
+
+/* Image sizes */
+
+.image-size-60 {
+  max-width: 60%;
+}
+
+.image-size-45 {
+  max-width: 45%;
+}
+
+.image-size-80 {
+  max-width: 80%;
 }
 
 .hierarchy-text {
