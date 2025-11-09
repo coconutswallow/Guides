@@ -356,6 +356,18 @@ p, li, td, th, a, code, pre {
 [data-theme="dark"] .btn:hover {
   color: var(--color-btn-text);
 }
+/* Dark mode button text */
+[data-theme="dark"] .button,
+[data-theme="dark"] .btn,
+[data-theme="dark"] .card-button {
+  color: var(--color-btn-text);
+}
+
+[data-theme="dark"] .button:hover,
+[data-theme="dark"] .btn:hover,
+[data-theme="dark"] .card-button:hover {
+  color: var(--color-btn-text);
+}
 
 /* Adjust alerts for dark mode */
 [data-theme="dark"] .alert-info,
