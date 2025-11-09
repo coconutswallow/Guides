@@ -967,7 +967,8 @@ creator: ${state.creator}`;
                 // --- PARSE DESCRIPTION (now outside front matter) ---
                 // Description appears after front matter as ## Title followed by paragraphs
                 // Match more flexibly to handle various spacing and optional description
-                const descriptionMatch = content.match(/---\s*\n+## .+?\s*\n+([\s\S]*?)(?=___)/);
+                // Must stop at ___ (stat block start)
+                const descriptionMatch = content.match(/---\s*\n+## [^\n]+\s*\n+([\s\S]*?)(?=\n___)/);
                 if (descriptionMatch) {
                     const desc = descriptionMatch[1].trim();
                     // Only save non-empty descriptions
