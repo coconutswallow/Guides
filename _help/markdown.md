@@ -4,21 +4,13 @@ title: "Markdown Guide"
 order: 3
 ---
 
-# Markdown Author's Guide for Non-Technical Writers
+# Markdown Author's Guide
 
-Welcome! This guide will teach you everything you need to know to write beautiful documentation for the Hawthorne Guild Guide. Don't worry if you've never used Markdown before - it's easier than you think!
+## Top of the Page Front Matter
+Every document **needs** to start with "front matter" - a small block at the very top that tells the website about your page.
+Without this, the document won't be added automatically into the site after uploading.  
 
-## What is Markdown?
-
-Markdown is a simple way to format text using plain characters like `#`, `*`, and `-`. You write in plain text, and the website automatically converts it to beautiful, formatted pages.
-
-**Think of it like this:** Instead of clicking buttons in Microsoft Word, you type special characters that tell the website how to format your text.
-
----
-
-## Getting Started: The Front Matter
-
-Every document needs to start with "front matter" - a small block at the very top that tells the website about your page:
+Copy this format:
 
 ```yaml
 ---
@@ -65,6 +57,13 @@ Headings create section titles in your document. Use the `#` symbol:
 - Use Heading 2 (`##`) for main sections
 - Use Heading 3 (`###`) for subsections
 - Don't skip levels (don't go from `##` to `####`)
+
+**Note**:  Always add a link break after each heading, e.g.
+
+```## Heading 2
+
+start the paragraph here
+```
 
 ---
 
@@ -443,51 +442,6 @@ When creating a character, follow these steps:
 See the Character Creation Guide for details.
 
 ---
-
-## Common Mistakes to Avoid
-
-### ❌ Mistake 1: Forgetting Blank Lines
-```markdown
-## Heading
-This paragraph won't format correctly!
-```
-
-### ✅ Correct:
-```markdown
-## Heading
-
-This paragraph will format correctly!
-```
-
----
-
-### ❌ Mistake 2: Not Using Enough #
-```markdown
-Heading 2
-This won't create a heading!
-```
-
-### ✅ Correct:
-```markdown
-## Heading 2
-
-Now it's a proper heading!
-```
-
----
-
-### ❌ Mistake 3: Broken Links
-```markdown
-[Click here](broken link)
-```
-
-### ✅ Correct:
-```markdown
-[Click here](https://www.example.com)
-```
-
----
-
 ## Quick Reference Cheat Sheet
 
 | What You Want | Syntax | Example |

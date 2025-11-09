@@ -3,5 +3,10 @@ layout: doc
 title: "Help Index"
 order: 1
 ---
-<a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a>
-<a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a>
+## Site Documentation
+
+For Authors:
+<p><a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a></p>
+
+For Engineers
+<p><a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a><p>
