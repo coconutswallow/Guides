@@ -74,6 +74,7 @@ ___
 | **Str** | 30 | +10 | +18 | **Dex** | 14 | +10 | +3 | **Con** | 29 | +7 | +16 |
 | **Int** | 18 | +4 | +13 | **Wis** | 19 | +4 | +12 | **Cha** | 29 | +6 | +14 |
 >
+> **Saving Throws** Dex +10, Con +16, Wis +12, Cha +16
 > **Skills** Insight +11, Perception +18, Stealth +10  
 > **Condition Immunities** Frightened, Paralyzed, Poisoned  
 > **Senses** Blindsight 60 ft., Darkvision 120 ft., Passive Perception 28  
