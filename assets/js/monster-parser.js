@@ -132,7 +132,7 @@ const MonsterParser = (function() {
      */
     function parseAbilitySection(blockContent, sectionName) {
         const abilities = [];
-        const sectionPattern = new RegExp(`### ${sectionName}\\n\\n([\\s\\S]*?)(?=\\n###|$)`);
+        const sectionPattern = new RegExp(`### ${sectionName}\\n+([\\s\\S]*?)(?=\\n+###|$)`);
         const sectionMatch = blockContent.match(sectionPattern);
         
         if (!sectionMatch) return abilities;
@@ -140,13 +140,13 @@ const MonsterParser = (function() {
         const sectionContent = sectionMatch[1];
         
         // Match pattern: ***Name.*** Description
-        const abilityPattern = /\*\*\*([^.]+)\.\*\*\*\s+([\s\S]*?)(?=\n\*\*\*|\n\n###|$)/g;
+        const abilityPattern = /\*\*\*([^.]+)\.\*\*\*\s+([\s\S]*?)(?=\n+\*\*\*|\n+###|$)/g;
         
         let match;
         while ((match = abilityPattern.exec(sectionContent)) !== null) {
             abilities.push({
                 name: match[1].trim(),
-                description: match[2].trim()
+                description: match[2].trim().replace(/^\n+/, '').replace(/\n+$/, '')
             });
         }
         
@@ -164,7 +164,7 @@ const MonsterParser = (function() {
             actions: []
         };
 
-        const sectionMatch = blockContent.match(/### Legendary Actions\n\n([\s\S]*?)(?=\n###|$)/);
+        const sectionMatch = blockContent.match(/### Legendary Actions\n+([\s\S]*?)(?=\n+###|$)/);
         if (!sectionMatch) return result;
 
         const legendaryContent = sectionMatch[1];
