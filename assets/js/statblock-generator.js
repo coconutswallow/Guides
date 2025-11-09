@@ -1105,6 +1105,7 @@ creator: ${state.creator}`;
                     // Strip all leading > markers and clean up whitespace
                     state.regionalEffects = regionalEffectsBlockMatch[1].replace(/\n?>\s*/g, '\n').trim();
                 }
+            }
 
             // Re-render form with loaded data and show success message
             render();
