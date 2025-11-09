@@ -31,9 +31,10 @@ ___
 > **Hit Points** 45 (6d8 + 18)  
 > **Speed** 30 ft., swim 30 ft.
 >
-> | STR | DEX | CON | INT | WIS | CHA |
-> |:---:|:---:|:---:|:---:|:---:|:---:|
-> | 16 (+3) | 12 (+1) | 16 (+3) | 3 (-4) | 12 (+1) | 6 (-2) |
+|     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+| **Str** | 21 | +5 | +9 | **Dex** | 12 | +1 | +5 | **Con** | 20 | +5 | +9 |
+| **Int** | 14 | +2 | +6 | **Wis** | 16 | +3 | +7 | **Cha** | 21 | +5 | +9 |
 >
 > **Saving Throws** Str +5, Con +5  
 > **Skills** Perception +3, Stealth +3  
@@ -93,59 +94,21 @@ ___
 > If the creature dies, these effects fade over the course of 1d10 days.
 
 ---
+### Additional Documentation
 
-## PARSER DOCUMENTATION
-
-### Parsing Rules for Standardized Format
-
-#### Front Matter
-```javascript
-// Extract YAML between --- markers
-const frontMatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-// Parse each line as key: value
-```
-
-#### Lore Section
-```javascript
-// Everything between "## Title" and "___"
-const loreMatch = content.match(/## [^\n]+\n\n([\s\S]*?)\n___/);
-```
-
-#### Ability Scores
-```javascript
-// Parse table row with pattern: | 16 (+3) | 12 (+1) | ...
-const abilityMatch = content.match(/\|\s*(\d+)\s*\([^)]+\)\s*\|/g);
-// Extract: STR=16, DEX=12, etc.
-```
-
-#### Basic Stats
-```javascript
-// Pattern: **Field Name** value
-const acMatch = content.match(/\*\*Armor Class\*\*\s+(.+?)(?=\s*\*\*|\n)/);
-const hpMatch = content.match(/\*\*Hit Points\*\*\s+(.+?)(?=\s*\*\*|\n)/);
-```
-
-#### Saving Throws
-```javascript
-// Pattern: **Saving Throws** Str +5, Con +5
-const savesMatch = content.match(/\*\*Saving Throws\*\*\s+(.+)/);
-// Split by comma, parse each save
-```
-
-#### Abilities (Traits/Actions/etc)
-```javascript
-// Pattern: ***Name.*** Description
-const abilityRegex = /\*\*\*([^.]+)\.\*\*\*\s+([^\n]+(?:\n(?!\*\*\*)[^\n]+)*)/g;
-```
-
-#### Legendary Actions Description
-```javascript
-// First paragraph after "### Legendary Actions" before first ***
-const descMatch = content.match(/### Legendary Actions\n>\n>\s*(.+?)(?=\n>\n>\s*\*\*\*)/s);
-```
-
-#### Lair Actions / Regional Effects
-```javascript
-// Everything between heading and next ### or end
-const lairMatch = content.match(/### Lair Actions\n>([\s\S]*?)(?=\n>\s*###|$)/);
-```
+- The Lore and regional effects sections can have sub sections and tables
+- Mandatory Front Matter:
+    - layout: statblock
+    - title: 
+    - cr: 
+    - size: 
+    - type: 
+    - alignment:
+    - category:
+    - creator:
+- Mandatory fields inside the block
+    - armor class
+    - hit points
+    - speed
+    - attributes statistics
+    - must have minimum one action
