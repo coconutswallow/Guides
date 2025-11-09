@@ -53,12 +53,14 @@ title: Hawthorne Guild
   <div class="card-grid">
     <div class="feature-card">
       <h3>Player's Guide</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/players-guide-cover.png" alt="Player's Guide" class="card-thumbnail">
       <p>Step-by-step guide to creating your Hawthorne character.</p>
       <a href="{{ 'players-guide/character-creation/character-creation/' | relative_url }}" class="card-button">Read Guide</a>
     </div>
         
     <div class="feature-card">
       <h3>Hawthorne Arcana</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/arcana-cover.png" alt="Hawthorne Arcana" class="card-thumbnail">
       <p>Spells, classes, backgrounds, and other character options.</p>
       <a href="{{ 'players-guide/downtime/' | relative_url }}" class="card-button">View Arcana</a>
     </div>
@@ -88,14 +90,27 @@ title: Hawthorne Guild
     
     <div class="feature-card">
       <h3>Monster Compendium</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/field-guide-cover.png" alt="Monster Compendium" class="card-thumbnail">
       <p>Browse our collection of community-created monsters.</p>
       <a href="{{ '/monster-compendium/' | relative_url }}" class="card-button">View Monsters</a>
     </div>
     
     <div class="feature-card">
       <h3>Adventurer Locations</h3>
+      <img src="{{ site.baseurl }}/assets/thumbnails/region-of-dreams-cover.png" alt="Adventure Locations" class="card-thumbnail">
       <p>Create professionally formatted monster statblocks for your games.</p>
       <a href="{{ '/monster-compendium/generator/' | relative_url }}" class="card-button">View Locations</a>
     </div>
   </div>
 </div>
+
+<style>
+.card-thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border: 2px solid #58180D;
+  margin-bottom: 1em;
+  display: block;
+}
+</style>
