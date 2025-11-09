@@ -655,6 +655,11 @@ tbody tr:hover {
   grid-column: 2 / 3;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
+/* Dark mode site title */
+[data-theme="dark"] .site-title {
+  color: var(--color-header-text);
+}
+
 
 /* ============================================
    HAMBURGER MENU BUTTON
@@ -833,6 +838,11 @@ tbody tr:hover {
 .nav-section-toggle:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
+/* Dark mode navigation section toggles */
+[data-theme="dark"] .nav-section-toggle {
+  color: var(--color-header-text);
+}
+
 
 .toggle-icon {
   display: inline-block;
