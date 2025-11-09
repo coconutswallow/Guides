@@ -6,7 +6,7 @@
 
 /* Hero Section */
 .home-hero {
-  background: var(--color-bg-light);
+  background: var(--color-primary);
   border: 3px solid var(--color-border);
   border-radius: 0px;
   padding: 3em 2em;
