@@ -933,6 +933,11 @@ creator: ${state.creator}`;
         const file = event.target.files[0];
         if (!file) return;
         
+        // Loads a markdown file and parses it back into the form
+        window.loadMarkdownFile = function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
         // Clear previous monster data before loading new file
         resetState();
 
@@ -953,23 +958,28 @@ creator: ${state.creator}`;
             // Parse single-line YAML fields
             const lines = frontMatter.split('\n');
             lines.forEach(line => {
-            const colonIndex = line.indexOf(':');
-            if (colonIndex === -1) return;
-    
-            const key = line.substring(0, colonIndex).trim();
-            const value = line.substring(colonIndex + 1).trim();
+                const colonIndex = line.indexOf(':');
+                if (colonIndex === -1) return;
+        
+                const key = line.substring(0, colonIndex).trim();
+                const value = line.substring(colonIndex + 1).trim();
 
-            if (key in state) {
-                state[key] = value;
+                if (key in state) {
+                    state[key] = value;
+                }
+            });
+
+            // --- PARSE DESCRIPTION (now outside front matter) ---
+            // Description appears after front matter as ## Title followed by paragraphs
+            // Match more flexibly to handle various spacing and optional description
+            const descriptionMatch = content.match(/---\s*\n+## .+?\s*\n+([\s\S]*?)(?=___)/);
+            if (descriptionMatch) {
+                const desc = descriptionMatch[1].trim();
+                // Only save non-empty descriptions
+                if (desc) {
+                    state.description = desc;
+                }
             }
-        });
-
-// --- PARSE DESCRIPTION (now outside front matter) ---
-// Description appears after front matter as ## Title followed by paragraphs
-const descriptionMatch = content.match(/---\n\n## .+?\n\n([\s\S]*?)(?=\n___)/);
-if (descriptionMatch) {
-    state.description = descriptionMatch[1].trim();
-}
 
             // --- PARSE ABILITY SCORES FROM STAT BLOCK TABLE ---
             const strMatch = content.match(/\|Str\|\s*(\d+)\|/);
@@ -991,82 +1001,110 @@ if (descriptionMatch) {
             const bodyMatch = content.match(/___[\s\S]*$/); 
             if (bodyMatch) {
                 // Clean up leading markers for easier parsing
-                let body = bodyMatch[0].replace(/___\s*>\s*/, '');
+                let body = bodyMatch[0];
 
-                // Parse basic statistics (AC, HP, Speed)
-                const acMatch = body.match(/\*\*AC\*\*\s+([^\*\n]+)/);
-                const hpMatch = body.match(/\*\*HP\*\*\s+([^\*\n]+)/);
+                // Parse basic statistics (AC, HP, Speed, Initiative)
+                const acMatch = body.match(/\*\*AC\*\*\s+([^\*\n]+?)(?=\s*\*\*|$)/);
+                const hpMatch = body.match(/\*\*HP\*\*\s+([^\*\n]+?)(?=\s*\*\*|$)/);
                 const speedMatch = body.match(/\*\*Speed\*\*\s+([^\n]+)/);
+                const initiativeMatch = body.match(/\*\*Initiative\*\*\s+([^\n]+)/);
 
-                if (acMatch) state.ac = acMatch[1].trim().replace(/â€ƒ/g, ' '); // Handle Unicode space
-                if (hpMatch) state.hp = hpMatch[1].trim().replace(/â€ƒ/g, ' '); // Handle Unicode space
+                if (acMatch) state.ac = acMatch[1].trim();
+                if (hpMatch) state.hp = hpMatch[1].trim();
                 if (speedMatch) state.speed = speedMatch[1].trim();
+                if (initiativeMatch) state.initiative = initiativeMatch[1].trim();
+
+                // Parse saving throw overrides if they exist (separate line after ability table)
+                const savingThrowsMatch = body.match(/\*\*Saving Throws\*\*\s+([^\n]+)/);
+                if (savingThrowsMatch) {
+                    const saves = savingThrowsMatch[1].trim();
+                    // Parse individual saves: "Str +9, Dex +5, Con +9, Int +6, Wis +7, Cha +9"
+                    const strSaveMatch = saves.match(/Str\s+([\+\-]?\d+)/);
+                    const dexSaveMatch = saves.match(/Dex\s+([\+\-]?\d+)/);
+                    const conSaveMatch = saves.match(/Con\s+([\+\-]?\d+)/);
+                    const intSaveMatch = saves.match(/Int\s+([\+\-]?\d+)/);
+                    const wisSaveMatch = saves.match(/Wis\s+([\+\-]?\d+)/);
+                    const chaSaveMatch = saves.match(/Cha\s+([\+\-]?\d+)/);
+                    
+                    if (strSaveMatch) state.strSave = strSaveMatch[1];
+                    if (dexSaveMatch) state.dexSave = dexSaveMatch[1];
+                    if (conSaveMatch) state.conSave = conSaveMatch[1];
+                    if (intSaveMatch) state.intSave = intSaveMatch[1];
+                    if (wisSaveMatch) state.wisSave = wisSaveMatch[1];
+                    if (chaSaveMatch) state.chaSave = chaSaveMatch[1];
+                }
 
                 // Parse optional statistics
-                const skillsMatch = body.match(/\*\*Skills\*\*\s+([^\n]+)/);
-                const sensesMatch = body.match(/\*\*Senses\*\*\s+([^\n]+)/);
-                const languagesMatch = body.match(/\*\*Languages\*\*\s+([^\n]+)/);
-                const condImmMatch = body.match(/\*\*Condition Immunities\*\*\s+([^\n]+)/);
+                const skillsMatch = body.match(/\*\*Skills\*\*\s+([^\n]+?)(?=\s*\*\*|\n|$)/);
+                const sensesMatch = body.match(/\*\*Senses\*\*\s+([^\n]+?)(?=\s*\*\*|\n|$)/);
+                const languagesMatch = body.match(/\*\*Languages\*\*\s+([^\n]+?)(?=\s*\*\*|\n|$)/);
+                const condImmMatch = body.match(/\*\*Condition Immunities\*\*\s+([^\n]+?)(?=\s*\*\*|\n|$)/);
+                const damageResMatch = body.match(/\*\*Damage Resistances\*\*\s+([^\n]+?)(?=\s*\*\*|\n|$)/);
+                const damageImmMatch = body.match(/\*\*Damage Immunities\*\*\s+([^\n]+?)(?=\s*\*\*|\n|$)/);
 
                 if (skillsMatch) state.skills = skillsMatch[1].trim();
                 if (sensesMatch) state.senses = sensesMatch[1].trim();
                 if (languagesMatch) state.languages = languagesMatch[1].trim();
                 if (condImmMatch) state.conditionImmunities = condImmMatch[1].trim();
+                if (damageResMatch) state.damageResistances = damageResMatch[1].trim();
+                if (damageImmMatch) state.damageImmunities = damageImmMatch[1].trim();
 
-                // Regex pattern to find section boundaries (used for all section parsing)
-                const sectionEndLookahead = '### Actions|### Bonus Actions|### Reactions|### Legendary Actions|### Lair Actions|### Regional Effects|___\n|\n$';
-                
-                // --- PARSE TRAITS SECTION ---
-                const traitsSection = body.match(new RegExp(`### Traits[\\s\\S]*?(?=${sectionEndLookahead})`));
-                if (traitsSection) {
-                    // Match each trait: ***Name.*** Description
-                    const traitMatches = traitsSection[0].matchAll(/\*\*\*(.*?)\.\*\*\*\s+([\s\S]*?)(?=\n>\s*\*\*\*|\n>\s*###|___\n|$)/g);
-                    state.traits = [];
-                    for (const match of traitMatches) {
-                        state.traits.push({ 
-                            name: match[1].trim(), 
-                            description: match[2].trim().replace(/^>\s*/gm, '').trim() // Remove blockquote markers
+                // Helper function to parse ability lists (traits, actions, etc.)
+                function parseAbilityList(sectionName, namePattern, descPattern) {
+                    const section = body.match(new RegExp(`### ${sectionName}[\\s\\S]*?(?=\\n>\\s*### |$)`));
+                    if (!section) return [];
+                    
+                    const items = [];
+                    const regex = new RegExp(`${namePattern}([^\\*]+?)\\.${descPattern}\\s+([\\s\\S]*?)(?=\\n>\\s*${namePattern}|\\n>\\s*### |$)`, 'g');
+                    let match;
+                    while ((match = regex.exec(section[0])) !== null) {
+                        items.push({
+                            name: match[1].trim(),
+                            description: match[2].trim().replace(/^>\s*/gm, '').trim()
                         });
                     }
+                    return items;
                 }
+
+                // --- PARSE TRAITS SECTION ---
+                state.traits = parseAbilityList('Traits', '\\*\\*\\*', '\\*\\*\\*');
+
+                // --- PARSE ACTIONS SECTION ---
+                state.actions = parseAbilityList('Actions', '\\*\\*\\*', '\\*\\*\\*');
+
+                // --- PARSE BONUS ACTIONS SECTION ---
+                state.bonusActions = parseAbilityList('Bonus Actions', '\\*\\*\\*', '\\*\\*\\*');
+
+                // --- PARSE REACTIONS SECTION ---
+                state.reactions = parseAbilityList('Reactions', '\\*\\*\\*', '\\*\\*\\*');
 
                 // --- PARSE LEGENDARY ACTIONS SECTION ---
-                const legendaryActionsSection = body.match(new RegExp(`### Legendary Actions[\\s\\S]*?(?=### Lair Actions|### Regional Effects|$)`));
+                const legendaryActionsSection = body.match(/### Legendary Actions[\s\S]*?(?=\n>\s*### |$)/);
                 if (legendaryActionsSection) {
-                    // Extract custom description text (first line after header)
-                    const descMatch = legendaryActionsSection[0].match(/### Legendary Actions\n>\s*([^\n>]+)/);
+                    // Extract custom description (everything between header and first action)
+                    const descMatch = legendaryActionsSection[0].match(/### Legendary Actions\n>\s*([\s\S]*?)(?=\n>\s*\*\*[^*]|$)/);
                     if (descMatch) {
-                        state.legendaryActionDescription = descMatch[1].trim();
+                        const desc = descMatch[1].trim().replace(/^>\s*/gm, '').trim();
+                        // Only save if it's not the default description
+                        if (!desc.includes('The creature can take 3 legendary actions')) {
+                            state.legendaryActionDescription = desc;
+                        }
                     }
                     
-                    // Extract individual legendary actions: **Name.** Description
-                    const actionMatches = legendaryActionsSection[0].matchAll(/\*\*([^\*]+?)\.\*\*\s+([\s\S]*?)(?=\n>\s*\*\*|\n>\s*###|$)/g);
-                    state.legendaryActions = [];
-                    for (const match of actionMatches) {
-                        state.legendaryActions.push({ 
-                            name: match[1].trim(), 
-                            description: match[2].trim().replace(/^>\s*/gm, '').trim() // Remove blockquote markers
-                        });
-                    }
+                    // Parse individual legendary actions: **Name.** Description (note: ** not ***)
+                    state.legendaryActions = parseAbilityList('Legendary Actions', '\\*\\*', '\\*\\*');
                 }
-                
-                // Note: Parsing logic for Actions, Bonus Actions, Reactions needs to be added here for completeness,
-                // but for fixing the preview function I will omit adding that code right now.
 
                 // --- PARSE LAIR ACTIONS SECTION ---
-                // Captures all text until Regional Effects or end of file
-                const lairActionsBlockMatch = body.match(/### Lair Actions\s*(\n>[\s\S]*?)(?=\n>\s*### Regional Effects|$)/);
+                const lairActionsBlockMatch = body.match(/### Lair Actions\s*\n>([\s\S]*?)(?=\n>\s*### Regional Effects|$)/);
                 if (lairActionsBlockMatch) {
-                    let block = lairActionsBlockMatch[1];
-                    state.lairActions = block.replace(/\n>\s*/g, '\n').trim(); // Remove blockquote markers
+                    state.lairActions = lairActionsBlockMatch[1].replace(/\n>\s*/g, '\n').trim();
                 }
 
                 // --- PARSE REGIONAL EFFECTS SECTION ---
-                // Captures all text until end of file (this is the last section)
-                const regionalEffectsBlockMatch = body.match(/### Regional Effects\s*(\n>[\s\S]*?)$/);
+                const regionalEffectsBlockMatch = body.match(/### Regional Effects\s*\n>([\s\S]*?)$/);
                 if (regionalEffectsBlockMatch) {
-                    let block = regionalEffectsBlockMatch[1];
-                    state.regionalEffects = block.replace(/\n>\s*/g, '\n').trim(); // Remove blockquote markers
+                    state.regionalEffects = regionalEffectsBlockMatch[1].replace(/\n>\s*/g, '\n').trim();
                 }
             }
 
@@ -1076,7 +1114,8 @@ if (descriptionMatch) {
             alert(`Loaded: ${file.name}`);
         };
 
-    reader.readAsText(file);
+        reader.readAsText(file);
+    };
 };
 
         // Initial render
