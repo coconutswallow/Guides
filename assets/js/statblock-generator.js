@@ -133,7 +133,23 @@
     // Calculates proficiency bonus based on Challenge Rating
     // Used for skill checks and saving throws
     function getProficiencyBonus(cr) {
-        const crNum = eval(cr) || 0; // Use eval to handle fractions like "1/4"
+        // Use eval to handle fractions like "1/4" or "1/2"
+        let crNum = 0;
+        try {
+            // Sanitize cr input slightly: remove spaces, allow fractions
+            const cleanCr = String(cr).replace(/\s/g, '');
+            if (cleanCr.includes('/')) {
+                const parts = cleanCr.split('/');
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[1] != 0) {
+                    crNum = parseFloat(parts[0]) / parseFloat(parts[1]);
+                }
+            } else {
+                crNum = parseFloat(cleanCr);
+            }
+        } catch (e) {
+            crNum = 0;
+        }
+
         if (isNaN(crNum)) return 2;
         if (crNum < 5) return 2;
         if (crNum < 9) return 3;
@@ -166,7 +182,6 @@
         return abilities;
     }
 
-    // **FIX for ancient-sword-dragon.md (Traits/Actions not loading)**
     /**
      * Parses ability blocks (Traits, Actions, Legendary Actions) from the markdown body.
      * NOTE: The markdown body must be stored in state.markdownBody before calling.
@@ -208,9 +223,12 @@
         // 2. Find individual abilities (robustly handles multi-paragraph descriptions)
         // This regex finds abilities that are blockquoted (>) or not.
         // It captures the Name and the Description
-        // Updated to be more robust for blockquoted and non-blockquoted abilities
+        
+        // *** FIX ***
+        // The lookahead now *also* stops at the next '###' header, preventing
+        // the last trait from consuming the entire next section.
         const abilityRegex = new RegExp(
-            `^>?\\s*${escapedStart}([^\\.]+?)\\. ${escapedEnd}\\s*([\\s\\S]*?)(?=\\n>?\\s*${escapedStart}[^\\.]+?\\. ${escapedEnd}|$)`,
+            `^>?\\s*${escapedStart}([^\\.]+?)\\. ${escapedEnd}\\s*([\\s\\S]*?)(?=\\n>?\\s*${escapedStart}[^\\.]+?\\. ${escapedEnd}|\\n>?\\s*### |\\n### |$)`,
             'gm'
         );
         
@@ -218,7 +236,8 @@
         while ((match = abilityRegex.exec(sectionContent)) !== null) {
             abilities.push({
                 name: match[1].trim(),
-                description: match[2].replace(/^>\s*/gm, '').trim() // Clean blockquotes from description
+                // Clean *all* leading blockquotes from the description lines
+                description: match[2].replace(/^\s*(?:>\s*)+/gm, '').trim()
             });
         }
     
@@ -248,8 +267,21 @@
         if (!state.creator.trim()) errors.push('Creator is required');
         
         try {
-            if (state.cr && isNaN(eval(state.cr))) { // Handle "1/4"
-                errors.push('CR must be a number (e.g., 5, 0.5, 1/4)');
+             // Use the same logic as getProficiencyBonus to validate CR
+            const cleanCr = String(state.cr).replace(/\s/g, '');
+            let crNum;
+            if (cleanCr.includes('/')) {
+                const parts = cleanCr.split('/');
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[1] != 0) {
+                    crNum = parseFloat(parts[0]) / parseFloat(parts[1]);
+                } else {
+                    throw new Error('Invalid fraction');
+                }
+            } else {
+                crNum = parseFloat(cleanCr);
+            }
+            if (isNaN(crNum)) {
+                errors.push('CR must be a valid number or fraction (e.g., 5, 0.5, 1/4)');
             }
         } catch (e) {
             errors.push('CR must be a valid number or fraction (e.g., 5, 0.5, 1/4)');
@@ -1159,7 +1191,7 @@ creator: ${state.creator}`;
 
 
                     // --- PARSE ABILITY LISTS ---
-                    // *** FIX for ancient-sword-dragon.md ***
+                    // *** FIX for ancient-sword-dragon.md AND the-sandman.md ***
                     // Use the new robust `parseAbilityList` function
                     state.traits = parseAbilityList('Traits', '***', '***');
                     state.actions = parseAbilityList('Actions', '***', '***');
@@ -1167,13 +1199,14 @@ creator: ${state.creator}`;
                     state.reactions = parseAbilityList('Reactions', '***', '***');
 
                     // --- PARSE LEGENDARY ACTIONS SECTION ---
-                    const legendaryActionsSection = body.match(/### Legendary Actions[\s\S]*?(?=\n>?\s*### |$)/);
+                    // This section also uses the robust parseAbilityList
+                    const legendaryActionsSection = body.match(/(?:^>\s*### Legendary Actions|^### Legendary Actions)[\s\S]*?(?=\n>?\s*### |$)/m);
                     if (legendaryActionsSection) {
                         // Find description text *before* the first bolded action
-                        // Added allowance for blockquote >
-                        const descMatch = legendaryActionsSection[0].match(/### Legendary Actions\n>?\s*([\s\S]*?)(?=\n>?\s*\*\*[^_]|$\n)/);                    
+                        const descMatch = legendaryActionsSection[0].match(/(?:^>\s*### Legendary Actions|^### Legendary Actions)\n>?\s*([\s\S]*?)(?=\n>?\s*\*\*[^_]|$\n)/m);                    
                         if (descMatch) {
-                            const desc = descMatch[1].replace(/^>\s*/gm, '').trim();
+                            // *** FIX: Robustly strip all blockquote levels ***
+                            const desc = descMatch[1].replace(/^\s*(?:>\s*)+/gm, '').trim();
                             // Only save if it's not the default description
                             if (desc && !desc.includes('The creature can take 3 legendary actions')) {
                                 state.legendaryActionDescription = desc;
@@ -1185,20 +1218,21 @@ creator: ${state.creator}`;
                     }
 
                     // --- PARSE LAIR ACTIONS SECTION ---
-                    // *** FIX for the-sandman.md ***
+                    // *** FIX for the-sandman.md (double blockquote) ***
                     // Use robust regex to find section and strip ALL blockquotes
-                    // Updated regex to be non-greedy and handle blockquotes
-                    const lairActionsBlockMatch = body.match(/### Lair Actions\s*([\s\S]*?)(?=\n>?\s*### Regional Effects|$)/);
+                    const lairActionsBlockMatch = body.match(/(?:^>\s*### Lair Actions|^### Lair Actions)\s*([\s\S]*?)(?=\n>?\s*### Regional Effects|$)/m);
                     if (lairActionsBlockMatch) {
-                        state.lairActions = lairActionsBlockMatch[1].replace(/^\s*>\s*/gm, '').trim();
+                        // Match one or more (>) blockquote sequences at start of line
+                        state.lairActions = lairActionsBlockMatch[1].replace(/^\s*(?:>\s*)+/gm, '').trim();
                     }
 
                     // --- PARSE REGIONAL EFFECTS SECTION ---
-                    // *** FIX for the-sandman.md ***
+                    // *** FIX for the-sandman.md (double blockquote) ***
                     // Use robust regex to find section and strip ALL blockquotes
-                    const regionalEffectsBlockMatch = body.match(/### Regional Effects\s*([\s\S]*?)(?=\n>?\s*$|\n>?\s*<|$)/); // Stop at end of block
+                    const regionalEffectsBlockMatch = body.match(/(?:^>\s*### Regional Effects|^### Regional Effects)\s*([\s\S]*?)(?=\n>?\s*$|\n>?\s*<|$)/m); // Stop at end of block
                     if (regionalEffectsBlockMatch) {
-                        state.regionalEffects = regionalEffectsBlockMatch[1].replace(/^\s*>\s*/gm, '').trim();
+                         // Match one or more (>) blockquote sequences at start of line
+                        state.regionalEffects = regionalEffectsBlockMatch[1].replace(/^\s*(?:>\s*)+/gm, '').trim();
                     }
                 }
 
