@@ -1,14 +1,12 @@
-// Hawthorne Bestiary Stat Block Generator (Patched)
-// - 2024 ability table format in markdown and visual preview
-// - Save overrides included in calculated saves (use override if provided)
-// - Keeps original functionality otherwise
-
+// Hawthorne Bestiary Stat Block Generator
+// This script creates an interactive form for generating D&D monster stat blocks in markdown format
 (function() {
     'use strict';
 
     // --- STATE INITIALIZATION ---
     function getInitialState() {
         return {
+            // Layout and identification
             layout: 'statblock',
             title: '',
             cr: '',
@@ -18,15 +16,17 @@
             category: '2014 Fair Game',
             creator: '',
             
+            // Visual elements
             image: '',
             image_credit: '',
             description: '',
             
+            // Core combat statistics
             ac: '',
             hp: '',
             speed: '',
             
-            // ability scores default 10
+            // Ability scores (default to 10, which gives +0 modifier)
             str: 10,
             dex: 10,
             con: 10,
@@ -34,7 +34,7 @@
             wis: 10,
             cha: 10,
             
-            // optional save overrides (string, e.g. "+5" or "5" or "-1")
+            // Optional proficient saving throw overrides (empty = use calculated value)
             strSave: '', 
             dexSave: '',
             conSave: '',
@@ -42,6 +42,7 @@
             wisSave: '',
             chaSave: '',
             
+            // Additional statistics
             skills: '',
             damageResistances: '',
             damageImmunities: '',
@@ -49,6 +50,7 @@
             senses: '',
             languages: '',
             
+            // Monster abilities (arrays of {name, description} objects)
             traits: [],
             actions: [],
             reactions: [],
@@ -56,6 +58,7 @@
             legendaryActions: [],
             legendaryActionDescription: '',
             
+            // Text blocks for lair mechanics
             lairActions: '', 
             regionalEffects: '',
         };
@@ -136,35 +139,18 @@
         return 9;
     }
 
-    // calculateSave is not used directly for overrides: overrides are applied in getAbilitiesObject
     function calculateSave(score, profBonus) {
         return calculateModifier(score) + profBonus;
-    }
-
-    function parseOverrideSaveString(s) {
-        if (typeof s !== 'string') return null;
-        const trimmed = s.trim();
-        if (!trimmed) return null;
-        // Accept +5, -1, 5 (assume number), or "+5 (prof)" etc. We'll extract leading signed number.
-        const m = trimmed.match(/^[\+\-]?\d+/);
-        if (m) return parseInt(m[0], 10);
-        return null;
     }
 
     function getAbilitiesObject(pb) {
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const abilities = {};
         abilityKeys.forEach(key => {
-            const score = parseInt(state[key], 10) || 0;
-            const mod = calculateModifier(score);
-            const baseSave = calculateSave(score, pb);
-            const overrideRaw = state[key + 'Save'];
-            const override = parseOverrideSaveString(overrideRaw);
             abilities[key] = {
-                score: score,
-                mod: mod,
-                // use override if provided, otherwise use calculated value
-                save: override !== null ? override : baseSave
+                score: state[key],
+                mod: calculateModifier(state[key]),
+                save: calculateSave(state[key], pb)
             };
         });
         return abilities;
@@ -258,29 +244,23 @@ creator: ${state.creator}`;
             markdown += `> ${statsLine.join('  \n> ')}\n>\n`;
         }
 
-        // 2024 Ability score table (three-column pairs with MOD and SAVE)
-        // Matches user's requested format:
-        // | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-        // |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-        // |Str| 21| +5| +9|Dex| 12| +1 | +5|Con| 20| +5 | +9|
-        // |Int| 14| +2 | +6|Wis| 16| +3 | +7|Cha| 21| +5 | +9|
-        markdown += `> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |\n`;
-        markdown += `> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|\n`;
+        // Ability score table
+        markdown += `> | STR | DEX | CON | INT | WIS | CHA |\n`;
+        markdown += `> |:---:|:---:|:---:|:---:|:---:|:---:|\n`;
+        markdown += `> | ${abilities.str.score} (${formatModifier(abilities.str.mod)}) | `;
+        markdown += `${abilities.dex.score} (${formatModifier(abilities.dex.mod)}) | `;
+        markdown += `${abilities.con.score} (${formatModifier(abilities.con.mod)}) | `;
+        markdown += `${abilities.int.score} (${formatModifier(abilities.int.mod)}) | `;
+        markdown += `${abilities.wis.score} (${formatModifier(abilities.wis.mod)}) | `;
+        markdown += `${abilities.cha.score} (${formatModifier(abilities.cha.mod)}) |\n>\n`;
 
-        markdown += `> |Str| ${abilities.str.score}| ${formatModifier(abilities.str.mod)}| ${formatModifier(abilities.str.save)}|` +
-                    `Dex| ${abilities.dex.score}| ${formatModifier(abilities.dex.mod)}| ${formatModifier(abilities.dex.save)}|` +
-                    `Con| ${abilities.con.score}| ${formatModifier(abilities.con.mod)}| ${formatModifier(abilities.con.save)}|\n`;
-
-        markdown += `> |Int| ${abilities.int.score}| ${formatModifier(abilities.int.mod)}| ${formatModifier(abilities.int.save)}|` +
-                    `Wis| ${abilities.wis.score}| ${formatModifier(abilities.wis.mod)}| ${formatModifier(abilities.wis.save)}|` +
-                    `Cha| ${abilities.cha.score}| ${formatModifier(abilities.cha.mod)}| ${formatModifier(abilities.cha.save)}|\n>\n`;
-
-        // Optional saving throw overrides (human-readable list) - only include if overrides provided
+        // Optional statistics
+        const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const saveOverrides = [];
-        ['str','dex','con','int','wis','cha'].forEach(key => {
-            const raw = state[key + 'Save'];
-            if (typeof raw === 'string' && raw.trim()) {
-                saveOverrides.push(`${key.charAt(0).toUpperCase() + key.slice(1)} ${raw.trim()}`);
+        abilityKeys.forEach(key => {
+            const overrideValue = state[key + 'Save'].trim(); 
+            if (overrideValue) {
+                saveOverrides.push(`${key.charAt(0).toUpperCase() + key.slice(1)} ${overrideValue}`);
             }
         });
 
@@ -294,7 +274,7 @@ creator: ${state.creator}`;
         if (state.conditionImmunities) markdown += `> **Condition Immunities** ${state.conditionImmunities}  \n`;
         if (state.senses) markdown += `> **Senses** ${state.senses}  \n`;
         if (state.languages) markdown += `> **Languages** ${state.languages}  \n`;
-        markdown += `> **Challenge** ${state.cr} (1,800 XP) **Proficiency Bonus** +${getProficiencyBonus(state.cr)}\n>\n`;
+        markdown += `> **Challenge** ${state.cr} (1,800 XP) **Proficiency Bonus** +${pb}\n>\n`;
 
         const formatDesc = (desc) => (desc || '').replace(NEWLINE_REGEX_G, "\n> ");
 
@@ -676,21 +656,6 @@ creator: ${state.creator}`;
         const optionalStat = (label, value) => value ? `<p><strong>${label}</strong> ${escapeHtml(value)}</p>` : '';
         const formatBlock = (text) => (text || '').split(NEWLINE_REGEX_G).map(p => `<p>${escapeHtml(p)}</p>`).join('');
 
-        // Render visual 2024-style table (HTML approximation)
-        const abilityRow1 = `
-            <tr>
-                <td>Str</td><td>${abilities.str.score}</td><td>${formatModifier(abilities.str.mod)}</td><td>${formatModifier(abilities.str.save)}</td>
-                <td>Dex</td><td>${abilities.dex.score}</td><td>${formatModifier(abilities.dex.mod)}</td><td>${formatModifier(abilities.dex.save)}</td>
-                <td>Con</td><td>${abilities.con.score}</td><td>${formatModifier(abilities.con.mod)}</td><td>${formatModifier(abilities.con.save)}</td>
-            </tr>`;
-
-        const abilityRow2 = `
-            <tr>
-                <td>Int</td><td>${abilities.int.score}</td><td>${formatModifier(abilities.int.mod)}</td><td>${formatModifier(abilities.int.save)}</td>
-                <td>Wis</td><td>${abilities.wis.score}</td><td>${formatModifier(abilities.wis.mod)}</td><td>${formatModifier(abilities.wis.save)}</td>
-                <td>Cha</td><td>${abilities.cha.score}</td><td>${formatModifier(abilities.cha.mod)}</td><td>${formatModifier(abilities.cha.save)}</td>
-            </tr>`;
-
         return `
             <div class="statblock-visual">
                 <div class="statblock-header">
@@ -711,17 +676,21 @@ creator: ${state.creator}`;
                 </div>
 
                 <div class="statblock-abilities">
-                    <table class="ability-table">
+                    <table>
                         <thead>
                             <tr>
-                                <th></th><th>Score</th><th>MOD</th><th>SAVE</th>
-                                <th></th><th>Score</th><th>MOD</th><th>SAVE</th>
-                                <th></th><th>Score</th><th>MOD</th><th>SAVE</th>
+                                <th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${abilityRow1}
-                            ${abilityRow2}
+                            <tr>
+                                <td>${abilities.str.score} (${formatModifier(abilities.str.mod)})</td>
+                                <td>${abilities.dex.score} (${formatModifier(abilities.dex.mod)})</td>
+                                <td>${abilities.con.score} (${formatModifier(abilities.con.mod)})</td>
+                                <td>${abilities.int.score} (${formatModifier(abilities.int.mod)})</td>
+                                <td>${abilities.wis.score} (${formatModifier(abilities.wis.mod)})</td>
+                                <td>${abilities.cha.score} (${formatModifier(abilities.cha.mod)})</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -839,7 +808,7 @@ creator: ${state.creator}`;
         if (!sectionMatch) return abilities;
 
         const sectionContent = sectionMatch[1];
-        const abilityRegex = /\\*\\*\\*([^.]+)\\.\\*\\*\\*\\s+([\\s\\S]*?)(?=\\n\\*\\*\\*|\\n\\n###|$)/g;
+        const abilityRegex = /\*\*\*([^.]+)\.\*\*\*\s+([\s\S]*?)(?=\n\*\*\*|\n\n###|$)/g;
         
         let match;
         while ((match = abilityRegex.exec(sectionContent)) !== null) {
@@ -863,31 +832,32 @@ creator: ${state.creator}`;
             const content = e.target.result;
 
             // --- PARSE YAML FRONT MATTER ---
-            const frontMatterMatch = content.match(/^---[\\r\\n]+([\\s\\S]*?)[\\r\\n]+---/);
+            // Support multiple line ending formats (\r\n, \n, \r)
+            const frontMatterMatch = content.match(/^---[\r\n]+([\s\S]*?)[\r\n]+---/);
             if (!frontMatterMatch) {
                 alert("No valid front matter found in this file.");
                 return;
             }
             const frontMatter = frontMatterMatch[1];
-            const lines = frontMatter.split(/\\r?\\n/);
+            const lines = frontMatter.split(/\r?\n/);
             lines.forEach(line => {
                 const colonIndex = line.indexOf(':');
                 if (colonIndex === -1) return;
                 const key = line.substring(0, colonIndex).trim();
                 const value = line.substring(colonIndex + 1).trim();
                 if (key in state) {
-                    state[key] = value.replace(/^['\"]|['\"]$/g, '');
+                    state[key] = value.replace(/^['"]|['"]$/g, '');
                 }
             });
 
             // --- PARSE LORE DESCRIPTION ---
-            const loreMatch = content.match(/## [^\\r\\n]+[\\r\\n]+[\\r\\n]+([\\s\\S]*?)[\\r\\n]+___/);
+            const loreMatch = content.match(/## [^\r\n]+[\r\n]+[\r\n]+([\s\S]*?)[\r\n]+___/);
             if (loreMatch) {
                 state.description = loreMatch[1].trim();
             }
 
             // --- PARSE ABILITY SCORES FROM TABLE ---
-            const abilityTableMatch = content.match(/\\|\\s*STR\\s*\\|\\s*DEX\\s*\\|\\s*CON\\s*\\|\\s*INT\\s*\\|\\s*WIS\\s*\\|\\s*CHA\\s*\\|[\\s\\S]*?\\|\\s*(\\d+)\\s*\\([^)]+\\)\\s*\\|\\s*(\\d+)\\s*\\([^)]+\\)\\s*\\|\\s*(\\d+)\\s*\\([^)]+\\)\\s*\\|\\s*(\\d+)\\s*\\([^)]+\\)\\s*\\|\\s*(\\d+)\\s*\\([^)]+\\)\\s*\\|\\s*(\\d+)\\s*\\([^)]+\\)\\s*\\|/);
+            const abilityTableMatch = content.match(/\|\s*STR\s*\|\s*DEX\s*\|\s*CON\s*\|\s*INT\s*\|\s*WIS\s*\|\s*CHA\s*\|[\s\S]*?\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|/);
             if (abilityTableMatch) {
                 state.str = parseInt(abilityTableMatch[1]);
                 state.dex = parseInt(abilityTableMatch[2]);
@@ -898,33 +868,33 @@ creator: ${state.creator}`;
             }
 
             // --- PARSE STAT BLOCK BODY ---
-            const bodyMatch = content.match(/___[\\s\\S]*$/);
+            const bodyMatch = content.match(/___[\s\S]*$/);
             if (!bodyMatch) return;
             
             let body = bodyMatch[0];
 
             // Remove all blockquote markers for easier parsing
-            body = body.replace(/^>\\s*/gm, '');
+            body = body.replace(/^>\s*/gm, '');
 
             // Parse basic statistics
-            const acMatch = body.match(/\\*\\*Armor Class\\*\\*\\s+(.+?)(?=\\s*\\*\\*|\\n)/);
-            const hpMatch = body.match(/\\*\\*Hit Points\\*\\*\\s+(.+?)(?=\\s*\\*\\*|\\n)/);
-            const speedMatch = body.match(/\\*\\*Speed\\*\\*\\s+(.+)/);
+            const acMatch = body.match(/\*\*Armor Class\*\*\s+(.+?)(?=\s*\*\*|\n)/);
+            const hpMatch = body.match(/\*\*Hit Points\*\*\s+(.+?)(?=\s*\*\*|\n)/);
+            const speedMatch = body.match(/\*\*Speed\*\*\s+(.+)/);
 
             if (acMatch) state.ac = acMatch[1].trim();
             if (hpMatch) state.hp = hpMatch[1].trim();
             if (speedMatch) state.speed = speedMatch[1].trim();
 
             // Parse saving throw overrides
-            const savingThrowsMatch = body.match(/\\*\\*Saving Throws\\*\\*\\s+(.+)/);
+            const savingThrowsMatch = body.match(/\*\*Saving Throws\*\*\s+(.+)/);
             if (savingThrowsMatch) {
                 const saves = savingThrowsMatch[1].trim();
-                const strSaveMatch = saves.match(/Str\\s+([\\+\\-]?\\d+)/);
-                const dexSaveMatch = saves.match(/Dex\\s+([\\+\\-]?\\d+)/);
-                const conSaveMatch = saves.match(/Con\\s+([\\+\\-]?\\d+)/);
-                const intSaveMatch = saves.match(/Int\\s+([\\+\\-]?\\d+)/);
-                const wisSaveMatch = saves.match(/Wis\\s+([\\+\\-]?\\d+)/);
-                const chaSaveMatch = saves.match(/Cha\\s+([\\+\\-]?\\d+)/);
+                const strSaveMatch = saves.match(/Str\s+([\+\-]\d+)/);
+                const dexSaveMatch = saves.match(/Dex\s+([\+\-]\d+)/);
+                const conSaveMatch = saves.match(/Con\s+([\+\-]\d+)/);
+                const intSaveMatch = saves.match(/Int\s+([\+\-]\d+)/);
+                const wisSaveMatch = saves.match(/Wis\s+([\+\-]\d+)/);
+                const chaSaveMatch = saves.match(/Cha\s+([\+\-]\d+)/);
                 
                 if (strSaveMatch) state.strSave = strSaveMatch[1];
                 if (dexSaveMatch) state.dexSave = dexSaveMatch[1];
@@ -935,12 +905,12 @@ creator: ${state.creator}`;
             }
 
             // Parse optional statistics
-            const skillsMatch = body.match(/\\*\\*Skills\\*\\*\\s+(.+)/);
-            const sensesMatch = body.match(/\\*\\*Senses\\*\\*\\s+(.+)/);
-            const languagesMatch = body.match(/\\*\\*Languages\\*\\*\\s+(.+)/);
-            const condImmMatch = body.match(/\\*\\*Condition Immunities\\*\\*\\s+(.+)/);
-            const damageResMatch = body.match(/\\*\\*Damage Resistances\\*\\*\\s+(.+)/);
-            const damageImmMatch = body.match(/\\*\\*Damage Immunities\\*\\*\\s+(.+)/);
+            const skillsMatch = body.match(/\*\*Skills\*\*\s+(.+)/);
+            const sensesMatch = body.match(/\*\*Senses\*\*\s+(.+)/);
+            const languagesMatch = body.match(/\*\*Languages\*\*\s+(.+)/);
+            const condImmMatch = body.match(/\*\*Condition Immunities\*\*\s+(.+)/);
+            const damageResMatch = body.match(/\*\*Damage Resistances\*\*\s+(.+)/);
+            const damageImmMatch = body.match(/\*\*Damage Immunities\*\*\s+(.+)/);
 
             if (skillsMatch) state.skills = skillsMatch[1].trim();
             if (sensesMatch) state.senses = sensesMatch[1].trim();
@@ -956,12 +926,12 @@ creator: ${state.creator}`;
             state.reactions = parseAbilities(body, 'Reactions');
 
             // Parse Legendary Actions section
-            const legendarySection = body.match(/### Legendary Actions\\n\\n([\\s\\S]*?)(?=\\n###|$)/);
+            const legendarySection = body.match(/### Legendary Actions\n\n([\s\S]*?)(?=\n###|$)/);
             if (legendarySection) {
                 const legendaryContent = legendarySection[1];
                 
                 // Extract description (everything before first ***)
-                const descMatch = legendaryContent.match(/^([\\s\\S]*?)(?=\\n\\*\\*\\*)/);
+                const descMatch = legendaryContent.match(/^([\s\S]*?)(?=\n\*\*\*)/);
                 if (descMatch) {
                     const desc = descMatch[1].trim();
                     if (desc && !desc.includes('The creature can take 3 legendary actions')) {
@@ -974,13 +944,13 @@ creator: ${state.creator}`;
             }
 
             // Parse Lair Actions
-            const lairMatch = body.match(/### Lair Actions\\n\\n([\\s\\S]*?)(?=\\n###|$)/);
+            const lairMatch = body.match(/### Lair Actions\n\n([\s\S]*?)(?=\n###|$)/);
             if (lairMatch) {
                 state.lairActions = lairMatch[1].trim();
             }
 
             // Parse Regional Effects
-            const regionalMatch = body.match(/### Regional Effects\\n\\n([\\s\\S]*?)(?=\\n###|$)/);
+            const regionalMatch = body.match(/### Regional Effects\n\n([\s\S]*?)(?=\n###|$)/);
             if (regionalMatch) {
                 state.regionalEffects = regionalMatch[1].trim();
             }
@@ -1095,10 +1065,11 @@ creator: ${state.creator}`;
         render();
     }
 
+    // Start initialization when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
         init();
     }
 
-})
+})();
