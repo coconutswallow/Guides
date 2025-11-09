@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "Markdown Author's Guide"
+title: "Markdown Guide"
 order: 3
 ---
 

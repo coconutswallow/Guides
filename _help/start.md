@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "Help-Index
+title: "Help Index"
 order: 1
 ---
 <a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a>

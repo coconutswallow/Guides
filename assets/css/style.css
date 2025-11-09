@@ -664,9 +664,9 @@ table {
   border: 2px solid var(--color-border);
 }
 
+/* LIGHT MODE: Dark burgundy header (#58180D) with cream text (#FDF1DC) */
 thead {
   background: var(--color-primary);
-  color: var(--color-bg-light);
 }
 
 th {
@@ -677,6 +677,7 @@ th {
   text-transform: uppercase;
   font-size: 0.9em;
   letter-spacing: 0.5px;
+  color: #FDF1DC; /* Hardcoded cream - since light mode bg-light IS cream */
 }
 
 td {
@@ -690,6 +691,19 @@ tbody tr:nth-child(even) {
 
 tbody tr:hover {
   background: var(--color-table-hover);
+}
+
+/* DARK MODE: Golden tan header (#D4A574) with dark text (#1a1a1a) */
+[data-theme="dark"] thead {
+  background: var(--color-primary); /* Golden tan in dark mode */
+}
+
+[data-theme="dark"] th {
+  color: #1a1a1a; /* Dark text - since dark mode bg-light IS dark gray */
+}
+
+[data-theme="dark"] tbody tr:hover {
+  background: var(--color-table-hover); /* Uses the dark mode variable */
 }
 
 /* ============================================
