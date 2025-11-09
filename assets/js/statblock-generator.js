@@ -78,6 +78,10 @@
     }
 
     // --- CONSTANTS ---
+    // Universal regex for line breaks (Windows \r\n, Mac \r, Linux \n)
+    const NEWLINE_REGEX = '(?:\\r\\n|\\r|\\n)';
+    const NEWLINE_REGEX_G = /(?:\r\n|\r|\n)/g;
+
     // Available creature sizes in D&D
     const sizes = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
     
@@ -86,11 +90,8 @@
                    'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'];
 
     // --- FOCUS MANAGEMENT ---
-    // Stores information about which input field was focused and cursor position
-    // This allows us to restore focus after re-rendering the form
     let focusedElementInfo = null;
 
-    // Saves the currently focused element and cursor position before re-render
     function saveFocus() {
         const activeElement = document.activeElement;
         if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') && activeElement.id) {
@@ -103,14 +104,12 @@
         }
     }
 
-    // Restores focus to the previously focused element and cursor position after re-render
     function restoreFocus() {
         if (!focusedElementInfo) return;
         const elementToFocus = document.getElementById(focusedElementInfo.id);
         if (elementToFocus) {
             elementToFocus.focus();
             if (elementToFocus.setSelectionRange) {
-                // Check if cursor position is valid for the element's value
                 const cursor = Math.min(focusedElementInfo.cursor, elementToFocus.value.length);
                 elementToFocus.setSelectionRange(cursor, cursor);
             }
@@ -118,25 +117,17 @@
     }
 
     // --- GAME MECHANICS CALCULATIONS ---
-    // Calculates the ability modifier from an ability score (D&D 5e formula)
-    // Example: score of 14 = modifier of +2
     function calculateModifier(score) {
         return Math.floor((parseInt(score, 10) - 10) / 2);
     }
 
-    // Formats a modifier with appropriate sign for display
-    // Example: 2 becomes "+2", -1 stays "-1"
     function formatModifier(mod) {
         return mod >= 0 ? `+${mod}` : `${mod}`;
     }
 
-    // Calculates proficiency bonus based on Challenge Rating
-    // Used for skill checks and saving throws
     function getProficiencyBonus(cr) {
-        // Use eval to handle fractions like "1/4" or "1/2"
         let crNum = 0;
         try {
-            // Sanitize cr input slightly: remove spaces, allow fractions
             const cleanCr = String(cr).replace(/\s/g, '');
             if (cleanCr.includes('/')) {
                 const parts = cleanCr.split('/');
@@ -161,14 +152,10 @@
         return 9;
     }
 
-    // Calculates a proficient saving throw value
-    // saving throw = ability modifier + proficiency bonus
     function calculateSave(score, profBonus) {
         return calculateModifier(score) + profBonus;
     }
 
-    // Creates an object with all ability scores, their modifiers, and saving throws
-    // Returns: { str: {score, mod, save}, dex: {...}, etc. }
     function getAbilitiesObject(pb) {
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const abilities = {};
@@ -183,68 +170,54 @@
     }
 
     /**
+     * **FIXED**
      * Parses ability blocks (Traits, Actions, Legendary Actions) from the markdown body.
-     * NOTE: The markdown body must be stored in state.markdownBody before calling.
-     * @param {string} sectionHeader - The H3 header of the section (e.g., 'Traits').
-     * @param {string} startMarker - The starting bold marker for the ability name (e.g., '***').
-     * @param {string} endMarker - The ending bold marker for the ability name.
-     * @returns {Array<Object>} An array of {name, description} objects.
+     * This function is now more robust.
+     * @param {string} sectionHeader - The H3 header (e.g., 'Traits').
+     * @param {string} nameRegexString - The regex string to capture the *name* of an ability. 
+     * Must contain one capture group for the name.
+     * e.g., "\\*\\*\\*([^\\.]+?)\\. \\*\\*\\*" for Traits
+     * e.g., "\\*\\*([^\\.]+?)\\." for Legendary Actions
      */
-    function parseAbilityList(sectionHeader, startMarker, endMarker) {
+    function parseAbilityList(sectionHeader, nameRegexString) {
         const abilities = [];
-        if (!state.markdownBody) return []; // Safety check
+        if (!state.markdownBody) return [];
 
-        // Ensure asterisks are correctly escaped for the RegExp constructor
-        const escapedStart = startMarker.replace(/\*/g, '\\*');
-        const escapedEnd = endMarker.replace(/\*/g, '\\*');
-        
         // 1. Find the entire section block by header
-        // Stops before the next H3 header or the end of the file.
-        // It also handles blockquoted (>) or non-blockquoted headers
-        // Added 'm' flag for multiline matching (^ matches start of line)
-        const sectionRegex = new RegExp(`(?:^>\\s*### ${sectionHeader}|^### ${sectionHeader})\\s*([\\s\\S]*?)(?=\\n>\\s*### |\\n### |$)`, 'm');
+        // Stops before the next H3 header or end of file. Handles blockquotes and line endings.
+        const sectionRegex = new RegExp(`(?:^>\\s*### ${sectionHeader}|^### ${sectionHeader})\\s*([\\s\\S]*?)(?=${NEWLINE_REGEX}>\\s*### |${NEWLINE_REGEX}### |$)`, 'm');
         const sectionMatch = state.markdownBody.match(sectionRegex);
     
         if (!sectionMatch) {
             return [];
         }
 
-        // Use match[1] if available, otherwise find content after match[0]
         let sectionContent = sectionMatch[1]; 
         if (!sectionContent) {
-             // Fallback for headers that might be part of the match[0]
             const headerRegex = new RegExp(`(?:^>\\s*### ${sectionHeader}|^### ${sectionHeader})`, 'm');
             sectionContent = sectionMatch[0].replace(headerRegex, '').trim();
         }
-
         if (!sectionContent) return [];
         sectionContent = sectionContent.trim();
 
-        // 2. Find individual abilities (robustly handles multi-paragraph descriptions)
-        // This regex finds abilities that are blockquoted (>) or not.
-        // It captures the Name and the Description
-        
-        // *** FIX ***
-        // The lookahead now *also* stops at the next '###' header, preventing
-        // the last trait from consuming the entire next section.
+        // 2. Find individual abilities
+        // The regex now uses the flexible nameRegexString and stops at the next name or next header.
         const abilityRegex = new RegExp(
-            `^>?\\s*${escapedStart}([^\\.]+?)\\. ${escapedEnd}\\s*([\\s\\S]*?)(?=\\n>?\\s*${escapedStart}[^\\.]+?\\. ${escapedEnd}|\\n>?\\s*### |\\n### |$)`,
+            `^>?\\s*${nameRegexString}\\s*([\\s\\S]*?)(?=${NEWLINE_REGEX}>?\\s*${nameRegexString}|${NEWLINE_REGEX}>?\\s*### |${NEWLINE_REGEX}### |$)`,
             'gm'
         );
         
         let match;
         while ((match = abilityRegex.exec(sectionContent)) !== null) {
             abilities.push({
-                name: match[1].trim(),
-                // Clean *all* leading blockquotes from the description lines
-                description: match[2].replace(/^\s*(?:>\s*)+/gm, '').trim()
+                name: match[1].trim(), // Name is always capture group 1
+                description: match[2].replace(/^\s*(?:>\s*)+/gm, '').trim() // Desc is group 2, clean all blockquotes
             });
         }
-    
         return abilities;
     }
     
-    // Simple HTML escaping utility (prevents XSS in <pre> tags)
+    // Simple HTML escaping utility
     function escapeHtml(unsafe) {
         if (typeof unsafe !== 'string') {
             if (unsafe === null || typeof unsafe === 'undefined') {
@@ -257,8 +230,6 @@
     }
 
     // --- VALIDATION ---
-    // Validates that all required fields are filled and valid
-    // Returns: { valid: boolean, errors: string[] }
     function validateForm() {
         const errors = [];
         if (!state.title.trim()) errors.push('Title is required');
@@ -267,7 +238,6 @@
         if (!state.creator.trim()) errors.push('Creator is required');
         
         try {
-             // Use the same logic as getProficiencyBonus to validate CR
             const cleanCr = String(state.cr).replace(/\s/g, '');
             let crNum;
             if (cleanCr.includes('/')) {
@@ -289,7 +259,7 @@
 
         ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach(ability => {
             const score = state[ability];
-            if (score < 1 || score > 30) {
+            if (isNaN(parseInt(score)) || score < 1 || score > 30) {
                 errors.push(`${ability.toUpperCase()} must be between 1 and 30`);
             }
         });
@@ -297,8 +267,6 @@
     }
 
     // --- MARKDOWN GENERATION ---
-    // Generates the complete markdown file content for the stat block
-    // This creates a Jekyll-compatible front matter + markdown stat block
     function generateMarkdown() {
         const validation = validateForm();
         if (!validation.valid) return '';
@@ -306,7 +274,6 @@
         const pb = getProficiencyBonus(state.cr);
         const abilities = getAbilitiesObject(pb);
 
-        // Build YAML front matter (metadata section at top of file)
         let markdown = `---
 layout: ${state.layout}
 title: ${state.title}
@@ -317,37 +284,27 @@ alignment: ${state.alignment}
 category: ${state.category}
 creator: ${state.creator}`;
 
-        // Add optional front matter fields if present
         if (state.image) markdown += `\nimage: ${state.image}`;
         if (state.image_credit) markdown += `\nimage_credit: ${state.image_credit}`;
-
-        // Close front matter
         markdown += `\n---\n\n`;
 
-        // Add description section if present (now outside front matter)
         if (state.description) {
             markdown += `## ${state.title}\n\n`;
-            // Split description into paragraphs and format with blank lines between
-            const paragraphs = state.description.split('\n').filter(p => p.trim());
+            const paragraphs = state.description.split(NEWLINE_REGEX_G).filter(p => p.trim());
             markdown += paragraphs.join('\n\n') + '\n\n';
         }
 
-        // Start the stat block content
         markdown += `___\n> ## ${state.title}\n> *${state.size} ${state.type.toLowerCase()}, ${state.alignment.toLowerCase()}*\n>\n`;
 
-        // Add core statistics (AC, HP, Speed)
         if (state.ac) markdown += `> **AC** ${state.ac}`;
         if (state.hp) markdown += ` **HP** ${state.hp}`;
         if (state.speed) markdown += ` **Speed** ${state.speed}`;
         markdown += `\n>\n`;
 
-        // Add initiative if specified
         if (state.initiative) {
             markdown += `> **Initiative** ${state.initiative}\n>\n`;
         }
 
-        // Determine which saving throw values to display
-        // Use override value if provided, otherwise use calculated value
         const strSaveOutput = state.strSave.trim() || formatModifier(abilities.str.save);
         const dexSaveOutput = state.dexSave.trim() || formatModifier(abilities.dex.save);
         const conSaveOutput = state.conSave.trim() || formatModifier(abilities.con.save);
@@ -355,7 +312,6 @@ creator: ${state.creator}`;
         const wisSaveOutput = state.wisSave.trim() || formatModifier(abilities.wis.save);
         const chaSaveOutput = state.chaSave.trim() || formatModifier(abilities.cha.save);
 
-        // Build ability score table with scores, modifiers, and saves
         markdown += `> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |\n`;
         markdown += `> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|\n`;
         markdown += `> |Str| ${abilities.str.score}| ${formatModifier(abilities.str.mod)}| ${strSaveOutput}|`;
@@ -365,7 +321,6 @@ creator: ${state.creator}`;
         markdown += `Wis| ${abilities.wis.score}| ${formatModifier(abilities.wis.mod)} | ${wisSaveOutput}|`;
         markdown += `Cha| ${abilities.cha.score}| ${formatModifier(abilities.cha.mod)} | ${chaSaveOutput}|\n>\n`;
 
-        // Add explicit "Saving Throws" line if any saves were overridden
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const saveOverrides = [];
         abilityKeys.forEach(key => {
@@ -379,7 +334,6 @@ creator: ${state.creator}`;
             markdown += `> **Saving Throws** ${saveOverrides.join(', ')}  \n`;
         }
         
-        // Add optional statistics (skills, resistances, senses, etc.)
         if (state.skills) markdown += `> **Skills** ${state.skills}  \n`;
         if (state.damageResistances) markdown += `> **Damage Resistances** ${state.damageResistances}  \n`;
         if (state.damageImmunities) markdown += `> **Damage Immunities** ${state.damageImmunities}  \n`;
@@ -388,10 +342,8 @@ creator: ${state.creator}`;
         if (state.languages) markdown += `> **Languages** ${state.languages}  \n`;
         markdown += `> **CR** ${state.cr} (PB +${pb})\n>\n`;
 
-        // Helper to format descriptions for markdown blockquote
-        const formatDesc = (desc) => (desc || '').replace(/\n/g, "\n> ");
+        const formatDesc = (desc) => (desc || '').replace(NEWLINE_REGEX_G, "\n> ");
 
-        // Add traits section if any traits exist
         if (state.traits.length > 0) {
             markdown += `> ### Traits\n>\n`;
             state.traits.forEach(trait => {
@@ -401,7 +353,6 @@ creator: ${state.creator}`;
             });
         }
 
-        // Add actions section if any actions exist
         if (state.actions.length > 0) {
             markdown += `> ### Actions\n>\n`;
             state.actions.forEach(action => {
@@ -411,7 +362,6 @@ creator: ${state.creator}`;
             });
         }
         
-        // Add bonus actions section if any exist
         if (state.bonusActions.length > 0) {
             markdown += `> ### Bonus Actions\n>\n`;
             state.bonusActions.forEach(action => {
@@ -421,7 +371,6 @@ creator: ${state.creator}`;
             });
         }
 
-        // Add reactions section if any exist
         if (state.reactions.length > 0) {
             markdown += `> ### Reactions\n>\n`;
             state.reactions.forEach(reaction => {
@@ -431,7 +380,6 @@ creator: ${state.creator}`;
             });
         }
 
-        // Add legendary actions section if any exist
         if (state.legendaryActions.length > 0) {
             markdown += `> ### Legendary Actions\n`;
             const defaultDesc = "The creature can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature's turn. The creature regains spent legendary actions at the start of its turn.";
@@ -446,17 +394,15 @@ creator: ${state.creator}`;
             });
         }
         
-        // Add lair actions section if text is provided
         if (state.lairActions) {
             markdown += `> ### Lair Actions\n>\n`;
-            const formattedLairActions = state.lairActions.split('\n').map(l => l.trim() ? `> ${l}` : '>').join('\n');
+            const formattedLairActions = state.lairActions.split(NEWLINE_REGEX_G).map(l => l.trim() ? `> ${l}` : '>').join('\n');
             markdown += `${formattedLairActions}\n>\n`;
         }
 
-        // Add regional effects section if text is provided
         if (state.regionalEffects) {
             markdown += `> ### Regional Effects\n>\n`;
-            const formattedRegionalEffects = state.regionalEffects.split('\n').map(l => l.trim() ? `> ${l}` : '>').join('\n');
+            const formattedRegionalEffects = state.regionalEffects.split(NEWLINE_REGEX_G).map(l => l.trim() ? `> ${l}` : '>').join('\n');
             markdown += `${formattedRegionalEffects}\n>\n`;
         }
 
@@ -464,28 +410,23 @@ creator: ${state.creator}`;
     }
     
     // --- SYNCHRONIZATION ---
-    // Updates the state object from the form inputs
     function syncFormState() {
         const formView = document.getElementById('form-view');
         if (!formView) return;
 
-        // Sync main fields
         const inputs = formView.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
-            // Check if input ID exists in the state and it's not an item list field
             if (input.id in state && !input.classList.contains('item-name') && !input.classList.contains('item-description')) {
                 if (input.type === 'number') {
-                    state[input.id] = parseInt(input.value) || 0; // Ensure ability scores are numbers
+                    state[input.id] = parseInt(input.value) || 0;
                 } else {
                     state[input.id] = input.value;
                 }
             }
         });
-        // Note: Item lists (traits, actions) are updated by their own handlers (addItem, removeItem, updateItem)
     }
 
     // --- FORM RENDERING ---
-    // Renders the complete HTML form for editing the stat block
     function renderForm() {
         const pb = getProficiencyBonus(state.cr || 0);
         return `
@@ -663,7 +604,6 @@ creator: ${state.creator}`;
     }
 
     // Renders a complete section with multiple items (traits, actions, etc.)
-    // Returns HTML for the section header, list of items, and add button
     function renderItemSection(field, title) {
         const singularTitle = title.slice(0, -1); 
         return `
@@ -676,7 +616,6 @@ creator: ${state.creator}`;
     }
 
     // Renders the list of items (each with name and description fields)
-    // Used for traits, actions, reactions, etc.
     function renderItemList(field) {
         if (!state[field]) state[field] = []; // Ensure field exists
         return `
@@ -688,7 +627,7 @@ creator: ${state.creator}`;
                                 class="item-name" 
                                 id="${field}-${index}-name"
                                 value="${escapeHtml(item.name)}" 
-                                placeholder="${field.slice(0, -1)} Name" 
+                                placeholder="${singular(field)} Name" 
                                 oninput="updateItem('${field}', ${index}, 'name', this.value)">
                             <button type="button" class="remove-button" onclick="removeItem('${field}', ${index})">Remove</button>
                         </div>
@@ -696,37 +635,42 @@ creator: ${state.creator}`;
                             class="item-description" 
                             id="${field}-${index}-description"
                             rows="3"
-                            placeholder="${field.slice(0, -1)} Description" 
+                            placeholder="${singular(field)} Description" 
                             oninput="updateItem('${field}', ${index}, 'description', this.value)">${escapeHtml(item.description)}</textarea>
                     </div>
                 `).join('')}
             </div>
         `;
     }
+    
+    // Helper for renderItemList placeholder text
+    function singular(field) {
+        if (field === 'traits') return 'Trait';
+        if (field === 'actions') return 'Action';
+        if (field === 'bonusActions') return 'Bonus Action';
+        if (field === 'reactions') return 'Reaction';
+        if (field === 'legendaryActions') return 'Legendary Action';
+        return 'Item';
+    }
+
 
     // --- ITEM LIST MANAGEMENT ---
-    // Adds a new item to the specified array field in the state
     function addItem(field) {
         if (!state[field]) state[field] = []; // Ensure array exists
         state[field].push({ name: '', description: '' });
         render(); // Re-render to show new empty item
     }
 
-    // Removes an item from the specified array field in the state
     function removeItem(field, index) {
         if (!state[field]) return;
         state[field].splice(index, 1);
         render(); // Re-render to update list indices
     }
 
-    // Updates a specific property (name or description) of an item in the state
-    // Note: This is called by oninput and does NOT trigger a full render, 
-    // it only updates the state for the next sync/render cycle.
     function updateItem(field, index, prop, value) {
         if (state[field] && state[field][index]) {
             state[field][index][prop] = value;
         }
-        // Optionally trigger a preview update here if needed, but not required for form input.
         const previewView = document.getElementById('preview-view');
         if (previewView && previewView.classList.contains('active')) {
             previewView.innerHTML = renderPreview();
@@ -735,7 +679,6 @@ creator: ${state.creator}`;
 
 
     // --- PREVIEW RENDERING ---
-    // Renders the preview tab showing validation status, markdown, and visual preview
     function renderPreview() {
         syncFormState(); // Ensure state is up-to-date
         const validation = validateForm();
@@ -756,12 +699,10 @@ creator: ${state.creator}`;
                     </div>
                 `}
             </div>
-
             <div class="markdown-output">
                 <h3>Markdown Preview</h3>
                 <pre>${escapeHtml(markdown)}</pre>
             </div>
-
             <div class="visual-output">
                 <h3>Visual Preview</h3>
                 <p>This is an approximation of how the statblock would appear in the bestiary. Note the visual rendering (Lore in particular) is not perfect in the preview and should look better when added to the bestiary.</p>
@@ -770,15 +711,12 @@ creator: ${state.creator}`;
         `;
     }
 
-    // Renders the visual representation of the stat block (HTML formatted)
-    // This shows what the stat block will look like when rendered on the website
     function renderVisualStatBlock() {
         if (!state.title) return '<div class="statblock-placeholder">Fill in the form to see preview...</div>';
 
         const pb = getProficiencyBonus(state.cr);
         const abilities = getAbilitiesObject(pb);
 
-        // Determine display values for saving throws (use override if provided)
         const strSaveValue = state.strSave.trim() || formatModifier(abilities.str.save);
         const dexSaveValue = state.dexSave.trim() || formatModifier(abilities.dex.save);
         const conSaveValue = state.conSave.trim() || formatModifier(abilities.con.save);
@@ -786,24 +724,19 @@ creator: ${state.creator}`;
         const wisSaveValue = state.wisSave.trim() || formatModifier(abilities.wis.save);
         const chaSaveValue = state.chaSave.trim() || formatModifier(abilities.cha.save);
         
-        // Determine which saving throw values to display in the section (only overrides)
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const saveOverrides = [];
         abilityKeys.forEach(key => {
             const overrideValue = state[key + 'Save'].trim();
             if (overrideValue) {
-                // Capitalize the ability name for display (e.g., 'Str +9')
                 saveOverrides.push(`${key.charAt(0).toUpperCase() + key.slice(1)} ${overrideValue}`);
             }
         });
 
-        // Split description into paragraphs for display
-        const descriptionParagraphs = state.description.trim().split('\n').filter(p => p.trim());
+        const descriptionParagraphs = state.description.trim().split(NEWLINE_REGEX_G).filter(p => p.trim());
         
-        // Helper function for optional stats
         const optionalStat = (label, value) => value ? `<p><strong>${label}</strong> ${escapeHtml(value)}</p>` : '';
-        // Helper to format text with newlines as <p> tags
-        const formatBlock = (text) => (text || '').split('\n').map(p => `<p>${escapeHtml(p)}</p>`).join('');
+        const formatBlock = (text) => (text || '').split(NEWLINE_REGEX_G).map(p => `<p>${escapeHtml(p)}</p>`).join('');
 
         return `
             <div class="statblock-visual">
@@ -914,20 +847,16 @@ creator: ${state.creator}`;
     }
 
     // --- VIEW MANAGEMENT ---
-    // Switches between form edit view and preview view
     function switchView(view) {
         const formView = document.getElementById('form-view');
         const previewView = document.getElementById('preview-view');
         if (!formView || !previewView) return;
 
-        // Hide all views
         formView.classList.remove('active');
         previewView.classList.remove('active');
         
-        // Show selected view
         document.getElementById(`${view}-view`).classList.add('active');
         
-        // Update button active states
         document.querySelectorAll('.toggle-btn').forEach(btn => {
             btn.classList.remove('active');
         });
@@ -938,7 +867,6 @@ creator: ${state.creator}`;
     }
 
     // --- FILE OPERATIONS ---
-    // Downloads the generated markdown as a .md file
     function downloadMarkdown() {
         syncFormState();
         const markdown = generateMarkdown();
@@ -949,7 +877,6 @@ creator: ${state.creator}`;
             return;
         }
 
-        // Create blob and trigger download
         const blob = new Blob([markdown], { type: 'text/markdown' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -962,24 +889,21 @@ creator: ${state.creator}`;
     }
 
     // --- RENDERING ---
-    // Main render function - updates both form and preview views
     function render() {
         const formView = document.getElementById('form-view');
         const previewView = document.getElementById('preview-view');
         
-        if (!formView || !previewView) return; // Exit if containers not found
+        if (!formView || !previewView) return;
 
         const activeTab = previewView.classList.contains('active') ? 'preview' : 'form';
         
         if (activeTab === 'form') {
-            saveFocus(); // Save cursor position before re-render
+            saveFocus();
             formView.innerHTML = renderForm();
-            restoreFocus(); // Restore cursor position after re-render
+            restoreFocus();
             attachFormListeners();
         } else {
-            // Only render preview if it's the active tab
             previewView.innerHTML = renderPreview();
-            // Still need to render form in background to attach listeners
             formView.innerHTML = renderForm();
             attachFormListeners();
         }
@@ -990,7 +914,6 @@ creator: ${state.creator}`;
         const formView = document.getElementById('form-view');
         if (!formView) return;
         
-        // Fields that require full re-render when changed (affect calculations)
         const dynamicFields = [
             'str', 'dex', 'con', 'int', 'wis', 'cha', 
             'strSave', 'dexSave', 'conSave', 'intSave', 'wisSave', 'chaSave',
@@ -999,13 +922,11 @@ creator: ${state.creator}`;
 
         const inputs = formView.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
-            // Skip item fields (they have their own handlers via updateItem)
             if (!input.classList.contains('item-name') && !input.classList.contains('item-description')) {
                 
                 const eventType = (input.tagName === 'SELECT' || input.type === 'checkbox') ? 'change' : 'input';
 
                 input.addEventListener(eventType, () => {
-                    // Sync state immediately on input
                     if (input.type === 'number') {
                         state[input.id] = parseInt(input.value) || 0;
                     } else {
@@ -1013,11 +934,8 @@ creator: ${state.creator}`;
                     }
 
                     if (dynamicFields.includes(input.id)) {
-                        // Full re-render for fields that affect calculations
-                        // This will re-render the form and preview (if active)
                         render();
                     } else {
-                        // Just update preview if it's active
                         const previewView = document.getElementById('preview-view');
                         if (previewView && previewView.classList.contains('active')) {
                             previewView.innerHTML = renderPreview();
@@ -1029,12 +947,10 @@ creator: ${state.creator}`;
     }
 
     // --- INITIALIZATION ---
-    // Sets up the application when the page loads
     function init() {
         const container = document.getElementById('generator-app');
         if (!container) return;
 
-        // Build main application structure
         container.innerHTML = `
             <div class="generator-controls">
                 <div class="view-toggles">
@@ -1053,13 +969,12 @@ creator: ${state.creator}`;
         `;
 
         // Register global functions for onclick handlers
-        // Expose necessary functions globally for onclick attributes in dynamically generated HTML
         window.switchGeneratorView = function(view) {
             if (view === 'preview') {
-                syncFormState(); // Sync before switching to preview
+                syncFormState(); 
             }
             switchView(view);
-            render(); // Re-render to update the active view
+            render(); 
         };
 
         window.downloadStatBlock = downloadMarkdown;
@@ -1072,7 +987,6 @@ creator: ${state.creator}`;
             const file = event.target.files[0];
             if (!file) return;
             
-            // Clear previous monster data before loading new file
             resetState();
 
             const reader = new FileReader();
@@ -1080,35 +994,25 @@ creator: ${state.creator}`;
                 const content = e.target.result;
 
                 // --- PARSE YAML FRONT MATTER ---
-                // Extract the YAML section between --- markers at the start of the file
                 const frontMatterMatch = content.match(/^---[\r\n]+([\s\S]*?)[\r\n]+---/);
                 if (!frontMatterMatch) {
                     alert("No valid front matter found in this file.");
                     return;
                 }
-
                 const frontMatter = frontMatterMatch[1];
-                            
-                // Parse single-line YAML fields
-                const lines = frontMatter.split('\n');
+                const lines = frontMatter.split(NEWLINE_REGEX_G);
                 lines.forEach(line => {
                     const colonIndex = line.indexOf(':');
                     if (colonIndex === -1) return;
-            
                     const key = line.substring(0, colonIndex).trim();
-                    // Handle values that may contain colons (like URLs)
                     const value = line.substring(colonIndex + 1).trim();
-
                     if (key in state) {
-                         // Strip quotes from value if present
                         state[key] = value.replace(/^['"]|['"]$/g, '');
                     }
                 });
 
                 // --- PARSE DESCRIPTION (now outside front matter) ---
-                // Description appears after front matter as ## Title followed by paragraphs
-                // Must stop at ___ (stat block start)
-                const descriptionMatch = content.match(/---\s*\n+## [^\n]+\s*\n+([\s\S]*?)(?=\n*___)/);
+                const descriptionMatch = content.match(new RegExp(`---${NEWLINE_REGEX_G}\\s*## [^${NEWLINE_REGEX}]+\\s*(${NEWLINE_REGEX_G}[\\s\\S]*?)(?=${NEWLINE_REGEX}*___)`));
                 if (descriptionMatch) {
                     const desc = descriptionMatch[1].trim();
                     if (desc) {
@@ -1117,7 +1021,6 @@ creator: ${state.creator}`;
                 }
 
                 // --- PARSE ABILITY SCORES FROM STAT BLOCK TABLE ---
-                // More robust regex to handle whitespace and pipes
                 const strMatch = content.match(/\|Str\|\s*(\d+)\s*\|/);
                 const dexMatch = content.match(/\|Dex\|\s*(\d+)\s*\|/);
                 const conMatch = content.match(/\|Con\|\s*(\d+)\s*\|/);
@@ -1133,32 +1036,26 @@ creator: ${state.creator}`;
                 if (chaMatch) state.cha = parseInt(chaMatch[1]);
 
                 // --- PARSE STAT BLOCK BODY ---
-                // Everything after the first '___' marker is the stat block body
                 const bodyMatch = content.match(/___[\s\S]*$/); 
                 if (bodyMatch) {
-                    // Clean up leading markers for easier parsing
                     let body = bodyMatch[0];
-                    
-                    // *** FIX: Store body in state for robust ability parsing ***
-                    state.markdownBody = body;
+                    state.markdownBody = body; // Store body for ability parsing
 
-                    // Parse basic statistics (AC, HP, Speed, Initiative)
-                    // Added \n to regex to prevent over-matching
-                    const acMatch = body.match(/\*\*AC\*\*\s+([^\*\n]+?)(?=\s*\*\*|$|\n)/);
-                    const hpMatch = body.match(/\*\*HP\*\*\s+([^\*\n]+?)(?=\s*\*\*|$|\n)/);
-                    const speedMatch = body.match(/\*\*Speed\*\*\s+([^\n]+)/);
-                    const initiativeMatch = body.match(/\*\*Initiative\*\*\s+([^\n]+)/);
+                    // Parse basic statistics
+                    const acMatch = body.match(new RegExp(`\\*\\*AC\\*\\*\\s+([^\\*${NEWLINE_REGEX}]+?)(?=\\s*\\*\\*|${NEWLINE_REGEX}|$)`));
+                    const hpMatch = body.match(new RegExp(`\\*\\*HP\\*\\*\\s+([^\\*${NEWLINE_REGEX}]+?)(?=\\s*\\*\\*|${NEWLINE_REGEX}|$)`));
+                    const speedMatch = body.match(new RegExp(`\\*\\*Speed\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
+                    const initiativeMatch = body.match(new RegExp(`\\*\\*Initiative\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
 
                     if (acMatch) state.ac = acMatch[1].trim();
                     if (hpMatch) state.hp = hpMatch[1].trim();
                     if (speedMatch) state.speed = speedMatch[1].trim();
                     if (initiativeMatch) state.initiative = initiativeMatch[1].trim();
 
-                    // Parse saving throw overrides if they exist (separate line after ability table)
-                    const savingThrowsMatch = body.match(/\*\*Saving Throws\*\*\s+([^\n]+)/);
+                    // Parse saving throw overrides
+                    const savingThrowsMatch = body.match(new RegExp(`\\*\\*Saving Throws\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
                     if (savingThrowsMatch) {
                         const saves = savingThrowsMatch[1].trim();
-                        // Parse individual saves: "Str +9, Dex +5, Con +9, Int +6, Wis +7, Cha +9"
                         const strSaveMatch = saves.match(/Str\s+([\+\-]\d+)/);
                         const dexSaveMatch = saves.match(/Dex\s+([\+\-]\d+)/);
                         const conSaveMatch = saves.match(/Con\s+([\+\-]\d+)/);
@@ -1174,13 +1071,13 @@ creator: ${state.creator}`;
                         if (chaSaveMatch) state.chaSave = chaSaveMatch[1];
                     }
 
-                    // Parse optional statistics (more robust regex)
-                    const skillsMatch = body.match(/\*\*Skills\*\*\s+([^\n]+)/);
-                    const sensesMatch = body.match(/\*\*Senses\*\*\s+([^\n]+)/);
-                    const languagesMatch = body.match(/\*\*Languages\*\*\s+([^\n]+)/);
-                    const condImmMatch = body.match(/\*\*Condition Immunities\*\*\s+([^\n]+)/);
-                    const damageResMatch = body.match(/\*\*Damage Resistances\*\*\s+([^\n]+)/);
-                    const damageImmMatch = body.match(/\*\*Damage Immunities\*\*\s+([^\n]+)/);
+                    // Parse optional statistics
+                    const skillsMatch = body.match(new RegExp(`\\*\\*Skills\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
+                    const sensesMatch = body.match(new RegExp(`\\*\\*Senses\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
+                    const languagesMatch = body.match(new RegExp(`\\*\\*Languages\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
+                    const condImmMatch = body.match(new RegExp(`\\*\\*Condition Immunities\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
+                    const damageResMatch = body.match(new RegExp(`\\*\\*Damage Resistances\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
+                    const damageImmMatch = body.match(new RegExp(`\\*\\*Damage Immunities\\*\\*\\s+([^${NEWLINE_REGEX}]+)`));
 
                     if (skillsMatch) state.skills = skillsMatch[1].trim();
                     if (sensesMatch) state.senses = sensesMatch[1].trim();
@@ -1190,59 +1087,55 @@ creator: ${state.creator}`;
                     if (damageImmMatch) state.damageImmunities = damageImmMatch[1].trim();
 
 
-                    // --- PARSE ABILITY LISTS ---
-                    // *** FIX for ancient-sword-dragon.md AND the-sandman.md ***
-                    // Use the new robust `parseAbilityList` function
-                    state.traits = parseAbilityList('Traits', '***', '***');
-                    state.actions = parseAbilityList('Actions', '***', '***');
-                    state.bonusActions = parseAbilityList('Bonus Actions', '***', '***');
-                    state.reactions = parseAbilityList('Reactions', '***', '***');
+                    // --- PARSE ABILITY LISTS (FIXED) ---
+                    const traitPattern = '\\*\\*\\*([^\\.]+?)\\. \\*\\*\\*';
+                    const legendaryPattern = '\\*\\*([^\\.]+?)\\.'; // Note the single dot and no end marker
 
-                    // --- PARSE LEGENDARY ACTIONS SECTION ---
-                    // This section also uses the robust parseAbilityList
-                    const legendaryActionsSection = body.match(/(?:^>\s*### Legendary Actions|^### Legendary Actions)[\s\S]*?(?=\n>?\s*### |$)/m);
+                    state.traits = parseAbilityList('Traits', traitPattern);
+                    state.actions = parseAbilityList('Actions', traitPattern);
+                    state.bonusActions = parseAbilityList('Bonus Actions', traitPattern);
+                    state.reactions = parseAbilityList('Reactions', traitPattern);
+
+                    // --- PARSE LEGENDARY ACTIONS SECTION (FIXED) ---
+                    const legendaryActionsSection = body.match(new RegExp(`(?:^>\\s*### Legendary Actions|^### Legendary Actions)[\\s\\S]*?(?=${NEWLINE_REGEX}>?\\s*### |$)`, 'm'));
                     if (legendaryActionsSection) {
-                        // Find description text *before* the first bolded action
-                        const descMatch = legendaryActionsSection[0].match(/(?:^>\s*### Legendary Actions|^### Legendary Actions)\n>?\s*([\s\S]*?)(?=\n>?\s*\*\*[^_]|$\n)/m);                    
+                        
+                        // FIX: Look for description text *before* the first actual action
+                        const descRegex = new RegExp(`(?:^>\\s*### Legendary Actions|^### Legendary Actions)${NEWLINE_REGEX}?>?\\s*([\\s\\S]*?)(?=${NEWLINE_REGEX}>?\\s*${legendaryPattern})`, 'm');
+                        const descMatch = legendaryActionsSection[0].match(descRegex);
+                                            
                         if (descMatch) {
-                            // *** FIX: Robustly strip all blockquote levels ***
                             const desc = descMatch[1].replace(/^\s*(?:>\s*)+/gm, '').trim();
-                            // Only save if it's not the default description
                             if (desc && !desc.includes('The creature can take 3 legendary actions')) {
                                 state.legendaryActionDescription = desc;
                             }
                         }
                         
-                        // Parse individual legendary actions: **Name.** Description (note: ** not ***)
-                        state.legendaryActions = parseAbilityList('Legendary Actions', '\\*\\*', '\\*\\*');
+                        // Parse individual legendary actions using the correct pattern
+                        state.legendaryActions = parseAbilityList('Legendary Actions', legendaryPattern);
                     }
 
-                    // --- PARSE LAIR ACTIONS SECTION ---
-                    // *** FIX for the-sandman.md (double blockquote) ***
-                    // Use robust regex to find section and strip ALL blockquotes
-                    const lairActionsBlockMatch = body.match(/(?:^>\s*### Lair Actions|^### Lair Actions)\s*([\s\S]*?)(?=\n>?\s*### Regional Effects|$)/m);
+                    // --- PARSE LAIR ACTIONS SECTION (FIXED) ---
+                    const lairActionsBlockMatch = body.match(new RegExp(`(?:^>\\s*### Lair Actions|^### Lair Actions)\\s*([\\s\\S]*?)(?=${NEWLINE_REGEX}>?\\s*### Regional Effects|$)`, 'm'));
                     if (lairActionsBlockMatch) {
-                        // Match one or more (>) blockquote sequences at start of line
+                        // FIX: Match one or more (>) blockquote sequences at start of line
                         state.lairActions = lairActionsBlockMatch[1].replace(/^\s*(?:>\s*)+/gm, '').trim();
                     }
 
-                    // --- PARSE REGIONAL EFFECTS SECTION ---
-                    // *** FIX for the-sandman.md (double blockquote) ***
-                    // Use robust regex to find section and strip ALL blockquotes
-                    const regionalEffectsBlockMatch = body.match(/(?:^>\s*### Regional Effects|^### Regional Effects)\s*([\s\S]*?)(?=\n>?\s*$|\n>?\s*<|$)/m); // Stop at end of block
+                    // --- PARSE REGIONAL EFFECTS SECTION (FIXED) ---
+                    const regionalEffectsBlockMatch = body.match(new RegExp(`(?:^>\\s*### Regional Effects|^### Regional Effects)\\s*([\\s\\S]*?)(?=${NEWLINE_REGEX}>?\\s*$|${NEWLINE_REGEX}>?\\s*<|$)`, 'm'));
                     if (regionalEffectsBlockMatch) {
-                         // Match one or more (>) blockquote sequences at start of line
+                         // FIX: Match one or more (>) blockquote sequences at start of line
                         state.regionalEffects = regionalEffectsBlockMatch[1].replace(/^\s*(?:>\s*)+/gm, '').trim();
                     }
                 }
 
-                // Re-render form with loaded data and show success message
+                // Re-render form with loaded data
                 render();
                 switchView('form'); // Switch back to form view
                 alert(`Loaded: ${file.name}`);
 
-                // Reset file input to allow loading the same file again
-                event.target.value = null;
+                event.target.value = null; // Reset file input
             };
 
             reader.readAsText(file);
