@@ -231,7 +231,7 @@ p, li, td, th, a, code, pre {
 }
 
 .theme-toggle:hover {
-  transform: scale(1.1);
+  transform: scale(1.0);
   background: var(--color-secondary);
 }
 

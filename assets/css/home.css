@@ -29,7 +29,7 @@
 
 [data-theme="dark"] .card-button:hover {
   background: var(--color-secondary);
-  color: var(--color-text);
+  color: var(--color-nav-hover);
 }
 
 /* Hero Section */
