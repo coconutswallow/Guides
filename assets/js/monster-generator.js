@@ -38,14 +38,32 @@ creator: ${state.creator}`;
      * @param {Object} state - Monster state
      * @returns {string} Lore section markdown
      */
+/**
+ * Generate lore/description section
+ * @param {Object} state - Monster state
+ * @returns {string} Lore section markdown
+ */
     function generateLoreSection(state) {
+        // If there's no description, return an empty string
         if (!state.description || !state.description.trim()) {
             return '';
         }
 
+        let lore = '';
+
+        // 1. Add the main title header for the lore section
+        // The original markdown uses `## Title\n\n`
         lore += `## ${state.title}\n\n`;
+
+        // 2. Add the description content (which includes the custom section, table, and other dividers)
+        // We use trim() to remove any extraneous whitespace captured by the parser.
         lore += state.description.trim();
-        lore += '\n\n';
+
+        // 3. Ensure a double newline separates the end of the description block from the '___' stat block delimiter
+        // This allows tables at the end of the description to maintain their proper markdown spacing.
+        // We add a final double newline. The main `generateMarkdown` function will then add the '___'.
+        lore += '\n\n'; 
+        
         return lore;
     }
 
