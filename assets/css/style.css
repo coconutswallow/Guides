@@ -323,9 +323,25 @@ p, li, td, th, a, code, pre {
 }
 
 /* Adjust role colors for dark mode readability */
-[data-theme="dark"] .role-admin {
-  background-color: var(--color-bg-light);
+[data-theme="dark"] .role-auditor,
+[data-theme="dark"] .role-auditor-apprentice,
+[data-theme="dark"] .role-lore,
+[data-theme="dark"] .role-lore-apprentice,
+[data-theme="dark"] .role-pr,
+[data-theme="dark"] .role-rules,
+[data-theme="dark"] .role-rules-apprentice,
+[data-theme="dark"] .role-engineer,
+[data-theme="dark"] .role-engineer-apprentice {
+  /* Set background to transparent to avoid blending with dark mode bg */
+  background-color: transparent !important; 
+  /* The original specific `color` (e.g., #ff9900) will now apply,
+     but we need to remove the padding/border-radius to make them act like regular text if no background is desired.
+     If you want the background and padding/radius, change transparent to a light, contrasting color. */
+  padding: 0;
+  border-radius: 0;
 }
+
+
 
 /* Adjust code blocks for dark mode */
 [data-theme="dark"] code {
