@@ -75,7 +75,7 @@ title: Hawthorne Monster Compendium
 <style>
 .filter-container {
   background: #FDF1DC;
-  border: 2px solid #58180D;
+  border: 2px solid var(--color-primary);
   border-radius: 0px;
   padding: 1.5em;
   margin: 2em 0;
@@ -96,7 +96,7 @@ title: Hawthorne Monster Compendium
 .filter-group label {
   font-family: var(--font-header);
   font-weight: 700;
-  color: #58180D;
+  color: var(--color-primary);
   text-transform: uppercase;
   font-size: 0.9em;
   letter-spacing: 0.5px;
@@ -104,35 +104,35 @@ title: Hawthorne Monster Compendium
 
 .filter-select {
   padding: 0.5em;
-  border: 2px solid #58180D;
+  border: 2px solid var(--color-primary);
   border-radius: 0px;
   background: white;
   font-family: var(--font-body);
   font-size: 1em;
-  color: #58180D;
+  color: var(--color-primary);
   cursor: pointer;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #822000;
+  border-color: var(--color-secondary);
   box-shadow: 0 0 0 2px rgba(88, 24, 13, 0.2);
 }
 
 .filter-input {
   padding: 0.5em;
-  border: 2px solid #58180D;
+  border: 2px solid var(--color-primary);
   border-radius: 0px;
   background: white;
   font-family: var(--font-body);
   font-size: 1em;
-  color: #58180D;
+  color: var(--color-primary);
   width: 100%;
 }
 
 .filter-input:focus {
   outline: none;
-  border-color: #822000;
+  border-color: var(--color-secondary);
   box-shadow: 0 0 0 2px rgba(88, 24, 13, 0.2);
 }
 
@@ -363,7 +363,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     
-    // --- CORRECTED SORTING LOGIC ---
     // This correctly sorts all monsters (visible first by CR, hidden last) and re-appends ALL
     categorySections.forEach(section => {
       const monsterList = section.querySelector('.monster-list');
@@ -387,8 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Re-append ALL cards to fix the DOM order
       allCards.forEach(card => monsterList.appendChild(card));
     });
-    // --- END CORRECTED SORTING LOGIC ---
-    
+      
     // Hide/show category sections based on visible monsters
     categorySections.forEach(section => {
       const visibleCardsInSection = section.querySelectorAll('.monster-card:not(.hidden)');
