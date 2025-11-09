@@ -17,16 +17,17 @@
 
 :root {
   /* Light Mode Colors (Default) */
-  --color-primary: #58180D;
-  --color-secondary: #822000;
-  --color-bg-light: ##FDF1DC;
-  --color-bg-medium: #F5E6D3;
-  --color-bg-page: #FFFEF9;
-  --color-text: #58180D;
-  --color-text-secondary: #2c2c2c;
-  --color-border: #58180D;
-  --color-link: #822000;
-  --color-link-hover: #58180D;
+   /* Light Mode Colors (Default) */
+  --color-primary: #58180D;        /* Deep burgundy - headers, buttons */
+  --color-secondary: #822000;      /* Rich rust - accents, hovers */
+  --color-bg-light: #FDF1DC;       /* Cream - cards, tables */
+  --color-bg-medium: #F5E6D3;      /* Light tan - alternating rows */
+  --color-bg-page: #FFFEF9;        /* Off-white - page background */
+  --color-text: #2c2c2c;           /* Dark gray - body text */
+  --color-text-secondary: #5a5a5a; /* Medium gray - meta text */
+  --color-border: #D4C4B0;         /* Tan border */
+  --color-link: #822000;           /* Rust - links */
+  --color-link-hover: #58180D;     /* Burgundy - link hover */
   
   /* Fonts */
   --font-header: 'Cinzel', 'Georgia', serif;
@@ -50,16 +51,16 @@
 
 /* Dark Mode Colors */
 [data-theme="dark"] {
-  --color-primary: #58180D;
-  --color-secondary: #822000;
-  --color-bg-light: #58180D;
-  --color-bg-medium: #1f1b18;
-  --color-bg-page: #1a1612;
-  --color-text: #FDF1DC;
-  --color-text-secondary: #C4B5A8;
-  --color-border: #5a4a3a;
-  --color-link: #E8C5A0;
-  --color-link-hover: #D4A574;
+ --color-primary: #E8C5A0;        /* Light tan - headers (inverted) */
+  --color-secondary: #D4A574;      /* Golden tan - accents */
+  --color-bg-light: #2a2420;       /* Dark brown - cards, tables */
+  --color-bg-medium: #1f1b18;      /* Darker brown - alternating rows */
+  --color-bg-page: #1a1612;        /* Very dark brown - page background */
+  --color-text: #E8DCC8;           /* Light cream - body text */
+  --color-text-secondary: #C4B5A8; /* Medium tan - meta text */
+  --color-border: #5a4a3a;         /* Brown border */
+  --color-link: #E8C5A0;           /* Light tan - links */
+  --color-link-hover: #F5D9B8;     /* Lighter tan - link hover */
   
   /* Dark mode shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
