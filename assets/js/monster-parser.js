@@ -141,7 +141,7 @@ const MonsterParser = (function() {
         
         // Match pattern: ***Name.*** Description
         const abilityPattern = /\*\*\*([^.]+)\.\*\*\*\s+([\s\S]*?)(?=\n+\*\*\*|\n+###|$)/g;
-        
+
         let match;
         while ((match = abilityPattern.exec(sectionContent)) !== null) {
             abilities.push({
@@ -169,19 +169,27 @@ const MonsterParser = (function() {
 
         const legendaryContent = sectionMatch[1];
         
+        
         // Extract description (everything before first ***)
         const descMatch = legendaryContent.match(/^([\s\S]*?)(?=\n+\*\*\*)/);
         if (descMatch) {
             const desc = descMatch[1].trim();
-            // Only store non-default descriptions
-            if (desc && !desc.includes('The creature can take 3 legendary actions')) {
+            if (desc) { // Capture the actual description
                 result.description = desc;
             }
+            // Isolate the actions content by removing the description and newlines
+            actionSearchContent = legendaryContent.substring(descMatch[0].length).trim();
         }
-        
-        // Parse individual legendary actions
-        result.actions = parseAbilitySection(blockContent, 'Legendary Actions');
-        
+        const actionPattern = /\*\*\*([^.]+)\.\*\*\*\s*([\s\S]*?)(?=\n+\*\*\*|$)/g;
+
+        let match;
+            while ((match = actionPattern.exec(actionSearchContent)) !== null) {
+                result.actions.push({
+                    name: match[1].trim(),
+                    description: match[2].trim()
+                });
+            }
+    
         return result;
     }
 
