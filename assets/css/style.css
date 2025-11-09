@@ -323,7 +323,23 @@ p, li, td, th, a, code, pre {
 }
 
 /* Adjust role colors for dark mode readability */
-/* FIX: Ensure staff/apprentice roles use their custom colors (not --color-text) and remove dark background. */
+[data-theme="dark"] .role-adventurer {
+  color: #999999 !important; /* Force original color (Gray) */
+  background-color: transparent !important;
+}
+
+/* FIX: Ensure Trial DM role uses its custom green color in dark mode. */
+[data-theme="dark"] .role-trial-dm {
+  color: #25c059 !important; /* Force original color (Light Green) */
+  background-color: transparent !important;
+}
+
+/* FIX: Ensure Full DM role uses its custom dark green color in dark mode. */
+[data-theme="dark"] .role-full-dm {
+  color: #1a7939 !important; /* Force original color (Dark Green) */
+  background-color: transparent !important;
+}
+
 [data-theme="dark"] .role-auditor {
   color: #ff9900 !important; /* Force original color */
   background-color: transparent !important;
