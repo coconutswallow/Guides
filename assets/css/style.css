@@ -322,6 +322,11 @@ p, li, td, th, a, code, pre {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
+/* Adjust role colors for dark mode readability */
+[data-theme="dark"] .role-admin {
+  background-color: var(--color-bg-light);
+}
+
 /* Adjust code blocks for dark mode */
 [data-theme="dark"] code {
   background: var(--color-bg-medium);
