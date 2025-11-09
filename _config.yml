@@ -28,7 +28,7 @@ collections:
     output: true
     permalink: /monster-compendium/:title/
   help:
-    output: false
+    output: true
     permalink: /help/:path/
     
 
@@ -73,6 +73,9 @@ navigation:
         
   - title: "❓ FAQ"
     collection: faq
+
+  - title: "Site Documentation"
+    collection: help
 
   # ========================================================  
   # Separator will be added with CSS/HTML
