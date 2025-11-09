@@ -770,7 +770,7 @@ tbody tr:hover {
   letter-spacing: 1px;
 }
 /* Dark mode navigation links */
-[data-theme="dark"] .nav-sidebar-title {
+[data-theme="dark"] .sidebar-title  {
   color: var(--color-text); /* Light cream for normal state */
 }
 
