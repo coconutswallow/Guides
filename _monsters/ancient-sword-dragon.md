@@ -91,15 +91,19 @@ ___
 > ***Legendary Resistance (3/Day).*** If the dragon fails a saving throw, it can choose to succeed instead.  
 > ***Magic Weapons.*** Its attacks are magical.
 > 
+> ### Actions
+> 
+> ***Adamantine Scales.*** Critical hits against the dragon become normal hits.  
+
 > ### Legendary Actions
 >
 > The dragon can take 3 legendary actions, only one at a time and only at the end of another creature’s turn.  
 >
-> **Detect.** Makes a Wisdom (Perception) check.  
-> **Attack.** Makes a Tail or Wing Blade attack.  
-> **At-Will Spell.** Casts one of its at-will spells.  
-> **Blade Dash (Costs 2 Actions).** Moves up to its speed without provoking opportunity attacks, making one Wing Blade attack against each creature it moves past.  
-> **Sword Step (Costs 2 Actions).** Teleports up to 60 ft. to an unoccupied space near a blade or magical sword, dealing 13 (3d8) slashing damage to creatures within 10 ft. of the space it left.
+> ***Detect.*** Makes a Wisdom (Perception) check.  
+> ***Attack.*** Makes a Tail or Wing Blade attack.  
+> ***At-Will Spell.*** Casts one of its at-will spells.  
+> ***Blade Dash (Costs 2 Actions).*** Moves up to its speed without provoking opportunity attacks, making one Wing Blade attack against each creature it moves past.  
+> ***Sword Step (Costs 2 Actions).*** Teleports up to 60 ft. to an unoccupied space near a blade or magical sword, dealing 13 (3d8) slashing damage to creatures within 10 ft. of the space it left.
 >
 > ### Lair Actions
 >
