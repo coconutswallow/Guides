@@ -150,3 +150,25 @@ ___
 > ***Sword Step (Costs 2 Actions).*** The dragon teleports in a burst of swords up to 60 feet to an unoccupied space it can see that is within 5 feet of a blade, including one created by magic (such as a blade barrier or a cloud of daggers). Then each creature within 10 feet of the space that the dragon left must succeed on a DC 25
 > Dexterity saving throw or take 16 (2d6 + 9) slashing damage.
 >
+> ### Lair Actions
+>
+> On initiative count 20 (losing initiative ties), the dragon takes a lair action to cause one of the following effects; the dragon can't use the same effect two rounds in a row:
+>
+> - 1d4 + 1 of the dragon's scales detach to defend the dragon. The scales have the statistics of flying swords and act on initiative count 20. The constructs last for 1 minute, after which they become inanimate once again.
+> - The dragon's scales become primed with magical energy.  Until initiative count 20 on the next round, each time the dragon takes 10 or more damage, its scales burst out and each creature within 10 feet of it takes 7 (2d6) slashing damage.
+> - A swirling cloud of swords forms 10 feet around the dragon, which follows the dragon until initiative count 20 on the next round. The cloud provides the dragon with three-quarters cover, and the area 10 feet around the dragon becomes difficult terrain for other creatures.  When a creature enters the cloud's area for the first time
+> on a turn or starts its turn there, the creature must make a DC 15 Dexterity saving throw. On a failed save, the creature takes 10 (3d6) slashing damage. On a successful save, the creature takes half as much damage.
+>
+> ### Regional Effects
+>
+> The region containing a legendary sword dragon's lair is warped by the dragon's magic, which creates one or more of the following effects:
+>
+> - Grass and plants within 6 miles of the lair are razor sharp and hazardous to outsiders. The area covered by the vegetation is difficult terrain, and when a creature moves into or within the area, it takes 2 (1d4) slashing damage for every 5 feet it travels.
+> - Protrusions of earth and stone within 6 miles of the dragon's lair form into blade-like shapes. Any rock formations may resemble oversized swords.
+> - Knives on occasion rain from the sky within 6 miles of the dragon's lair. Creatures caught in the rain take 1 piercing damage each turn until they can find shelter.
+> - Whirling blades scour the land within 6 miles of the lair. A whirling blade has the statistics of an air elemental, it has a speed of 50 feet, it has an Intelligence and - Charisma of 1 (-5), and its damage rolls deal slashing damage instead of bludgeoning damage.
+> - Blades brought within 1 mile of the dragon's lair sharpen themselves and never dull while they remain in the area.
+> - The dragon can hear up to 30 feet through any magical, bladed weapon within 1 mile of the dragon's lair.
+>
+> If the dragon dies, these effects end immediately.
+>
