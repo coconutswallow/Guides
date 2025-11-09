@@ -323,25 +323,61 @@ p, li, td, th, a, code, pre {
 }
 
 /* Adjust role colors for dark mode readability */
-[data-theme="dark"] .role-auditor,
-[data-theme="dark"] .role-auditor-apprentice,
-[data-theme="dark"] .role-lore,
-[data-theme="dark"] .role-lore-apprentice,
-[data-theme="dark"] .role-pr,
-[data-theme="dark"] .role-rules,
-[data-theme="dark"] .role-rules-apprentice,
-[data-theme="dark"] .role-engineer,
-[data-theme="dark"] .role-engineer-apprentice {
-  /* Set background to transparent to avoid blending with dark mode bg */
-  background-color: transparent !important; 
-  /* The original specific `color` (e.g., #ff9900) will now apply,
-     but we need to remove the padding/border-radius to make them act like regular text if no background is desired.
-     If you want the background and padding/radius, change transparent to a light, contrasting color. */
+/* FIX: Ensure staff/apprentice roles use their custom colors (not --color-text) and remove dark background. */
+[data-theme="dark"] .role-auditor {
+  color: #ff9900 !important; /* Force original color */
+  background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
-
-
+[data-theme="dark"] .role-auditor-apprentice {
+  color: #d98843 !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+[data-theme="dark"] .role-lore {
+  color: #1f628e !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+[data-theme="dark"] .role-lore-apprentice {
+  color: #5296d5 !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+[data-theme="dark"] .role-pr {
+  color: #ffd966 !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+[data-theme="dark"] .role-rules {
+  color: #f975f2 !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+[data-theme="dark"] .role-rules-apprentice {
+  color: #b179b8 !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+[data-theme="dark"] .role-engineer {
+  color: #1abc9c !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+[data-theme="dark"] .role-engineer-apprentice {
+  color: #63a493 !important; /* Force original color */
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
 
 /* Adjust code blocks for dark mode */
 [data-theme="dark"] code {

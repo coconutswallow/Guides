@@ -27,4 +27,4 @@ There are six Staff teams:
 ### Channel Roles
 <p>In the Channels & Roles feature in discord, you can select and change what you would like to be pinged for, including game advertising (by type and character tier) or other such as text role-play.</p>
 
-<img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy" class="hierarchy-image image-size-60">
+<img src="https://img.photouploads.com/file/PhotoUploads-com/jv5M.png" alt="Server Role Hierarchy">
