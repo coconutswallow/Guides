@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Markdown Guide"
-order: 3
+order: 10
 ---
 
 # Markdown Author's Guide
@@ -67,26 +67,9 @@ start the paragraph here
 
 ---
 
-## Paragraphs and Line Breaks
-
-Just write normally! Press Enter twice to create a new paragraph.
-
-**Syntax:**
-```markdown
-This is the first paragraph. It has several sentences.
-
-This is the second paragraph. Notice the blank line between them.
-```
-
-**How it looks:**
-
-This is the first paragraph. It has several sentences.
-
-This is the second paragraph. Notice the blank line between them.
-
----
-
 ## Text Formatting
+
+A lot of this is exactly like discord syntax
 
 ### Bold Text
 
@@ -97,7 +80,6 @@ This is the second paragraph. Notice the blank line between them.
 
 **How it looks:** **This text is bold** (appears darker and thicker)
 
-**When to use:** To emphasize important terms, rules, or key concepts.
 
 ### Italic Text
 

@@ -212,13 +212,20 @@ creator: ${state.creator}`;
         // Add optional front matter fields if present
         if (state.image) markdown += `\nimage: ${state.image}`;
         if (state.image_credit) markdown += `\nimage_credit: ${state.image_credit}`;
+
+        // Close front matter
+        markdown += `\n---\n\n`;
+
+        // Add description section if present (now outside front matter)
         if (state.description) {
-            // Format multiline description with proper indentation
-            markdown += `\ndescription: |\n  ${state.description.split('\n').join('\n  ')}`;
+            markdown += `## ${state.title}\n\n`;
+            // Split description into paragraphs and format with blank lines between
+            const paragraphs = state.description.split('\n').filter(p => p.trim());
+            markdown += paragraphs.join('\n\n') + '\n\n';
         }
 
-        // Start the stat block content (everything after front matter)
-        markdown += `\n---\n\n___\n> ## ${state.title}\n> *${state.size} ${state.type.toLowerCase()}, ${state.alignment.toLowerCase()}*\n>\n`;
+        // Start the stat block content
+        markdown += `___\n> ## ${state.title}\n> *${state.size} ${state.type.toLowerCase()}, ${state.alignment.toLowerCase()}*\n>\n`;
 
         // Add core statistics (AC, HP, Speed)
         if (state.ac) markdown += `> **AC** ${state.ac}`;
@@ -942,32 +949,27 @@ creator: ${state.creator}`;
             }
 
             const frontMatter = frontMatterMatch[1];
-            
-            // Parse multiline description field (uses YAML | syntax)
-            const descMatch = frontMatter.match(/description:\s*\|([\s\S]*?)(?=\n\w+:|$)/);
-            if (descMatch) {
-                state.description = descMatch[1]
-                    .split('\n')
-                    .map(l => l.replace(/^\s{2}/, '')) // Remove YAML indentation
-                    .join('\n')
-                    .trim();
-            }
-
+                        
             // Parse single-line YAML fields
             const lines = frontMatter.split('\n');
             lines.forEach(line => {
-                if (line.includes('description:')) return; // Already handled above
-                
-                const colonIndex = line.indexOf(':');
-                if (colonIndex === -1) return;
-                
-                const key = line.substring(0, colonIndex).trim();
-                const value = line.substring(colonIndex + 1).trim();
+            const colonIndex = line.indexOf(':');
+            if (colonIndex === -1) return;
+    
+            const key = line.substring(0, colonIndex).trim();
+            const value = line.substring(colonIndex + 1).trim();
 
-                if (key in state && key !== 'description') {
-                    state[key] = value;
-                }
-            });
+            if (key in state) {
+                state[key] = value;
+            }
+        });
+
+// --- PARSE DESCRIPTION (now outside front matter) ---
+// Description appears after front matter as ## Title followed by paragraphs
+const descriptionMatch = content.match(/---\n\n## .+?\n\n([\s\S]*?)(?=\n___)/);
+if (descriptionMatch) {
+    state.description = descriptionMatch[1].trim();
+}
 
             // --- PARSE ABILITY SCORES FROM STAT BLOCK TABLE ---
             const strMatch = content.match(/\|Str\|\s*(\d+)\|/);
