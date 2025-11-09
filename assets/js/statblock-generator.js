@@ -968,7 +968,7 @@ creator: ${state.creator}`;
                 // Description appears after front matter as ## Title followed by paragraphs
                 // Match more flexibly to handle various spacing and optional description
                 // Must stop at ___ (stat block start)
-                const descriptionMatch = content.match(/---\s*\n+## [^\n]+\s*\n+([\s\S]*?)(?=\n___)/);
+                const descriptionMatch = content.match(/---\s*\n+## [^\n]+\s*\n+([\s\S]*?)(?=\n*___)/);
                 if (descriptionMatch) {
                     const desc = descriptionMatch[1].trim();
                     // Only save non-empty descriptions
@@ -1047,11 +1047,13 @@ creator: ${state.creator}`;
 
                     // Helper function to parse ability lists (traits, actions, etc.)
                     function parseAbilityList(sectionName, namePattern, descPattern) {
-                        const section = body.match(new RegExp(`### ${sectionName}[\\s\\S]*?(?=\\n>\\s*### |$)`));
+                        // More flexible regex to handle both blockquote and non-blockquote sections
+                        const section = body.match(new RegExp(`### ${sectionName}[\\s\\S]*?(?=\\n>?\\s*### |\\n>\\s*$|$)`));
                         if (!section) return [];
                         
                         const items = [];
-                        const regex = new RegExp(`${namePattern}([^\\*]+?)\\.${descPattern}\\s+([\\s\\S]*?)(?=\\n>\\s*${namePattern}|\\n>\\s*### |$)`, 'g');
+                        // Match both with and without leading > markers
+                        const regex = new RegExp(`>?\\s*${namePattern}([^\\*]+?)\\.${descPattern}\\s+([\\s\\S]*?)(?=\\n>?\\s*${namePattern}|\\n>?\\s*### |\\n>\\s*$|$)`, 'g');
                         let match;
                         while ((match = regex.exec(section[0])) !== null) {
                             items.push({
@@ -1075,10 +1077,9 @@ creator: ${state.creator}`;
                     state.reactions = parseAbilityList('Reactions', '\\*\\*\\*', '\\*\\*\\*');
 
                 // --- PARSE LEGENDARY ACTIONS SECTION ---
-                const legendaryActionsSection = body.match(/### Legendary Actions[\s\S]*?(?=\n>\s*### |$)/);
+                const legendaryActionsSection = body.match(/### Legendary Actions[\s\S]*?(?=\n>?\s*### |$)/);
                 if (legendaryActionsSection) {
-                    // Extract custom description (everything between header and first action)
-                    const descMatch = legendaryActionsSection[0].match(/### Legendary Actions\n>\s*([\s\S]*?)(?=\n>\s*\*\*[^*]|$)/);
+                    const descMatch = legendaryActionsSection[0].match(/### Legendary Actions\n>?\s*([\s\S]*?)(?=\n>?\s*\*\*[^*]|$)/);                    
                     if (descMatch) {
                         const desc = descMatch[1].trim().replace(/^>\s*/gm, '').trim();
                         // Only save if it's not the default description
@@ -1092,17 +1093,18 @@ creator: ${state.creator}`;
                 }
 
                 // --- PARSE LAIR ACTIONS SECTION ---
-                const lairActionsBlockMatch = body.match(/### Lair Actions\s*\n>([\s\S]*?)(?=\n>\s*### Regional Effects|$)/);
+                const lairActionsBlockMatch = body.match(/### Lair Actions\s*\n>?\s*([\s\S]*?)(?=\n>?\s*### Regional Effects|$)/);
                 if (lairActionsBlockMatch) {
-                    state.lairActions = lairActionsBlockMatch[1].replace(/\n>\s*/g, '\n').trim();
+                    // Strip all leading > markers and clean up whitespace
+                    state.lairActions = lairActionsBlockMatch[1].replace(/\n?>\s*/g, '\n').trim();
                 }
 
                 // --- PARSE REGIONAL EFFECTS SECTION ---
-                const regionalEffectsBlockMatch = body.match(/### Regional Effects\s*\n>([\s\S]*?)$/);
+                const regionalEffectsBlockMatch = body.match(/### Regional Effects\s*\n>?\s*([\s\S]*?)$/);
                 if (regionalEffectsBlockMatch) {
-                    state.regionalEffects = regionalEffectsBlockMatch[1].replace(/\n>\s*/g, '\n').trim();
+                    // Strip all leading > markers and clean up whitespace
+                    state.regionalEffects = regionalEffectsBlockMatch[1].replace(/\n?>\s*/g, '\n').trim();
                 }
-            }
 
             // Re-render form with loaded data and show success message
             render();
