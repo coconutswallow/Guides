@@ -92,7 +92,7 @@ const MonsterParser = (function() {
      * @returns {string} Stat value or empty string
      */
     function parseStat(blockContent, statName) {
-        const pattern = new RegExp(`\\*\\*${statName}\\*\\*\\s+(.+?)(?=\\s*\\*\\*|\\n|$)`);
+        const pattern = new RegExp(`\\*\\*${statName}\\*\\*\\s+(.+?)(?=\\s*\\*\\*|\\n{2,}|\\s*\\||$)`, 's');
         const match = blockContent.match(pattern);
         return match ? match[1].trim() : '';
     }
@@ -170,7 +170,7 @@ const MonsterParser = (function() {
         const legendaryContent = sectionMatch[1];
         
         // Extract description (everything before first ***)
-        const descMatch = legendaryContent.match(/^([\s\S]*?)(?=\n\*\*\*)/);
+        const descMatch = legendaryContent.match(/^([\s\S]*?)(?=\n+\*\*\*)/);
         if (descMatch) {
             const desc = descMatch[1].trim();
             // Only store non-default descriptions
@@ -192,7 +192,7 @@ const MonsterParser = (function() {
      * @returns {string} Section content
      */
     function parseTextBlock(blockContent, sectionName) {
-        const pattern = new RegExp(`### ${sectionName}\\n\\n([\\s\\S]*?)(?=\\n###|$)`);
+        const pattern = new RegExp(`### ${sectionName}\\n+([\\s\\S]*?)(?=\\n+###|$)`);
         const match = blockContent.match(pattern);
         return match ? match[1].trim() : '';
     }
