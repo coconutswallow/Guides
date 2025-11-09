@@ -43,14 +43,9 @@ creator: ${state.creator}`;
             return '';
         }
 
-        let lore = `## ${state.title}\n\n`;
-        
-        // Split by newlines and create paragraphs
-        const paragraphs = state.description
-            .split(NEWLINE_REGEX)
-            .filter(p => p.trim());
-        
-        lore += paragraphs.join('\n\n') + '\n\n';
+        lore += `## ${state.title}\n\n`;
+        lore += state.description.trim();
+        lore += '\n\n';
         return lore;
     }
 
