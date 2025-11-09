@@ -167,32 +167,38 @@ const MonsterParser = (function() {
             actions: []
         };
 
+        // Use \n+ for one or more newlines after header
         const sectionMatch = blockContent.match(/### Legendary Actions\n+([\s\S]*?)(?=\n+###|$)/);
         if (!sectionMatch) return result;
 
         const legendaryContent = sectionMatch[1];
         
-        
+        // Ensure actionSearchContent is always defined, initially set to all content
+        let actionSearchContent = legendaryContent;
+
         // Extract description (everything before first ***)
         const descMatch = legendaryContent.match(/^([\s\S]*?)(?=\n+\*\*\*)/);
+
         if (descMatch) {
             const desc = descMatch[1].trim();
-            if (desc) { // Capture the actual description
+            if (desc) { 
                 result.description = desc;
             }
-            // Isolate the actions content by removing the description and newlines
+            // Update actionSearchContent to only be the actions, removing the description
             actionSearchContent = legendaryContent.substring(descMatch[0].length).trim();
         }
-        const actionPattern = /\*\*\*([^.]+)\.\*\*\*\s*([\s\S]*?)(?=\n+\*\*\*|$)/g;
-
+        
+        // Now safely use actionSearchContent for the action parsing loop
+        const actionPattern = /\*\*\*([^.]+)\.\*\*\*\s*([\s\S]*?)(?=\*\*\*|###|$)/g;
+        
         let match;
-            while ((match = actionPattern.exec(actionSearchContent)) !== null) {
-                result.actions.push({
-                    name: match[1].trim(),
-                    description: match[2].trim()
-                });
-            }
-    
+        while ((match = actionPattern.exec(actionSearchContent)) !== null) {
+            result.actions.push({
+                name: match[1].trim(),
+                description: match[2].trim()
+            });
+        }
+        
         return result;
     }
 
