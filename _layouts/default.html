@@ -45,10 +45,16 @@
                         </button>
                         <div class="nav-submenu">
                             {% assign collection_name = nav_item.collection | remove: '_' %}
-                            {% assign collection_docs = site[collection_name] | where_exp: "item", "item.layout == 'doc'" | sort: "order" %}
-                            {% for doc in collection_docs %}
-                                <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
-                            {% endfor %}
+                            {% assign collection_items = site[collection_name] %}
+                            {% if collection_items %}
+                                {% assign collection_docs = collection_items | where_exp: "item", "item.layout == 'doc'" %}
+                                {% if collection_docs.size > 0 %}
+                                    {% assign sorted_docs = collection_docs | sort: "order" %}
+                                    {% for doc in sorted_docs %}
+                                        <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                     
