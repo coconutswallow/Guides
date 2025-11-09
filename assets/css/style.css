@@ -17,7 +17,6 @@
 
 :root {
   /* Light Mode Colors (Default) */
-   /* Light Mode Colors (Default) */
   --color-primary: #58180D;        /* Deep burgundy - headers, buttons */
   --color-secondary: #822000;      /* Rich rust - accents, hovers */
   --color-bg-light: #FDF1DC;       /* Cream - cards, tables */
@@ -28,6 +27,28 @@
   --color-border: #D4C4B0;         /* Tan border */
   --color-link: #822000;           /* Rust - links */
   --color-link-hover: #58180D;     /* Burgundy - link hover */
+  
+  /* Light mode specific UI colors */
+  --color-table-hover: #F0E0C8;    /* Table row hover */
+  --color-blockquote: #5a3a2a;     /* Blockquote text */
+  --color-breadcrumb: #666;        /* Breadcrumb text */
+  --color-breadcrumb-sep: #999;    /* Breadcrumb separator */
+  --color-doc-meta: #666;          /* Documentation meta */
+  --color-doc-meta-border: #ddd;   /* Documentation meta border */
+  --color-doc-body: #2c2c2c;       /* Documentation body text */
+  --color-sidebar-bg: #5b0f00;     /* Sidebar background */
+  --color-sidebar-border: #C0AD6A; /* Sidebar header border */
+  --color-nav-hover-light: #C0AD6A; /* Nav hover in light mode */
+  
+  /* Alert colors (light mode) */
+  --color-alert-info-bg: #e3f2fd;
+  --color-alert-info-border: #3498db;
+  --color-alert-warning-bg: #fff3cd;
+  --color-alert-warning-border: #f39c12;
+  --color-alert-danger-bg: #f8d7da;
+  --color-alert-danger-border: #e74c3c;
+  --color-alert-success-bg: #d4edda;
+  --color-alert-success-border: #27ae60;
   
   /* Fonts */
   --font-header: 'Cinzel', 'Georgia', serif;
@@ -61,6 +82,8 @@
   --color-border: #5a4a3a;         /* Brown border */
   --color-link: #E8C5A0;           /* Light tan - links */
   --color-link-hover: #F5D9B8;     /* Lighter tan - link hover */
+  
+  /* Dark mode specific UI colors */
   --color-header-bg-start: #1a0f0a; /* Deep dark brown (gradient start) */
   --color-header-bg-end: #2a1810;   /* Rich dark brown (gradient end) */
   --color-header-border: #3d2418;   /* Dark brown border */
@@ -68,13 +91,24 @@
   --color-footer-bg: #1a0f0a;       /* Deep dark brown */
   --color-footer-border: #3d2418;   /* Dark brown border */
   --color-nav-hover: #E8C5A0;       /* Light tan for nav hover */
+  --color-table-hover: rgba(212, 165, 116, 0.1); /* Table row hover */
+  --color-sidebar-bg: #1a1612;      /* Dark sidebar background */
+  
+  /* Alert colors (dark mode) */
+  --color-alert-info-bg: rgba(52, 152, 219, 0.15);
+  --color-alert-info-border: #3498db;
+  --color-alert-warning-bg: rgba(243, 156, 18, 0.15);
+  --color-alert-warning-border: #f39c12;
+  --color-alert-danger-bg: rgba(231, 76, 60, 0.15);
+  --color-alert-danger-border: #e74c3c;
+  --color-alert-success-bg: rgba(39, 174, 96, 0.15);
+  --color-alert-success-border: #27ae60;
    
   /* Dark mode shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 6px 12px rgba(0, 0, 0, 0.5);
 }
-
 /* ============================================
    APPLY COLORS TO ELEMENTS
    ============================================ */
@@ -516,7 +550,7 @@ blockquote {
   padding-left: 1em;
   margin: 1em 0;
   font-style: italic;
-  color: #5a3a2a;
+  color: var(--color-blockquote);
 }
 
 hr {
@@ -581,7 +615,7 @@ tbody tr:nth-child(even) {
 }
 
 tbody tr:hover {
-  background: #F0E0C8;
+  background: var(--color-table-hover);
 }
 
 /* ============================================
@@ -707,7 +741,7 @@ tbody tr:hover {
   width: 280px;
   max-width: 80vw;
   height: 100%;
-  background: #5b0f00;
+  background: var(--color-sidebar-bg);
   color: var(--color-bg-light);
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
@@ -755,7 +789,7 @@ tbody tr:hover {
   justify-content: space-between;
   align-items: center;
   padding-bottom: 10px;
-  border-bottom: 2px solid #C0AD6A;
+  border-bottom-color: var(--color-sidebar-border);
   margin-bottom: 20px;
 }
 
@@ -811,7 +845,7 @@ tbody tr:hover {
 .nav-link:hover {
   background-color: rgba(255, 255, 255, 0.05);
   padding-left: 30px;
-  color: #C0AD6A;
+  color: var(--color-nav-hover-light);
 }
 
 [data-theme="dark"] .nav-link:hover {
@@ -1229,7 +1263,7 @@ tbody tr:hover {
 .breadcrumb {
   font-family: var(--font-body);
   font-size: 0.9em;
-  color: #666;
+  color: var(--color-breadcrumb);
   margin-bottom: 1em;
   padding: 0.5em 0;
 }
@@ -1245,11 +1279,11 @@ tbody tr:hover {
 
 .breadcrumb-separator {
   margin: 0 0.5em;
-  color: #999;
+  color: var(--color-breadcrumb-sep);
 }
 
 .breadcrumb-item {
-  color: #666;
+  color: var(--color-breadcrumb);
 }
 
 /* Documentation Title */
@@ -1266,10 +1300,10 @@ tbody tr:hover {
 .doc-meta {
   font-family: var(--font-body);
   font-size: 0.9em;
-  color: #666;
+  color: var(--color-doc-meta);
   margin-bottom: 2em;
   padding-bottom: 1em;
-  border-bottom: 1px solid #ddd;
+  border-bottom-color: var(--color-doc-meta-border);
 }
 
 .doc-author {
@@ -1284,7 +1318,7 @@ tbody tr:hover {
 .doc-body {
   font-family: var(--font-body);
   line-height: 1.8;
-  color: #2c2c2c;
+  color: var(--color-doc-body);
 }
 
 .doc-body h2 {
