@@ -6,7 +6,7 @@
 
 /* Hero Section */
 .home-hero {
-  background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg-medium) 100%);
+  background: var(--color-bg-light);
   border: 3px solid var(--color-border);
   border-radius: 0px;
   padding: 3em 2em;
