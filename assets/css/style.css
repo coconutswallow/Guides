@@ -322,19 +322,6 @@ p, li, td, th, a, code, pre {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-/* Adjust role colors for dark mode readability */
-[data-theme="dark"] .role-auditor,
-[data-theme="dark"] .role-auditor-apprentice,
-[data-theme="dark"] .role-lore,
-[data-theme="dark"] .role-lore-apprentice,
-[data-theme="dark"] .role-pr,
-[data-theme="dark"] .role-rules,
-[data-theme="dark"] .role-rules-apprentice,
-[data-theme="dark"] .role-engineer,
-[data-theme="dark"] .role-engineer-apprentice {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
 /* Adjust code blocks for dark mode */
 [data-theme="dark"] code {
   background: var(--color-bg-medium);
