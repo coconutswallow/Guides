@@ -183,7 +183,7 @@ const MonsterUI = (function() {
                                         <td>${abilities[ability].formattedMod}</td>
                                         <td>${abilities[ability].save}</td>
                                         <td>
-                                            <input type="text" id="${ability}Save" value="${escapeHtml(state[ability + 'Save'])}" placeholder="e.g., +9">
+                                            <input type="text" id="${ability}Save" value="${escapeHtml(state[ability + 'Save'])}" placeholder="+0">
                                         </td>
                                     </tr>
                                 `;
