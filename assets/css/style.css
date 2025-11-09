@@ -769,6 +769,11 @@ tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+/* Dark mode navigation links */
+[data-theme="dark"] .nav-sidebar-title {
+  color: var(--color-text); /* Light cream for normal state */
+}
+
 
 .close-btn {
   background: none;
@@ -864,6 +869,11 @@ tbody tr:hover {
   text-decoration: none;
   font-size: 1.1em;
   transition: background-color 0.2s;
+}
+
+/* Dark mode navigation section toggles */
+[data-theme="dark"] .nav-submenu a {
+  color: var(--color-header-text);
 }
 
 .nav-submenu a:hover {
