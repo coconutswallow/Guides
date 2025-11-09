@@ -25,6 +25,7 @@ To customize a sword dragon, start with the base stat block for its age category
 If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon DC.
 
 #### Sword Dragon Wyrmling Traits
+
 | d4 | Trait Name | Description |
 |:--:|:------------|:-------------|
 | 1 | **Alert** | The dragon has advantage on initiative rolls, and neither it nor its allies within 30 ft. can be surprised. |
@@ -33,6 +34,7 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 | 4 | **Wrathful** | When the dragon hits a target, creatures of its choice within 5 ft. of that target take 5 (2d4) slashing damage. |
 
 #### Young Sword Dragon Traits
+
 | d4 | Trait Name | Description |
 |:--:|:------------|:-------------|
 | 1 | **Baneful** | The dragon has advantage on attack rolls against a chosen kind of creature, which also has disadvantage on saving throws against the dragon’s breath weapon. |
@@ -41,6 +43,7 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 | 4 | **Vicious** | On a critical hit, the dragon rolls damage dice three times instead of twice. |
 
 #### Adult Sword Dragon Traits
+
 | d4 | Trait Name | Description |
 |:--:|:------------|:-------------|
 | 1 | **Commanding** | Once per turn, the dragon enables one creature within 60 ft. to make a weapon attack, move up to its speed, or take the Dodge action as a reaction. |
@@ -49,6 +52,7 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 | 4 | **Swift** | The dragon can make one extra attack as a bonus action each turn. |
 
 #### Ancient Sword Dragon Traits
+
 | d4 | Trait Name | Description |
 |:--:|:------------|:-------------|
 | 1 | **Avenging** | The dragon’s attacks deal +11 (2d10) radiant damage. The dragon and its allies within 30 ft. have advantage on saving throws against spells. |
@@ -86,7 +90,7 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 > - 1/day: *invulnerability*  
 > ***Legendary Resistance (3/Day).*** If the dragon fails a saving throw, it can choose to succeed instead.  
 > ***Magic Weapons.*** Its attacks are magical.
->
+> 
 > ### Legendary Actions
 >
 > The dragon can take 3 legendary actions, only one at a time and only at the end of another creature’s turn.  
