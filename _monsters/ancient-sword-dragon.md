@@ -60,7 +60,7 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 | 3 | **Reshaping** | The dragon gains a +3 bonus to attack and damage rolls. On its first attack each turn, it may transfer some or all of this bonus to its AC until its next turn. |
 | 4 | **Vorpal** | The dragon’s attacks and breath ignore resistance to piercing/slashing. On a critical hit, the target must make a Con save or be decapitated. |
 
----
+___
 
 > ## Ancient Sword Dragon
 > *Gargantuan dragon, typically neutral*
