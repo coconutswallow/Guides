@@ -832,13 +832,14 @@ creator: ${state.creator}`;
             const content = e.target.result;
 
             // --- PARSE YAML FRONT MATTER ---
-            const frontMatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+            // Support multiple line ending formats (\r\n, \n, \r)
+            const frontMatterMatch = content.match(/^---[\r\n]+([\s\S]*?)[\r\n]+---/);
             if (!frontMatterMatch) {
                 alert("No valid front matter found in this file.");
                 return;
             }
             const frontMatter = frontMatterMatch[1];
-            const lines = frontMatter.split('\n');
+            const lines = frontMatter.split(/\r?\n/);
             lines.forEach(line => {
                 const colonIndex = line.indexOf(':');
                 if (colonIndex === -1) return;
@@ -850,7 +851,7 @@ creator: ${state.creator}`;
             });
 
             // --- PARSE LORE DESCRIPTION ---
-            const loreMatch = content.match(/## [^\n]+\n\n([\s\S]*?)\n___/);
+            const loreMatch = content.match(/## [^\r\n]+[\r\n]+[\r\n]+([\s\S]*?)[\r\n]+___/);
             if (loreMatch) {
                 state.description = loreMatch[1].trim();
             }
