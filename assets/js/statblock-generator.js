@@ -110,7 +110,8 @@
         if (elementToFocus) {
             elementToFocus.focus();
             if (elementToFocus.setSelectionRange) {
-                const cursor = focusedElementInfo.cursor;
+                // Check if cursor position is valid for the element's value
+                const cursor = Math.min(focusedElementInfo.cursor, elementToFocus.value.length);
                 elementToFocus.setSelectionRange(cursor, cursor);
             }
         }
@@ -120,7 +121,7 @@
     // Calculates the ability modifier from an ability score (D&D 5e formula)
     // Example: score of 14 = modifier of +2
     function calculateModifier(score) {
-        return Math.floor((score - 10) / 2);
+        return Math.floor((parseInt(score, 10) - 10) / 2);
     }
 
     // Formats a modifier with appropriate sign for display
@@ -132,7 +133,7 @@
     // Calculates proficiency bonus based on Challenge Rating
     // Used for skill checks and saving throws
     function getProficiencyBonus(cr) {
-        const crNum = parseFloat(cr);
+        const crNum = eval(cr) || 0; // Use eval to handle fractions like "1/4"
         if (isNaN(crNum)) return 2;
         if (crNum < 5) return 2;
         if (crNum < 9) return 3;
@@ -185,20 +186,20 @@
         // 1. Find the entire section block by header
         // Stops before the next H3 header or the end of the file.
         // It also handles blockquoted (>) or non-blockquoted headers
-        const sectionRegex = new RegExp(`^>\\s*### ${sectionHeader}|^### ${sectionHeader}\\s*([\\s\\S]*?)(?=\\n>\\s*### |\\n### |$)`, 'm');
+        // Added 'm' flag for multiline matching (^ matches start of line)
+        const sectionRegex = new RegExp(`(?:^>\\s*### ${sectionHeader}|^### ${sectionHeader})\\s*([\\s\\S]*?)(?=\\n>\\s*### |\\n### |$)`, 'm');
         const sectionMatch = state.markdownBody.match(sectionRegex);
     
         if (!sectionMatch) {
             return [];
         }
 
-        // Use match[1] if available (non-blockquoted header), otherwise find content after match[0]
+        // Use match[1] if available, otherwise find content after match[0]
         let sectionContent = sectionMatch[1]; 
         if (!sectionContent) {
-             // Fallback for blockquoted headers
-            const contentMatch = state.markdownBody.substring(sectionMatch.index + sectionMatch[0].length)
-                                 .match(/^([\s\S]*?)(?=\n>\s*### |\n### |$)/);
-            if(contentMatch) sectionContent = contentMatch[0];
+             // Fallback for headers that might be part of the match[0]
+            const headerRegex = new RegExp(`(?:^>\\s*### ${sectionHeader}|^### ${sectionHeader})`, 'm');
+            sectionContent = sectionMatch[0].replace(headerRegex, '').trim();
         }
 
         if (!sectionContent) return [];
@@ -206,43 +207,19 @@
 
         // 2. Find individual abilities (robustly handles multi-paragraph descriptions)
         // This regex finds abilities that are blockquoted (>) or not.
-        // It captures the Name (match[1]) and the Description (match[2])
+        // It captures the Name and the Description
+        // Updated to be more robust for blockquoted and non-blockquoted abilities
         const abilityRegex = new RegExp(
-            `^>\\s*${escapedStart}([^\\.]+?)\\. ${escapedEnd}|^\\s*${escapedStart}([^\\.]+?)\\. ${escapedEnd}\\s*([\\s\\S]*?)(?=\\n>\\s*${escapedStart}[^\\.]+?\\. ${escapedEnd}|\\n\\s*${escapedStart}[^\\.]+?\\. ${escapedEnd}|$)`,
+            `^>?\\s*${escapedStart}([^\\.]+?)\\. ${escapedEnd}\\s*([\\s\\S]*?)(?=\\n>?\\s*${escapedStart}[^\\.]+?\\. ${escapedEnd}|$)`,
             'gm'
         );
         
         let match;
         while ((match = abilityRegex.exec(sectionContent)) !== null) {
-            // Determine which capture group got the name and description
-            const name = match[1] || match[2];
-            let description = match[3] || "";
-
-            // If description is empty, it might be on the next line (for blockquoted items)
-            if (!description && (match[1] || match[2])) {
-                 const remainder = sectionContent.substring(match.index + match[0].length);
-                 const descMatch = remainder.match(/^([\s\S]*?)(?=\n>\\s*${escapedStart}|\n\\s*${escapedStart}|$)/);
-                 if(descMatch) description = descMatch[0];
-            }
-
             abilities.push({
-                name: name.trim(),
-                description: description.replace(/^>\s*/gm, '').trim() // Clean blockquotes from description
+                name: match[1].trim(),
+                description: match[2].replace(/^>\s*/gm, '').trim() // Clean blockquotes from description
             });
-        }
-
-        // Fallback for the first regex not capturing names correctly
-        if (abilities.length === 0) {
-             const fallbackRegex = new RegExp(
-                `>?\\s*${escapedStart}([^\\.]+?)\\. ${escapedEnd}\\s*([\\s\\S]*?)(?=\\n>?\\s*${escapedStart}[^\\.]+?\\. ${escapedEnd}|\\n>?\\s*### |$)`,
-                'g'
-            );
-            while ((match = fallbackRegex.exec(sectionContent)) !== null) {
-                 abilities.push({
-                    name: match[1].trim(),
-                    description: match[2].replace(/^>\s*/gm, '').trim()
-                });
-            }
         }
     
         return abilities;
@@ -250,7 +227,13 @@
     
     // Simple HTML escaping utility (prevents XSS in <pre> tags)
     function escapeHtml(unsafe) {
-        if (!unsafe) return '';
+        if (typeof unsafe !== 'string') {
+            if (unsafe === null || typeof unsafe === 'undefined') {
+                unsafe = '';
+            } else {
+                unsafe = String(unsafe);
+            }
+        }
         return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
@@ -263,9 +246,15 @@
         if (!state.cr.trim()) errors.push('CR is required');
         if (!state.category.trim()) errors.push('Category is required');
         if (!state.creator.trim()) errors.push('Creator is required');
-        if (state.cr && isNaN(parseFloat(state.cr.replace('/', '.')))) { // Handle "1/4"
-            errors.push('CR must be a number (e.g., 5, 0.5, 1/4)');
+        
+        try {
+            if (state.cr && isNaN(eval(state.cr))) { // Handle "1/4"
+                errors.push('CR must be a number (e.g., 5, 0.5, 1/4)');
+            }
+        } catch (e) {
+            errors.push('CR must be a valid number or fraction (e.g., 5, 0.5, 1/4)');
         }
+
         ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach(ability => {
             const score = state[ability];
             if (score < 1 || score > 30) {
@@ -368,7 +357,7 @@ creator: ${state.creator}`;
         markdown += `> **CR** ${state.cr} (PB +${pb})\n>\n`;
 
         // Helper to format descriptions for markdown blockquote
-        const formatDesc = (desc) => desc.replace(/\n/g, "\n> ");
+        const formatDesc = (desc) => (desc || '').replace(/\n/g, "\n> ");
 
         // Add traits section if any traits exist
         if (state.traits.length > 0) {
@@ -513,7 +502,7 @@ creator: ${state.creator}`;
                     </div>
                     <div class="form-field full-width">
                         <label for="description">Lore Description</label>
-                        <textarea id="description">${escapeHtml(state.description)}</textarea>
+                        <textarea id="description" rows="5">${escapeHtml(state.description)}</textarea>
                     </div>
                 </div>
             </div>
@@ -563,7 +552,7 @@ creator: ${state.creator}`;
                                     <tr>
                                         <td>${ability.toUpperCase()}</td>
                                         <td>
-                                            <input type="number" id="${ability}" min="1" max="30" value="${score}">
+                                            <input type="number" class="ability-score-input" id="${ability}" min="1" max="30" value="${score}">
                                         </td>
                                         <td>${formatModifier(mod)}</td>
                                         <td>${formatModifier(save)}</td>
@@ -615,9 +604,9 @@ creator: ${state.creator}`;
             
             <div class="form-section">
                 <h2>Legendary Actions</h2>
-                <div class="form-field">
+                <div class="form-field full-width">
                     <label for="legendaryActionDescription">Legendary Action Description (optional)</label>
-                    <textarea id="legendaryActionDescription">${escapeHtml(state.legendaryActionDescription)}</textarea>
+                    <textarea id="legendaryActionDescription" rows="3">${escapeHtml(state.legendaryActionDescription)}</textarea>
                 </div>
                 ${renderItemList('legendaryActions')}
                 <button type="button" class="add-button" onclick="addItem('legendaryActions')">+ Add Legendary Action</button>
@@ -627,7 +616,7 @@ creator: ${state.creator}`;
                 <h2>Lair Actions</h2>
                 <div class="form-field full-width">
                     <label for="lairActions">Lair Actions (Optional Text Block)</label>
-                    <textarea id="lairActions">${escapeHtml(state.lairActions)}</textarea>
+                    <textarea id="lairActions" rows="5">${escapeHtml(state.lairActions)}</textarea>
                 </div>
             </div>
             
@@ -635,7 +624,7 @@ creator: ${state.creator}`;
                 <h2>Regional Effects</h2>
                 <div class="form-field full-width">
                     <label for="regionalEffects">Regional Effects (Optional Text Block)</label>
-                    <textarea id="regionalEffects">${escapeHtml(state.regionalEffects)}</textarea>
+                    <textarea id="regionalEffects" rows="5">${escapeHtml(state.regionalEffects)}</textarea>
                 </div>
             </div>
         `;
@@ -657,6 +646,7 @@ creator: ${state.creator}`;
     // Renders the list of items (each with name and description fields)
     // Used for traits, actions, reactions, etc.
     function renderItemList(field) {
+        if (!state[field]) state[field] = []; // Ensure field exists
         return `
             <div class="item-list">
                 ${state[field].map((item, index) => `
@@ -673,6 +663,7 @@ creator: ${state.creator}`;
                         <textarea 
                             class="item-description" 
                             id="${field}-${index}-description"
+                            rows="3"
                             placeholder="${field.slice(0, -1)} Description" 
                             oninput="updateItem('${field}', ${index}, 'description', this.value)">${escapeHtml(item.description)}</textarea>
                     </div>
@@ -684,12 +675,14 @@ creator: ${state.creator}`;
     // --- ITEM LIST MANAGEMENT ---
     // Adds a new item to the specified array field in the state
     function addItem(field) {
+        if (!state[field]) state[field] = []; // Ensure array exists
         state[field].push({ name: '', description: '' });
         render(); // Re-render to show new empty item
     }
 
     // Removes an item from the specified array field in the state
     function removeItem(field, index) {
+        if (!state[field]) return;
         state[field].splice(index, 1);
         render(); // Re-render to update list indices
     }
@@ -778,7 +771,7 @@ creator: ${state.creator}`;
         // Helper function for optional stats
         const optionalStat = (label, value) => value ? `<p><strong>${label}</strong> ${escapeHtml(value)}</p>` : '';
         // Helper to format text with newlines as <p> tags
-        const formatBlock = (text) => text.split('\n').map(p => `<p>${escapeHtml(p)}</p>`).join('');
+        const formatBlock = (text) => (text || '').split('\n').map(p => `<p>${escapeHtml(p)}</p>`).join('');
 
         return `
             <div class="statblock-visual">
@@ -803,21 +796,25 @@ creator: ${state.creator}`;
 
                 <div class="statblock-abilities">
                     <table>
-                        <tr>
-                            <th></th><th>Score</th><th>Mod</th><th>Save</th>
-                            <th></th><th>Score</th><th>Mod</th><th>Save</th>
-                            <th></th><th>Score</th><th>Mod</th><th>Save</th>
-                        </tr>
-                        <tr>
-                            <td>Str</td><td>${abilities.str.score}</td><td>${formatModifier(abilities.str.mod)}</td><td>${strSaveValue}</td>
-                            <td>Dex</td><td>${abilities.dex.score}</td><td>${formatModifier(abilities.dex.mod)}</td><td>${dexSaveValue}</td>
-                            <td>Con</td><td>${abilities.con.score}</td><td>${formatModifier(abilities.con.mod)}</td><td>${conSaveValue}</td>
-                        </tr>
-                        <tr>
-                            <td>Int</td><td>${abilities.int.score}</td><td>${formatModifier(abilities.int.mod)}</td><td>${intValue}</td>
-                            <td>Wis</td><td>${abilities.wis.score}</td><td>${formatModifier(abilities.wis.mod)}</td><td>${wisValue}</td>
-                            <td>Cha</td><td>${abilities.cha.score}</td><td>${formatModifier(abilities.cha.mod)}</td><td>${chaValue}</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                                <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                                <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Str</td><td>${abilities.str.score}</td><td>${formatModifier(abilities.str.mod)}</td><td>${strSaveValue}</td>
+                                <td>Dex</td><td>${abilities.dex.score}</td><td>${formatModifier(abilities.dex.mod)}</td><td>${dexSaveValue}</td>
+                                <td>Con</td><td>${abilities.con.score}</td><td>${formatModifier(abilities.con.mod)}</td><td>${conSaveValue}</td>
+                            </tr>
+                            <tr>
+                                <td>Int</td><td>${abilities.int.score}</td><td>${formatModifier(abilities.int.mod)}</td><td>${intSaveValue}</td>
+                                <td>Wis</td><td>${abilities.wis.score}</td><td>${formatModifier(abilities.wis.mod)}</td><td>${wisSaveValue}</td>
+                                <td>Cha</td><td>${abilities.cha.score}</td><td>${formatModifier(abilities.cha.mod)}</td><td>${chaSaveValue}</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
 
@@ -859,10 +856,10 @@ creator: ${state.creator}`;
                     </div>
                 ` : ''}
                 
-                ${state.legendaryActions.length > 0 && state.legendaryActions.some(l => l.name) ? `
+                ${(state.legendaryActions.length > 0 && state.legendaryActions.some(l => l.name)) ? `
                     <div class="statblock-section">
                         <h3>Legendary Actions</h3>
-                        ${state.legendaryActionDescription ? `<p>${formatBlock(state.legendaryActionDescription)}</p>` : ''}
+                        <p>${formatBlock(state.legendaryActionDescription.trim() || "The creature can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature's turn. The creature regains spent legendary actions at the start of its turn.")}</p>
                         ${state.legendaryActions.filter(l => l.name).map(l => `<p><strong>${escapeHtml(l.name)}.</strong> ${formatBlock(l.description)}</p>`).join('')}
                     </div>
                 ` : ''}
@@ -887,9 +884,13 @@ creator: ${state.creator}`;
     // --- VIEW MANAGEMENT ---
     // Switches between form edit view and preview view
     function switchView(view) {
+        const formView = document.getElementById('form-view');
+        const previewView = document.getElementById('preview-view');
+        if (!formView || !previewView) return;
+
         // Hide all views
-        document.getElementById('form-view').classList.remove('active');
-        document.getElementById('preview-view').classList.remove('active');
+        formView.classList.remove('active');
+        previewView.classList.remove('active');
         
         // Show selected view
         document.getElementById(`${view}-view`).classList.add('active');
@@ -898,7 +899,10 @@ creator: ${state.creator}`;
         document.querySelectorAll('.toggle-btn').forEach(btn => {
             btn.classList.remove('active');
         });
-        document.querySelector(`[data-view="${view}"]`).classList.add('active');
+        const activeButton = document.querySelector(`[data-view="${view}"]`);
+        if (activeButton) {
+            activeButton.classList.add('active');
+        }
     }
 
     // --- FILE OPERATIONS ---
@@ -906,8 +910,10 @@ creator: ${state.creator}`;
     function downloadMarkdown() {
         syncFormState();
         const markdown = generateMarkdown();
-        if (!markdown) {
-            alert("Please fill in all mandatory fields before downloading.");
+        const validation = validateForm();
+        
+        if (!validation.valid) {
+            alert("Please fill in all mandatory fields before downloading:\n- " + validation.errors.join("\n- "));
             return;
         }
 
@@ -916,7 +922,7 @@ creator: ${state.creator}`;
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${state.title.toLowerCase().replace(/\s+/g, '-') || 'statblock'}.md`;
+        a.download = `${state.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s-]+/g, '-') || 'statblock'}.md`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -929,22 +935,28 @@ creator: ${state.creator}`;
         const formView = document.getElementById('form-view');
         const previewView = document.getElementById('preview-view');
         
-        if (formView) {
+        if (!formView || !previewView) return; // Exit if containers not found
+
+        const activeTab = previewView.classList.contains('active') ? 'preview' : 'form';
+        
+        if (activeTab === 'form') {
             saveFocus(); // Save cursor position before re-render
             formView.innerHTML = renderForm();
             restoreFocus(); // Restore cursor position after re-render
             attachFormListeners();
-        }
-        
-        if (previewView && previewView.classList.contains('active')) {
-             // Only render preview if it's the active tab
+        } else {
+            // Only render preview if it's the active tab
             previewView.innerHTML = renderPreview();
+            // Still need to render form in background to attach listeners
+            formView.innerHTML = renderForm();
+            attachFormListeners();
         }
     }
 
     // Attaches event listeners to form inputs for real-time updates
     function attachFormListeners() {
         const formView = document.getElementById('form-view');
+        if (!formView) return;
         
         // Fields that require full re-render when changed (affect calculations)
         const dynamicFields = [
@@ -957,7 +969,10 @@ creator: ${state.creator}`;
         inputs.forEach(input => {
             // Skip item fields (they have their own handlers via updateItem)
             if (!input.classList.contains('item-name') && !input.classList.contains('item-description')) {
-                input.addEventListener('input', () => {
+                
+                const eventType = (input.tagName === 'SELECT' || input.type === 'checkbox') ? 'change' : 'input';
+
+                input.addEventListener(eventType, () => {
                     // Sync state immediately on input
                     if (input.type === 'number') {
                         state[input.id] = parseInt(input.value) || 0;
@@ -967,6 +982,7 @@ creator: ${state.creator}`;
 
                     if (dynamicFields.includes(input.id)) {
                         // Full re-render for fields that affect calculations
+                        // This will re-render the form and preview (if active)
                         render();
                     } else {
                         // Just update preview if it's active
@@ -1005,7 +1021,7 @@ creator: ${state.creator}`;
         `;
 
         // Register global functions for onclick handlers
-        // FIX: Expose necessary functions globally for onclick attributes in dynamically generated HTML
+        // Expose necessary functions globally for onclick attributes in dynamically generated HTML
         window.switchGeneratorView = function(view) {
             if (view === 'preview') {
                 syncFormState(); // Sync before switching to preview
@@ -1048,6 +1064,7 @@ creator: ${state.creator}`;
                     if (colonIndex === -1) return;
             
                     const key = line.substring(0, colonIndex).trim();
+                    // Handle values that may contain colons (like URLs)
                     const value = line.substring(colonIndex + 1).trim();
 
                     if (key in state) {
@@ -1068,7 +1085,7 @@ creator: ${state.creator}`;
                 }
 
                 // --- PARSE ABILITY SCORES FROM STAT BLOCK TABLE ---
-                // More robust regex to handle whitespace
+                // More robust regex to handle whitespace and pipes
                 const strMatch = content.match(/\|Str\|\s*(\d+)\s*\|/);
                 const dexMatch = content.match(/\|Dex\|\s*(\d+)\s*\|/);
                 const conMatch = content.match(/\|Con\|\s*(\d+)\s*\|/);
@@ -1094,6 +1111,7 @@ creator: ${state.creator}`;
                     state.markdownBody = body;
 
                     // Parse basic statistics (AC, HP, Speed, Initiative)
+                    // Added \n to regex to prevent over-matching
                     const acMatch = body.match(/\*\*AC\*\*\s+([^\*\n]+?)(?=\s*\*\*|$|\n)/);
                     const hpMatch = body.match(/\*\*HP\*\*\s+([^\*\n]+?)(?=\s*\*\*|$|\n)/);
                     const speedMatch = body.match(/\*\*Speed\*\*\s+([^\n]+)/);
@@ -1109,12 +1127,12 @@ creator: ${state.creator}`;
                     if (savingThrowsMatch) {
                         const saves = savingThrowsMatch[1].trim();
                         // Parse individual saves: "Str +9, Dex +5, Con +9, Int +6, Wis +7, Cha +9"
-                        const strSaveMatch = saves.match(/Str\s+([\+\-]?\d+)/);
-                        const dexSaveMatch = saves.match(/Dex\s+([\+\-]?\d+)/);
-                        const conSaveMatch = saves.match(/Con\s+([\+\-]?\d+)/);
-                        const intSaveMatch = saves.match(/Int\s+([\+\-]?\d+)/);
-                        const wisSaveMatch = saves.match(/Wis\s+([\+\-]?\d+)/);
-                        const chaSaveMatch = saves.match(/Cha\s+([\+\-]?\d+)/);
+                        const strSaveMatch = saves.match(/Str\s+([\+\-]\d+)/);
+                        const dexSaveMatch = saves.match(/Dex\s+([\+\-]\d+)/);
+                        const conSaveMatch = saves.match(/Con\s+([\+\-]\d+)/);
+                        const intSaveMatch = saves.match(/Int\s+([\+\-]\d+)/);
+                        const wisSaveMatch = saves.match(/Wis\s+([\+\-]\d+)/);
+                        const chaSaveMatch = saves.match(/Cha\s+([\+\-]\d+)/);
                         
                         if (strSaveMatch) state.strSave = strSaveMatch[1];
                         if (dexSaveMatch) state.dexSave = dexSaveMatch[1];
@@ -1152,6 +1170,7 @@ creator: ${state.creator}`;
                     const legendaryActionsSection = body.match(/### Legendary Actions[\s\S]*?(?=\n>?\s*### |$)/);
                     if (legendaryActionsSection) {
                         // Find description text *before* the first bolded action
+                        // Added allowance for blockquote >
                         const descMatch = legendaryActionsSection[0].match(/### Legendary Actions\n>?\s*([\s\S]*?)(?=\n>?\s*\*\*[^_]|$\n)/);                    
                         if (descMatch) {
                             const desc = descMatch[1].replace(/^>\s*/gm, '').trim();
@@ -1168,6 +1187,7 @@ creator: ${state.creator}`;
                     // --- PARSE LAIR ACTIONS SECTION ---
                     // *** FIX for the-sandman.md ***
                     // Use robust regex to find section and strip ALL blockquotes
+                    // Updated regex to be non-greedy and handle blockquotes
                     const lairActionsBlockMatch = body.match(/### Lair Actions\s*([\s\S]*?)(?=\n>?\s*### Regional Effects|$)/);
                     if (lairActionsBlockMatch) {
                         state.lairActions = lairActionsBlockMatch[1].replace(/^\s*>\s*/gm, '').trim();
@@ -1176,7 +1196,7 @@ creator: ${state.creator}`;
                     // --- PARSE REGIONAL EFFECTS SECTION ---
                     // *** FIX for the-sandman.md ***
                     // Use robust regex to find section and strip ALL blockquotes
-                    const regionalEffectsBlockMatch = body.match(/### Regional Effects\s*([\s\S]*?)$/);
+                    const regionalEffectsBlockMatch = body.match(/### Regional Effects\s*([\s\S]*?)(?=\n>?\s*$|\n>?\s*<|$)/); // Stop at end of block
                     if (regionalEffectsBlockMatch) {
                         state.regionalEffects = regionalEffectsBlockMatch[1].replace(/^\s*>\s*/gm, '').trim();
                     }
