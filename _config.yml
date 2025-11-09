@@ -27,6 +27,10 @@ collections:
   monsters:
     output: true
     permalink: /monster-compendium/:title/
+  help:
+    output: false
+    permalink: /help/:path/
+    
 
 # ========================================================
 # Navigation structure - defines order and hierarchy
