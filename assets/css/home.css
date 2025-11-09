@@ -24,7 +24,7 @@
 
 [data-theme="dark"] .card-button {
   background: var(--color-primary);
-  color: var(--color-text);
+  color: var(--color-btn-text);
 }
 
 [data-theme="dark"] .card-button:hover {

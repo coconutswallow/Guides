@@ -399,7 +399,7 @@ p, li, td, th, a, code, pre {
 
 [data-theme="dark"] .reset-button {
   background: var(--color-primary);
-  color: var(--color-text);
+  color: var(--color-btn-text);
 }
 
 /* Adjust monster cards for dark mode */
