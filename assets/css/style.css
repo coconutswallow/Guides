@@ -51,7 +51,7 @@
 
 /* Dark Mode Colors */
 [data-theme="dark"] {
- --color-primary: #E8C5A0;        /* Light tan - headers (inverted) */
+  --color-primary: #E8C5A0;        /* Light tan - headers (inverted) */
   --color-secondary: #D4A574;      /* Golden tan - accents */
   --color-bg-light: #2a2420;       /* Dark brown - cards, tables */
   --color-bg-medium: #1f1b18;      /* Darker brown - alternating rows */
@@ -61,16 +61,17 @@
   --color-border: #5a4a3a;         /* Brown border */
   --color-link: #E8C5A0;           /* Light tan - links */
   --color-link-hover: #F5D9B8;     /* Lighter tan - link hover */
-  --color-header-bg-start: #2C1810 /* Rich dark burgundy-brown (gradient start) */
-  --color-header-bg-end: #3D0E07 /* Deeper burgundy (gradient end) */
-  --color-header-border: #3D0E07
-  --color-header-text: #E8DCC8
-  --color-footer-bg: #2C1810
-  --color-footer-border: #3D0E07
+  --color-header-bg-start: #1a0f0a; /* Deep dark brown (gradient start) */
+  --color-header-bg-end: #2a1810;   /* Rich dark brown (gradient end) */
+  --color-header-border: #3d2418;   /* Dark brown border */
+  --color-header-text: #E8DCC8;     /* Light cream text */
+  --color-footer-bg: #1a0f0a;       /* Deep dark brown */
+  --color-footer-border: #3d2418;   /* Dark brown border */
+  --color-nav-hover: #E8C5A0;       /* Light tan for nav hover */
    
-  /* Dark mode shadows/**/
+  /* Dark mode shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --sh shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 6px 12px rgba(0, 0, 0, 0.5);
 }
 
@@ -596,7 +597,7 @@ tbody tr:hover {
 }
 
 /* ============================================
-   SITE HEADER (FIXED)
+   SITE HEADER
    ============================================ */
 
 .site-header {
@@ -613,7 +614,6 @@ tbody tr:hover {
   box-shadow: var(--shadow-md);
 
 }
-/* Dark mode header */
 [data-theme="dark"] .site-header {
   background: linear-gradient(135deg, var(--color-header-bg-start) 0%, var(--color-header-bg-end) 100%);
   border-bottom: 4px solid var(--color-header-border);
@@ -793,10 +793,21 @@ tbody tr:hover {
   font-weight: 400;
 }
 
+/* Dark mode navigation links */
+[data-theme="dark"] .nav-link {
+  color: var(--color-text); /* Light cream for normal state */
+}
+
 .nav-link:hover {
   background-color: rgba(255, 255, 255, 0.05);
   padding-left: 30px;
   color: #C0AD6A;
+}
+
+[data-theme="dark"] .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding-left: 30px;
+  color: var(--color-nav-hover); /* Brighter tan for hover */
 }
 
 /* Navigation Sections */
