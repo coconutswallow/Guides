@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Markdown Author's Guide"
-order: 2
+order: 3
 ---
 
 # Markdown Author's Guide for Non-Technical Writers
