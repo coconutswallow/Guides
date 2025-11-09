@@ -6,12 +6,42 @@
 /* ============================================ */
 
 /* ============================================ */
+/* CSS VARIABLES FOR STAT BLOCKS */
+/* ============================================ */
+
+:root {
+  /* Light mode stat block colors */
+  --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
+  --statblock-page-bg: white;
+  --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5ErkJggg==');
+  --statblock-modifier-bg: #dad1ca;
+  --statblock-divider: #ccc;
+  --statblock-image-credit: #666;
+  --statblock-description-bg: #ffffff;
+  --statblock-description-text: #2c2c2c;
+  --statblock-type-text: #666;
+}
+
+[data-theme="dark"] {
+  /* Dark mode stat block colors */
+  --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
+  --statblock-page-bg: var(--color-bg-light);
+  --statblock-texture: none;
+  --statblock-modifier-bg: rgba(90, 74, 58, 0.3);
+  --statblock-divider: var(--color-border);
+  --statblock-image-credit: var(--color-text-secondary);
+  --statblock-description-bg: var(--color-bg-light);
+  --statblock-description-text: var(--color-text);
+  --statblock-type-text: var(--color-text-secondary);
+}
+
+/* ============================================ */
 /* MONSTER COMPENDIUM PAGE BACKGROUND */
 /* ============================================ */
 
 /* Override body background for monster compendium pages */
 body.monster-page {
-  background-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
+  background-image: var(--statblock-bg-image);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -22,7 +52,7 @@ body.monster-page {
 /* Override page container for monster compendium */
 .monster-page .page {
   max-width: 1000px;
-  background: white url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5ErkJggg==');
+  background: var(--statblock-page-bg) var(--statblock-texture);
   padding: 20px;
   box-shadow: 0 0 15px rgba(0,0,0,0.25);
   border-radius: 6px;
@@ -43,8 +73,8 @@ blockquote.stat-block,
   padding: 0;
   margin: 1em 0;
   box-shadow: 0 0 8px rgba(0,0,0,0.2);
-  font-family: 'Source Sans 3', Arial, sans-serif; /* Changed to clean sans-serif */
-  font-style: normal; /* Ensure no italic */
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-style: normal;
   overflow: hidden;
   page-break-inside: avoid;
 }
@@ -66,7 +96,14 @@ blockquote.stat-block h2 {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
-  font-style: normal; /* Ensure no italic */
+  font-style: normal;
+}
+
+/* Dark mode: Invert header colors for better contrast */
+[data-theme="dark"] .monster-page blockquote h2,
+[data-theme="dark"] blockquote.stat-block h2 {
+  color: var(--color-text);
+  background: var(--color-primary);
 }
 
 /* ============================================ */
@@ -87,9 +124,10 @@ blockquote.stat-block > *:not(h2):not(h3) {
 /* First paragraph in stat block (creature type/size/alignment) */
 .monster-page blockquote p:first-of-type,
 blockquote.stat-block p:first-of-type {
-  font-style: italic; /* This one SHOULD be italic */
+  font-style: italic;
   margin: 8px 0 4px 0;
   font-size: 1em;
+  color: var(--color-text);
 }
 
 /* All paragraphs within stat blocks */
@@ -98,7 +136,8 @@ blockquote.stat-block p {
   margin: 6px 0;
   font-size: 1em;
   line-height: 1.4;
-  font-style: normal; /* Override any inherited italic */
+  font-style: normal;
+  color: var(--color-text);
 }
 
 /* ============================================ */
@@ -120,7 +159,7 @@ blockquote.stat-block h3 {
   text-transform: uppercase;
   letter-spacing: 0.8px;
   font-weight: 700;
-  font-style: normal; /* Ensure no italic */
+  font-style: normal;
 }
 
 /* ============================================ */
@@ -131,13 +170,15 @@ blockquote.stat-block h3 {
 .monster-page blockquote strong,
 blockquote.stat-block strong {
   font-weight: 700;
-  font-style: normal; /* Ensure no italic unless explicitly set */
+  font-style: normal;
+  color: var(--color-text);
 }
 
 /* Italic text within stat blocks */
 .monster-page blockquote em,
 blockquote.stat-block em {
   font-style: italic;
+  color: var(--color-text);
 }
 
 /* Bold italic text (both tags applied) */
@@ -147,6 +188,7 @@ blockquote.stat-block strong em,
 blockquote.stat-block em strong {
   font-weight: 700;
   font-style: italic;
+  color: var(--color-text);
 }
 
 /* ============================================ */
@@ -166,7 +208,8 @@ blockquote.stat-block ul li {
   margin: 4px 0;
   font-size: 1em;
   line-height: 1.4;
-  font-style: normal; /* Ensure no italic */
+  font-style: normal;
+  color: var(--color-text);
 }
 
 /* ============================================ */
@@ -195,8 +238,9 @@ blockquote.stat-block table td {
   border: none;
   background: none;
   min-width: 0;
-  font-family: 'Source Sans 3', Arial, sans-serif; /* Clean sans-serif for tables */
-  font-style: normal; /* Ensure no italic */
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-style: normal;
+  color: var(--color-text);
 }
 
 /* Table headers (MOD, SAVE labels) */
@@ -260,7 +304,7 @@ blockquote.stat-block table td:nth-child(11),
 blockquote.stat-block table td:nth-child(12) {
   width: 8%;
   font-weight: 400;
-  background: #dad1ca;
+  background: var(--statblock-modifier-bg);
 }
 
 /* ============================================ */
@@ -336,6 +380,15 @@ blockquote.stat-block hr {
   transform: translateY(0);
 }
 
+/* Dark mode button text adjustment */
+[data-theme="dark"] .export-json-button {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .export-json-button:hover {
+  color: var(--color-text);
+}
+
 /* ============================================ */
 /* GENERAL DIVIDERS */
 /* ============================================ */
@@ -344,7 +397,7 @@ blockquote.stat-block hr {
 .statblock-divider {
   border: 0;
   height: 1px;
-  background: #ccc;
+  background: var(--statblock-divider);
   margin: 10px 0;
 }
 
@@ -376,7 +429,7 @@ blockquote.stat-block hr {
 /* Image credit/attribution text */
 .image-credit {
   font-size: 0.9em;
-  color: #666;
+  color: var(--statblock-image-credit);
   font-style: italic;
   margin-top: 0.5em;
 }
@@ -390,10 +443,10 @@ blockquote.stat-block hr {
   font-family: var(--font-body);
   font-size: 1em;
   line-height: 1.7;
-  color: #2c2c2c;
+  color: var(--statblock-description-text);
   padding: 2em 1em;
   margin-top: 2em;
-  background: #ffffff;
+  background: var(--statblock-description-bg);
   border: none;
   border-radius: 0;
   text-align: justify;
@@ -479,7 +532,7 @@ blockquote.stat-block hr {
 .monster-type {
   font-family: 'Source Sans 3', Arial, sans-serif;
   font-style: italic;
-  color: #666;
+  color: var(--statblock-type-text);
   margin: 0.3em 0;
   font-size: 0.9em;
 }
