@@ -2,6 +2,45 @@
 /* SEARCH RESULTS STYLING (assets/css/search.css)                */
 /* ============================================================= */
 
+/* Dark mode search input */
+[data-theme="dark"] #search-input {
+  background: var(--color-bg-medium);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* Dark mode search results */
+[data-theme="dark"] #search-results {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] #search-results li {
+  border-bottom-color: var(--color-border);
+}
+
+[data-theme="dark"] #search-results li.search-header {
+  background-color: var(--color-bg-medium);
+  color: var(--color-primary);
+  border-bottom-color: var(--color-border);
+}
+
+[data-theme="dark"] #search-results li a {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] #search-results li a:hover {
+  background-color: rgba(232, 197, 160, 0.08);
+}
+
+[data-theme="dark"] #search-results li h4 {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] #search-results li p {
+  color: var(--color-text);
+}
+
 /* The main container for search results */
 #search-results {
   list-style: none; /* Remove bullet points */
@@ -91,12 +130,6 @@
   border-color: var(--color-primary);
 }
 
-/* Dark mode search input */
-[data-theme="dark"] #search-input {
-  background: var(--color-bg-medium);
-  border-color: var(--color-border);
-  color: var(--color-text);
-}
 
 /* Mobile responsive */
 @media (max-width: 768px) {

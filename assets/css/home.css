@@ -4,6 +4,34 @@
    Using CSS variables for automatic dark mode support
    ============================================ */
 
+/* ============================================
+   DARK MODE OVERRIDES FOR HOME PAGE
+   ============================================ */
+
+/* Ensure proper text color in dark mode */
+[data-theme="dark"] .home-hero h1,
+[data-theme="dark"] .home-section h2,
+[data-theme="dark"] .feature-card h3 {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .hero-description,
+[data-theme="dark"] .section-description,
+[data-theme="dark"] .feature-card p,
+[data-theme="dark"] .home-credits p {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .card-button {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .card-button:hover {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+
 /* Hero Section */
 .home-hero {
   background: var(--color-bg-light);

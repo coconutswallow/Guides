@@ -72,42 +72,42 @@
 
 /* Dark Mode Colors */
 [data-theme="dark"] {
-  --color-primary: #E8C5A0;        /* Light tan - headers (inverted) */
-  --color-secondary: #D4A574;      /* Golden tan - accents */
-  --color-bg-light: #2a2420;       /* Dark brown - cards, tables */
-  --color-bg-medium: #1f1b18;      /* Darker brown - alternating rows */
-  --color-bg-page: #1a1612;        /* Very dark brown - page background */
+  --color-primary: #D4A574;        /* Golden tan - headers (inverted) */
+  --color-secondary: #E8C5A0;      /* Light tan - accents */
+  --color-bg-light: #1a1a1a;       /* Dark gray/black - cards, tables */
+  --color-bg-medium: #0f0f0f;      /* Darker black - alternating rows */
+  --color-bg-page: #000000;        /* Pure black - page background */
   --color-text: #E8DCC8;           /* Light cream - body text */
-  --color-text-secondary: #C4B5A8; /* Medium tan - meta text */
-  --color-border: #5a4a3a;         /* Brown border */
-  --color-link: #E8C5A0;           /* Light tan - links */
-  --color-link-hover: #F5D9B8;     /* Lighter tan - link hover */
+  --color-text-secondary: #A09080; /* Muted tan - meta text */
+  --color-border: #3a3a3a;         /* Dark gray border */
+  --color-link: #D4A574;           /* Golden tan - links */
+  --color-link-hover: #E8C5A0;     /* Light tan - link hover */
   
   /* Dark mode specific UI colors */
-  --color-header-bg-start: #1a0f0a; /* Deep dark brown (gradient start) */
-  --color-header-bg-end: #2a1810;   /* Rich dark brown (gradient end) */
-  --color-header-border: #3d2418;   /* Dark brown border */
+  --color-header-bg-start: #0a0a0a; /* Nearly black (gradient start) */
+  --color-header-bg-end: #1a1410;   /* Very dark brown-black (gradient end) */
+  --color-header-border: #2a2420;   /* Dark brown-gray border */
   --color-header-text: #E8DCC8;     /* Light cream text */
-  --color-footer-bg: #1a0f0a;       /* Deep dark brown */
-  --color-footer-border: #3d2418;   /* Dark brown border */
+  --color-footer-bg: #0a0a0a;       /* Nearly black */
+  --color-footer-border: #2a2420;   /* Dark brown-gray border */
   --color-nav-hover: #E8C5A0;       /* Light tan for nav hover */
-  --color-table-hover: rgba(212, 165, 116, 0.1); /* Table row hover */
-  --color-sidebar-bg: #1a1612;      /* Dark sidebar background */
+  --color-table-hover: rgba(212, 165, 116, 0.08); /* Subtle table row hover */
+  --color-sidebar-bg: #000000;      /* Pure black sidebar background */
   
   /* Alert colors (dark mode) */
-  --color-alert-info-bg: rgba(52, 152, 219, 0.15);
+  --color-alert-info-bg: rgba(52, 152, 219, 0.12);
   --color-alert-info-border: #3498db;
-  --color-alert-warning-bg: rgba(243, 156, 18, 0.15);
+  --color-alert-warning-bg: rgba(243, 156, 18, 0.12);
   --color-alert-warning-border: #f39c12;
-  --color-alert-danger-bg: rgba(231, 76, 60, 0.15);
+  --color-alert-danger-bg: rgba(231, 76, 60, 0.12);
   --color-alert-danger-border: #e74c3c;
-  --color-alert-success-bg: rgba(39, 174, 96, 0.15);
+  --color-alert-success-bg: rgba(39, 174, 96, 0.12);
   --color-alert-success-border: #27ae60;
    
   /* Dark mode shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 6px 12px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 6px 12px rgba(0, 0, 0, 0.7);
 }
 /* ============================================
    APPLY COLORS TO ELEMENTS

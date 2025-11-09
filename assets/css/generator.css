@@ -9,6 +9,184 @@
 }
 
 /* ============================================ */
+/* DARK MODE SUPPORT FOR GENERATOR */
+/* ============================================ */
+
+/* Page intro section dark mode */
+[data-theme="dark"] .page-intro {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1410 100%);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .page-intro h2 {
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .page-intro p {
+    color: var(--color-text);
+}
+
+/* Toggle buttons dark mode */
+[data-theme="dark"] .toggle-btn {
+    background: var(--color-bg-medium);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .toggle-btn:hover {
+    background: var(--color-bg-light);
+}
+
+[data-theme="dark"] .toggle-btn.active {
+    background: var(--color-primary);
+    color: var(--color-text);
+}
+
+/* Download button dark mode */
+[data-theme="dark"] .download-btn {
+    background: var(--color-primary);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .download-btn:hover {
+    color: var(--color-text);
+}
+
+/* Form sections dark mode */
+[data-theme="dark"] .form-section {
+    background: var(--color-bg-light);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .form-section h2 {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-border);
+}
+
+/* Form fields dark mode */
+[data-theme="dark"] .form-field label {
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .form-field input,
+[data-theme="dark"] .form-field select,
+[data-theme="dark"] .form-field textarea {
+    background: var(--color-bg-medium);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .form-field input:focus,
+[data-theme="dark"] .form-field select:focus,
+[data-theme="dark"] .form-field textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(232, 197, 160, 0.2);
+}
+
+/* Ability group table dark mode */
+[data-theme="dark"] .ability-group th {
+    background: var(--color-bg-medium);
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .ability-group td {
+    border-bottom-color: var(--color-border);
+}
+
+/* Item entries dark mode */
+[data-theme="dark"] .item-entry {
+    background: var(--color-bg-medium);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .item-name,
+[data-theme="dark"] .item-description {
+    background: var(--color-bg-light);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+/* Buttons dark mode */
+[data-theme="dark"] .add-button {
+    background: var(--color-primary);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .add-button:hover {
+    background: var(--color-secondary);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .remove-button {
+    background: #c00;
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .remove-button:hover {
+    background: #a00;
+}
+
+/* Markdown output dark mode */
+[data-theme="dark"] .markdown-output h3,
+[data-theme="dark"] .visual-output h3 {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-border);
+}
+
+[data-theme="dark"] .markdown-output pre {
+    background: #0a0a0a;
+    color: var(--color-text);
+}
+
+/* Visual stat block preview dark mode */
+[data-theme="dark"] .statblock-visual {
+    background: var(--color-bg-light);
+    border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .statblock-header h1 {
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .statblock-header p {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .statblock-section h3 {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+[data-theme="dark"] .statblock-abilities td:nth-child(3),
+[data-theme="dark"] .statblock-abilities td:nth-child(4),
+[data-theme="dark"] .statblock-abilities td:nth-child(7),
+[data-theme="dark"] .statblock-abilities td:nth-child(8),
+[data-theme="dark"] .statblock-abilities td:nth-child(11),
+[data-theme="dark"] .statblock-abilities td:nth-child(12) {
+    background: rgba(90, 74, 58, 0.3);
+}
+
+[data-theme="dark"] .statblock-placeholder {
+    color: var(--color-text-secondary);
+}
+
+/* Error/Success boxes dark mode */
+[data-theme="dark"] .error-box {
+    background: rgba(231, 76, 60, 0.15);
+    border-left-color: #e74c3c;
+}
+
+[data-theme="dark"] .error-box h3 {
+    color: #e74c3c;
+}
+
+[data-theme="dark"] .success-box {
+    background: rgba(39, 174, 96, 0.15);
+    border-left-color: #27ae60;
+    color: #27ae60;
+}
+
+/* ============================================ */
 /* PAGE INTRO SECTION */
 /* ============================================ */
 
