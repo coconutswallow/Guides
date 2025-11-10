@@ -349,12 +349,19 @@ const MonsterUI = (function() {
     /**
      * Simple markdown parser for description
      */
+     /**
+     * Simple markdown parser for description
+     */
     function parseMarkdown(text) {
         if (!text) return '';
         
         let html = text;
         
-        // Headers (## Header -> <h4>Header</h4>, ### -> <h5>, etc.)
+        // Horizontal rules (--- or ___)
+        html = html.replace(/^(---+|___+)$/gm, '<hr class="statblock-divider">');
+        
+        // Headers (#### -> <h6>, ### -> <h5>, ## -> <h4>)
+        html = html.replace(/^#### (.+)$/gm, '<h6>$1</h6>');
         html = html.replace(/^### (.+)$/gm, '<h5>$1</h5>');
         html = html.replace(/^## (.+)$/gm, '<h4>$1</h4>');
         
@@ -363,14 +370,21 @@ const MonsterUI = (function() {
         html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
         
+        // Parse tables
+        html = parseMarkdownTables(html);
+        
         // Split into paragraphs and wrap in <p> tags
         const paragraphs = html.split(/\n\n+/);
         html = paragraphs.map(p => {
             p = p.trim();
             if (!p) return '';
-            // Don't wrap headers in <p> tags
-            if (p.startsWith('<h')) return p;
-            // Don't wrap list items
+            
+            // Don't wrap certain elements in <p> tags
+            if (p.startsWith('<h') || p.startsWith('<hr') || p.startsWith('<table')) {
+                return p;
+            }
+            
+            // Handle list items
             if (p.startsWith('-') || p.startsWith('*')) {
                 const items = p.split(/\n/).map(line => {
                     line = line.trim();
@@ -381,8 +395,86 @@ const MonsterUI = (function() {
                 }).join('');
                 return `<ul>${items}</ul>`;
             }
+            
             return `<p>${p}</p>`;
         }).join('');
+        
+        return html;
+    }
+
+    /**
+     * Parse markdown tables
+     */
+    function parseMarkdownTables(text) {
+        const lines = text.split('\n');
+        let inTable = false;
+        let tableLines = [];
+        let result = [];
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            
+            // Check if this looks like a table row (starts and ends with |)
+            if (line.startsWith('|') && line.endsWith('|')) {
+                if (!inTable) {
+                    inTable = true;
+                    tableLines = [];
+                }
+                tableLines.push(line);
+            } else {
+                // Not a table line
+                if (inTable) {
+                    // We were in a table, now we're not - process it
+                    result.push(convertTableToHtml(tableLines));
+                    inTable = false;
+                    tableLines = [];
+                }
+                result.push(line);
+            }
+        }
+        
+        // Handle table at end of text
+        if (inTable && tableLines.length > 0) {
+            result.push(convertTableToHtml(tableLines));
+        }
+        
+        return result.join('\n');
+    }
+
+    /**
+     * Convert markdown table to HTML
+     */
+    function convertTableToHtml(tableLines) {
+        if (tableLines.length < 2) return tableLines.join('\n');
+        
+        const rows = tableLines.map(line => {
+            // Remove leading/trailing pipes and split by pipe
+            return line.substring(1, line.length - 1)
+                .split('|')
+                .map(cell => cell.trim());
+        });
+        
+        // First row is headers
+        const headers = rows[0];
+        
+        // Second row is alignment (ignore it for now, just skip it)
+        const dataRows = rows.slice(2);
+        
+        let html = '<table>\n<thead>\n<tr>\n';
+        headers.forEach(header => {
+            html += `<th>${header}</th>\n`;
+        });
+        html += '</tr>\n</thead>\n<tbody>\n';
+        
+        dataRows.forEach(row => {
+            html += '<tr>\n';
+            row.forEach(cell => {
+                html += `<td>${cell}</td>\n`;
+            });
+            html += '</tr>\n';
+        });
+        
+        html += '</tbody>\n</table>';
         
         return html;
     }
