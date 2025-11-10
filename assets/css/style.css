@@ -191,7 +191,7 @@
   
   /* Fonts */
   --font-header: 'Cinzel', 'Georgia', serif;
-  --font-body: 'Crimson Text', 'Source Sans 3', 'Georgia', serif;
+  --font-body: 'Source Sans 3', 'Crimson Text', 'Georgia', serif;
   
   /* Spacing */
   --spacing-xs: 0.5rem;
