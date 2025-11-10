@@ -41,6 +41,14 @@
   border-color: var(--color-primary);
 }
 
+@media (max-width: 768px) {
+  #search-input {
+    /* Reduce the width and max-width on mobile to prevent crowding */
+    width: 70%; 
+    max-width: 180px;
+  }
+}
+
 /* ============================================ */
 /* SEARCH RESULTS CONTAINER */
 /* ============================================ */
