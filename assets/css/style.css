@@ -1557,6 +1557,11 @@ tbody tr:hover {
   font-size: 0.85em;
 }
 
+/* Guild icon - desktop only */
+.guild-icon {
+  display: none;
+}
+
 /* ============================================
    PDF Rendering
    ============================================ */
@@ -1651,6 +1656,12 @@ tbody tr:hover {
     float: none;
     width: 100%;
     margin: 2em 0;
+  }
+  .guild-icon {
+    display: block;
+    height: 2.5em;
+    width: auto;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
   }
 }
 
