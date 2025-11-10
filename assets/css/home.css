@@ -119,8 +119,6 @@
   position: relative;
   overflow: hidden;
   min-height: 250px;
-  max-height: 400px;
-  max-width: 400px;
 }
 
 /* Feature card with background image */
