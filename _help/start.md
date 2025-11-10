@@ -7,9 +7,10 @@ order: 1
 
 ### For Authors:
 
-- <a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a></p>
+- <a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a>
 
 ### For Engineers
 
-- <a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a><p>
-- <a href="{{ 'help/colors/' | relative_url }}">Colors</a><p>
+- <a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a>
+- <a href="{{ 'help/colors/' | relative_url }}">Site Color Schemes (Light/Dark)</a>
+- <a href="{{ 'help/Monster-Compendium' | relative_url }}">Monster Compendium</a>
