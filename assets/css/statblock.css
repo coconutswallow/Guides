@@ -37,6 +37,48 @@
   --statblock-header-text: #1a1a1a;
 }
 
+/* ============================================
+   STAT BLOCK TABLE FIXES
+   Add these rules to your style.css to fix the column highlighting
+   ============================================ */
+
+/* Remove the special background highlighting from MOD/SAVE columns in stat blocks */
+/* This overrides the existing dark mode rules that apply rgba backgrounds */
+
+/* Light Mode - Remove any special styling */
+.monster-page blockquote table td:nth-child(3),
+.monster-page blockquote table td:nth-child(4),
+.monster-page blockquote table td:nth-child(7),
+.monster-page blockquote table td:nth-child(8),
+.monster-page blockquote table td:nth-child(11),
+.monster-page blockquote table td:nth-child(12),
+blockquote.stat-block table td:nth-child(3),
+blockquote.stat-block table td:nth-child(4),
+blockquote.stat-block table td:nth-child(7),
+blockquote.stat-block table td:nth-child(8),
+blockquote.stat-block table td:nth-child(11),
+blockquote.stat-block table td:nth-child(12) {
+  background: inherit !important; /* Use default table cell background */
+}
+
+/* Dark Mode - Remove special background highlighting */
+[data-theme="dark"] .monster-page blockquote table td:nth-child(3),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(4),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(7),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(8),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(11),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(12),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(3),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(4),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(7),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(8),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(11),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(12) {
+  background: inherit !important; /* Use default table cell background */
+}
+
+
+
 /* ============================================ */
 /* MONSTER COMPENDIUM PAGE BACKGROUND */
 /* ============================================ */
