@@ -4,22 +4,6 @@
 /* ============================================================= */
 
 /* ============================================ */
-/* CSS VARIABLES FOR SEARCH */
-/* ============================================ */
-
-:root {
-  /* Light mode search colors */
-  --search-results-shadow: rgba(0, 0, 0, 0.1);
-  --search-link-hover-bg: rgba(88, 24, 13, 0.05);
-}
-
-[data-theme="dark"] {
-  /* Dark mode search colors */
-  --search-results-shadow: rgba(0, 0, 0, 0.4);
-  --search-link-hover-bg: rgba(232, 197, 160, 0.08);
-}
-
-/* ============================================ */
 /* SEARCH INPUT BOX */
 /* ============================================ */
 

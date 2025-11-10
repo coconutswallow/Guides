@@ -1,25 +1,3 @@
-/* ============================================
-   HOME PAGE STYLES
-   Specific styles for the index/homepage
-   
-   Uses CSS variables from style.css for consistency
-   ============================================ */
-
-/* ============================================
-   HOME PAGE CSS VARIABLES
-   ============================================ */
-
-:root {
-  /* Home page specific colors (light mode) */
-  --color-hero-title: #2c2c2c;          /* Dark gray for hero title */
-  --color-card-button-text: #FDF1DC;    /* Cream text on buttons */
-}
-
-[data-theme="dark"] {
-  /* Home page specific colors (dark mode) */
-  --color-hero-title: #E8DCC8;          /* Light cream for hero title */
-  --color-card-button-text: #1a1a1a;    /* Dark text on buttons */
-}
 
 /* ============================================
    HERO SECTION
@@ -37,7 +15,7 @@
 
 .home-hero h1 {
   font-family: var(--font-header);
-  color: var(--color-hero-title);
+  color: var(--color-text);
   font-size: 2.5em;
   margin: 0 0 0.5em 0;
   text-transform: uppercase;
@@ -145,7 +123,7 @@
   display: inline-block;
   padding: 0.75em 1.5em;
   background: var(--color-primary);
-  color: var(--color-card-button-text);
+  color: var(--color-btn-text);
   text-decoration: none;
   border-radius: var(--border-radius);
   font-family: var(--font-header);

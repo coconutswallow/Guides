@@ -5,37 +5,6 @@
 /* Uses CSS variables from style.css for consistency */
 /* ============================================ */
 
-/* ============================================ */
-/* CSS VARIABLES FOR STAT BLOCKS */
-/* ============================================ */
-
-:root {
-  /* Light mode stat block colors */
-  --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
-  --statblock-page-bg: #ffffff;
-  --statblock-body-bg: #000000;
-  --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5ErkJggg==');
-  --statblock-modifier-bg: #dad1ca;
-  --statblock-box-shadow: rgba(0, 0, 0, 0.25);
-  --statblock-card-shadow: rgba(0, 0, 0, 0.2);
-  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.3);
-  --statblock-image-shadow: rgba(0, 0, 0, 0.2);
-  --statblock-header-text: #FDF1DC;
-}
-
-[data-theme="dark"] {
-  /* Dark mode stat block colors */
-  --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
-  --statblock-page-bg: #0a0a0a;
-  --statblock-body-bg: #000000;
-  --statblock-texture: none;
-  --statblock-modifier-bg: rgba(90, 74, 58, 0.3);
-  --statblock-box-shadow: rgba(0, 0, 0, 0.5);
-  --statblock-card-shadow: rgba(0, 0, 0, 0.4);
-  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.6);
-  --statblock-image-shadow: rgba(0, 0, 0, 0.4);
-  --statblock-header-text: #1a1a1a;
-}
 
 /* ============================================ */
 /* MONSTER COMPENDIUM PAGE BACKGROUND */
@@ -344,58 +313,6 @@ blockquote.stat-block hr {
   border-bottom: none;
   width: calc(100% - 16px);
   transition: color 0.3s ease, border-color 0.3s ease;
-}
-
-/* ============================================ */
-/* EXPORT BUTTON */
-/* ============================================ */
-
-/* Container for the JSON export button */
-.export-button-container {
-  text-align: right;
-  margin: 1em 0 1.5em 0;
-}
-
-/* The export button itself - uses standard site button styling */
-.export-json-button {
-  display: inline-block;
-  padding: 0.75em 1.5em;
-  background: var(--color-primary);
-  color: var(--color-bg-light);
-  text-decoration: none;
-  border-radius: var(--border-radius);
-  font-family: var(--font-header);
-  font-size: 0.9em;
-  text-transform: uppercase;
-  text-align: center;
-  transition: all 0.2s;
-  cursor: pointer;
-  border: none;
-  letter-spacing: 0.5px;
-  font-weight: bold;
-}
-
-/* Button hover effect */
-.export-json-button:hover {
-  background: var(--color-secondary);
-  color: var(--color-bg-light);
-  text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* Button press effect */
-.export-json-button:active {
-  transform: translateY(0);
-}
-
-/* Dark mode button text adjustment */
-[data-theme="dark"] .export-json-button {
-  color: var(--color-btn-text);
-}
-
-[data-theme="dark"] .export-json-button:hover {
-  color: var(--color-btn-text);
 }
 
 /* ============================================ */

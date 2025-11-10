@@ -35,6 +35,7 @@
   --color-border: #D4C4B0;         /* Tan border */
   --color-link: #822000;           /* Rust - links */
   --color-link-hover: #D4C4B0;     /* Cream - link hover */
+  --color-btn-text: #FDF1DC;        /* Cream text for buttons */
   
   /* Light mode specific UI colors */
   --color-table-hover: #F0E0C8;    /* Table row hover */
@@ -54,6 +55,10 @@
   --color-doc-meta-border: #ddd;
   --color-doc-body: #2c2c2c;
   --color-blockquote: #5a3a2a;
+  --color-hero-title: #2c2c2c;          /* Dark gray for hero title */
+  --color-card-button-text: #FDF1DC;    /* Cream text on buttons */
+  --search-results-shadow: rgba(0, 0, 0, 0.1);
+  --search-link-hover-bg: rgba(88, 24, 13, 0.05);
 
   
   --color-role-badge-bg: #333333;   /* Role badge background (light mode) */
@@ -68,6 +73,37 @@
   --color-alert-danger-border: #e74c3c;
   --color-alert-success-bg: #d4edda;
   --color-alert-success-border: #27ae60;
+
+    /* Light mode generator colors */
+  --generator-intro-bg-start: #5b0f00;
+  --generator-intro-bg-end: #8b1a0f;
+  --generator-toggle-active-bg: #58180D;
+  --generator-toggle-active-text: #FDF1DC;
+  --generator-input-focus-shadow: rgba(88, 24, 13, 0.1);
+  --generator-table-header-bg: rgba(88, 24, 13, 0.05);
+  --generator-remove-btn-bg: #c00;
+  --generator-remove-btn-hover: #a00;
+  --generator-markdown-bg: #1e1e1e;
+  --generator-markdown-text: #d4d4d4;
+  --generator-placeholder-text: #999;
+  --generator-error-bg: #fee;
+  --generator-error-border: #c00;
+  --generator-error-text: #c00;
+  --generator-success-bg: #efe;
+  --generator-success-border: #0a0;
+  --generator-success-text: #0a0;
+
+    /* Light mode stat block colors */
+  --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
+  --statblock-page-bg: #ffffff;
+  --statblock-body-bg: #000000;
+  --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5ErkJggg==');
+  --statblock-modifier-bg: #dad1ca;
+  --statblock-box-shadow: rgba(0, 0, 0, 0.25);
+  --statblock-card-shadow: rgba(0, 0, 0, 0.2);
+  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.3);
+  --statblock-image-shadow: rgba(0, 0, 0, 0.2);
+  --statblock-header-text: #FDF1DC;
 
   
   /* Fonts */
@@ -123,6 +159,41 @@
   --color-table-hover: rgba(212, 165, 116, 0.08); /* Subtle table row hover */
   --color-sidebar-bg: #000000;      /* Pure black sidebar background */
   --color-btn-text: #1a1a1a;        /* Dark text for buttons - NEW! */
+  --color-hero-title: #E8DCC8;          /* Light cream for hero title */
+  --color-card-button-text: #1a1a1a;    /* Dark text on buttons */
+  --search-results-shadow: rgba(0, 0, 0, 0.4);
+  --search-link-hover-bg: rgba(232, 197, 160, 0.08);
+
+  /* Dark mode generator colors */
+  --generator-intro-bg-start: #0a0a0a;
+  --generator-intro-bg-end: #1a1410;
+  --generator-toggle-active-bg: #D4A574;
+  --generator-toggle-active-text: #1a1a1a;
+  --generator-input-focus-shadow: rgba(212, 165, 116, 0.2);
+  --generator-table-header-bg: rgba(212, 165, 116, 0.08);
+  --generator-remove-btn-bg: #c00;
+  --generator-remove-btn-hover: #a00;
+  --generator-markdown-bg: #0a0a0a;
+  --generator-markdown-text: #E8DCC8;
+  --generator-placeholder-text: #5a5a5a;
+  --generator-error-bg: rgba(231, 76, 60, 0.15);
+  --generator-error-border: #e74c3c;
+  --generator-error-text: #e74c3c;
+  --generator-success-bg: rgba(39, 174, 96, 0.15);
+  --generator-success-border: #27ae60;
+  --generator-success-text: #27ae60;
+
+    /* Dark mode stat block colors */
+  --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
+  --statblock-page-bg: #0a0a0a;
+  --statblock-body-bg: #000000;
+  --statblock-texture: none;
+  --statblock-modifier-bg: rgba(90, 74, 58, 0.3);
+  --statblock-box-shadow: rgba(0, 0, 0, 0.5);
+  --statblock-card-shadow: rgba(0, 0, 0, 0.4);
+  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.6);
+  --statblock-image-shadow: rgba(0, 0, 0, 0.4);
+  --statblock-header-text: #1a1a1a;
   
   /* Alert colors (dark mode) */
   --color-alert-info-bg: rgba(52, 152, 219, 0.12);
@@ -211,7 +282,7 @@ hr {
 /* Buttons */
 .button, .btn {
   background: var(--color-primary);
-  color: var(--color-bg-light);
+  color: var(--color-btn-text);
   border-color: var(--color-border);
 }
 
