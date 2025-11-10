@@ -7,9 +7,9 @@ order: 1
 
 ### For Authors:
 
-<p><a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a></p>
+- <a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a></p>
 
 ### For Engineers
 
-<p><a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a><p>
-<p><a href="{{ 'help/colors/' | relative_url }}">Colors</a><p>
+- <a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a><p>
+- <a href="{{ 'help/colors/' | relative_url }}">Colors</a><p>

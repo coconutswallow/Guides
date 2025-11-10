@@ -786,6 +786,7 @@ tbody tr:hover {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   text-align: center;
+  gap: 1rem;
 }
 
 .site-title {
