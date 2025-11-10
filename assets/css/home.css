@@ -5,50 +5,43 @@
    ============================================ */
 
 /* ============================================
-   DARK MODE OVERRIDES FOR HOME PAGE
+   HOME PAGE CSS VARIABLES
    ============================================ */
 
-/* Ensure proper text color in dark mode */
-[data-theme="dark"] .home-hero h1,
-[data-theme="dark"] .home-section h2,
-[data-theme="dark"] .feature-card h3 {
-  color: var(--color-primary);
+:root {
+  /* Home page specific colors (light mode) */
+  --color-hero-title: #2c2c2c;          /* Dark gray for hero title */
+  --color-card-button-text: #FDF1DC;    /* Cream text on buttons */
 }
 
-[data-theme="dark"] .hero-description,
-[data-theme="dark"] .section-description,
-[data-theme="dark"] .feature-card p,
-[data-theme="dark"] .home-credits p {
-  color: var(--color-text);
+[data-theme="dark"] {
+  /* Home page specific colors (dark mode) */
+  --color-hero-title: #E8DCC8;          /* Light cream for hero title */
+  --color-card-button-text: #1a1a1a;    /* Dark text on buttons */
 }
 
-[data-theme="dark"] .card-button {
-  background: var(--color-primary);
-  color: var(--color-btn-text);
-}
+/* ============================================
+   HERO SECTION
+   ============================================ */
 
-[data-theme="dark"] .card-button:hover {
-  background: var(--color-secondary);
-  color: var(--color-nav-hover);
-}
-
-/* Hero Section */
 .home-hero {
   background: var(--color-bg-light);
   border: 3px solid var(--color-border);
-  border-radius: 0px;
+  border-radius: var(--border-radius);
   padding: 3em 2em;
   margin: 2em 0 3em 0;
   text-align: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .home-hero h1 {
   font-family: var(--font-header);
-  color: var(--color-text);
+  color: var(--color-hero-title);
   font-size: 2.5em;
   margin: 0 0 0.5em 0;
   text-transform: uppercase;
   letter-spacing: 1px;
+  transition: color 0.3s ease;
 }
 
 .hero-description {
@@ -58,16 +51,20 @@
   line-height: 1.6;
   max-width: 900px;
   margin: 0 auto;
+  transition: color 0.3s ease;
 }
 
-/* Home Sections */
+/* ============================================
+   HOME SECTIONS
+   ============================================ */
+
 .home-section {
   margin: 4em 0;
 }
 
 .home-section h2 {
   font-family: var(--font-header);
-  color: var(--color-text);
+  color: var(--color-primary);
   font-size: 2em;
   margin-bottom: 0.5em;
   display: flex;
@@ -75,6 +72,7 @@
   gap: 0.5em;
   border-bottom: 3px solid var(--color-border);
   padding-bottom: 0.3em;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .section-icon {
@@ -87,9 +85,13 @@
   font-size: 1.05em;
   line-height: 1.6;
   margin-bottom: 2em;
+  transition: color 0.3s ease;
 }
 
-/* Card Grid */
+/* ============================================
+   CARD GRID
+   ============================================ */
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -97,13 +99,16 @@
   margin-top: 2em;
 }
 
-/* Feature Cards */
+/* ============================================
+   FEATURE CARDS
+   ============================================ */
+
 .feature-card {
   background: var(--color-bg-light);
   border: 2px solid var(--color-border);
-  border-radius: 0px;
+  border-radius: var(--border-radius);
   padding: 2em;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease, border-color 0.3s ease;
   display: flex;
   flex-direction: column;
 }
@@ -115,10 +120,11 @@
 
 .feature-card h3 {
   font-family: var(--font-header);
-  color: var(--color-text);
+  color: var(--color-primary);
   font-size: 1.4em;
   margin: 0 0 0.5em 0;
   text-transform: uppercase;
+  transition: color 0.3s ease;
 }
 
 .feature-card p {
@@ -127,45 +133,56 @@
   line-height: 1.5;
   flex-grow: 1;
   margin-bottom: 1.5em;
+  transition: color 0.3s ease;
 }
 
-/* Card Buttons */
+/* ============================================
+   CARD BUTTONS
+   ============================================ */
+
 .card-button {
   display: inline-block;
   padding: 0.75em 1.5em;
   background: var(--color-primary);
-  color: var(--color-bg-light);
+  color: var(--color-card-button-text);
   text-decoration: none;
-  border-radius: 0px;
+  border-radius: var(--border-radius);
   font-family: var(--font-header);
   font-size: 0.9em;
   text-transform: uppercase;
   text-align: center;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
   cursor: pointer;
   margin-top: auto;
+  border: none;
 }
 
 .card-button:hover {
   background: var(--color-secondary);
-  color: var(--color-bg-light);
+  color: var(--color-card-button-text);
+  text-decoration: none;
 }
 
-/* Home Credits (if needed) */
+/* ============================================
+   HOME CREDITS SECTION
+   ============================================ */
+
 .home-credits {
   background: var(--color-bg-light);
   border: 2px solid var(--color-border);
-  border-radius: 0px;
+  border-radius: var(--border-radius);
   padding: 2em;
   margin: 4em 0 2em 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .home-credits h2 {
   font-family: var(--font-header);
-  color: var(--color-text);
+  color: var(--color-primary);
   font-size: 1.5em;
   margin: 0 0 1em 0;
   text-transform: uppercase;
+  transition: color 0.3s ease;
 }
 
 .home-credits p {
@@ -173,6 +190,7 @@
   color: var(--color-text);
   line-height: 1.6;
   margin-bottom: 1em;
+  transition: color 0.3s ease;
 }
 
 .home-credits p:last-child {
@@ -181,6 +199,7 @@
 
 .home-credits strong {
   font-weight: 700;
+  color: var(--color-text);
 }
 
 /* ============================================

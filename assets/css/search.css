@@ -2,119 +2,30 @@
 /* SEARCH RESULTS STYLING (assets/css/search.css)                */
 /* ============================================================= */
 
-/* Dark mode search input */
-[data-theme="dark"] #search-input {
-  background: var(--color-bg-medium);
-  border-color: var(--color-border);
-  color: var(--color-text);
+/* ============================================ */
+/* CSS VARIABLES FOR SEARCH */
+/* ============================================ */
+
+:root {
+  /* Light mode search colors */
+  --search-results-shadow: rgba(0, 0, 0, 0.1);
+  --search-link-hover-bg: rgba(88, 24, 13, 0.05);
 }
 
-/* Dark mode search results */
-[data-theme="dark"] #search-results {
-  background: var(--color-bg-light);
-  border-color: var(--color-border);
+[data-theme="dark"] {
+  /* Dark mode search colors */
+  --search-results-shadow: rgba(0, 0, 0, 0.4);
+  --search-link-hover-bg: rgba(232, 197, 160, 0.08);
 }
 
-[data-theme="dark"] #search-results li {
-  border-bottom-color: var(--color-border);
-}
+/* ============================================ */
+/* SEARCH INPUT BOX */
+/* ============================================ */
 
-[data-theme="dark"] #search-results li.search-header {
-  background-color: var(--color-bg-medium);
-  color: var(--color-primary);
-  border-bottom-color: var(--color-border);
-}
-
-[data-theme="dark"] #search-results li a {
-  color: var(--color-text);
-}
-
-[data-theme="dark"] #search-results li a:hover {
-  background-color: rgba(232, 197, 160, 0.08);
-}
-
-[data-theme="dark"] #search-results li h4 {
-  color: var(--color-primary);
-}
-
-[data-theme="dark"] #search-results li p {
-  color: var(--color-text);
-}
-
-/* The main container for search results */
-#search-results {
-  list-style: none; /* Remove bullet points */
-  padding: 0;
-  
-  /* Use site colors for a consistent look */
-  background: var(--color-bg-light); /* Light beige background */
-  border: 1px solid var(--color-border); /* Dark reddish-brown border */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
-  margin: 15px auto; 
-  max-width: 90%; 
-  z-index: 100; 
-  display: none; /* KEY: HIDE BY DEFAULT */
-}
-
-/* Show the list when JavaScript adds the 'active' class */
-#search-results.active {
-  display: block; 
-}
-
-/* Style for individual result items */
-#search-results li {
-  padding: 10px 15px;
-  border-bottom: 1px solid var(--color-bg-medium); /* Use a softer internal divider */
-}
-
-#search-results li:last-child {
-  border-bottom: none;
-}
-
-/* Header (Results Count) Styling */
-#search-results li.search-header {
-  /* Use a slightly darker background to distinguish the header */
-  background-color: var(--color-bg-medium); 
-  font-size: 0.9em;
-  color: var(--color-primary); /* Use primary color for the header text */
-  padding: 5px 15px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-/* Anchor link container */
-#search-results li a {
-  text-decoration: none;
-  color: var(--color-text); /* Use primary text color */
-  display: block;
-  /* Add hover effect for better user feedback */
-  transition: background-color 0.2s;
-}
-
-#search-results li a:hover {
-  background-color: rgba(88, 24, 13, 0.05); /* Very slight hover effect using primary color opacity */
-}
-
-/* Result Title */
-#search-results li h4 {
-  margin: 0 0 5px 0;
-  /* Use the primary color for document titles */
-  color: var(--color-primary); 
-  font-family: 'Cinzel', serif; /* Optional: Use a title/heading font */
-}
-
-/* Content Snippet */
-#search-results li p {
-  font-size: 0.9em;
-  color: var(--color-text); /* Ensure snippets are readable */
-  margin: 0;
-}
-
-/* Search box styling */
 #search-input {
-  max-width: 300px;  /* Makes it less wide */
+  max-width: 300px;
   width: 100%;
-  height: 40px;      /* Makes it taller */
+  height: 40px;
   padding: 0.5em 1em;
   border: 2px solid var(--color-border);
   border-radius: 4px;
@@ -122,7 +33,7 @@
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 0.95em;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 #search-input:focus {
@@ -130,6 +41,96 @@
   border-color: var(--color-primary);
 }
 
+/* ============================================ */
+/* SEARCH RESULTS CONTAINER */
+/* ============================================ */
+
+/* The main container for search results */
+#search-results {
+  list-style: none;
+  padding: 0;
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 8px var(--search-results-shadow);
+  margin: 15px auto; 
+  max-width: 90%; 
+  z-index: 100; 
+  display: none; /* KEY: HIDE BY DEFAULT */
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Show the list when JavaScript adds the 'active' class */
+#search-results.active {
+  display: block; 
+}
+
+/* ============================================ */
+/* SEARCH RESULT ITEMS */
+/* ============================================ */
+
+/* Style for individual result items */
+#search-results li {
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--color-bg-medium);
+  transition: border-color 0.3s ease;
+}
+
+#search-results li:last-child {
+  border-bottom: none;
+}
+
+/* ============================================ */
+/* SEARCH HEADER (Results Count) */
+/* ============================================ */
+
+#search-results li.search-header {
+  background-color: var(--color-bg-medium);
+  font-size: 0.9em;
+  color: var(--color-primary);
+  padding: 5px 15px;
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============================================ */
+/* SEARCH RESULT LINKS */
+/* ============================================ */
+
+/* Anchor link container */
+#search-results li a {
+  text-decoration: none;
+  color: var(--color-text);
+  display: block;
+  transition: background-color 0.2s, color 0.3s ease;
+}
+
+#search-results li a:hover {
+  background-color: var(--search-link-hover-bg);
+}
+
+/* ============================================ */
+/* SEARCH RESULT CONTENT */
+/* ============================================ */
+
+/* Result Title */
+#search-results li h4 {
+  margin: 0 0 5px 0;
+  color: var(--color-primary);
+  font-family: 'Cinzel', serif;
+  transition: color 0.3s ease;
+}
+
+/* Content Snippet */
+#search-results li p {
+  font-size: 0.9em;
+  color: var(--color-text);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+/* ============================================ */
+/* RESPONSIVE DESIGN */
+/* ============================================ */
 
 /* Mobile responsive */
 @media (max-width: 768px) {

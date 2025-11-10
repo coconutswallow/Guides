@@ -19,7 +19,7 @@ Sword dragons are powerful and exceedingly rare variants of dragons, born from h
 
 ---
 
-### Customising a Sword Dragon
+### Customizing a Sword Dragon
 
 To customize a sword dragon, start with the base stat block for its age category (wyrmling, young, adult, or ancient). Then, roll once on each previous age category’s table to add traits, beginning from wyrmling up to its current age.  
 
@@ -28,7 +28,6 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 #### Sword Dragon Wyrmling Traits
 
 | d4 | Trait Name | Description |
-
 |:--:|:------------|:-------------|
 | 1 | **Alert** | The dragon has advantage on initiative rolls, and neither it nor its allies within 30 ft. can be surprised. |
 | 2 | **Dominating** | The dragon can cast *command* and *dominate beast* at will via Innate Spellcasting. |
@@ -38,7 +37,6 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 #### Young Sword Dragon Traits
 
 | d4 | Trait Name | Description |
-
 |:--:|:------------|:-------------|
 | 1 | **Baneful** | The dragon has advantage on attack rolls against a chosen kind of creature, which also has disadvantage on saving throws against the dragon’s breath weapon. |
 | 2 | **Draining** | Once per turn, the dragon deals an extra 10 (3d6) necrotic damage and gains that many temporary hit points. |
@@ -58,7 +56,6 @@ If a trait doesn’t specify a saving throw DC, use the dragon’s breath weapon
 
 | d4 | Trait Name | Description |
 |:--:|:------------|:-------------|
-
 | 1 | **Avenging** | The dragon’s attacks deal +11 (2d10) radiant damage. The dragon and its allies within 30 ft. have advantage on saving throws against spells. |
 | 2 | **Lucky** | The dragon has advantage on all saving throws and can reroll one attack roll, ability check, or save per turn (must use the new roll). |
 | 3 | **Reshaping** | The dragon gains a +3 bonus to attack and damage rolls. On its first attack each turn, it may transfer some or all of this bonus to its AC until its next turn. |
@@ -79,6 +76,8 @@ ___
 >
 > **Saving Throws** Dex +10, Con +16, Wis +12, Cha +16  
 > **Skills** Insight +11, Perception +18, Stealth +10  
+> **Damage Resistances** piercing, slashing  
+> **Damage Immunities** poison  
 > **Condition Immunities** Frightened, Paralyzed, Poisoned  
 > **Senses** Blindsight 60 ft., Darkvision 120 ft., Passive Perception 28  
 > **Languages** Common, Draconic  

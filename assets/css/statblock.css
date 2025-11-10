@@ -12,27 +12,29 @@
 :root {
   /* Light mode stat block colors */
   --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
-  --statblock-page-bg: white;
+  --statblock-page-bg: #ffffff;
+  --statblock-body-bg: #000000;
   --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5ErkJggg==');
   --statblock-modifier-bg: #dad1ca;
-  --statblock-divider: #ccc;
-  --statblock-image-credit: #666;
-  --statblock-description-bg: #ffffff;
-  --statblock-description-text: #2c2c2c;
-  --statblock-type-text: #666;
+  --statblock-box-shadow: rgba(0, 0, 0, 0.25);
+  --statblock-card-shadow: rgba(0, 0, 0, 0.2);
+  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.3);
+  --statblock-image-shadow: rgba(0, 0, 0, 0.2);
+  --statblock-header-text: #FDF1DC;
 }
 
 [data-theme="dark"] {
   /* Dark mode stat block colors */
   --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
-  --statblock-page-bg: var(--color-header-bg-start);
+  --statblock-page-bg: #0a0a0a;
+  --statblock-body-bg: #000000;
   --statblock-texture: none;
   --statblock-modifier-bg: rgba(90, 74, 58, 0.3);
-  --statblock-divider: var(--color-border);
-  --statblock-image-credit: var(--color-text-secondary);
-  --statblock-description-bg: var(--color-bg-light);
-  --statblock-description-text: var(--color-text);
-  --statblock-type-text: var(--color-text-secondary);
+  --statblock-box-shadow: rgba(0, 0, 0, 0.5);
+  --statblock-card-shadow: rgba(0, 0, 0, 0.4);
+  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.6);
+  --statblock-image-shadow: rgba(0, 0, 0, 0.4);
+  --statblock-header-text: #1a1a1a;
 }
 
 /* ============================================ */
@@ -46,7 +48,7 @@ body.monster-page {
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-color: #000000;
+  background-color: var(--statblock-body-bg);
 }
 
 /* Override page container for monster compendium */
@@ -54,9 +56,10 @@ body.monster-page {
   max-width: 1000px;
   background: var(--statblock-page-bg) var(--statblock-texture);
   padding: 20px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.25);
+  box-shadow: 0 0 15px var(--statblock-box-shadow);
   border-radius: 6px;
   margin: 20px auto;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* ============================================ */
@@ -72,11 +75,12 @@ blockquote.stat-block,
   border-radius: 8px;
   padding: 0;
   margin: 1em 0;
-  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  box-shadow: 0 0 8px var(--statblock-card-shadow);
   font-family: 'Source Sans 3', Arial, sans-serif;
   font-style: normal;
   overflow: hidden;
   page-break-inside: avoid;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* ============================================ */
@@ -88,7 +92,7 @@ blockquote.stat-block,
 blockquote.stat-block h2 {
   font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
   font-size: 1.3em;
-  color: var(--color-bg-light);
+  color: var(--statblock-header-text);
   background: var(--color-primary);
   border: none;
   margin: 0;
@@ -97,13 +101,7 @@ blockquote.stat-block h2 {
   letter-spacing: 1px;
   font-weight: 700;
   font-style: normal;
-}
-
-/* Dark mode: Invert header colors for better contrast */
-[data-theme="dark"] .monster-page blockquote h2,
-[data-theme="dark"] blockquote.stat-block h2 {
-  color: var(--color-text);
-  background: var(--color-primary);
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 /* ============================================ */
@@ -128,6 +126,7 @@ blockquote.stat-block p:first-of-type {
   margin: 8px 0 4px 0;
   font-size: 1em;
   color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 /* All paragraphs within stat blocks */
@@ -138,6 +137,7 @@ blockquote.stat-block p {
   line-height: 1.4;
   font-style: normal;
   color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 /* ============================================ */
@@ -160,6 +160,7 @@ blockquote.stat-block h3 {
   letter-spacing: 0.8px;
   font-weight: 700;
   font-style: normal;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ============================================ */
@@ -172,6 +173,7 @@ blockquote.stat-block strong {
   font-weight: 700;
   font-style: normal;
   color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 /* Italic text within stat blocks */
@@ -179,6 +181,7 @@ blockquote.stat-block strong {
 blockquote.stat-block em {
   font-style: italic;
   color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 /* Bold italic text (both tags applied) */
@@ -189,6 +192,7 @@ blockquote.stat-block em strong {
   font-weight: 700;
   font-style: italic;
   color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 /* ============================================ */
@@ -210,6 +214,7 @@ blockquote.stat-block ul li {
   line-height: 1.4;
   font-style: normal;
   color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 /* ============================================ */
@@ -241,6 +246,7 @@ blockquote.stat-block table td {
   font-family: 'Source Sans 3', Arial, sans-serif;
   font-style: normal;
   color: var(--color-text);
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 /* Table headers (MOD, SAVE labels) */
@@ -317,6 +323,7 @@ blockquote.stat-block hr {
   border: none;
   border-top: 1.5px solid var(--color-primary);
   margin: 8px 8px;
+  transition: border-color 0.3s ease;
 }
 
 /* ============================================ */
@@ -335,6 +342,7 @@ blockquote.stat-block hr {
   border-top: 1.5px solid var(--color-primary);
   border-bottom: none;
   width: calc(100% - 16px);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ============================================ */
@@ -382,11 +390,11 @@ blockquote.stat-block hr {
 
 /* Dark mode button text adjustment */
 [data-theme="dark"] .export-json-button {
-  color: var(--color-text);
+  color: var(--color-btn-text);
 }
 
 [data-theme="dark"] .export-json-button:hover {
-  color: var(--color-text);
+  color: var(--color-btn-text);
 }
 
 /* ============================================ */
@@ -397,8 +405,9 @@ blockquote.stat-block hr {
 .statblock-divider {
   border: 0;
   height: 1px;
-  background: var(--statblock-divider);
+  background: var(--color-border);
   margin: 10px 0;
+  transition: background-color 0.3s ease;
 }
 
 /* First divider on the page (optional special styling) */
@@ -423,15 +432,17 @@ blockquote.stat-block hr {
   height: auto;
   border: 5px solid var(--color-primary);
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px var(--statblock-image-shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Image credit/attribution text */
 .image-credit {
   font-size: 0.9em;
-  color: var(--statblock-image-credit);
+  color: var(--color-text-secondary);
   font-style: italic;
   margin-top: 0.5em;
+  transition: color 0.3s ease;
 }
 
 /* ============================================ */
@@ -443,13 +454,14 @@ blockquote.stat-block hr {
   font-family: var(--font-body);
   font-size: 1em;
   line-height: 1.7;
-  color: var(--statblock-description-text);
+  color: var(--color-text);
   padding: 2em 1em;
   margin-top: 2em;
-  background: var(--statblock-description-bg);
+  background: var(--color-bg-light);
   border: none;
   border-radius: 0;
   text-align: justify;
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 /* Headers within monster descriptions */
@@ -460,6 +472,7 @@ blockquote.stat-block hr {
   margin-top: 1.2em;
   margin-bottom: 0.5em;
   text-transform: uppercase;
+  transition: color 0.3s ease;
 }
 
 /* First paragraph in description (no top margin) */
@@ -490,13 +503,13 @@ blockquote.stat-block hr {
   border: 2px solid var(--color-primary);
   border-radius: 8px;
   padding: 0.5em;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Card hover effect - lift up slightly */
 .monster-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px var(--statblock-card-hover-shadow);
 }
 
 /* Monster name in card */
@@ -512,6 +525,7 @@ blockquote.stat-block hr {
 .monster-card h3 a {
   color: var(--color-primary);
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 /* Monster name link hover */
@@ -526,15 +540,17 @@ blockquote.stat-block hr {
   color: var(--color-secondary);
   margin: 0.3em 0;
   font-size: 0.95em;
+  transition: color 0.3s ease;
 }
 
 /* Monster type display (Beast, Dragon, etc.) */
 .monster-type {
   font-family: 'Source Sans 3', Arial, sans-serif;
   font-style: italic;
-  color: var(--statblock-type-text);
+  color: var(--color-text-secondary);
   margin: 0.3em 0;
   font-size: 0.9em;
+  transition: color 0.3s ease;
 }
 
 /* ============================================ */

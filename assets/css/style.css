@@ -39,7 +39,18 @@
   --color-sidebar-bg: #5b0f00;     /* Sidebar background */
   --color-sidebar-border: #C0AD6A; /* Sidebar header border */
   --color-nav-hover-light: #C0AD6A; /* Nav hover in light mode */
+  --color-table-header-text: #FDF1DC; /* Table header text in light mode */
+  --color-breadcrumb: #666;
+  --color-breadcrumb-sep: #999;
+  --color-doc-meta: #666;
+  --color-doc-meta-border: #ddd;
+  --color-doc-body: #2c2c2c;
+  --color-blockquote: #5a3a2a;
+
   
+  --color-role-badge-bg: #333333;   /* Role badge background (light mode) */
+  --color-header-overlay: rgba(0, 0, 0, 0.4);    /* Header overlay (light mode) */
+
   /* Alert colors (light mode) */
   --color-alert-info-bg: #e3f2fd;
   --color-alert-info-border: #3498db;
@@ -49,6 +60,7 @@
   --color-alert-danger-border: #e74c3c;
   --color-alert-success-bg: #d4edda;
   --color-alert-success-border: #27ae60;
+
   
   /* Fonts */
   --font-header: 'Cinzel', 'Georgia', serif;
@@ -82,6 +94,15 @@
   --color-border: #3a3a3a;         /* Dark gray border */
   --color-link: #D4A574;           /* Golden tan - links */
   --color-link-hover: #E8C5A0;     /* Light tan - link hover */
+  --color-table-header-text: #1a1a1a; /* Table header text in dark mode */
+  --color-role-badge-bg: transparent; /* Role badge background (dark mode) */
+  --color-header-overlay: rgba(0, 0, 0, 0.2);    /* Header overlay (dark mode) */
+  --color-breadcrumb: #A09080;        /* Muted tan for breadcrumbs */
+  --color-breadcrumb-sep: #5a5a5a;    /* Darker separator */
+  --color-doc-meta: #A09080;          /* Muted tan for meta info */
+  --color-doc-meta-border: #3a3a3a;   /* Dark border */
+  --color-doc-body: #E8DCC8;          /* Light cream for body text */
+  --color-blockquote: #A09080;        /* Muted tan for quotes */
   
   /* Dark mode specific UI colors */
   --color-header-bg-start: #0a0a0a; /* Nearly black (gradient start) */
@@ -677,7 +698,7 @@ th {
   text-transform: uppercase;
   font-size: 0.9em;
   letter-spacing: 0.5px;
-  color: #FDF1DC; /* Hardcoded cream - since light mode bg-light IS cream */
+  color: var(--color-table-header-text); 
 }
 
 td {
@@ -750,7 +771,7 @@ tbody tr:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--color-header-overlay);
   z-index: 1;
   pointer-events: none;
 }
@@ -1174,22 +1195,22 @@ tbody tr:hover {
 
 .alert-info, .notice-info {
   border-left-color: #3498db;
-  background: #e3f2fd;
+  background: var(--color-alert-info-bg);
 }
 
 .alert-warning, .notice-warning {
-  border-left-color: #f39c12;
-  background: #fff3cd;
+  border-left-color: var(--color-alert-warning-border);
+  background: var(--color-alert-warning-bg); 
 }
 
 .alert-danger, .notice-danger {
-  border-left-color: #e74c3c;
-  background: #f8d7da;
+  border-left-color: var(--color-alert-danger-border);
+  background: var(--color-alert-danger-bg);
 }
 
 .alert-success, .notice-success {
-  border-left-color: #27ae60;
-  background: #d4edda;
+  border-left-color: var(--color-alert-success-border);
+  background: var(--color-alert-success-bg);
 }
 
 /* ============================================
