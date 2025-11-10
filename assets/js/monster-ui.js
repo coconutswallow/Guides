@@ -347,6 +347,47 @@ const MonsterUI = (function() {
     }
 
     /**
+     * Simple markdown parser for description
+     */
+    function parseMarkdown(text) {
+        if (!text) return '';
+        
+        let html = text;
+        
+        // Headers (## Header -> <h4>Header</h4>, ### -> <h5>, etc.)
+        html = html.replace(/^### (.+)$/gm, '<h5>$1</h5>');
+        html = html.replace(/^## (.+)$/gm, '<h4>$1</h4>');
+        
+        // Bold and italic
+        html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        
+        // Split into paragraphs and wrap in <p> tags
+        const paragraphs = html.split(/\n\n+/);
+        html = paragraphs.map(p => {
+            p = p.trim();
+            if (!p) return '';
+            // Don't wrap headers in <p> tags
+            if (p.startsWith('<h')) return p;
+            // Don't wrap list items
+            if (p.startsWith('-') || p.startsWith('*')) {
+                const items = p.split(/\n/).map(line => {
+                    line = line.trim();
+                    if (line.startsWith('-') || line.startsWith('*')) {
+                        return `<li>${line.substring(1).trim()}</li>`;
+                    }
+                    return line;
+                }).join('');
+                return `<ul>${items}</ul>`;
+            }
+            return `<p>${p}</p>`;
+        }).join('');
+        
+        return html;
+    }
+
+    /**
      * Render visual stat block preview
      */
     function renderVisualStatBlock(state, abilities) {
@@ -355,7 +396,6 @@ const MonsterUI = (function() {
         }
 
         const pb = MonsterCalculator.getProficiencyBonus(state.cr);
-        const descriptionParagraphs = state.description.trim().split(/\n/).filter(p => p.trim());
 
         // Helper for optional stats
         const optionalStat = (label, value) => value ? `<p><strong>${label}</strong> ${escapeHtml(value)}</p>` : '';
@@ -376,16 +416,19 @@ const MonsterUI = (function() {
             }
         });
 
+        // Parse description as markdown and render outside the stat block
+        const descriptionHtml = state.description.trim() ? parseMarkdown(state.description.trim()) : '';
+
         return `
+            ${descriptionHtml ? `
+                <div class="monster-description">
+                    ${descriptionHtml}
+                </div>
+                <hr class="statblock-divider">
+            ` : ''}
             <blockquote class="stat-block statblock-visual">
                 <h2>${escapeHtml(state.title)}</h2>
                 <p><em>${escapeHtml(state.size)} ${escapeHtml(state.type.toLowerCase())}, ${escapeHtml(state.alignment.toLowerCase())}</em></p>
-                
-                ${descriptionParagraphs.length > 0 ? `
-                    <div class="monster-description-preview">
-                        ${descriptionParagraphs.map(p => `<p>${escapeHtml(p)}</p>`).join('')}
-                    </div>
-                ` : ''}
 
                 <p><strong>Armor Class</strong> ${escapeHtml(state.ac || '—')}</p>
                 <p><strong>Hit Points</strong> ${escapeHtml(state.hp || '—')}</p>

@@ -347,6 +347,72 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   box-shadow: 0 0 0 2px var(--generator-input-focus-shadow);
 }
 
+
+/* ============================================ */
+/* VISUAL STAT BLOCK PREVIEW */
+/* ============================================ */
+
+/* Monster description above stat block */
+.monster-description {
+  background: var(--color-bg-light);
+  padding: 1.5em;
+  margin-bottom: 1em;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  line-height: 1.7;
+  transition: background-color 0.3s ease;
+}
+
+.monster-description h4 {
+  font-family: var(--font-header);
+  color: var(--color-primary);
+  font-size: 1.4em;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.monster-description h5 {
+  font-family: var(--font-header);
+  color: var(--color-primary);
+  font-size: 1.2em;
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+  transition: color 0.3s ease;
+}
+
+.monster-description p {
+  margin-bottom: 1em;
+  color: var(--color-text);
+  transition: color 0.3s ease;
+}
+
+.monster-description p:first-child {
+  margin-top: 0;
+}
+
+.monster-description ul {
+  margin: 1em 0;
+  padding-left: 2em;
+  list-style-type: disc;
+}
+
+.monster-description li {
+  margin-bottom: 0.5em;
+  color: var(--color-text);
+  transition: color 0.3s ease;
+}
+
+.statblock-visual {
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 1.5em;
+  font-family: var(--font-body);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
 /* ============================================ */
 /* ABILITY SCORE TABLE */
 /* ============================================ */
