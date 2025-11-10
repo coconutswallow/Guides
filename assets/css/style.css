@@ -1,7 +1,15 @@
 /* ============================================
    Hawthorne Guild Guide - Main Stylesheet
    Site-wide styles for all pages
+   
+   Other css files:
+    - assets/css/search.css    : Styles specific to search results and input
+    - assets/css/home.css      : Styles specific to the homepage layout
+    - assets/css/statblock.css : Styles specific to monster stat blocks
+    - assets/css/generator.css : Styles specific to the monster stat block generator page
    ============================================ */
+
+
 
 /* ============================================
    FONT IMPORTS
