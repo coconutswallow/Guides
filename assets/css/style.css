@@ -881,6 +881,17 @@ tbody tr:hover {
   color: var(--color-header-text);
 }
 
+.site-title a.home-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Ensures the color doesn't change on hover */
+.site-title a.home-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
 
 /* ============================================
    HAMBURGER MENU BUTTON
