@@ -173,7 +173,10 @@ const MonsterController = (function() {
         // Regular input fields
         const inputs = formView.querySelectorAll('input:not([data-field]), select, textarea:not([data-field])');
         inputs.forEach(input => {
-            const eventType = (input.tagName === 'SELECT') ? 'change' : 'input';
+            // For ability scores and save overrides, use 'change' and 'blur' to avoid premature calculation
+            // For other fields, use 'input' for immediate updates
+            const isDynamicField = dynamicFields.includes(input.id);
+            const eventType = isDynamicField ? 'change' : (input.tagName === 'SELECT' ? 'change' : 'input');
             
             input.addEventListener(eventType, () => {
                 if (input.type === 'number') {
@@ -183,10 +186,18 @@ const MonsterController = (function() {
                 }
 
                 // Re-render if it's a dynamic field that affects calculations
-                if (dynamicFields.includes(input.id)) {
+                if (isDynamicField) {
                     render('form');
                 }
             });
+
+            // Also add blur event for number inputs to ensure final value is captured
+            if (input.type === 'number' && isDynamicField) {
+                input.addEventListener('blur', () => {
+                    state[input.id] = parseInt(input.value) || 10;
+                    render('form');
+                });
+            }
         });
 
         // Item list inputs (name/description fields)

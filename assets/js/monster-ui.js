@@ -366,7 +366,7 @@ const MonsterUI = (function() {
             return text.split(/\n/).map(p => `<p>${escapeHtml(p)}</p>`).join('');
         };
 
-        // Get saving throw overrides for display
+        // Get saving throw overrides for display in the "Saving Throws" line
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const saveOverrides = [];
         abilityKeys.forEach(key => {
@@ -395,21 +395,21 @@ const MonsterUI = (function() {
                     <table>
                         <thead>
                             <tr>
-                                <th></th><th></th><th>MOD</th><th>SAVE</th>
-                                <th></th><th></th><th>MOD</th><th>SAVE</th>
-                                <th></th><th></th><th>MOD</th><th>SAVE</th>
+                                <th></th><th></th><th>MOD</th>
+                                <th></th><th></th><th>MOD</th>
+                                <th></th><th></th><th>MOD</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Str</strong></td><td>${abilities.str.score}</td><td>${abilities.str.formattedMod}</td><td>${abilities.str.save}</td>
-                                <td><strong>Dex</strong></td><td>${abilities.dex.score}</td><td>${abilities.dex.formattedMod}</td><td>${abilities.dex.save}</td>
-                                <td><strong>Con</strong></td><td>${abilities.con.score}</td><td>${abilities.con.formattedMod}</td><td>${abilities.con.save}</td>
+                                <td><strong>Str</strong></td><td>${abilities.str.score}</td><td>${abilities.str.formattedMod}</td>
+                                <td><strong>Dex</strong></td><td>${abilities.dex.score}</td><td>${abilities.dex.formattedMod}</td>
+                                <td><strong>Con</strong></td><td>${abilities.con.score}</td><td>${abilities.con.formattedMod}</td>
                             </tr>
                             <tr>
-                                <td><strong>Int</strong></td><td>${abilities.int.score}</td><td>${abilities.int.formattedMod}</td><td>${abilities.int.save}</td>
-                                <td><strong>Wis</strong></td><td>${abilities.wis.score}</td><td>${abilities.wis.formattedMod}</td><td>${abilities.wis.save}</td>
-                                <td><strong>Cha</strong></td><td>${abilities.cha.score}</td><td>${abilities.cha.formattedMod}</td><td>${abilities.cha.save}</td>
+                                <td><strong>Int</strong></td><td>${abilities.int.score}</td><td>${abilities.int.formattedMod}</td>
+                                <td><strong>Wis</strong></td><td>${abilities.wis.score}</td><td>${abilities.wis.formattedMod}</td>
+                                <td><strong>Cha</strong></td><td>${abilities.cha.score}</td><td>${abilities.cha.formattedMod}</td>
                             </tr>
                         </tbody>
                     </table>
