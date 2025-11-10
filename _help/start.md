@@ -12,3 +12,4 @@ order: 1
 ### For Engineers
 
 <p><a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a><p>
+<p><a href="{{ 'help/colors/' | relative_url }}">Colors</a><p>
