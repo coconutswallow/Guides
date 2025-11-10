@@ -49,12 +49,12 @@ If you ever have a concern that another player is violating the Code of Conduct 
 ### Disciplinary Actions
 In the event a server member repeatedly or intentionally violates the Code of Conduct above, the PR team may open an investigation, contacting affected parties in order to determine a course of action. The following potential disciplinary outcomes are listed in order of severity.
 
-**Verbal Counseling**. The PR team discusses and mediates the matter with affected parties in order to resolve the issue and provides steps to avoid repeat incidents without additional disciplinary measures.
+| Action | Description |
+|:------|:---------------------------------------------------------------------------------|
+| **Verbal Counseling** | The PR team discusses and mediates the matter with affected parties in order to resolve the issue and provides steps to avoid repeat incidents without additional disciplinary measures. |
+| **Timeout** | A Discord timeout up to 1 week, due to disruptive behavior or Code of Conduct violation. |
+| **Warning** | A warning period up to 6 months, due to Code of Conduct breach and/or failure in mediation or verbal counseling to achieve desired results. This warning can be accompanied other disciplinary actions, with further incidents prompting discussion and vote for removal of DM or Staff tags, extension of the warning period, Suspension, Removal from the Server, or other disciplinary actions. |
+| **Suspension** | A server ban up to 180 days, which can be coupled with a Warning consecutively afterward. |
+| **Removal from the Server** | A server ban lasting at least 180 days. |
 
-**Timeout**. A Discord timeout up to 1 week, due to disruptive behavior or Code of Conduct violation.
-
-**Warning**. A warning period up to 6 months, due to Code of Conduct breach and/or failure in mediation or verbal counseling to achieve desired results. This warning can be accompanied other disciplinary actions, with further incidents prompting discussion and vote for removal of DM or Staff tags, extension of the warning period, Suspension, Removal from the Server, or other disciplinary actions.
-
-**Suspension**. A server ban up to 180 days, which can be coupled with a Warning consecutively afterward.
-
-**Removal from the Server**. A server ban lasting at least 180 days.
+(made into a table temporarily to demonstrate formatting)
