@@ -29,7 +29,7 @@
   --color-secondary: #822000;      /* Rich rust - accents, hovers */
   --color-bg-light: #FDF1DC;       /* Cream - cards, tables */
   --color-bg-medium: #F5E6D3;      /* Light tan - alternating rows */
-  --color-bg-page: #FFFEF9;        /* Off-white - page background */
+  --color-bg-page: #fffef9fa;        /* Off-white - page background */
   --color-text: #2c2c2c;           /* Dark gray - body text */
   --color-text-secondary: #5a5a5a; /* Medium gray - meta text */
   --color-border: #D4C4B0;         /* Tan border */
@@ -1034,6 +1034,7 @@ tbody tr:hover {
   text-decoration: none;
   transition: background-color 0.2s, padding-left 0.2s, color 0.2s;
   font-weight: 400;
+  font-size: 1em; /* ADD THIS LINE */
 }
 
 /* Dark mode navigation links */
@@ -1071,6 +1072,8 @@ tbody tr:hover {
   align-items: center;
   gap: 8px;
   transition: background-color 0.2s;
+  font-family: inherit; /* ADD THIS LINE */
+  font-weight: 400;   /* ADD THIS LINE */
 }
 
 .nav-section-toggle:hover {
