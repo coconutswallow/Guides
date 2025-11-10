@@ -17,8 +17,12 @@
                 <span class="bar"></span>
                 <span class="bar"></span>
             </button>
-            <h1 class="site-title"><img src="{{ '/assets/thumbnails/Guild-icon.png' | relative_url }}" class="guild-icon">
-                {{ site.title | default: "Hawthorne Guild" }}</h1>
+            <h1 class="site-title">
+                <a href="{{ '/' | relative_url }}" class="home-link">
+                    <img src="{{ '/assets/thumbnails/Guild-icon.png' | relative_url }}" class="guild-icon">
+                    {{ site.title | default: "Hawthorne Guild" }}
+                </a>
+            </h1>
             
             <div class="header-search-container">
                 <input type="text" id="search-input" placeholder="Search..." aria-label="Search documents">
