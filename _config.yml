@@ -39,33 +39,33 @@ collections:
 # (new files get added to the side-nav menu dynamically).
 # ========================================================
 navigation:
-  - title: "🏠 Home"
+  - title: "Home"
     url: "/"
     
-  - title: "📜 Rules & Roles"
+  - title: "Rules & Roles"
     collection: rules
 
       
-  - title: "⚔️ Player's Guide"
+  - title: "Player's Guide"
     collection: players_guide
 
 
 # =========================================================
 #
-#  - title: "✨ Arcana"
+#  - title: "Arcana"
 #    collection: arcana
 # =========================================================
 
-  - title: "✨ Arcana"
+  - title: "Arcana"
     url: "https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view"
 
 # =========================================================
 # DM's Guide Section - currently commented out to use PDF instead         
-#  - title: "🎲 DM's Guide"
+#  - title: "DM's Guide"
 #    collection: dms_guide
 # =========================================================
 
-  - title: "🎲 DM's Guide"
+  - title: "DM's Guide"
     url: "https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing"
 
   # =========================================================
@@ -75,7 +75,7 @@ navigation:
   # Repeat this pattern for any future sections that need dynamic content generation.
   # =========================================================
 
-  - title: "📖 Monster Compendium"
+  - title: "Monster Compendium"
     sections:
       - title: "Monster Compendium"
         url: /monster-compendium/
@@ -84,7 +84,7 @@ navigation:
       - title: "Statblock Builder"
         url: /monster-compendium/generator/
         
-  - title: "❓ FAQ"
+  - title: "FAQ"
     collection: faq
 
   # ========================================================  
