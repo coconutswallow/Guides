@@ -245,7 +245,7 @@ blockquote.stat-block table td {
   min-width: 0;
   font-family: 'Source Sans 3', Arial, sans-serif;
   font-style: normal;
-  color: var(--color-bg-light);
+  color: var(--color-text);
   transition: color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -253,6 +253,7 @@ blockquote.stat-block table td {
 .monster-page blockquote table th,
 blockquote.stat-block table th {
   font-weight: 700;
+  color: var(--color-bg-light);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 0.9em;
