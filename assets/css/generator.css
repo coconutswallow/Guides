@@ -4,51 +4,6 @@
 /* ============================================ */
 
 /* ============================================ */
-/* CSS VARIABLES FOR GENERATOR */
-/* ============================================ */
-
-:root {
-  /* Light mode generator colors */
-  --generator-intro-bg-start: #5b0f00;
-  --generator-intro-bg-end: #8b1a0f;
-  --generator-toggle-active-bg: #58180D;
-  --generator-toggle-active-text: #FDF1DC;
-  --generator-input-focus-shadow: rgba(88, 24, 13, 0.1);
-  --generator-table-header-bg: rgba(88, 24, 13, 0.05);
-  --generator-remove-btn-bg: #c00;
-  --generator-remove-btn-hover: #a00;
-  --generator-markdown-bg: #1e1e1e;
-  --generator-markdown-text: #d4d4d4;
-  --generator-placeholder-text: #999;
-  --generator-error-bg: #fee;
-  --generator-error-border: #c00;
-  --generator-error-text: #c00;
-  --generator-success-bg: #efe;
-  --generator-success-border: #0a0;
-  --generator-success-text: #0a0;
-}
-
-[data-theme="dark"] {
-  /* Dark mode generator colors */
-  --generator-intro-bg-start: #0a0a0a;
-  --generator-intro-bg-end: #1a1410;
-  --generator-toggle-active-bg: #D4A574;
-  --generator-toggle-active-text: #1a1a1a;
-  --generator-input-focus-shadow: rgba(212, 165, 116, 0.2);
-  --generator-table-header-bg: rgba(212, 165, 116, 0.08);
-  --generator-remove-btn-bg: #c00;
-  --generator-remove-btn-hover: #a00;
-  --generator-markdown-bg: #0a0a0a;
-  --generator-markdown-text: #E8DCC8;
-  --generator-placeholder-text: #5a5a5a;
-  --generator-error-bg: rgba(231, 76, 60, 0.15);
-  --generator-error-border: #e74c3c;
-  --generator-error-text: #e74c3c;
-  --generator-success-bg: rgba(39, 174, 96, 0.15);
-  --generator-success-border: #27ae60;
-  --generator-success-text: #27ae60;
-}
-
 .monster-page blockquote table thead,
 blockquote.stat-block table thead,
 .statblock-visual table thead {
