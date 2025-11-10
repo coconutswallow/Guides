@@ -395,21 +395,17 @@ const MonsterUI = (function() {
                     <table>
                         <thead>
                             <tr>
-                                <th></th><th></th><th>MOD</th>
-                                <th></th><th></th><th>MOD</th>
-                                <th></th><th></th><th>MOD</th>
+                                <th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Str</strong></td><td>${abilities.str.score}</td><td>${abilities.str.formattedMod}</td>
-                                <td><strong>Dex</strong></td><td>${abilities.dex.score}</td><td>${abilities.dex.formattedMod}</td>
-                                <td><strong>Con</strong></td><td>${abilities.con.score}</td><td>${abilities.con.formattedMod}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Int</strong></td><td>${abilities.int.score}</td><td>${abilities.int.formattedMod}</td>
-                                <td><strong>Wis</strong></td><td>${abilities.wis.score}</td><td>${abilities.wis.formattedMod}</td>
-                                <td><strong>Cha</strong></td><td>${abilities.cha.score}</td><td>${abilities.cha.formattedMod}</td>
+                                <td>${abilities.str.score} (${abilities.str.formattedMod})</td>
+                                <td>${abilities.dex.score} (${abilities.dex.formattedMod})</td>
+                                <td>${abilities.con.score} (${abilities.con.formattedMod})</td>
+                                <td>${abilities.int.score} (${abilities.int.formattedMod})</td>
+                                <td>${abilities.wis.score} (${abilities.wis.formattedMod})</td>
+                                <td>${abilities.cha.score} (${abilities.cha.formattedMod})</td>
                             </tr>
                         </tbody>
                     </table>
