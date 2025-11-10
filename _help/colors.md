@@ -1,83 +1,163 @@
 ---
 layout: doc
-title: "Color Table"
+title: "Color System"
 order: 51
 ---
-# Colors
 
-I've tried my best to use color variables wherever possible, and stick to as clean of a set of colors as possible. This way each color variable has a pair for light and dark mode, so if we hate the colors, we just change it at the headers, and everything updates easier
+# Color System
 
-## Color Table
+Our color system is built on a two-layer model to make it powerful, flexible, and easy to maintain. This approach, often called "design tokens," separates the *literal color values* (the Palette) from their *purpose* (the Theme).
 
-| file | variable | light mode color (including example) | dark mode color (including example) |
-| :--- | :--- | :--- | :--- |
-| **style.css** | `--color-primary` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #58180D; color: #FDF1DC; border-radius: 4px; ">#58180D (Deep burgundy - headers, buttons)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #D4A574; color: #2c2c2c; border-radius: 4px; ">#D4A574 (Golden tan - headers (inverted))</span> |
-| **style.css** | `--color-secondary` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #822000; color: #FDF1DC; border-radius: 4px; ">#822000 (Rich rust - accents, hovers)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8C5A0; color: #2c2c2c; border-radius: 4px; ">#E8C5A0 (Light tan - accents)</span> |
-| **style.css** | `--color-bg-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FDF1DC (Cream - cards, tables)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1a1a; color: #E8DCC8; border-radius: 4px; ">#1a1a1a (Dark gray/black - cards, tables)</span> |
-| **style.css** | `--color-bg-medium` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #F5E6D3; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#F5E6D3 (Light tan - alternating rows)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0f0f0f; color: #E8DCC8; border-radius: 4px; ">#0f0f0f (Darker black - alternating rows)</span> |
-| **style.css** | `--color-bg-page` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FFFEF9; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FFFEF9 (Off-white - page background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #000000; color: #E8DCC8; border-radius: 4px; ">#000000 (Pure black - page background)</span> |
-| **style.css** | `--color-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2c2c2c; color: #FDF1DC; border-radius: 4px; ">#2c2c2c (Dark gray - body text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8DCC8; color: #2c2c2c; border-radius: 4px; ">#E8DCC8 (Light cream - body text)</span> |
-| **style.css** | `--color-text-secondary` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5a5a5a; color: #FDF1DC; border-radius: 4px; ">#5a5a5a (Medium gray - meta text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #A09080; color: #E8DCC8; border-radius: 4px; ">#A09080 (Muted tan - meta text)</span> |
-| **style.css** | `--color-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #D4C4B0; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#D4C4B0 (Tan border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3a3a3a; color: #E8DCC8; border-radius: 4px; ">#3a3a3a (Dark gray border)</span> |
-| **style.css** | `--color-link` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #822000; color: #FDF1DC; border-radius: 4px; ">#822000 (Rust - links)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #D4A574; color: #2c2c2c; border-radius: 4px; ">#D4A574 (Golden tan - links)</span> |
-| **style.css** | `--color-link-hover` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #D4C4B0; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#D4C4B0 (Cream - link hover)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3a3a3a; color: #E8DCC8; border-radius: 4px; ">#3a3a3a (Dark Grey - link hover)</span> |
-| **style.css** | `--color-btn-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FDF1DC (Cream text for buttons)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1a1a; color: #E8DCC8; border-radius: 4px; ">#1a1a1a (Dark text for buttons)</span> |
-| **style.css** | `--color-table-hover` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #F0E0C8; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#F0E0C8 (Table row hover)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(212, 165, 116, 0.08); color: #E8DCC8; border-radius: 4px; border: 1px solid #3a3a3a;">rgba(212, 165, 116, 0.08) (Subtle table row hover)</span> |
-| **style.css** | `--color-blockquote` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5a3a2a; color: #FDF1DC; border-radius: 4px; ">#5a3a2a (Blockquote text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #A09080; color: #E8DCC8; border-radius: 4px; ">#A09080 (Muted tan for quotes)</span> |
-| **style.css** | `--color-breadcrumb` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #666; color: #FDF1DC; border-radius: 4px; ">#666 (Breadcrumb text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #A09080; color: #E8DCC8; border-radius: 4px; ">#A09080 (Muted tan for breadcrumbs)</span> |
-| **style.css** | `--color-breadcrumb-sep` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #999; color: #FDF1DC; border-radius: 4px; ">#999 (Breadcrumb separator)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5a5a5a; color: #E8DCC8; border-radius: 4px; ">#5a5a5a (Darker separator)</span> |
-| **style.css** | `--color-doc-meta` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #666; color: #FDF1DC; border-radius: 4px; ">#666 (Documentation meta)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #A09080; color: #E8DCC8; border-radius: 4px; ">#A09080 (Muted tan for meta info)</span> |
-| **style.css** | `--color-doc-meta-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #ddd; color: #2c2c2c; border-radius: 4px; ">#ddd (Documentation meta border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3a3a3a; color: #E8DCC8; border-radius: 4px; ">#3a3a3a (Dark border)</span> |
-| **style.css** | `--color-doc-body` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2c2c2c; color: #FDF1DC; border-radius: 4px; ">#2c2c2c (Documentation body text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8DCC8; color: #2c2c2c; border-radius: 4px; ">#E8DCC8 (Light cream for body text)</span> |
-| **style.css** | `--color-sidebar-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5b0f00; color: #FDF1DC; border-radius: 4px; ">#5b0f00 (Sidebar background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #000000; color: #E8DCC8; border-radius: 4px; ">#000000 (Pure black sidebar background)</span> |
-| **style.css** | `--color-sidebar-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #C0AD6A; color: #2c2c2c; border-radius: 4px; ">#C0AD6A (Sidebar header border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2a2420; color: #E8DCC8; border-radius: 4px; ">#2a2420 (Dark brown-gray border)</span> |
-| **style.css** | `--color-nav-hover-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #C0AD6A; color: #2c2c2c; border-radius: 4px; ">#C0AD6A (Nav hover in light mode)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2a2420; color: #E8DCC8; border-radius: 4px; ">#2a2420 (Light tan for nav hover)</span> |
-| **style.css** | `--color-table-header-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FDF1DC (Table header text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1a1a; color: #E8DCC8; border-radius: 4px; ">#1a1a1a (Table header text)</span> |
-| **style.css** | `--color-hero-title` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2c2c2c; color: #FDF1DC; border-radius: 4px; ">#2c2c2c (Dark gray for hero title)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8DCC8; color: #2c2c2c; border-radius: 4px; ">#E8DCC8 (Light cream for hero title)</span> |
-| **style.css** | `--color-card-button-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FDF1DC (Cream text on buttons)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1a1a; color: #E8DCC8; border-radius: 4px; ">#1a1a1a (Dark text on buttons)</span> |
-| **style.css** | `--search-results-shadow` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.1); color: #2c2c2c; border-radius: 4px; ">rgba(0, 0, 0, 0.1) (Search results shadow)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.4); color: #E8DCC8; border-radius: 4px; ">rgba(0, 0, 0, 0.4) (Search results shadow)</span> |
-| **style.css** | `--search-link-hover-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(88, 24, 13, 0.05); color: #2c2c2c; border-radius: 4px; ">rgba(88, 24, 13, 0.05) (Search link hover background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(232, 197, 160, 0.08); color: #E8DCC8; border-radius: 4px; border: 1px solid #3a3a3a;">rgba(232, 197, 160, 0.08) (Search link hover background)</span> |
-| **style.css** | `--color-role-badge-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #333333; color: #FDF1DC; border-radius: 4px; ">#333333 (Role badge background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: transparent; color: #A09080; border-radius: 4px; border: 1px dashed #3a3a3a;">transparent (Role badge background)</span> |
-| **style.css** | `--color-header-overlay` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.4); color: #FDF1DC; border-radius: 4px; ">rgba(0, 0, 0, 0.4) (Header overlay)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.2); color: #E8DCC8; border-radius: 4px; ">rgba(0, 0, 0, 0.2) (Header overlay)</span> |
-| **style.css** | `--color-alert-info-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e3f2fd; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#e3f2fd (Alert background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(52, 152, 219, 0.12); color: #E8DCC8; border-radius: 4px; ">rgba(52, 152, 219, 0.12) (Alert background)</span> |
-| **style.css** | `--color-alert-info-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3498db; color: #FDF1DC; border-radius: 4px; ">#3498db (Alert border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3498db; color: #E8DCC8; border-radius: 4px; ">#3498db (Alert border)</span> |
-| **style.css** | `--color-alert-warning-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #fff3cd; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#fff3cd (Alert background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(243, 156, 18, 0.12); color: #E8DCC8; border-radius: 4px; ">rgba(243, 156, 18, 0.12) (Alert background)</span> |
-| **style.css** | `--color-alert-warning-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #f39c12; color: #FDF1DC; border-radius: 4px; ">#f39c12 (Alert border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #f39c12; color: #E8DCC8; border-radius: 4px; ">#f39c12 (Alert border)</span> |
-| **style.css** | `--color-alert-danger-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #f8d7da; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#f8d7da (Alert background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(231, 76, 60, 0.12); color: #E8DCC8; border-radius: 4px; ">rgba(231, 76, 60, 0.12) (Alert background)</span> |
-| **style.css** | `--color-alert-danger-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e74c3c; color: #FDF1DC; border-radius: 4px; ">#e74c3c (Alert border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e74c3c; color: #E8DCC8; border-radius: 4px; ">#e74c3c (Alert border)</span> |
-| **style.css** | `--color-alert-success-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #d4edda; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#d4edda (Alert background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(39, 174, 96, 0.12); color: #E8DCC8; border-radius: 4px; ">rgba(39, 174, 96, 0.12) (Alert background)</span> |
-| **style.css** | `--color-alert-success-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #27ae60; color: #FDF1DC; border-radius: 4px; ">#27ae60 (Alert border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #27ae60; color: #E8DCC8; border-radius: 4px; ">#27ae60 (Alert border)</span> |
-| **style.css** | `--generator-intro-bg-start` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5b0f00; color: #FDF1DC; border-radius: 4px; ">#5b0f00 (Intro gradient start)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0a0a; color: #E8DCC8; border-radius: 4px; ">#0a0a0a (Intro gradient start)</span> |
-| **style.css** | `--generator-intro-bg-end` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #8b1a0f; color: #FDF1DC; border-radius: 4px; ">#8b1a0f (Intro gradient end)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1410; color: #E8DCC8; border-radius: 4px; ">#1a1410 (Intro gradient end)</span> |
-| **style.css** | `--generator-toggle-active-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #58180D; color: #FDF1DC; border-radius: 4px; ">#58180D (Active toggle background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #D4A574; color: #2c2c2c; border-radius: 4px; ">#D4A574 (Active toggle background)</span> |
-| **style.css** | `--generator-toggle-active-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FDF1DC (Active toggle text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1a1a; color: #E8DCC8; border-radius: 4px; ">#1a1a1a (Active toggle text)</span> |
-| **style.css** | `--generator-input-focus-shadow` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(88, 24, 13, 0.1); color: #2c2c2c; border-radius: 4px; ">rgba(88, 24, 13, 0.1) (Input focus shadow)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(212, 165, 116, 0.2); color: #E8DCC8; border-radius: 4px; ">rgba(212, 165, 116, 0.2) (Input focus shadow)</span> |
-| **style.css** | `--generator-table-header-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(88, 24, 13, 0.05); color: #2c2c2c; border-radius: 4px; ">rgba(88, 24, 13, 0.05) (Table header background)</span> | <span style="display:inline-block; width:1A00%; padding:0.5em 0; text-align:center; background-color: rgba(212, 165, 116, 0.08); color: #E8DCC8; border-radius: 4px; border: 1px solid #3a3a3a;">rgba(212, 165, 116, 0.08) (Table header background)</span> |
-| **style.css** | `--generator-remove-btn-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #c00; color: #FDF1DC; border-radius: 4px; ">#c00 (Remove button background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #c00; color: #E8DCC8; border-radius: 4px; ">#c00 (Remove button background)</span> |
-| **style.css** | `--generator-remove-btn-hover` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #a00; color: #FDF1DC; border-radius: 4px; ">#a00 (Remove button hover)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #a00; color: #E8DCC8; border-radius: 4px; ">#a00 (Remove button hover)</span> |
-| **style.css** | `--generator-markdown-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1e1e1e; color: #FDF1DC; border-radius: 4px; ">#1e1e1e (Markdown preview background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0a0a; color: #E8DCC8; border-radius: 4px; ">#0a0a0a (Markdown preview background)</span> |
-| **style.css** | `--generator-markdown-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #d4d4d4; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#d4d4d4 (Markdown preview text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8DCC8; color: #2c2c2c; border-radius: 4px; ">#E8DCC8 (Markdown preview text)</span> |
-| **style.css** | `--generator-placeholder-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #999; color: #FDF1DC; border-radius: 4px; ">#999 (Placeholder text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5a5a5a; color: #E8DCC8; border-radius: 4px; ">#5a5a5a (Placeholder text)</span> |
-| **style.css** | `--generator-error-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #fee; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#fee (Error box background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(231, 76, 60, 0.15); color: #E8DCC8; border-radius: 4px; ">rgba(231, 76, 60, 0.15) (Error box background)</span> |
-| **style.css** | `--generator-error-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #c00; color: #FDF1DC; border-radius: 4px; ">#c00 (Error box border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e74c3c; color: #E8DCC8; border-radius: 4px; ">#e74c3c (Error box border)</span> |
-| **style.css** | `--generator-error-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #c00; color: #FDF1DC; border-radius: 4px; ">#c00 (Error box text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e74c3c; color: #E8DCC8; border-radius: 4px; ">#e74c3c (Error box text)</span> |
-| **style.css** | `--generator-success-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #efe; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#efe (Success box background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(39, 174, 96, 0.15); color: #E8DCC8; border-radius: 4px; ">rgba(39, 174, 96, 0.15) (Success box background)</span> |
-| **style.css** | `--generator-success-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0; color: #FDF1DC; border-radius: 4px; ">#0a0 (Success box border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #27ae60; color: #E8DCC8; border-radius: 4px; ">#27ae60 (Success box border)</span> |
-| **style.css** | `--generator-success-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0; color: #FDF1DC; border-radius: 4px; ">#0a0 (Success box text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #27ae60; color: #E8DCC8; border-radius: 4px; ">#27ae60 (Success box text)</span> |
-| **style.css** | `--statblock-bg-image` | <span style="font-family: monospace; font-size: 0.8em; overflow-wrap: break-word; color: #5a5a5a;">url(...) (Background image)</span> | <span style="font-family: monospace; font-size: 0.8em; overflow-wrap: break-word; color: #A09080;">url(...) (Background image)</span> |
-| **style.css** | `--statblock-page-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #ffffff; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#ffffff (Page background override)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0a0a; color: #E8DCC8; border-radius: 4px; ">#0a0a0a (Page background override)</span> |
-| **style.css** | `--statblock-body-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #000000; color: #FDF1DC; border-radius: 4px; ">#000000 (Body background color)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #000000; color: #E8DCC8; border-radius: 4px; ">#000000 (Body background color)</span> |
-| **style.css** | `--statblock-texture` | <span style="font-family: monospace; font-size: 0.8em; overflow-wrap: break-word; color: #5a5a5a;">url(...) (Texture pattern)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: transparent; color: #A09080; border-radius: 4px; border: 1px dashed #3a3a3a;">none</span> |
-| **style.css** | `--statblock-modifier-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #dad1ca; color: #2c2c2c; border-radius: 4px; ">#dad1ca (Ability score modifier background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(90, 74, 58, 0.3); color: #E8DCC8; border-radius: 4px; ">rgba(90, 74, 58, 0.3) (Ability score modifier background)</span> |
-| **style.css** | `--statblock-box-shadow` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.25); color: #FDF1DC; border-radius: 4px; ">rgba(0, 0, 0, 0.25) (Page container shadow)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.5); color: #E8DCC8; border-radius: 4px; ">rgba(0, 0, 0, 0.5) (Page container shadow)</span> |
-| **style.css** | `--statblock-card-shadow` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.2); color: #FDF1DC; border-radius: 4px; ">rgba(0, 0, 0, 0.2) (Stat block card shadow)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.4); color: #E8DCC8; border-radius: 4px; ">rgba(0, 0, 0, 0.4) (Stat block card shadow)</span> |
-| **style.css** | `--statblock-card-hover-shadow` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.3); color: #FDF1DC; border-radius: 4px; ">rgba(0, 0, 0, 0.3) (Stat block card hover shadow)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.6); color: #E8DCC8; border-radius: 4px; ">rgba(0, 0, 0, 0.6) (Stat block card hover shadow)</span> |
-| **style.css** | `--statblock-image-shadow` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.2); color: #FDF1DC; border-radius: 4px; ">rgba(0, 0, 0, 0.2) (Image shadow)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: rgba(0, 0, 0, 0.4); color: #E8DCC8; border-radius: 4px; ">rgba(0, 0, 0, 0.4) (Image shadow)</span> |
-| **style.css** | `--statblock-header-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FDF1DC (Stat block header text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1a1a; color: #E8DCC8; border-radius: 4px; ">#1a1a1a (Stat block header text)</span> |
-| **style.css** | `--color-header-bg-start` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5b0f00; color: #FDF1DC; border-radius: 4px; ">#5b0f00 (Header gradient start)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0a0a; color: #E8DCC8; border-radius: 4px; ">#0a0a0a (Nearly black (gradient start))</span> |
-| **style.css** | `--color-header-bg-end` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #8b1a0f; color: #FDF1DC; border-radius: 4px; ">#8b1a0f (Header gradient end)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1410; color: #E8DCC8; border-radius: 4px; ">#1a1410 (Very dark brown-black (gradient end))</span> |
-| **style.css** | `--color-header-text` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #D4C4B0;">#FDF1DC (Header text)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8DCC8; color: #2c2c2c; border-radius: 4px; ">#E8DCC8 (Light cream text)</span> |
-| **style.css** | `--color-header-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #C0AD6A; color: #2c2c2c; border-radius: 4px; ">#C0AD6A (Header border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2a2420; color: #E8DCC8; border-radius: 4px; ">#2a2420 (Dark brown-gray border)</span> |
-| **style.css** | `--color-footer-bg` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5b0f00; color: #FDF1DC; border-radius: 4px; ">#5b0f00 (Footer background)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0a0a; color: #E8DCC8; border-radius: 4px; ">#0a0a0a (Nearly black)</span> |
-| **style.css** | `--color-footer-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #C0AD6A; color: #2c2c2c; border-radius: 4px; ">#C0AD6A (Footer border)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2a2420; color: #E8DCC8; border-radius: 4px; ">#2a2420 (Dark brown-gray border)</span> |
-| **style.css** | `--color-nav-hover` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #C0AD6A; color: #2c2c2c; border-radius: 4px; ">#C0AD6A (Nav hover)</span> | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2a2420; color: #E8DCC8; border-radius: 4px; ">#2a2420 (Light tan for nav hover)</span> |
+* **Layer 1: The Palette (`--palette-...`)**
+    These are the raw, abstractly-named colors for the entire brand (e.g., `var(--palette-brand-main)`). They have no context, they just define the available colors. They are all stored in `style.css`.
+
+* **Layer 2: The Theme (`--color-...`)**
+    These are the semantic, role-based variables we use in the component CSS (e.g., `var(--color-primary)`). They give a *purpose* to a palette color. This layer is what allows us to swap between Light and Dark modes so easily.
+
+---
+
+## How to Use This System
+
+* **To style an element:** Always use a **Layer 2 (Theme)** variable.
+    > `/* GOOD */`
+    > `.my-button { background-color: var(--color-primary); }`
+    >
+    > `/* BAD */`
+    > `.my-button { background-color: var(--palette-brand-main); }`
+
+* **To change the entire brand's look:** You only need to change the **Layer 1 (Palette)** variables.
+    > For example, to change the brand from burgundy to blue, you would only change `--palette-brand-main` and `--palette-brand-accent` in `style.css`. The entire site, in both light and dark mode, will update automatically.
+
+---
+
+## Layer 1: The Palette Tokens
+
+These are the raw color values.
+
+### Light Theme Palette
+
+| Variable | Value | Description |
+| :--- | :--- | :--- |
+| `--palette-brand-main` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #58180D; color: #FDF1DC; border-radius: 4px; ">#58180D</span> | Darkest, for headers/buttons |
+| `--palette-brand-main-darker` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5b0f00; color: #FDF1DC; border-radius: 4px; ">#5b0f00</span> | For sidebar, gradients |
+| `--palette-brand-accent` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #822000; color: #FDF1DC; border-radius: 4px; ">#822000</span> | Lighter, for accents/hovers |
+| `--palette-brand-accent-darker` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #8b1a0f; color: #FDF1DC; border-radius: 4px; ">#8b1a0f</span> | For gradients |
+| `--palette-brand-highlight` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #C0AD6A; color: #2c2c2c; border-radius: 4px; ">#C0AD6A</span> | Gold, for special accents |
+| `--palette-bg-page-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #fffef9fa; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#fffef9fa</span> | Off-white page background |
+| `--palette-bg-card-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#FDF1DC</span> | Cream for cards, tables |
+| `--palette-bg-row-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #F5E6D3; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#F5E6D3</span> | Light tan for alternating rows |
+| `--palette-bg-hover-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #F0E0C8; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#F0E0C8</span> | For table row hover |
+| `--palette-border-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #D4C4B0; color: #2c2c2c; border-radius: 4px; ">#D4C4B0</span> | Tan border |
+| `--palette-text-main-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2c2c2c; color: #FDF1DC; border-radius: 4px; ">#2c2c2c</span> | Dark gray body text |
+| `--palette-text-muted-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5a5a5a; color: #FDF1DC; border-radius: 4px; ">#5a5a5a</span> | Medium gray meta text |
+| `--palette-text-quote-light` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #5a3a2a; color: #FDF1DC; border-radius: 4px; ">#5a3a2a</span> | Blockquote text |
+
+### Dark Theme Palette
+
+| Variable | Value | Description |
+| :--- | :--- | :--- |
+| `--palette-brand-main-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #D4A574; color: #2c2c2c; border-radius: 4px; ">#D4A574</span> | Golden tan, for headers |
+| `--palette-brand-accent-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8C5A0; color: #2c2c2c; border-radius: 4px; ">#E8C5A0</span> | Light tan, for accents |
+| `--palette-bg-page-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #000000; color: #E8DCC8; border-radius: 4px; ">#000000</span> | Pure black page background |
+| `--palette-bg-card-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1a1a; color: #E8DCC8; border-radius: 4px; ">#1a1a1a</span> | Dark gray for cards, tables |
+| `--palette-bg-row-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0f0f0f; color: #E8DCC8; border-radius: 4px; ">#0f0f0f</span> | Darker black for rows |
+| `--palette-bg-header-start-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0a0a; color: #E8DCC8; border-radius: 4px; ">#0a0a0a</span> | Gradient start for headers |
+| `--palette-bg-header-end-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a1410; color: #E8DCC8; border-radius: 4px; ">#1a1410</span> | Gradient end for headers |
+| `--palette-border-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3a3a3a; color: #E8DCC8; border-radius: 4px; ">#3a3a3a</span> | Dark gray border |
+| `--palette-border-header-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #2a2420; color: #E8DCC8; border-radius: 4px; ">#2a2420</span> | Dark brown-gray border |
+| `--palette-text-main-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #E8DCC8; color: #2c2c2c; border-radius: 4px; ">#E8DCC8</span> | Light cream body text |
+| `--palette-text-muted-dark` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #A09080; color: #2c2c2c; border-radius: 4px; ">#A09080</span> | Muted tan meta text |
+
+### Neutral / System Palette (Shared)
+
+| Variable | Value | Description |
+| :--- | :--- | :--- |
+| `--palette-neutral-white` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #ffffff; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#ffffff</span> | Pure white |
+| `--palette-neutral-gray-100` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #d4d4d4; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#d4d4d4</span> | Code text (light) |
+| `--palette-neutral-gray-200` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #ddd; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#ddd</span> | Light border (light) |
+| `--palette-neutral-gray-300` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #999; color: #FDF1DC; border-radius: 4px; ">#999</span> | Light meta text (light) |
+| `--palette-neutral-gray-400` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #666; color: #FDF1DC; border-radius: 4px; ">#666</span> | Meta text (light) |
+| `--palette-neutral-gray-500` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #333333; color: #FDF1DC; border-radius: 4px; ">#333333</span> | Role badge bg (light) |
+| `--palette-neutral-gray-600` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1e1e1e; color: #FDF1DC; border-radius: 4px; ">#1e1e1e</span> | Code bg (light) |
+| `--palette-neutral-gray-700` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #dad1ca; color: #2c2c2c; border-radius: 4px; ">#dad1ca</span> | Statblock modifier (light) |
+| `--palette-alert-info-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3498db; color: #FDF1DC; border-radius: 4px; ">#3498db</span> | Info border (shared) |
+| `--palette-alert-warning-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #f39c12; color: #FDF1DC; border-radius: 4px; ">#f39c12</span> | Warning border (shared) |
+| `--palette-alert-danger-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e74c3c; color: #FDF1DC; border-radius: 4px; ">#e74c3c</span> | Danger border (shared) |
+| `--palette-alert-danger-action` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #c00; color: #FDF1DC; border-radius: 4px; ">#c00</span> | Danger action (shared) |
+| `--palette-alert-danger-action-hover` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #a00; color: #FDF1DC; border-radius: 4px; ">#a00</span> | Danger action hover (shared) |
+| `--palette-alert-success-border` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #27ae60; color: #FDF1DC; border-radius: 4px; ">#27ae60</span> | Success border (shared) |
+| `--palette-alert-success-action` | <span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0; color: #FDF1DC; border-radius: 4px; ">#0a0</span> | Success action (shared) |
+
+---
+
+## Layer 2: The Theme (Semantic Roles)
+
+This table shows how the semantic variables (what you use in your code) are mapped from the palette.
+
+### Core Colors
+
+| Theme Variable | Light Mode Map | Dark Mode Map |
+| :--- | :--- | :--- |
+| `--color-primary` | `var(--palette-brand-main)` | `var(--palette-brand-main-dark)` |
+| `--color-secondary` | `var(--palette-brand-accent)` | `var(--palette-brand-accent-dark)` |
+| `--color-text` | `var(--palette-text-main-light)` | `var(--palette-text-main-dark)` |
+| `--color-text-secondary` | `var(--palette-text-muted-light)` | `var(--palette-text-muted-dark)` |
+| `--color-border` | `var(--palette-border-light)` | `var(--palette-border-dark)` |
+| `--color-bg-page` | `var(--palette-bg-page-light)` | `var(--palette-bg-page-dark)` |
+| `--color-bg-light` | `var(--palette-bg-card-light)` | `var(--palette-bg-card-dark)` |
+| `--color-bg-medium` | `var(--palette-bg-row-light)` | `var(--palette-bg-row-dark)` |
+| `--color-link` | `var(--color-secondary)` | `var(--color-primary)` |
+| `--color-btn-text` | `var(--color-bg-light)` | `var(--color-bg-light)` |
+| `--color-card-button-text` | `var(--color-bg-light)` | `var(--color-bg-light)` |
+
+### UI Components
+
+| Theme Variable | Light Mode Map | Dark Mode Map |
+| :--- | :--- | :--- |
+| `--color-table-hover` | `var(--palette-bg-hover-light)` | `rgba(212, 165, 116, 0.08)` |
+| `--color-table-header-text` | `var(--color-bg-light)` | `var(--color-bg-light)` |
+| `--color-blockquote` | `var(--palette-text-quote-light)` | `var(--color-text-secondary)` |
+| `--color-breadcrumb` | `var(--palette-neutral-gray-400)` | `var(--color-text-secondary)` |
+| `--color-breadcrumb-sep` | `var(--palette-neutral-gray-300)` | `var(--palette-text-muted-light)` |
+| `--color-doc-meta` | `var(--palette-neutral-gray-400)` | `var(--color-text-secondary)` |
+| `--color-doc-meta-border` | `var(--palette-neutral-gray-200)` | `var(--color-border)` |
+| `--color-doc-body` | `var(--color-text)` | `var(--color-text)` |
+| `--color-hero-title` | `var(--color-text)` | `var(--color-text)` |
+| `--color-sidebar-bg` | `var(--palette-brand-main-darker)` | `var(--color-bg-page)` |
+| `--color-sidebar-border` | `var(--palette-brand-highlight)` | *N/A* |
+| `--color-nav-hover-light` | `var(--color-sidebar-border)` | *N/A* |
+| `--color-role-badge-bg` | `var(--palette-neutral-gray-500)` | `transparent` |
+| `--color-header-bg-start` | *N/A* | `var(--palette-bg-header-start-dark)` |
+| `--color-header-bg-end` | *N/A* | `var(--palette-bg-header-end-dark)` |
+| `--color-header-border` | *N/A* | `var(--palette-border-header-dark)` |
+| `--color-header-text` | *N/A* | `var(--color-text)` |
+| `--color-footer-bg` | *N/A* | `var(--color-header-bg-start)` |
+| `--color-footer-border` | *N/A* | `var(--color-header-border)` |
+| `--color-nav-hover` | *N/A* | `var(--color-header-border)` |
+
+### Generator
+
+| Theme Variable | Light Mode Map | Dark Mode Map |
+| :--- | :--- | :--- |
+| `--generator-intro-bg-start` | `var(--palette-brand-main-darker)` | `var(--color-header-bg-start)` |
+| `--generator-intro-bg-end` | `var(--palette-brand-accent-darker)` | `var(--color-header-bg-end)` |
+| `--generator-toggle-active-bg` | `var(--color-primary)` | `var(--color-primary)` |
+| `--generator-toggle-active-text` | `var(--color-bg-light)` | `var(--color-bg-light)` |
+| `--generator-markdown-bg` | `var(--palette-neutral-gray-600)` | `var(--color-header-bg-start)` |
+| `--generator-markdown-text` | `var(--palette-neutral-gray-100)` | `var(--color-text)` |
+| `--generator-placeholder-text` | `var(--palette-neutral-gray-300)` | `var(--palette-text-muted-light)` |
+| `--generator-error-bg` | `var(--palette-alert-danger-bg-light-alt)` | `var(--palette-alert-danger-bg-dark)` |
+| `--generator-error-border` | `var(--palette-alert-danger-action)` | `var(--palette-alert-danger-border)` |
+| `--generator-error-text` | `var(--palette-alert-danger-action)` | `var(--palette-alert-danger-border)` |
+| `--generator-success-bg` | `var(--palette-alert-success-bg-light-alt)` | `var(--palette-alert-success-bg-dark)` |
+| `--generator-success-border` | `var(--palette-alert-success-action)` | `var(--palette-alert-success-border)` |
+| `--generator-success-text` | `var(--palette-alert-success-action)` | `var(--palette-alert-success-border)` |
+
+### Stat Blocks
+
+| Theme Variable | Light Mode Map | Dark Mode Map |
+| :--- | :--- | :--- |
+| `--statblock-page-bg` | `var(--palette-neutral-white)` | `var(--color-header-bg-start)` |
+| `--statblock-body-bg` | `#000000` | `var(--color-bg-page)` |
+| `--statblock-modifier-bg` | `var(--palette-neutral-gray-700)` | `rgba(90, 74, 58, 0.3)` |
+| `--statblock-header-text` | `var(--color-bg-light)` | `var(--color-bg-light)` |
