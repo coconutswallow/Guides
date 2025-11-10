@@ -60,9 +60,10 @@ Headings create section titles in your document. Use the `#` symbol:
 
 **Note**:  Always add a link break after each heading, e.g.
 
-```## Heading 2
+```markdown
+ ## Heading 2
 
-start the paragraph here
+start the paragraph after a linne break
 ```
 
 ---
@@ -71,7 +72,7 @@ start the paragraph here
 
 A lot of this is exactly like discord syntax
 
-### Bold Text
+### Bold Text  
 
 **Syntax:**
 ```markdown
@@ -381,47 +382,6 @@ When mentioning Discord roles, you can use special CSS classes to color them cor
 - <span style="color: #1f628e; font-weight: 600; background: #333; padding: 2px 4px; border-radius: 3px;">Lore Team</span> (blue)
 - <span style="color: #f975f2; font-weight: 600; background: #333; padding: 2px 4px; border-radius: 3px;">Rules Team</span> (pink)
 - <span style="color: #1abc9c; font-weight: 700; background: #333; padding: 2px 4px; border-radius: 3px;">Engineer</span> (teal)
-
----
-
-## Combining Elements
-
-You can mix and match different formatting! Here's an example:
-
-**Syntax:**
-```markdown
-## Character Creation Rules
-
-When creating a character, follow these steps:
-
-1. **Choose Your Race** - Select from the PHB races
-2. **Choose Your Class** - Pick one of these options:
-   - Fighter
-   - Wizard
-   - Rogue
-3. **Roll Stats** - Use the `!stats` command
-
-> **Important:** All characters must be approved by a <span class="role-full-dm">Full DM</span> before play.
-
-See the [Character Creation Guide](/Guides/players-guide/character-creation/) for details.
-```
-
-**How it looks:**
-
-## Character Creation Rules
-
-When creating a character, follow these steps:
-
-1. **Choose Your Race** - Select from the PHB races
-2. **Choose Your Class** - Pick one of these options:
-   - Fighter
-   - Wizard
-   - Rogue
-3. **Roll Stats** - Use the `!stats` command
-
-> **Important:** All characters must be approved by a Full DM before play.
-
-See the Character Creation Guide for details.
 
 ---
 ## Quick Reference Cheat Sheet
