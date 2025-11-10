@@ -391,25 +391,27 @@ const MonsterUI = (function() {
                 <p><strong>Hit Points</strong> ${escapeHtml(state.hp || '—')}</p>
                 <p><strong>Speed</strong> ${escapeHtml(state.speed || '—')}</p>
 
-                <div class="statblock-abilities">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>${abilities.str.score} (${abilities.str.formattedMod})</td>
-                                <td>${abilities.dex.score} (${abilities.dex.formattedMod})</td>
-                                <td>${abilities.con.score} (${abilities.con.formattedMod})</td>
-                                <td>${abilities.int.score} (${abilities.int.formattedMod})</td>
-                                <td>${abilities.wis.score} (${abilities.wis.formattedMod})</td>
-                                <td>${abilities.cha.score} (${abilities.cha.formattedMod})</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th><th></th><th>MOD</th><th>SAVE</th>
+                            <th></th><th></th><th>MOD</th><th>SAVE</th>
+                            <th></th><th></th><th>MOD</th><th>SAVE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Str</strong></td><td>${abilities.str.score}</td><td>${abilities.str.formattedMod}</td><td>${abilities.str.save}</td>
+                            <td><strong>Dex</strong></td><td>${abilities.dex.score}</td><td>${abilities.dex.formattedMod}</td><td>${abilities.dex.save}</td>
+                            <td><strong>Con</strong></td><td>${abilities.con.score}</td><td>${abilities.con.formattedMod}</td><td>${abilities.con.save}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Int</strong></td><td>${abilities.int.score}</td><td>${abilities.int.formattedMod}</td><td>${abilities.int.save}</td>
+                            <td><strong>Wis</strong></td><td>${abilities.wis.score}</td><td>${abilities.wis.formattedMod}</td><td>${abilities.wis.save}</td>
+                            <td><strong>Cha</strong></td><td>${abilities.cha.score}</td><td>${abilities.cha.formattedMod}</td><td>${abilities.cha.save}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <div class="statblock-section">
                     ${saveOverrides.length > 0 ? `<p><strong>Saving Throws</strong> ${escapeHtml(saveOverrides.join(', '))}</p>` : ''}
