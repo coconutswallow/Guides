@@ -194,7 +194,7 @@
   --statblock-card-hover-shadow: rgba(0, 0, 0, 0.6);
   --statblock-image-shadow: rgba(0, 0, 0, 0.4);
   --statblock-header-text: #1a1a1a;
-  
+
   /* Alert colors (dark mode) */
   --color-alert-info-bg: rgba(52, 152, 219, 0.12);
   --color-alert-info-border: #3498db;
@@ -649,7 +649,6 @@ h1 {
 
 h2 {
   font-size: 2em;
-  border-bottom: 3px solid var(--color-border);
   padding-bottom: 0.3em;
   margin-top: 1.5em;
 }
