@@ -13,7 +13,7 @@ A variety of games are offered on the Hawthorne Server:
 
 ## Finding Games
 
-DMs advertise games in the <a href="https://discord.com/channels/308324031478890497/343396172293210112">#game-advertisement</a> channel, with instructions on how to apply in <a href="https://discord.com/channels/308324031478890497/1366924010255814768">#game-listings<</a>.  You must apply for games, and it is solely up to the DM's discretion on the players they pick.  DMs are incentivized to take on new players; but if you are not picked, please be patient - you will get into a game soon!
+DMs advertise games in the <a href="https://discord.com/channels/308324031478890497/343396172293210112">#game-advertisement</a> channel, with instructions on how to apply in  <a href="https://discord.com/channels/308324031478890497/1366924010255814768">#game-listings</a>.  You must apply for games, and it is solely up to the DM's discretion on the players they pick.  DMs are incentivized to take on new players; but if you are not picked, please be patient - you will get into a game soon!
 
 Most games occur in voice, with an associated session channel and lobby in the game ad; however some games are ran in text as a Play-By-Post (PbP) and will have its own associated text channel listed in the game ad. 
 
