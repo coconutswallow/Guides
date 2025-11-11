@@ -299,16 +299,6 @@
    APPLY COLORS TO ELEMENTS
    ============================================ */
 
-/* Body - uses page background color */
-body {
-  background-color: var(--color-bg-page);  /* Changed from 'background' to 'background-color' */
-  color: var(--color-text);
-  background-image: var(--page-bg-image, none);
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-}
-
 /* Main page container */
 .page {
   background-color: var(--color-bg-page);
@@ -711,6 +701,11 @@ body {
   display: flex;
   flex-direction: column;
   padding-top: 85px; /* Space for fixed header */
+
+  background-image: var(--page-bg-image, none);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 /* Prevent background scrolling when mobile menu is open */
