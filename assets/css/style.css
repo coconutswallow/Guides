@@ -303,6 +303,15 @@ body {
   background: var(--color-bg-page);
   color: var(--color-text);
 }
+body {
+  /* This will be 'none' by default, but will use the image if set */
+  background-image: var(--page-bg-image, none);
+
+  /* Optional: Add styles to make it look good */
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
 
 /* Main page container */
 .page {

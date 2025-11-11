@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}"> 
 	<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}"><link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
 </head>
-<body>
+<body {% if page.background_image %}style="--page-bg-image: url('{{ page.background_image | relative_url }}')"{% endif %}>
     <header class="site-header">
         <div class="header-content">
             <button id="menu-toggle" aria-label="Toggle Navigation Menu">
