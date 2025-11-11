@@ -2,7 +2,7 @@
 layout: doc
 title: "About Hawthorne"
 order: 5
-background_image: {{ '/assets/images/fieldguide-back.png' | relative_url }}
+background_image: /assets/images/fieldguide-back.png
 
 ---
 
