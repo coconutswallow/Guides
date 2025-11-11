@@ -45,7 +45,7 @@ navigation:
   - title: "Rules & Roles"
     collection: rules
       
-  - title: "Player's Guide"
+  - title: "Players Guide"
     collection: player_guide
 
 # =========================================================
