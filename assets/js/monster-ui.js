@@ -7,6 +7,8 @@ const MonsterUI = (function() {
     const SIZES = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
     const TYPES = ['Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental', 
                    'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'];
+    // NEW: Added categories constant
+    const CATEGORIES = ['2014 Fair Game', '2014 Full DM Only'];
 
     /**
      * Escape HTML to prevent XSS
@@ -103,7 +105,9 @@ const MonsterUI = (function() {
                     </div>
                     <div class="form-field">
                         <label for="category">Category *</label>
-                        <input type="text" id="category" value="${escapeHtml(state.category)}" placeholder="e.g., 2014 Fair Game">
+                        <select id="category">
+                            ${CATEGORIES.map(c => `<option value="${c}" ${state.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+                        </select>
                     </div>
                     <div class="form-field">
                         <label for="creator">Creator *</label>
@@ -113,7 +117,7 @@ const MonsterUI = (function() {
                         <label for="image">Image URL</label>
                         <input type="text" id="image" value="${escapeHtml(state.image)}" placeholder="Full URL to image">
                     </div>
-                    <div class="form-field">
+                    <div class="form-field span-2">
                         <label for="image_credit">Image Credit</label>
                         <input type="text" id="image_credit" value="${escapeHtml(state.image_credit)}" placeholder="Artist and Source">
                     </div>

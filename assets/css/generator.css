@@ -108,8 +108,8 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
 .generator-instructions p,
 .generator-instructions li {
   color: var(--color-text);
-  font-size: 0.95em;
-  line-height: 1.5;
+  font-size: 1.05em;
+  line-height: 1.6;
   transition: color 0.3s ease;
 }
 
@@ -312,6 +312,12 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
 .form-field.full-width {
   grid-column: 1 / -1;
 }
+
+/* START MODIFICATION: Added span-2 class */
+.form-field.span-2 {
+  grid-column: span 2;
+}
+/* END MODIFICATION */
 
 .form-field label {
   font-weight: bold;
