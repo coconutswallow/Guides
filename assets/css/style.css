@@ -301,18 +301,12 @@
 
 /* Body - uses page background color */
 body {
-  background: var(--color-bg-page);
+  background-color: var(--color-bg-page);  /* Changed from 'background' to 'background-color' */
   color: var(--color-text);
-}
-body {
-  /* This will be 'none' by default, but will use the image if set */
   background-image: var(--page-bg-image, none);
-
-  /* Optional: Add styles to make it look good */
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
-  background-image: var(--page-bg-image, none);
 }
 
 /* Main page container */
