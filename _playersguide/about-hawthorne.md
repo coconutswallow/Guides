@@ -32,11 +32,11 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 
 ### Hawthorne Location on Faerun's Sword Coast
 
-![Hawthorne Location](https://lh3.googleusercontent.com/sitesv/AAzXCkehgKTDDCV62-MDUqc_nE97I6BVGyl68_ykPUc8xFLjKYhq1J9ZVT3pLTgq7_CgnW7dhQBaT3_T4iaFMC9QOaRTP7u4FV-NgaGV4RisgH2EyPCHHdtUQP4RIxVSKTAfjqgJS7jYMR-jPDpF-iO68RiQa1WSQE8hhgOtleo175zosVncEWj3qNS1FV2rIZ3YsL0tPq63qfyl9sCWJTlhUZHQdmvImT57cwwH=w1280)
+![Hawthorne Location]({{ '/assets/images/hawthorne-sword-coast.jpg' | relative_url }}))
 
 ### Map of Hawthorne
 
-![City of Hawthorne](https://lh3.googleusercontent.com/sitesv/AAzXCkfyfP_3wwq9b40s0LMs8vKDa9G6C7ahKQd640ER9Q8L8Hr8LkjAJ622HdWb3Mh6F6lSV95nEkxzcZOSwpZGNuHH6PihwXino77O5QsF9HnULcScqFlh9qsW0jUftgucGOkav_6Q1mE1KIxwiCDedyMBQTxLLH5eI5GNimVaAWY0Ytj5taN3wCMjy74GKLfbdtZPAX8cW5AZjhiZ0sKPp57zxVxvpYxEje--sHk=w1280)
+![City of Hawthorne]({{ '/assets/images/hawthorne-city-map.jpg' | relative_url }}))
 
 ## Hawthorne Guild Rules
 
