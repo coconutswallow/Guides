@@ -9,9 +9,9 @@ collections:
   rules:
     output: true
     permalink: /rules/:name.html
-  test:
+  playersguide:
     output: true
-    permalink: /test/:name.html
+    permalink: /playersguide/:name.html
   dms_guide:
     output: true
     permalink: /dms-guide/:path/
@@ -45,8 +45,8 @@ navigation:
   - title: "Rules & Roles"
     collection: rules
       
-  - title: "Test"
-    collection: test
+  - title: "Player's Guide"
+    collection: playersguide
 
 # =========================================================
 #
