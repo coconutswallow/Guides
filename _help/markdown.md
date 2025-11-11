@@ -25,13 +25,11 @@ background_image: /assets/images/fieldguide-back.png  <-- this is the only optio
 **What each part means:**
 
 |Front Matter Part|	|Optional / Mandatory|	|Description|	|Example|
-|:-------------------|	|:--------------------|	|:---------------------------------------------------------------------------------|	|:------------------------------------------------------|
+|:-------------------|	|:--------------------|	|:--------------------------------------------------|	|:--------------------------------------------------|
 |`layout:`|	|Mandatory|	|Always use this (tells the site to format it as a documentation page)|	|`layout: doc`|
-|`title:`|	|Mandatory|	|The title that appears at the top of the page and in the menu|	|`title: "Your Page Title Here"`|
+|`title:`|	|Mandatory|	|The title that appears at the top of the page and in the menu|	|`title: Your Page Title Here`|
 |`order:'|	|Mandatory|	|A number that determines where it appears in the menu (lower numbers = higher up)|	|`order: 10`|
 |`background_image:`|	|Optional|	|adds a background image to the page|	|`background_image: /assets/images/fieldguide-back.png`|
-
-
 
 **Tips:**
 - Use order numbers like 10, 20, 30 so you can easily add pages in between later
