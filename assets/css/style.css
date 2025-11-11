@@ -177,10 +177,9 @@
   --generator-success-text: var(--palette-alert-success-action);
 
   /* Stat Blocks */
-  --statblock-bg-image: url('/Guide/assets/images/fieldguide-back.png');
+  --statblock-bg-image: url('/Guides/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--palette-neutral-white);
   --statblock-body-bg: #000000;
-  --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5kJggg==');
   --statblock-modifier-bg: var(--palette-neutral-gray-700);
   --statblock-box-shadow: rgba(0, 0, 0, 0.25);
   --statblock-card-shadow: rgba(0, 0, 0, 0.2);
