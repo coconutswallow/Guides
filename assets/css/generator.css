@@ -83,6 +83,50 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
 }
 
 /* ============================================ */
+/* GENERATOR INSTRUCTIONS BLOCK */
+/* ============================================ */
+
+.generator-instructions {
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5em;
+  margin: 0 0 2em 0; /* 2em bottom margin to space it out */
+  text-align: left; /* This is the key part */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.generator-instructions h3 {
+  color: var(--color-primary);
+  margin-top: 0;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0.5em;
+  font-size: 1.5em;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.generator-instructions p,
+.generator-instructions li {
+  color: var(--color-text);
+  font-size: 1.05em;
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+.generator-instructions ul {
+  padding-left: 1.5em; /* Standard indentation for bullet points */
+  margin: 1em 0;
+}
+
+.generator-instructions ul li {
+  margin-bottom: 0.5em;
+}
+
+.generator-instructions p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================ */
 /* GENERATOR CONTROLS */
 /* ============================================ */
 
