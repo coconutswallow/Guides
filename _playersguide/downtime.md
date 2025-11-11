@@ -47,6 +47,8 @@ You can purchase spellcasting services for the listed level 0 - 5 spells in Hawt
 
 You can trade items with other PCs. Only PCs in the same location can trade with each other and any items you obtain via trading with another PC must be of your PC’s tier or lower. All trades must be logged in <a href="https://discord.com/channels/308324031478890497/617832619689902100">#trade-logs</a> and both players’ MALs must be updated.
 
+![Trade Example](/assets/images/trade-example.png)
+
 **Note**: You can’t trade gold or equipment that can be sold for gold between your PCs, even by proxy or cross character trade (such as trading an item from one of your PCs and receiving an item on another PC).
 
 You can list your items for trade in <a href="https://discord.com/channels/308324031478890497/617822091164516405">#trade-listing</a>.  But please observe the <a href="https://discord.com/channels/308324031478890497/617822091164516405/1424311899843068005">rules for posts</a> in this channel.
