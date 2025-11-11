@@ -311,7 +311,7 @@ body {
 
 /* Main page container */
 .page {
-  background: var(--color-bg-page);
+  background-color: var(--color-bg-page);
   color: var(--color-text);
 }
 
