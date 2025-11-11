@@ -17,7 +17,7 @@ Copy this format:
 layout: doc
 title: "Your Page Title Here"
 order: 10
-background_image: /assets/images/fieldguide-back.png  <-- this is the only optional
+background_image: /assets/images/fieldguide-back.png
 
 ---
 ```
@@ -28,7 +28,7 @@ background_image: /assets/images/fieldguide-back.png  <-- this is the only optio
 |:-------------------|	|:--------------------|	|:--------------------------------------------------|	|:--------------------------------------------------|
 |`layout:`|	|Mandatory|	|Always use this (tells the site to format it as a documentation page)|	|`layout: doc`|
 |`title:`|	|Mandatory|	|The title that appears at the top of the page and in the menu|	|`title: Your Page Title Here`|
-|`order:'|	|Mandatory|	|A number that determines where it appears in the menu (lower numbers = higher up)|	|`order: 10`|
+|`order:`|	|Mandatory|	|A number that determines where it appears in the menu (lower numbers = higher up)|	|`order: 10`|
 |`background_image:`|	|Optional|	|adds a background image to the page|	|`background_image: /assets/images/fieldguide-back.png`|
 
 **Tips:**
