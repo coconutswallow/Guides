@@ -48,6 +48,8 @@ navigation:
       
   - title: "Player's Guide"
     collection: players_guide
+    items:
+    - character-creation
 
 
 # =========================================================
