@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Character Creation"
-order: 110
+order: 10
 ---
 
 ## Character Creation
