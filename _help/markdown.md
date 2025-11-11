@@ -309,12 +309,11 @@ or
 
 **Syntax:**
 ```markdown
-![Alt text describing the image](path/to/image.jpg)
-```
+![alt text]({{ '/assets/images/my-image.png' | relative_url }})```
 
 **Example:**
 ```markdown
-![Map of the Sword Coast](/assets/images/sword-coast-map.jpg)
+![Map of the Sword Coast]({{ '/assets/images/sword-coast-map.jpg' | relative_url }})
 ```
 
 **Tips:**
