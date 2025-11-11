@@ -60,7 +60,7 @@
                       {% endfor %}
                     {% else %}
                       <!-- Auto-discover all pages in folder -->
-                      {% assign folder_pages = site[item.collection] | where_exp: "page", "page.path contains section.folder" %}
+                      {% assign folder_pages = site[item.collection] | where_exp: "page", "page.path contains section.folder" | sort: "order" %}
                       {% for page in folder_pages %}
                         <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
                       {% endfor %}
@@ -74,7 +74,8 @@
           
           {% unless item.items or item.sections %}
             <!-- Auto-discover all pages in collection if no items specified -->
-            {% for page in site[item.collection] %}
+            {% assign sorted_pages = site[item.collection] | sort: "order" %}
+            {% for page in sorted_pages %}
               <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
             {% endfor %}
           {% endunless %}
@@ -84,4 +85,4 @@
     {% endif %}
     
   {% endfor %}
-  
+</div>
