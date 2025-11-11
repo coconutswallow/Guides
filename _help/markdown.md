@@ -221,7 +221,10 @@ Tables are great for organizing information like stats, schedules, or rules.
 - `:---:` = center-aligned  
 - `---:` = right-aligned
 
+Too complicated?  I made an Google Sheet tool that will spit out the right markdown for tables  [MARKDOWN TABLE MAKER](https://docs.google.com/spreadsheets/d/1N2Z3t1rN-1r3yraTGbXWIZo-yaqyHTMYRF0sZtipTq4/edit?usp=sharing)
+
 ---
+
 
 ## Blockquotes
 
