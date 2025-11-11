@@ -177,6 +177,7 @@
   --generator-success-text: var(--palette-alert-success-action);
 
   /* Stat Blocks */
+  /*  statblock-texture is a broken link but keep it, cuz it keeps the monster-background from being transparent */
   --statblock-bg-image: url('/Guides/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--palette-neutral-white);
   --statblock-body-bg: #000000;
