@@ -2,7 +2,8 @@
 layout: doc
 title: "About Hawthorne"
 order: 5
-background_image: /assets/images/fieldguide-back.png
+background_image: {{ '/assets/images/fieldguide-back.png' | relative_url }}
+
 ---
 
 ## Hawthorne Guild: A History
