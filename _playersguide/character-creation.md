@@ -13,7 +13,11 @@ If you are new to DND and do not have access to the rule books yet, a lot of the
 <a href="https://www.dndbeyond.com/srd">D&D System Reference Document</a>
 
 ---
-<div class="alert-warning"><strong>If you have questions about character creation, or want to get input on a character idea, <a href="https://discord.com/channels/308324031478890497/617820317389160471">#character-discussion</a> is the place to ask!</strong></div>
+
+>
+> <strong>If you have questions about character creation, or want to get input on a character idea, <a href="https://discord.com/channels/308324031478890497/617820317389160471">#character-discussion</a> is the place to ask!
+>
+
 ---
 
 The following additional rules apply during character creation beyond the official rules for character creation
