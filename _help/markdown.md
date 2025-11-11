@@ -6,7 +6,7 @@ order: 10
 
 # Markdown Author's Guide
 
-## Top of the Page Front Matter
+## IMPORTANT:  Top of the Page Front Matter
 Every document **needs** to start with "front matter" - a small block at the very top that tells the website about your page.
 Without this, the document won't be added automatically into the site after uploading.  
 
@@ -17,13 +17,21 @@ Copy this format:
 layout: doc
 title: "Your Page Title Here"
 order: 10
+background_image: /assets/images/fieldguide-back.png  <-- this is the only optional
+
 ---
 ```
 
 **What each part means:**
-- `layout: doc` - Always use this (tells the site to format it as a documentation page)
-- `title:` - The title that appears at the top of the page and in the menu
-- `order:` - A number that determines where it appears in the menu (lower numbers = higher up)
+
+|Front Matter Part|	|Optional / Mandatory|	|Description|	|Example|
+|:-------------------|	|:--------------------|	|:---------------------------------------------------------------------------------|	|:------------------------------------------------------|
+|`layout:`|	|Mandatory|	|Always use this (tells the site to format it as a documentation page)|	|`layout: doc`|
+|`title:`|	|Mandatory|	|The title that appears at the top of the page and in the menu|	|`title: "Your Page Title Here"`|
+|`order:'|	|Mandatory|	|A number that determines where it appears in the menu (lower numbers = higher up)|	|`order: 10`|
+|`background_image:`|	|Optional|	|adds a background image to the page|	|`background_image: /assets/images/fieldguide-back.png`|
+
+
 
 **Tips:**
 - Use order numbers like 10, 20, 30 so you can easily add pages in between later
@@ -52,13 +60,7 @@ Headings create section titles in your document. Use the `#` symbol:
 - Heading 3 is also in ALL CAPS but smaller
 - Heading 4, 5, 6 get progressively smaller
 
-**Best Practices:**
-- Use Heading 1 (`#`) only once at the top of your page (usually your title)
-- Use Heading 2 (`##`) for main sections
-- Use Heading 3 (`###`) for subsections
-- Don't skip levels (don't go from `##` to `####`)
-
-**Note**:  Always add a link break after each heading, e.g.
+**Note**:  Always add a break after each heading, e.g.
 
 ```markdown
  ## Heading 2
@@ -172,7 +174,7 @@ Check out the [D&D Beyond website](https://www.dndbeyond.com) for more info.
 
 **For internal links (other pages on our site):**
 ```markdown
-See the [Server Rules](/Guides/rules/server-rules.html) for more information.
+See the [Server Rules]({{ 'location in the github' | relative_url }}) for more information.
 ```
 
 **Tips:**
@@ -221,7 +223,7 @@ Tables are great for organizing information like stats, schedules, or rules.
 - `:---:` = center-aligned  
 - `---:` = right-aligned
 
-Too complicated?  I made an Google Sheet tool that will spit out the right markdown for tables  [MARKDOWN TABLE MAKER](https://docs.google.com/spreadsheets/d/1N2Z3t1rN-1r3yraTGbXWIZo-yaqyHTMYRF0sZtipTq4/edit?usp=sharing)
+Too complicated?  I made an Google Sheet tool that will spit out the right markdown for tables  [MARKDOWN TABLE MAKER](https://docs.google.com/spreadsheets/d/1N2Z3t1rN-1r3yraTGbXWIZo-yaqyHTMYRF0sZtipTq4/copy?edit?usp=sharing)
 
 ---
 
