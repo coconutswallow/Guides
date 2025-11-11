@@ -177,7 +177,7 @@
   --generator-success-text: var(--palette-alert-success-action);
 
   /* Stat Blocks */
-  --statblock-bg-image: url('{{ '/assets/images/fieldguide-back.png' | relative_url }}');
+  --statblock-bg-image: url('/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--palette-neutral-white);
   --statblock-body-bg: #000000;
   --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5kJggg==');
