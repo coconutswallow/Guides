@@ -12,7 +12,7 @@
 
 
 /* ============================================
-   LAYER 1: THE COLOR PALLETTE (THEME)
+   LAYER 1: THE COLOR PALLETTE
    (Literal, abstractly-named color values)
    ============================================ */
 :root {
@@ -177,7 +177,7 @@
   --generator-success-text: var(--palette-alert-success-action);
 
   /* Stat Blocks */
-  --statblock-bg-image: url('https://img.photouploads.com/file/PhotoUploads-com/jHlk.png');
+  --statblock-bg-image: url('{{ '/assets/images/fieldguide-back.png' | relative_url }}');
   --statblock-page-bg: var(--palette-neutral-white);
   --statblock-body-bg: #000000;
   --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5kJggg==');
