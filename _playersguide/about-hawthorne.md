@@ -2,6 +2,7 @@
 layout: doc
 title: "About Hawthorne"
 order: 5
+background_image: Guides/assets/images/fieldguide-back.png
 ---
 
 ## Hawthorne Guild: A History
