@@ -10,6 +10,15 @@
 	<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}"><link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
 </head>
 <body {% if page.background_image %}style="--page-bg-image: url('{{ page.background_image | relative_url }}')"{% endif %}>
+    {% if page.background_image %}
+    <script>
+    // Fallback: Set background image if not already set
+    if (!document.body.style.getPropertyValue('--page-bg-image')) {
+        document.body.style.setProperty('--page-bg-image', 'url("{{ page.background_image | relative_url }}")');
+    }
+    </script>
+    {% endif %}
+        
     <header class="site-header">
         <div class="header-content">
             <button id="menu-toggle" aria-label="Toggle Navigation Menu">
