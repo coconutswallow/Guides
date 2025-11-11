@@ -14,7 +14,7 @@ If you are new to DND and do not have access to the rule books yet, a lot of the
 
 <a href="https://www.dndbeyond.com/srd">D&D System Reference Document</a>
 
-<div class="alert-warning">If you have questions about character creation, or want to get input on a character idea, #character-discussion is the place to ask!</div>
+<div class="alert-warning"><strong>If you have questions about character creation, or want to get input on a character idea, <a href="https://discord.com/channels/308324031478890497/617820317389160471">#character-discussion</a> is the place to ask!</strong></div>
 
 The following additional rules apply during character creation beyond the official rules for character creation
 
@@ -36,7 +36,11 @@ The following additional rules apply during character creation beyond the offici
 | <strong>Starting Equipment</strong> | Your character’s background and initial class determines this. Rolling for gold is not allowed. Note: A character that starts at level 5 starts with an additional 600 GP. |
 | <strong>Renown</strong> | You can start with a Renown score of 1 and Initiate rank with a group in the setting, starting with an Initiate Renown Perk if it’s a group detailed in <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (this can’t be sold or traded).
 
-**Note:**  There is no limit to the number of characters you wish to create as long as they adhere to the rules above!
+### Notes 
+- There is no limit to the number of characters you wish to create as long as they adhere to the rules above!
+- Once you receive your adventure's Google Drive, please save a copy of each of your character's sheet there
+- Each character must have a corresponding entry in your Master Adventurer's Log (MAL).  See next page for details.
+
 
 
 
