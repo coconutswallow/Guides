@@ -58,6 +58,15 @@ ___
 >
 > ***Trackless.*** The Sandman leaves no tracks to indicate where he has been or where he's headed.
 >
+> ### Actions
+>
+> ***Multiattack***. The Sandman makes two attacks. If he attacks with his claws and both claw attacks hit a humanoid, the target must succeed on a DC 17 Wisdom saving throw or fall unconscious for 1 hour. A creature awakens if it takes damage or if someone uses
+an action to shake or slap it awake. 
+>
+> ***Claws***. Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 8 (1d6 + 5) slashing damage. If the Sandman has advantage on the attack roll, the target also takes 10 (3d6) psychic damage.
+>
+> ***Sleeping Sand***. The Sandman sprinkles sand in the eyes of an unconscious creature within 5 feet of him. While the sand remains, the creature is paralyzed. The effect ends after 8 hours, or if a creature takes an action to remove the sand.
+>
 > ### Legendary Actions
 > The Sandman can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another
 creature's turn. The Sandman regains spent legendary actions at the start of his turn.
@@ -78,10 +87,11 @@ creature's turn. The Sandman regains spent legendary actions at the start of his
 >
 > ### Regional Effects
 >
-> > The region containing the Sandman's lair is warped by his magic, creating one or more of the following effects:
-> > * Corridors and pathways within the lair twist and turn back on themselves, making navigation in the area exceedingly difficult.
+> The region containing the Sandman's lair is warped by his magic, creating one or more of the following effects:
+> * Corridors and pathways within the lair twist and turn back on themselves, making navigation in the area exceedingly difficult.
 > * New structures appear on occasion, and existing ones can shift or change in size or appearance.
 > * Intelligent creatures see hallucinations of friends, family members, and things that they desire. Any attempt to interact with a hallucinatory image causes it to disappear.
 > * Duplicates of the Sandman appear in random places at random times (but never more than one in any given location). A duplicate is made of sand, but it looks, sounds, and moves like the Sandman. The Sandman can sense when one or more creatures are within 60 feet of his duplicate and can interact with them as if he were present and standing in the duplicate's space. If the duplicate takes any damage, it crumbles into sand.
-> > If the Sandman dies, these regional effects end immediately.
+>
+> If the Sandman dies, these regional effects end immediately.
 >

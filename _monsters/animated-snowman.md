@@ -13,12 +13,13 @@ image_credit: Unknown (https://ca.pinterest.com/pin/476326098069095049/)
 
 ## Animated Snowman
 
-The **Animated Snowman** is a mindless protector construct, originally built by nomadic gnomes of the High Ice to guard their settlement from marauding monsters. It is a sentinel that never abandons its post, even as the snow around it melts.
+### Origins
 
-These creatures create festive displays of snow and foliage to hide in plain sight (**False Appearance**). If a creature is killed near their display, they hide the body within another snowman and use the spilled blood to add macabre "rosy cheeks" and "festive stripes" to the scene. The snowman is highly resistant to physical damage due to its **Compacted Snow** trait, which increases its armor, but it is highly vulnerable to fire.
+The original Animated Snowmen were built by a group of nomadic gnomes traveling on the High Ice to protect their settlement from marauding monsters. They are mindless protectors and will ambush anything that does not look like one of their gnomish creators.
 
-#### Combat Tactics
-The Animated Snowman relies on its **False Appearance** to ambush anything that doesn't resemble its gnomish creators. In combat, it uses **Winter's Breath** to deal burst cold damage and follows up with **Slam** attacks to quickly increase its armor class with **Compacted Snow**. It may use ranged **Snowball** attacks to slow targets with cold damage. The snowman is compelled to stay within the area it was charged to protect.
+### Behaviors
+
+Animated Snowmen will create festive displays in order to hide in plain sight. Displays are created with snow and available foliage in the area to make circlets, necklaces, and facial expressions. If the snowmen kill a creature near their display, they will hide the body in another snowman and add it to the display. Any blood spilled will be used to add rosy cheeks, red lips, and festive stripes to elements of the display. Animated snowmen will not leave the area they were charged to protect, even if the snow melts to the point where their festive display is reduced to a ghastly display of thawing corpses and an ominous snowman remaining perfectly frozen.
 
 ___
 > ## Animated Snowman
@@ -46,3 +47,12 @@ ___
 >
 > ***Compacted Snow.*** When the snowman is dealt bludgeoning, piercing, slashing, or force damage, the outside layer of snow is compacted, making it harder to hit. The snowman gains a **+1 bonus to AC** each time it takes damage from one of these damage types, up to a maximum of AC 20. If the snowman takes fire damage, any AC bonus accumulated from this feature is lost.
 >
+> ### Actions
+> 
+> ***Multiattack.*** The snowman uses Winter's Breath if available and two slam attacks or two snowball attacks.
+>
+> ***Winter's Breath (Recharge 5-6).*** The snowman exhales an icy blast in a 15-foot cone. Each creature in that area must make a DC 15 Constitution saving throw, taking 18 (4d8) cold damage on a failed save, or half as much damage on a successful one.
+>
+> **Slam.** Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit 13 (2d8 + 4) bludgeoning damage.
+>
+> ***Snowball.*** Ranged Weapon Attack: +7 to hit, range 20/60 ft., one target. Hit 6 (1d4 + 4) bludgeoning damage plus 5 (2d4) cold damage.
