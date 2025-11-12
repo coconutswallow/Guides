@@ -80,7 +80,7 @@ The DM will log all such rewards for the game in the <a href="https://discord.co
 
 Example:
 
-[Example MAL entry](https://lh3.googleusercontent.com/sitesv/AAzXCkdPh1hkngYhZj-9TdlKInnrZrDgIJhXVsxrnhYn61LFdmXimNhkD5m3Cr-CLB4sB0gXLzPg6AlC7T_yDfqjBD-D5TJOR-56zsCf-DsbXRjBzyBjSmN07jpmfT0ZY2AnprpFqsmzkNURoMnfgijcQhIJ0w-wy454J-8Nca91YcOu85SmLkA2743mmOB8NtX7-3BwJPHkhP9emlnuFbzl-jnZdWagOni16Eg2lRY=w1280)
+[Example MAL entry]({{ '/assets/images/example-mal-entry.png' | relative_url }})
 
 ### Death
 
