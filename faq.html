@@ -6,9 +6,9 @@ extra_css:
 ---
 <script src="//unpkg.com/alpinejs" defer></script>
 
-{% assign categories = site.data.faqs | map: "category" | uniq %}
+{% assign categories = site.data.faqs | map: "category" | uniq %}  
 
-<div class="doc-body" x-data="{ searchTerm: '', activeCategories: {{ categories | jsonify }} }">
+<div class="doc-body" x-data='{ "searchTerm": "", "activeCategories": {{ categories | jsonify }} }'>
 
   <h1>Frequently Asked Questions</h1>
  
@@ -37,7 +37,7 @@ extra_css:
       <div 
         class="faq-item" 
         data-category="{{ item.category }}"
-        x-show="( activeCategories.includes($el.dataset.category) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase())) )"
+        x-show="( $el.dataset.category && activeCategories.includes($el.dataset.category) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase())) )"
       >
         <h4>{{ item.question }}</h4>
         
