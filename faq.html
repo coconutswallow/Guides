@@ -6,11 +6,12 @@ extra_css:
 ---
 <script src="//unpkg.com/alpinejs" defer></script>
 
-<div class="doc-body" x-data="{ searchTerm: '', activeCategories: [] }">
+{% assign categories = site.data.faqs | map: "category" | uniq %}
+
+<div class="doc-body" x-data="{ searchTerm: '', activeCategories: {{ categories | jsonify }} }">
 
   <h1>Frequently Asked Questions</h1>
-
-  {% assign categories = site.data.faqs | map: "category" | uniq %}  
+ 
   <div class="faq-controls">
     <input 
       type="search" 
@@ -19,13 +20,7 @@ extra_css:
       class="filter-input"
     >
     <div class="faq-filters">
-        <button 
-            @click="activeCategories = []" 
-            :class="{ 'active': activeCategories.length === 0 }"
-        >
-        All
-        </button>
-
+        <h2>Filters:</h2>
         {% for category in categories %}
             <button 
                 @click="const index = activeCategories.indexOf('{{ category }}'); index === -1 ? activeCategories.push('{{ category }}') : activeCategories.splice(index, 1)"
@@ -43,7 +38,7 @@ extra_css:
       <div 
         class="faq-item" 
         data-category="{{ item.category }}"
-        x-show="( (activeCategories.length === 0 || activeCategories.includes($el.dataset.category)) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase())) )"
+        x-show="( activeCategories.includes($el.dataset.category) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase())) )"
       >
         <h4>{{ item.question }}</h4>
         

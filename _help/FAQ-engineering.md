@@ -105,7 +105,14 @@ python convert_faq.py
 
 #### 4. Verify and Commit
 
-Check `_data/faqs.yml` to ensure the formatting looks correct. Commit the changes to the repository.
+Check `_data/faqs.yml` to ensure the formatting looks correct. 
+
+**DELETE the TSV file**
+
+Commit the changes to the repository.
+
+
+
 
 ## 4. Styling & Design
 
