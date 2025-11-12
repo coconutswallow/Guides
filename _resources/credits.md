@@ -6,7 +6,7 @@ order: 80
 
 ## Image Credits
 
-### Home Page Thumbnail Art
+### Home Page
 
 - [Tavern Brawl Image - Art by velinov](https://www.deviantart.com/velinov/art/Tavern-Brawl-96471746)
 - [TSR Jam Image - Art by Todd Lockwood](https://www.toddlockwood.com/dungeons-and-dragons#/tsr-jam/)
@@ -15,7 +15,9 @@ order: 80
 - [Candlekeep Mysteries - Art by ClintCearley](https://www.deviantart.com/clintcearley/art/Candlekeep-Mysteries-Dungeons-and-Dragons-928409928)
 - [Adventurer Traverses the landscape 2 - Art by Tirinium1 ](https://www.deviantart.com/tirinium1/art/The-adventurers-party-traverses-the-landscape-2-1219674888)
 - [Adventurer Party - Art by MenemAdam](https://www.deviantart.com/menemenadam/art/Adventure-Party-1175834324)
-
-#### Site Background Art
 - [The Contract by Exphrasis](https://www.deviantart.com/exphrasis/art/The-Contract-624868109)
+
+### Player's Guide
+
+- [Tavern Brawl Image - Art by velinov](https://www.deviantart.com/velinov/art/Tavern-Brawl-96471746)
 

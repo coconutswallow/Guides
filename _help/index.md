@@ -14,3 +14,4 @@ order: 1
 - <a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a>
 - <a href="{{ 'help/colors/' | relative_url }}">Site Color Schemes (Light/Dark)</a>
 - <a href="{{ 'help/Monster-Compendium' | relative_url }}">Monster Compendium Customer Pages</a>
+- <a href="{{ 'help/FAQ-engineering' | relative_url }}">FAQ</a>
