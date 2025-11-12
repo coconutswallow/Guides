@@ -2,7 +2,7 @@
 layout: doc
 title: "About Hawthorne"
 order: 5
-
+background_image: /assets/images/tavern_brawl.jpg
 ---
 
 ## Hawthorne Guild: A History

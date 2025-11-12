@@ -2,6 +2,7 @@
 layout: doc
 title: "Character Creation"
 order: 10
+background_image: /assets/images/tavern_brawl.jpg
 ---
 
 You can create characters using the rules in the Player’s Handbook and per the rules below. The <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> document contains all available options for use on the server for character creation. There is no limit on the number of characters you can create and control, but each character must have their own sheet in your server folder as well as a MAL entry. 

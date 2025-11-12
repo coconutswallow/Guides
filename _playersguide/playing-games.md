@@ -2,7 +2,9 @@
 layout: doc
 title: "Playing Games"
 order: 12
+background_image: /assets/images/tavern_brawl.jpg
 ---
+
 ## Type of Games
 
 A variety of games are offered on the Hawthorne Server:

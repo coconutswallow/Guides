@@ -2,7 +2,9 @@
 layout: doc
 title: "Downtime"
 order: 15
+background_image: /assets/images/tavern_brawl.jpg
 ---
+
 ## Downtime Points
 
 Between adventures, you can use Downtime Points (DTP) to perform different downtime activities. DTP is accrued by both players and DMs from sessions at a rate of 5 DTP per hour of the game (2 DTP for half hour). You can’t spend the same DTP on more than one activity, and DTP is player bound, meaning all of your PCs share a common pool of DTP. Except where otherwise stated, the minimum DTP for any activity is 1.

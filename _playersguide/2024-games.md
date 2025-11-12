@@ -2,7 +2,7 @@
 layout: doc
 title: "Appendix: 2024 PC & Games"
 order: 90
-
+background_image: /assets/images/tavern_brawl.jpg
 ---
 
 ## 2024 Characters
