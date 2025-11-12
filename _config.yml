@@ -83,7 +83,7 @@ navigation:
         url: /monster-compendium/generator/
         
   - title: "FAQ"
-    collection: faq
+    url: /faq.html
 
   # ========================================================  
   # Separator will be added with CSS/HTML
