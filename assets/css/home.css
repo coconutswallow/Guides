@@ -97,6 +97,12 @@
   box-shadow: var(--shadow-lg);
 }
 
+.feature-card.wip {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .feature-card h3 {
   font-family: var(--font-header);
   color: var(--color-primary);
