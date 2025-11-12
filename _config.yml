@@ -30,6 +30,9 @@ collections:
   help:
     output: true
     permalink: /help/:path/
+  resources:
+    output: true
+    permalink: /resources/:path/
     
 
 # ========================================================
@@ -84,6 +87,9 @@ navigation:
         
   - title: "FAQ"
     url: /faq.html
+
+  - title: "Resources"
+    collection: resources
 
   # ========================================================  
   # Separator will be added with CSS/HTML
