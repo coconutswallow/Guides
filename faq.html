@@ -20,7 +20,6 @@ extra_css:
       class="filter-input"
     >
     <div class="faq-filters">
-        <h2>Filters:</h2>
         {% for category in categories %}
             <button 
                 @click="const index = activeCategories.indexOf('{{ category }}'); index === -1 ? activeCategories.push('{{ category }}') : activeCategories.splice(index, 1)"

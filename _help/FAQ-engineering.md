@@ -87,7 +87,7 @@ Maintain a master spreadsheet (Google Sheets or Excel) with three columns (case 
     
 - **Excel:** Save As > Text (Tab delimited) (*.txt) -> Rename to `.tsv`.
     
-- Save the file as `faqs.tsv` in the same folder as the Python script.
+- Save the file as `faqs.tsv` in the same folder as the Python script. (/tools)
     
 
 #### 3. Run the Converter
@@ -98,7 +98,7 @@ Execute the script to generate the production YAML file.
 python convert_faq.py
 ```
 
-- **Input:** `_data/faqs.tsv` (or root, depending on script config)
+- **Input:** `tools/faqs.tsv` (or root, depending on script config)
     
 - **Output:** `_data/faqs.yml`
     
