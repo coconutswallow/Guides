@@ -69,3 +69,11 @@
 .faq-item p {
   margin: 0;
 }
+.faq-item-category {
+  font-size: 0.8rem;          /* Makes it small */
+  font-weight: 600;           /* Makes it semi-bold */
+  color: #6a737d;            /* A muted gray color */
+  margin-bottom: 4px;         /* Adds a little space before the question */
+  text-transform: uppercase;  /* Makes it look like a nice tag */
+  letter-spacing: 0.5px;      /* A bit of breathing room */
+}

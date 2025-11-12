@@ -34,15 +34,19 @@ extra_css:
   <div class="faq-list">
 
     {% for item in site.data.faqs %}
-      <div 
-        class="faq-item" 
-        data-category="{{ item.category }}"
-        x-show="( $el.dataset.category && activeCategories.includes($el.dataset.category) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase())) )"
-      >
-        <h4>{{ item.question }}</h4>
-        
-        {{ item.answer | markdownify }}
-      </div>
+      {% if item %}
+        <div 
+          class="faq-item" 
+          data-category="{{ item.category }}"
+          x-show="( $el.dataset.category && activeCategories.includes($el.dataset.category) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase())) )"
+        >
+          <p class="faq-item-category">{{ item.category }}</p>
+
+          <h4>{{ item.question }}</h4>
+          
+          {{ item.answer | markdownify }}
+        </div>
+      {% endif %}
     {% endfor %}
 
   </div>

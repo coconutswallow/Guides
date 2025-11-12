@@ -83,11 +83,9 @@ Maintain a master spreadsheet (Google Sheets or Excel) with three columns (case 
 
 #### 2. Export to TSV
 
-- **Google Sheets:** File > Download > Tab-separated values (.tsv).  Rename to remove the -sheet1 from the filename
-    
-- **Excel:** Save As > Text (Tab delimited) (*.txt) -> Rename to `.tsv`.
-    
-- Save the file as `faqs.tsv` in the same folder as the Python script. (/tools)
+- **Google Sheets:** File > Download > Tab-separated values (.tsv).  it will be named `faqs - Sheet1.tsv` by default
+
+- Save the file as `faqs - Sheet1.tsv` in the same folder as the Python script. (`/tools)`)
     
 
 #### 3. Run the Converter
@@ -98,7 +96,7 @@ Execute the script to generate the production YAML file.
 python convert_faq.py
 ```
 
-- **Input:** `tools/faqs.tsv` (or root, depending on script config)
+- **Input:** `tools/faqs - Sheet1.tsv` (or root, depending on script config)
     
 - **Output:** `_data/faqs.yml`
     
@@ -106,11 +104,6 @@ python convert_faq.py
 #### 4. Verify and Commit
 
 Check `_data/faqs.yml` to ensure the formatting looks correct. 
-
-**DELETE the TSV file**
-
-Commit the changes to the repository.
-
 
 
 
