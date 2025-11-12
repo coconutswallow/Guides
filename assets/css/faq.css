@@ -70,7 +70,7 @@
   margin: 0;
 }
 .faq-item-category {
-  font-size: 0.8rem;          /* Makes it small */
+  font-size: 0.6rem;          /* Makes it small */
   font-weight: 600;           /* Makes it semi-bold */
   color: #6a737d;            /* A muted gray color */
   margin-bottom: 4px;         /* Adds a little space before the question */
