@@ -2,6 +2,7 @@
 layout: doc
 title: "Your MAL"
 order: 11
+background_image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c3162551-b1f8-456c-915f-acf24e22777f/d1lfq2q-3904e5b0-6bfa-41d9-9b49-5fd4279d7003.jpg/v1/fill/w_1088,h_735,q_70,strp/tavern_brawl_by_velinov_d1lfq2q-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODQwIiwicGF0aCI6Ii9mL2MzMTYyNTUxLWIxZjgtNDU2Yy05MTVmLWFjZjI0ZTIyNzc3Zi9kMWxmcTJxLTM5MDRlNWIwLTZiZmEtNDFkOS05YjQ5LTVmZDQyNzlkNzAwMy5qcGciLCJ3aWR0aCI6Ijw9MTI0MyJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.kCGkaqlsUchSTji3_cvwzXpI_pDsF8NkHFJKE_-lTx4
 ---
 ## What is your Master Adventurer's Log (MAL) ?
 
