@@ -124,6 +124,7 @@
   /* Links & Buttons */
   --color-link: var(--color-secondary);
   --color-link-hover: var(--color-border);
+  --color-btn-hover-text: var(--color-bg-light);
   --color-btn-text: var(--color-bg-light);
   --color-card-button-text: var(--color-bg-light);
 
@@ -230,6 +231,7 @@
 
   /* Links & Buttons */
   --color-btn-text: var(--color-bg-light);
+  --color-btn-hover-text: var(--color-bg-light);
   --color-card-button-text: var(--color-bg-light);
 
   /* UI Components */
@@ -1332,7 +1334,7 @@ tbody tr:hover {
 
 .button:hover, .btn:hover {
   background: var(--color-secondary);
-  color: var(--color-bg-light);
+  color: var(--color-btn-hover-text);
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
