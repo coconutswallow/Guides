@@ -6,9 +6,9 @@ extra_css:
 ---
 <script src="//unpkg.com/alpinejs" defer></script>
 
-{% assign categories = site.data.faqs | map: "category" | uniq %}  
+{% assign categories = site.data.faqs | map: "category" | uniq %}
 
-<div class="doc-body" x-data="{ searchTerm: '', activeCategories: [{{ categories | join: "','", prepend: "'", append: "'" }}] }">
+<div class="doc-body" x-data="{ searchTerm: '', activeCategories: {{ categories | jsonify }} }">
 
   <h1>Frequently Asked Questions</h1>
  
