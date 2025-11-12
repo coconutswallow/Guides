@@ -6,7 +6,7 @@ order: 3
 Your privacy is important to us and we collect only data necessary for the running of the server and guild. This applies to use of the Discord server, the Google Drive and Kanka. This document lays out the processes by which we collect, use and store your data. Please read this document carefully and contact a member of the Admin team if you have any questions.
 
 ## Who Are We
-Hawthorne Guild is a Discord-based multiplayer DnD 5e server comprising players from all over the world.  The server is maintained by volunteer staff from several countries. The data controller is Espy42, contactable on Discord via Direct Message.
+Hawthorne Guild is a Discord-based multiplayer DnD 5e server comprising players from all over the world.  The server is maintained by volunteer staff from several countries. The data controller is **Espy42**, contactable on Discord via Direct Message.
 
 ## What Information Do we Collect?
 We collect the following information through Discord:
