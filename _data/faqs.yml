@@ -1,38 +1,36 @@
-- question: "What's server stance on use of AI images for characters?"
-  category: "Rules"
-  answer: |
-    The server takes no official stance on AI generated images. Players and DMs are allowed to use it in their own games and for their characters. Some players and DMs prefer not to play in games where AI generated images are present, which is typically indicated in a game ad. We do also have and promote several active Artists in our community, the nature of whose work is obviously entangled with the existence of AI generated images. 
-
-- question: "Where do I find the Humblewood Campaign Content?"
-  category: "Content"
-  answer: |
-    You can find the Humblewood Campaign Setting content as a free pay-what-you-want on their <a href="https://hitpointpress.com/products/humblewood-campaign-setting-pdf?_pos=1&_fid=96de5d2fb&_ss=c&variant=44261348343981">Website</a>
-
-- question: "Does the server play D&D 2014 or 2024 Games?"
-  category: "Games"
-  answer: |
-    There's a number of DMs that run 2014 games and there's a fair amount of older 2014 PCs among more tenured server members here. However, folks typically are curious and interested to try out the new options, so 2024 games are statistically more prevalent overall. To clarify and bear in mind as well, 2014 PCs can play without issue in either 2014 or 2024 games.
-
-- question: "Can a 2024 character use any 2014 class / subclass / race / feat?"
-  category: "Character Creation"
-  answer: |
-    If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: 
-    * 2024 Cleric, 2014 Twilight Domain - Permitted
-    * 2024 Cleric, 2014 Life Domain - Not Permitted
-
-- question: "Do I need to have played games to be a DM on the server?"
-  category: "DMing"
-  answer: |
-    You can apply to be a DM without having played a game yet, you just have to make a request in **#⁠player-requests** to PR and Auditors to check in with you after submitting the form. However, like Thomas said, playing a few games first if possible is recommended to get to know folks and the server.
-
-- question: "What is the Hawthorne Guild?"
-  category: "General"
-  answer: |
-    This server is a D&D 5e server where all games take place in a shared persistent world set in the Forgotten Realms and broader D&D multiverse. Player characters are adventurers in the Hawthorne Guild, an adventurer's guild based out of the Sword Coast, and head out on various adventures as ran by DMs. Adventure events and characters are persistent, with characters accruing XP, wealth, and loot between games, and starting at either level 3 or level 5.
-    While not exactly that, it is similar to what some folks call a "Westmarches server." In essence, you can create characters that participate in adventures ran by various DMs, with character progression and adventure events persisting between games. You can think of it as akin to an MMO, adventuring alongside various fellow players under various DMs, and able to participate in varying storylines DMs tell here. 
-    Most games are oneshots set in the same shared, connected game world, though there are also open multisessions, open campaigns, and traditional closed campaigns as well. We typically average around 6 games a day across various time zones, with games posted in our **#⁠game-advertisement** and ⁠**#game-listings** channel.
-
-- question: "Where is the Allowed Content?"
-  category: "General"
-  answer: |
-    [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632)
+  - question: What is the Hawthorne Guild?
+    category: General
+    answer: |-
+      This server is a D&D 5e server where all games take place in a shared persistent world set in the Forgotten Realms and broader D&D multiverse. Player characters are adventurers in the Hawthorne Guild, an adventurer's guild based out of the Sword Coast, and head out on various adventures as ran by DMs. Adventure events and characters are persistent, with characters accruing XP, wealth, and loot between games, and starting at either level 3 or level 5.  While not exactly that, it is similar to what some folks call a "Westmarches server." In essence, you can create characters that participate in adventures ran by various DMs, with character progression and adventure events persisting between games. You can think of it as akin to an MMO, adventuring alongside various fellow players under various DMs, and able to participate in varying storylines DMs tell here.   Most games are oneshots set in the same shared, connected game world, though there are also open multisessions, open campaigns, and traditional closed campaigns as well. We typically average around 6 games a day across various time zones, with games posted in our **#⁠game-advertisement** and ⁠**#game-listings** channel.
+  - question: Does the server play D&D 2014 or 2024 Games?
+    category: Games
+    answer: |-
+      There's a number of DMs that run 2014 games and there's a fair amount of older 2014 PCs among more tenured server members here. However, folks typically are curious and interested to try out the new options, so 2024 games are statistically more prevalent overall. To clarify and bear in mind as well, 2014 PCs can play without issue in either 2014 or 2024 games.
+  - question: Can a 2024 character use any 2014 class / subclass / race / feat?
+    category: Character Creation
+    answer: |-
+      If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example:      * 2024 Cleric, 2014 Twilight Domain - Permitted     * 2024 Cleric, 2014 Life Domain - Not Permitted
+  - question: Do I need to have played games to be a DM on the server?
+    category: DMing
+    answer: |-
+      You can apply to be a DM without having played a game yet, you just have to make a request in **#⁠player-requests** to PR and Auditors to check in with you after submitting the form. However, playing a few games first if possible is recommended to get to know folks and the server.
+  - question: What are the AC and the Allowed Content?
+    category: General
+    answer: |-
+      They are one in the same, and the single most helpful document on the server.  The AC has basically all of the information as to what is allowed on the server, mechanics-wise.
+  - question: Do I need to get my character approved?
+    category: Character Creation
+    answer: |-
+      No, we operate on the honor system here! But you can post it in the Character-Discussion channel to get it double checked if you’d like!
+  - question: The DM asked me if I am a New Hire or a Welcome Wagon. What do those mean?
+    category: General
+    answer: |-
+      The DM is checking to see if you have completed your first 10 games in Hawthorne. As long as you are on your first 10 games, you're a new hire. Bear in mind, any session that goes longer than 6 hours will count as multiple games.
+  - question: Do I roll for stats?
+    category: Character Creation
+    answer: |-
+      No, here we use point buy. [Point Buy Calculator](https://chicken-dinner.com/5e/5e-point-buy.html)
+  - question: What's server stance on use of AI images for characters?
+    category: Rules
+    answer: |-
+      The server takes no official stance on AI generated images. Players and DMs are allowed to use it in their own games and for their characters. Some players and DMs prefer not to play in games where AI generated images are present, which is typically indicated in a game ad. We do also have and promote several active Artists in our community, the nature of whose work is obviously entangled with the existence of AI generated images.

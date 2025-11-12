@@ -6,7 +6,7 @@ extra_css:
 ---
 <script src="//unpkg.com/alpinejs" defer></script>
 
-<div class="doc-body" x-data="{ searchTerm: '', selectedCategory: 'all' }">
+<div class="doc-body" x-data="{ searchTerm: '', activeCategories: [] }">
 
   <h1>Frequently Asked Questions</h1>
 
@@ -20,18 +20,19 @@ extra_css:
     >
     <div class="faq-filters">
         <button 
-            @click="selectedCategory = 'all'" 
-            :class="{ 'active': selectedCategory === 'all' }"
+            @click="activeCategories = []" 
+            :class="{ 'active': activeCategories.length === 0 }"
         >
         All
         </button>
 
         {% for category in categories %}
             <button 
-                @click="selectedCategory = '{{ category }}'" 
-                :class="{ 'active': selectedCategory === '{{ category }}' }"
+                @click="const index = activeCategories.indexOf('{{ category }}'); index === -1 ? activeCategories.push('{{ category }}') : activeCategories.splice(index, 1)"
+                :class="{ 'active': activeCategories.includes('{{ category }}') }"
             >
-            {{ category | capitalize }}  </button>
+            {{ category | capitalize }}
+            </button>
         {% endfor %}
     </div>
   </div>
@@ -42,7 +43,7 @@ extra_css:
       <div 
         class="faq-item" 
         data-category="{{ item.category }}"
-        x-show="(selectedCategory === 'all' || $el.dataset.category === selectedCategory) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase()))"
+        x-show="( (activeCategories.length === 0 || activeCategories.includes($el.dataset.category)) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase())) )"
       >
         <h4>{{ item.question }}</h4>
         
