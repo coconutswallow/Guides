@@ -10,6 +10,7 @@ extra_css:
 
   <h1>Frequently Asked Questions</h1>
 
+  {% assign categories = site.data.faqs | map: "category" | uniq %}  
   <div class="faq-controls">
     <input 
       type="search" 
@@ -18,13 +19,22 @@ extra_css:
       class="filter-input"
     >
     <div class="faq-filters">
-      <button @click="selectedCategory = 'all'" :class="{ 'active': selectedCategory === 'all' }">All</button>
-      <button @click="selectedCategory = 'general'" :class="{ 'active': selectedCategory === 'general' }">General</button>
-      <button @click="selectedCategory = 'downtime'" :class="{ 'active': selectedCategory === 'downtime' }">Downtime</button>
+        <button 
+            @click="selectedCategory = 'all'" 
+            :class="{ 'active': selectedCategory === 'all' }"
+        >
+        All
+        </button>
+
+        {% for category in categories %}
+            <button 
+                @click="selectedCategory = '{{ category }}'" 
+                :class="{ 'active': selectedCategory === '{{ category }}' }"
+            >
+            {{ category | capitalize }}  </button>
+        {% endfor %}
     </div>
   </div>
-
-  ---
 
   <div class="faq-list">
 
