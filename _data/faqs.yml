@@ -1,21 +1,9 @@
-- question: "What is the Hawthorne Guild?"
-  category: "general"
+- question: "What's server stance on use of AI images for characters?"
+  category: "Rules"
   answer: |
-    A community-driven West Marches TTRPG server. We focus on... (answer)
+    The server takes no official stance on AI generated images. Players and DMs are allowed to use it in their own games and for their characters. Some players and DMs prefer not to play in games where AI generated images are present, which is typically indicated in a game ad. We do also have and promote several active Artists in our community, the nature of whose work is obviously entangled with the existence of AI generated images. 
 
-- question: "How do I join a game?"
-  category: "general"
+- question: "Where do I find the Humblewood Campaign Content?"
+  category: "Content"
   answer: |
-    Check the `#game-listings` channel. DMs post their games there with all the info you need.
-
-- question: "How does Downtime work?"
-  category: "downtime"
-  answer: |
-    Downtime is spent in 7-day increments. You can use it to craft, train, or carouse. 
-    
-    See the [full downtime rules]({{ 'players-guide/downtime/' | relative_url }}) for more.
-
-- question: "Can I craft a magic item?"
-  category: "downtime"
-  answer: |
-    Yes, crafting is a downtime activity. See the crafting rules for details on materials and time required.
+    You can find the Humblewood Campaign Content <a href="https://hitpointpress.com/products/humblewood-campaign-setting-pdf?_pos=1&_fid=96de5d2fb&_ss=c&variant=44261348343981"> Here </a>
