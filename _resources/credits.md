@@ -13,3 +13,5 @@ order: 80
 - [Goblin Chaos - Art by Daryl Mandrytk](https://www.artstation.com/artwork/qAYBN)
 - [The Dungeon Master - Art by MoulinBleu](https://www.deviantart.com/moulinbleu/art/the-Dungeon-Master-365881616)
 - [Candlekeep Mysteries - Art by ClintCearley](https://www.deviantart.com/clintcearley/art/Candlekeep-Mysteries-Dungeons-and-Dragons-928409928)
+- [The Contract by Exphrasis](https://www.deviantart.com/exphrasis/art/The-Contract-624868109)
+
