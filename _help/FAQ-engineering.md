@@ -22,7 +22,7 @@ This approach ensures the page is SEO-friendly (all content is in the initial HT
 |`faq.html`|The main page template. Contains the Alpine.js logic and Jekyll Liquid loops.|
 |`_data/faqs.yml`|The source of truth. Contains all questions, answers, and categories.|
 |`assets/css/faq.css`|Specific styles for the FAQ page (loaded via `extra_css` front matter).|
-|`convert_faq.py`|Utility script to convert Spreadsheet exports (TSV) into the YAML format.|
+|`/tools/convert_faq.py`|Utility script to convert Spreadsheet exports (TSV) into the YAML format.|
 
 ### Logic Flow
 
@@ -63,7 +63,7 @@ To allow non-technical contributors to update content, we use a **Spreadsheet â†
 
 #### 1. Edit the Spreadsheet
 
-Maintain a master spreadsheet (Google Sheets or Excel) with three columns:
+Maintain a master spreadsheet (Google Sheets or Excel) with three columns (case sensitive):
 
 - `category` (e.g., General, Rules, Downtime)
     
@@ -83,7 +83,7 @@ Maintain a master spreadsheet (Google Sheets or Excel) with three columns:
 
 #### 2. Export to TSV
 
-- **Google Sheets:** File > Download > Tab-separated values (.tsv).
+- **Google Sheets:** File > Download > Tab-separated values (.tsv).  Rename to remove the -sheet1 from the filename
     
 - **Excel:** Save As > Text (Tab delimited) (*.txt) -> Rename to `.tsv`.
     
