@@ -6,4 +6,16 @@
 - question: "Where do I find the Humblewood Campaign Content?"
   category: "Content"
   answer: |
-    You can find the Humblewood Campaign Content <a href="https://hitpointpress.com/products/humblewood-campaign-setting-pdf?_pos=1&_fid=96de5d2fb&_ss=c&variant=44261348343981"> Here </a>
+    You can find the Humblewood Campaign Setting content as a free pay-what-you-want on their <a href="https://hitpointpress.com/products/humblewood-campaign-setting-pdf?_pos=1&_fid=96de5d2fb&_ss=c&variant=44261348343981">Website</a>
+
+- question: "Does the server play D&D 2014 or 2024 Games?"
+  category: "Games"
+  answer: |
+    There's a number of DMs that run 2014 games and there's a fair amount of older 2014 PCs among more tenured server members here. However, folks typically are curious and interested to try out the new options, so 2024 games are statistically more prevalent overall. To clarify and bear in mind as well, 2014 PCs can play without issue in either 2014 or 2024 games.
+
+- question: "Can a 2024 character use any 2014 class / subclass / race / feat?"
+  category: "Character Creation"
+  answer: |
+    If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: 
+    2024 Cleric, 2014 Twilight Domain - Permitted
+    2024 Cleric, 2014 Life Domain - Not Permitted
