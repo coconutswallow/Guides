@@ -36,15 +36,34 @@
 
 .faq-item {
   background: var(--color-bg-light);
-  border: 2px solid var(--color-border);
-  padding: 1.5em;
+  
+  /* --- CHANGE 1: New color scheme --- */
+  /* We removed the full border and added just a left border, */
+  /* like a blockquote. This makes it look distinct. */
+  border: none;
+  border-left: 4px solid var(--color-primary);
+
+  /* --- CHANGE 2: Reduced vertical padding --- */
+  /* Was "padding: 1.5em;" */
+  padding: 1em 1.5em;
+
   margin-bottom: 1em;
   border-radius: var(--border-radius);
 }
 
 .faq-item h4 {
   color: var(--color-primary);
-  margin: 0 0 0.5em 0;
+
+  /* --- CHANGE 3: Smaller, lighter header --- */
+  /* Using the body font (bolded) instead of the all-caps */
+  /* header font makes it feel much less heavy. */
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.1em;
+
+  /* --- CHANGE 4: Reduced vertical margin --- */
+  /* Was "margin: 0 0 0.5em 0;" */
+  margin: 0 0 0.25em 0;
 }
 
 .faq-item p {
