@@ -1,0 +1,21 @@
+- question: "What is the Hawthorne Guild?"
+  category: "general"
+  answer: |
+    A community-driven West Marches TTRPG server. We focus on... (answer)
+
+- question: "How do I join a game?"
+  category: "general"
+  answer: |
+    Check the `#game-listings` channel. DMs post their games there with all the info you need.
+
+- question: "How does Downtime work?"
+  category: "downtime"
+  answer: |
+    Downtime is spent in 7-day increments. You can use it to craft, train, or carouse. 
+    
+    See the [full downtime rules]({{ 'players-guide/downtime/' | relative_url }}) for more.
+
+- question: "Can I craft a magic item?"
+  category: "downtime"
+  answer: |
+    Yes, crafting is a downtime activity. See the crafting rules for details on materials and time required.

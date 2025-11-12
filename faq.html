@@ -1,0 +1,44 @@
+---
+layout: default
+title: FAQ
+extra_css:
+  - /assets/css/faq.css
+---
+<script src="//unpkg.com/alpinejs" defer></script>
+
+<div class="doc-body" x-data="{ searchTerm: '', selectedCategory: 'all' }">
+
+  <h1>Frequently Asked Questions</h1>
+
+  <div class="faq-controls">
+    <input 
+      type="search" 
+      x-model="searchTerm" 
+      placeholder="Search all FAQs..." 
+      class="filter-input"
+    >
+    <div class="faq-filters">
+      <button @click="selectedCategory = 'all'" :class="{ 'active': selectedCategory === 'all' }">All</button>
+      <button @click="selectedCategory = 'general'" :class="{ 'active': selectedCategory === 'general' }">General</button>
+      <button @click="selectedCategory = 'downtime'" :class="{ 'active': selectedCategory === 'downtime' }">Downtime</button>
+    </div>
+  </div>
+
+  ---
+
+  <div class="faq-list">
+
+    {% for item in site.data.faqs %}
+      <div 
+        class="faq-item" 
+        data-category="{{ item.category }}"
+        x-show="(selectedCategory === 'all' || $el.dataset.category === selectedCategory) && (searchTerm === '' || $el.textContent.toLowerCase().includes(searchTerm.toLowerCase()))"
+      >
+        <h4>{{ item.question }}</h4>
+        
+        {{ item.answer | markdownify }}
+      </div>
+    {% endfor %}
+
+  </div>
+</div>

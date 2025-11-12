@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}"> 
 	<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}"><link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
+    {% for stylesheet in page.extra_css %}
+        <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
+    {% endfor %}
 </head>
 <body {% if page.background_image %}style="--page-bg-image: url('{{ page.background_image | relative_url }}')"{% endif %}>
     {% if page.background_image %}

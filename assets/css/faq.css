@@ -1,0 +1,52 @@
+/* Styles for the FAQ page */
+.faq-controls {
+  padding: 1.5em;
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  margin-bottom: 2em;
+}
+
+.faq-controls .filter-input {
+  width: 100%;
+  padding: 0.75em 1em;
+  font-size: 1.1em;
+  border: 2px solid var(--color-border);
+  background: var(--color-bg-page);
+  color: var(--color-text);
+  margin-bottom: 1em;
+}
+
+.faq-filters button {
+  padding: 0.5em 1em;
+  margin-right: 0.5em;
+  border: none;
+  background: var(--color-bg-medium);
+  color: var(--color-text-secondary);
+  font-family: var(--font-header);
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.faq-filters button.active {
+  background: var(--color-primary);
+  color: var(--color-btn-text);
+}
+
+.faq-item {
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  padding: 1.5em;
+  margin-bottom: 1em;
+  border-radius: var(--border-radius);
+}
+
+.faq-item h4 {
+  color: var(--color-primary);
+  margin: 0 0 0.5em 0;
+}
+
+.faq-item p {
+  margin: 0;
+}
