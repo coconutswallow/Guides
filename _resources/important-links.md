@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "Resources"
+title: "Important Links"
 order: 10
 ---
 
