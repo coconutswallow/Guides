@@ -40,7 +40,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
 
   - name: "playersguide"
     label: "Player's Guide"
@@ -51,7 +56,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
 
   - name: "dms_guide"
     label: "DM's Guide"
@@ -62,7 +72,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
 
   - name: "arcana"
     label: "Arcana"
@@ -73,7 +88,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
 
   - name: "field_guide"
     label: "Field Guide"
@@ -84,7 +104,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
 
   - name: "faq"
     label: "FAQ"
@@ -95,7 +120,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
 
   - name: "help"
     label: "Help"
@@ -106,7 +136,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
 
   - name: "resources"
     label: "Resources"
@@ -117,4 +152,9 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
