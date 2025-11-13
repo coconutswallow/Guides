@@ -11,9 +11,6 @@ order: 10
 |[Google Drive](https://drive.google.com/drive/folders/1LbV3SfS5XveJM8ScEM1ceRLia6MtNkLh)|The server’s Google Drive|
 |[Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857)|List of usable content on the server|
 |[DM Registration](https://docs.google.com/forms/d/e/1FAIpQLSeSJFrWH_ZFCBa_TndvhqhJsNDtVoKb4hAt7X2v07D-4lLTbw/viewform)|Form to register as a Trial DM|
-|[Hawthorne DM Guidelines](https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view)|Guidelines on DMing on the server|
-|[Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view)|Player facing server homebrew|
-|[Hawthorne Field Guide](https://drive.google.com/file/d/1CQ508SRkQvzOjmfmpzL2PrVtYOk9MSnc/view)|DM facing server homebrew|
 |[Hawthorne Award Nomination](https://docs.google.com/forms/d/e/1FAIpQLScHdywQI2i9Kqs0jOfqma31x1VzUvLO7BjjO5qDlq8_L42MUg/viewform)|Form to nominate a community member for a Hawthorne Award|
 |[Hawthorne Incident Report](https://docs.google.com/forms/d/e/1FAIpQLSfAKWb9rl_w2IRZ6zXKJZ42Kez3C4aTZtwkfTjhSUWuciKwHw/viewform)|Form to report an incident to be reviewed by the PR team|
 
