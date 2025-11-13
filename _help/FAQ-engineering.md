@@ -83,9 +83,11 @@ Maintain a master spreadsheet (Google Sheets or Excel) with three columns (case 
 
 #### 2. Export to TSV
 
-- **Google Sheets:** File > Download > Tab-separated values (.tsv).  it will be named `faqs - Sheet1.tsv` by default
+[Google Sheet Location](https://docs.google.com/spreadsheets/d/13x8hrf6-3-dst0Gj9lFsHAtxQHQPS2kIreVQMY7oeiw/edit?usp=sharing)
 
-- Save the file as `faqs - Sheet1.tsv` in the same folder as the Python script. (`/tools)`)
+File > Download > Tab-separated values (.tsv).  it will be named `faqs - Sheet1.tsv` by default
+
+Save the file as `faqs - Sheet1.tsv` in the same folder as the Python script. (`/tools)`)
     
 
 #### 3. Run the Converter
@@ -96,16 +98,13 @@ Execute the script to generate the production YAML file.
 python convert_faq.py
 ```
 
-- **Input:** `tools/faqs - Sheet1.tsv` (or root, depending on script config)
-    
+- **Input:** `tools/faqs - Sheet1.tsv` (or root, depending on script config)  
 - **Output:** `_data/faqs.yml`
     
 
 #### 4. Verify and Commit
 
 Check `_data/faqs.yml` to ensure the formatting looks correct. 
-
-
 
 ## 4. Styling & Design
 
@@ -117,24 +116,3 @@ The FAQ utilizes a custom style sheet (`assets/css/faq.css`) that overrides the 
     
 - **Dark Mode:** Fully compatible with the site's `[data-theme="dark"]` logic via CSS variables.
     
-
-## 5. Troubleshooting
-
-**Issue: "ruamel.yaml module not found"**
-
-- **Cause:** Python environment path issue.
-    
-- **Fix:** Run the install command using the python module flag:
-    
-    ```
-    python -m pip install ruamel.yaml
-    ```
-    
-
-**Issue: Newlines appearing as literal "\n" in the text**
-
-- **Cause:** The Python script regex or replacement logic failed, or double escaping occurred.
-    
-- **Fix:** Ensure the script uses `row['answer'].replace(r'\n', '\n')`.
-    
-
