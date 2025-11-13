@@ -1757,6 +1757,35 @@ tbody tr:hover {
 }
 
 /* ============================================
+/* --- Styles for 2-column TOC --- */
+/* ============================================
+/* This is the parent container */
+.toc-container {
+  display: flex;
+  flex-direction: row;  /* Puts items in a row */
+  flex-wrap: wrap;      /* Lets them stack on small screens */
+  gap: 30px;            /* Adds space between the columns */
+}
+
+/* This is the image column */
+.toc-image {
+  flex: 1;            /* Tells it to be flexible */
+  min-width: 300px;   /* Prevents it from getting too squished */
+}
+
+/* This is the list column */
+.toc-links {
+  flex: 2;            /* Makes this column 2x as wide as the image */
+  min-width: 300px;
+}
+
+/* Makes sure the image fills its container nicely */
+.toc-image img {
+  width: 100%;
+  height: auto;
+}
+
+/* ============================================
    PDF Rendering
    ============================================ */
 
