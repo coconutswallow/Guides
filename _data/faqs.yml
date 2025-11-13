@@ -37,4 +37,4 @@
   - question: Can a new character buy equipment?
     category: Character Creation
     answer: |-
-      Yes, you can buy anything listed under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Link to Allowed Content</a>.  For example of how to log your equipment purchase for the first time, please review [Player's Guide - Your MAL]({{ '/playersguide/your-mal.html' | relative_url }})
+      Yes, you can buy anything listed under the Equipment Tab of the [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857).
