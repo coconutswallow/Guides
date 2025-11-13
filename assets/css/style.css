@@ -251,7 +251,7 @@
   --color-header-text: var(--color-text);
   --color-footer-bg: var(--color-header-bg-start);
   --color-footer-border: var(--color-header-border);
-  --color-nav-hover: var(--color-header-border);
+  --color-nav-hover: var(--color-secondary);
   --color-role-badge-bg: transparent;
   --color-header-overlay: rgba(0, 0, 0, 0.2);
   
