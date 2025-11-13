@@ -7,8 +7,6 @@ background_image:
 
 ![Player's Guide Cover]({{ '/assets/images/players-guide-cover.png' | relative_url }})
 
-## Table of Contents
-
 {% assign sorted_guides = site.playersguide | sort: 'order' %}
 
 <ul>
