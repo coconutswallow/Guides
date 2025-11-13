@@ -26,8 +26,9 @@ logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 site_url: https://coconutswallow.github.io
 
 # --- Media ---
+# Global settings
 media_folder: "assets/images"
-public_path: "/Guides/assets/images" # <-- This is the fix for image paths
+public_path: "/Guides/assets/images"
 
 # --- Content Collections ---
 collections:
@@ -39,7 +40,13 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
@@ -55,7 +62,13 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
@@ -71,7 +84,13 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
@@ -87,7 +106,13 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
@@ -103,7 +128,13 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
@@ -119,13 +150,19 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
         media_library:
           config:
-            public_path: "/Guides/assets/images"
+            public_library: "/Guides/assets/images"
 
   - name: "help"
     label: "Help"
@@ -135,7 +172,13 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
@@ -151,7 +194,13 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - label: "Background Image"
+        name: "background_image"
+        widget: "image"
+        required: false
+        media_library:
+          config:
+            public_path: "/Guides/assets/images"
       - label: "Body"
         name: "body"
         widget: "markdown"
