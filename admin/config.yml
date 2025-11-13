@@ -1,4 +1,4 @@
-# Use DecapBridge PKCE auth (required)
+# Backend auth (no changes, this is correct)
 backend:
   name: git-gateway
   repo: coconutswallow/Guides
@@ -8,8 +8,6 @@ backend:
   auth_endpoint: /sites/a9c3edd8-e3cd-4b70-89e3-adb5acdd7a8f/pkce
   auth_token_endpoint: /sites/a9c3edd8-e3cd-4b70-89e3-adb5acdd7a8f/token
   gateway_url: https://gateway.decapbridge.com
-  
-  # Commit messages (optional)
   commit_messages:
     create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
     update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
@@ -18,34 +16,105 @@ backend:
     deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
-# Enable PKCE fields (optional, recommended)
+# Auth and site info (no changes)
 auth:
   email_claim: email
   first_name_claim: first_name
   last_name_claim: last_name
   avatar_url_claim: avatar_url
-
-# Better Decap + Bridge logo (optional)
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-
-# Add site links in Decap CMS (optional)
 site_url: https://coconutswallow.github.io
 
-# --- REQUIRED FIELDS ---
-#
-# Tell Decap where to store uploaded images. 
-# This path is relative to the root of your repo.
+# Media folder (no changes)
 media_folder: "assets/images"
 
-# Tell Decap what content to edit.
-# You MUST have at least one collection.
+# --- YOUR CONTENT COLLECTIONS ---
+# Updated with fields from your example .md file
 collections:
-  - name: "blog" # Used in the URL, e.g., /admin/#/collections/blog
-    label: "Blog" # Used in the UI
-    folder: "_posts" # The folder in your repo where posts are stored
-    create: true # Allow users to create new posts
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
-    fields: # The fields for each post
+  - name: "rules"
+    label: "Rules & Roles"
+    folder: "_rules"
+    create: true
+    fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "playersguide"
+    label: "Player's Guide"
+    folder: "_playersguide"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "dms_guide"
+    label: "DM's Guide"
+    folder: "_dms_guide"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "arcana"
+    label: "Arcana"
+    folder: "_arcana"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "field_guide"
+    label: "Field Guide"
+    folder: "_field_guide"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "faq"
+    label: "FAQ"
+    folder: "_faq"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "help"
+    label: "Help"
+    folder: "_help"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "resources"
+    label: "Resources"
+    folder: "_resources"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
       - { label: "Body", name: "body", widget: "markdown" }
