@@ -7,6 +7,8 @@ background_image:
 
 ![Player's Guide Cover]({{ '/assets/images/players-guide-cover.png' | relative_url }})
 
+{% assign sorted_guides = site.playersguide | sort: 'order' %}
+
 <ul>
   {% for doc in sorted_guides %}
     {% if doc.url != page.url %}
