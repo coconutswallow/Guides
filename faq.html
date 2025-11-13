@@ -44,21 +44,8 @@ extra_css:
 
           <h4>{{ item.question }}</h4>
           
-          {% comment %}
-            First, capture the answer. This evaluates any Liquid tags 
-            (like {{ ... | relative_url }}) inside the string.
-          {% endcomment %}
-          {% capture rendered_answer %}
-            {{ item.answer }}
-          {% endcapture %}
-
-          {% comment %}
-            Now, 'rendered_answer' contains pure Markdown 
-            (e.g., "[Link](/path/to/page.html)"). We can safely
-            pass this to markdownify without it seeing the '|' pipe.
-          {% endcomment %}
-          {{ rendered_answer | markdownify }}
-          </div>
+          {{ item.answer | markdownify }}
+        </div>
       {% endif %}
     {% endfor %}
 
