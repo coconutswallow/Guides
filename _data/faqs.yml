@@ -9,7 +9,7 @@
   - question: Can a 2024 character use any 2014 class / subclass / race / feat?
     category: Character Creation
     answer: |-
-      If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: **2024 Cleric, 2014 Twilight Domain** - Permitted, **2024 Cleric, 2014 Life Domain** - Not Permitted
+      If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: **2024 Cleric, 2014 Twilight Domain** - Permitted,  **2024 Cleric, 2014 Life Domain** - Not Permitted
   - question: Do I need to have played games to be a DM on the server?
     category: DM
     answer: |-
@@ -34,3 +34,7 @@
     category: Rules
     answer: |-
       The server takes no official stance on AI generated images. Players and DMs are allowed to use it in their own games and for their characters. Some players and DMs prefer not to play in games where AI generated images are present, which is typically indicated in a game ad. We do also have and promote several active Artists in our community, the nature of whose work is obviously entangled with the existence of AI generated images.
+  - question: Can a new character buy equipment?
+    category: Character Creation
+    answer: |-
+      Yes, you can buy anything listed under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Link to Allowed Content</a>.  For example of how to log your equipment purchase for the first time, please review [Player's Guide - Your MAL]({{ '/playersguide/your-mal.html' | relative_url }})
