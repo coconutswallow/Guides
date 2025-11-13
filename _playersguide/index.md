@@ -7,11 +7,11 @@ background_image:
 
 <div class="toc-container">
 
-  <div class="toc-image" markdown="1">
+  <div class="toc-image">
     ![Player's Guide Cover]({{ '/assets/images/players-guide-cover.png' | relative_url }})
   </div>
   
-  <div class="toc-links" markdown="1">
+  <div class="toc-links">
     ## Table of Contents
 
     {% assign sorted_guides = site.playersguide | sort: 'order' %}
