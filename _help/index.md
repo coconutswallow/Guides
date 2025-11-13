@@ -21,5 +21,6 @@ The intention of the site design is that maintenance of the content is "low-tech
 
 #### Custom Pages
 
+- <a href="{{ 'help/homepage.md' | relative_url }}">Main Site Home Page</a>
 - <a href="{{ 'help/monsters' | relative_url }}">Monster Compendium Customer Pages</a>
 - <a href="{{ 'help/FAQ-engineering' | relative_url }}">FAQ</a>
