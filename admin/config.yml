@@ -8,8 +8,8 @@ backend:
   auth_endpoint: /sites/a9c3edd8-e3cd-4b70-89e3-adb5acdd7a8f/pkce
   auth_token_endpoint: /sites/a9c3edd8-e3cd-4b70-89e3-adb5acdd7a8f/token
   gateway_url: https://gateway.decapbridge.com
-
-  # See who did what (optional)
+  
+  # Commit messages (optional)
   commit_messages:
     create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
     update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
@@ -30,3 +30,22 @@ logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 
 # Add site links in Decap CMS (optional)
 site_url: https://coconutswallow.github.io
+
+# --- REQUIRED FIELDS ---
+#
+# Tell Decap where to store uploaded images. 
+# This path is relative to the root of your repo.
+media_folder: "assets/images"
+
+# Tell Decap what content to edit.
+# You MUST have at least one collection.
+collections:
+  - name: "blog" # Used in the URL, e.g., /admin/#/collections/blog
+    label: "Blog" # Used in the UI
+    folder: "_posts" # The folder in your repo where posts are stored
+    create: true # Allow users to create new posts
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
+    fields: # The fields for each post
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
