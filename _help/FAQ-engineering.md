@@ -23,6 +23,7 @@ This approach ensures the page is SEO-friendly (all content is in the initial HT
 |`_data/faqs.yml`|The source of truth. Contains all questions, answers, and categories.|
 |`assets/css/faq.css`|Specific styles for the FAQ page (loaded via `extra_css` front matter).|
 |`/tools/convert_faq.py`|Utility script to convert Spreadsheet exports (TSV) into the YAML format.|
+|`https://docs.google.com/spreadsheets/d/13x8hrf6-3-dst0Gj9lFsHAtxQHQPS2kIreVQMY7oeiw/edit?usp=sharing`| Google Sheet where CGs can maintain the FAQ easily, and then we use the tool to convert to a yml |
 
 ### Logic Flow
 
@@ -45,8 +46,6 @@ This approach ensures the page is SEO-friendly (all content is in the initial HT
 
 ## 3. Content Maintenance Workflow
 
-To allow non-technical contributors to update content, we use a **Spreadsheet → TSV → Python** pipeline.
-
 ### Prerequisites
 
 - **Python 3.x** installed.
@@ -63,10 +62,10 @@ To allow non-technical contributors to update content, we use a **Spreadsheet �
 
 #### 1. Edit the Spreadsheet
 
-Maintain a master spreadsheet (Google Sheets or Excel) with three columns (case sensitive):
+[Google Sheet](https://docs.google.com/spreadsheets/d/13x8hrf6-3-dst0Gj9lFsHAtxQHQPS2kIreVQMY7oeiw/edit?usp=sharing)
 
 - `category` (e.g., General, Rules, Downtime)
-    
+   
 - `question` (Plain text)
     
 - `answer` (HTML allowed)
@@ -76,14 +75,12 @@ Maintain a master spreadsheet (Google Sheets or Excel) with three columns (case 
 
 - **Newlines:** Do not press Enter inside a cell. Use the character sequence `\n` to indicate a paragraph break.
     
-- **Links:** Use standard HTML anchors: `<a href="...">Link</a>`.
+- **Links:** Use standard HTML anchors: `<a href="...">Link</a>` or `[name of the link](link url)`.  Note I tried to use relative internal links, but it doesn't work.  Adding code to try to accomodate it became too complex for what it's worth.
     
 - **No Tabs:** Do not use tab characters within the text.
-    
+   
 
 #### 2. Export to TSV
-
-[Google Sheet Location](https://docs.google.com/spreadsheets/d/13x8hrf6-3-dst0Gj9lFsHAtxQHQPS2kIreVQMY7oeiw/edit?usp=sharing)
 
 File > Download > Tab-separated values (.tsv).  it will be named `faqs - Sheet1.tsv` by default
 
@@ -92,7 +89,7 @@ Save the file as `faqs - Sheet1.tsv` in the same folder as the Python script. (`
 
 #### 3. Run the Converter
 
-Execute the script to generate the production YAML file.
+Execute the script to generate the production YAML file (via your command prompt)
 
 ```
 python convert_faq.py
@@ -106,13 +103,5 @@ python convert_faq.py
 
 Check `_data/faqs.yml` to ensure the formatting looks correct. 
 
-## 4. Styling & Design
 
-The FAQ utilizes a custom style sheet (`assets/css/faq.css`) that overrides the default "card" look of the site to be more compact.
-
-- **Visual Style:** Uses a `border-left` accent instead of a full border to mimic the "Blockquote" style.
-    
-- **Typography:** Uses the body font (Source Sans) for headers instead of the decorative site header font (Cinzel) to reduce vertical height and improve scan-ability.
-    
-- **Dark Mode:** Fully compatible with the site's `[data-theme="dark"]` logic via CSS variables.
-    
+#### 5. Push to Github
