@@ -1,10 +1,9 @@
 ---
+title: About Hawthorne
 layout: doc
-title: "About Hawthorne"
 order: 5
 background_image: /assets/images/tavern_brawl.jpg
 ---
-
 ## Hawthorne Guild: A History
 
 In 1491 DR, the drow sorceress Irisen Rhuvali and her adventuring companions established a settlement near the Delimbyr River and the Greypeak Mountains, for the purposes of creating a new adventurers’ guild. What started as a haphazard collection of tents and makeshift homes occupied by adventurers and villagers soon became the town of Lerwick, home of the newly created Hawthorne Guild.
@@ -31,11 +30,11 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 
 ### Hawthorne Location on Faerun's Sword Coast
 
-![Hawthorne Location]({{ '/assets/images/hawthorne-sword-coast.jpg' | relative_url }})
+![Hawthorne Location](/assets/images/hawthorne-sword-coast.jpg)
 
 ### Map of Hawthorne
 
-![City of Hawthorne]({{ '/assets/images/hawthorne-city-map.jpg' | relative_url }})
+![City of Hawthorne](/assets/images/hawthorne-city-map.jpg)
 
 ## Hawthorne Guild Rules
 
@@ -45,10 +44,9 @@ Any prospective adventurer that wishes to join the guild must first provide some
 
 The city of Hawthorne has a list of laws that guild members are nominally expected to know and follow, but enforcement of specific laws can vary and often is relaxed owing to the rowdy antics that adventurers can often get up to. However, all guild members are expected to adhere to the following guidelines that make up the guild’s code of conduct:
 
-
-- Cooperate with other guild members on missions.
-- Don’t harm other guild members.
-- Don’t harm the guild’s reputation.
-- Don’t act against the guild’s interests.
+* Cooperate with other guild members on missions.
+* Don’t harm other guild members.
+* Don’t harm the guild’s reputation.
+* Don’t act against the guild’s interests.
 
 Flagrant or repeated violations of the guild’s code of conduct can be grounds for imprisonment, exile, or even execution. Beyond that, the guild tolerates tolerates a wide array of activities from its members.
