@@ -27,7 +27,10 @@ background_image: /assets/images/tavern_brawl.jpg
 
 The syntax to add images inside regular documents unfortunately need a bit of a custom syntax:
 
-`![Trade Example]({{ '/assets/images/trade-example.png' | relative_url }})`
+
+<code>![Example of a Trade in #trade-logs]({{ '/assets/images/trade-example.png' | relative_url }})</code>
+
+
 
 You need the `{{` in front of the URL and the `| relative_url }}` after the url for it to work.  But following this format
 Makes it more maintainable, so that if we can have a development copy of this site with a different URL and we don't need to
