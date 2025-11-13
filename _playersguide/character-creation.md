@@ -23,7 +23,7 @@ If you are new to DND and do not have access to the rule books yet, a lot of the
 
 The following additional rules apply during character creation beyond the official rules for character creation
 
-| Attribute | Rules |
+|  |  |
 |:---------------------------------------|:------------------------------------------------------------------------|
 | <strong>Version</strong> | You can create characters using the ruleset in either the 2014 or 2024 Player's Handbook (PHB). For 2024 characters, refer to the rules and guidelines in Appendix A |
 | <strong>Starting Level</strong> | Characters are created with a starting level of either level 3 or level 5 (your choice). Follow the rules to create a level 1 PC and level them up to your desired starting level. Note: Some campaigns may require you to start at level 1; your PC is treated as level 3 for purposes of all other server rules. |

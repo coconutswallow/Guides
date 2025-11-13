@@ -18,10 +18,9 @@ As a player, you can create 2024 characters using the rules in the 2024 PHB and 
 * **Customizing Backgrounds**. You can customize the listed 2024 Backgrounds: 
 
     * Replace the listed ASIs with +2/+1 to two different ability scores or +1/+1/+1 to three different ability scores. 
-
     * Choose an Origin Feat. 
-
-    * Choose two different skills to be proficient in. 4) Choose a tool proficiency to be proficient in.  
+    * Choose two different skills to be proficient in. 
+    * Choose a tool proficiency to be proficient in.  
 
 * **Older Backgrounds**. You can use older background options (including 2014 background options reprinted in 2024) and use the 2014 rules on Customizing a Background. If you use an older background option in this way, you gain +2/+1 to two different ability scores or +1/+1/+1 to three different ability scores. You also gain an Origin Feat (unless the selected background already provides a Feat).
 
@@ -34,9 +33,7 @@ As a player, you can create 2024 characters using the rules in the 2024 PHB and 
 DMs can run games using the D&D 2024 ruleset described in the 2024 PHB and new sourcebooks as per the following:
 
 * **Game Version**. DMs must indicate the ruleset to be used in the game by adding Game Version: 2014 or Game Version: 2024 to their ad in #game-advertisement.
-
 * **Player Characters**. Both PCs created using the 2014 or 2024 character options can play in a 2024 game.  2024 characters cannot play in 2014 games without versioning or the DM’s permission.
-
 * **Spells**. The revised version of spells updated in the 2024 ruleset must be used in 2024 games. 2014 characters can use the older version of spells they cast at DM discretion.
 
 ## 2024 Change Log

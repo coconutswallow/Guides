@@ -31,10 +31,11 @@ If you decided to purchase additional equipment (from the equipment tab on the A
 
 Your character comes with initial gold and equipment based on the rules of the PHB.  Everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> you can make purchases whenever you want.  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
 
+<br>Equipment Purchase Log:
 ![Equipment Purchase Downtime Log]({{ '/assets/images/mal-equipment-purchase.png' | relative_url }})
 
+<br>In the inventory section of your MAL, add your equipment:
 ![Inventory Update]({{ '/assets/images/mal-inventory.png' | relative_url }})
-<br>In the inventory section of your MAL, add your equipment
 
 Then in discord in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>, add an entry like this:
 
