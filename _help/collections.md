@@ -21,7 +21,8 @@ Collections are Jekyll's way of organizing related content. Each collection is d
 - `_field_guide` - World and location information
 - `_faq` - Frequently asked questions
 - `_monsters` - Monster statblocks (special handling)
-- `_site_docs` - Internal site documentation (NOT in menu)
+- `_help` - Internal site documentation (NOT in menu)
+- `_data` - FAQ data - use this for content that needs to be specially indexed (NOT in menu)
 
 ## What Appears in the Navigation Menu
 
