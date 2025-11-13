@@ -26,16 +26,10 @@ logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 site_url: https://coconutswallow.github.io
 
 # --- Media ---
-# Where to store images uploaded through the CMS
 media_folder: "assets/images"
-
-# --- THIS IS THE FIX ---
-# The public-facing URL path to that same folder.
-# This is built from your site's baseurl (/Guides) + your media_folder.
-public_path: "/Guides/assets/images"
+public_path: "/Guides/assets/images" # <-- This is the fix for image paths
 
 # --- Content Collections ---
-# (All your collections, no changes needed here)
 collections:
   - name: "rules"
     label: "Rules & Roles"
@@ -98,4 +92,29 @@ collections:
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Layout", name: "layout", widget:
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "help"
+    label: "Help"
+    folder: "_help"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "resources"
+    label: "Resources"
+    folder: "_resources"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
