@@ -1,7 +1,7 @@
 ---
+title: Markdown Guide
 layout: doc
-title: "Markdown Guide"
-order: 10
+order: 12
 ---
 
 # Markdown Author's Guide
