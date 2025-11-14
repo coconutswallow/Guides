@@ -28,6 +28,20 @@
           {% endif %}
           
           {% if item.sections %}
+            <!-- Auto-discover root-level pages first (not in any folder) -->
+            {% assign all_pages = site[item.collection] | sort: "order" %}
+            {% for page in all_pages %}
+              {% assign is_in_folder = false %}
+              {% for section in item.sections %}
+                {% if section.folder and page.path contains section.folder %}
+                  {% assign is_in_folder = true %}
+                {% endif %}
+              {% endfor %}
+              {% unless is_in_folder %}
+                <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+              {% endunless %}
+            {% endfor %}
+            
             <!-- Nested sections within collection -->
             {% for section in item.sections %}
               
