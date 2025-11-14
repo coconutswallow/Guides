@@ -78,4 +78,13 @@
                     setTimeout(() => {
                         // 3. ...then tell the L1 parent to update its height.
                         parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                    },
+                    }, animationTime); // Wait for the animation to complete
+                }
+            });
+        });
+        
+    } catch (e) {
+        // This fails gracefully without breaking the main menu toggle or search
+        console.warn("Sidebar submenu JS failed to initialize:", e);
+    }
+})();
