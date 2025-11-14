@@ -38,27 +38,33 @@
                 
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-                
+
                 if (!isExpanded) {
-                    // Open child submenu
+                    // --- OPENING ---
+                    // 1. Open child menu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
-                } else {
-                    // Close child submenu
-                    subsubmenu.style.maxHeight = '0';
-                }
-                
-                // Always recalculate parent height after any change
-                if (parentSubmenu) {
-                    // Remove max-height temporarily to get true scrollHeight
-                    const currentMaxHeight = parentSubmenu.style.maxHeight;
-                    parentSubmenu.style.maxHeight = 'none';
-                    const newHeight = parentSubmenu.scrollHeight;
-                    parentSubmenu.style.maxHeight = currentMaxHeight;
                     
-                    // Now set to the correct height
-                    requestAnimationFrame(() => {
-                        parentSubmenu.style.maxHeight = newHeight + 'px';
-                    });
+                    if (parentSubmenu) {
+                        // 2. Wait for the browser's next frame, THEN...
+                        requestAnimationFrame(() => {
+                            // 3. Read the parent's NEW scrollHeight (which now includes the open child)
+                            // and set its maxHeight to that value.
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        });
+                    }
+                } else {
+                    // --- CLOSING ---
+                    if (parentSubmenu) {
+                         // 1. Get the heights *before* closing
+                         const parentHeight = parentSubmenu.scrollHeight;
+                         const childHeight = subsubmenu.scrollHeight;
+                         
+                         // 2. Set the parent to the new, smaller, fixed height
+                         // This animates it *down* smoothly
+                         parentSubmenu.style.maxHeight = (parentHeight - childHeight) + 'px';
+                    }
+                    // 3. Close the child *at the same time*
+                    subsubmenu.style.maxHeight = '0';
                 }
             });
         });
