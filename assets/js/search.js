@@ -16,7 +16,7 @@
       // 2. Build the Lunr index
       index = lunr(function () {
         this.field('title', { boost: 10 }); // Give title a higher importance
-        this.field('content');
+        this.field('content', { boost: 10 });
         this.ref('url'); // The URL is the unique identifier (reference)
 
         data.forEach(function (doc) {
