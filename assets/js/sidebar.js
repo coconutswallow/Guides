@@ -41,30 +41,30 @@
 
                 if (!isExpanded) {
                     // --- OPENING ---
-                    // 1. Open child menu
+                    // 1. Open the child menu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
+                    // 2. Wait for the browser's next frame...
                     if (parentSubmenu) {
-                        // 2. Wait for the browser's next frame, THEN...
                         requestAnimationFrame(() => {
-                            // 3. Read the parent's NEW scrollHeight (which now includes the open child)
-                            // and set its maxHeight to that value.
+                            // 3. NOW read the parent's NEW scrollHeight (which includes the child)
+                            // and animate the parent to that new, larger height.
                             parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
                         });
                     }
                 } else {
                     // --- CLOSING ---
-                    if (parentSubmenu) {
-                         // 1. Get the heights *before* closing
-                         const parentHeight = parentSubmenu.scrollHeight;
-                         const childHeight = subsubmenu.scrollHeight;
-                         
-                         // 2. Set the parent to the new, smaller, fixed height
-                         // This animates it *down* smoothly
-                         parentSubmenu.style.maxHeight = (parentHeight - childHeight) + 'px';
-                    }
-                    // 3. Close the child *at the same time*
+                    // 1. Close the child menu
                     subsubmenu.style.maxHeight = '0';
+                    
+                    // 2. Wait for the browser's next frame...
+                    if (parentSubmenu) {
+                         requestAnimationFrame(() => {
+                            // 3. NOW read the parent's NEW scrollHeight (which no longer includes the child)
+                            // and animate the parent to that new, smaller height.
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        });
+                    }
                 }
             });
         });
