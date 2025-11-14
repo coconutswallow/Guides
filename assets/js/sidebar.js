@@ -36,6 +36,8 @@
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
                 const parentSubmenu = this.closest('.nav-submenu');
                 
+                if (!parentSubmenu) return; // Safety check
+
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
 
@@ -45,26 +47,22 @@
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
                     // 2. Wait for the browser's next frame...
-                    if (parentSubmenu) {
-                        requestAnimationFrame(() => {
-                            // 3. NOW read the parent's NEW scrollHeight (which includes the child)
-                            // and animate the parent to that new, larger height.
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        });
-                    }
+                    requestAnimationFrame(() => {
+                        // 3. NOW read the parent's NEW scrollHeight (which includes the child)
+                        // and animate the parent to that new, larger height.
+                        parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                    });
                 } else {
                     // --- CLOSING ---
                     // 1. Close the child menu
                     subsubmenu.style.maxHeight = '0';
                     
                     // 2. Wait for the browser's next frame...
-                    if (parentSubmenu) {
-                         requestAnimationFrame(() => {
-                            // 3. NOW read the parent's NEW scrollHeight (which no longer includes the child)
-                            // and animate the parent to that new, smaller height.
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        });
-                    }
+                    requestAnimationFrame(() => {
+                        // 3. NOW read the parent's NEW scrollHeight (which no longer includes the child)
+                        // and animate the parent to that new, smaller height.
+                        parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                    });
                 }
             });
         });
