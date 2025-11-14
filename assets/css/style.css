@@ -1158,8 +1158,8 @@ tbody tr:hover {
   align-items: center;
   gap: 8px;
   transition: background-color 0.2s;
-  font-family: inherit; /* ADD THIS LINE */
-  font-weight: 400;   /* ADD THIS LINE */
+  font-family: inherit; 
+  font-weight: 400;   
 }
 
 .nav-section-toggle:hover {
