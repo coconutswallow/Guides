@@ -16,7 +16,8 @@
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
                 
                 if (!isExpanded) {
-                    // Open menu by setting max-height to scroll height
+                    // Open menu by setting max-height to its full scroll height
+                    // This scrollHeight already includes the height of all nested children
                     submenu.style.maxHeight = submenu.scrollHeight + 'px';
                 } else {
                     // Close menu by setting max-height to 0
@@ -34,33 +35,20 @@
                 const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
                 const icon = this.querySelector('.toggle-icon');
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                const parentSubmenu = this.closest('.nav-submenu');
                 
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
                 
                 if (!isExpanded) {
-                    // 1. Open sub-submenu
+                    // Open submenu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
-                    // 2. Wait for next frame, then recalculate and set the parent's max-height 
-                    //    to include the newly opened sub-submenu's height.
-                    if (parentSubmenu) {
-                        requestAnimationFrame(() => {
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        });
-                    }
+                    // DO NOT TOUCH THE PARENT SUBMENU
                 } else {
                     // Close submenu
                     subsubmenu.style.maxHeight = '0';
                     
-                    // Recalculate parent to fit remaining content
-                    if (parentSubmenu) {
-                        // Force reflow then set to current scroll height
-                        requestAnimationFrame(() => {
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        });
-                    }
+                    // DO NOT TOUCH THE PARENT SUBMENU
                 }
             });
         });
