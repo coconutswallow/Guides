@@ -38,26 +38,28 @@
                 
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-                
-                // Get the height of the child menu *before* changing it
-                const childHeight = subsubmenu.scrollHeight;
 
                 if (!isExpanded) {
-                    // Open child submenu
-                    subsubmenu.style.maxHeight = childHeight + 'px';
+                    // 1. Open child submenu
+                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
-                    // Update parent's max-height by ADDING the child's height
+                    // 2. Wait for the browser to update, then...
+                    // 3. Re-calculate the PARENT'S height to include the new child
                     if (parentSubmenu) {
-                        parentSubmenu.style.maxHeight = (parentSubmenu.scrollHeight + childHeight) + 'px';
+                        requestAnimationFrame(() => {
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        });
                     }
                 } else {
-                    // Close child submenu
+                    // 1. Close child submenu
                     subsubmenu.style.maxHeight = '0';
                     
-                    // Update parent's max-height by SUBTRACTING the child's height
+                    // 2. Wait for the browser to update, then...
+                    // 3. Re-calculate the PARENT'S height *without* the child
                     if (parentSubmenu) {
-                         // We set the height to the parent's current height *minus* the child's height
-                        parentSubmenu.style.maxHeight = (parentSubmenu.scrollHeight - childHeight) + 'px';
+                         requestAnimationFrame(() => {
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        });
                     }
                 }
             });
