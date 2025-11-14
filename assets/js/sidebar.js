@@ -1,10 +1,5 @@
 // assets/js/sidebar.js
 
-// This file contains the logic for opening/closing navigation sections and subsections.
-// It is wrapped in a try/catch to prevent errors on pages without complex navigation.
-
-// assets/js/sidebar.js
-
 (function() {
     try {
         // Handle section toggles (first level submenus)
@@ -45,28 +40,23 @@
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
                 
                 if (!isExpanded) {
-                    // Open submenu by setting max-height to scroll height
+                    // Open submenu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
-                    // Recalculate parent multiple times during expansion
+                    // Set parent to none temporarily to let it grow naturally
                     if (parentSubmenu) {
-                        // Immediately set to a large value
-                        parentSubmenu.style.maxHeight = (parentSubmenu.scrollHeight + subsubmenu.scrollHeight + 100) + 'px';
-                        
-                        // Then recalculate after animation
-                        setTimeout(() => {
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        }, 320);
+                        parentSubmenu.style.maxHeight = 'none';
                     }
                 } else {
-                    // Close submenu by setting max-height to 0
+                    // Close submenu
                     subsubmenu.style.maxHeight = '0';
                     
-                    // Recalculate parent submenu height after animation completes
+                    // Recalculate parent to fit remaining content
                     if (parentSubmenu) {
-                        setTimeout(() => {
+                        // Force reflow then set to current scroll height
+                        requestAnimationFrame(() => {
                             parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        }, 320);
+                        });
                     }
                 }
             });
