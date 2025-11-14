@@ -29,7 +29,7 @@
   - question: Do I roll for stats?
     category: Character Creation
     answer: |-
-      No, here we use point buy. [Point Buy Calculator](https://chicken-dinner.com/5e/5e-point-buy.html)
+      No, here we use point buy (27 points). [Point Buy Calculator](https://chicken-dinner.com/5e/5e-point-buy.html)
   - question: What's server stance on use of AI images for characters?
     category: Rules
     answer: |-
@@ -38,3 +38,7 @@
     category: Character Creation
     answer: |-
       Yes, you can buy anything listed under the Equipment Tab of the [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857).
+  - question: What level do characters start on the server?
+    category: Character Creation
+    answer: |-
+      Characters start at level 3 or level 5.  There is no limit to the number of characters you create, so you can create a level 3 **and** a level 5 character (or more...).  See Player's Guide for [character creation](/Guides/playersguide/character-creation/).
