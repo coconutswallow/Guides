@@ -1,7 +1,7 @@
 ---
 title: Navigation Setup
 layout: doc
-order: 50
+order: 20
 ---
 # Site Documentation: Managing Collections & Navigation
 
