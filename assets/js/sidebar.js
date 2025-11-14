@@ -1,10 +1,6 @@
 // assets/js/sidebar.js
 
 (function() {
-    // This value MUST match the transition time in your style.css
-    // .nav-submenu { transition: max-height 0.3s ease; }
-    const animationTime = 300; // 300 milliseconds
-
     try {
         // Handle section toggles (first level submenus, e.g., "Player's Guide")
         const sectionToggles = document.querySelectorAll('.nav-section-toggle');
@@ -21,17 +17,22 @@
                 
                 if (!isExpanded) {
                     // --- THIS IS THE L1 FIX ---
-                    // 1. Temporarily set to 'none' to measure the TRUE full height
-                    //    (including any open children from a previous state).
-                    submenu.style.transition = 'none'; // Turn off animation
+                    // 1. Turn off animation so we can measure without delay.
+                    submenu.style.transition = 'none'; 
+                    
+                    // 2. Set to 'none' to unlock its full potential height.
                     submenu.style.maxHeight = 'none';
+                    
+                    // 3. Read the *true* height (which now includes all hidden children).
                     const trueHeight = submenu.scrollHeight;
                     
-                    // 2. Reset to 0 *immediately* (before the browser can render)
+                    // 4. Reset to 0 *before* the browser can render the change.
                     submenu.style.maxHeight = '0';
-                    submenu.style.transition = ''; // Turn animation back on
                     
-                    // 3. Wait one frame, then animate to the true, correct height.
+                    // 5. Turn animation back on.
+                    submenu.style.transition = ''; // Uses the default from style.css
+                    
+                    // 6. Wait one frame, then animate to the *true, correct* height.
                     requestAnimationFrame(() => {
                         submenu.style.maxHeight = trueHeight + 'px';
                     });
@@ -51,34 +52,22 @@
                 const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
                 const icon = this.querySelector('.toggle-icon');
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                const parentSubmenu = this.closest('.nav-submenu');
+                // const parentSubmenu = this.closest('.nav-submenu'); // No longer needed
                 
-                if (!parentSubmenu) return; // Safety check
-
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
 
-                if (!isExpanded) {
-                    // --- OPENING L2 ---
-                    // 1. Open the child menu.
-                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
-                    
-                    // 2. Wait for the browser to register the new child height...
-                    requestAnimationFrame(() => {
-                        // 3. ...then tell the L1 parent to update its height.
-                        parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                    });
+                // --- THIS IS THE L2 FIX ---
+                // Because the L1 toggle (above) now opens to the *full* height,
+                // the L2 toggle only needs to open and close itself.
+                // No more parent calculations, no more race conditions.
 
+                if (!isExpanded) {
+                    // Open the child menu. That's it.
+                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                 } else {
-                    // --- CLOSING L2 ---
-                    // 1. Close the child menu.
+                    // Close the child menu. That's it.
                     subsubmenu.style.maxHeight = '0';
-                    
-                    // 2. We MUST wait for the child's animation to finish...
-                    setTimeout(() => {
-                        // 3. ...then tell the L1 parent to update its height.
-                        parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                    }, animationTime); // Wait for the animation to complete
                 }
             });
         });
