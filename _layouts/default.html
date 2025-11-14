@@ -67,19 +67,20 @@
                             {% assign collection_name = nav_item.collection %}
                             
                             {% if nav_item.sections %}
-                                <!-- Auto-discover root-level pages first (not in any folder) -->
                                 {% assign all_pages = site[collection_name] | sort: "order" %}
+                                
                                 {% for page in all_pages %}
-                                    {% assign is_in_folder = false %}
+                                    {% assign is_in_section_folder = false %}
                                     {% for section in nav_item.sections %}
                                         {% if section.folder %}
-                                            {% assign folder_check = "/" | append: section.folder | append: "/" %}
-                                            {% if page.path contains folder_check %}
-                                                {% assign is_in_folder = true %}
+                                            {% assign folder_prefix = '_' | append: collection_name | append: '/' | append: section.folder | append: '/' %}
+                                            {% if page.path contains folder_prefix %}
+                                                {% assign is_in_section_folder = true %}
                                             {% endif %}
                                         {% endif %}
                                     {% endfor %}
-                                    {% unless is_in_folder %}
+                                    
+                                    {% unless is_in_section_folder %}
                                         <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
                                     {% endunless %}
                                 {% endfor %}
