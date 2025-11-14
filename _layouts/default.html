@@ -53,25 +53,77 @@
         <div class="sidebar-nav">
             {% for nav_item in site.navigation %}
                 {% if nav_item.url %}
+                    <!-- Simple URL link -->
                     <a href="{{ nav_item.url | relative_url }}" class="nav-link">{{ nav_item.title }}</a>
                     
                 {% elsif nav_item.collection %}
-                    <!-- Collection-based navigation with dynamic page generation -->
+                    <!-- Collection-based navigation -->
                     <div class="nav-section">
                         <button class="nav-section-toggle" aria-expanded="false">
                             <span class="toggle-icon">▶</span>
                             {{ nav_item.title }}
                         </button>
                         <div class="nav-submenu">
-                            {% assign collection_name = nav_item.collection | remove: '_' %}
-                            {% assign collection_items = site[collection_name] %}
-                            {% if collection_items %}
-                                {% assign collection_docs = collection_items | where_exp: "item", "item.layout == 'doc'" %}
-                                {% if collection_docs.size > 0 %}
-                                    {% assign sorted_docs = collection_docs | sort: "order" %}
-                                    {% for doc in sorted_docs %}
-                                        <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+                            {% assign collection_name = nav_item.collection %}
+                            
+                            {% if nav_item.sections %}
+                                <!-- Auto-discover root-level pages first (not in any folder) -->
+                                {% assign all_pages = site[collection_name] | sort: "order" %}
+                                {% for page in all_pages %}
+                                    {% assign is_in_folder = false %}
+                                    {% for section in nav_item.sections %}
+                                        {% if section.folder %}
+                                            {% assign folder_check = "/" | append: section.folder | append: "/" %}
+                                            {% if page.path contains folder_check %}
+                                                {% assign is_in_folder = true %}
+                                            {% endif %}
+                                        {% endif %}
                                     {% endfor %}
+                                    {% unless is_in_folder %}
+                                        <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+                                    {% endunless %}
+                                {% endfor %}
+                                
+                                <!-- Nested sections within collection -->
+                                {% for section in nav_item.sections %}
+                                    {% if section.url %}
+                                        <!-- Direct URL link -->
+                                        <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
+                                        
+                                    {% elsif section.folder %}
+                                        <!-- Folder with items -->
+                                        <div class="nav-subsection">
+                                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                                <span class="toggle-icon">▶</span>
+                                                <span>{{ section.title }}</span>
+                                            </button>
+                                            <div class="nav-subsubmenu">
+                                                {% assign folder_check = "/" | append: section.folder | append: "/" %}
+                                                {% assign folder_pages = site[collection_name] | where_exp: "page", "page.path contains folder_check" | sort: "order" %}
+                                                {% for page in folder_pages %}
+                                                    <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <!-- No sections defined - auto-discover all pages -->
+                                {% assign collection_items = site[collection_name] %}
+                                {% if collection_items %}
+                                    {% assign collection_docs = collection_items | where_exp: "item", "item.layout == 'doc'" %}
+                                    {% if collection_docs.size > 0 %}
+                                        {% assign sorted_docs = collection_docs | sort: "order" %}
+                                        {% for doc in sorted_docs %}
+                                            <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+                                        {% endfor %}
+                                    {% else %}
+                                        <!-- Fallback: show all items in collection -->
+                                        {% assign sorted_items = collection_items | sort: "order" %}
+                                        {% for item in sorted_items %}
+                                            <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </div>
