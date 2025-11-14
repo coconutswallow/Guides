@@ -1,0 +1,113 @@
+<!-- Dynamic Navigation Generator -->
+<!-- This include generates the sidebar navigation from _config.yml -->
+
+<div class="sidebar-nav">
+  {% for item in site.navigation %}
+    
+    {% if item.url %}
+      <!-- Simple link item -->
+      <a href="{{ item.url | relative_url }}" class="nav-link">{{ item.title }}</a>
+      
+    {% elsif item.collection %}
+      <!-- Section with subsections/items -->
+      <div class="nav-section">
+        <button class="nav-section-toggle" aria-expanded="false">
+          <span class="toggle-icon">▶</span>
+          <span>{{ item.title }}</span>
+        </button>
+        
+        <div class="nav-submenu">
+          {% if item.items %}
+            <!-- Direct items in collection root -->
+            {% for page_name in item.items %}
+              {% assign collection_pages = site[item.collection] | where_exp: "page", "page.slug == page_name" %}
+              {% for page in collection_pages %}
+                <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+              {% endfor %}
+            {% endfor %}
+          {% endif %}
+          
+          {% if item.sections %}
+            <!-- DEBUG: Show what we're working with -->
+            <!-- Collection: {{ item.collection }} -->
+            {% for page in site[item.collection] limit:2 %}
+              <!-- DEBUG Page path: {{ page.path }} -->
+            {% endfor %}
+            
+            <!-- Auto-discover root-level pages first (not in any folder) -->
+            {% assign all_pages = site[item.collection] | sort: "order" %}
+            {% for page in all_pages %}
+              {% assign is_in_folder = false %}
+              {% for section in item.sections %}
+                {% if section.folder %}
+                  {% assign folder_check = "/" | append: section.folder | append: "/" %}
+                  {% if page.path contains folder_check %}
+                    {% assign is_in_folder = true %}
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              {% unless is_in_folder %}
+                <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+                <!-- DEBUG: {{ page.path }} - not in folder -->
+              {% endunless %}
+            {% endfor %}
+            
+            <!-- Nested sections within collection -->
+            {% for section in item.sections %}
+              
+              {% if section.url %}
+                <!-- Direct URL link -->
+                <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
+                
+              {% elsif section.file %}
+                <!-- Single file item -->
+                {% assign collection_pages = site[item.collection] | where_exp: "page", "page.slug == section.file" %}
+                {% for page in collection_pages %}
+                  <a href="{{ page.url | relative_url }}">{{ page.title | default: section.title }}</a>
+                {% endfor %}
+                
+              {% elsif section.folder %}
+                <!-- Folder with items -->
+                <div class="nav-subsection">
+                  <button class="nav-subsection-toggle" aria-expanded="false">
+                    <span class="toggle-icon">▶</span>
+                    <span>{{ section.title }}</span>
+                  </button>
+                  <div class="nav-subsubmenu">
+                    {% if section.items %}
+                      {% for page_name in section.items %}
+                        {% assign folder_path = section.folder | append: "/" | append: page_name %}
+                        {% assign collection_pages = site[item.collection] | where_exp: "page", "page.path contains folder_path or page.slug == page_name" %}
+                        {% for page in collection_pages %}
+                          <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+                        {% endfor %}
+                      {% endfor %}
+                    {% else %}
+                      <!-- Auto-discover all pages in folder -->
+                      {% assign folder_check = "/" | append: section.folder | append: "/" %}
+                      {% assign folder_pages = site[item.collection] | where_exp: "page", "page.path contains folder_check" | sort: "order" %}
+                      {% for page in folder_pages %}
+                        <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+              
+            {% endfor %}
+          {% endif %}
+          
+          {% unless item.items or item.sections %}
+            <!-- Auto-discover all pages in collection if no items specified -->
+            {% assign sorted_pages = site[item.collection] | sort: "order" %}
+            {% for page in sorted_pages %}
+              <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+            {% endfor %}
+          {% endunless %}
+        </div>
+      </div>
+      
+    {% endif %}
+    
+  {% endfor %}
+</div>
