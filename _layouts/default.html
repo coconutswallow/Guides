@@ -67,23 +67,29 @@
                             {% assign collection_name = nav_item.collection %}
                             
                             {% if nav_item.sections %}
-                                {% assign all_pages = site[collection_name] | sort: "order" %}
+                                <!-- DEBUG -->
+                                <!-- Collection: {{ collection_name }} -->
+                                {% for page in site[collection_name] limit:3 %}
+                                    <!-- Path: {{ page.path }} -->
+                                {% endfor %}
                                 
+                                <!-- Auto-discover root-level pages first (not in any folder) -->
+                                {% assign all_pages = site[collection_name] | sort: "order" %}
                                 {% for page in all_pages %}
-                                    {% assign is_in_section_folder = false %}
+                                    {% assign is_in_folder = false %}
                                     {% for section in nav_item.sections %}
                                         {% if section.folder %}
-                                            {% comment %} Check if the page path contains the folder path relative to the site root, which is included in the page.path variable. {% endcomment %}
-                                            {% assign folder_check = '/' | append: section.folder | append: '/' %}
+                                            {% assign folder_check = "/" | append: section.folder | append: "/" %}
+                                            <!-- Check: {{ page.path }} contains {{ folder_check }}? -->
                                             {% if page.path contains folder_check %}
-                                                {% assign is_in_section_folder = true %}
+                                                {% assign is_in_folder = true %}
+                                                <!-- MATCH: {{ page.title }} is in folder -->
                                             {% endif %}
                                         {% endif %}
                                     {% endfor %}
-                                    
-                                    {% unless is_in_section_folder %}
-                                        {% comment %} Reverting to capitalize filter to fix the lowercasing issue {% endcomment %}
+                                    {% unless is_in_folder %}
                                         <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+                                        <!-- NOT in folder: {{ page.path }} -->
                                     {% endunless %}
                                 {% endfor %}
                                 
@@ -101,8 +107,7 @@
                                                 <span>{{ section.title }}</span>
                                             </button>
                                             <div class="nav-subsubmenu">
-                                                {% comment %} Use the defined section.folder path to accurately find documents within it {% endcomment %}
-                                                {% assign folder_check = '/' | append: section.folder | append: '/' %}
+                                                {% assign folder_check = "/" | append: section.folder | append: "/" %}
                                                 {% assign folder_pages = site[collection_name] | where_exp: "page", "page.path contains folder_check" | sort: "order" %}
                                                 {% for page in folder_pages %}
                                                     <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
