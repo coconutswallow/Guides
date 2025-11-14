@@ -16,8 +16,8 @@
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
                 
                 if (!isExpanded) {
-                    // --- THIS IS THE L1 FIX ---
-                    // Don't calculate. Set to a very large, fixed number.
+                    // --- L1 FIX ---
+                    // Set to a very large, fixed number.
                     // This guarantees it's tall enough for all hidden children.
                     submenu.style.maxHeight = '5000px'; 
                 } else {
@@ -40,23 +40,36 @@
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
 
-                // --- THIS IS THE L2 FIX ---
-                // The L1 parent is now *guaranteed* to be tall enough.
-                // This toggle only needs to open and close itself.
-                // No more complex parent/child calculations.
-
                 if (!isExpanded) {
-                    // Open the child menu.
-                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
+                    // --- THIS IS THE L2 FIX ---
+                    // 1. Turn off animation so we can measure without delay.
+                    subsubmenu.style.transition = 'none'; 
+                    
+                    // 2. Set to 'none' to un-hide it and find its full height.
+                    subsubmenu.style.maxHeight = 'none';
+                    
+                    // 3. Read the *true* height.
+                    const trueHeight = subsubmenu.scrollHeight;
+                    
+                    // 4. Reset to 0 *before* the browser can render.
+                    subsubmenu.style.maxHeight = '0';
+                    
+                    // 5. Turn animation back on.
+                    subsubmenu.style.transition = ''; // Uses the default from style.css
+                    
+                    // 6. Wait one frame, then animate to the *true, correct* height.
+                    requestAnimationFrame(() => {
+                        subsubmenu.style.maxHeight = trueHeight + 'px';
+                    });
                 } else {
-                    // Close the child menu.
+                    // To close, just animate to 0.
                     subsubmenu.style.maxHeight = '0';
                 }
             });
         });
         
     } catch (e) {
-        // This fails gracefully without breaking the main menu toggle or search
+        // This fails gracefully...
         console.warn("Sidebar submenu JS failed to initialize:", e);
     }
 })();
