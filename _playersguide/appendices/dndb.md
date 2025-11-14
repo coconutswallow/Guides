@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "Appendix: DnD Beyond Settings"
+title: "DnD Beyond Settings"
 order: 92
 background_image: /assets/images/tavern_brawl.jpg
 ---

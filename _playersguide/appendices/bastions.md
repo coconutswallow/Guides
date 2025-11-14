@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "Appendix: Bastions"
+title: "Bastions"
 order: 91
 background_image: /assets/images/tavern_brawl.jpg
 ---

@@ -40,12 +40,15 @@
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
                 
                 if (!isExpanded) {
-                    // Open submenu
+                    // 1. Open sub-submenu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
-                    // Set parent to none temporarily to let it grow naturally
+                    // 2. Wait for next frame, then recalculate and set the parent's max-height 
+                    //    to include the newly opened sub-submenu's height.
                     if (parentSubmenu) {
-                        parentSubmenu.style.maxHeight = 'none';
+                        requestAnimationFrame(() => {
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        });
                     }
                 } else {
                     // Close submenu
