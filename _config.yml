@@ -52,7 +52,7 @@ navigation:
     collection: playersguide
     sections:
       - title: "Appendices"
-        folder: "appendices"
+        folder: "playersguide/appendices"
 
 # =========================================================
 #
