@@ -1,7 +1,7 @@
 ---
 title: Site Editor
 layout: doc
-order: 0
+order: 10
 ---
 ## Using the Web Editor to Edit documents
 
