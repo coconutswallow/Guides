@@ -49,7 +49,7 @@ Choose image allows you to select (or upload) images to the server, whereas "rep
 
 As you can see in the screenshot above, you can select an image already uploaded, or press the upload image to add an image to the site library, then select it.
 
-\## Publishing
+## Publishing
 
 Once you are done, hit the "Publish" button and it will load to the website in ~ 1-5 minutes.  
 
