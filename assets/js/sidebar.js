@@ -44,15 +44,25 @@
                 if (!isExpanded) {
                     // Open submenu by setting max-height to scroll height
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
+                    
+                    // Recalculate parent submenu height after a brief delay
+                    setTimeout(() => {
+                        const parentSubmenu = this.closest('.nav-submenu');
+                        if (parentSubmenu) {
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        }
+                    }, 10);
                 } else {
                     // Close submenu by setting max-height to 0
                     subsubmenu.style.maxHeight = '0';
-                }
-                
-                // Recalculate parent submenu height
-                const parentSubmenu = this.closest('.nav-submenu');
-                if (parentSubmenu) {
-                    parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                    
+                    // Recalculate parent submenu height after animation completes
+                    setTimeout(() => {
+                        const parentSubmenu = this.closest('.nav-submenu');
+                        if (parentSubmenu) {
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        }
+                    }, 300); // Match the CSS transition duration
                 }
             });
         });
