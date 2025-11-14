@@ -1230,6 +1230,10 @@ tbody tr:hover {
   transition: background-color 0.2s;
 }
 
+#sidebar-menu .nav-subsection-toggle span {
+  color: inherit;
+}
+
 .nav-subsection-toggle:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
