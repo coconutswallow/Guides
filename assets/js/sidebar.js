@@ -3,6 +3,8 @@
 // This file contains the logic for opening/closing navigation sections and subsections.
 // It is wrapped in a try/catch to prevent errors on pages without complex navigation.
 
+// assets/js/sidebar.js
+
 (function() {
     try {
         // Handle section toggles (first level submenus)
@@ -37,6 +39,7 @@
                 const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
                 const icon = this.querySelector('.toggle-icon');
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                const parentSubmenu = this.closest('.nav-submenu');
                 
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
@@ -45,24 +48,26 @@
                     // Open submenu by setting max-height to scroll height
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
-                    // Recalculate parent submenu height after a brief delay
-                    setTimeout(() => {
-                        const parentSubmenu = this.closest('.nav-submenu');
-                        if (parentSubmenu) {
+                    // Recalculate parent multiple times during expansion
+                    if (parentSubmenu) {
+                        // Immediately set to a large value
+                        parentSubmenu.style.maxHeight = (parentSubmenu.scrollHeight + subsubmenu.scrollHeight + 100) + 'px';
+                        
+                        // Then recalculate after animation
+                        setTimeout(() => {
                             parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        }
-                    }, 10);
+                        }, 320);
+                    }
                 } else {
                     // Close submenu by setting max-height to 0
                     subsubmenu.style.maxHeight = '0';
                     
                     // Recalculate parent submenu height after animation completes
-                    setTimeout(() => {
-                        const parentSubmenu = this.closest('.nav-submenu');
-                        if (parentSubmenu) {
+                    if (parentSubmenu) {
+                        setTimeout(() => {
                             parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        }
-                    }, 300); // Match the CSS transition duration
+                        }, 320);
+                    }
                 }
             });
         });
