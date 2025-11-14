@@ -1,6 +1,10 @@
 // assets/js/sidebar.js
 
 (function() {
+    // This value MUST match the transition time in your style.css
+    // .nav-submenu { transition: max-height 0.3s ease; }
+    const animationTime = 300; // 300 milliseconds
+
     try {
         // Handle section toggles (first level submenus)
         const sectionToggles = document.querySelectorAll('.nav-section-toggle');
@@ -16,10 +20,8 @@
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
                 
                 if (!isExpanded) {
-                    // Open menu by setting max-height to its full scroll height
                     submenu.style.maxHeight = submenu.scrollHeight + 'px';
                 } else {
-                    // Close menu by setting max-height to 0
                     submenu.style.maxHeight = '0';
                 }
             });
@@ -46,23 +48,23 @@
                     // 1. Open the child menu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
-                    // 2. Wait for the browser's next frame...
-                    requestAnimationFrame(() => {
-                        // 3. NOW read the parent's NEW scrollHeight (which includes the child)
-                        // and animate the parent to that new, larger height.
+                    // 2. Use a tiny delay (setTimeout 0) to wait one "tick"
+                    //    This ensures the browser has registered the child's new scrollHeight.
+                    setTimeout(() => {
                         parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                    });
+                    }, 0); // A 0ms timeout is all that's needed for opening
+
                 } else {
                     // --- CLOSING ---
                     // 1. Close the child menu
                     subsubmenu.style.maxHeight = '0';
                     
-                    // 2. Wait for the browser's next frame...
-                    requestAnimationFrame(() => {
-                        // 3. NOW read the parent's NEW scrollHeight (which no longer includes the child)
-                        // and animate the parent to that new, smaller height.
+                    // 2. THIS IS THE FIX:
+                    //    We MUST wait for the child's 300ms animation to *finish*
+                    //    before we recalculate the parent's height.
+                    setTimeout(() => {
                         parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                    });
+                    }, animationTime); // Wait for the animation to complete
                 }
             });
         });
