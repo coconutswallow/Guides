@@ -81,17 +81,6 @@ collections:
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
       - { label: "Body", name: "body", widget: "markdown" }
 
-  - name: "faq"
-    label: "FAQ"
-    folder: "_faq"
-    create: true
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
-
   - name: "help"
     label: "Help"
     folder: "_help"
