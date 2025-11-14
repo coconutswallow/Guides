@@ -82,6 +82,15 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   transition: color 0.3s ease;
 }
 
+[data-theme="dark"] .page-intro {
+  background: linear-gradient(135deg, var(--color-header-bg-start) 0%, var(--color-header-bg-end) 100%);
+}
+
+[data-theme="dark"] .page-intro h2,
+[data-theme="dark"] .page-intro p {
+  color: var(--color-header-text); /* This will be your light cream text */
+}
+
 /* ============================================ */
 /* GENERATOR INSTRUCTIONS BLOCK */
 /* ============================================ */
