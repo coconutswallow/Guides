@@ -48,20 +48,23 @@
                     // 1. Open the child menu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
                     
-                    // 2. Use a tiny delay (setTimeout 0) to wait one "tick"
-                    //    This ensures the browser has registered the child's new scrollHeight.
-                    setTimeout(() => {
-                        parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                    }, 0); // A 0ms timeout is all that's needed for opening
+                    // 2. We MUST wait two frames.
+                    // Frame 1: Browser registers child is open.
+                    // Frame 2: Browser updates parent's scrollHeight.
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            // 3. NOW we can safely read the parent's new height.
+                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                        });
+                    });
 
                 } else {
                     // --- CLOSING ---
                     // 1. Close the child menu
                     subsubmenu.style.maxHeight = '0';
                     
-                    // 2. THIS IS THE FIX:
-                    //    We MUST wait for the child's 300ms animation to *finish*
-                    //    before we recalculate the parent's height.
+                    // 2. We MUST wait for the child's animation to finish
+                    //    before recalculating the parent's height.
                     setTimeout(() => {
                         parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
                     }, animationTime); // Wait for the animation to complete
