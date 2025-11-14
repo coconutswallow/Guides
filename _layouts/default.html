@@ -113,7 +113,7 @@
                                                 {% assign folder_check = section.folder | append: '/' %}
                                                 {% assign folder_pages = site[collection_name] | where_exp: "page", "page.path contains folder_check" | sort: "order" %}
                                                 {% for page in folder_pages %}
-                                                    <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize }}</a>
+                                                    <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize_words }}</a>
                                                 {% endfor %}
                                             </div>
                                         </div>

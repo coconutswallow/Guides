@@ -17,7 +17,6 @@
                 
                 if (!isExpanded) {
                     // Open menu by setting max-height to its full scroll height
-                    // This scrollHeight already includes the height of all nested children
                     submenu.style.maxHeight = submenu.scrollHeight + 'px';
                 } else {
                     // Close menu by setting max-height to 0
@@ -35,20 +34,31 @@
                 const subsubmenu = navSubsection.querySelector('.nav-subsubmenu');
                 const icon = this.querySelector('.toggle-icon');
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                const parentSubmenu = this.closest('.nav-submenu');
                 
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
                 
+                // Get the height of the child menu *before* changing it
+                const childHeight = subsubmenu.scrollHeight;
+
                 if (!isExpanded) {
-                    // Open submenu
-                    subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
+                    // Open child submenu
+                    subsubmenu.style.maxHeight = childHeight + 'px';
                     
-                    // DO NOT TOUCH THE PARENT SUBMENU
+                    // Update parent's max-height by ADDING the child's height
+                    if (parentSubmenu) {
+                        parentSubmenu.style.maxHeight = (parentSubmenu.scrollHeight + childHeight) + 'px';
+                    }
                 } else {
-                    // Close submenu
+                    // Close child submenu
                     subsubmenu.style.maxHeight = '0';
                     
-                    // DO NOT TOUCH THE PARENT SUBMENU
+                    // Update parent's max-height by SUBTRACTING the child's height
+                    if (parentSubmenu) {
+                         // We set the height to the parent's current height *minus* the child's height
+                        parentSubmenu.style.maxHeight = (parentSubmenu.scrollHeight - childHeight) + 'px';
+                    }
                 }
             });
         });
