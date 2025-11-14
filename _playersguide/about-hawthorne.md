@@ -30,7 +30,7 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 
 ### Hawthorne Location on Faerun's Sword Coast
 
-![Hawthorne Location]({{ '/assets/images/hawthorne-sword-coast.jpg' | relative_url}})
+![Hawthorne Location](/Guides/assets/images/hawthorne-sword-coast.jpg)
 
 ### Map of Hawthorne
 
