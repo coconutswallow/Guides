@@ -38,29 +38,27 @@
                 
                 this.setAttribute('aria-expanded', !isExpanded);
                 icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-
+                
                 if (!isExpanded) {
-                    // 1. Open child submenu
+                    // Open child submenu
                     subsubmenu.style.maxHeight = subsubmenu.scrollHeight + 'px';
-                    
-                    // 2. Wait for the browser to update, then...
-                    // 3. Re-calculate the PARENT'S height to include the new child
-                    if (parentSubmenu) {
-                        requestAnimationFrame(() => {
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        });
-                    }
                 } else {
-                    // 1. Close child submenu
+                    // Close child submenu
                     subsubmenu.style.maxHeight = '0';
+                }
+                
+                // Always recalculate parent height after any change
+                if (parentSubmenu) {
+                    // Remove max-height temporarily to get true scrollHeight
+                    const currentMaxHeight = parentSubmenu.style.maxHeight;
+                    parentSubmenu.style.maxHeight = 'none';
+                    const newHeight = parentSubmenu.scrollHeight;
+                    parentSubmenu.style.maxHeight = currentMaxHeight;
                     
-                    // 2. Wait for the browser to update, then...
-                    // 3. Re-calculate the PARENT'S height *without* the child
-                    if (parentSubmenu) {
-                         requestAnimationFrame(() => {
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                        });
-                    }
+                    // Now set to the correct height
+                    requestAnimationFrame(() => {
+                        parentSubmenu.style.maxHeight = newHeight + 'px';
+                    });
                 }
             });
         });
