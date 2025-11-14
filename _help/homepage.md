@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Home Page"
-order: 20
+order: 32
 ---
 
 # Site Documentation: Editing the Homepage

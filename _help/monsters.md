@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: Monster-Compendium
-order: 60
+order: 34
 ---
 # Monster Compendium Engineering Notes
 

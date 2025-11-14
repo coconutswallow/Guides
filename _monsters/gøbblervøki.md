@@ -54,18 +54,18 @@ ___
 >
 > ### Bonus Actions
 >
-> ***Shadow Stealth. .*** While in dim light or darkness, the Gøbblervøki takes the Hide action.
+> ***Shadow Stealth.*** While in dim light or darkness, the Gøbblervøki takes the Hide action.
 >
-> ***Shadow Stride. .*** The Gøbblervøki steps into a shadow within 5 feet of it and magically appears in an unoccupied space within 5 feet of a second shadow
+> ***Shadow Stride.*** The Gøbblervøki steps into a shadow within 5 feet of it and magically appears in an unoccupied space within 5 feet of a second shadow
 that is up to 60 feet away. Both shadows must be cast by a Small or larger creature or object.
 >
 > ### Legendary Actions
 > The Gøbblervøki can take 3 legendary actions, choosing from the options below. Only one legendary option can be used at a time and only at the end of another
 creature's turn. The Gøbblervøki regains spent legendary actions at the start of its turn.
 >
-> **Move. .** The Gøbblervøki moves up to its speed.
+> **Move.** The Gøbblervøki moves up to its speed.
 >
-> **Shadow Stride..** The Gøbblervøki uses its Shadow Stride.
+> **Shadow Stride.** The Gøbblervøki uses its Shadow Stride.
 >
-> **Lashing Shadows (Costs 2 Actions)..** The Gøbblervøki uses its Lashing Shadows if available or rolls a d6 to attempt to recharge it if it is unavailable.
+> **Lashing Shadows (Costs 2 Actions).** The Gøbblervøki uses its Lashing Shadows if available or rolls a d6 to attempt to recharge it if it is unavailable.
 >
