@@ -5,7 +5,7 @@ order: 90
 ---
 Now that you've read all the rules, it's time to register as an adventurer!  Here are the steps:
 
-1.  **Register to be an Adventurer**. You can do so via the `/register` command in [`#⁠pr-couch`](https://discord.com/channels/308324031478890497/719671742141956157) on the Hawthorne Guild Discord server.  You will want to have the [Player's Handbook]({{'/playersguide/index.html' | relative_url }}) ready.
+1.  **Register to be an Adventurer**. You can do so via the `/register` command in [`#⁠pr-couch`](https://discord.com/channels/308324031478890497/719671742141956157) on the Hawthorne Guild Discord server.  You will want to have the [Player's Handbook]({{'/playersguide/index/' | relative_url }}) ready.
 
 2.  Mention the <span class="role-pr">@Player Relations</span> team in the [`#⁠pr-couch`](https://discord.com/channels/308324031478890497/719671742141956157) channel when you have finished your application, and one of its members will get with you as soon as they can to get you officially registered as an Adventurer and also set you up with your own Google folder on the drive for your character sheets and Master Adventure Log.
 
