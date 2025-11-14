@@ -50,6 +50,9 @@ navigation:
       
   - title: "Player's Guide"
     collection: playersguide
+    sections:
+    - title: "Appendices"
+      folder: "appendices"
 
 # =========================================================
 #
