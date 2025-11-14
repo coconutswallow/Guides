@@ -16,6 +16,7 @@ order: 80
 - [Adventurer Traverses the landscape 2 - Art by Tirinium1 ](https://www.deviantart.com/tirinium1/art/The-adventurers-party-traverses-the-landscape-2-1219674888)
 - [Adventurer Party - Art by MenemAdam](https://www.deviantart.com/menemenadam/art/Adventure-Party-1175834324)
 - [The Contract by Exphrasis](https://www.deviantart.com/exphrasis/art/The-Contract-624868109)
+- [Gateway of the Deep Stars - Art by plumsy460](https://www.deviantart.com/plumsy460/art/Gateway-of-the-Deep-Stars-1255313053)
 
 ### Player's Guide
 
