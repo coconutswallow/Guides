@@ -1198,6 +1198,14 @@ tbody tr:hover {
   color: var(--color-header-text);
 }
 
+[data-theme="dark"] .nav-subsection-toggle {
+  color: var(--color-header-text);
+}
+
+[data-theme="dark"] .nav-subsubmenu a {
+  color: var(--color-header-text);
+}
+
 .nav-submenu a:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
