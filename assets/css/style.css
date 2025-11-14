@@ -509,13 +509,13 @@ p, li, td, th, a, code, pre {
   background-color: transparent !important;
 }
 
-/* FIX: Ensure Trial DM role uses its custom green color in dark mode. */
+/* Trial DM role uses its custom green color in dark mode. */
 [data-theme="dark"] .role-trial-dm {
   color: #25c059 !important; /* Force original color (Light Green) */
   background-color: transparent !important;
 }
 
-/* FIX: Ensure Full DM role uses its custom dark green color in dark mode. */
+/* Full DM role uses its custom dark green color in dark mode. */
 [data-theme="dark"] .role-full-dm {
   color: #1a7939 !important; /* Force original color (Dark Green) */
   background-color: transparent !important;
@@ -1120,7 +1120,7 @@ tbody tr:hover {
   text-decoration: none;
   transition: background-color 0.2s, padding-left 0.2s, color 0.2s;
   font-weight: 400;
-  font-size: 1em; /* ADD THIS LINE */
+  font-size: 1em;
 }
 
 /* Dark mode navigation links */
