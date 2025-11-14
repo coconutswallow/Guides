@@ -11,7 +11,7 @@ collections:
     permalink: /rules/:name.html
   playersguide:
     output: true
-    permalink: /playersguide/:name.html
+    permalink: permalink: /playersguide/:path/
   dms_guide:
     output: true
     permalink: /dms-guide/:path/
