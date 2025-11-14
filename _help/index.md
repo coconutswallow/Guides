@@ -1,12 +1,12 @@
 ---
+title: Help Index
 layout: doc
-title: "Help Index"
 order: 1
 ---
 ## Site Documentation
 
 ### For Authors:
-
+- <a href="{{ 'help/site-editor/' | relative_url }}">Site Page Editing tool</a>
 - <a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a>
 
 ### For Engineers
