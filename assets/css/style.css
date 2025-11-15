@@ -562,6 +562,8 @@ tbody tr:hover {
   width: 100%;
   margin: 0 auto;
   padding: var(--spacing-md);
+  background-color: var(--color-bg-light);
+  color: var(--color-text);
 }
 
 
