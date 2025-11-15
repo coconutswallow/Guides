@@ -21,7 +21,7 @@
   - question: Do I need to get my character approved?
     category: Character Creation
     answer: |-
-      No, we operate on the honor system here! But you can post it in the Character-Discussion channel to get it double checked if you’d like!
+      No, we operate on the honor system here! But you can post it in the **#Character-Discussion** channel to get it double checked if you’d like!
   - question: The DM asked me if I am a New Hire or a Welcome Wagon. What do those mean?
     category: General
     answer: |-
@@ -41,4 +41,12 @@
   - question: What level do characters start on the server?
     category: Character Creation
     answer: |-
-      Characters start at level 3 or level 5.  There is no limit to the number of characters you create, so you can create a level 3 **and** a level 5 character (or more...).  See Player's Guide for [character creation](/Guides/playersguide/character-creation/).
+      Characters start at level 3 or level 5.  There is **no limit to the number of characters** you create, so you can create a level 3 **and** a level 5 character (or more...).  See Player's Guide for [character creation](/Guides/playersguide/character-creation/).
+  - question: How do I become a DM on the server?
+    category: DM
+    answer: |-
+      Fill in a [DM Registration form](https://docs.google.com/forms/d/e/1FAIpQLSeSJFrWH_ZFCBa_TndvhqhJsNDtVoKb4hAt7X2v07D-4lLTbw/viewform?usp=sf_link)
+  - question: how do I subscribe / unsubscribe from a role to control what I get pinged for?
+    category: General
+    answer: |-
+      You can manage your ping subscriptions in [*#role-select*](https://discord.com/channels/308324031478890497/1333187518576726098)
