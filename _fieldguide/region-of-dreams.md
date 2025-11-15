@@ -21,6 +21,8 @@ The dreamer’s unconscious mind forms the dreamscape and moves through it, usua
 
 Sometimes, dream elements from one dreamer’s personal experience may leak into the dream of another. The reason for this is unknown, though some speculate it has to do with the nature of the plane itself.
 
+![Dreamland](https://cdna.artstation.com/p/assets/images/images/005/220/398/large/hangmoon-alexander-komarov-dreamland.jpg?1489427215)
+
 ### Dreamscape Ruptures
 
 In extremely rare cases, a dreamscape can rupture, sending its pieces, dream-creatures and visitors into other dreamscapes, or other planes. These objects, which are made from dream-stuff, can retain a physical state for up to 1d100 hours after the dreamer has woken up. When that time has passed, the dream-stuff becomes undifferentiated once again and returns to the Region of Dreams. In 1% of these cases, these dream elements can achieve permanent reality. For example, this could happen in the case of a dreamer who is stuck in a permanent stasis, forever dreaming and never waking up. Under normal circumstances, if the dream-self was expelled with the rupture, the dreamer would wake up.
@@ -167,10 +169,10 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
   
     The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
 
-    When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
+    <p>When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
 
   </div>
-   <img src="/Guides/assets/images/joseph-meehan-storm.jpg" alt="Channeled Storm" class="hierarchy-image image-size-20">
+   <img src="/Guides/assets/images/joseph-meehan-storm.jpg" alt="Channeled Storm" class="hierarchy-image image-size-45">
 </div>
 
 ### Dreamheart Tempest
@@ -211,6 +213,7 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 > ##### Image Credits
 
 * [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
-* [Sail Away by hangmoon-alexander-komarov](https://hangmoon.artstation.com/projects/qxa4a)
+* [Dreamland by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/lKLok)
+* [Sail Away by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qxa4a)
 * [Channelled Storm by Joseph Meehan](https://meehanjo.artstation.com/)
 
