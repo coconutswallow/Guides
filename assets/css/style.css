@@ -133,6 +133,7 @@
   --color-bg-page: var(--palette-bg-page-light);
   --color-bg-light: var(--palette-bg-card-light);
   --color-bg-medium: var(--palette-bg-row-light);
+  --color-bg-page-container: var(--palette-bg-hover-light); /* New: for .page container */
 
   /* Links & Buttons */
   --color-link: var(--color-secondary);
@@ -236,6 +237,7 @@
   --color-bg-page: var(--palette-bg-page-dark);
   --color-bg-light: var(--palette-bg-card-dark);
   --color-bg-medium: var(--palette-bg-row-dark);
+  --color-bg-page-container: var(--palette-bg-row-dark); /* New: for .page container */
 
   /* Links & Buttons */
   --color-btn-text: var(--color-bg-light);
@@ -562,7 +564,7 @@ tbody tr:hover {
   width: 100%;
   margin: 0 auto;
   padding: var(--spacing-md);
-  background-color: var(--color-bg-light);
+  background-color: var(--color-bg-page-container);
   color: var(--color-text);
 }
 
