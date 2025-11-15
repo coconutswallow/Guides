@@ -5,12 +5,6 @@ order: 10
 background_image: https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001
 ---
 
-## Credits
-
-> This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.
->
-> Background Image: [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
-
 # Region of Dreams
 
 The Region of Dreams seems to be accessible from most of the planes, since creatures can sleep and dream anywhere. It is the place
@@ -98,7 +92,7 @@ When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the 
 ## Reaching the Region of Dreams
 
 ![]({{'/assets/images/hangmoon-alexander-komarov-sail-away.jpg' | relative_url }})
-<br>*Art: Sail Away by hangmoon-alexander-komarov, cropped*
+
 
 
 There are a few methods to reach the Region of Dreams, whether it is consciously or not, and physically or not. A traveler choosing to travel there physically must know that they will be subjected to the whims of the dreams they enter and risk being injured or die, unlike an unconscious dreamer whose mind is within its own dreamscape. A physical traveler must also be aware they can stumble into the dreamscape of a powerful entity, and could potentially become trapped within it. (Note: Unlike the normal rules for dreaming, items used, spells cast, and other consumables are still gone when you return to the waking world after leaving the Region of Dreams if it was accessed physically. Likewise, items you gain and experience you accumulate while you were there
@@ -168,7 +162,7 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
 
 ---
 
-  # The Dreamheart
+# The Dreamheart
 
 <div class="image-text-wrapper">
   <div class="hierarchy-explanation">
@@ -178,7 +172,7 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
     When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
 
   </div>
-  <img src="https://meehanjo.artstation.com/projects/lVO8WY" alt="Description" class="hierarchy-image image-size-20">
+  <img src="https://cdna.artstation.com/p/assets/images/images/017/422/910/large/joseph-meehan-storm.jpg?1555941161" alt="Description" class="hierarchy-image image-size-20">
 </div>
 
 ### Dreamheart Tempest
@@ -211,4 +205,13 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 > ##### Adventures in the Region of Dreams
 > Players can enter the Region of Dreams physically or as their dream-self when they are asleep. When asleep, at a DM discretion, PCs could become aware that they are in a dream and have an adventure in the Region of Dreams as their dream-self. Please be aware that unless PCs enter the Region of Dreams physically, they cannot gain, nor lose items and they cannot learn spells.
 
+
+## Credits
+
+> *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
+
+> ##### Image Credits
+
+* [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
+* [Sail Away by hangmoon-alexander-komarov](https://hangmoon.artstation.com/projects/qxa4a)
 
