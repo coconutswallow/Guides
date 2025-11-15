@@ -1337,6 +1337,11 @@ tbody tr:hover {
   border: 2px solid var(--color-border);
 }
 
+
+.image-size-20 {
+  max-width: 20% !important;
+}
+
 .image-size-60 {
   max-width: 60% !important;
 }

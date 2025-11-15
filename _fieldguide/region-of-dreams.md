@@ -5,8 +5,6 @@ order: 10
 background_image: https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001
 ---
 
-![Region of Dreams]({{ '/assets/images/region-of-dreams-cover.png' | relative_url }})
-
 ## Credits
 
 > This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.
@@ -95,6 +93,8 @@ The passage between dreamscapes happens gradually. As the traveler approaches th
 
 When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the nearest dreamscape.
 
+---
+
 ## Reaching the Region of Dreams
 
 ![]({{'/assets/images/hangmoon-alexander-komarov-sail-away.jpg' | relative_url }})
@@ -165,5 +165,50 @@ The sleeper then wakes up the next day without feeling rested and must succeed o
 > The Region of Dreams can interact in eerie ways with other planes. You can use the effects above as inspiration and feel free to create strange effects that could arise within another plane as a result of The Region of Dreams interacting with it.
 
 Moreover, a whole group of people sleeping during a dreamstorm could experience the same dream, which often results in mass hysteria and widespread paranoia.  Within the Realms, such occurence is often attributed to a dark omen or an augury of impending doom.
+
+---
+
+  # The Dreamheart
+
+<div class="image-text-wrapper">
+  <div class="hierarchy-explanation">
+  
+    The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
+
+    When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
+
+  </div>
+  <img src="https://meehanjo.artstation.com/projects/lVO8WY" alt="Description" class="hierarchy-image image-size-20">
+</div>
+
+### Dreamheart Tempest
+A Dreamheart Tempest is a violent winding storm of chaotic raw energy which is harmful and difficult to endure. Because of their nature, the size and intensity of Dreamheart Tempests greatly vary from one another. Mechanically speaking, for each minute a creature is exposed to the Dreamheart Tempest, the creature takes (a minimum of) 3d6 force damage and must succeed on a DC 15 (or higher) Constitution saving throw or suffer a level of exhaustion. As it is noted in the parenthesis, the DC and damage presented in this paragraph are the minimum for a Dreamheart Tempest, thus it would be common to find Dreamheart Tempests that deal more damage and that have a higher DC. 
+
+
+#### The Eye of the Tempest
+Like any storm, each Dreamheart Tempest has an eye. A traveler can visit the Eye of a Dreamheart Tempest, but each visitor comes away with a completely different understanding of what hides within the Eye. Some meet deities, others find long-dead loved ones, and others achieve unparalleled personal insight. Of course, these meetings are more akin to visions or illusions rather than an actual meeting, but that isn't perfectly clear to the visitors of the Eye.
+
+
+---
+
+# Demiplane of Nightmares
+
+Although it is called the Region of Dreams, the dreamscapes within it sometimes contain vile creatures, landscapes and images, charged with dark emotions. Sometimes, these elements rampage from dreamscape to dreamscape, giving rise to terrible nightmares. Whether these nightmares originate from dreamers’ dark thoughts or have been birthed by the near presence of the Demiplane of Nightmares is unclear, but one thing remains certain: the Demiplane of Nightmares is a place where one’s darkest thoughts and fears become reality. 
+
+### Description
+The Demiplane of Nightmares is an awful place, with nothing but horrible sights. Its particular landscape with eerie angles and anomalous geometry is particularly repulsive and uninviting to most non-natives.
+
+The Demiplane of Nightmares is located coterminously with the Region of Dreams, the Ethereal Plane and the Far Realm. The boundary between the Demiplane and the Far Realm is extremely thin, thus it is constantly tainted and corrupted by the influences of the Far Realm.
+
+### Inhabitants
+The majority of the inhabitants of the Demiplane of Nightmares are hostile and horrifying beings, creatures whose essence repels even the most twisted minded individuals that aren't native to this demiplane. In turn, these creatures find non-natives to be disgusting.
+
+However, there aren't only hostile and horrifying creatures within the Demiplane of Nightmares. Among these non-hostile creatures are the Diaboli. The Diaboli are fiendish looking humanoids who are native to the Demiplane of Nightmares and tend to value freedom and spontaneity. They are usually of a chaotic good alignment. They can sometimes be found on the Material Plane since some of them have left and formed communities there. (For more information read Dragon 327, "Diaboli")
+
+### Rumors
+Those who have found their way out of the Demiplane of Dread say that the dark powers must have pulled a portion of the Demiplane of Nightmares into Ravenloft. These Nightmare Lands are said to represent some of the most horrifying areas in Ravenloft. It is yet unknown whether these rumors are true or not, but one thing remains clear; those who went to the Nightmare Lands have been changed after their time spent there and are no longer the same now that they have been released.
+
+> ##### Adventures in the Region of Dreams
+> Players can enter the Region of Dreams physically or as their dream-self when they are asleep. When asleep, at a DM discretion, PCs could become aware that they are in a dream and have an adventure in the Region of Dreams as their dream-self. Please be aware that unless PCs enter the Region of Dreams physically, they cannot gain, nor lose items and they cannot learn spells.
 
 
