@@ -11,6 +11,8 @@ where dreams come to existence with complete disregard to the waking world. When
 The Region of Dream is filled with undifferentiated dream-stuff, thus it would exist regardless of if creatures were 
 dreaming or not. Its edges expand and contract continuously as dreamers sleep and wake, creating various dreamscapes. These dreamscapes last a short time and they rarely impinge on one another accidentally.
 
+![Dreamland](https://cdna.artstation.com/p/assets/images/images/005/220/398/large/hangmoon-alexander-komarov-dreamland.jpg?1489427215)
+
 ## Dreamscapes
 
 Within the Region of Dreams, dreamers participate in separate and extremely personal dream scenes of their own subconscious creation: the dreamscape. 
@@ -20,8 +22,6 @@ Most dreamscapes are small; representing a single building, a clearing in a fore
 The dreamer’s unconscious mind forms the dreamscape and moves through it, usually unconscious of the fact that they are dreaming at all. The dreamer alters large or small aspects of their personal dreamscape, though they never do so consciously. Dreamscapes usually burst as soon as the dreamer awakes, but on occasion, a dreamscape can linger or survive permanently under unusual circumstances or magic.
 
 Sometimes, dream elements from one dreamer’s personal experience may leak into the dream of another. The reason for this is unknown, though some speculate it has to do with the nature of the plane itself.
-
-![Dreamland](https://cdna.artstation.com/p/assets/images/images/005/220/398/large/hangmoon-alexander-komarov-dreamland.jpg?1489427215)
 
 ### Dreamscape Ruptures
 
