@@ -19,7 +19,7 @@ The following is a summary of available Downtime Activities. For details on each
 
 You can buy and sell items as listed. The purchase limit in Hawthorne is 15,000 GP, with more expensive items available in Waterdeep or other major cities.  Purchasing items on the equipment list in the Allowed Content can be logged in #downtime-channel and in your MAL under downtime. 
 
-<code>PlayerDiscord as Character (level) purchases <list items> for <amount> gp</code>
+```PlayerDiscord as Character (level) purchases <list items> for <amount> gp```
 
 ### Bastions
 
