@@ -9,7 +9,17 @@ background_image: /assets/images/tavern_brawl.jpg
 
 Your MAL is the single-source-of truth logging all pertinent activity for your character on the server.  Everything you gain (xp, gold, equipment) and spend on your character is logged here, so that we can make sure that we have a fair and even playing ground for everyone.
 
-### Your first MAL entry
+
+## What do you need to log in your MAL
+
+- **Session Logs**  The results of a game session, including XP and DTP earned, gold and items gained (or used, etc.)
+
+- **Downtime Logs** Downtime activities such as equipment purchases, crafting, bastion activities, etc.
+
+- **Trade Logs** Trades with other members of the community
+
+
+## Your first MAL entry
 
 Once you've created your first character sheet, you should create add the character in your MAL.
 
@@ -21,13 +31,13 @@ If you decided to purchase additional equipment (from the equipment tab on the A
 
 ---
 
-#### Example Character Creation MAL
+### Example Character Creation MAL
 
 ![Example Character Creation MAL]({{ '/assets/images/mal-character-creation.jpg' | relative_url }})
 
 ---
 
-#### Equipment purchases
+### Initial Equipment purchases
 
 Your character comes with initial gold and equipment based on the rules of the PHB.  Everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> you can make purchases whenever you want.  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
 
