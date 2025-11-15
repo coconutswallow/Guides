@@ -27,7 +27,11 @@ You can construct and use a Bastion and its facilities. See Appendix B and <a hr
 
 ### Crafting
 
-You can craft equipment and magic items. Except where otherwise stated, crafting equipment requires proficiency in a corresponding tool, costs DTP equal to the item cost / 25, and costs half the item price in gold.   You must have a bastion with the requisite facilities to craft items (see <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> under Equipment or Loot to see crafting requirements)
+You can craft equipment and magic items. Except where otherwise stated, crafting equipment requires proficiency in a corresponding tool, costs DTP equal to the item cost / 25, and costs half the item price in gold, plus additional DTP for crafting magical items.   You must have a bastion with the requisite facilities and your character must have the requisite tool skills to craft items.  For crafting items that produce spell effects (e.g. spellwrought tattoos or wands), your character must be able to cast that spell.
+
+Only T1 or below items are craftable.
+
+See <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> under Equipment or Loot to see crafting requirements per item.
 
 ### Research
 
@@ -47,7 +51,7 @@ You can purchase spellcasting services for the listed level 0 - 5 spells in Hawt
 
 ### Trading
 
-You can trade items with other PCs. Only PCs in the same location can trade with each other and any items you obtain via trading with another PC must be of your PC’s tier or lower. All trades must be logged in <a href="https://discord.com/channels/308324031478890497/617832619689902100">#trade-logs</a> and both players’ MALs must be updated.
+You can trade items with other PCs. Only PCs in the same location can trade with each other and any items you obtain via trading with another PC must be of your PC’s tier or lower. All trades must be logged in <a href="https://discord.com/channels/308324031478890497/617832619689902100">#trade-logs</a> and both players’ MALs must be updated with the corresponding entries.
 
 ![Trade Example]({{ '/assets/images/trade-example.png' | relative_url }})
 
