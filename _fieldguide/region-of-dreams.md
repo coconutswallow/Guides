@@ -172,7 +172,7 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
     When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
 
   </div>
-  <img src="https://cdna.artstation.com/p/assets/images/images/017/422/910/large/joseph-meehan-storm.jpg?1555941161" alt="Description" class="hierarchy-image image-size-20">
+  ![Storm, Cropped]({{ '/assets/images/joseph-meehan-storm.jpg' | relative_url}})
 </div>
 
 ### Dreamheart Tempest
@@ -214,4 +214,5 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 
 * [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
 * [Sail Away by hangmoon-alexander-komarov](https://hangmoon.artstation.com/projects/qxa4a)
+* [Channelled Storm by Joseph Meehan](https://meehanjo.artstation.com/)
 
