@@ -3,213 +3,182 @@ title: Navigation Setup
 layout: doc
 order: 20
 ---
+
 # Site Documentation: Managing Collections & Navigation
 
-This guide explains how to maintain the Hawthorne Guild Guide site, including how collections work and what appears in the navigation menu.
+This guide explains the technical backbone of the site: how content is organized using Jekyll **Collections** and how those collections automatically build the sidebar **Navigation** menu.
 
-## Understanding Collections
+## Part 1: What is a "Collection"?
 
-Collections are Jekyll's way of organizing related content. Each collection is defined in `_config.yml` and corresponds to a folder starting with an underscore.
+In simple terms, a **Collection** is a special folder (starting with an `_`) that Jekyll is told to pay attention to.
 
-### Current Collections
+- **Standard Folder:** Jekyll ignores a normal folder.
+    
+- **Collection Folder (`_rules`, `_playersguide`, etc.):** Jekyll will read _every file_ inside, process it, and make it available for the site to use (e.g., to create pages or list in a menu).
+    
 
-* `_rules` - Server rules and policies
-* `_players_guide` - Player resources and guides
-* `_dms_guide` - Dungeon Master resources
-* `_arcana` - Magic and spellcasting information
-* `_field_guide` - World and location information (Adventure Locations in the Field Guide)
-* `_faq` - Frequently asked questions
-* `_monsters` - Monster statblocks (special handling)
-* `_help` - Internal site documentation (NOT in menu)
-* `_data` - FAQ data - use this for content that needs to be specially indexed (NOT in menu)
+These are all defined in the `collections:` block of your `_config.yml` file. This definition tells Jekyll "Yes, the `_rules` folder is special. Read its contents and make them available under the name `rules`."
 
-## What Appears in the Navigation Menu
+## Part 2: The Magic: From `.md` File to Sidebar Menu
 
-### Automatic Collection Navigation
+This is the core concept of the site. Here is the step-by-step process of how your new page appears in the menu automatically.
 
-Collections added to the `navigation` section in `_config.yml` with the `collection` property will automatically generate menu items for all documents with:
+1. **You Create a File:** You create `_rules/my-new-rule.md`.
+    
+2. **You Add "Front Matter":** At the top of that file, you add `layout: doc`.
+    
+3. **Jekyll Builds the Site:**
+    
+    - Jekyll finds `_rules/my-new-rule.md`.
+        
+    - It sees `layout: doc`. This is a crucial instruction. It tells Jekyll: "Take the content of this Markdown file and wrap it inside the HTML template found at `_layouts/doc.html`."
+        
+    - The result is a fully-formed webpage, `.../rules/my-new-rule.html`, which now has the site header, footer, and all the correct styling.
+        
+4. **The Sidebar Builds Itself:**
+    
+    - The sidebar layout file reads the `navigation:` block in `_config.yml`.
+        
+    - It sees the entry for "Rules & Roles" which says `collection: rules`.
+        
+    - This is another instruction: "Automatically find every page in the `rules` collection (which we found in Step 3!), sort them by their `order:` number, and list their `title:` here as a link."
+        
+5. **Done:** Your new page appears in the menu, perfectly sorted, without you ever having to manually edit an HTML navigation file.
+    
 
-* `layout: doc` in the front matter
-* Files are sorted by the `order` field
+The key takeaway: **`collection:` + `layout: doc` + `order:` = Automatic Menu Item**
 
-**Example from `_config.yml`:**
+## Part 3: How to Configure the Sidebar Menu
 
-```yaml
+The sidebar is 100% controlled by the `navigation:` block in `_config.yml`. It supports **four** types of menu items.
+
+### Type 1: The Simple Link
+
+This just points to one specific URL. It's used for the "Home" page and the "FAQ" page.
+
+```
+# Example from _config.yml
 navigation:
-  - title: "📜 Rules & Roles"
+  - title: "Home"
+    url: "/"
+  - title: "FAQ"
+    url: /faq.html
+```
+
+### Type 2: The Automatic Collection (Most Common)
+
+This is the "magic" one. You provide a `title` and a `collection:` name. It automatically finds all `layout: doc` pages in that collection and builds a list.
+
+```
+# Example from _config.yml
+# This one line automatically finds all pages
+# in the `_rules` folder and lists them.
+  - title: "Rules & Roles"
     collection: rules
 ```
 
-This will display ALL `.md` files in `_rules/` that have `layout: doc`, sorted by their `order` value.
+### Type 3: The Fully Manual Section
 
-### What Gets Excluded
+This is used when you need to link to pages that are _not_ in a collection, or are not standard document pages (like the Statblock Builder, which is an `.html` file).
 
-Documents are excluded from automatic navigation if they:
-
-* Use a different layout (e.g., `layout: statblock`)
-* Are in a collection NOT listed in `_config.yml` navigation (like `_help`)
-* Don't have front matter
-
-### Manual Navigation Sections
-
-Some sections are manually defined (not auto-generated from collections):
-
-**Example: Monster Compendium**
-
-```yaml
-- title: "📖 Monster Compendium"
-  sections:
-    - title: "Monster Compendium"
-      url: /monster-compendium/
-    - title: "Submit Monster"
-      url: /monster-compendium/monsters-submit/
-    - title: "Statblock Builder"
-      url: /monster-compendium/generator/
-```
-
-These require explicit URLs because they include `.html` files or need custom ordering.
-
-## Adding New Content
-
-### Adding a Document to an Existing Collection
-
-1. Create a new `.md` file in the appropriate collection folder (e.g., `_rules/new-rule.md`)
-2. Add front matter:
-
-```yaml
----
-layout: doc
-title: "Your Document Title"
-order: 5
----
-```
-
-3. Write your content using Markdown
-4. The document will automatically appear in the navigation menu if the collection is in `_config.yml`
-
-### Creating a New Collection
-
-1. **Add to `_config.yml` collections section:**
-
-```yaml
-collections:
-  your_collection:
-    output: true
-    permalink: /your-collection/:path/
-```
-
-2. **Add to navigation (if you want it in the menu):**
-
-```yaml
-navigation:
-  - title: "🎯 Your Collection"
-    collection: your_collection
-```
-
-3. **Create the folder:** `_your_collection/`
-4. **Add documents** with `layout: doc` front matter
-
-### Creating a Hidden Collection (Like Help)
-
-If you want a collection that generates pages but doesn't appear in the menu:
-
-1. Add to collections in `_config.yml`:
-
-```yaml
-collections:
-  site_docs:
-    output: true
-    permalink: /site-docs/:path/
-```
-
-2. **Do NOT add it to the navigation section**
-3. Pages will be accessible via direct URL: `/site-docs/your-page/`
-
-## Front Matter Reference
-
-### Required Fields for Navigation Display
-
-```yaml
----
-layout: doc          # Must be "doc" to appear in auto-generated nav
-title: "Page Title"  # Displays in menu and as page heading
-order: 1             # Determines position in menu (lower = higher)
----
-```
-
-### Optional Fields
-
-```yaml
-background_image:  /assets/images/background_image.jpg
-```
-
-## Direct Links
-
-All pages are accessible via direct URLs following this pattern:
-
-* Rules: `https://coconutswallow.github.io/Guides/rules/page-name.html`
-* Player's Guide: `https://coconutswallow.github.io/Guides/players-guide/page-name/`
-* DM's Guide: `https://coconutswallow.github.io/Guides/dms-guide/page-name/`
-* Arcana: `https://coconutswallow.github.io/Guides/arcana/page-name/`
-* FAQ: `https://coconutswallow.github.io/Guides/faq/page-name/`
-* Monsters: `https://coconutswallow.github.io/Guides/monster-compendium/monster-name/`
-* Site Docs: `https://coconutswallow.github.io/Guides/site-docs/page-name/`
-
-**Note:** The URL structure is defined by the `permalink` setting in each collection's config.
-
-## Troubleshooting
-
-### "My page doesn't appear in the menu"
-
-Check:
-
-1. Does the file have `layout: doc` in front matter?
-2. Is the collection listed in `_config.yml` navigation?
-3. Is the file in the correct collection folder?
-4. Does it have an `order` field?
-
-### "My collection appears empty in the menu"
-
-Check:
-
-1. Do any files in the collection have `layout: doc`?
-2. Files with `layout: statblock` or other layouts won't appear
-3. The collection folder must start with underscore (e.g., `_rules`)
-
-### "Build error about null object"
-
-This usually means:
-
-1. A collection name is misspelled in `_config.yml`
-2. A collection folder doesn't exist
-3. Front matter is malformed
-
-## Best Practices
-
-1. **Consistent Ordering:** Use order values in increments of 10 (10, 20, 30) to allow easy insertion of new pages
-2. **Clear Titles:** Use descriptive titles that work both in the menu and as page headings
-3. **Document Layout:** Always use `layout: doc` for standard documentation pages
-4. **Test Locally:** Use `bundle exec jekyll serve` to test changes before committing
-5. **Keep URLs Clean:** Use lowercase and hyphens in filenames (e.g., `server-rules.md` not `Server_Rules.md`)
-
-## File Structure Example
+Notice there is **no `collection:` key**. Instead, you manually define all sub-links in a `sections:` block.
 
 ```
-/
-├── _config.yml
-├── _rules/
-│   ├── server-rules.md        (layout: doc, order: 1)
-│   ├── server-roles.md        (layout: doc, order: 2)
-│   └── privacy-policy.md      (layout: doc, order: 3)
-├── _monsters/
-│   ├── ancient-dragon.md      (layout: statblock) ← NOT in auto-nav
-│   └── goblin.md              (layout: statblock) ← NOT in auto-nav
-├── _site_docs/
-│   └── collections-guide.md   (layout: doc) ← NOT in menu
-└── monster-compendium/
-    └── index.html             ← Manual nav entry required
+# Example from _config.yml
+# Used for the Monster Compendium
+  - title: "Monster Compendium"
+    sections:
+      - title: "Monster Compendium"
+        url: /monster-compendium/
+      - title: "Submit A Monster"
+        url: /monster-compendium/monsters-submit/
+      - title: "Statblock Builder"
+        url: /monster-compendium/generator/
 ```
 
-## Need Help?
+### Type 4: The Hybrid (Automatic + Manual Submenu)
 
-If you need to make structural changes to the site or have questions about the navigation system, contact the site administrator or consult the Jekyll documentation at https://jekyllrb.com/docs/collections/
+This is the most complex type and is used for the "Player's Guide." It has **one level of sub-menu** and is a special case.
+
+```
+# Example from _config.yml
+  - title: "Player's Guide"
+    collection: playersguide
+    sections:
+      - title: "Appendices"
+        folder: "playersguide/appendices"
+```
+
+**How this works:**
+
+1. `collection: playersguide`: This part is **automatic**. It finds all `layout: doc` pages in the _root_ of the `_playersguide/` folder (e.g., `_playersguide/getting-started.md`) and lists them at the top level.
+    
+2. `sections:`: This part is **manual**. It adds a sub-menu (a "section") titled "Appendices."
+    
+3. `folder: "playersguide/appendices"`: This is a _special_ key. It tells the sidebar to find all `layout: doc` pages _inside_ the `_playersguide/appendices/` sub-folder and list them under the "Appendices" sub-menu.
+    
+
+**This is the 1-level-submenu limit.** This "Hybrid" model is the only way this site is configured to handle sub-menus.
+
+## Part 4: How-To Guides
+
+### How to Add a Page to "Rules & Roles"
+
+1. Create a new file, e.g., `_rules/my-new-rule.md`.
+    
+2. Add this Front Matter to the top:
+    
+    ```
+    ---
+    layout: doc
+    title: "My New Rule"
+    order: 50
+    ---
+    
+    My content starts here...
+    ```
+    
+3. Save the file. It will be added to the menu automatically.
+    
+
+### How to Add a Page to "Player's Guide (Appendices)"
+
+1. Create a new file in the sub-folder, e.g., `_playersguide/appendices/my-appendix.md`.
+    
+2. Add this Front Matter to the top:
+    
+    ```
+    ---
+    layout: doc
+    title: "My New Appendix"
+    order: 30
+    ---
+    
+    My content starts here...
+    ```
+    
+3. Save the file. It will be added to the "Appendices" sub-menu automatically.
+    
+
+## Part 5: Troubleshooting
+
+### "My page isn't showing up in the menu!"
+
+Check these four things:
+
+1. **Is the file in the right collection folder?** (e.g., `_rules/`)
+    
+2. **Does it have `layout: doc`?** If it has `layout: statblock` or no layout, it will be ignored by the menu.
+    
+3. **Is the collection itself listed in `_config.yml`?** If you made a new `_newstuff/` folder, it won't do anything until you add it to `_config.yml`.
+    
+4. **Does it have an `order:` number?** Missing `order` can cause it to sort to the end or not appear.
+    
+
+### "My links are broken!"
+
+- In your `_config.yml`, the `permalink:` setting for each collection controls the URL.
+    
+- Most are set to `/:path/`, which means `_playersguide/foo.md` becomes `/playersguide/foo/`.
+    
+- **Exception:** `rules` is set to `/:name.html`. This is an older style, and means `_rules/foo.md` becomes `/rules/foo.html`.
