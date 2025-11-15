@@ -18,9 +18,9 @@ collections:
   arcana:
     output: true
     permalink: /arcana/:path/
-  field_guide:
+  fieldguide:
     output: true
-    permalink: /field-guide/:path/
+    permalink: /fieldguide/:path/
   faq:
     output: true
     permalink: /faq/:path/
@@ -87,7 +87,12 @@ navigation:
         url: /monster-compendium/monsters-submit/
       - title: "Statblock Builder"
         url: /monster-compendium/generator/
-        
+
+
+  - title: "Adventure Locations"
+    collection: fieldguide
+  
+
   - title: "FAQ"
     url: /faq.html
 
