@@ -221,6 +221,7 @@ Tables are great for organizing information like stats, schedules, or rules.
 - `:---:` = center-aligned  
 - `---:` = right-aligned
 
+### Table Markdown Tool
 Too complicated?  I made an Google Sheet tool that will spit out the right markdown for tables  [MARKDOWN TABLE MAKER](https://docs.google.com/spreadsheets/d/1N2Z3t1rN-1r3yraTGbXWIZo-yaqyHTMYRF0sZtipTq4/copy?edit?usp=sharing)
 
 ---
@@ -374,6 +375,8 @@ When mentioning Discord roles, you can use special CSS classes to color them cor
 <span class="role-rules">Rules Team</span>
 <span class="role-engineer">Engineer</span>
 <span class="role-admins">Admins</span>
+<span class="role-pr">Player Relations</span>
+
 ```
 
 **How it looks:**
