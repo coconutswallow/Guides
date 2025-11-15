@@ -2,14 +2,16 @@
 layout: doc
 title: "Region of Dreams"
 order: 10
-background_image: 
+background_image: https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001
 ---
 
-![Region of Dreams](/assets/images/region-of-dreams-cover.png)
+![Region of Dreams]({{ '/assets/images/region-of-dreams-cover.png' | relative_url }})
 
 ## Credits
 
 > This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.
+>
+> Background Image:  [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
 
 # Region of Dreams
 
