@@ -201,7 +201,7 @@ However, there aren't only hostile and horrifying creatures within the Demiplane
 
 Those who have found their way out of the Demiplane of Dread say that the dark powers must have pulled a portion of the Demiplane of Nightmares into Ravenloft. These Nightmare Lands are said to represent some of the most horrifying areas in Ravenloft. It is yet unknown whether these rumors are true or not, but one thing remains clear; those who went to the Nightmare Lands have been changed after their time spent there and are no longer the same now that they have been released.
 
-> ##### Adventures in the Region of Dreams
+##### Adventures in the Region of Dreams
 
 > Players can enter the Region of Dreams physically or as their dream-self when they are asleep. When asleep, at a DM discretion, PCs could become aware that they are in a dream and have an adventure in the Region of Dreams as their dream-self. Please be aware that unless PCs enter the Region of Dreams physically, they cannot gain, nor lose items and they cannot learn spells.
 
