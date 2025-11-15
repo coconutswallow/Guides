@@ -61,6 +61,8 @@ Spells can be cast normally in a dream, but aren’t actually cast by the physic
 
 A wide variety of creatures can be found within the Region of Dreams. The creatures living within the dreamscapes are created through the whim of the dreamer. Whether it is an adorable bunny, or a horrifying cluster of the most grotesque creatures prancing around; anything is possible.
 
+![Dark Land](https://cdna.artstation.com/p/assets/images/images/015/496/568/large/hangmoon-alexander-komarov-dark-land.jpg?1548585025)
+
 ### The Quori
 
 *Since the Quori come from the Eberron setting, they are reflavored here to fit within the Forgotten Realms setting.*  
@@ -92,8 +94,6 @@ When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the 
 ## Reaching the Region of Dreams
 
 ![]({{'/assets/images/hangmoon-alexander-komarov-sail-away.jpg' | relative_url }})
-
-
 
 There are a few methods to reach the Region of Dreams, whether it is consciously or not, and physically or not. A traveler choosing to travel there physically must know that they will be subjected to the whims of the dreams they enter and risk being injured or die, unlike an unconscious dreamer whose mind is within its own dreamscape. A physical traveler must also be aware they can stumble into the dreamscape of a powerful entity, and could potentially become trapped within it. (Note: Unlike the normal rules for dreaming, items used, spells cast, and other consumables are still gone when you return to the waking world after leaving the Region of Dreams if it was accessed physically. Likewise, items you gain and experience you accumulate while you were there
 remain with you.)
@@ -163,16 +163,10 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
 ---
 
 # The Dreamheart
-
-<div class="image-text-wrapper">
-  <div class="hierarchy-explanation">
   
-    The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
-    
-    When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
-  </div>
-    <img src="/Guides/assets/images/joseph-meehan-storm.jpg" alt="Channeled Storm" class="hierarchy-image image-size-45">
-</div>
+The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
+
+When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
 
 ### Dreamheart Tempest
 
@@ -220,5 +214,6 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 * [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
 * [Dreamland by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/lKLok)
 * [Sail Away by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qxa4a)
-* [Channelled Storm by Joseph Meehan](https://meehanjo.artstation.com/)
+* [Dark Land by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qAob5n)
+* 
 
