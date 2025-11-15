@@ -67,4 +67,4 @@ In the event a server member repeatedly or intentionally violates the Code of Co
 
 ## Guild Membership Rules
 
-In addition to the server rules, members of the Hawthorne Guild must adhere to the [Guild rules]({{ '/playersguide/about-hawthorne.html#hawthorne-guild-rules' | relative_url }}) 
+In addition to the server rules, members of the Hawthorne Guild must adhere to the [Guild rules]({{ '/playersguide/about-hawthorne/#hawthorne-guild-rules' | relative_url }}) 
