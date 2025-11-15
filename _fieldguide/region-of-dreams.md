@@ -97,8 +97,8 @@ When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the 
 
 ## Reaching the Region of Dreams
 
-![](https://cdna.artstation.com/p/assets/images/images/011/832/140/large/hangmoon-alexander-komarov-sail-away.jpg?1531663990)
-*Art: Sail Away by hangmoon-alexander-komarov*
+![]({{'/assets/images/hangmoon-alexander-komarov-sail-away.jpg' | relative_url }})
+*Art: Sail Away by hangmoon-alexander-komarov, cropped*
 
 
 There are a few methods to reach the Region of Dreams, whether it is consciously or not, and physically or not. A traveler choosing to travel there physically must know that they will be subjected to the whims of the dreams they enter and risk being injured or die, unlike an unconscious dreamer whose mind is within its own dreamscape. A physical traveler must also be aware they can stumble into the dreamscape of a powerful entity, and could potentially become trapped within it. (Note: Unlike the normal rules for dreaming, items used, spells cast, and other consumables are still gone when you return to the waking world after leaving the Region of Dreams if it was accessed physically. Likewise, items you gain and experience you accumulate while you were there
