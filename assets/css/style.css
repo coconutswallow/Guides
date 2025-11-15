@@ -2,94 +2,112 @@
    Hawthorne Guild Guide - Main Stylesheet
    Site-wide styles for all pages
    
-   Other css files:
-    - assets/css/search.css    : Styles specific to search results and input
-    - assets/css/home.css      : Styles specific to the homepage layout
-    - assets/css/statblock.css : Styles specific to monster stat blocks
-    - assets/css/generator.css : Styles specific to the monster stat block generator page
+   Other CSS files:
+    - assets/css/search.css    : Search results and input
+    - assets/css/home.css      : Homepage layout
+    - assets/css/statblock.css : Monster stat blocks
+    - assets/css/generator.css : Monster generator page
+    - assets/css/faq.css       : FAQ page
    ============================================ */
 
+/* ============================================
+   TABLE OF CONTENTS
+   ============================================
+   1. COLOR PALETTE (Design Tokens)
+   2. THEME APPLICATION (Semantic Tokens)
+   3. THEME OVERRIDES (Dark Mode)
+   4. GLOBAL RESETS & BASE STYLES
+   5. TYPOGRAPHY
+   6. LISTS
+   7. TABLES
+   8. PAGE STRUCTURE
+   9. SITE HEADER
+   10. HAMBURGER MENU & SIDEBAR
+   11. SITE FOOTER
+   12. BUTTONS & LINKS
+   13. CARDS & CONTAINERS
+   14. ALERTS & NOTICES
+   15. SERVER ROLES
+   16. IMAGES
+   17. DOCUMENTATION LAYOUT
+   18. DARK MODE TOGGLE BUTTON
+   19. DARK MODE SPECIFIC OVERRIDES
+   20. PDF RENDERING
+   21. RESPONSIVE DESIGN
+   22. PRINT STYLES
+   ============================================ */
 
 
 /* ============================================
-   LAYER 1: THE COLOR PALLETTE
-   (Literal, abstractly-named color values)
+   1. COLOR PALETTE (Design Tokens)
+   Raw color values - do not use directly
    ============================================ */
 :root {
-  /* === Light Theme Palette === */
-  
-  /* Brand Colors (Primary/Accent) */
-  --palette-brand-main: #58180D;         /* Darkest, for headers/buttons */
-  --palette-brand-main-darker: #5b0f00;  /* For sidebar, gradients */
-  --palette-brand-accent: #822000;       /* Lighter, for accents/hovers */
-  --palette-brand-accent-darker: #8b1a0f;/* For gradients */
-  --palette-brand-highlight: #C0AD6A;   /* Gold, for special accents */
+  /* Light Theme Colors */
+  --palette-brand-main: #58180D;
+  --palette-brand-main-darker: #5b0f00;
+  --palette-brand-accent: #822000;
+  --palette-brand-accent-darker: #8b1a0f;
+  --palette-brand-highlight: #C0AD6A;
 
-  /* Background Colors (Light) */
-  --palette-bg-page-light: #fffef9fa;    /* Off-white page background */
-  --palette-bg-card-light: #FDF1DC;      /* Cream for cards, tables */
-  --palette-bg-row-light: #F5E6D3;       /* Light tan for alternating rows */
-  --palette-bg-hover-light: #F0E0C8;     /* For table row hover */
+  --palette-bg-page-light: #fffef9fa;
+  --palette-bg-card-light: #FDF1DC;
+  --palette-bg-row-light: #F5E6D3;
+  --palette-bg-hover-light: #F0E0C8;
 
-  /* Border & Text (Light) */
-  --palette-border-light: #D4C4B0;       /* Tan border */
-  --palette-text-main-light: #2c2c2c;    /* Dark gray body text */
-  --palette-text-muted-light: #5a5a5a;   /* Medium gray meta text */
-  --palette-text-quote-light: #5a3a2a;   /* Blockquote text */
+  --palette-border-light: #D4C4B0;
+  --palette-text-main-light: #2c2c2c;
+  --palette-text-muted-light: #5a5a5a;
+  --palette-text-quote-light: #5a3a2a;
 
-  
-  /* === Dark Theme Palette === */
+  /* Dark Theme Colors */
+  --palette-brand-main-dark: #D4A574;
+  --palette-brand-accent-dark: #E8C5A0;
 
-  /* Brand Colors (Dark) */
-  --palette-brand-main-dark: #D4A574;    /* Golden tan, for headers */
-  --palette-brand-accent-dark: #E8C5A0;  /* Light tan, for accents */
-
-  /* Background Colors (Dark) */
-  --palette-bg-page-dark: #000000;       /* Pure black page background */
-  --palette-bg-card-dark: #1a1a1a;       /* Dark gray for cards, tables */
-  --palette-bg-row-dark: #0f0f0f;        /* Darker black for rows */
+  --palette-bg-page-dark: #000000;
+  --palette-bg-card-dark: #1a1a1a;
+  --palette-bg-row-dark: #0f0f0f;
   --palette-bg-header-start-dark: #0a0a0a;
   --palette-bg-header-end-dark: #1a1410;
 
-  /* Border & Text (Dark) */
-  --palette-border-dark: #3a3a3a;        /* Dark gray border */
-  --palette-border-header-dark: #2a2420; /* Dark brown-gray border */
-  --palette-text-main-dark: #E8DCC8;     /* Light cream body text */
-  --palette-text-muted-dark: #A09080;    /* Muted tan meta text */
+  --palette-border-dark: #3a3a3a;
+  --palette-border-header-dark: #2a2420;
+  --palette-text-main-dark: #E8DCC8;
+  --palette-text-muted-dark: #A09080;
 
-
-  /* === Neutral/System Palette (Shared) === */
-
-  /* Grays */
+  /* Neutral/System Colors (Shared) */
   --palette-neutral-white: #ffffff;
-  --palette-neutral-gray-100: #d4d4d4; /* Code text */
-  --palette-neutral-gray-200: #ddd;     /* Light border */
-  --palette-neutral-gray-300: #999;     /* Light meta text */
-  --palette-neutral-gray-400: #666;     /* Meta text */
-  --palette-neutral-gray-500: #333333; /* Role badge bg */
-  --palette-neutral-gray-600: #1e1e1e; /* Code bg */
-  --palette-neutral-gray-700: #dad1ca; /* Statblock modifier */
+  --palette-neutral-gray-100: #d4d4d4;
+  --palette-neutral-gray-200: #ddd;
+  --palette-neutral-gray-300: #999;
+  --palette-neutral-gray-400: #666;
+  --palette-neutral-gray-500: #333333;
+  --palette-neutral-gray-600: #1e1e1e;
+  --palette-neutral-gray-700: #dad1ca;
 
-  /* Alerts */
+  /* Alert Colors */
   --palette-alert-info-bg-light: #e3f2fd;
   --palette-alert-info-border: #3498db;
   --palette-alert-info-bg-dark: rgba(52, 152, 219, 0.12);
+  
   --palette-alert-warning-bg-light: #fff3cd;
   --palette-alert-warning-border: #f39c12;
   --palette-alert-warning-bg-dark: rgba(243, 156, 18, 0.12);
+  
   --palette-alert-danger-bg-light: #f8d7da;
   --palette-alert-danger-bg-light-alt: #fee;
   --palette-alert-danger-border: #e74c3c;
   --palette-alert-danger-action: #c00;
   --palette-alert-danger-action-hover: #a00;
   --palette-alert-danger-bg-dark: rgba(231, 76, 60, 0.12);
+  
   --palette-alert-success-bg-light: #d4edda;
   --palette-alert-success-bg-light-alt: #efe;
   --palette-alert-success-border: #27ae60;
   --palette-alert-success-action: #0a0;
   --palette-alert-success-bg-dark: rgba(39, 174, 96, 0.12);
-  
-  /* Shadows (Re-usable) */
+
+  /* Shadows */
   --shadow-color-light: rgba(88, 24, 13, 0.1);
   --shadow-color-light-alt: rgba(88, 24, 13, 0.15);
   --shadow-color-light-alt-2: rgba(88, 24, 13, 0.2);
@@ -100,15 +118,10 @@
 
 
 /* ============================================
-   LAYER 2: APPLYING THE THEME (SEMANTIC ROLES)
-   (Giving the palette colors a purpose)
+   2. THEME APPLICATION (Semantic Tokens)
+   Default Light Theme
    ============================================ */
-
 :root {
-  /* ------------------- */
-  /* DEFAULT LIGHT THEME */
-  /* ------------------- */
-
   /* Core Colors */
   --color-primary: var(--palette-brand-main);
   --color-secondary: var(--palette-brand-accent);
@@ -158,7 +171,7 @@
   --color-alert-success-bg: var(--palette-alert-success-bg-light);
   --color-alert-success-border: var(--palette-alert-success-border);
   
-  /* Generator */
+  /* Generator Page */
   --generator-intro-bg-start: var(--palette-brand-main-darker);
   --generator-intro-bg-end: var(--palette-brand-accent-darker);
   --generator-toggle-active-bg: var(--color-primary);
@@ -178,20 +191,18 @@
   --generator-success-text: var(--palette-alert-success-action);
 
   /* Stat Blocks */
-  /*  statblock-texture is a broken link but keep it, cuz it keeps the monster-background from being transparent */
   --statblock-bg-image: url('/Guides/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--palette-neutral-white);
   --statblock-body-bg: #000000;
-  --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5kJggg==');
+  --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5EkJggg==');
   --statblock-modifier-bg: var(--palette-neutral-gray-700);
   --statblock-box-shadow: rgba(0, 0, 0, 0.25);
   --statblock-card-shadow: rgba(0, 0, 0, 0.2);
   --statblock-card-hover-shadow: rgba(0, 0, 0, 0.3);
   --statblock-image-shadow: rgba(0, 0, 0, 0.2);
   --statblock-header-text: var(--color-bg-light);
-
   
-  /* Fonts */
+  /* Typography */
   --font-header: 'Cinzel', 'Georgia', serif;
   --font-body: 'Source Sans 3', 'Crimson Text', 'Georgia', serif;
   
@@ -202,20 +213,17 @@
   --spacing-lg: 3rem;
   --spacing-xl: 4rem;
   
-  /* Border radius */
+  /* Border & Shadows */
   --border-radius: 0px;
-  
-  /* Shadows */
   --shadow-sm: 0 2px 4px var(--shadow-color-light);
   --shadow-md: 0 4px 8px var(--shadow-color-light-alt);
   --shadow-lg: 0 6px 12px var(--shadow-color-light-alt-2);
 }
 
 
-/* ------------------- */
-/* DARK THEME OVERRIDES*/
-/* ------------------- */
-
+/* ============================================
+   3. THEME OVERRIDES (Dark Mode)
+   ============================================ */
 [data-theme="dark"] {
   /* Core Colors */
   --color-primary: var(--palette-brand-main-dark);
@@ -265,7 +273,7 @@
   --color-alert-danger-bg: var(--palette-alert-danger-bg-dark);
   --color-alert-success-bg: var(--palette-alert-success-bg-dark);
 
-  /* Generator */
+  /* Generator Page */
   --generator-intro-bg-start: var(--color-header-bg-start);
   --generator-intro-bg-end: var(--color-header-bg-end);
   --generator-toggle-active-bg: var(--color-primary);
@@ -297,396 +305,10 @@
   --shadow-lg: 0 6px 12px var(--shadow-color-dark-alt-2);
 }
 
-/* ============================================
-   APPLY COLORS TO ELEMENTS
-   ============================================ */
-
-/* Main page container */
-.page {
-  background-color: var(--color-bg-page);
-  color: var(--color-text);
-}
-
-/* All text elements inherit text color */
-p, li, td, th, span, div {
-  color: var(--color-text);
-}
-
-/* Links */
-a {
-  color: var(--color-link);
-}
-
-a:hover {
-  color: var(--color-link-hover);
-}
-
-/* Cards */
-.card {
-  background: var(--color-bg-light);
-  border-color: var(--color-border);
-  color: var(--color-text);
-}
-
-/* Tables */
-table {
-  background: var(--color-bg-light);
-  border-color: var(--color-border);
-}
-
-tbody tr:nth-child(even) {
-  background: var(--color-bg-medium);
-}
-
-/* Code blocks */
-code {
-  background: var(--color-bg-medium);
-  color: var(--color-text);
-}
-
-pre {
-  background: var(--color-bg-medium);
-  border-color: var(--color-border);
-}
-
-/* Blockquotes */
-blockquote {
-  border-left-color: var(--color-primary);
-  color: var(--color-text-secondary);
-}
-
-/* HR */
-hr {
-  border-top-color: var(--color-border);
-}
-
-/* Buttons */
-.button, .btn {
-  background: var(--color-primary);
-  color: var(--color-btn-text);
-  border-color: var(--color-border);
-}
-
-.button:hover, .btn:hover {
-  background: var(--color-secondary);
-}
-
-/* Smooth transitions for theme changes */
-body,
-.page,
-.card,
-blockquote,
-.site-header,
-.site-footer,
-#sidebar-menu,
-.monster-card,
-table,
-.filter-container,
-p, li, td, th, a, code, pre {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
 
 /* ============================================
-   DARK MODE TOGGLE BUTTON
-   Add this CSS to style.css
+   4. GLOBAL RESETS & BASE STYLES
    ============================================ */
-
-.theme-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  border: 2px solid var(--color-border);
-  color: var(--color-bg-light);
-  cursor: pointer;
-  box-shadow: var(--shadow-lg);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-  transition: all 0.3s ease;
-}
-
-.theme-toggle:hover {
-  transform: scale(1.0);
-  background: var(--color-secondary);
-}
-
-.theme-toggle:active {
-  transform: scale(0.95);
-}
-
-/* Icons for light/dark mode */
-.theme-toggle .sun-icon {
-  display: none;
-}
-
-.theme-toggle .moon-icon {
-  display: block;
-}
-
-[data-theme="dark"] .theme-toggle .sun-icon {
-  display: block;
-}
-
-[data-theme="dark"] .theme-toggle .moon-icon {
-  display: none;
-}
-
-/* Mobile positioning */
-@media (max-width: 768px) {
-  .theme-toggle {
-    bottom: 15px;
-    right: 15px;
-    width: 45px;
-    height: 45px;
-    font-size: 1.3em;
-  }
-}
-
-/* ============================================
-   DARK MODE SPECIFIC OVERRIDES
-   ============================================ */
-
-/* Make sure all text is readable in dark mode */
-[data-theme="dark"] p,
-[data-theme="dark"] li,
-[data-theme="dark"] td,
-[data-theme="dark"] th,
-[data-theme="dark"] span,
-[data-theme="dark"] .doc-body,
-[data-theme="dark"] .monster-description {
-  color: var(--color-text);
-}
-
-/* Adjust table styling for dark mode */
-[data-theme="dark"] thead {
-  background: var(--color-primary);
-  color: var(--color-text);
-}
-
-[data-theme="dark"] tbody tr:hover {
-  background: rgba(212, 165, 116, 0.1);
-}
-
-/* Adjust stat block tables for dark mode */
-[data-theme="dark"] .monster-page blockquote table td:nth-child(3),
-[data-theme="dark"] .monster-page blockquote table td:nth-child(4),
-[data-theme="dark"] .monster-page blockquote table td:nth-child(7),
-[data-theme="dark"] .monster-page blockquote table td:nth-child(8),
-[data-theme="dark"] .monster-page blockquote table td:nth-child(11),
-[data-theme="dark"] .monster-page blockquote table td:nth-child(12),
-[data-theme="dark"] blockquote.stat-block table td:nth-child(3),
-[data-theme="dark"] blockquote.stat-block table td:nth-child(4),
-[data-theme="dark"] blockquote.stat-block table td:nth-child(7),
-[data-theme="dark"] blockquote.stat-block table td:nth-child(8),
-[data-theme="dark"] blockquote.stat-block table td:nth-child(11),
-[data-theme="dark"] blockquote.stat-block table td:nth-child(12) {
-  background: rgba(90, 74, 58, 0.3);
-}
-
-/* Adjust sidebar for dark mode */
-[data-theme="dark"] #sidebar-menu {
-  background: #1a1612;
-  border-right: 1px solid var(--color-border);
-}
-
-[data-theme="dark"] .nav-submenu {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .nav-subsubmenu {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-/* Adjust role colors for dark mode readability */
-[data-theme="dark"] .role-adventurer {
-  color: #999999 !important; /* Force original color (Gray) */
-  background-color: transparent !important;
-}
-
-/* Trial DM role uses its custom green color in dark mode. */
-[data-theme="dark"] .role-trial-dm {
-  color: #25c059 !important; /* Force original color (Light Green) */
-  background-color: transparent !important;
-}
-
-/* Full DM role uses its custom dark green color in dark mode. */
-[data-theme="dark"] .role-full-dm {
-  color: #1a7939 !important; /* Force original color (Dark Green) */
-  background-color: transparent !important;
-}
-
-[data-theme="dark"] .role-auditor {
-  color: #ff9900 !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-auditor-apprentice {
-  color: #d98843 !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-lore {
-  color: #1f628e !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-lore-apprentice {
-  color: #5296d5 !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-pr {
-  color: #ffd966 !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-rules {
-  color: #f975f2 !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-rules-apprentice {
-  color: #b179b8 !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-engineer {
-  color: #1abc9c !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-[data-theme="dark"] .role-engineer-apprentice {
-  color: #63a493 !important; /* Force original color */
-  background-color: transparent !important;
-  padding: 0;
-  border-radius: 0;
-}
-
-/* Adjust code blocks for dark mode */
-[data-theme="dark"] code {
-  background: var(--color-bg-medium);
-  color: var(--color-text);
-}
-
-[data-theme="dark"] pre {
-  background: var(--color-bg-medium);
-  border-color: var(--color-border);
-}
-
-/* Dark mode button text */
-[data-theme="dark"] .button,
-[data-theme="dark"] .btn,
-[data-theme="dark"] .card-button {
-  color: var(--color-btn-text);
-}
-
-[data-theme="dark"] .button:hover,
-[data-theme="dark"] .btn:hover,
-[data-theme="dark"] .card-button:hover {
-  color: var(--color-btn-text);
-}
-
-/* Adjust alerts for dark mode */
-[data-theme="dark"] .alert-info,
-[data-theme="dark"] .notice-info {
-  background: rgba(52, 152, 219, 0.15);
-  border-left-color: #3498db;
-}
-
-[data-theme="dark"] .alert-warning,
-[data-theme="dark"] .notice-warning {
-  background: rgba(243, 156, 18, 0.15);
-  border-left-color: #f39c12;
-}
-
-[data-theme="dark"] .alert-danger,
-[data-theme="dark"] .notice-danger {
-  background: rgba(231, 76, 60, 0.15);
-  border-left-color: #e74c3c;
-}
-
-[data-theme="dark"] .alert-success,
-[data-theme="dark"] .notice-success {
-  background: rgba(39, 174, 96, 0.15);
-  border-left-color: #27ae60;
-}
-
-/* Adjust filter container for dark mode */
-[data-theme="dark"] .filter-container {
-  background: var(--color-bg-light);
-  border-color: var(--color-border);
-}
-
-[data-theme="dark"] .filter-select,
-[data-theme="dark"] .filter-input {
-  background: var(--color-bg-medium);
-  border-color: var(--color-border);
-  color: var(--color-text);
-}
-
-[data-theme="dark"] .reset-button {
-  background: var(--color-primary);
-  color: var(--color-btn-text);
-}
-
-/* Adjust monster cards for dark mode */
-[data-theme="dark"] .monster-card {
-  background: var(--color-bg-light);
-  border-color: var(--color-border);
-}
-
-[data-theme="dark"] .monster-card h3,
-[data-theme="dark"] .monster-card h3 a {
-  color: var(--color-primary);
-}
-
-[data-theme="dark"] .monster-cr {
-  color: var(--color-secondary);
-}
-
-[data-theme="dark"] .monster-type {
-  color: var(--color-text-secondary);
-}
-
-/* Adjust breadcrumbs for dark mode */
-[data-theme="dark"] .breadcrumb {
-  color: var(--color-text-secondary);
-}
-
-[data-theme="dark"] .breadcrumb a {
-  color: var(--color-link);
-}
-
-/* Adjust documentation meta for dark mode */
-[data-theme="dark"] .doc-meta {
-  color: var(--color-text-secondary);
-  border-bottom-color: var(--color-border);
-}
-
-/* Adjust TOC for dark mode */
-[data-theme="dark"] .doc-toc {
-  background: var(--color-bg-light);
-  border-color: var(--color-border);
-}
-
-/* ============================================
-   Global Styles
-   ============================================ */
-
 * {
   margin: 0;
   padding: 0;
@@ -702,23 +324,36 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 85px; /* Space for fixed header */
-
+  padding-top: 85px;
   background-image: var(--page-bg-image, none);
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
 }
 
-/* Prevent background scrolling when mobile menu is open */
 body.menu-open {
   overflow: hidden;
 }
 
-/* ============================================
-   Typography
-   ============================================ */
+/* Global smooth transitions for theme changes */
+body,
+.page,
+.card,
+blockquote,
+.site-header,
+.site-footer,
+#sidebar-menu,
+.monster-card,
+table,
+.filter-container,
+p, li, td, th, a, code, pre {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
 
+
+/* ============================================
+   5. TYPOGRAPHY
+   ============================================ */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-header);
   color: var(--color-primary);
@@ -818,10 +453,37 @@ hr {
   margin: 2em 0;
 }
 
-/* ============================================
-   Lists
-   ============================================ */
+/* Heading anchor links */
+.heading-link {
+  opacity: 0;
+  margin-left: 0.5rem;
+  font-size: 0.6em;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
 
+h1:hover .heading-link,
+h2:hover .heading-link,
+h3:hover .heading-link,
+h4:hover .heading-link,
+h5:hover .heading-link,
+h6:hover .heading-link {
+  opacity: 1;
+}
+
+.heading-link::before {
+  content: "🔗";
+}
+
+/* Scroll offset for anchor links (accounts for fixed header) */
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+  scroll-margin-top: 100px;
+}
+
+
+/* ============================================
+   6. LISTS
+   ============================================ */
 ul, ol {
   margin-bottom: 1em;
   padding-left: 2em;
@@ -837,10 +499,10 @@ ul ul, ol ol, ul ol, ol ul {
   margin-bottom: 0.5em;
 }
 
-/* ============================================
-   Tables
-   ============================================ */
 
+/* ============================================
+   7. TABLES
+   ============================================ */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -849,7 +511,6 @@ table {
   border: 2px solid var(--color-border);
 }
 
-/* LIGHT MODE: Dark burgundy header (#58180D) with cream text (#FDF1DC) */
 thead {
   background: var(--color-primary);
 }
@@ -862,7 +523,7 @@ th {
   text-transform: uppercase;
   font-size: 0.9em;
   letter-spacing: 0.5px;
-  color: var(--color-table-header-text); 
+  color: var(--color-table-header-text);
 }
 
 td {
@@ -878,23 +539,23 @@ tbody tr:hover {
   background: var(--color-table-hover);
 }
 
-/* DARK MODE: Golden tan header (#D4A574) with dark text (#1a1a1a) */
+/* Dark mode table adjustments */
 [data-theme="dark"] thead {
-  background: var(--color-primary); /* Golden tan in dark mode */
+  background: var(--color-primary);
 }
 
 [data-theme="dark"] th {
-  color: #1a1a1a; /* Dark text - since dark mode bg-light IS dark gray */
+  color: #1a1a1a;
 }
 
 [data-theme="dark"] tbody tr:hover {
-  background: var(--color-table-hover); /* Uses the dark mode variable */
+  background: var(--color-table-hover);
 }
 
-/* ============================================
-   Page Structure
-   ============================================ */
 
+/* ============================================
+   8. PAGE STRUCTURE
+   ============================================ */
 .page {
   flex: 1;
   max-width: 1200px;
@@ -903,10 +564,10 @@ tbody tr:hover {
   padding: var(--spacing-md);
 }
 
-/* ============================================
-   SITE HEADER
-   ============================================ */
 
+/* ============================================
+   9. SITE HEADER
+   ============================================ */
 .site-header {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
   color: var(--color-bg-light);
@@ -919,15 +580,13 @@ tbody tr:hover {
   width: 100%;
   z-index: 100;
   box-shadow: var(--shadow-md);
-
 }
+
 [data-theme="dark"] .site-header {
   background: linear-gradient(135deg, var(--color-header-bg-start) 0%, var(--color-header-bg-end) 100%);
   border-bottom: 4px solid var(--color-header-border);
 }
 
-
-/* Dark overlay for header backgrounds (when using background images) */
 .site-header::before {
   content: '';
   position: absolute;
@@ -963,7 +622,7 @@ tbody tr:hover {
   grid-column: 2 / 3;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
-/* Dark mode site title */
+
 [data-theme="dark"] .site-title {
   color: var(--color-header-text);
 }
@@ -973,7 +632,6 @@ tbody tr:hover {
   text-decoration: none;
 }
 
-/* Ensures the color doesn't change on hover */
 .site-title a.home-link:hover {
   color: inherit;
   text-decoration: none;
@@ -981,9 +639,10 @@ tbody tr:hover {
 
 
 /* ============================================
-   HAMBURGER MENU BUTTON
+   10. HAMBURGER MENU & SIDEBAR
    ============================================ */
 
+/* Hamburger Button */
 #menu-toggle {
   grid-column: 1 / 2;
   background: none;
@@ -1015,10 +674,7 @@ tbody tr:hover {
   border-radius: 2px;
 }
 
-/* ============================================
-   OFF-CANVAS SIDEBAR MENU
-   ============================================ */
-
+/* Sidebar Menu */
 #sidebar-menu {
   position: fixed;
   top: 0;
@@ -1035,7 +691,6 @@ tbody tr:hover {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-body);
   overflow-y: auto;
 }
 
@@ -1043,10 +698,7 @@ tbody tr:hover {
   transform: translateX(0);
 }
 
-/* ============================================
-   MENU OVERLAY
-   ============================================ */
-
+/* Menu Overlay */
 #menu-overlay {
   position: fixed;
   top: 0;
@@ -1065,10 +717,7 @@ tbody tr:hover {
   opacity: 1;
 }
 
-/* ============================================
-   SIDEBAR CONTENT
-   ============================================ */
-
+/* Sidebar Header */
 .sidebar-header {
   display: flex;
   justify-content: space-between;
@@ -1088,11 +737,10 @@ tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
-/* Dark mode navigation links */
-[data-theme="dark"] .sidebar-title  {
-  color: var(--color-text); /* Light cream for normal state */
-}
 
+[data-theme="dark"] .sidebar-title {
+  color: var(--color-text);
+}
 
 .close-btn {
   background: none;
@@ -1103,10 +751,7 @@ tbody tr:hover {
   padding: 5px;
 }
 
-/* ============================================
-   NAVIGATION LINKS
-   ============================================ */
-
+/* Navigation Links */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -1123,9 +768,8 @@ tbody tr:hover {
   font-size: 1em;
 }
 
-/* Dark mode navigation links */
 [data-theme="dark"] .nav-link {
-  color: var(--color-text); /* Light cream for normal state */
+  color: var(--color-text);
 }
 
 .nav-link:hover {
@@ -1137,7 +781,7 @@ tbody tr:hover {
 [data-theme="dark"] .nav-link:hover {
   background-color: rgba(255, 255, 255, 0.05);
   padding-left: 30px;
-  color: var(--color-nav-hover); /* Brighter tan for hover */
+  color: var(--color-nav-hover);
 }
 
 /* Navigation Sections */
@@ -1158,18 +802,17 @@ tbody tr:hover {
   align-items: center;
   gap: 8px;
   transition: background-color 0.2s;
-  font-family: inherit; 
-  font-weight: 400;   
+  font-family: inherit;
+  font-weight: 400;
 }
 
 .nav-section-toggle:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
-/* Dark mode navigation section toggles */
+
 [data-theme="dark"] .nav-section-toggle {
   color: var(--color-header-text);
 }
-
 
 .toggle-icon {
   display: inline-block;
@@ -1193,16 +836,7 @@ tbody tr:hover {
   transition: background-color 0.2s;
 }
 
-/* Dark mode navigation section toggles */
 [data-theme="dark"] .nav-submenu a {
-  color: var(--color-header-text);
-}
-
-[data-theme="dark"] .nav-subsection-toggle {
-  color: var(--color-header-text);
-}
-
-[data-theme="dark"] .nav-subsubmenu a {
   color: var(--color-header-text);
 }
 
@@ -1230,6 +864,10 @@ tbody tr:hover {
   transition: background-color 0.2s;
 }
 
+[data-theme="dark"] .nav-subsection-toggle {
+  color: var(--color-header-text);
+}
+
 #sidebar-menu .nav-subsection-toggle span {
   color: inherit;
 }
@@ -1254,6 +892,10 @@ tbody tr:hover {
   transition: background-color 0.2s;
 }
 
+[data-theme="dark"] .nav-subsubmenu a {
+  color: var(--color-header-text);
+}
+
 .nav-subsubmenu a:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }
@@ -1264,10 +906,24 @@ tbody tr:hover {
   border-top: 1px solid rgba(192, 173, 106, 0.3);
 }
 
-/* ============================================
-   SITE FOOTER
-   ============================================ */
+/* Dark mode sidebar adjustments */
+[data-theme="dark"] #sidebar-menu {
+  background: #1a1612;
+  border-right: 1px solid var(--color-border);
+}
 
+[data-theme="dark"] .nav-submenu {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .nav-subsubmenu {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+/* ============================================
+   11. SITE FOOTER
+   ============================================ */
 .site-footer {
   background: var(--color-primary);
   color: var(--color-bg-light);
@@ -1277,8 +933,6 @@ tbody tr:hover {
   box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
 }
 
-
-/* Dark mode footer */
 [data-theme="dark"] .site-footer {
   background: var(--color-footer-bg);
   border-top: 4px solid var(--color-footer-border);
@@ -1289,7 +943,6 @@ tbody tr:hover {
   margin: 0 auto;
   padding: 0 var(--spacing-md);
   text-align: center;
-  font-family: var(--font-body);
 }
 
 .footer-content p {
@@ -1298,13 +951,10 @@ tbody tr:hover {
   color: var(--color-bg-light);
 }
 
-/* Ensure footer text is readable in dark mode */
 [data-theme="dark"] .footer-content p {
   color: var(--color-header-text);
 }
 
-
-/* Footer social media icons */
 .footer-icons {
   display: flex;
   align-items: center;
@@ -1323,10 +973,10 @@ tbody tr:hover {
   opacity: 0.8;
 }
 
-/* ============================================
-   Buttons & Links
-   ============================================ */
 
+/* ============================================
+   12. BUTTONS & LINKS
+   ============================================ */
 .button, .btn {
   display: inline-block;
   padding: 0.75em 1.5em;
@@ -1363,10 +1013,10 @@ tbody tr:hover {
   color: var(--color-bg-light);
 }
 
-/* ============================================
-   Cards & Containers
-   ============================================ */
 
+/* ============================================
+   13. CARDS & CONTAINERS
+   ============================================ */
 .card {
   background: var(--color-bg-light);
   border: 2px solid var(--color-border);
@@ -1393,10 +1043,10 @@ tbody tr:hover {
   line-height: 1.6;
 }
 
-/* ============================================
-   Alerts & Notices
-   ============================================ */
 
+/* ============================================
+   14. ALERTS & NOTICES
+   ============================================ */
 .alert, .notice {
   padding: 1em 1.5em;
   margin: 1.5em 0;
@@ -1412,7 +1062,7 @@ tbody tr:hover {
 
 .alert-warning, .notice-warning {
   border-left-color: var(--color-alert-warning-border);
-  background: var(--color-alert-warning-bg); 
+  background: var(--color-alert-warning-bg);
 }
 
 .alert-danger, .notice-danger {
@@ -1425,10 +1075,35 @@ tbody tr:hover {
   background: var(--color-alert-success-bg);
 }
 
-/* ============================================
-   Server Roles
-   ============================================ */
+/* Dark mode alerts */
+[data-theme="dark"] .alert-info,
+[data-theme="dark"] .notice-info {
+  background: rgba(52, 152, 219, 0.15);
+  border-left-color: #3498db;
+}
 
+[data-theme="dark"] .alert-warning,
+[data-theme="dark"] .notice-warning {
+  background: rgba(243, 156, 18, 0.15);
+  border-left-color: #f39c12;
+}
+
+[data-theme="dark"] .alert-danger,
+[data-theme="dark"] .notice-danger {
+  background: rgba(231, 76, 60, 0.15);
+  border-left-color: #e74c3c;
+}
+
+[data-theme="dark"] .alert-success,
+[data-theme="dark"] .notice-success {
+  background: rgba(39, 174, 96, 0.15);
+  border-left-color: #27ae60;
+}
+
+
+/* ============================================
+   15. SERVER ROLES
+   ============================================ */
 .role-adventurer {
   color: #999999;
   font-weight: 600;
@@ -1521,10 +1196,89 @@ tbody tr:hover {
   font-weight: 800;
 }
 
-/* ============================================
-   Images
-   ============================================ */
+/* Dark mode role adjustments */
+[data-theme="dark"] .role-adventurer {
+  color: #999999 !important;
+  background-color: transparent !important;
+}
 
+[data-theme="dark"] .role-trial-dm {
+  color: #25c059 !important;
+  background-color: transparent !important;
+}
+
+[data-theme="dark"] .role-full-dm {
+  color: #1a7939 !important;
+  background-color: transparent !important;
+}
+
+[data-theme="dark"] .role-auditor {
+  color: #ff9900 !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-auditor-apprentice {
+  color: #d98843 !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-lore {
+  color: #1f628e !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-lore-apprentice {
+  color: #5296d5 !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-pr {
+  color: #ffd966 !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-rules {
+  color: #f975f2 !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-rules-apprentice {
+  color: #b179b8 !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-engineer {
+  color: #1abc9c !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+[data-theme="dark"] .role-engineer-apprentice {
+  color: #63a493 !important;
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+
+/* ============================================
+   16. IMAGES
+   ============================================ */
 .image-text-wrapper {
   display: flex;
   flex-direction: row;
@@ -1567,10 +1321,10 @@ tbody tr:hover {
   line-height: 1.6;
 }
 
-/* ============================================
-   DOCUMENTATION LAYOUT
-   ============================================ */
 
+/* ============================================
+   17. DOCUMENTATION LAYOUT
+   ============================================ */
 .doc-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -1582,7 +1336,6 @@ tbody tr:hover {
 
 /* Breadcrumb Navigation */
 .breadcrumb {
-  font-family: var(--font-body);
   font-size: 0.9em;
   color: var(--color-breadcrumb);
   margin-bottom: 1em;
@@ -1619,7 +1372,6 @@ tbody tr:hover {
 
 /* Documentation Metadata */
 .doc-meta {
-  font-family: var(--font-body);
   font-size: 0.9em;
   color: var(--color-doc-meta);
   margin-bottom: 2em;
@@ -1637,7 +1389,6 @@ tbody tr:hover {
 
 /* Documentation Body */
 .doc-body {
-  font-family: var(--font-body);
   line-height: 1.8;
   color: var(--color-doc-body);
 }
@@ -1667,7 +1418,7 @@ tbody tr:hover {
 /* Table of Contents Sidebar */
 .doc-toc {
   position: sticky;
-  top: 100px; /* Below fixed header */
+  top: 100px;
   float: right;
   width: 250px;
   margin-left: 2em;
@@ -1768,36 +1519,173 @@ tbody tr:hover {
   font-size: 0.85em;
 }
 
-.heading-link {
-  opacity: 0;
-  margin-left: 0.5rem;
-  font-size: 0.6em;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
 
-h1:hover .heading-link,
-h2:hover .heading-link,
-h3:hover .heading-link,
-h4:hover .heading-link,
-h5:hover .heading-link,
-h6:hover .heading-link {
-  opacity: 1;
-}
-
-.heading-link::before {
-  content: "🔗";
-}
-
-/* Scroll offset for anchor links (to account for fixed header) */
-h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
-  scroll-margin-top: 100px; /* Adjust this value to match your header height + some spacing */
-}
-  
 /* ============================================
-   PDF Rendering
+   18. DARK MODE TOGGLE BUTTON
+   ============================================ */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-border);
+  color: var(--color-bg-light);
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.0);
+  background: var(--color-secondary);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle .sun-icon {
+  display: none;
+}
+
+.theme-toggle .moon-icon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle .sun-icon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle .moon-icon {
+  display: none;
+}
+
+
+/* ============================================
+   19. DARK MODE SPECIFIC OVERRIDES
    ============================================ */
 
+/* Text readability */
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] td,
+[data-theme="dark"] th,
+[data-theme="dark"] span,
+[data-theme="dark"] .doc-body,
+[data-theme="dark"] .monster-description {
+  color: var(--color-text);
+}
+
+/* Code blocks */
+[data-theme="dark"] code {
+  background: var(--color-bg-medium);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] pre {
+  background: var(--color-bg-medium);
+  border-color: var(--color-border);
+}
+
+/* Buttons */
+[data-theme="dark"] .button,
+[data-theme="dark"] .btn,
+[data-theme="dark"] .card-button {
+  color: var(--color-btn-text);
+}
+
+[data-theme="dark"] .button:hover,
+[data-theme="dark"] .btn:hover,
+[data-theme="dark"] .card-button:hover {
+  color: var(--color-btn-text);
+}
+
+/* Filter containers */
+[data-theme="dark"] .filter-container {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .filter-select,
+[data-theme="dark"] .filter-input {
+  background: var(--color-bg-medium);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .reset-button {
+  background: var(--color-primary);
+  color: var(--color-btn-text);
+}
+
+/* Monster cards */
+[data-theme="dark"] .monster-card {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .monster-card h3,
+[data-theme="dark"] .monster-card h3 a {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .monster-cr {
+  color: var(--color-secondary);
+}
+
+[data-theme="dark"] .monster-type {
+  color: var(--color-text-secondary);
+}
+
+/* Breadcrumbs */
+[data-theme="dark"] .breadcrumb {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .breadcrumb a {
+  color: var(--color-link);
+}
+
+/* Documentation meta */
+[data-theme="dark"] .doc-meta {
+  color: var(--color-text-secondary);
+  border-bottom-color: var(--color-border);
+}
+
+/* TOC */
+[data-theme="dark"] .doc-toc {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+/* Stat block table modifiers */
+[data-theme="dark"] .monster-page blockquote table td:nth-child(3),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(4),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(7),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(8),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(11),
+[data-theme="dark"] .monster-page blockquote table td:nth-child(12),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(3),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(4),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(7),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(8),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(11),
+[data-theme="dark"] blockquote.stat-block table td:nth-child(12) {
+  background: rgba(90, 74, 58, 0.3);
+}
+
+
+/* ============================================
+   20. PDF RENDERING
+   ============================================ */
 .pdf-container {
   display: flex;
   justify-content: center;
@@ -1816,17 +1704,17 @@ h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   border: none;
 }
 
-/* ============================================
-   Responsive Design
-   ============================================ */
 
+/* ============================================
+   21. RESPONSIVE DESIGN
+   ============================================ */
 @media (max-width: 768px) {
   :root {
     font-size: 14px;
   }
     
   body {
-    padding-top: 70px; /* Smaller header on mobile */
+    padding-top: 70px;
   }
   
   .page {
@@ -1889,11 +1777,20 @@ h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
     width: 100%;
     margin: 2em 0;
   }
+  
   .guild-icon {
     display: block;
     height: 2.5em;
     width: auto;
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+  }
+  
+  .theme-toggle {
+    bottom: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.3em;
   }
 }
 
@@ -1918,15 +1815,16 @@ h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
     font-size: 1.1em;
     letter-spacing: 1px;
   }
+  
   .guild-icon {
     display: none;
   }
 }
 
-/* ============================================
-   Print Styles
-   ============================================ */
 
+/* ============================================
+   22. PRINT STYLES
+   ============================================ */
 @media print {
   body {
     background: white;
@@ -1939,6 +1837,7 @@ h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   #menu-toggle,
   #sidebar-menu,
   #menu-overlay,
+  .theme-toggle,
   .button,
   .btn {
     display: none;

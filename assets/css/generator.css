@@ -4,46 +4,6 @@
 /* ============================================ */
 
 /* ============================================ */
-.monster-page blockquote table thead,
-blockquote.stat-block table thead,
-.statblock-visual table thead {
-  background: var(--color-primary);
-}
-
-.monster-page blockquote table th,
-blockquote.stat-block table th,
-.statblock-visual table th {
-  color: var(--color-table-header-text);
-  background: var(--color-primary);
-}
-
-/* Dark mode table headers */
-[data-theme="dark"] .monster-page blockquote table thead,
-[data-theme="dark"] blockquote.stat-block table thead,
-[data-theme="dark"] .statblock-visual table thead {
-  background: var(--color-primary); /* Golden tan in dark mode */
-}
-
-[data-theme="dark"] .monster-page blockquote table th,
-[data-theme="dark"] blockquote.stat-block table th,
-[data-theme="dark"] .statblock-visual table th {
-  color: var(--color-table-header-text); /* Dark text in dark mode */
-  background: var(--color-primary);
-}
-
-/* Ensure stat block tables inherit row hover effects properly */
-.monster-page blockquote table tbody tr:hover td,
-blockquote.stat-block table tbody tr:hover td {
-  background: var(--color-table-hover);
-}
-
-/* Alternating row colors should still work */
-.monster-page blockquote table tbody tr:nth-child(even) td,
-blockquote.stat-block table tbody tr:nth-child(even) td {
-  background: var(--color-bg-medium);
-}
-
-/* ============================================ */
 /* MAIN CONTAINER */
 /* ============================================ */
 
@@ -63,7 +23,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border-radius: 8px;
   margin-bottom: 2em;
   text-align: center;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .page-intro h2 {
@@ -71,7 +30,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border: none;
   margin: 0 0 0.5em 0;
   font-size: 2em;
-  transition: color 0.3s ease;
 }
 
 .page-intro p {
@@ -79,7 +37,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-size: 1.1em;
   opacity: 0.9;
   color: var(--color-bg-light);
-  transition: color 0.3s ease;
 }
 
 [data-theme="dark"] .page-intro {
@@ -88,7 +45,7 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
 
 [data-theme="dark"] .page-intro h2,
 [data-theme="dark"] .page-intro p {
-  color: var(--color-header-text); /* This will be your light cream text */
+  color: var(--color-header-text);
 }
 
 /* ============================================ */
@@ -100,9 +57,8 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border: 2px solid var(--color-border);
   border-radius: 8px;
   padding: 1.5em;
-  margin: 0 0 2em 0; /* 2em bottom margin to space it out */
-  text-align: left; /* This is the key part */
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin: 0 0 2em 0;
+  text-align: left;
 }
 
 .generator-instructions h3 {
@@ -111,7 +67,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border-bottom: 2px solid var(--color-border);
   padding-bottom: 0.5em;
   font-size: 1.5em;
-  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .generator-instructions p,
@@ -119,11 +74,10 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   color: var(--color-text);
   font-size: 1.05em;
   line-height: 1.6;
-  transition: color 0.3s ease;
 }
 
 .generator-instructions ul {
-  padding-left: 1.5em; /* Standard indentation for bullet points */
+  padding-left: 1.5em;
   margin: 1em 0;
 }
 
@@ -163,7 +117,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-size: 1em;
   cursor: pointer;
   border-radius: 6px;
-  transition: all 0.3s ease;
   font-family: var(--font-header);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -190,7 +143,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-size: 0.9em;
   text-transform: uppercase;
   text-align: center;
-  transition: all 0.2s;
   cursor: pointer;
   border: none;
   letter-spacing: 0.5px;
@@ -208,15 +160,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
 
 .download-btn:active {
   transform: translateY(0);
-}
-
-/* Dark mode button text */
-[data-theme="dark"] .download-btn {
-  color: var(--color-btn-text);
-}
-
-[data-theme="dark"] .download-btn:hover {
-  color: var(--color-btn-text);
 }
 
 /* Secondary download button variant */
@@ -253,13 +196,11 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border-left: 4px solid var(--generator-error-border);
   padding: 1em;
   border-radius: 4px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .error-box h3 {
   margin-top: 0;
   color: var(--generator-error-text);
-  transition: color 0.3s ease;
 }
 
 .error-box ul {
@@ -275,7 +216,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border-radius: 4px;
   color: var(--generator-success-text);
   font-weight: bold;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 /* ============================================ */
@@ -290,7 +230,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   margin: 1.5em 0;
   width: 100%;
   box-sizing: border-box;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .form-section h2 {
@@ -299,7 +238,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border-bottom: 2px solid var(--color-border);
   padding-bottom: 0.5em;
   font-size: 1.5em;
-  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ============================================ */
@@ -322,17 +260,14 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   grid-column: 1 / -1;
 }
 
-/* START MODIFICATION: Added span-2 class */
 .form-field.span-2 {
   grid-column: span 2;
 }
-/* END MODIFICATION */
 
 .form-field label {
   font-weight: bold;
   margin-bottom: 0.5em;
   color: var(--color-primary);
-  transition: color 0.3s ease;
 }
 
 .form-field input,
@@ -345,7 +280,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-size: 1em;
   background: var(--color-bg-page);
   color: var(--color-text);
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.2s ease;
 }
 
 .form-field textarea {
@@ -361,7 +295,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   box-shadow: 0 0 0 2px var(--generator-input-focus-shadow);
 }
 
-
 /* ============================================ */
 /* VISUAL STAT BLOCK PREVIEW */
 /* ============================================ */
@@ -372,9 +305,7 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   padding: 1.5em;
   margin-bottom: 1em;
   border-radius: 8px;
-  font-family: var(--font-body);
   line-height: 1.7;
-  transition: background-color 0.3s ease;
 }
 
 .monster-description h4 {
@@ -384,7 +315,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   margin-top: 1.2em;
   margin-bottom: 0.5em;
   text-transform: uppercase;
-  transition: color 0.3s ease;
 }
 
 .monster-description h5 {
@@ -393,13 +323,11 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-size: 1.2em;
   margin-top: 1em;
   margin-bottom: 0.4em;
-  transition: color 0.3s ease;
 }
 
 .monster-description p {
   margin-bottom: 1em;
   color: var(--color-text);
-  transition: color 0.3s ease;
 }
 
 .monster-description p:first-child {
@@ -415,7 +343,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
 .monster-description li {
   margin-bottom: 0.5em;
   color: var(--color-text);
-  transition: color 0.3s ease;
 }
 
 .statblock-visual {
@@ -423,8 +350,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border: 2px solid var(--color-primary);
   border-radius: 8px;
   padding: 1.5em;
-  font-family: var(--font-body);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ============================================ */
@@ -445,14 +370,12 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-weight: bold;
   color: var(--color-bg-light);
   background: var(--generator-table-header-bg);
-  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .ability-group td {
   padding: 0.6em;
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text);
-  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .ability-group td:first-child {
@@ -493,7 +416,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   margin-bottom: 1em;
   width: 100%;
   box-sizing: border-box;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .item-header {
@@ -512,7 +434,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-size: 1em;
   background: var(--color-bg-page);
   color: var(--color-text);
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .item-description {
@@ -527,7 +448,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   box-sizing: border-box;
   background: var(--color-bg-page);
   color: var(--color-text);
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 /* ============================================ */
@@ -542,7 +462,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s;
   width: 100%;
   margin-top: 1em;
   font-family: var(--font-header);
@@ -556,15 +475,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   box-shadow: var(--shadow-md);
 }
 
-/* Dark mode button text */
-[data-theme="dark"] .add-button {
-  color: var(--color-btn-text);
-}
-
-[data-theme="dark"] .add-button:hover {
-  color: var(--color-btn-text);
-}
-
 .remove-button {
   background: var(--generator-remove-btn-bg);
   color: var(--color-bg-light);
@@ -573,7 +483,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s;
   white-space: nowrap;
 }
 
@@ -595,7 +504,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   color: var(--color-primary);
   border-bottom: 2px solid var(--color-border);
   padding-bottom: 0.5em;
-  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .markdown-output pre {
@@ -607,35 +515,23 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   font-family: 'Courier New', monospace;
   font-size: 0.9em;
   line-height: 1.6;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ============================================ */
 /* VISUAL STAT BLOCK PREVIEW */
 /* ============================================ */
 
-.statblock-visual {
-  background: var(--color-bg-light);
-  border: 2px solid var(--color-primary);
-  border-radius: 8px;
-  padding: 1.5em;
-  font-family: var(--font-body);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
 .statblock-header h1 {
   font-family: 'Cinzel Decorative', 'Cinzel', serif;
   color: var(--color-primary);
   margin: 0 0 0.5em 0;
   text-transform: uppercase;
-  transition: color 0.3s ease;
 }
 
 .statblock-header p {
   font-style: italic;
   margin: 0 0 1em 0;
   color: var(--color-text);
-  transition: color 0.3s ease;
 }
 
 .statblock-section {
@@ -649,7 +545,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   margin: 1em 0 0.5em 0;
   padding-bottom: 0.3em;
   text-transform: uppercase;
-  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .statblock-abilities table {
@@ -663,7 +558,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   padding: 0.4em;
   text-align: center;
   color: var(--color-text);
-  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .statblock-abilities th {
@@ -694,7 +588,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   margin: 1em 0 0.5em 0;
   padding-bottom: 0.3em;
   text-transform: uppercase;
-  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .statblock-section.lair-actions-section p,
@@ -703,7 +596,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   line-height: 1.4;
   font-size: 0.95em;
   color: var(--color-text);
-  transition: color 0.3s ease;
 }
 
 .statblock-section.lair-actions-section p strong,
@@ -717,7 +609,6 @@ blockquote.stat-block table tbody tr:nth-child(even) td {
   color: var(--generator-placeholder-text);
   padding: 2em;
   font-style: italic;
-  transition: color 0.3s ease;
 }
 
 /* ============================================ */
