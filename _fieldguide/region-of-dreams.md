@@ -168,11 +168,10 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
   <div class="hierarchy-explanation">
   
     The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
-
+    
     When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
-
   </div>
-   <img src="/Guides/assets/images/joseph-meehan-storm.jpg" alt="Channeled Storm" class="hierarchy-image image-size-45">
+    <img src="/Guides/assets/images/joseph-meehan-storm.jpg" alt="Channeled Storm" class="hierarchy-image image-size-45">
 </div>
 
 ### Dreamheart Tempest
