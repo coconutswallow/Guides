@@ -17,7 +17,7 @@ Collections are Jekyll's way of organizing related content. Each collection is d
 * `_players_guide` - Player resources and guides
 * `_dms_guide` - Dungeon Master resources
 * `_arcana` - Magic and spellcasting information
-* `_field_guide` - World and location information
+* `_field_guide` - World and location information (Adventure Locations in the Field Guide)
 * `_faq` - Frequently asked questions
 * `_monsters` - Monster statblocks (special handling)
 * `_help` - Internal site documentation (NOT in menu)

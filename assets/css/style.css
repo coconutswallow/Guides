@@ -84,6 +84,23 @@
   --palette-neutral-gray-500: #333333;
   --palette-neutral-gray-600: #1e1e1e;
   --palette-neutral-gray-700: #dad1ca;
+  
+  /* Statblock specific colors */
+  --palette-statblock-modifier-dark: rgba(90, 74, 58, 0.3);
+
+  /* Server Role Colors */
+  --palette-role-trial-dm: #25c059;
+  --palette-role-full-dm: #1a7939;
+  --palette-role-auditor: #ff9900;
+  --palette-role-auditor-apprentice: #d98843;
+  --palette-role-lore: #1f628e;
+  --palette-role-lore-apprentice: #5296d5;
+  --palette-role-pr: #ffd966;
+  --palette-role-rules: #f975f2;
+  --palette-role-rules-apprentice: #b179b8;
+  --palette-role-engineer: #1abc9c;
+  --palette-role-engineer-apprentice: #63a493;
+  --palette-role-admins: #1c1c1c;
 
   /* Alert Colors */
   --palette-alert-info-bg-light: #e3f2fd;
@@ -114,6 +131,30 @@
   --shadow-color-dark: rgba(0, 0, 0, 0.5);
   --shadow-color-dark-alt: rgba(0, 0, 0, 0.6);
   --shadow-color-dark-alt-2: rgba(0, 0, 0, 0.7);
+  --shadow-color-statblock-light: rgba(0, 0, 0, 0.25);
+  --shadow-color-statblock-card-light: rgba(0, 0, 0, 0.2);
+  --shadow-color-statblock-card-hover-light: rgba(0, 0, 0, 0.3);
+  --shadow-color-statblock-dark: rgba(0, 0, 0, 0.5);
+  --shadow-color-statblock-card-dark: rgba(0, 0, 0, 0.4);
+  --shadow-color-statblock-card-hover-dark: rgba(0, 0, 0, 0.6);
+  --shadow-color-header-light: rgba(0, 0, 0, 0.3);
+  --shadow-color-header-dark: rgba(0, 0, 0, 0.3);
+  --shadow-color-footer-light: rgba(0, 0, 0, 0.3);
+  --shadow-color-footer-dark: rgba(0, 0, 0, 0.3);
+  --shadow-color-sidebar-light: rgba(0, 0, 0, 0.5);
+  --shadow-color-sidebar-dark: rgba(0, 0, 0, 0.5);
+  --shadow-color-doc-image: rgba(0, 0, 0, 0.1);
+  --shadow-text-header: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-footer: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  --shadow-color-overlay: rgba(0, 0, 0, 0.7);
+  --shadow-color-menu-hover-light: rgba(255, 255, 255, 0.1);
+  --shadow-color-menu-hover-alt-light: rgba(255, 255, 255, 0.05);
+  --shadow-color-menu-hover-alt2-light: rgba(255, 255, 255, 0.08);
+  --shadow-color-nav-divider: rgba(192, 173, 106, 0.3);
+  --shadow-color-menu-hover: rgba(0, 0, 0, 0.03);
+  --shadow-color-menu-hover-dark: rgba(0, 0, 0, 0.2);
+  --shadow-color-menu-hover-dark-alt: rgba(0, 0, 0, 0.3);
+  --shadow-color-menu-hover-alt2: rgba(0, 0, 0, 0.05);
 }
 
 
@@ -133,7 +174,7 @@
   --color-bg-page: var(--palette-bg-page-light);
   --color-bg-light: var(--palette-bg-card-light);
   --color-bg-medium: var(--palette-bg-row-light);
-  --color-bg-page-container: var(--palette-bg-hover-light); /* New: for .page container */
+  --color-bg-page-container: var(--palette-bg-page-light); /* New: for .page container - lightest */
 
   /* Links & Buttons */
   --color-link: var(--color-secondary);
@@ -194,13 +235,13 @@
   /* Stat Blocks */
   --statblock-bg-image: url('/Guides/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--palette-neutral-white);
-  --statblock-body-bg: #000000;
+  --statblock-body-bg: var(--palette-bg-page-dark);
   --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5EkJggg==');
   --statblock-modifier-bg: var(--palette-neutral-gray-700);
-  --statblock-box-shadow: rgba(0, 0, 0, 0.25);
-  --statblock-card-shadow: rgba(0, 0, 0, 0.2);
-  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.3);
-  --statblock-image-shadow: rgba(0, 0, 0, 0.2);
+  --statblock-box-shadow: var(--shadow-color-statblock-light);
+  --statblock-card-shadow: var(--shadow-color-statblock-card-light);
+  --statblock-card-hover-shadow: var(--shadow-color-statblock-card-hover-light);
+  --statblock-image-shadow: var(--shadow-color-statblock-card-light);
   --statblock-header-text: var(--color-bg-light);
   
   /* Typography */
@@ -237,7 +278,7 @@
   --color-bg-page: var(--palette-bg-page-dark);
   --color-bg-light: var(--palette-bg-card-dark);
   --color-bg-medium: var(--palette-bg-row-dark);
-  --color-bg-page-container: var(--palette-bg-row-dark); /* New: for .page container */
+  --color-bg-page-container: var(--palette-bg-page-dark); /* New: for .page container - pure black */
 
   /* Links & Buttons */
   --color-btn-text: var(--color-bg-light);
@@ -291,14 +332,15 @@
   --generator-success-text: var(--palette-alert-success-border);
   
   /* Stat Blocks */
+  --statblock-bg-image: url('/Guides/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--color-header-bg-start);
   --statblock-body-bg: var(--color-bg-page);
   --statblock-texture: none;
-  --statblock-modifier-bg: rgba(90, 74, 58, 0.3);
-  --statblock-box-shadow: rgba(0, 0, 0, 0.5);
-  --statblock-card-shadow: rgba(0, 0, 0, 0.4);
-  --statblock-card-hover-shadow: rgba(0, 0, 0, 0.6);
-  --statblock-image-shadow: rgba(0, 0, 0, 0.4);
+  --statblock-modifier-bg: var(--palette-statblock-modifier-dark);
+  --statblock-box-shadow: var(--shadow-color-statblock-dark);
+  --statblock-card-shadow: var(--shadow-color-statblock-card-dark);
+  --statblock-card-hover-shadow: var(--shadow-color-statblock-card-hover-dark);
+  --statblock-image-shadow: var(--shadow-color-statblock-card-dark);
   --statblock-header-text: var(--color-bg-light);
 
   /* Shadows */
@@ -547,7 +589,7 @@ tbody tr:hover {
 }
 
 [data-theme="dark"] th {
-  color: #1a1a1a;
+  color: var(--palette-bg-card-dark);
 }
 
 [data-theme="dark"] tbody tr:hover {
@@ -624,7 +666,7 @@ tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 2px;
   grid-column: 2 / 3;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: var(--shadow-text-header);
 }
 
 [data-theme="dark"] .site-title {
@@ -666,7 +708,7 @@ tbody tr:hover {
 }
 
 #menu-toggle:hover {
-  background: rgba(253, 241, 220, 0.1);
+  background: var(--shadow-color-menu-hover-alt-light);
   opacity: 0.8;
 }
 
@@ -690,7 +732,7 @@ tbody tr:hover {
   color: var(--color-bg-light);
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 0 10px var(--shadow-color-sidebar-light);
   z-index: 1000;
   padding: 20px;
   display: flex;
@@ -709,7 +751,7 @@ tbody tr:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--shadow-color-overlay);
   z-index: 999;
   visibility: hidden;
   opacity: 0;
@@ -777,13 +819,13 @@ tbody tr:hover {
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--shadow-color-menu-hover-alt-light);
   padding-left: 30px;
   color: var(--color-nav-hover-light);
 }
 
 [data-theme="dark"] .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--shadow-color-menu-hover-alt-light);
   padding-left: 30px;
   color: var(--color-nav-hover);
 }
@@ -811,7 +853,7 @@ tbody tr:hover {
 }
 
 .nav-section-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--shadow-color-menu-hover-alt-light);
 }
 
 [data-theme="dark"] .nav-section-toggle {
@@ -828,7 +870,7 @@ tbody tr:hover {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: var(--shadow-color-menu-hover);
 }
 
 .nav-submenu a {
@@ -845,7 +887,7 @@ tbody tr:hover {
 }
 
 .nav-submenu a:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--shadow-color-menu-hover-alt-light);
 }
 
 /* Subsection Styling */
@@ -877,14 +919,14 @@ tbody tr:hover {
 }
 
 .nav-subsection-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--shadow-color-menu-hover-alt-light);
 }
 
 .nav-subsubmenu {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--shadow-color-menu-hover-alt2);
 }
 
 .nav-subsubmenu a {
@@ -901,13 +943,13 @@ tbody tr:hover {
 }
 
 .nav-subsubmenu a:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--shadow-color-menu-hover-alt2-light);
 }
 
 .nav-divider {
   margin: 15px 20px;
   border: none;
-  border-top: 1px solid rgba(192, 173, 106, 0.3);
+  border-top: 1px solid var(--shadow-color-nav-divider);
 }
 
 /* Dark mode sidebar adjustments */
@@ -917,11 +959,11 @@ tbody tr:hover {
 }
 
 [data-theme="dark"] .nav-submenu {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--shadow-color-menu-hover-dark);
 }
 
 [data-theme="dark"] .nav-subsubmenu {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--shadow-color-menu-hover-dark-alt);
 }
 
 
@@ -934,7 +976,7 @@ tbody tr:hover {
   padding: 2em 0;
   margin-top: auto;
   border-top: 4px solid var(--color-secondary);
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-footer);
 }
 
 [data-theme="dark"] .site-footer {
@@ -1060,7 +1102,7 @@ tbody tr:hover {
 }
 
 .alert-info, .notice-info {
-  border-left-color: #3498db;
+  border-left-color: var(--color-alert-info-border);
   background: var(--color-alert-info-bg);
 }
 
@@ -1082,198 +1124,196 @@ tbody tr:hover {
 /* Dark mode alerts */
 [data-theme="dark"] .alert-info,
 [data-theme="dark"] .notice-info {
-  background: rgba(52, 152, 219, 0.15);
-  border-left-color: #3498db;
+  background: var(--color-alert-info-bg);
+  border-left-color: var(--color-alert-info-border);
 }
 
 [data-theme="dark"] .alert-warning,
 [data-theme="dark"] .notice-warning {
-  background: rgba(243, 156, 18, 0.15);
-  border-left-color: #f39c12;
+  background: var(--color-alert-warning-bg);
+  border-left-color: var(--color-alert-warning-border);
 }
 
 [data-theme="dark"] .alert-danger,
 [data-theme="dark"] .notice-danger {
-  background: rgba(231, 76, 60, 0.15);
-  border-left-color: #e74c3c;
+  background: var(--color-alert-danger-bg);
+  border-left-color: var(--color-alert-danger-border);
 }
 
 [data-theme="dark"] .alert-success,
 [data-theme="dark"] .notice-success {
-  background: rgba(39, 174, 96, 0.15);
-  border-left-color: #27ae60;
+  background: var(--color-alert-success-bg);
+  border-left-color: var(--color-alert-success-border);
 }
 
 
-/* ============================================
-   15. SERVER ROLES
-   ============================================ */
+/* Server Roles - Now using semantic variables */
 .role-adventurer {
-  color: #999999;
+  color: var(--palette-neutral-gray-300);
   font-weight: 600;
 }
 
 .role-trial-dm {
-  color: #25c059;
+  color: var(--palette-role-trial-dm);
   font-weight: 600;
 }
 
 .role-full-dm {
-  color: #1a7939;
+  color: var(--palette-role-full-dm);
   font-weight: 600;
 }
 
 .role-auditor {
-  color: #ff9900;
+  color: var(--palette-role-auditor);
   font-weight: 600;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-auditor-apprentice {
-  color: #d98843;
+  color: var(--palette-role-auditor-apprentice);
   font-weight: 600;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-lore {
-  color: #1f628e;
+  color: var(--palette-role-lore);
   font-weight: 600;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-lore-apprentice {
-  color: #5296d5;
+  color: var(--palette-role-lore-apprentice);
   font-weight: 600;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-pr {
-  color: #ffd966;
+  color: var(--palette-role-pr);
   font-weight: 600;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-rules {
-  color: #f975f2;
+  color: var(--palette-role-rules);
   font-weight: 600;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-rules-apprentice {
-  color: #b179b8;
+  color: var(--palette-role-rules-apprentice);
   font-weight: 600;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-engineer {
-  color: #1abc9c;
+  color: var(--palette-role-engineer);
   font-weight: 700;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-engineer-apprentice {
-  color: #63a493;
+  color: var(--palette-role-engineer-apprentice);
   font-weight: 700;
-  background-color: #333333;
+  background-color: var(--palette-neutral-gray-500);
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 .role-admins {
-  color: #1c1c1c;
+  color: var(--palette-role-admins);
   font-weight: 800;
 }
 
 /* Dark mode role adjustments */
 [data-theme="dark"] .role-adventurer {
-  color: #999999 !important;
+  color: var(--palette-neutral-gray-300) !important;
   background-color: transparent !important;
 }
 
 [data-theme="dark"] .role-trial-dm {
-  color: #25c059 !important;
+  color: var(--palette-role-trial-dm) !important;
   background-color: transparent !important;
 }
 
 [data-theme="dark"] .role-full-dm {
-  color: #1a7939 !important;
+  color: var(--palette-role-full-dm) !important;
   background-color: transparent !important;
 }
 
 [data-theme="dark"] .role-auditor {
-  color: #ff9900 !important;
+  color: var(--palette-role-auditor) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-auditor-apprentice {
-  color: #d98843 !important;
+  color: var(--palette-role-auditor-apprentice) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-lore {
-  color: #1f628e !important;
+  color: var(--palette-role-lore) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-lore-apprentice {
-  color: #5296d5 !important;
+  color: var(--palette-role-lore-apprentice) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-pr {
-  color: #ffd966 !important;
+  color: var(--palette-role-pr) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-rules {
-  color: #f975f2 !important;
+  color: var(--palette-role-rules) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-rules-apprentice {
-  color: #b179b8 !important;
+  color: var(--palette-role-rules-apprentice) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-engineer {
-  color: #1abc9c !important;
+  color: var(--palette-role-engineer) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
 }
 
 [data-theme="dark"] .role-engineer-apprentice {
-  color: #63a493 !important;
+  color: var(--palette-role-engineer-apprentice) !important;
   background-color: transparent !important;
   padding: 0;
   border-radius: 0;
@@ -1411,7 +1451,7 @@ tbody tr:hover {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
   margin: 1.5em 0;
 }
 
@@ -1683,7 +1723,7 @@ tbody tr:hover {
 [data-theme="dark"] blockquote.stat-block table td:nth-child(8),
 [data-theme="dark"] blockquote.stat-block table td:nth-child(11),
 [data-theme="dark"] blockquote.stat-block table td:nth-child(12) {
-  background: rgba(90, 74, 58, 0.3);
+  background: var(--palette-statblock-modifier-dark);
 }
 
 
