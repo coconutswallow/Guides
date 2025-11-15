@@ -25,6 +25,9 @@ The intention of the site design is that maintenance of the content is "low-tech
 - <a href="{{ 'help/monsters' | relative_url }}">Monster Compendium Customer Pages</a>
 - <a href="{{ 'help/FAQ-engineering' | relative_url }}">FAQ</a>
 
+
+---
+
 #### External Components
 
 I tried not to, but there are a few external components used for super complicated stuff
@@ -38,7 +41,7 @@ This is a library that adds universal search to the the whole site.  It's not th
 
 This is the editor that I have plugged into the back-end so that users can edit the pages directly without going through git-hub.  
 
-The control console is here: https://decapbridge.com/dashboard/sites/edit?tab=manage&siteId=a9c3edd8-e3cd-4b70-89e3-adb5acdd7a8f
+The control console is here: [Decapbridge Console](https://decapbridge.com/dashboard/sites/edit?tab=manage&siteId=a9c3edd8-e3cd-4b70-89e3-adb5acdd7a8f)
 
 Right now it's all connected to the coconut site, which I am using the development site. At some point will need to re-point this to the main site.  But let's make sure this works well first.
 
