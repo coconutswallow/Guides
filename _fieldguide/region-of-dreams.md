@@ -5,8 +5,6 @@ order: 10
 background_image: https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001
 ---
 
-# Region of Dreams
-
 The Region of Dreams seems to be accessible from most of the planes, since creatures can sleep and dream anywhere. It is the place
 where dreams come to existence with complete disregard to the waking world. Whenever one falls asleep, its mind goes to the Region of Dreams. Ordinarily, dreams have little effect on either the dreamer or on the Region of Dreams itself. Dreams can affect the emotions of the dreamer, but little else. Once the dreamer wakes up, the dream fades away, but its echo forever resonates within the Region of Dreams. 
 
@@ -172,7 +170,7 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
     When within the Region of Dreams, one can physically travel into the Dreamheart, but should be wary; a random flare of fire or dream-born creature could just appear out of the chaos and take the life of an inexperienced traveler. Even when a dreamer’s physical body is safe and sound on the Material Plane, any harm that comes to its dream-self when in the Dreamheart affects its physical body as well. In simpler terms, if your dream-self dies within the Dreamheart, you die as well.  When the dream-self or a physical traveler dies within the Dreamheart, its soul becomes trapped within the Dreamheart forever. Any creature whose soul is trapped within the Dreamheart, can’t be revived by any means short of a wish spell, at the DM’s discretion. When inside the Dreamheart, one can encounter a devastating storm known as a Dreamheart Tempest.
 
   </div>
-  ![Storm, Cropped]({{ '/assets/images/joseph-meehan-storm.jpg' | relative_url}})
+   <img src="/Guides/assets/images/joseph-meehan-storm.jpg" alt="Channeled Storm" class="hierarchy-image image-size-20">
 </div>
 
 ### Dreamheart Tempest
