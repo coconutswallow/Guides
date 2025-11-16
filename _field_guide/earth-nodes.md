@@ -509,7 +509,7 @@ You have learned to attune your senses and magical powers to the magic of nodes:
 
 <tr><th>Node Spellcasting and Monsters</th></tr>
 
-<tr><td>The \\*\\*Node Spellcasting\\*\\* Supernatural Gift is intended for player characters, but certain powerful or notable spellcasting monsters may also be able to harness nodes as described in the Supernatural Gift. 
+<tr><td>The **Node Spellcasting** Supernatural Gift is intended for player characters, but certain powerful or notable spellcasting monsters may also be able to harness nodes as described in the Supernatural Gift. 
 
 Any DM may give such monsters the benefits of the **Node Spellcasting** Supernatural Gift in order to use the full power of a node as part of an adventure. Such monsters should have proficiency or expertise in the Arcana skill. Monsters that don't have spell slots but have the Innate Spellcasting trait can still benefit from the **Node Spellcasting** Supernatural Gift in accessing the granted spells associated with a node. 
 
