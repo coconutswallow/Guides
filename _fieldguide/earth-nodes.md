@@ -1,10 +1,9 @@
 ---
 title: Earth Nodes
 layout: doc
-order: 0
-background_image: /Guides/assets/images/earthnodes-background.jpg
+order: 18
+background_image: /assets/images/earthnodes-background.jpg
 ---
-# Earth Nodes
 
 Beneath the surface of the earth run streams and currents of magical energy. This energy sometimes forms into nexuses that can create a number of magical effects and whose powers can be harnessed. These nexuses are known as **earth nodes**.
 
@@ -69,9 +68,7 @@ The table below describes various associated properties of an earth node.
 ***Node DC*** : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below.
 
 </td><td width=300 style="text-align:left;">
-
-![Diagram of typical earth node sizes](https://i.imgur.com/Qayoqbp.png)
-
+  <img src="![/path/to/image.jpg](https://i.imgur.com/Qayoqbp.png)" alt="Description">
 </td></tr></table>
 
 <br>
@@ -293,7 +290,6 @@ Besides the properties and powers of earth nodes as mentioned and described abov
 
 Besides earth nodes encountered on the Material Plane, other planes of existence can also contain earth nodes, most commonly the Feywild and the Shadowfell as reflections of the Material Plane. At times, an earth node in the Material Plane may be linked to a mirroring earth node on the Feywild or the Shadowfell. Earth nodes are also common in the Elemental Plane of Earth, wherever streams of magical energy form a nexus of power. Such earth nodes have many of the same properties and powers associated with earth nodes on the Material Plane, but often carry additional properties tied to the plane of existence in which they reside. For example, an earth node in the Feywild might act as a wild magic zone.
 
-<br>
 
 ## Other Kinds of Nodes
 
