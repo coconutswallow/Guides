@@ -61,19 +61,17 @@ The table below describes various associated properties of an earth node.
 
 </table>
 
-***Layer Width***  : This value indicates the thickness of a given layer of the earth node.
+<b>Layer Width</b>  : This value indicates the thickness of a given layer of the earth node.
 
-***Node Diameter*** :This value indicates the diameter of the entire earth node.
+<b>Node Diameter</b> :This value indicates the diameter of the entire earth node.
 
-***Node DC*** : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below.
+<b>Node DC</b> : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below.
 
 </td><td width=300 style="text-align:left;">
 
  <img src="https://i.imgur.com/Qayoqbp.png" alt="Diagram of typical earth node sizes">
 
 </td></tr></table>
-
-<br>
 
 ## Sensing Earth Nodes
 
@@ -93,16 +91,12 @@ For example, a class 3 earth node has 3 layers: an inner, middle, and outer laye
 
 The *commune with nature* spell can also be used to locate (but not map out) any earth nodes within the spell's range.
 
-<br>
-
 ## Studying Earth Nodes
 
 Utilizing some of the powers associated with an earth node requires one to spend time and effort in study of a particular earth node and learning its specific pattern of magical energy. This can occur in the following two ways:
 
 * A creature that is aware of a given earth node can become **proficient** in their understanding of that earth node's pattern of magical energy by spending a short rest within the area while studying its pattern of magical energy. At the end of the short rest, the creature can make an Intelligence (Arcana) check against the node DC of the earth node. On a success, the creature commits the earth node to memory as if it were the sigil sequence of a teleportation circle.
 * A creature with the **Node Spellcasting** Supernatural Gift that is also **proficient** in their understanding of a specific earth node's pattern of magical energy can additionally acquire **expertise** in their understanding of that earth node's pattern of magical energy. The creature can study the energies of a given earth node for a number of workweeks of downtime while in the area of the earth node, spending at least 8 hours each day engaged in the activity. At the end of each workweek, the creature must make an Arcana check using their spellcasting ability against the node DC of the earth node. The creature must acquire a number of total successes in this way equal to the earth node's class rating. Each failure on this check reduces the number of accumulated successes by 1, but cannot reduce it below zero. For example, studying a class 3 earth node in this way requires 3 successful Arcana checks over a minimum of 3 workweeks but could require more if failures occur.
-
-<br>
 
 ## Powers of Earth Nodes
 
@@ -166,8 +160,6 @@ Certain earth nodes are charged with the energies of other planes of existence, 
 
 The portal that is created is similar to portals to other locations as previously above, except that it links to a specific fixed location on another plane of existence as determined by the DM. Using the *plane shift* spell in this way does not require the spell's material component.
 
-<br>
-
 ![](https://i.imgur.com/cXOoAzg.jpeg)
 
 ### Granted Spells (Restricted)
@@ -222,8 +214,6 @@ A creature with levels in the Mystic class can still gain access to the spells g
 
 <tr><td>5th</td><td>7 psi points</td></tr></table>
 
-<br>
-
 ### Storing Items (Restricted)
 
 This power can **only** be used by creatures with the **Node Spellcasting** or **Node Manifestation** Supernatural Gift. A creature skilled in the use of earth nodes can utilize them to store or retrieve objects within a hidden extradimensional space linked to a given earth node. An earth node can store any number of objects in this extradimensional space whose combined total volume does not exceed a number of cubic feet equal to 10 x (the earth node's class)<sup>2</sup>. No objects can be stored in an earth node in excess of its storage capacity. For example, a class 3 earth node can store up to 90 cubic feet worth of objects.
@@ -244,29 +234,32 @@ This power can only be used by creatures with the **Node Spellcasting** Supernat
 
 This "node lock" can only be removed by means of a *dispel magic* spell in the area of the earth node, targeting a magical effect as if attempting to dispel a spell of the same level as the class rating of the earth node. For example, attempting use the *dispel magic* spell on a node lock present in a class 4 earth node would be treated as if trying to dispel a 4th-level spell.
 
-<br>
-
 ## Modifying Earth Nodes
 
-The area around an earth node can be modified, from incorporating an earth node into a structure to opening up an earth node that resides within solid rock. However, such modifications to the area may affect the integrity of the earth node situated within it.
 
-Any physical project involving building around or modifying the area around an earth node takes the normal amount of time to accomplish such a project, as determined by the DM. However, ensuring that the earth node remains intact throughout this process requires supervision by a  creature familiar with the earth node.
+<div class="image-text-wrapper">
+  <div class="hierarchy-explanation" style="flex: 0 0 80%;">
+    The area around an earth node can be modified, from incorporating an earth node into a structure to opening up an earth node that resides within solid rock. However, such modifications to the area may affect the integrity of the earth node situated within it.
 
-In the event that the project makes either no or at most minor modifications to the area in which the earth node is situated, then the earth node is unaffected by the project. However, projects which involve moderate or extensive changes to the area risk damaging the earth node.
+    Any physical project involving building around or modifying the area around an earth node takes the normal amount of time to accomplish such a project, as determined by the DM. However, ensuring that the earth node remains intact throughout this process requires supervision by a  creature familiar with the earth node.
 
-At the end of each workweek associated with the project, a creature that has become **proficient** in their understanding of a given earth node can make an ability check using their spellcasting ability while within the area of that earth node. A creature with the **Node Spellcasting** Supernatural Gift can instead make an Arcana check using their spellcasting ability, and a creature with the **Node Manifestation** Supernatural Gift can make an Intelligence (Arcana) check. (A creature without a spellcasting ability instead makes an Intelligence check.) A creature proficient in mason's tools that is also overseeing the project can provide Help on the ability check.
+    In the event that the project makes either no or at most minor modifications to the area in which the earth node is situated, then the earth node is unaffected by the project. However, projects which involve moderate or extensive changes to the area risk damaging the earth node.
 
-The DC of the ability check is equal to the node DC if the project involves moderate changes to the area as determined by the DM. If the project involves extensive changes to the area as determined by the DM, the DC for the ability check is equal to the node DC + 5. 
+    At the end of each workweek associated with the project, a creature that has become **proficient** in their understanding of a given earth node can make an ability check using their spellcasting ability while within the area of that earth node. A creature with the **Node Spellcasting** Supernatural Gift can instead make an Arcana check using their spellcasting ability, and a creature with the **Node Manifestation** Supernatural Gift can make an Intelligence (Arcana) check. (A creature without a spellcasting ability instead makes an Intelligence check.) A creature proficient in mason's tools that is also overseeing the project can provide Help on the ability check.
 
-On a success, the creature is able to help reroute and smooth the flow of magical energy in the new physical arrangement as associated with the project. On a failure, the class rating of the earth node decreases by 1. An earth node whose class rating is reduced to 0 is destroyed. 
+    The DC of the ability check is equal to the node DC if the project involves moderate changes to the area as determined by the DM. If the project involves extensive changes to the area as determined by the DM, the DC for the ability check is equal to the node DC + 5. 
 
-If projects involving moderate or extensive changes aren't supervised, there is a cumulative 5% chance for each day of the project that the class rating of the node is reduced by 1. This chance resets to 5% after the node's class rating is reduced, before accumulating with each day once more.  
+    On a success, the creature is able to help reroute and smooth the flow of magical energy in the new physical arrangement as associated with the project. On a failure, the class rating of the earth node decreases by 1. An earth node whose class rating is reduced to 0 is destroyed. 
 
-It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM. 
+    If projects involving moderate or extensive changes aren't supervised, there is a cumulative 5% chance for each day of the project that the class rating of the node is reduced by 1. This chance resets to 5% after the node's class rating is reduced, before accumulating with each day once more.  
 
-In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
+    It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM. 
 
-![](https://i.imgur.com/pfAp3Pa.png)
+    In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
+  </div>
+  
+  <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
+</div>
 
 ## Creating Earth Nodes
 
@@ -280,13 +273,9 @@ The following describes the most common procedure by which a spellcaster with th
 
 The earth node slowly grows in size and strength over time, with a new layer added after a number of years equal to 2 x (the earth node's current class rating), up to that of a class 5 earth node. For example, it would take a class 1 earth node 2 years to reach class 2, then 4 years to reach class 3, then 6 years to reach class 4, and then 8 years to reach class 5 (for a total of 20 years). The earth node functions as akin to any other earth node as described in this document and is subject to potential modification, damage, and destruction in the same ways. Improving the size and strength of an artificially created earth node in this way beyond class 5 requires even more esoteric knowledge and powerful magic beyond the scope of this ritual. 
 
-<br>
-
 ## Other Properties of Earth Nodes
 
 Besides the properties and powers of earth nodes as mentioned and described above, it is possible for earth nodes to have other properties or idiosyncrasies as determined by the DM. Perhaps a particular earth node lacks some of the properties above, or grants additional powers, or may require a specific ritual to access. A DM should feel free to customize or alter the specifics of a particular earth node of their creation as suits their storyline beyond the guidelines mentioned in this document.
-
-<br>
 
 ## Earth Nodes on Other Planes of Existence
 

@@ -395,7 +395,7 @@ p, li, td, th, a, code, pre {
 }
 
 
-/* For when using <table> instead of markdown format
+/* For when using <table> instead of markdown format */
 
 th {
   padding: 0.75em;
