@@ -70,9 +70,9 @@ collections:
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
       - { label: "Body", name: "body", widget: "markdown" }
 
-  - name: "field_guide"
+  - name: "fieldguide"
     label: "Field Guide"
-    folder: "_field_guide"
+    folder: "_fieldguide"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
