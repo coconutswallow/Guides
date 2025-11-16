@@ -37,14 +37,43 @@ The power of an earth node can enhance spellcasting and create other magical eff
 The table below describes various associated properties of an earth node.
 
 ### Earth Nodes
-| Class | Layer Width | Node Diameter | Node DC |
-| :-----: | :----------------: | ------: | :-----: |
-| 1 | 5 to 30 feet | 10 to 60 feet | 14 |
-| 2 | 10 to 40 feet | 40 to 160 feet | 16 |
-| 3 | 20 to 80 feet | 120 to 480 feet | 18 |
-| 4 | 30 to 120 feet | 240 to 960 feet | 20 | 
-| 5 | 40 to 160 feet | 400 to 1,600 feet | 22 |
-| 6 | 50 to 200 feet | 600 to 2,400 feet | 24 |
-| 7 | 60 to 240 feet | 840 to 3,360 feet | 26 |
-| 8 | 70 to 280 feet | 1,120 to 4,480 feet | 28 |
-| 9 | 80 to 320 feet | 1,440 to 5,760 feet | 30 |
+
+<style>
+
+td, th { padding: 5px; text-align:center; };
+
+</style>
+
+<table><tr><td width=400><table border=1>
+
+<tr><th>Class</th><th>Layer Width</th><th>Node Diameter</th><th>Node DC</th></tr>
+
+<tr><td>1</td><td>5 to 30 feet</td><td>10 to 60 feet</td><td>14</td></tr>
+
+<tr><td>2</td><td>10 to 40 feet</td><td>40 to 160 feet</td><td>16</td></tr>
+
+<tr><td>3</td><td>20 to 80 feet</td><td>120 to 480 feet</td><td>18</td></tr>
+
+<tr><td>4</td><td>30 to 120 feet</td><td>240 to 960 feet</td><td>20</td></tr>
+
+<tr><td>5</td><td>40 to 160 feet</td><td>400 to 1,600 feet</td><td>22</td></tr>
+
+<tr><td>6</td><td>50 to 200 feet</td><td>600 to 2,400 feet</td><td>24</td></tr>
+
+<tr><td>7</td><td>60 to 240 feet</td><td>840 to 3,360 feet</td><td>26</td></tr>
+
+<tr><td>8</td><td>70 to 280 feet</td><td>1,120 to 4,480 feet</td><td>28</td></tr>
+
+<tr><td>9</td><td>80 to 320 feet</td><td>1,440 to 5,760 feet</td><td>30</td></tr>
+
+</table></td><td width=300 style="text-align:left;">
+
+**Layer Width**  : This value indicates the thickness of a given layer of the earth node.
+
+**Node Diameter** :This value indicates the diameter of the entire earth node.
+
+**Node DC** : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below. </td></tr></table>
+
+<br>
+
+## Sensing Earth Nodes
