@@ -158,7 +158,7 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
- ##### Image Credits
+##### Image Credits
 
 * [The underwater world, with the aqua-dragons by RayaA5](https://www.deviantart.com/rayaa5/art/The-underwater-world-with-the-aqua-dragons-1241138160)
 * [Submerged Palace by Arcaedes](https://www.deviantart.com/arcaedes/art/Submerged-Palace-1198810611)
