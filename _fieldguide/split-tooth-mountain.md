@@ -20,6 +20,7 @@ The Cube of Rubex was used in the past by the Elder Elves in eons past as part o
 The Dynakinetic Transmutation Matrix was used during the ritual at Bohu's core to synchronize the magics of the rituals occuring in Bohu’s head with the Codex of Infinite Planes and Bohu’s stomach with the Cube of Rubex as well as to manipulate the magic of the planes tying Bohu to the Material Plane. The adventurers that activated it were assisted by Vedalken soldiers and scientists of New Nivix to ensure everything went smoothly. This artifact remains at the core of the Split Tooth Mountain and New Nivix scientists and soldiers often do rounds to ensure the Dynakinetic Transmutation Matrix remains secure.
 
 ### Split Tooth Dwellers
+
 With the Titan’s body now present near Hellgate Dell, various groups have decided to re
 main either near Split Tooth Mountain or within the mountain. 
 
@@ -52,6 +53,7 @@ Regions of the affected area are overcome with strange, twisted growths. The col
 The landscape is utterly alien, the usual terrain, trees and plants have melted with one another, from those ooze a strange mucus. Anyone touching the mucus with their bare
 skin must make a DC 15 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
+
 #### Absolute Territory
 
 For the purpose of spells or effects whose results change across or are blocked by planar boundaries (such as *sending*), this area is considered its own plane. These restrictions apply to magic items and artifacts that have properties that transport, banish, or summon creatures to or from other locations or planes or that have properties to create portals to other locations or planes of existence.
@@ -68,27 +70,17 @@ While in the area affected by Eldritch Veil, when a creature casts a spell of 1s
 
 At the DM’s discretion, spells and other magical effects can be modified cosmetically to enhance the strange and eldritch atmosphere. Here are some examples:
 
-*Alarm:* Instead of hearing a mental ping when the alarm is triggered, the caster hears a scream.
-
-*Bigby's hand:* The conjured hand appears to a wriggling swarm of tentacles in the shape of a hand.
-
-*Find the path:* A spirit in the form of a warped aberration of the DM's choice appears and guides the caster to the desired location. The spirit can't be harmed and doesn't speak.
-
-*Fog cloud:* The cloud takes the form of an eerie, obscuring starscape.
-
-*Gust of wind:* A ghastly moan accompanies the summoned wind.
-
-*Mage hand:* The summoned hand resembles an ectoplasmic appendage.
-
-*Phantom steed:* The steed resembles a neogi.
-
-*Rary's telepathic bond:* Characters linked together by the spell can't shake the feeling that something vile is telepathically eavesdropping on them.
-
-*Revivify:* A creature restored to life by a revivify spell screams upon regaining consciousness, as though waking from some horrible nightmare.
-
-*Spirit guardians:* The spirits appear as grotesque aberrations of the DM’s choice.
-
-*Wall of stone:* A wall created by the spell resembles warped, living flesh, with appendages, eyes, and mouths strewn haphazardly across the surface.
+* *Alarm:* Instead of hearing a mental ping when the alarm is triggered, the caster hears a scream.
+* *Bigby's hand:* The conjured hand appears to a wriggling swarm of tentacles in the shape of a hand.
+* *Find the path:* A spirit in the form of a warped aberration of the DM's choice appears and guides the caster to the desired location. The spirit can't be harmed and doesn't speak.
+* *Fog cloud:* The cloud takes the form of an eerie, obscuring starscape.
+* *Gust of wind:* A ghastly moan accompanies the summoned wind.
+* *Mage hand:* The summoned hand resembles an ectoplasmic appendage.
+* *Phantom steed:* The steed resembles a neogi.
+* *Rary's telepathic bond:* Characters linked together by the spell can't shake the feeling that something vile is telepathically eavesdropping on them.
+* *Revivify:* A creature restored to life by a revivify spell screams upon regaining consciousness, as though waking from some horrible nightmare.
+* *Spirit guardians:* The spirits appear as grotesque aberrations of the DM’s choice.
+* *Wall of stone:* A wall created by the spell resembles warped, living flesh, with appendages, eyes, and mouths strewn haphazardly across the surface.
 
 
 #### Far Realm Rifts (Optional Rule)
@@ -119,7 +111,7 @@ Random cerebrotic blots linked to the Far Realm can be encountered and explored 
 
 **Cerebrotic Periphery**
   
->  * "The first time, I didn't realize what it was before it was too late. You can't see it at first sight. It's not immediately distinct from normal reality; instead a subtle influence pervades the area, overlaying it with an unnerving sense of dread." *
+>  *"The first time, I didn't realize what it was before it was too late. You can't see it at first sight. It's not immediately distinct from normal reality; instead a subtle influence pervades the area, overlaying it with an unnerving sense of dread."*
   
 The periphery’s shape is not necessarily a symmetrical circle enclosing a smaller marrow, but may be made of river-like swathes or even be discontinuous. Peripheries can enclose areas miles wide, can be completely or partially above or underground, and expand or contract unpredictably in accord with unknowable tides.
 
