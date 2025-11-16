@@ -72,11 +72,12 @@ As blinding sickness is a natural disease, any effect that removes a disease or 
 
 ## Sultan Rezzo the Marvelous
 
-Sultan Rezzo is a noble marid (see statblock on the following page) who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water. Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
+Sultan Rezzo is a noble marid (see [ *Sultan Rezzo's Statblock* ]({{ '/monster-compendium/sultan-rezzo/' | relative_url }}) ) who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water. Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
 
 ### Sultan Rezzo's Palace
 Sultan Rezzo's palace is a grandiose building covered in coral and algae. It is filled with wonders and sensory delights that goes beyond one's wildest dreams. This opulent palace floats in a deep part of the Plane of Water and contains many luxurious chambers and rooms filled with air for his guests or slaves.
 
+![Sultan's Palace](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/aa825589-b5f2-443a-8874-546a7eac55d8/djtqo6r-849a4c39-c94e-400d-a7bc-fa892876936c.jpg/v1/fill/w_1192,h_670,q_70,strp/submerged_palace_by_arcaedes_djtqo6r-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTE1MiIsInBhdGgiOiIvZi9hYTgyNTU4OS1iNWYyLTQ0M2EtODg3NC01NDZhN2VhYzU1ZDgvZGp0cW82ci04NDlhNGMzOS1jOTRlLTQwMGQtYTdiYy1mYTg5Mjg3NjkzNmMuanBnIiwid2lkdGgiOiI8PTIwNDgifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.82Y_8CkgKb7YA4UlDNPvgWvpugYOZMFHxHWhg4Lh2Tg)
 
 ### Roleplaying Sultan Rezzo
 
@@ -158,4 +159,5 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 > ##### Image Credits
 
 * [The underwater world, with the aqua-dragons by RayaA5](https://www.deviantart.com/rayaa5/art/The-underwater-world-with-the-aqua-dragons-1241138160)
+* [Submerged Palace by Arcaedes](https://www.deviantart.com/arcaedes/art/Submerged-Palace-1198810611)
 
