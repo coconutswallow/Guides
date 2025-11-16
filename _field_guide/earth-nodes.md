@@ -594,24 +594,24 @@ The table below summarizes the different quantities associated with earth nodes 
 
 <br>
 
-\- Layer Width. This value indicates the thickness of a given layer of the earth node.
+\- **Layer Width.** This value indicates the thickness of a given layer of the earth node.
 
-\- Node Diameter. This value indicates the diameter of the entire earth node.
+\- **Node Diameter.** This value indicates the diameter of the entire earth node.
 
-\- Node DC. This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed above.
+\- **Node DC.** This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed above.
 
-\- Enhanced Spellcasting Bonus. This value indicates how many spells levels higher a spell that has been enhanced by an earth node is cast at. (See "Enhanced Spellcasting" above.)
+\- **Enhanced Spellcasting Bonus.** This value indicates how many spells levels higher a spell that has been enhanced by an earth node is cast at. (See "Enhanced Spellcasting" above.)
 
-\- Psionic Mastery Pool. This value indicates how many psi points can be accessed as part of the special Psionic Mastery conferred by an earth node as accessed by a mystic. (See the sidebar of "Enhanced Spellcasting" above.)
+\- **Psionic Mastery Pool.** This value indicates how many psi points can be accessed as part of the special Psionic Mastery conferred by an earth node as accessed by a mystic. (See the sidebar of "Enhanced Spellcasting" above.)
 
-\- Portal to Nearby Earth Node Range. This value indicates the maximum range that a nearby earth node could be located when teleporting from an earth node via the \*teleportation circle\* spell. (See "Teleporting to Other Earth Nodes" above.)
+\- **Portal to Nearby Earth Node Range.** This value indicates the maximum range that a nearby earth node could be located when teleporting from an earth node via the *teleportation circle* spell. (See "Teleporting to Other Earth Nodes" above.)
 
-\- Portal Diameter. This value indicates the diameter of a portal to another location or plane of existence. (See "Portals to Other Locations" and "Portals to Other Planes of Existence" above.)
+\- **Portal Diameter.** This value indicates the diameter of a portal to another location or plane of existence. (See "Portals to Other Locations" and "Portals to Other Planes of Existence" above.)
 
-\- Portal Duration. This value indicates how long a portal to another location or plane of existence lasts. (See "Portals to Other Locations" and "Portals to Other Planes of Existence" above.)
+\- **Portal Duration.** This value indicates how long a portal to another location or plane of existence lasts. (See "Portals to Other Locations" and "Portals to Other Planes of Existence" above.)
 
-\- Portal Max Range. This value indicates the maximum range that a portal to another location can reach on the same plane of existence. (See "Portals to Other Locations" above.)
+\- **Portal Max Range.** This value indicates the maximum range that a portal to another location can reach on the same plane of existence. (See "Portals to Other Locations" above.)
 
-\- Storage Capacity. This value indicates the maximum capacity that an earth node can store worth of objects. (See "Storing Items" above.)
+\- **Storage Capacity.** This value indicates the maximum capacity that an earth node can store worth of objects. (See "Storing Items" above.)
 
-\- Time to Map. This value indicates the typical amount of time it takes to fully map out an earth node's boundaries and layers, without factoring in additional time due to physical barriers or other obstacles.
+\- **Time to Map.** This value indicates the typical amount of time it takes to fully map out an earth node's boundaries and layers, without factoring in additional time due to physical barriers or other obstacles.
