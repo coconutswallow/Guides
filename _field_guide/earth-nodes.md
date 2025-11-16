@@ -38,11 +38,7 @@ The table below describes various associated properties of an earth node.
 
 ### Earth Nodes
 
-<style>
-
-td, th { padding: 5px; text-align:center; };
-
-</style>
+<style>td, th { padding: 8px;};</style>
 
 <table><tr><td width=400><table border=1>
 
@@ -66,14 +62,54 @@ td, th { padding: 5px; text-align:center; };
 
 <tr><td>9</td><td>80 to 320 feet</td><td>1,440 to 5,760 feet</td><td>30</td></tr>
 
-</table></td><td width=300 style="text-align:left;">
+</table>
 
-**Layer Width**  : This value indicates the thickness of a given layer of the earth node.
+***Layer Width***  : This value indicates the thickness of a given layer of the earth node.
 
-**Node Diameter** :This value indicates the diameter of the entire earth node.
+***Node Diameter*** :This value indicates the diameter of the entire earth node.
 
-**Node DC** : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below. </td></tr></table>
+***Node DC*** : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below.
+</td><td width=300 style="text-align:left;">
+
+![Diagram of typical earth node sizes](https://i.imgur.com/Qayoqbp.png)
+
+</td></tr></table>
 
 <br>
 
 ## Sensing Earth Nodes
+
+Earth nodes themselves are invisible to ordinary perception, but they can be detected as a sense of magic in the area. Any creature that approaches within 30 feet of an earth node or that enters the area can make a passive or active check (DC 15) as described below to notice the earth node and to recognize it as an earth node. 
+
+* **Non-Spellcasters** make an Intelligence check.
+* **Spellcasters** make an ability check using their spellcasting ability.
+* **Spellcasters with the Node Spellcasting Supernatural Gift** make an Arcana check using their spellcasting ability.
+* **Mystics** make an Intelligence check.
+* **Mystics with the Node Manifestation Supernatural Gift** make an Intelligence (Arcana) check.
+
+A creature using the *detect magic* spell automatically detects and recognizes an earth node within the spell's range.
+
+A creature that senses an earth node in this way is able to map out the earth node's boundaries. The process requires time as it takes travel and observation to map out the boundaries of an earth node. As a guideline, without factoring in additional time due to physical barriers or other obstacles, it takes 10 minutes to map out the inner layer of an earth node. Each layer beyond the inner layer takes an additional 10 minutes for each layer before it.
+
+For example, a class 3 earth node has 3 layers: an inner, middle, and outer layer. It takes 10 minutes to map out the inner layer, 20 minutes to map out the middle layer, and 30 minutes to map out the outer layer. In total, it would take at least one hour to map out a class 3 earth node. 
+
+The *commune with nature* spell can also be used to locate (but not map out) any earth nodes within the spell's range.
+
+<br>
+
+## Studying Earth Nodes
+
+Utilizing some of the powers associated with an earth node requires one to spend time and effort in study of a particular earth node and learning its specific pattern of magical energy. This can occur in the following two ways:
+
+* A creature that is aware of a given earth node can become **proficient** in their understanding of that earth node's pattern of magical energy by spending a short rest within the area while studying its pattern of magical energy. At the end of the short rest, the creature can make an Intelligence (Arcana) check against the node DC of the earth node. On a success, the creature commits the earth node to memory as if it were the sigil sequence of a teleportation circle.
+* A creature with the **Node Spellcasting** Supernatural Gift that is also **proficient** in their understanding of a specific earth node's pattern of magical energy can additionally acquire **expertise** in their understanding of that earth node's pattern of magical energy. The creature can study the energies of a given earth node for a number of workweeks of downtime while in the area of the earth node, spending at least 8 hours each day engaged in the activity. At the end of each workweek, the creature must make an Arcana check using their spellcasting ability against the node DC of the earth node. The creature must acquire a number of total successes in this way equal to the earth node's class rating. Each failure on this check reduces the number of accumulated successes by 1, but cannot reduce it below zero. For example, studying a class 3 earth node in this way requires 3 successful Arcana checks over a minimum of 3 workweeks but could require more if failures occur.
+
+<br>
+
+## Powers of Earth Nodes
+
+Earth nodes are nexuses of magical energy, enhancing spellcasting and creating other magical effects. Those aware of an earth node are capable of taking advantage of its powers and capabilities. 
+
+Certain powers can be accessed only by those practiced and experienced in utilizing the powers of an earth node, which are individuals with the **Node Spellcasting** and/or **Node Manifestation** Supernatural Gift. Powers which are restricted in this way are indicated below.
+
+### Enhanced Spellcasting
