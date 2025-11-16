@@ -509,7 +509,7 @@ You have learned to attune your senses and magical powers to the magic of nodes:
 
 <tr><th>Node Spellcasting and Monsters</th></tr>
 
-<tr><td>The \*\*Node Spellcasting\*\* Supernatural Gift is intended for player characters, but certain powerful or notable spellcasting monsters may also be able to harness nodes as described in the Supernatural Gift. 
+<tr><td>The \\*\\*Node Spellcasting\\*\\* Supernatural Gift is intended for player characters, but certain powerful or notable spellcasting monsters may also be able to harness nodes as described in the Supernatural Gift. 
 
 Any DM may give such monsters the benefits of the **Node Spellcasting** Supernatural Gift in order to use the full power of a node as part of an adventure. Such monsters should have proficiency or expertise in the Arcana skill. Monsters that don't have spell slots but have the Innate Spellcasting trait can still benefit from the **Node Spellcasting** Supernatural Gift in accessing the granted spells associated with a node. 
 
@@ -537,11 +537,11 @@ You have learned to attune your senses and psionic powers to the magic of nodes:
 
 The content contained in this document is adapted from the following source material listed below.
 
-**Dungeons and Dragons, 3.5 Edition**<br>- Campbell, Brian, et al. \*Ravenloft Dungeon Master's Guide.\* Arthaus, 2003. pp. 86 - 102.<br>- Cordell, Bruce, et al. \*Underdark.\* Wizards of the Coast, 2003. pp. 49 - 52.<br>- Crook, Jeff, et al. \*Champions of Ruin.\* Wizards of the Coast, 2005. pp. 95 - 98.
+**Dungeons and Dragons, 3.5 Edition**<br>- Campbell, Brian, et al. *Ravenloft Dungeon Master's Guide*. Arthaus, 2003. pp. 86 - 102.<br>- Cordell, Bruce, et al. *Underdark.* Wizards of the Coast, 2003. pp. 49 - 52.<br>- Crook, Jeff, et al. *Champions of Ruin.* Wizards of the Coast, 2005. pp. 95 - 98.
 
-**Dungeons and Dragons, 4th Edition**<br>- Cordell, Bruce, et al. \*Forgotten Realms Campaign Guide.\* Wizards of the Coast, 2008. pp. 51 - 52.<br>- Anderson, Dan and Lori Anderson. "Liberation." \*Living Forgotten Realms.\* Wizards of the Coast, 2013. 
+**Dungeons and Dragons, 4th Edition**<br>- Cordell, Bruce, et al. *Forgotten Realms Campaign Guide.* Wizards of the Coast, 2008. pp. 51 - 52.<br>- Anderson, Dan and Lori Anderson. "Liberation." *Living Forgotten Realms*. Wizards of the Coast, 2013. 
 
-**Dungeons and Dragons, 5th Edition** <br>- Baker, Richard, et al. \*Princes of the Apocalypse.\* Wizards of the Coast, 2015. 
+**Dungeons and Dragons, 5th Edition** <br>- Baker, Richard, et al. *Princes of the Apocalypse*. Wizards of the Coast, 2015. 
 
 <br>
 
