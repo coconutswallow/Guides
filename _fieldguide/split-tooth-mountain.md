@@ -3,6 +3,7 @@ layout: doc
 title: "Split Tooth Mountain"
 order: 12
 background_image: /assets/images/mountain_landscape.jpg
+---
 
 ## Split Tooth Mountain
 
@@ -52,7 +53,7 @@ Regions of the affected area are overcome with strange, twisted growths. The col
 The landscape is utterly alien, the usual terrain, trees and plants have melted with one another, from those ooze a strange mucus. Anyone touching the mucus with their bare
 skin must make a DC 15 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
-![Bone Spire]({{ '/assets/images/bonespire.jpg' | relative_url }} )
+![Bone Spire]( {{ '/assets/images/bonespire.jpg' | relative_url }} )
 
 #### Absolute Territory
 
