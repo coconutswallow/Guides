@@ -16,7 +16,7 @@ The entrance of the cave is located about 500 feet underwater, underneath Hawtho
 
 The majority of this district serves as a residential area, but a few shops and inns have been built there as well. The buildings of the district are mostly made of more exotic material like coral, or other water resistant material.  Most houses of this district are built in the bottom section, underwater, whereas the shops and inns are located on the island of the top section, outside the water. Only those that can breathe underwater and are comfortable underwater can live in the underwater portion of the district.
 
-![Underwwater World]({{ 'Guides/assets/images/underwater-world.jpg' | relative_url }} )
+![Underwwater World]({{ '/assets/images/underwater-world.jpg' | relative_url }} )
 
 ### The Portal
 
