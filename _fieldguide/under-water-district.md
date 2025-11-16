@@ -70,6 +70,8 @@ Red tides are rare but dangerous patches of infected water. A creature caught in
 
 As blinding sickness is a natural disease, any effect that removes a disease or otherwise ameliorates a disease's effects apply to the target.
 
+![Red Tide]({{ '/assets/images/red_tide.jpg' | relative_url }} )
+
 ## Sultan Rezzo the Marvelous
 
 Sultan Rezzo is a noble marid (see [ *Sultan Rezzo's Statblock* ]({{ '/monster-compendium/sultan-rezzo/' | relative_url }}) ) who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water. Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
@@ -156,8 +158,10 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
-> ##### Image Credits
+ ##### Image Credits
 
 * [The underwater world, with the aqua-dragons by RayaA5](https://www.deviantart.com/rayaa5/art/The-underwater-world-with-the-aqua-dragons-1241138160)
 * [Submerged Palace by Arcaedes](https://www.deviantart.com/arcaedes/art/Submerged-Palace-1198810611)
+* [Red Tide by SitwithMeNtheDark](https://www.deviantart.com/sitwithmenthedark/art/Red-Tide-1020824483)
+
 
