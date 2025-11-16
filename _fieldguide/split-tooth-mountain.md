@@ -53,6 +53,7 @@ Regions of the affected area are overcome with strange, twisted growths. The col
 The landscape is utterly alien, the usual terrain, trees and plants have melted with one another, from those ooze a strange mucus. Anyone touching the mucus with their bare
 skin must make a DC 15 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
+![Bone Spire]({{ '/assets/image/bonespire.jpg' | relative_url }} )
 
 #### Absolute Territory
 
@@ -82,11 +83,9 @@ At the DM’s discretion, spells and other magical effects can be modified cosme
 * *Spirit guardians:* The spirits appear as grotesque aberrations of the DM’s choice.
 * *Wall of stone:* A wall created by the spell resembles warped, living flesh, with appendages, eyes, and mouths strewn haphazardly across the surface.
 
-
 #### Far Realm Rifts (Optional Rule)
 
 Because the area has been touched by the Far Realm, some rare rifts still open once in a while which lets aberrations come through to the material plane. This makes the Split Tooth Mountain fairly dangerous since no one can really tell when and where this can happen. Although aberrations can definitely be encountered in the Split Tooth Mountain, there may be other types of creatures lurking around the area. These rifts are unstable and sporadic in appearance and longevity. Contact with one of these rifts can have dangerous and perhaps irreversible consequences for those unfortunate or foolish enough to contact it. If a creature’s space overlaps with the area of a Rift to the Far Realm, the creature must make a DC 17 Dexterity saving throw or come into contact with the rift. If a creature comes into contact with a Rift to the Far Realm, roll a d4 and use the table titled "Rifts to the Far Realm."
-
 
 ##### Loss of a Body Part
 
@@ -182,11 +181,7 @@ For DMs wanting to learn more about the Far Realm and add their own effects or m
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
-> ##### Image Credits
+##### Image Credits
 
-* [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
-* [Dreamland by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/lKLok)
-* [Sail Away by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qxa4a)
-* [Dark Land by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qAob5n)
-* [Nightmare by MIKAIL IL](https://mikail.artstation.com/store/art_posters/lbPR/nightmare)
+* [Bone Spire by logan-feliciano](https://cdnb.artstation.com/p/assets/images/images/021/394/125/4k/logan-feliciano-bonespire-002s.jpg?1571510286)
 
