@@ -181,8 +181,6 @@ A creature with the **Node Spellcasting** Supernatural Gift that is aware of a g
 
 On a success, the creature can cast the associated spells from the earth node using any spell slots of the appropriate level they have and using their spellcasting ability to do so; the creature can cast these spells in this way for the next 24 hours while they remain within the area of the earth node. On a failure, the creature is unable to cast these additional spells this way and cannot attempt to gain access to these spells again until 24 hours pass. The table below shows some typical spells that an earth node may grant as an example, though each individual earth node grants its own individual spells as determined by the DM.
 
-
-
 ***Sample Earth Node Spells***
 
 <table style="text-align:center;" border=1>
@@ -511,7 +509,7 @@ You have learned to attune your senses and magical powers to the magic of nodes:
 
 <tr><th>Node Spellcasting and Monsters</th></tr>
 
-<tr><td>The **Node Spellcasting** Supernatural Gift is intended for player characters, but certain powerful or notable spellcasting monsters may also be able to harness nodes as described in the Supernatural Gift. 
+<tr><td>The \*\*Node Spellcasting\*\* Supernatural Gift is intended for player characters, but certain powerful or notable spellcasting monsters may also be able to harness nodes as described in the Supernatural Gift. 
 
 Any DM may give such monsters the benefits of the **Node Spellcasting** Supernatural Gift in order to use the full power of a node as part of an adventure. Such monsters should have proficiency or expertise in the Arcana skill. Monsters that don't have spell slots but have the Innate Spellcasting trait can still benefit from the **Node Spellcasting** Supernatural Gift in accessing the granted spells associated with a node. 
 
@@ -532,3 +530,47 @@ You have learned to attune your senses and psionic powers to the magic of nodes:
 * **Modifying Earth Nodes.** You have a greater ability in helping to redirect the flow of energy of a node when supervising any project that involves modifying the area around a node and are able to make Intelligence (Arcana) checks to do so. 
 
 ![](/Guides/assets/images/acidify-art-deviant.jpg)
+
+<br>
+
+## Sources and Additional Reading
+
+The content contained in this document is adapted from the following source material listed below.
+
+**Dungeons and Dragons, 3.5 Edition**<br>- Campbell, Brian, et al. \*Ravenloft Dungeon Master's Guide.\* Arthaus, 2003. pp. 86 - 102.<br>- Cordell, Bruce, et al. \*Underdark.\* Wizards of the Coast, 2003. pp. 49 - 52.<br>- Crook, Jeff, et al. \*Champions of Ruin.\* Wizards of the Coast, 2005. pp. 95 - 98.
+
+**Dungeons and Dragons, 4th Edition**<br>- Cordell, Bruce, et al. \*Forgotten Realms Campaign Guide.\* Wizards of the Coast, 2008. pp. 51 - 52.<br>- Anderson, Dan and Lori Anderson. "Liberation." \*Living Forgotten Realms.\* Wizards of the Coast, 2013. 
+
+**Dungeons and Dragons, 5th Edition** <br>- Baker, Richard, et al. \*Princes of the Apocalypse.\* Wizards of the Coast, 2015. 
+
+<br>
+
+## Earth Nodes At a Glance
+
+The following summarizes information regarding the powers and properties of earth nodes. It serves as a "cheat sheet" and reference for players and DMs. For full details, refer to the section and page in this document corresponding to the entries below. For information regarding the modification or creation of nodes, refer to the corresponding sections of this document in detail. 
+
+	
+
+\- \*\*\*Features of Earth Nodes (pg. 3).\*\*\* Earth nodes are nexuses of magical energy that often dwell underground, though their power can extend partly or fully into the surface. 
+
+\- \*\*\*Properties of Earth Nodes (pg. 3).\*\*\* Earth nodes come in classes from 1 - 9; the higher the class rating, the larger and stronger the earth node. Weaker earth nodes are more common than stronger earth nodes, with most earth nodes falling between class 1 to 5. Earth nodes of class 2 or higher consist of nested circular layers, with each layer having its own class layer. The innermost layer has the highest rating, equal to the class rating of the earth node as a whole, with each layer beyond it having a class rating of one less than the layer before it. 
+
+\- \*\*\*Sensing Earth Nodes (pg. 3).\*\*\* Creatures that approach within 30 feet of an earth node can detect it with passive or active DC 15 spellcasting ability check or an Intelligence check if they aren't spellcasters. Those with the \*\*Node Spellcasting\*\* Supernatural Gift can make an Arcana check. The \*detect magic\* and \*commune with nature\* spells automatically detect an earth node in range. Fully mapping an earth node's boundaries and layers takes time depending on the earth node's size.
+
+\- \*\*\*Powers of Earth Nodes: Studying Earth Nodes (pg. 4).\*\*\* Creatures can spend a short rest within an earth node and make an Intelligence (Arcana) check against the node DC of the earth node to learn its pattern of magical energy as if learning the sigil sequence of a teleportation circle, becoming \*\*proficient\*\* in their understanding of that earth node. A creature with the \*\*Node Spellcasting\*\* Supernatural Gift and that is \*\*proficient\*\* in their understanding of an earth node can gain \*\*expertise\*\* by making an Arcana check with their spellcasting ability against the node DC of the earth node at the end of each workweek until the number of total successes equals the earth node's class rating. (Each failure deducts 1 success, but the total can't go below 0) 
+
+\- \*\*\*Powers of Earth Nodes: Enhanced Spellcasting (pg. 4).\*\*\* Creatures can enhance spells while in the area of an earth node by succeeding on a spellcasting ability check (or an Intelligence check if they aren't spellcasters) against the node DC of the earth node layer they are in to increase the spell level their spells are cast at. This can be attempted against the node DC as if in a layer of a lower class rating for an easier check but less benefit. Those with the \*\*Node Spellcasting\*\* Supernatural Gift can make an Arcana check. Mystics instead can gain a pool of psi points with an action they can do 1/day as if they had used their Psionic Mastery (doesn't count against the normal uses of the feature), with mystics with the \*\*Node Manifestation\*\* Supernatural Gift are able to take this action 2/day. (An earth node grants this benefit to a number of mystics per day up to its class rating)
+
+\- \*\*\*Powers of Earth Nodes: Teleporting to a Known Earth Node (pg. 4).\*\*\* Creatures that are \*\*proficient\*\* with an earth node can use \*teleportation circle\* or similar magic to teleport to that earth node.
+
+\- \*\*\*Powers of Earth Nodes: Teleporting to Other Earth Nodes (pg. 4).\*\*\* A creature that is \*\*proficient\*\* with an earth node can use the \*teleportation circle\* to create a \*teleportation circle\* portal to a specific or random earth node within a certain range.
+
+\- \*\*\*Powers of Earth Nodes: Portals to Other Locations (Restricted, pg. 5)\*\*\* A creature with the \*\*Node Spellcasting\*\* Supernatural Gift and that has \*\*expertise\*\* with an earth node can, while in the earth node's area, use spells like \*teleportation circle\*, or \*teleport\* to create two-way portals to other locations on the same plane of existence within a certain range.
+
+\- \*\*\*Powers of Earth Nodes: Portals to Other Planes of Existence (pg. 5).\*\*\* A creature that is \*\*proficient\*\* with an earth node learns what plane of existence beyond the Material Plane, if any, it is linked to. The creature can use spells or magic like \*gate\* or \*plane shift\* to open a two-way portal to that plane, with portals behaving similar to portals to other locations. Plane shift cast in this way doesn't require material components. 
+
+\- \*\*\*Powers of Earth Nodes: Granted Spells (Restricted, pg. 5).\*\*\* A creature with the \*\*Node Spellcasting\*\* Supernatural Gift can spend a short rest within an earth node and make an Arcana check with their spellcasting ability against the node DC of the earth node to gain the ability to cast a number of spells using their spell slots for the next 24 hours. On a failure, nothing happens and they can't attempt this again until 24 hours later. A mystic with the \*\*Node Manifestation\*\* Supernatural Gift makes an Intelligence (Arcana) check instead and can cast up to 5th-level granted spells without any components by using psi points.
+
+\- \*\*\*Powers of Earth Nodes: Storing Items (Restricted, pg. 6).\*\*\* All functions associated with this power can only be used by creatures with the \*\*Node Spellcasting\*\* or \*\*Node Manifestation\*\* Supernatural Gift. Objects can be stored in an earth node up to its storage capacity, and creatures that have studied an earth node's pattern of magcal energy can use an action to learn how much volume is being used up at that time. (The specific contents aren't learned, except for objects the creatures had previously stored themselves) Creatures can store objects in an earth node by making an Arcana check using their spellcasting ability (Intelligence in the case of mystics) against the node DC of the earth node to do so, causing the object to go into an extradimensional space. On a failure, nothing happens and the creature can't attempt to store that object again for 24 hours. Creatures can retrieve objects they've stored in an earth node from within the area of any earth node on the same plane of existence by using an action to make an Arcana check using their spellcasting ability (Intelligence in the case of mystics) against the node DC of the original earth node. Creatures can attempt to retrieve a random stored object they hadn't stored while in an earth node by making an Arcana check using their spellcasting ability (Intelligence in the case of mystics) against the node DC of the earth node + the proficiency bonus of the creature who originally stored it.
+
+\- \*\*\*Powers of Earth Nodes: Locking Nodes (Restricted, pg. 6).\*\*\* After a creature with the \*\*Node Spellcasting\*\* Supernatural Gift has gained \*\*expertise\*\* with an earth node, the creature can use the \*arcane lock\* spell while in the earth node's area to magically secure it: the effective node DC of the earth node by 10 for other creatures that interact with the earth node. Other creatures can be designated at the time of casting to be able to normally interact with the earth node. Removing a node lock requires a \*dispel magic\* spell in the area targeting the magical effect, treated as if attempting to dispel a spell of a spell level equal to the earth node's class rating.
