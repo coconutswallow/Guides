@@ -47,11 +47,10 @@ In addition to the strange environment, confusing pathways and dangerous caves, 
 
 Depending on how deep one ventures inside the Split Tooth Mountain, the environment is warped in various ways:
 
-Regions of the affected area are overcome with strange, twisted growths. The colors of the landscape are overly saturated.
+Regions of the affected area are overcome with strange, twisted growths. The colors of the landscape are overly saturated.  The landscape is painted with unusual and vivid colors, the grass turns to blue, the tree stumps are dark red. The plants in the area have begun to warp, some have grown eyes, tentacles, mouth, teeth, and some even ooze strange mucus that is poisonous. Anyone touching the mucus with their bare skin must make a DC 13 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
-The landscape is painted with unusual and vivid colors, the grass turns to blue, the tree stumps are dark red. The plants in the area have begun to warp, some have grown eyes, tentacles, mouth, teeth, and some even ooze strange mucus that is poisonous. Anyone touching the mucus with their bare skin must make a DC 13 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
-
-The landscape is utterly alien, the usual terrain, trees and plants have melted with one another, from those ooze a strange mucus. Anyone touching the mucus with their bare skin must make a DC 15 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
+The landscape is utterly alien, the usual terrain, trees and plants have melted with one another, from those ooze a strange mucus. Anyone touching the mucus with their bare
+skin must make a DC 15 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
 #### Absolute Territory
 
@@ -61,7 +60,6 @@ For the purpose of spells or effects whose results change across or are blocked 
 
 This area is magically sealed off from other locations throughout the world and throughout the planes. No spell or effect—not even *wish*—allows creatures or objects to magically transport into, within, or out from the area. *Astral projection, teleport, plane shift,* and similar spells or effects that are for purpose of entering, leaving, or travelling within the area simply fail, as do effects that dismiss or banish a creature or object to another plane of existence or summon a creature or object from another location or plane of existence, as well as the portals created by *arcane gate,* *demiplane,* *gate,* or other similar spells or effects. Summoned creatures brought into the area no longer return to their native plane if the associated spell or effect that summoned the creature expires while the creature is within the affected area; the summoned creature remains on the plane but is no longer under the caster’s control. Aberrations are immune to this effect.
 
-
 #### Wild Magic (Optional)
 
 While in the area affected by Eldritch Veil, when a creature casts a spell of 1st-level or higher, the DM may choose to roll a 1d20, rolling with advantage if the spell is a conjuration or divination spell. On a 20 on the roll, the creature must roll on the Wild Magic Surge table (see the *Player’s Handbook,* page 104). This effect applies to magic items and artifacts that have properties that allow one to cast spells from it. Aberrations can choose to ignore this effect.
@@ -70,45 +68,28 @@ While in the area affected by Eldritch Veil, when a creature casts a spell of 1s
 
 At the DM’s discretion, spells and other magical effects can be modified cosmetically to enhance the strange and eldritch atmosphere. Here are some examples:
 
-*Alarm:* Instead of hearing a mental ping when the alarm is triggered, the caster hears a scream.<br><br>
-*Bigby's hand:* The conjured hand appears to a wriggling swarm of tentacles in the shape of a hand.<br><br>
-*Find the path:* A spirit in the form of a warped aberration of the DM's choice appears and guides the caster to the desired location. The spirit can't be harmed and doesn't speak.<br><br>
-*Fog cloud:* The cloud takes the form of an eerie, obscuring starscape.<br><br>
-*Gust of wind:* A ghastly moan accompanies the summoned wind.<br><br>
-*Mage hand:* The summoned hand resembles an ectoplasmic appendage.<br><br>
-*Phantom steed:* The steed resembles a neogi.<br><br>
-*Rary's telepathic bond:* Characters linked together by the spell can't shake the feeling that something vile is telepathically eavesdropping on them.<br><br>
-*Revivify:* A creature restored to life by a revivify spell screams upon regaining consciousness, as though waking from some horrible nightmare.<br><br>
-*Spirit guardians:* The spirits appear as grotesque aberrations of the DM’s choice.<br><br>
+*Alarm:* Instead of hearing a mental ping when the alarm is triggered, the caster hears a scream.
+
+*Bigby's hand:* The conjured hand appears to a wriggling swarm of tentacles in the shape of a hand.
+
+*Find the path:* A spirit in the form of a warped aberration of the DM's choice appears and guides the caster to the desired location. The spirit can't be harmed and doesn't speak.
+
+*Fog cloud:* The cloud takes the form of an eerie, obscuring starscape.
+
+*Gust of wind:* A ghastly moan accompanies the summoned wind.
+
+*Mage hand:* The summoned hand resembles an ectoplasmic appendage.
+
+*Phantom steed:* The steed resembles a neogi.
+
+*Rary's telepathic bond:* Characters linked together by the spell can't shake the feeling that something vile is telepathically eavesdropping on them.
+
+*Revivify:* A creature restored to life by a revivify spell screams upon regaining consciousness, as though waking from some horrible nightmare.
+
+*Spirit guardians:* The spirits appear as grotesque aberrations of the DM’s choice.
+
 *Wall of stone:* A wall created by the spell resembles warped, living flesh, with appendages, eyes, and mouths strewn haphazardly across the surface.
 
-#### Absolute Territory
-For the purpose of spells or effects whose results change across or are blocked by planar boundaries (such as *sending*), this area is considered its own plane. These restrictions apply to magic items and artifacts that have properties that transport, banish, or summon creatures to or from other locations or planes or that have properties to create portals to other locations or planes of existence.
-
-<br>
-#### No Escape
-This area is magically sealed off from other locations throughout the world and throughout the planes. No spell or effect—not even *wish*—allows creatures or objects to magically transport into, within, or out from the area. *Astral projection, teleport, plane shift,* and similar spells or effects that are for purpose of entering, leaving, or travelling within the area simply fail, as do effects that dismiss or banish a creature or object to another plane of existence or summon a creature or object from another location or plane of existence, as well as the portals created by *arcane gate,* *demiplane,* *gate,* or other similar spells or effects. Summoned creatures brought into the area no longer return to their native plane if the associated spell or effect that summoned the creature expires while the creature is within the affected area; the summoned creature remains on the plane but is no longer under the caster’s control. Aberrations are immune to this effect.
-
-
-#### Wild Magic (Optional)
-
-While in the area affected by Eldritch Veil, when a creature casts a spell of 1st-level or higher, the DM may choose to roll a 1d20, rolling with advantage if the spell is a conjuration or divination spell. On a 20 on the roll, the creature must roll on the Wild Magic Surge table (see the *Player’s Handbook,* page 104). This effect applies to magic items and artifacts that have properties that allow one to cast spells from it. Aberrations can choose to ignore this effect.
-
-#### Cosmetic Alterations to Magic (Optional)
-
-At the DM’s discretion, spells and other magical effects can be modified cosmetically to enhance the strange and eldritch atmosphere. Here are some examples:
-
-*Alarm:* Instead of hearing a mental ping when the alarm is triggered, the caster hears a scream.<br><br>
-*Bigby's hand:* The conjured hand appears to a wriggling swarm of tentacles in the shape of a hand.<br><br>
-*Find the path:* A spirit in the form of a warped aberration of the DM's choice appears and guides the caster to the desired location. The spirit can't be harmed and doesn't speak.<br><br>
-*Fog cloud:* The cloud takes the form of an eerie, obscuring starscape.<br><br>
-*Gust of wind:* A ghastly moan accompanies the summoned wind.<br><br>
-*Mage hand:* The summoned hand resembles an ectoplasmic appendage.<br><br>
-*Phantom steed:* The steed resembles a neogi.<br><br>
-*Rary's telepathic bond:* Characters linked together by the spell can't shake the feeling that something vile is telepathically eavesdropping on them.<br><br>
-*Revivify:* A creature restored to life by a revivify spell screams upon regaining consciousness, as though waking from some horrible nightmare.<br><br>
-*Spirit guardians:* The spirits appear as grotesque aberrations of the DM’s choice.<br><br>
-*Wall of stone:* A wall created by the spell resembles warped, living flesh, with appendages, eyes, and mouths strewn haphazardly across the surface.
 
 #### Far Realm Rifts (Optional Rule)
 
@@ -116,15 +97,15 @@ Because the area has been touched by the Far Realm, some rare rifts still open o
 
 
 ##### Loss of a Body Part
+
 | d10 | Effect |
 |:----:|:-------------|
 | 1-5  | **Arm.** The creature loses an arm of the DM’s choice. The creature can no longer hold anything in two hands and can hold only a single object at a time.  |
 | 6-9  | **Leg.** The creature loses a leg of the DM’s choice. The creature’s walking speed is halved, and the creature must use a cane or crutch to move unless the creature has a peg leg or other prosthesis. The creature falls prone after taking the Dash action. The creature has disadvantage on Dexterity ability checks made to balance.|
 | 10 | **Head.** The creature loses its head. The creature dies if it cannot survive without its head. A creature is immune to this effect if it doesn’t have or need a head, has legendary actions, or if the DM decides it is too big for its head to be destroyed in this way. Such a creature instead takes an additional 6d10 force damage. |
 
-<div style='margin-top:400px'></div>
-
 ##### Rifts to the Far Realm
+
 | d4 | Effect |
 |:----:|:-------------|
 | 1  | The creature must make a DC 17 Charisma saving throw. On a success, the creature takes 6d10 force damage and is hurled 1d6 x 10 feet away from the Rift in a random direction. On a failure, the creature is forcibly pulled through the Rift into the Far Realm. The process is not clean and there is a 50% chance that the creature dies in the process of being pulled through. In this case, enough residue of the victim remains behind to serve as the basis of a *reincarnate* spell or similar magic.
@@ -136,24 +117,23 @@ Because the area has been touched by the Far Realm, some rare rifts still open o
 
 Random cerebrotic blots linked to the Far Realm can be encountered and explored throughout the affected area. Cerebrotic blots are areas where the Far Realm overlaps with reality. They are comprised of two regions: the periphery and the marrow, with the core consisting of a persisting Rift to the Far Realm.
 
-<br>**Cerebrotic Periphery** <br>
-<div class='descriptive'>
+**Cerebrotic Periphery**
   
-  ''The first time, I didn't realize what it was before it was too late. You can't see it at first sight. It's not immediately distinct from normal reality; instead a subtle influence pervades the area, overlaying it with an unnerving sense of dread.''
+>  * "The first time, I didn't realize what it was before it was too late. You can't see it at first sight. It's not immediately distinct from normal reality; instead a subtle influence pervades the area, overlaying it with an unnerving sense of dread." *
   
-*The periphery’s shape is not necessarily a symmetrical circle enclosing a smaller marrow, but may be made of river-like swathes or even be discontinuous. Peripheries can enclose areas miles wide, can be completely or partially above or underground, and expand or contract unpredictably in accord with unknowable tides.* 
+The periphery’s shape is not necessarily a symmetrical circle enclosing a smaller marrow, but may be made of river-like swathes or even be discontinuous. Peripheries can enclose areas miles wide, can be completely or partially above or underground, and expand or contract unpredictably in accord with unknowable tides.
 
 The periphery of a cerebrotic blot is not immediately noticeable. The first sign is the unshakable sense of dread one feels upon walking inside its area. As one gets closer to the marrow, the landscape becomes increasingly warped as per *Warped Landscape* as described throughout the stages. The boundaries of a cerebrotic blot can be ascertained with a successful DC 15 Wisdom (Perception) check made over the course of an hour. Despite a periphery’s discontinuous nature, a periphery always possesses one or more “foci” that anchors the periphery and also allows access to the marrow of the cerebrotic blot.  While the periphery of a cerebrotic blot exists “in phase” with reality as normally experienced, the marrow of a cerebrotic blot is “out of phase” and cannot be accessed by simply walking through the periphery towards its “center” as conventional reason would dictate. Instead, access to the marrow of a cerebrotic blot is restricted to a few chokepoints throughout the periphery in a region. 
 
 Foci can take any number of forms, from strange phosphorescent growths, freestanding archs of crystal, or more.  To the traveler, it seems the path inward is continuous while to observers they appear to fade to translucence before disappearing entirely. 
 
 The environmental effect in the *Cerebrotic Periphery* is as follows:
+
 - A field of corruption pervades each cerebrotic periphery, invisible to the naked eye or to magical or psionic perception. Creatures who succeed on a DC 10 Wisdom (Insight) check however can feel an indefinable sense of “wrongness” while within the periphery of a cerebrotic blot.  
 
 **Cerebrotic Marrow**
 
 Once a creature uses the focus to cross from the periphery to the marrow, the hidden awfulness of the blot becomes apparent. The nature of the marrow reflects the lawless and unpredictable nature of the Far Realm itself, with anything from warped landscapes to terrifying dungeons possible to encounter within. The sky above can shift and warp, raining down amoebic rain, the ground can shake, and creatures of nightmare are prevalent. 
-
 
 Typical marrow can be as much as 20 miles square in size, with foci scattered about allowing passage from the marrow back to the periphery and vice versa. The environmental effect in the *Cerebrotic Marrow* is as follows:
 
@@ -161,29 +141,7 @@ Typical marrow can be as much as 20 miles square in size, with foci scattered ab
 
 *Cerebriotic Core.* At the center of the marrow lies a persisting Rift to the Far Realm, which itself can take any number of nightmarish forms, such as black voids or portals with tentacles sprouting from within.
 
-##### Additional Reading 
-
-For DMs wanting to learn more about the Far Realm and add their own effects or monsters to the location, we recommend reading the following material for inspiration.
-  
-**Advanced D&D 2nd Edition**
-  
-- Cordell, Bruce. *Gates of Firestorm Peak*. TSR, 1996.
-
-**D&D 3rd edition**
-- Baker, Richard, et al. *Lords of Madness.* Wizards of the Coast, 2005.
-- Cordell, Bruce, et al. *Manual of the Planes.* Wizards of the Coast, 2001. pp. 211 - 213.
-- Cordell, Bruce. "Enter the Far Realm." *Dragon* 330. Paizo, April 2005. pp. 21 - 40.
-- Jacobs, James. "The Ecology of the Kaorti." *Dragon* 358. Paizo, August 2007. pp. 58 - 63.
-
-**D&D 4th edition**
-- Baker, Richard, et al. *Manual of the Planes*. Wizards of the Coast, 2008. p. 30.
-- Schwalb, Robert. *Book of Vile Darkness*. Wizards of the Coast, 2011.
-- Shea, Michael E. "Far Realm Fiends." *Dungeon* 201. Wizards of the Coast, April 2012. pp. 1 - 5.
-
-**D&D 5th Edition**
-- Crawford, Jeremy, et al. *Dungeon Master's Guide.* Wizards of the Coast, 2014. p. 68.erior of the cerebrotic marrow of a cerebrotic blot is as chaotic and unpredictable as the Far Realm, ranging from warped landscapes of grotesque flora to crystalline dungeons to more can possibly be encountered. The interior of the cerebrotic marrow can take virtually any form.
-
-*Cerebriotic Core.* At the center of the marrow lies a persisting Rift to the Far Realm, which itself can take any number of nightmarish forms, such as black voids or portals with tentacles sprouting from within.
+![Cerebrotic Periphery](https://i.imgur.com/zbWkxLJ.png)
 
 ### Minor Properties
 
