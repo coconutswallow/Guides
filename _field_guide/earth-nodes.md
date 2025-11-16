@@ -413,13 +413,45 @@ Using holy water or the *hallow* spell to purify desecrated ground may suppress 
 
 ![](/Guides/assets/images/acidify-art-deviantfixed.jpg)
 
+**Creating Evil Nodes** <br>Just as acts of singular goodness can damage or destroy evil nodes, acts of prime or ultimate evil can help to create one. As evil nodes are tied to forces of evil that often result from the wicked choices of creatures, the question of whether or not an evil node arose naturally or inadvertently generally comes down to intent. Often, an evil node is created as a natural course of events owing to a concentration of evil energy that results from particularly wicked acts, shrines to dark deities and other entities, or due to the lingering presence of a particularly evil creature. However, certain foul and profane rituals are known to exist by which an evil node can be intentionally created, themselves often involving acts of horrific evil and sacrifice as a means by which to stain the landscape with a concentration of evil energy so as to create an evil node.
 
+**Evil Nodes and Ravenloft** <br>In the Domains of Dread in Ravenloft, sites of powerful and insidious evil can create what are known as **sinkholes of evil**. Similar to evil nodes, sinkholes of evil are areas especially tainted by acts of evil, which are pronounced owing to the morphic nature of the Shadowfell and the influence of the Dark Powers.
 
+Sinkholes of evil can be of any size and have a number of different effects. Particularly powerful and evil creatures in the Domains of Dread, such as a darklord, may continually generate their own sinkholes of evil as an aura around them.
 
+Sinkholes of evil are desecrated areas which are difficult to impossible to purify by typical means. Whenever a non-evil creature enters the area of a sinkhole of evil for the first time in 24 hours, the creature must make a Wisdom saving throw or suffer from Shadowfell Despair (see Chapter 2 of the *Dungeon Master's Guide*). The DC of the saving throw depends on strength of the sinkhole, as determined by the DM. While a non-evil creature remains within a sinkhole of evil, they have disadvantage on saving throws made to avoid being frightened or suffering from madness. 
 
+A DM may wish to treat some sinkholes of evil in Ravenloft as evil nodes in their own right. In addition to the properties described before, undead in the region of such an evil node gain a bonus to their saving throws against being turned, equal to the class rating of the evil node. The DC for the Wisdom saving throw against Shadowfell Despair is equal to 10 + the class rating of the evil node. 
 
+<br>
 
+### Shadow Nodes
 
+A shadow node in the Material Plane is a lasting nexus of magical energy tied to the Shadowfell, in which the Plane of Shadow touches upon and connects to the Material Plane.  Shadow nodes can be found in areas removed from the sun and light, such as dark catacombs, dread caverns, or forgotten tombs. Some rare shadow nodes may exist exposed to the sky but continually shroud themselves in a miasma of darkness, obscuring the light of the sun to anything within.
+
+Shadow nodes are suffused with the energies of the Shadowfell, with the Plane of Shadow "bleeding" into the region of the Material Plane where the shadow node is located. 
+
+A permanent shadow crossing exists as a portal at the origin of a shadow node. The area surrounding a shadow node takes on qualities of the Shadowfell itself, with light sources dampened, magic in the area altered, and creatures hailing from the Shadowfell lurking through the area.
+
+Some organizations and entities seek out shadow nodes as means by which to travel to and from the Shadowfell. Others incorporate them into lairs or shrines dedicated to deities of darkness and shadow, such as Mask, Shar, or the Raven Queen. It is rumored that some shadar-kai agents of the Raven Queen know of and maintain artificially created shadow nodes as a means by which to allow travel between the Material Plane and the Shadowfell. 
+
+The properties and powers of shadow nodes function the same as earth nodes except as specified below.
+
+**Dark Nature** <br>The area of a shadow node reflects the nature of the Shadowfell, with corresponding effects on the environment, magic, and the creatures within. Light struggles to shine, darkness is pervasive and overwhelming, and creatures in the area are susceptible to Shadowfell Despair. Sorrowsworn and other creatures of the Shadowfell can be commonly found in the area within and surrounding a shadow node. The specifics of how a shadow node affects the region it is within is determined by the DM. 
+
+**Dampened Light** <br>All light sources in the area of a shadow node, including magical light, emit half the amount of light they normally do and last half as long. Additionally, anyone in the area of a layer of a shadow node attempting to cast a spell which produces light must make an ability check using their spellcasting ability in order to successfully cast the spell, with the DC of the ability check equal to 10 + the class rating of the shadow node layer. (A creature without a spellcasting ability instead makes an Intelligence check) On a failure, the slot is wasted and the spell fails.  
+
+**Enhanced Spellcasting** <br>Illusion and necromancy spells as well as spells which can create areas of magical darkness or whose type corresponds to the Shadowfell (as determined by the DM) are easier to enhance with the node's magic, with the DC of the ability check equal to the node DC - 5. However, it is impossible to enhance spells which produce light with the node's magic. For example, a *shadow blade* spell is easier to enhance with a shadow node's magic, but a *wall of light* spell cannot be so enhanced. 
+
+**Teleporting to Other Nodes** <br>The portal created is linked to the nearest shadow node that is within the portal's range. 
+
+**Portals to Other Locations** <br>When creating a portal to another location, one can also choose to have the portal lead to the corresponding location in the Shadowfell, not the location on the Material Plane within the portal's range. 
+
+**Portals to Other Planes of Existence** <br>Given the nature of shadow nodes, shadow nodes contain a free-standing portal that leads to and from the Shadowfell as a permanent shadow crossing. 
+
+These portals last indefinitely but otherwise behave similarly to and have properties as described before regarding portals to other planes of existence in relation to earth nodes.
+
+**Granted Spells** <br>The granted spells provided by a shadow node reflect the nature of the Shadowfell, often consisting of illusion or necromancy spells or spells which can create areas of magical darkness. A shadow node never grants spells which act to produce light. See the table below for a list of sample granted spells associated with a shadow node.
 
 #### *Sample Shadow Node Spells*
 
@@ -473,4 +505,30 @@ You have learned to attune your senses and magical powers to the magic of nodes:
 * **Granted Spells.** You can spend a short rest bringing yourself in tune with the magical energy of a node and, at the end of the short rest, make an Arcana check using your spellcasting ability against the node DC of the node to access the node's granted spells for the next 24 hours. You can cast these spells using any spell slots of the appropriate level you have and using your spellcasting ability to do so.
 * **Storing Items.** You can store and retrieve items within the extradimensional space of a node, making Arcana checks using your spellcasting ability to do so. 
 * **Locking Nodes.** After studying a node, you can use \*arcane lock\* to magically secure against its use by others. 
-* **Modifying Earth Nodes.** You have a greater ability in helping to redirect the flow of energy of a node when supervising any project that involves modifying the area around a node and are able to make Arcana checks using your spellcasting ability to do so.
+* **Modifying Earth Nodes.** You have a greater ability in helping to redirect the flow of energy of a node when supervising any project that involves modifying the area around a node and are able to make Arcana checks using your spellcasting ability to do so. 
+
+<table border=1>
+
+<tr><th>Node Spellcasting and Monsters</th></tr>
+
+<tr><td>The **Node Spellcasting** Supernatural Gift is intended for player characters, but certain powerful or notable spellcasting monsters may also be able to harness nodes as described in the Supernatural Gift. 
+
+Any DM may give such monsters the benefits of the **Node Spellcasting** Supernatural Gift in order to use the full power of a node as part of an adventure. Such monsters should have proficiency or expertise in the Arcana skill. Monsters that don't have spell slots but have the Innate Spellcasting trait can still benefit from the **Node Spellcasting** Supernatural Gift in accessing the granted spells associated with a node. 
+
+The monster can access the granted spells of a node, of spell level no greater than half the monster's Challenge Rating, rounded up. These spells are added to the list of spells in the monster's Innate Spellcasting trait and can be cast innately once per day using the monster's innate spellcasting ability. 
+
+For example, a **dao** (CR 11) with the **Node Spellcasting** Supernatural Gift can access an earth node's granted spells up to 6th level as innate spells and using Charisma as its spellcasting ability.</td></tr></table>
+
+### Node Manifestation
+
+**Supernatural Gift, T2 (can only be used by a mystic)**
+
+You have learned to attune your senses and psionic powers to the magic of nodes: nexuses of magical energy that exist throughout the world. You have gained a heightened sense and ability to utilize nodes, granting you access to various powers associated with nodes. While this Supernatural Gift is active, you gain the following benefits with respect to earth nodes and other nodes, as well as any other benefit that requires this Supernatural Gift in order to use. (For details on the powers associated with nodes, see [Earth Nodes](https://homebrewery.naturalcrit.com/share/20Ba8her1M4d) and its corresponding sections)
+
+* **Sensing Earth Nodes.** When attempting to sense a node within 30 feet of you, you can make a DC 15 Intelligence (Arcana) check to do so.
+* **Enhanced Spellcasting.** You can take the action to draw on a node's Psionic Mastery psi point pool twice per 24-hour period instead of once.
+* **Granted Spells.** You can spend a short rest bringing yourself in tune with the magical energy of a node and, at the end of the short rest, make an Intelligence (Arcana) against the node DC of the node to access the node's granted spells for the next 24 hours. You can cast these spells without using any components by expending psi points up to your psi limit, with Intelligence as your spellcasting ability. You can benefit from a node's Enhanced Spellcasting from any spells you cast in this way, making Intelligence (Arcana) checks to do so. 
+* **Storing Items.** You can store and retrieve items within the extradimensional space of a node, making Intelligence (Arcana) checks to do so. 
+* **Modifying Earth Nodes.** You have a greater ability in helping to redirect the flow of energy of a node when supervising any project that involves modifying the area around a node and are able to make Intelligence (Arcana) checks to do so. 
+
+![](/Guides/assets/images/acidify-art-deviant.jpg)
