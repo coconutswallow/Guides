@@ -73,6 +73,9 @@ Sultan Rezzo is a noble marid (see statblock on the following page) who reigns i
 ### Sultan Rezzo's Palace
 Sultan Rezzo's palace is a grandiose building covered in coral and algae. It is filled with wonders and sensory delights that goes beyond one's wildest dreams. This opulent palace floats in a deep part of the Plane of Water and contains many luxurious chambers and rooms filled with air for his guests or slaves.
 
+[Sultan Rezzo's Statblock]({{ '/monster-compendium/sultan-rezzo/' | relative_url }})
+
+
 ### Roleplaying Sultan Rezzo
 Rezzo is a Marid who sees himself as a superior being and expects to be treated as such. He wears fine and colorful clothes that resemble outfits usually seen in the Calimshan region.
 
@@ -97,6 +100,7 @@ Rezzo has a great sense of self-importance, and considers himself, as well as ot
 If a DM wishes to add an extra minor property to one of the items obtained in the Elemental Plane of Water, or have their origins in the Elemental Plane of Water, it is possible to select a property from the list. The items must follow the guidelines for minor properties in the Hawthorne DM Guidelines.
 
 ##### Plane of Water Minor Properties Table
+
 | d10 | Minor Property |
 |:----:|:-------------|
 | 1  | ***Aqua Affinity.*** While holding this item you can hold your breath for twice as long while underwater.  |
