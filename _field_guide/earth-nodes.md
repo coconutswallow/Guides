@@ -551,7 +551,7 @@ The following summarizes information regarding the powers and properties of eart
 
 * **Features of Earth Nodes (pg. 3)** <br>Earth nodes are nexuses of magical energy that often dwell underground, though their power can extend partly or fully into the surface. 
 * **Properties of Earth Nodes (pg. 3)** <br>Earth nodes come in classes from 1 - 9; the higher the class rating, the larger and stronger the earth node. Weaker earth nodes are more common than stronger earth nodes, with most earth nodes falling between class 1 to 5. Earth nodes of class 2 or higher consist of nested circular layers, with each layer having its own class layer. The innermost layer has the highest rating, equal to the class rating of the earth node as a whole, with each layer beyond it having a class rating of one less than the layer before it. 
-* **Sensing Earth Nodes (pg. 3)** <br>Creatures that approach within 30 feet of an earth node can detect it with passive or active DC 15 spellcasting ability check or an Intelligence check if they aren't spellcasters. Those with the \*\*Node Spellcasting\*\* Supernatural Gift can make an Arcana check. The \*detect magic\* and \*commune with nature\* spells automatically detect an earth node in range. Fully mapping an earth node's boundaries and layers takes time depending on the earth node's size.
+* **Sensing Earth Nodes (pg. 3)** <br>Creatures that approach within 30 feet of an earth node can detect it with passive or active DC 15 spellcasting ability check or an Intelligence check if they aren't spellcasters. Those with the **Node Spellcasting** Supernatural Gift can make an Arcana check. The *detect magic* and *commune with nature* spells automatically detect an earth node in range. Fully mapping an earth node's boundaries and layers takes time depending on the earth node's size.
 * **Powers of Earth Nodes: Studying Earth Nodes (pg. 4)** <br>Creatures can spend a short rest within an earth node and make an Intelligence (Arcana) check against the node DC of the earth node to learn its pattern of magical energy as if learning the sigil sequence of a teleportation circle, becoming **proficient** in their understanding of that earth node. A creature with the **Node Spellcasting** Supernatural Gift and that is **proficient** in their understanding of an earth node can gain **expertise** by making an Arcana check with their spellcasting ability against the node DC of the earth node at the end of each workweek until the number of total successes equals the earth node's class rating. (Each failure deducts 1 success, but the total can't go below 0) 
 * **Powers of Earth Nodes: Enhanced Spellcasting (pg. 4)** <br>Creatures can enhance spells while in the area of an earth node by succeeding on a spellcasting ability check (or an Intelligence check if they aren't spellcasters) against the node DC of the earth node layer they are in to increase the spell level their spells are cast at. This can be attempted against the node DC as if in a layer of a lower class rating for an easier check but less benefit. Those with the **Node Spellcasting** Supernatural Gift can make an Arcana check. Mystics instead can gain a pool of psi points with an action they can do 1/day as if they had used their Psionic Mastery (doesn't count against the normal uses of the feature), with mystics with the **Node Manifestation** Supernatural Gift are able to take this action 2/day. (An earth node grants this benefit to a number of mystics per day up to its class rating)
 * **Powers of Earth Nodes: Teleporting to a Known Earth Node (pg. 4)** <br>Creatures that are **proficient** with an earth node can use *teleportation circle* or similar magic to teleport to that earth node.
@@ -561,3 +561,57 @@ The following summarizes information regarding the powers and properties of eart
 * **Powers of Earth Nodes: Granted Spells (Restricted, pg. 5)** <br>A creature with the **Node Spellcasting** Supernatural Gift can spend a short rest within an earth node and make an Arcana check with their spellcasting ability against the node DC of the earth node to gain the ability to cast a number of spells using their spell slots for the next 24 hours. On a failure, nothing happens and they can't attempt this again until 24 hours later. A mystic with the **Node Manifestation** Supernatural Gift makes an Intelligence (Arcana) check instead and can cast up to 5th-level granted spells without any components by using psi points.
 * **Powers of Earth Nodes: Storing Items (Restricted, pg. 6)** <br>All functions associated with this power can only be used by creatures with the **Node Spellcasting** or **Node Manifestation** Supernatural Gift. Objects can be stored in an earth node up to its storage capacity, and creatures that have studied an earth node's pattern of magcal energy can use an action to learn how much volume is being used up at that time. (The specific contents aren't learned, except for objects the creatures had previously stored themselves) Creatures can store objects in an earth node by making an Arcana check using their spellcasting ability (Intelligence in the case of mystics) against the node DC of the earth node to do so, causing the object to go into an extradimensional space. On a failure, nothing happens and the creature can't attempt to store that object again for 24 hours. Creatures can retrieve objects they've stored in an earth node from within the area of any earth node on the same plane of existence by using an action to make an Arcana check using their spellcasting ability (Intelligence in the case of mystics) against the node DC of the original earth node. Creatures can attempt to retrieve a random stored object they hadn't stored while in an earth node by making an Arcana check using their spellcasting ability (Intelligence in the case of mystics) against the node DC of the earth node + the proficiency bonus of the creature who originally stored it.
 * **Powers of Earth Nodes: Locking Nodes (Restricted, pg. 6)** <br>After a creature with the **Node Spellcasting** Supernatural Gift has gained **expertise** with an earth node, the creature can use the *arcane lock* spell while in the earth node's area to magically secure it: the effective node DC of the earth node by 10 for other creatures that interact with the earth node. Other creatures can be designated at the time of casting to be able to normally interact with the earth node. Removing a node lock requires a *dispel magic* spell in the area targeting the magical effect, treated as if attempting to dispel a spell of a spell level equal to the earth node's class rating.
+
+<br>
+
+## Earth Node Master Table
+
+The table below summarizes the different quantities associated with earth nodes as mentioned and detailed in the document thus far, for use by players and DMs. For full information, players and DMs should refer to the associated sections of the document.
+
+#### *Earth Node Properties*
+
+<table border="1" style="text-align:center">
+
+  <tr><th>Class</th><th>Layer Width</th><th>Node Diameter</th><th>Node DC</th><th>Enhanced Spellcasting Bonus</th><th>Psionic Mastery Pool</th><th>Portal to Nearby Earth Node Range</th><th>Portal Diameter</th><th>Portal Duration</th><th>Portal Max Range</th><th>Storage Capacity</th><th>Time to Map</th></tr>
+
+  <tr><td>1</td><td>5 to 30 feet</td><td>10 to 60 feet</td><td>14</td><td>+1 spell level</td><td>9 psi points</td><td>100 miles</td><td>10 feet</td><td>1 minute</td><td>100 miles</td><td>10 cubic feet</td><td>10 minutes</td></tr>
+
+  <tr><td>2</td><td>10 to 40 feet</td><td>40 to 160 feet</td><td>16</td><td>+1 spell level</td><td>10 psi points</td><td>200 miles</td><td>10 feet</td><td>3 minutes</td><td>300 miles</td><td>40 cubic feet</td><td>30 minutes</td></tr>
+
+  <tr><td>3</td><td>20 to 80 feet</td><td>120 to 480 feet</td><td>18</td><td>+2 spell levels</td><td>11 psi points</td><td>300 miles</td><td>20 feet</td><td>5 minutes</td><td>500 miles</td><td>90 cubic feet</td><td>60 minutes</td></tr>
+
+  <tr><td>4</td><td>30 to 120 feet</td><td>240 to 960 feet</td><td>20</td><td>+2 spell levels</td><td>12 psi points</td><td>400 miles</td><td>20 feet</td><td>7 minutes</td><td>700 miles</td><td>160 cubic feet</td><td>100 minutes</td></tr>
+
+  <tr><td>5</td><td>40 to 160 feet</td><td>400 to 1,600 feet</td><td>22</td><td>+3 spell levels</td><td>13 psi points</td><td>500 miles</td><td>30 feet</td><td>9 minutes</td><td>900 miles</td><td>250 cubic feet</td><td>150 minutes</td></tr>
+
+  <tr><td>6</td><td>50 to 200 feet</td><td>600 to 2,400 feet</td><td>24</td><td>+3 spell levels</td><td>14 psi points</td><td>600 miles</td><td>30 feet</td><td>11 minutes</td><td>1,100 miles</td><td>360 cubic feet</td><td>210 minutes</td></tr>
+
+  <tr><td>7</td><td>60 to 240 feet</td><td>840 to 3,360 feet</td><td>26</td><td>+4 spell levels</td><td>15 psi points</td><td>700 miles</td><td>40 feet</td><td>13 minutes</td><td>1,300 miles</td><td>490 cubic feet</td><td>280 minutes</td></tr>
+
+  <tr><td>8</td><td>70 to 280 feet</td><td>1,120 to 4,480 feet</td><td>28</td><td>+4 spell levels</td><td>16 psi points</td><td>800 miles</td><td>40 feet</td><td>15 minutes</td><td>1,500 miles</td><td>640 cubic feet</td><td>360 minutes</td></tr>
+
+  <tr><td>9</td><td>80 to 320 feet</td><td>1,440 to 5,760 feet</td><td>30</td><td>+5 spell levels</td><td>17 psi points</td><td>900 miles</td><td>50 feet</td><td>17 minutes</td><td>1,700 miles</td><td>810 cubic feet</td><td>450 minutes</td></tr></table>
+
+<br>
+
+\- Layer Width. This value indicates the thickness of a given layer of the earth node.
+
+\- Node Diameter. This value indicates the diameter of the entire earth node.
+
+\- Node DC. This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed above.
+
+\- Enhanced Spellcasting Bonus. This value indicates how many spells levels higher a spell that has been enhanced by an earth node is cast at. (See "Enhanced Spellcasting" above.)
+
+\- Psionic Mastery Pool. This value indicates how many psi points can be accessed as part of the special Psionic Mastery conferred by an earth node as accessed by a mystic. (See the sidebar of "Enhanced Spellcasting" above.)
+
+\- Portal to Nearby Earth Node Range. This value indicates the maximum range that a nearby earth node could be located when teleporting from an earth node via the \*teleportation circle\* spell. (See "Teleporting to Other Earth Nodes" above.)
+
+\- Portal Diameter. This value indicates the diameter of a portal to another location or plane of existence. (See "Portals to Other Locations" and "Portals to Other Planes of Existence" above.)
+
+\- Portal Duration. This value indicates how long a portal to another location or plane of existence lasts. (See "Portals to Other Locations" and "Portals to Other Planes of Existence" above.)
+
+\- Portal Max Range. This value indicates the maximum range that a portal to another location can reach on the same plane of existence. (See "Portals to Other Locations" above.)
+
+\- Storage Capacity. This value indicates the maximum capacity that an earth node can store worth of objects. (See "Storing Items" above.)
+
+\- Time to Map. This value indicates the typical amount of time it takes to fully map out an earth node's boundaries and layers, without factoring in additional time due to physical barriers or other obstacles.
