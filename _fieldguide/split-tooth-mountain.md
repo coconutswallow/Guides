@@ -2,8 +2,7 @@
 layout: doc
 title: "Split Tooth Mountain"
 order: 12
-background_image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b3fcbdc2-5568-402a-92c4-8705755b4e2f/dklkysz-80c03a77-bfc5-4f65-bccf-bb712293bd3e.jpg/v1/fill/w_1183,h_676,q_70,strp/mountains_landscape__curvy_river_by_volturearachnids_dklkysz-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzY4IiwicGF0aCI6Ii9mL2IzZmNiZGMyLTU1NjgtNDAyYS05MmM0LTg3MDU3NTViNGUyZi9ka2xreXN6LTgwYzAzYTc3LWJmYzUtNGY2NS1iY2NmLWJiNzEyMjkzYmQzZS5qcGciLCJ3aWR0aCI6Ijw9MTM0NCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.c_VVgivcKIXhLjIaAmNmmyASNf72NTeZtOIKU-su6Kk
----
+background_image: /assets/images/mountain_landscape.jpg
 
 ## Split Tooth Mountain
 
