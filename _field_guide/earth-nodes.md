@@ -69,6 +69,7 @@ The table below describes various associated properties of an earth node.
 ***Node Diameter*** :This value indicates the diameter of the entire earth node.
 
 ***Node DC*** : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below.
+
 </td><td width=300 style="text-align:left;">
 
 ![Diagram of typical earth node sizes](https://i.imgur.com/Qayoqbp.png)
@@ -113,3 +114,27 @@ Earth nodes are nexuses of magical energy, enhancing spellcasting and creating o
 Certain powers can be accessed only by those practiced and experienced in utilizing the powers of an earth node, which are individuals with the **Node Spellcasting** and/or **Node Manifestation** Supernatural Gift. Powers which are restricted in this way are indicated below.
 
 ### Enhanced Spellcasting
+
+A creature that is aware of a given earth node while within its area can utilize it to enhance their own spellcasting. 
+
+When casting a spell whilst in the area of a layer of a given earth node, a creature can make a check against the node DC of that earth node layer as part of the action of casting the spell.
+
+* **Non-Spellcasters** make an Intelligence check.
+* **Spellcasters** make an ability check using their spellcasting ability.
+* **Spellcasters with the Node Spellcasting Supernatural Gift** make an Arcana check using their spellcasting ability.
+
+On a success, the spell that is cast is treated as if it was cast at a number of levels higher equal to half the class rating of the earth node layer, rounded up. Spells cast at a higher level in this way still cannot be cast above 9th-level.
+
+For example, a creature that casts a 1st-level *magic missile* spell while within an earth node layer with a class rating of 3 that succeeds on the associated check against the node DC of 18 casts the spell as if it had been cast at two levels higher, thus casting the spell at 3rd-level. 
+
+A creature may additionally choose to use less of the earth node's power for a given earth node layer if they wish to, treating as if the creature was attempting the ability check against a node DC for a layer of a lower class rating of their choice and thereby cast the spell at a number of levels higher equal to half that class rating, rounded up.
+
+For example, a creature that casts a 1st-level *magic missile* spell while within an earth node layer with a class rating of 3 can choose to make the ability check against the node DC of an earth node layer with a class rating of 2 (node DC 16). On a success, the creature's 1st-level *magic missile* would be treated as if it had been cast one level higher, casting the spell at 2nd-level. 
+
+<table border=1><tr><th>Mystics</th></tr>
+
+<tr><td>A creature with levels in the Mystic class that is aware of an earth node can use an action to gain a number of special psi points as if they had used their Psionic Mastery feature. (This does not count against the number of uses granted by their Psionic Mastery class feature.) The pool of psi points gained from this action is equal to 8 + the class rating of the earth node. 
+
+A creature that uses this action can't do so again until 24 hours pass, and an earth node can grant this benefit up to a number of creatures equal to its class rating per day.
+
+A mystic with the **Node Manifestation** Supernatural Gift can instead use this action twice per day.</td></tr></table>
