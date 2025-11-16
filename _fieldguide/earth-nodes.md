@@ -68,7 +68,9 @@ The table below describes various associated properties of an earth node.
 ***Node DC*** : This value indicates the DC for any ability checks associated with using the earth node's powers, as detailed below.
 
 </td><td width=300 style="text-align:left;">
-  <img src="![/path/to/image.jpg](https://i.imgur.com/Qayoqbp.png)" alt="Description">
+
+ <img src="https://i.imgur.com/Qayoqbp.png" alt="Diagram of typical earth node sizes">
+
 </td></tr></table>
 
 <br>
