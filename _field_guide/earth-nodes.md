@@ -326,3 +326,151 @@ The properties and powers of elemental nodes function the same as earth nodes ex
 **Creating Elemental Nodes** <br>The creation of an artificial elemental node can be accomplished in a number of ways, as may be accomplished by certain powerful elemental entities present on the Material Plane or through invoking powerful elemental magic. It is rumored that certain apocalyptic elemental cults have sought out certain magical weapons tied to the Elemental Evils. Through the use of these magical items, these cults seek a means by which to establish a foothold for the Elemental Planes to make their presence manifest on the Material Plane and also to allow the elemental forces they revere to enter the Material Plane. 
 
 **Granted Spells** <br>The granted spells provided by an elemental node reflect the Elemental Plane to which the node is linked to. See the table below for a list of sample granted spells associated with each kind of elemental node.
+
+Sample Elemental Node Spells
+
+<table style="text-align:center;" border=1>
+
+<tr><th>Node Class /<br> Maximum<br>Spell Level</th><th>Elemental<br>Air Node<br> Spell</th>
+
+<th>Elemental<br>Earth Node<br> Spell</th>
+
+<th>Elemental<br>Fire Node<br> Spell</th>
+
+<th>Elemental<br>Water Node<br> Spell</th></tr>
+
+<tr><td>1</td><td>feather fall</td><td>earth tremor</td><td>burning hands</td><td>create or destroy water</td></tr>
+
+<tr><td>2</td><td>skywrite</td><td>Maximillian's earthen grasp</td><td>scorching ray</td><td>Rime's binding ice</td></tr>
+
+<tr><td>3</td><td>fly</td><td>meld into stone</td><td>fireball</td><td>tidal wave</td></tr>
+
+<tr><td>4</td><td>storm sphere</td><td>stone shape</td><td>wall of fire</td><td>control water</td></tr>
+
+<tr><td>5</td><td>control winds</td><td>transmute rock</td><td>immolation</td><td>maelstrom</td></tr>
+
+<tr><td>6</td><td>investiture of wind</td><td>investiture of stone</td><td>investiture of flame</td><td>investiture of ice</td></tr>
+
+<tr><td>7</td><td>whirlwind</td><td>reverse gravity</td><td>fire storm</td><td>simulacrum</td></tr>
+
+<tr><td>8</td><td>control weather</td><td>earthquake</td><td>incendiary cloud</td><td>tsunami</td></tr>
+
+<tr><td>9</td><td>storm of vengeance</td><td>meteor swarm</td><td>meteor swarm</td><td>storm of vengeance</td></tr></table>
+
+### Evil Nodes
+
+In places where unspeakable acts of evil have occurred, where shrines to dark deities and others exist, or where an exceptionally evil entity had enacted its influence, a concentration of evil energy can pool to form an evil node. 
+
+As sites of powerful evil, the area of an evil node echoes the wickedness associated with it. Shadows may linger or move of their own accord, spells cast in the area often take on macabre aspects unintended by their casters, distant cries and wails from no discernible source may sometimes be heard, low-hanging fog that can take on unsettling shapes may be present, and the very stones may bleed. 
+
+The pervasive evil of an evil node also affects creatures within its area, as they often find themselves more tempted to commit misdeeds. Creatures that prolong their stay in the area of an evil node may suffer from disturbed sleep and nightmares or even have their alignments shifted towards evil over time. Good creatures, especially clerics and paladins dedicated to the cause of good, may find evil nodes especially repulsive and difficult to abide for extended periods of time. 
+
+Dark cults or particularly evil entities often construct lairs around an evil node, using it strengthen to their own power and position. In the event an evil node becomes known of, evil entities often fight over control of such areas.
+
+The properties and powers of evil nodes function the same as earth nodes except as specified below.
+
+**Evil Nature** <br>The area of an evil node is altered, reflecting the evils associated with it in the environment. Dark sights and sounds can be perceived, spells are altered to appear macabre, and the area is desecrated. An evil node also affects the mood and disposition of creatures in the area in various subtle or overt ways, with good creatures particularly troubled while remaining in the area for long.
+
+The specifics of how an evil node affects the region it is within as well as creatures in its area is determined by the DM.
+
+**Enhanced Spellcasting** <br>Good creatures find it more difficult to make use of the enhanced spellcasting afforded by evil nodes, with the DC of the ability check equal to the node DC + 5 for good creatures. 
+
+**Teleporting to Other Nodes** <br>The portal created is linked to the nearest evil node that is within the portal's range. 
+
+**Granted Spells** <br>Good creatures find it more difficult to access the granted spells associated with an evil node, with the DC of the ability check equal to the node DC + 5 for good creatures. The granted spells provided by an evil node are generally tied to a particular theme, such as death or darkness. See the table below for a list of sample granted spells associated with an evil node.
+
+#### *Sample Evil Node Spells*
+
+<table style="text-align:center;" border=1>
+
+<tr><th>Earth Node Class /<br> Maximum Spell Level</th><th>Evil Node Spell</th></tr>
+
+<tr><td>1</td><td>inflict wounds</td></tr>
+
+<tr><td>2</td><td>ray of enfeeblement</td></tr>
+
+<tr><td>3</td><td>animate dead</td></tr>
+
+<tr><td>4</td><td>blight</td></tr>
+
+<tr><td>5</td><td>enervation</td></tr>
+
+<tr><td>6</td><td>circle of death</td></tr>
+
+<tr><td>7</td><td>finger of death</td></tr>
+
+<tr><td>8</td><td>Abi-Dalzim's horrid wilting</td></tr>
+
+<tr><td>9</td><td>power word kill</td></tr></table>
+
+**Imprisonment** <br>Evil nodes can contain creatures following the same rules for storing items, with the following differences. An evil node can contain any number of creatures in its extradimensional space whose combined total Hit Dice does not exceed 3 x (the evil node's class)<sup>2</sup>. (For example, a class 3 evil node can contain up to 27 Hit Dice worth of creatures) Storing creatures inside an evil node does not count against its capacity for storing objects nor vice versa. 
+
+Only willing creatures can be imprisoned in an evil node, including those that have been charmed or possessed to be willing. An imprisoned creature is in a state of suspended animation as if under the effects of a *sequester* spell, except without a special end condition. The rules for storing or retrieving creatures from an evil node otherwise follows the same corresponding rules for storing and retrieving items.
+
+**Modifying Evil Nodes** <br>Evil nodes are tied to forces of evil that linger long after the event or influence that precipitated them. Evil nodes in this regard are more likely and quicker to repair or reconstitute themselves, especially if strengthened by dark rituals or further acts of evil as determined by the DM. 
+
+Using holy water or the *hallow* spell to purify desecrated ground may suppress the effects of an evil node in an area for no more than 24 hours, but is unlikely to permanently purify an evil node without extensive effort. Acts of singular and powerful goodness done in the area of an evil node may damage or destroy an evil node as determined by the DM. 
+
+![](/Guides/assets/images/acidify-art-deviantfixed.jpg)
+
+
+
+
+
+
+
+
+
+#### *Sample Shadow Node Spells*
+
+<table style="text-align:center;" border=1>
+
+<tr><th>Earth Node Class /<br> Maximum Spell Level</th><th>Shadow Node Spell</th></tr>
+
+<tr><td>1</td><td>silent image</td></tr>
+
+<tr><td>2</td><td>darkness</td></tr>
+
+<tr><td>3</td><td>summon shadowspawn</td></tr>
+
+<tr><td>4</td><td>shadow of moil</td></tr>
+
+<tr><td>5</td><td>creation</td></tr>
+
+<tr><td>6</td><td>eyebite</td></tr>
+
+<tr><td>7</td><td>mirage arcane</td></tr>
+
+<tr><td>8</td><td>maddening darkness</td></tr>
+
+<tr><td>9</td><td>weird</td></tr></table>
+
+**Empowerment**  <br>A creature with the **Node Spellcasting** or the **Node Manifestation** Supernatural Gift that has become **proficient** in their understanding of a given shadow node (following the same rules as described under "Studying Earth Nodes" on page 4) can spend a short rest within the area attempting to draw upon its energy to strengthen themselves. At the end of the short rest, the creature can make an Arcana check using their spellcasting ability against the node DC of the shadow node. (A mystic can use their Intelligence modifier for the Arcana check) 
+
+On a failure, nothing happens and the creature cannot attempt to empower themselves in this way again until 24 hours pass. On a success, the creature harnesses the power of the shadow node and for the next hour, the creature gains a bonus to their Strength, Dexterity, or Constitution score equal to the shadow node's class rating. The creature's ability scores may increase in this way beyond 20, but not 30. The creature can apply this bonus to one ability score or distribute among their Strength, Dexterity, or Constitution scores as they wish.
+
+A creature can additionally choose to use less of the shadow node's power if they wish to, treating as if the creature was attempting the ability check against a node DC for a shadow node of a lower class rating of their choice and thereby gaining a bonus equal to that class rating.
+
+A creature can't empower themselves in the same way again until 24 hours pass, and a shadow node can grant this benefit up to a number of creatures equal to its class rating per day. 
+
+**Modifying Shadow Nodes** <br>Most shadow nodes are susceptible to any modifications which expose the shadow node to the prolonged presence of light, especially sunlight. Such modifications can permanently damage or ultimately destroy a shadow node, as determined by the DM.
+
+**Creating Shadow Nodes** <br>The creation of a shadow node can be accomplished by certain powerful entities with an intimate connection to the Shadowfell, such as balhannoths or darkweavers, using their own ability to warp and modify the environment so as to invoke the power of the Shadowfell. Spellcasters that are skilled and knowledgeable in shadow magic can utilize specific rituals akin to the *Node Genesis* ritual as a means by which to establish a shadow node in an appropriate location.
+
+## Node Supernatural Gifts
+
+Earth nodes and other kinds of nodes create a number of different magical effects. However, accessing the full suite of powers associated with nodes requires extraordinary sense and training in using a node's magics. Whether as a result of extensive exposure and study to the magic of nodes or due to other special circumstances, creatures that possess the **Node Spellcasting** or **Node Manifestation** Supernatural Gifts are able to take advantage of the full breadth of capabilities afforded by earth nodes and other kinds of nodes. These Supernatural Gifts follow the rules associated with the acquisition and use of Supernatural Gifts, as can be found on page 24 of the [Hawthorne Item List](https://drive.google.com/file/d/1sxYFCO3HAhP8kAaVQsT3XoDksn8v7OgY/view)
+
+### Node Spellcasting
+
+**Supernatural Gift, T2 (can only be used by a spellcaster)**
+
+You have learned to attune your senses and magical powers to the magic of nodes: nexuses of magical energy that exist throughout the world. You have gained a heightened sense and ability to utilize nodes, granting you access to various powers associated with nodes. While this Supernatural Gift is active, you gain the following benefits with respect to earth nodes and other nodes, as well as any other benefit that requires this Supernatural Gift in order to use. (For details on the powers associated with nodes, see ***[Earth Nodes](https://homebrewery.naturalcrit.com/share/20Ba8her1M4d)*** and its corresponding sections)
+
+* **Sensing Earth Nodes.** When attempting to sense a node within 30 feet of you, you can make a DC 15 Arcana check using your spellcasting ability to do so.
+* **Enhanced Spellcasting.** When attempting to enhance your spells with a node's magic, you can make an Arcana check using your spellcasting ability to do so.
+* **Portals to Other Locations.** You are able to spend time acquiring **expertise** in your understanding of a given earth node after your understanding of it has become **proficient**. After you've acquired such **expertise**, you are able to use *teleportation circle*, *teleport* or similar magic while within the area of the given earth node to attempt to create a two-way portal to another location on the same plane of existence. 
+* **Granted Spells.** You can spend a short rest bringing yourself in tune with the magical energy of a node and, at the end of the short rest, make an Arcana check using your spellcasting ability against the node DC of the node to access the node's granted spells for the next 24 hours. You can cast these spells using any spell slots of the appropriate level you have and using your spellcasting ability to do so.
+* **Storing Items.** You can store and retrieve items within the extradimensional space of a node, making Arcana checks using your spellcasting ability to do so. 
+* **Locking Nodes.** After studying a node, you can use \*arcane lock\* to magically secure against its use by others. 
+* **Modifying Earth Nodes.** You have a greater ability in helping to redirect the flow of energy of a node when supervising any project that involves modifying the area around a node and are able to make Arcana checks using your spellcasting ability to do so.
