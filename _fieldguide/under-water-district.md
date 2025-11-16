@@ -16,6 +16,8 @@ The entrance of the cave is located about 500 feet underwater, underneath Hawtho
 
 The majority of this district serves as a residential area, but a few shops and inns have been built there as well. The buildings of the district are mostly made of more exotic material like coral, or other water resistant material.  Most houses of this district are built in the bottom section, underwater, whereas the shops and inns are located on the island of the top section, outside the water. Only those that can breathe underwater and are comfortable underwater can live in the underwater portion of the district.
 
+![Underwwater World]({{ 'Guides/assets/images/underwater-world.jpg' | relative_url }} )
+
 ### The Portal
 
 At the bottom of the cave, on the south-eastern side, a portal leading to the Elemental Plane of Water can be found. The portal to the Elemental Plane of Water is now guarded and secured for all Hawthorne Guild members to go through for adventures. The Sultan himself also gives missions to Hawthorne Adventurers whenever he needs something done via two of his emissaries that occasionally travel to and from Sultan Rezzo's palace through the portal. These emissaries are Aukai, the Wanderer, a sea elf, and Brooke, the Swift, a water genasi.
@@ -23,6 +25,8 @@ At the bottom of the cave, on the south-eastern side, a portal leading to the El
 ## The Elemental Plane of Water
 
 The Inner Planes surround the Material Plane, the Shadowfell and the Feywild. They provide the substance from which the world was made. They are also known as the Elemental Planes. One of these planes is the Plane of Water, an endless sea with a warm sun across the sky and a plane in which the weather varies extremely. Throughout this plane are scattered gigantic coral reefs stretching out underneath the sea and above it, forming various islands. For more information on the Elemental Plane of Water, please refer to the *Dungeon Master's Guide,* pp. 56 - 57. 
+
+
 
 ### Adventures in the Elemental Plane of Water
 
@@ -73,21 +77,26 @@ Sultan Rezzo is a noble marid (see statblock on the following page) who reigns i
 ### Sultan Rezzo's Palace
 Sultan Rezzo's palace is a grandiose building covered in coral and algae. It is filled with wonders and sensory delights that goes beyond one's wildest dreams. This opulent palace floats in a deep part of the Plane of Water and contains many luxurious chambers and rooms filled with air for his guests or slaves.
 
-[Sultan Rezzo's Statblock]({{ '/monster-compendium/sultan-rezzo/' | relative_url }})
-
 
 ### Roleplaying Sultan Rezzo
+
 Rezzo is a Marid who sees himself as a superior being and expects to be treated as such. He wears fine and colorful clothes that resemble outfits usually seen in the Calimshan region.
 
-Rezzo has a great sense of self-importance, and considers himself, as well as other Marids, above all other kinds of genies. He tolerates djinn, dislikes dao, and despises efreet. Bribery and flattery are the best means for a humanoid to earn Rezzo's favor. In an adventuring group, whoever praises him the most will be seen by Rezzo as the most intelligent or worthy of the group and assume they are the leader. Rezzo loves to tell stories about himself or legends he knows, and although he will not directly lie about the events he recounts, he will greatly embellish them. He hates being interrupted while telling his stories, and will only offer a single warning before unleashing his wrath should this great offense be done to him.<br><br>
- ***Personality Trait.*** There's nothing I like more than finding a new skillful slave. <br>
- ***Ideal.*** Noble Obligation. It is my duty to protect and care for the people beneath me. (Good)<br>
-  ***Bond.*** I will do anything to prove myself superior to other genies.  <br>
-  ***Flaw.*** Flattery brings down my defenses and I tend to be less cautious of those who compliment me. <br>
-  ***Quirk.*** I will always invite the one I deem most worthy in an adventuring group to join my kingdom as a slave. <br>
+Rezzo has a great sense of self-importance, and considers himself, as well as other Marids, above all other kinds of genies. He tolerates djinn, dislikes dao, and despises efreet. Bribery and flattery are the best means for a humanoid to earn Rezzo's favor. In an adventuring group, whoever praises him the most will be seen by Rezzo as the most intelligent or worthy of the group and assume they are the leader. Rezzo loves to tell stories about himself or legends he knows, and although he will not directly lie about the events he recounts, he will greatly embellish them. He hates being interrupted while telling his stories, and will only offer a single warning before unleashing his wrath should this great offense be done to him.
+
+>
+> [ **Sultan Rezzo's Statblock** ]({{ '/monster-compendium/sultan-rezzo/' | relative_url }})
+>
+
+***Personality Trait.*** There's nothing I like more than finding a new skillful slave.
+***Ideal.*** Noble Obligation. It is my duty to protect and care for the people beneath me. (Good)
+***Bond.*** I will do anything to prove myself superior to other genies.
+***Flaw.*** Flattery brings down my defenses and I tend to be less cautious of those who compliment me.
+***Quirk.*** I will always invite the one I deem most worthy in an adventuring group to join my kingdom as a slave.
 
 
 #### Additional Notes
+
 - Sultan Rezzo's crown is a *helm of telepathy*. He frequently scans the surface thoughts of his guests to try and gauge them.
 - Rezzo is a difficult individual to gauge or read and attempts to magically discern his thoughts or know if he is lying are foiled by his *ring of mind shielding*.
 - He continually maintains the *tongues* spell on himself to be able to speak with all manner of visitors from across the planes without issue.
@@ -97,6 +106,7 @@ Rezzo has a great sense of self-importance, and considers himself, as well as ot
 
 
 ### Minor Properties
+
 If a DM wishes to add an extra minor property to one of the items obtained in the Elemental Plane of Water, or have their origins in the Elemental Plane of Water, it is possible to select a property from the list. The items must follow the guidelines for minor properties in the Hawthorne DM Guidelines.
 
 ##### Plane of Water Minor Properties Table
@@ -116,24 +126,29 @@ If a DM wishes to add an extra minor property to one of the items obtained in th
 
 ##### Additional Reading 
 For DMs wanting to learn more about the Inner Planes and the Elemental Plane of Water, we recommend reading the following material for inspiration.
-<br><br>
+
 ###### **AD&D 2nd edition**
+
 - Baur, Wolfgang and Steve Kurtz. *Monstrous Compendium Al-Qadim Appendix.* TSR, 1992. pp. 
 - Baur, Wolfgang. *Secrets of the Lamp.* TSR, 1993. pp. 23 - 24.
 - Beach, Tim, et al. *Monstrous Manual.* TSR, 1993. pp. 126 - 129.
 - Cook, Monte and William W. Conners. *The Inner Planes.* TSR, 1998. pp. 50 - 59. 
 
 ###### **D&D 3rd edition**
+
 - Cordell, Bruce, et al. *Manual of the Planes.* Wizards of the Coast, 2001. pp. 77 - 80, 172 - 174.
 
 ###### **D&D 4th Edition**
+
 - Hyatt, Doug. "Bestiary: The Dao and the Marid." *Dungeon* 199. Wizards of the Coast, February 2012. pp. 56 - 59.
 - Pozas, Claudio. "Elemental Patrons and Palaces." *Dragon* 408. Wizards of the Coast, February 2012. pp. 19 - 27. 
 	
 ###### **D&D 5th Edition**
+
 - Crawford, Jeremy, et al. *Dungeon Master's Guide.* Wizards of the Coast, 2014. pp. 52 - 57.
 - Crawford, Jeremy, et al. *Monster Manual.* Wizards of the Coast, 2014. pp. 141 - 146.
-- Mearls, Mike, et al. *Ghosts of Saltmarsh.* Wizards of the Coast, 2019. pp. 186 - 228. 
+- Mearls, Mike, et al. *Ghosts of Saltmarsh.* Wizards of the Coast, 2019. pp. 186 - 228.
+ 
 ---
 
 ## Credits
@@ -142,9 +157,5 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 
 > ##### Image Credits
 
-* [White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
-* [Dreamland by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/lKLok)
-* [Sail Away by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qxa4a)
-* [Dark Land by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qAob5n)
-* [Nightmare by MIKAIL IL](https://mikail.artstation.com/store/art_posters/lbPR/nightmare)
+* [The underwater world, with the aqua-dragons by RayaA5](https://www.deviantart.com/rayaa5/art/The-underwater-world-with-the-aqua-dragons-1241138160)
 
