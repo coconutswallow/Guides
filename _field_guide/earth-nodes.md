@@ -36,11 +36,9 @@ The power of an earth node can enhance spellcasting and create other magical eff
 
 The table below describes various associated properties of an earth node.
 
-### Earth Nodes
+#### *Typical Earth Nodes Properties Based On Class*
 
-<style>td, th { padding: 8px;};</style>
-
-<table><tr><td width=400><table border=1>
+<style>td, th { padding: 8px;};</style><table><tr><td width=400><table border=1>
 
 <tr><th>Class</th><th>Layer Width</th><th>Node Diameter</th><th>Node DC</th></tr>
 
@@ -138,3 +136,193 @@ For example, a creature that casts a 1st-level *magic missile* spell while withi
 A creature that uses this action can't do so again until 24 hours pass, and an earth node can grant this benefit up to a number of creatures equal to its class rating per day.
 
 A mystic with the **Node Manifestation** Supernatural Gift can instead use this action twice per day.</td></tr></table>
+
+### Magical Travel
+
+Earth nodes can be utilized for purposes of magical travel to other locations, via the creation of portals to or from a given earth node.
+
+#### *Teleporting to a Known Earth Node*
+
+An earth node can be used as if it were a permanent teleportation circle as described by the *teleportation circle* spell. A creature that is **proficient** in their understanding of a specific earth node can use *teleportation circle* or similar magic to teleport within 5 feet of the origin point of the earth node, or the nearest unoccupied space if that space is occupied. 
+
+#### *Teleporting to Other Earth Nodes*
+
+Earth nodes can also be utilized to travel to other nearby earth nodes, even those one has not yet visited. After a creature becomes **proficient** in their understanding of a given earth node, a creature able to cast the *teleportation circle* spell can use it within the area of an earth node to attempt to create a portal to a nearby earth node.
+
+The specific earth node the portal leads to is determined by the DM. Some earth nodes are magically linked to a single earth node, whereas other earth nodes may randomly lead to any given other nearby earth node. As a general rule, the portal is linked to another earth node that is no farther from the original earth node than a number of miles equal to 100 x the class rating of the original earth node. If there are no such earth nodes nearby in range, nothing happens and the spell slot is wasted. For example, if using *teleportation circle* to create a portal from a class 3 earth node to a nearby earth node, one would arrive at an earth node no farther than 300 miles away from the original earth node.
+
+#### *Portals to Other Locations (Restricted)*
+
+This power can **only** be used by creatures with the **Node Spellcasting** Supernatural Gift. Earth nodes can also be used to travel to other locations on the same plane of existence. A creature that has **expertise** in their understanding of a specific earth node can use *teleportation circle*, *teleport*, or similar magic while within the area of an earth node to attempt to create a two-way portal to another location of the same plane of existence. 
+
+Instead of the normal effect associated with using such magic, a portal is created, with a diameter in feet equal to 10 x half the class rating of the earth node (rounded up), and that lasts for a number of minutes equal to 2 x the class rating of the earth node - 1.  For example, a class 3 earth node can create a portal with a diameter of 20 feet and that lasts 5 minutes.
+
+The portal has a front and back on each location it appears, with travel through the portal only possible through the front. Anything that does so is instantly transported to the other location, appearing in the unoccupied space nearest to the portal. The portal is linked to a destination that is no farther from the original earth node than a number of miles equal to 200 x the class rating of the original earth node - 100. For example, a class 3 earth node can be used to create portals to destinations as far as 500 miles away.
+
+If one attempts to create a portal in this way to a destination outside of this range, nothing happens and the magic and any associated spell slot is wasted. The creature's familiarity with the destination determines whether the portal successfully links to the intended destination. The DM rolls d100 and consults the table associated with the *teleport* spell. In the case of a Mishap, things crossing through the portal are affected by the Mishap on an individual basis. It is possible in this way for things to become separated if some ultimately end up on target, others off target, or others in a similar area as a result of the Mishap.
+
+#### *Portals to Other Planes of Existence*
+
+Certain earth nodes are charged with the energies of other planes of existence, allowing for the creation of portals that lead to them. Such portals lead to a fixed location on another plane of existence, most commonly in the Feywild or in the Inner Planes. After a creature becomes **proficient** in their understanding of a given earth node, a creature can also discover what plane of existence the earth node is linked to, if any. After determining this information, a creature can use *gate*, *plane shift*, or similar magic while within the area of an earth node to create a portal to another plane of existence that the earth node is tied to.
+
+The portal that is created is similar to portals to other locations as previously above, except that it links to a specific fixed location on another plane of existence as determined by the DM. Using the *plane shift* spell in this way does not require the spell's material component.
+
+<br>
+
+![](https://i.imgur.com/cXOoAzg.jpeg)
+
+### Granted Spells (Restricted)
+
+This power can **only** be used by creatures with the **Node Spellcasting** or **Node Manifestation** Supernatural Gift. Earth nodes resonate with magical energy and are capable of allowing those sensitive to node magic to access their power to cast a variety of spells. Earth nodes can grant a number of spells equal to their class rating, with a maximum spell level equal to its class rating and one spell per spell level in this way. Each earth node grants a specific list of spells in this way as determined by the DM.
+
+A creature with the **Node Spellcasting** Supernatural Gift that is aware of a given earth node can spend a short rest within the area bringing themselves in tune with the magical energy of the earth node. 
+
+(This can be the same short rest spent becoming **proficient** in one's understanding of that earth node.) At the end of the short rest, the creature can make an Arcana check using their spellcasting ability against the node DC of the earth node. 
+
+On a success, the creature can cast the associated spells from the earth node using any spell slots of the appropriate level they have and using their spellcasting ability to do so; the creature can cast these spells in this way for the next 24 hours while they remain within the area of the earth node. On a failure, the creature is unable to cast these additional spells this way and cannot attempt to gain access to these spells again until 24 hours pass. The table below shows some typical spells that an earth node may grant as an example, though each individual earth node grants its own individual spells as determined by the DM.
+
+
+
+***Sample Earth Node Spells***
+
+<table style="text-align:center;" border=1>
+
+<tr><th>Earth Node Class /<br> Maximum Spell Level</th><th>Example Spell</th></tr>
+
+<tr><td>1</td><td>earth tremor</td></tr>
+
+<tr><td>2</td><td>earthbind</td></tr>
+
+<tr><td>3</td><td>erupting earth</td></tr>
+
+<tr><td>4</td><td>stoneskin</td></tr>
+
+<tr><td>5</td><td>wall of stone</td></tr>
+
+<tr><td>6</td><td>move earth</td></tr>
+
+<tr><td>7</td><td>reverse gravity</td></tr>
+
+<tr><td>8</td><td>earthquake</td></tr>
+
+<tr><td>9</td><td>meteor swarm</td></tr></table>
+
+A creature with levels in the Mystic class can still gain access to the spells granted by an earth node. A mystic with the **Node Manifestation** Supernatural Gift can instead make an Intelligence (Arcana) check at the end of the short rest spent attempting to gain access to the granted spells of an earth node. The mystic can cast these spells (using no components) for the next 24 hours and while within the area using psi points up to their psi limit as detailed in the table below, using Intelligence as the spellcasting ability. The mystic can benefit from the Enhanced Spellcasting property when casting these spells, making Intelligence (Arcana) checks to do so.
+
+#### *Mystic Psi Points Consumed Per Spell Level*
+
+<table style="text-align:center;" border=1>
+
+<tr><th>Spell Level of Granted Spell </th><th>Psi Points Required to Cast</th></tr>
+
+<tr><td>1st</td><td>2 psi points</td></tr>
+
+<tr><td>2nd</td><td>3 psi points</td></tr>
+
+<tr><td>3rd</td><td>5 psi points</td></tr>
+
+<tr><td>4th</td><td>6 psi points</td></tr>
+
+<tr><td>5th</td><td>7 psi points</td></tr></table>
+
+<br>
+
+### Storing Items (Restricted)
+
+This power can **only** be used by creatures with the **Node Spellcasting** or **Node Manifestation** Supernatural Gift. A creature skilled in the use of earth nodes can utilize them to store or retrieve objects within a hidden extradimensional space linked to a given earth node. An earth node can store any number of objects in this extradimensional space whose combined total volume does not exceed a number of cubic feet equal to 10 x (the earth node's class)<sup>2</sup>. No objects can be stored in an earth node in excess of its storage capacity. For example, a class 3 earth node can store up to 90 cubic feet worth of objects.
+
+After a creature with the **Node Spellcasting** Supernatural Gift becomes **proficient** in their understanding of that earth node, the creature can use an action while in the area to discover how much total volume worth of objects is held within the earth node at the time. The creature does not learn the specific contents of the earth node, except for any objects the creature themselves had previously stored in it.
+
+After becoming **proficient** in their understanding of the earth node, the creature can attempt to store an object within an earth node by using an action to make an Arcana check using their spellcasting ability against the node DC of the earth node while they and the item are in the area of an earth node. On a success, the object is stored within the extradimensional space linked to the earth node and vanishes. On a failure, nothing happens and the creature can't attempt to store that object again within that earth node until 24 hours pass. 
+
+A creature with the **Node Spellcasting** Supernatural Gift that has stored items within an earth node can retrieve them from *any* earth node on the same plane of existence, not just the one where the item was originally stored. To do so, the creature can make an Arcana check as an action using their spellcasting ability against the node DC of the original earth node where the item was stored, while within the area of an earth node on the same plane of existence as the original earth node. On a success, the object harmlessly appears in the nearest unoccupied space by the creature.
+
+Provided that they've become **proficient** in their understanding of a given earth node, a creature with the **Node Spellcasting** Supernatural Gift can also retrieve items within that earth node that was stored by another creature. To retrieve an object that was stored in an earth node by another, the creature must make an Arcana check using their spellcasting ability while within the area of the earth node. The DC of the ability check is equal to the node DC of the earth node + the proficiency bonus of the creature who originally stored the object. (In the case multiple creatures had stored objects in a given earth node, the specific creature whose items are being retrieved is randomly determined.) On a success, a random object stored by the original creature within the earth node harmlessly appears in the nearest unoccupied space by the creature who succeeded on the ability check.
+
+A creature with levels in the Mystic class and the **Node Manifestation** Supernatural Gift can also store or retrieve objects from an earth node as described above. Such a mystic instead makes Intelligence (Arcana) checks to do so.
+
+### *Node Locking (Restricted)*
+
+This power can only be used by creatures with the **Node Spellcasting** Supernatural Gift. A creature with the **Node Spellcasting** Supernatural Gift that has **expertise** in their understanding of a specific earth node is capable of warding that earth node against its use by other creatures. The creature can use the *arcane lock* spell targeting the earth node while in its area to attempt to magically secure it. Instead of the normal effect of the spell, *arcane lock* cast in this way magically "locks" the node by increasing the effective node DC of the earth node by 10 for any other creature that interacts with the earth node. Creatures can be additionally designated when casting *arcane lock* in this way to be able to interact with the earth node normally. 
+
+This "node lock" can only be removed by means of a *dispel magic* spell in the area of the earth node, targeting a magical effect as if attempting to dispel a spell of the same level as the class rating of the earth node. For example, attempting use the *dispel magic* spell on a node lock present in a class 4 earth node would be treated as if trying to dispel a 4th-level spell.
+
+<br>
+
+## Modifying Earth Nodes
+
+The area around an earth node can be modified, from incorporating an earth node into a structure to opening up an earth node that resides within solid rock. However, such modifications to the area may affect the integrity of the earth node situated within it.
+
+Any physical project involving building around or modifying the area around an earth node takes the normal amount of time to accomplish such a project, as determined by the DM. However, ensuring that the earth node remains intact throughout this process requires supervision by a  creature familiar with the earth node.
+
+In the event that the project makes either no or at most minor modifications to the area in which the earth node is situated, then the earth node is unaffected by the project. However, projects which involve moderate or extensive changes to the area risk damaging the earth node.
+
+At the end of each workweek associated with the project, a creature that has become **proficient** in their understanding of a given earth node can make an ability check using their spellcasting ability while within the area of that earth node. A creature with the **Node Spellcasting** Supernatural Gift can instead make an Arcana check using their spellcasting ability, and a creature with the **Node Manifestation** Supernatural Gift can make an Intelligence (Arcana) check. (A creature without a spellcasting ability instead makes an Intelligence check.) A creature proficient in mason's tools that is also overseeing the project can provide Help on the ability check.
+
+The DC of the ability check is equal to the node DC if the project involves moderate changes to the area as determined by the DM. If the project involves extensive changes to the area as determined by the DM, the DC for the ability check is equal to the node DC + 5. 
+
+On a success, the creature is able to help reroute and smooth the flow of magical energy in the new physical arrangement as associated with the project. On a failure, the class rating of the earth node decreases by 1. An earth node whose class rating is reduced to 0 is destroyed. 
+
+If projects involving moderate or extensive changes aren't supervised, there is a cumulative 5% chance for each day of the project that the class rating of the node is reduced by 1. This chance resets to 5% after the node's class rating is reduced, before accumulating with each day once more.  
+
+It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM. 
+
+In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
+
+![](https://i.imgur.com/pfAp3Pa.png)
+
+## Creating Earth Nodes
+
+The following section is intended to provide background information and guidelines for DMs looking to incorporate artificially created earth nodes as part of their storylines and is not intended to allow for the creation of artificial earth nodes by player characters. 
+
+While earth nodes are typically natural phenomena, it is possible through means of powerful and esoteric magic to artificially create the nexus of magical energy that comprises an earth node. The creation of an artificial earth node requires powerful magic, on par with that of 9th-level spells, as well as the knowledge and skill by which to utilize the magic of nodes. 
+
+The specific methods or magic by which an earth node can be artificially created varies. Certain artifacts, such as the fabled *Axe of the Dwarvish Lords*, are believed to have the capacity by which they could potentially be used by a creature skilled in node magic to forge an artificial earth node. Additionally, spellcasters capable of casting 9th-level spells may be able to conduct various rituals or the use of certain powerful magics by which to create an earth node. Finally, certain powerful supernatural creatures, such as some dragons or genies, have innate magical abilities to artificially create and cultivate earth nodes. A specific method by which to create an earth node is often a closely guarded secret and is difficult to acquire. Regardless of the method, only creatures with the **Node Spellcasting** Supernatural Gift are capable of creating an earth node at all, and earth nodes can generally only be created in areas that are at least partially if not wholly underground. (Any DM may modify a monster's statblock to include the **Node Spellcasting** Supernatural Gift to accommodate this, as detailed on page 12.)
+
+The following describes the most common procedure by which a spellcaster with the **Node Spellcasting** Supernatural Gift and the ability to cast 9th-level spells can utilize, known as the *Node Genesis* ritual. After learning of and internalizing the ritual, the spellcaster must stand at the intended origin point of the node to be created and conduct a ritual (requiring concentration as if concentrating on a spell) over the course of 8 uninterrupted hours, expending a 9th-level spell slot and at least 500 GP worth of adamantine in doing so. This ritual must be repeated for a full tenday in total, consuming the same material components (for a total of 5,000 GP worth of adamantine) and a 9th-level spell slot for each day. At the end of the process, a class 1 earth node is created at the location.
+
+The earth node slowly grows in size and strength over time, with a new layer added after a number of years equal to 2 x (the earth node's current class rating), up to that of a class 5 earth node. For example, it would take a class 1 earth node 2 years to reach class 2, then 4 years to reach class 3, then 6 years to reach class 4, and then 8 years to reach class 5 (for a total of 20 years). The earth node functions as akin to any other earth node as described in this document and is subject to potential modification, damage, and destruction in the same ways. Improving the size and strength of an artificially created earth node in this way beyond class 5 requires even more esoteric knowledge and powerful magic beyond the scope of this ritual. 
+
+<br>
+
+## Other Properties of Earth Nodes
+
+Besides the properties and powers of earth nodes as mentioned and described above, it is possible for earth nodes to have other properties or idiosyncrasies as determined by the DM. Perhaps a particular earth node lacks some of the properties above, or grants additional powers, or may require a specific ritual to access. A DM should feel free to customize or alter the specifics of a particular earth node of their creation as suits their storyline beyond the guidelines mentioned in this document.
+
+<br>
+
+## Earth Nodes on Other Planes of Existence
+
+Besides earth nodes encountered on the Material Plane, other planes of existence can also contain earth nodes, most commonly the Feywild and the Shadowfell as reflections of the Material Plane. At times, an earth node in the Material Plane may be linked to a mirroring earth node on the Feywild or the Shadowfell. Earth nodes are also common in the Elemental Plane of Earth, wherever streams of magical energy form a nexus of power. Such earth nodes have many of the same properties and powers associated with earth nodes on the Material Plane, but often carry additional properties tied to the plane of existence in which they reside. For example, an earth node in the Feywild might act as a wild magic zone.
+
+<br>
+
+## Other Kinds of Nodes
+
+Earth nodes are the most common kind of node that are encountered, but other kinds of nodes exist that act as nexuses of magical energy. The following describe some other kinds of nodes known to exist. These nodes have many of the same properties and powers as associated with earth nodes, but also have important features that distinguish them from earth nodes or other kinds of nodes.
+
+### Elemental Nodes
+
+An elemental node in the Material Plane is a location where an Elemental Plane connects to and touches upon the Material Plane. There are four basic elemental nodes, each tied to one of the main Elemental Planes: elemental air nodes, elemental earth nodes, elemental fire nodes, and elemental water nodes. Elemental nodes are charged with the energy of the plane they are linked to and contain sustained portals that lead to and from the Elemental Plane they are connected to. The area around an elemental node is altered and resembles an area of the associated Elemental Plane and takes on the properties of that plane. 
+
+For example, an elemental air node might feature powerful gusts of wind that run through a cavern whereas an elemental earth node might be situated in a cavern littered with crystals charged with elemental energy and the area may continually rumble. Likewise, an elemental fire node may lie within a magma chamber filled with sweltering heat, while an elemental water node may feature rivers and waterfalls of rapid and rushing waters.
+
+Particularly powerful elemental nodes can warp the environment around them to a degree so as to resemble natural disasters, generating tornados, earthquakes, wildfires, or even hurricanes in the region. In featuring such free-standing portals, elemental creatures hailing from the associated Elemental Plane can frequently be encountered. 
+
+It is said that various cults dedicated to elemental powers such as elder elementals or even the Elemental Evils can harness the power of such elemental nodes to either act as a conduit to summon such powerful beings into the Material Plane or even to create magical weapons capable of wreaking widespread devastation. 
+
+The properties and powers of elemental nodes function the same as earth nodes except as specified below.
+
+**Elemental Nature** <br>The area of an elemental node is altered, reflecting the nature of the Elemental Plane it is linked to and with corresponding environmental effects and hazards. Elementals originating from the corresponding Elemental Plane can be found in the region and near the elemental node. The specifics of how an elemental node affects the region it is within is determined by the DM.
+
+**Enhanced Spellcasting** <br>Spells whose type corresponds to a given elemental node (as determined by the DM) are easier to enhance with the node's magic, with the DC of the ability check equal to the node DC - 5. For example, a *fireball* spell is easier to enhance with an elemental fire node's magic.
+
+**Teleporting to Other Nodes** <br>The portal created is linked to the nearest elemental node of the matching type that is within the portal's range.
+
+**Portals to Other Planes of Existence** <br>Given the nature of elemental nodes, elemental nodes contain a free-standing portal that leads to and from the Elemental Plane to which they are linked, located at the origin of the node. These portals last indefinitely but otherwise behave similarly to and have properties as described above regarding portals to other planes of existence in relation to earth nodes.
+
+**Modifying Elemental Nodes** <br>Elemental nodes are sustained by the portals which lie at their origin. So long as the portal remains intact, an elemental node's class rating cannot diminish nor can an elemental node be destroyed. It is far more likely for an elemental node's presence to warp the nature and terrain of anything constructed around it than vice versa.
+
+**Creating Elemental Nodes** <br>The creation of an artificial elemental node can be accomplished in a number of ways, as may be accomplished by certain powerful elemental entities present on the Material Plane or through invoking powerful elemental magic. It is rumored that certain apocalyptic elemental cults have sought out certain magical weapons tied to the Elemental Evils. Through the use of these magical items, these cults seek a means by which to establish a foothold for the Elemental Planes to make their presence manifest on the Material Plane and also to allow the elemental forces they revere to enter the Material Plane. 
+
+**Granted Spells** <br>The granted spells provided by an elemental node reflect the Elemental Plane to which the node is linked to. See the table below for a list of sample granted spells associated with each kind of elemental node.
