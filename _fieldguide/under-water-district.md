@@ -2,7 +2,8 @@
 layout: doc
 title: "The Underwater District, Sultan Rezzo's Palace, and the Plane of Water"
 order: 14
-background_image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/dc180f87-63de-4df2-911c-791edfa09683/d7acvqj-d78fe44c-d879-458b-bff5-1d42d5082623.jpg/v1/fill/w_1024,h_497,q_75,strp/1_by_zhaoenzhe_d7acvqj-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NDk3IiwicGF0aCI6Ii9mL2RjMTgwZjg3LTYzZGUtNGRmMi05MTFjLTc5MWVkZmEwOTY4My9kN2FjdnFqLWQ3OGZlNDRjLWQ4NzktNDU4Yi1iZmY1LTFkNDJkNTA4MjYyMy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19._IlRy7GnL58cKG_PUt4O-E89_aFLVC1ovthmObWjUHU
+background_image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/68545d52-ed3d-4fd3-a124-075a60034c0c/dk5cplj-d7d562c7-1a3b-42b5-ae08-184eb9465f8d.png/v1/fill/w_1280,h_718,q_80,strp/coral_reef_by_aokiryu_dk5cplj-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzE4IiwicGF0aCI6Ii9mLzY4NTQ1ZDUyLWVkM2QtNGZkMy1hMTI0LTA3NWE2MDAzNGMwYy9kazVjcGxqLWQ3ZDU2MmM3LTFhM2ItNDJiNS1hZTA4LTE4NGViOTQ2NWY4ZC5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.JXb8diaRRP2CFX44CLtKAswtsxH_XUHUhcFsFtoaYBk
+
 ---
 
 ## The Underwater District
@@ -163,6 +164,6 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 * [The underwater world, with the aqua-dragons by RayaA5](https://www.deviantart.com/rayaa5/art/The-underwater-world-with-the-aqua-dragons-1241138160)
 * [Submerged Palace by Arcaedes](https://www.deviantart.com/arcaedes/art/Submerged-Palace-1198810611)
 * [Red Tide by SitwithMeNtheDark](https://www.deviantart.com/sitwithmenthedark/art/Red-Tide-1020824483)
-* [1 by zhaoenzhe](https://www.deviantart.com/zhaoenzhe/art/1-440660395)
+* [Coral Reef by aokiryu](https://www.deviantart.com/aokiryu/art/Coral-reef-1218314647)
 
 
