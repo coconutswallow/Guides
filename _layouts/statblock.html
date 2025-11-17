@@ -1,261 +1,365 @@
----
-layout: default
-body_class: monster-page
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
+</head>
+<body class="monster-page">
+    <header class="site-header">
+        <div class="header-content">
+            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <h1 class="site-title">{{ site.title | default: "Hawthorne Guild Guide" }}</h1>
+        </div>
+    </header>
 
-{% if page.creator %}
-<p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
-{% endif %}
+    <div id="sidebar-menu">
+        <div class="sidebar-header">
+            <h4 class="sidebar-title">Navigation</h4>
+            <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
+        </div>
+        
+        <div class="sidebar-nav">
+            {% for nav_item in site.navigation %}
+                {% if nav_item.url %}
+                    <a href="{{ nav_item.url | relative_url }}" class="nav-link">{{ nav_item.title }}</a>
+                {% elsif nav_item.collection %}
+                    <a href="{{ nav_item.collection | relative_url }}" class="nav-link">{{ nav_item.title }}</a>
+                {% elsif nav_item.sections %}
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            {{ nav_item.title }}
+                        </button>
+                        <div class="nav-submenu">
+                            {% for section in nav_item.sections %}
+                                {% if section.url %}
+                                    <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
+                                {% elsif section.subsections %}
+                                    <div class="nav-subsection">
+                                        <button class="nav-subsection-toggle" aria-expanded="false">
+                                            <span class="toggle-icon">▶</span>
+                                            {{ section.title }}
+                                        </button>
+                                        <div class="nav-subsubmenu">
+                                            {% for subsection in section.subsections %}
+                                                <a href="{{ subsection.url | relative_url }}">{{ subsection.title }}</a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% elsif nav_item.links %}
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            {{ nav_item.title }}
+                        </button>
+                        <div class="nav-submenu">
+                            {% for link in nav_item.links %}
+                                <a href="{{ link.url | relative_url }}">{{ link.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 
-{{ content }}
-
-{% if page.layout == "statblock" %}
-<div class="export-button-container">
-    <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Index</button>
-    <button class="btn export-json-button" onclick="exportToJSON()">Export as JSON</button>
-</div>
-{% endif %}
-
-{% if page.image %}
-<div class="monster-image-container">
-    <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
-    {% if page.image_credit %}
-    <p class="image-credit">{{ page.image_credit }}</p>
+    <div id="menu-overlay"></div>
+    <div class="page">
+    {% if page.creator %}
+    <p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
+    {% endif %}
+    
+    {{ content }}
+    
+    {% if page.layout == "statblock" %}
+    <div class="export-button-container">
+        <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Index</button>
+        <button class="btn export-json-button" onclick="exportToJSON()">Export as JSON</button>
+    </div>
+    {% endif %}
+    
+    {% if page.image %}
+    <div class="monster-image-container">
+        <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
+        {% if page.image_credit %}
+        <p class="image-credit">{{ page.image_credit }}</p>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
-{% endif %}
 
-<script>
-    // Export stat block to JSON (5etools format)
-    function exportToJSON() {
-        const statBlock = document.querySelector('blockquote');
-        if (!statBlock) {
-            alert('No stat block found on this page.');
-            return;
-        }
-        
-        // Helper functions
-        const extractText = (element) => element ? element.textContent.trim() : '';
-        const parseModifier = (str) => {
-            const match = str.match(/([+-]\d+)/);
-            return match ? match[1] : '+0';
-        };
-        
-        // Extract monster name from h2
-        const nameEl = statBlock.querySelector('h2');
-        const name = extractText(nameEl);
-        
-        // Extract size, type, alignment from first paragraph
-        const typeLineEl = statBlock.querySelector('p:first-of-type');
-        const typeLine = extractText(typeLineEl);
-        const typeMatch = typeLine.match(/^(\w+)\s+(\w+),\s+(.+)$/);
-        
-        const sizeMap = { 'Tiny': 'T', 'Small': 'S', 'Medium': 'M', 'Large': 'L', 'Huge': 'H', 'Gargantuan': 'G' };
-        const size = typeMatch ? sizeMap[typeMatch[1]] || 'M' : 'M';
-        const type = typeMatch ? typeMatch[2].toLowerCase() : 'unknown';
-        const alignment = typeMatch ? typeMatch[3] : 'unaligned';
-        
-        // Parse alignment to abbreviations
-        const alignmentMap = {
-            'lawful good': ['L', 'G'], 'neutral good': ['N', 'G'], 'chaotic good': ['C', 'G'],
-            'lawful neutral': ['L', 'N'], 'neutral': ['N'], 'chaotic neutral': ['C', 'N'],
-            'lawful evil': ['L', 'E'], 'neutral evil': ['N', 'E'], 'chaotic evil': ['C', 'E'],
-            'unaligned': ['U'], 'any alignment': ['A']
-        };
-        const alignmentKey = alignment.toLowerCase().replace('typically ', '');
-        const alignmentArr = alignmentMap[alignmentKey] || ['N'];
-        
-        // Extract AC, HP, Speed
-        const statLineEl = Array.from(statBlock.querySelectorAll('p')).find(p => p.textContent.includes('AC'));
-        const statLine = extractText(statLineEl);
-        
-        const acMatch = statLine.match(/AC\s+(\d+)/i);
-        const ac = acMatch ? parseInt(acMatch[1]) : 10;
-        
-        const hpMatch = statLine.match(/HP\s+(\d+)/i);
-        const hp = hpMatch ? parseInt(hpMatch[1]) : 1;
-        
-        const speedMatch = statLine.match(/Speed\s+(.+?)(?=\n|$)/i);
-        const speedText = speedMatch ? speedMatch[1].trim() : '30 ft.';
-        const speed = { walk: 30 };
-        
-        const walkMatch = speedText.match(/(\d+)\s*ft\./);
-        if (walkMatch) speed.walk = parseInt(walkMatch[1]);
-        
-        const flyMatch = speedText.match(/fly\s+(\d+)\s*ft\./i);
-        if (flyMatch) {
-            speed.fly = parseInt(flyMatch[1]);
-            if (speedText.includes('hover')) {
-                speed.fly = { number: speed.fly, condition: "(hover)" };
-                speed.canHover = true;
+    <footer class="site-footer">
+        <div class="footer-content">
+
+        </div>
+    </footer>
+    
+    <script>
+        // CORE MENU TOGGLE LOGIC (Main Hamburger/Close Button)
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+            function toggleMenu() {
+                sidebarMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
             }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            closeMenuBtn.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
         }
-        
-        const swimMatch = speedText.match(/swim\s+(\d+)\s*ft\./i);
-        if (swimMatch) speed.swim = parseInt(swimMatch[1]);
-        
-        const climbMatch = speedText.match(/climb\s+(\d+)\s*ft\./i);
-        if (climbMatch) speed.climb = parseInt(climMatch[1]);
-        
-        const burrowMatch = speedText.match(/burrow\s+(\d+)\s*ft\./i);
-        if (burrowMatch) speed.burrow = parseInt(burrowMatch[1]);
-        
-        // Extract ability scores from table
-        const table = statBlock.querySelector('table');
-        const cells = table ? Array.from(table.querySelectorAll('td')) : [];
-        
-        const abilities = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
-        const saves = {};
-        
-        if (cells.length >= 12) {
-            // First row: STR, DEX, CON (columns 1, 5, 9)
-            abilities.str = parseInt(extractText(cells[1])) || 10;
-            abilities.dex = parseInt(extractText(cells[5])) || 10;
-            abilities.con = parseInt(extractText(cells[9])) || 10;
+    </script>
+    
+    <script src="{{ '/assets/js/sidebar.js' | relative_url }}"></script>
+    
+    <script>
+        // Export stat block to JSON (5etools format)
+        function exportToJSON() {
+            const statBlock = document.querySelector('blockquote');
+            if (!statBlock) {
+                alert('No stat block found on this page.');
+                return;
+            }
             
-            // Saves (columns 3, 7, 11)
-            const strSave = extractText(cells[3]);
-            const dexSave = extractText(cells[7]);
-            const conSave = extractText(cells[11]);
-            if (strSave && strSave !== '—') saves.str = strSave;
-            if (dexSave && dexSave !== '—') saves.dex = dexSave;
-            if (conSave && conSave !== '—') saves.con = conSave;
-        }
-        
-        if (cells.length >= 24) {
-            // Second row: INT, WIS, CHA (columns 13, 17, 21)
-            abilities.int = parseInt(extractText(cells[13])) || 10;
-            abilities.wis = parseInt(extractText(cells[17])) || 10;
-            abilities.cha = parseInt(extractText(cells[21])) || 10;
+            // Helper functions
+            const extractText = (element) => element ? element.textContent.trim() : '';
+            const parseModifier = (str) => {
+                const match = str.match(/([+-]\d+)/);
+                return match ? match[1] : '+0';
+            };
             
-            // Saves (columns 15, 19, 23)
-            const intSave = extractText(cells[15]);
-            const wisSave = extractText(cells[19]);
-            const chaSave = extractText(cells[23]);
-            if (intSave && intSave !== '—') saves.int = intSave;
-            if (wisSave && wisSave !== '—') saves.wis = wisSave;
-            if (chaSave && chaSave !== '—') saves.cha = chaSave;
-        }
-        
-        // Extract skills, senses, languages, CR
-        const paragraphs = Array.from(statBlock.querySelectorAll('p'));
-        let skills = null, senses = [], languages = [], cr = '0', passive = 10;
-        let immune = [], resist = [], vulnerable = [], conditionImmune = [];
-        
-        paragraphs.forEach(p => {
-            const text = extractText(p);
+            // Extract monster name from h2
+            const nameEl = statBlock.querySelector('h2');
+            const name = extractText(nameEl);
             
-            if (text.startsWith('Skills')) {
-                const skillsMatch = text.match(/Skills\s+(.+)/i);
-                if (skillsMatch) {
-                    skills = {};
-                    const skillParts = skillsMatch[1].split(',');
-                    skillParts.forEach(part => {
-                        const match = part.trim().match(/(\w+)\s+([+-]\d+)/);
-                        if (match) {
-                            skills[match[1].toLowerCase()] = match[2];
-                        }
-                    });
+            // Extract size, type, alignment from first paragraph
+            const typeLineEl = statBlock.querySelector('p:first-of-type');
+            const typeLine = extractText(typeLineEl);
+            const typeMatch = typeLine.match(/^(\w+)\s+(\w+),\s+(.+)$/);
+            
+            const sizeMap = { 'Tiny': 'T', 'Small': 'S', 'Medium': 'M', 'Large': 'L', 'Huge': 'H', 'Gargantuan': 'G' };
+            const size = typeMatch ? sizeMap[typeMatch[1]] || 'M' : 'M';
+            const type = typeMatch ? typeMatch[2].toLowerCase() : 'unknown';
+            const alignment = typeMatch ? typeMatch[3] : 'unaligned';
+            
+            // Parse alignment to abbreviations
+            const alignmentMap = {
+                'lawful good': ['L', 'G'], 'neutral good': ['N', 'G'], 'chaotic good': ['C', 'G'],
+                'lawful neutral': ['L', 'N'], 'neutral': ['N'], 'chaotic neutral': ['C', 'N'],
+                'lawful evil': ['L', 'E'], 'neutral evil': ['N', 'E'], 'chaotic evil': ['C', 'E'],
+                'unaligned': ['U'], 'any alignment': ['A']
+            };
+            const alignmentKey = alignment.toLowerCase().replace('typically ', '');
+            const alignmentArr = alignmentMap[alignmentKey] || ['N'];
+            
+            // Extract AC, HP, Speed
+            const statLineEl = Array.from(statBlock.querySelectorAll('p')).find(p => p.textContent.includes('AC'));
+            const statLine = extractText(statLineEl);
+            
+            const acMatch = statLine.match(/AC\s+(\d+)/i);
+            const ac = acMatch ? parseInt(acMatch[1]) : 10;
+            
+            const hpMatch = statLine.match(/HP\s+(\d+)/i);
+            const hp = hpMatch ? parseInt(hpMatch[1]) : 1;
+            
+            const speedMatch = statLine.match(/Speed\s+(.+?)(?=\n|$)/i);
+            const speedText = speedMatch ? speedMatch[1].trim() : '30 ft.';
+            const speed = { walk: 30 };
+            
+            const walkMatch = speedText.match(/(\d+)\s*ft\./);
+            if (walkMatch) speed.walk = parseInt(walkMatch[1]);
+            
+            const flyMatch = speedText.match(/fly\s+(\d+)\s*ft\./i);
+            if (flyMatch) {
+                speed.fly = parseInt(flyMatch[1]);
+                if (speedText.includes('hover')) {
+                    speed.fly = { number: speed.fly, condition: "(hover)" };
+                    speed.canHover = true;
                 }
             }
             
-            if (text.startsWith('Damage Immunities')) {
-                const match = text.match(/Damage Immunities\s+(.+)/i);
-                if (match) immune = match[1].split(',').map(s => s.trim().toLowerCase());
+            const swimMatch = speedText.match(/swim\s+(\d+)\s*ft\./i);
+            if (swimMatch) speed.swim = parseInt(swimMatch[1]);
+            
+            const climbMatch = speedText.match(/climb\s+(\d+)\s*ft\./i);
+            if (climbMatch) speed.climb = parseInt(climbMatch[1]);
+            
+            const burrowMatch = speedText.match(/burrow\s+(\d+)\s*ft\./i);
+            if (burrowMatch) speed.burrow = parseInt(burrowMatch[1]);
+            
+            // Extract ability scores from table
+            const table = statBlock.querySelector('table');
+            const cells = table ? Array.from(table.querySelectorAll('td')) : [];
+            
+            const abilities = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
+            const saves = {};
+            
+            if (cells.length >= 12) {
+                // First row: STR, DEX, CON (columns 1, 5, 9)
+                abilities.str = parseInt(extractText(cells[1])) || 10;
+                abilities.dex = parseInt(extractText(cells[5])) || 10;
+                abilities.con = parseInt(extractText(cells[9])) || 10;
+                
+                // Saves (columns 3, 7, 11)
+                const strSave = extractText(cells[3]);
+                const dexSave = extractText(cells[7]);
+                const conSave = extractText(cells[11]);
+                if (strSave && strSave !== '—') saves.str = strSave;
+                if (dexSave && dexSave !== '—') saves.dex = dexSave;
+                if (conSave && conSave !== '—') saves.con = conSave;
             }
             
-            if (text.startsWith('Damage Resistances')) {
-                const match = text.match(/Damage Resistances\s+(.+)/i);
-                if (match) resist = match[1].split(',').map(s => s.trim().toLowerCase());
+            if (cells.length >= 24) {
+                // Second row: INT, WIS, CHA (columns 13, 17, 21)
+                abilities.int = parseInt(extractText(cells[13])) || 10;
+                abilities.wis = parseInt(extractText(cells[17])) || 10;
+                abilities.cha = parseInt(extractText(cells[21])) || 10;
+                
+                // Saves (columns 15, 19, 23)
+                const intSave = extractText(cells[15]);
+                const wisSave = extractText(cells[19]);
+                const chaSave = extractText(cells[23]);
+                if (intSave && intSave !== '—') saves.int = intSave;
+                if (wisSave && wisSave !== '—') saves.wis = wisSave;
+                if (chaSave && chaSave !== '—') saves.cha = chaSave;
             }
             
-            if (text.startsWith('Damage Vulnerabilities')) {
-                const match = text.match(/Damage Vulnerabilities\s+(.+)/i);
-                if (match) vulnerable = match[1].split(',').map(s => s.trim().toLowerCase());
-            }
+            // Extract skills, senses, languages, CR
+            const paragraphs = Array.from(statBlock.querySelectorAll('p'));
+            let skills = null, senses = [], languages = [], cr = '0', passive = 10;
+            let immune = [], resist = [], vulnerable = [], conditionImmune = [];
             
-            if (text.startsWith('Condition Immunities')) {
-                const match = text.match(/Condition Immunities\s+(.+)/i);
-                if (match) conditionImmune = match[1].split(',').map(s => s.trim().toLowerCase());
-            }
-            
-            if (text.startsWith('Senses')) {
-                const sensesMatch = text.match(/Senses\s+(.+?)(?:Passive Perception\s+(\d+))?$/i);
-                if (sensesMatch) {
-                    const senseText = sensesMatch[1].trim();
-                    senses = senseText.split(',').map(s => s.trim()).filter(s => s);
-                    if (sensesMatch[2]) passive = parseInt(sensesMatch[2]);
+            paragraphs.forEach(p => {
+                const text = extractText(p);
+                
+                if (text.startsWith('Skills')) {
+                    const skillsMatch = text.match(/Skills\s+(.+)/i);
+                    if (skillsMatch) {
+                        skills = {};
+                        const skillParts = skillsMatch[1].split(',');
+                        skillParts.forEach(part => {
+                            const match = part.trim().match(/(\w+)\s+([+-]\d+)/);
+                            if (match) {
+                                skills[match[1].toLowerCase()] = match[2];
+                            }
+                        });
+                    }
                 }
-            }
+                
+                if (text.startsWith('Damage Immunities')) {
+                    const match = text.match(/Damage Immunities\s+(.+)/i);
+                    if (match) immune = match[1].split(',').map(s => s.trim().toLowerCase());
+                }
+                
+                if (text.startsWith('Damage Resistances')) {
+                    const match = text.match(/Damage Resistances\s+(.+)/i);
+                    if (match) resist = match[1].split(',').map(s => s.trim().toLowerCase());
+                }
+                
+                if (text.startsWith('Damage Vulnerabilities')) {
+                    const match = text.match(/Damage Vulnerabilities\s+(.+)/i);
+                    if (match) vulnerable = match[1].split(',').map(s => s.trim().toLowerCase());
+                }
+                
+                if (text.startsWith('Condition Immunities')) {
+                    const match = text.match(/Condition Immunities\s+(.+)/i);
+                    if (match) conditionImmune = match[1].split(',').map(s => s.trim().toLowerCase());
+                }
+                
+                if (text.startsWith('Senses')) {
+                    const sensesMatch = text.match(/Senses\s+(.+?)(?:Passive Perception\s+(\d+))?$/i);
+                    if (sensesMatch) {
+                        const senseText = sensesMatch[1].trim();
+                        senses = senseText.split(',').map(s => s.trim()).filter(s => s);
+                        if (sensesMatch[2]) passive = parseInt(sensesMatch[2]);
+                    }
+                }
+                
+                if (text.startsWith('Languages')) {
+                    const langMatch = text.match(/Languages\s+(.+)/i);
+                    if (langMatch) languages = langMatch[1].split(',').map(s => s.trim());
+                }
+                
+                if (text.includes('CR')) {
+                    const crMatch = text.match(/CR\s+([\d/]+)/i);
+                    if (crMatch) cr = crMatch[1];
+                }
+            });
             
-            if (text.startsWith('Languages')) {
-                const langMatch = text.match(/Languages\s+(.+)/i);
-                if (langMatch) languages = langMatch[1].split(',').map(s => s.trim());
-            }
+            // Build the JSON structure
+            const fullData = {
+                siteVersion: "1.197.0",
+                _meta: {
+                    sources: [{
+                        json: "HawthorneGuild",
+                        abbreviation: "HG",
+                        full: "Hawthorne Guild",
+                        url: "{{ site.url }}{{ site.baseurl }}",
+                        authors: ["{{ page.creator | default: 'Hawthorne Guild' }}"],
+                        convertedBy: []
+                    }],
+                    dateAdded: Math.floor(Date.now() / 1000),
+                    dateLastModified: Math.floor(Date.now() / 1000)
+                },
+                monster: [{
+                    name: name,
+                    size: [size],
+                    type: type,
+                    source: "HawthorneGuild",
+                    alignment: alignmentArr,
+                    ac: [{ ac: ac }],
+                    hp: { average: hp },
+                    speed: speed,
+                    str: abilities.str,
+                    dex: abilities.dex,
+                    con: abilities.con,
+                    int: abilities.int,
+                    wis: abilities.wis,
+                    cha: abilities.cha,
+                    passive: passive,
+                    cr: cr
+                }]
+            };
             
-            if (text.includes('CR')) {
-                const crMatch = text.match(/CR\s+([\d/]+)/i);
-                if (crMatch) cr = crMatch[1];
-            }
-        });
-        
-        // Build the JSON structure
-        const fullData = {
-            siteVersion: "1.197.0",
-            _meta: {
-                sources: [{
-                    json: "HawthorneGuild",
-                    abbreviation: "HG",
-                    full: "Hawthorne Guild",
-                    url: "{{ site.url }}{{ site.baseurl }}",
-                    authors: ["{{ page.creator | default: 'Hawthorne Guild' }}"],
-                    convertedBy: []
-                }],
-                dateAdded: Math.floor(Date.now() / 1000),
-                dateLastModified: Math.floor(Date.now() / 1000)
-            },
-            monster: [{
-                name: name,
-                size: [size],
-                type: type,
-                source: "HawthorneGuild",
-                alignment: alignmentArr,
-                ac: [{ ac: ac }],
-                hp: { average: hp },
-                speed: speed,
-                str: abilities.str,
-                dex: abilities.dex,
-                con: abilities.con,
-                int: abilities.int,
-                wis: abilities.wis,
-                cha: abilities.cha,
-                passive: passive,
-                cr: cr
-            }]
-        };
-        
-        const monster = fullData.monster[0];
-        
-        // Add optional fields
-        if (Object.keys(saves).length > 0) monster.save = saves;
-        if (skills) monster.skill = skills;
-        if (immune.length > 0) monster.immune = immune;
-        if (resist.length > 0) monster.resist = resist;
-        if (vulnerable.length > 0) monster.vulnerable = vulnerable;
-        if (conditionImmune.length > 0) monster.conditionImmune = conditionImmune;
-        if (senses.length > 0) monster.senses = senses;
-        if (languages.length > 0) monster.languages = languages;
-        
-        // Download the JSON
-        const dataStr = JSON.stringify(fullData, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = name.toLowerCase().replace(/\s+/g, '-') + '.json';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    }
-</script>
+            const monster = fullData.monster[0];
+            
+            // Add optional fields
+            if (Object.keys(saves).length > 0) monster.save = saves;
+            if (skills) monster.skill = skills;
+            if (immune.length > 0) monster.immune = immune;
+            if (resist.length > 0) monster.resist = resist;
+            if (vulnerable.length > 0) monster.vulnerable = vulnerable;
+            if (conditionImmune.length > 0) monster.conditionImmune = conditionImmune;
+            if (senses.length > 0) monster.senses = senses;
+            if (languages.length > 0) monster.languages = languages;
+            
+            // Download the JSON
+            const dataStr = JSON.stringify(fullData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = name.toLowerCase().replace(/\s+/g, '-') + '.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
