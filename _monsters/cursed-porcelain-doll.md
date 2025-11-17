@@ -46,3 +46,10 @@ ___
 > ***Claw.*** *Melee Attack Roll:* +3, reach 5 ft., one target. *Hit:* 6 (2d4 + 1) Slashing damage. If the target is a creature, it must succeed on a DC 11 Wisdom saving throw or be **frightened** until the end of the doll's next turn.
 >
 > ***Terrifying Glare.*** The doll targets one creature it can see within 30 feet of it. If the target can see the doll, the target must succeed on a DC 11 Wisdom saving throw or be magically **frightened** until the end of the doll's next turn. The frightened target is also **paralyzed**.
+
+___
+
+## See Also
+
+- [Swarm of Cursed Porcelain Dolls](https://hawthorneguild.github.io/Guides/monster-compendium/cursed-porcelain-dolls-swarm-of/)
+- [The Dollmaker](https://hawthorneguild.github.io/Guides/monster-compendium/dollmaker/)

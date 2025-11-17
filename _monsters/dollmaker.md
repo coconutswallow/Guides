@@ -66,4 +66,11 @@ ___
 >
 > ***Detect.*** The dollmaker makes a Wisdom (Perception) check.
 >
-> ***Move.*** The dollmaker moves up to its speed without provoking Opportunity Attacks.
+> ***Move.*** The dollmaker moves up to its speed without provoking Opportunity Attacks.  
+
+___
+
+## See Also
+
+- [Cursed Porcelain Dolls](https://hawthorneguild.github.io/Guides/monster-compendium/cursed-porcelain-doll/)
+- [Swarm of Cursed Porcelain Dolls](https://hawthorneguild.github.io/Guides/monster-compendium/cursed-porcelain-dolls-swarm-of/)

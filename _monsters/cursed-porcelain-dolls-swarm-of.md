@@ -46,3 +46,10 @@ ___
 > ### Actions
 >
 > ***Claw.*** *Melee Attack Roll:* +3, reach 5 ft., one target in the swarm's space. *Hit:* 20 ($8d4$) Slashing damage, or 10 ($4d4$) Slashing damage if the swarm has half of its hit points or fewer. If the target is a creature, it must succeed on a DC 11 Wisdom saving throw or be **frightened** until the end of the doll swarm's next turn.
+
+___
+
+## See Also
+
+- [Cursed Porcelain Dolls](https://hawthorneguild.github.io/Guides/monster-compendium/cursed-porcelain-doll/)
+- [The Dollmaker](https://hawthorneguild.github.io/Guides/monster-compendium/dollmaker/)
