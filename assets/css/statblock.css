@@ -10,15 +10,6 @@
 /* MONSTER COMPENDIUM PAGE BACKGROUND */
 /* ============================================ */
 
-/* Override body background for monster compendium pages */
-body.monster-page {
-  background-image: var(--statblock-bg-image);
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-color: var(--statblock-body-bg);
-}
 
 /* Override page container for monster compendium */
 .monster-page .page {
