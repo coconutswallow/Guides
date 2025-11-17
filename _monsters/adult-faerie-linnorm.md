@@ -51,7 +51,6 @@ ___
 > **Senses** Blindsight 120 ft., Darkvision 120 ft., Passive Perception 21  
 > **Languages** Common, Draconic, Sylvan  
 > **CR** 12 (PB +4)
-> **Proficiency Bonus** +4
 >
 > ### Traits
 >
