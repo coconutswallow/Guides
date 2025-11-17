@@ -76,30 +76,32 @@
 
     <div id="menu-overlay"></div>
     <div class="page">
-        {{ content }}
-        
-        {% if page.layout == "statblock" %}
-        <div class="export-button-container">
-            <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Compendium</button>
-            <button class="btn export-json-button" onclick="exportToJSON()">Export as JSON</button>
-        </div>
-        {% endif %}
-        
-        {% if page.image %}
-        <div class="monster-image-container">
-            <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
-            {% if page.image_credit %}
-            <p class="image-credit">{{ page.image_credit }}</p>
-            {% endif %}
-        </div>
+    {% if page.creator %}
+    <p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
+    {% endif %}
+    
+    {{ content }}
+    
+    {% if page.layout == "statblock" %}
+    <div class="export-button-container">
+        <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Index</button>
+        <button class="btn export-json-button" onclick="exportToJSON()">Export as JSON</button>
+    </div>
+    {% endif %}
+    
+    {% if page.image %}
+    <div class="monster-image-container">
+        <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
+        {% if page.image_credit %}
+        <p class="image-credit">{{ page.image_credit }}</p>
         {% endif %}
     </div>
+    {% endif %}
+</div>
 
     <footer class="site-footer">
         <div class="footer-content">
-            {% if page.creator %}
-            <p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
-            {% endif %}
+
         </div>
     </footer>
     
