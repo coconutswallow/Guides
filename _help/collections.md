@@ -6,86 +6,64 @@ order: 20
 
 # Site Documentation: Managing Collections & Navigation
 
-This guide explains the technical backbone of the site: how content is organized using Jekyll **Collections** and how those collections automatically build the sidebar **Navigation** menu.
+This guide explains the technical backbone of the site: how content is organized using Jekyll (the built-in CMS in GithHub Pages) **Collections** and how those collections automatically build the sidebar **Navigation** menu.
 
 ## Part 1: What is a "Collection"?
 
-In simple terms, a **Collection** is a special folder (starting with an `_`) that Jekyll is told to pay attention to.
+In simple terms, a **Collection** is a special folder (starting with an `_`) that Jekyll is told to pay attention to. Whatever is set as a collection is indexed by Jekyll.  For our purposes, the general setup is a collection is more or less a "Book" or a Guide with a bunch of pages.
 
-- **Standard Folder:** Jekyll ignores a normal folder.
+- **Standard Folder:** Jekyll ignores a normal folder (e.g. /assets)
     
-- **Collection Folder (`_rules`, `_playersguide`, etc.):** Jekyll will read _every file_ inside, process it, and make it available for the site to use (e.g., to create pages or list in a menu).
-    
+- **Collection Folder (`_rules`, `_playersguide`, etc.):** Jekyll will read _every file_ inside, process it, and make it available for the site to use (e.g., to create pages or list in a menu).  It will convert markdown files (.md) and apply CSS and re-write them as formatted HTML files.
 
-These are all defined in the `collections:` block of your `_config.yml` file. This definition tells Jekyll "Yes, the `_rules` folder is special. Read its contents and make them available under the name `rules`."
+## Setting up Collections
 
-## Part 2: The Magic: From `.md` File to Sidebar Menu
+There are 2 places to setup the collections `collections:` is in 
+- `_config.yml` in the root directory:  this setups which collections are processed, as well as adding them to the side-navigation
+- `/admin/config.yml` in the admin folder:  this sets up which collections are available for editing in the admin console. 
 
-This is the core concept of the site. Here is the step-by-step process of how your new page appears in the menu automatically.
+In general, you don't need to touch these config files unless we add a new top level item (e.g. add a new guide), or add a submenu (e.g. appendices section).  Adding new pages automatically get added to the site nav.
 
-1. **You Create a File:** You create `_rules/my-new-rule.md`.
-    
-2. **You Add "Front Matter":** At the top of that file, you add `layout: doc`.
-    
-3. **Jekyll Builds the Site:**
-    
-    - Jekyll finds `_rules/my-new-rule.md`.
-        
-    - It sees `layout: doc`. This is a crucial instruction. It tells Jekyll: "Take the content of this Markdown file and wrap it inside the HTML template found at `_layouts/doc.html`."
-        
-    - The result is a fully-formed webpage, `.../rules/my-new-rule.html`, which now has the site header, footer, and all the correct styling.
-        
-4. **The Sidebar Builds Itself:**
-    
-    - The sidebar layout file reads the `navigation:` block in `_config.yml`.
-        
-    - It sees the entry for "Rules & Roles" which says `collection: rules`.
-        
-    - This is another instruction: "Automatically find every page in the `rules` collection (which we found in Step 3!), sort them by their `order:` number, and list their `title:` here as a link."
-        
-5. **Done:** Your new page appears in the menu, perfectly sorted, without you ever having to manually edit an HTML navigation file.
-    
+in _config.yml, there are 2 sections:
 
-The key takeaway: **`collection:` + `layout: doc` + `order:` = Automatic Menu Item**
+### Collections Setup:
 
-## Part 3: How to Configure the Sidebar Menu
+This section tells Jekyll where are the collections to process.  The permalink tells the site the URL to create.  
+```
+collections:
+  rules:
+    output: true
+    permalink: /rules/:path/
+  playersguide:
+    output: true
+    permalink: /playersguide/:path/
+```
 
-The sidebar is 100% controlled by the `navigation:` block in `_config.yml`. It supports **four** types of menu items.
+### Navigation setup
 
-### Type 1: The Simple Link
-
-This just points to one specific URL. It's used for the "Home" page and the "FAQ" page.
+The navigation section tells the site which collections to show in the side-nav, and in which order.  You only need to define the "folders" - individual pages are automatically
+indexed and added.  Note:  I've only built this to handle 1-level of subfolders (e.g. playersguide/appendix/ is okay but not playersguide/appendix/appendix_A_pages/)
 
 ```
-# Example from _config.yml
 navigation:
   - title: "Home"
     url: "/"
-  - title: "FAQ"
-    url: /faq.html
-```
-
-### Type 2: The Automatic Collection (Most Common)
-
-This is the "magic" one. You provide a `title` and a `collection:` name. It automatically finds all `layout: doc` pages in that collection and builds a list.
-
-```
-# Example from _config.yml
-# This one line automatically finds all pages
-# in the `_rules` folder and lists them.
+    
   - title: "Rules & Roles"
     collection: rules
+      
+  - title: "Player's Guide"
+    collection: playersguide
+    sections:
+      - title: "Appendices"
+        folder: "playersguide/appendices"
 ```
 
-### Type 3: The Fully Manual Section
+In some cases, the side nav can have direct links instead of pulling from a collection, e.g.
 
-This is used when you need to link to pages that are _not_ in a collection, or are not standard document pages (like the Statblock Builder, which is an `.html` file).
-
-Notice there is **no `collection:` key**. Instead, you manually define all sub-links in a `sections:` block.
 
 ```
-# Example from _config.yml
-# Used for the Monster Compendium
+# Monster Compendium we want to link directly to HTML files
   - title: "Monster Compendium"
     sections:
       - title: "Monster Compendium"
@@ -96,89 +74,23 @@ Notice there is **no `collection:` key**. Instead, you manually define all sub-l
         url: /monster-compendium/generator/
 ```
 
-### Type 4: The Hybrid (Automatic + Manual Submenu)
+### Documents and Front Matter
 
-This is the most complex type and is used for the "Player's Guide." It has **one level of sub-menu** and is a special case.
+As I said, individual markdown files in Jekyll are automatically processed, converted to HTML, and indexed into the navigation.  In order to do so, there is some
+meta-data (front matter) that is read at the top of each file to let it know how to use it:
 
-```
-# Example from _config.yml
-  - title: "Player's Guide"
-    collection: playersguide
-    sections:
-      - title: "Appendices"
-        folder: "playersguide/appendices"
-```
-
-**How this works:**
-
-1. `collection: playersguide`: This part is **automatic**. It finds all `layout: doc` pages in the _root_ of the `_playersguide/` folder (e.g., `_playersguide/getting-started.md`) and lists them at the top level.
-    
-2. `sections:`: This part is **manual**. It adds a sub-menu (a "section") titled "Appendices."
-    
-3. `folder: "playersguide/appendices"`: This is a _special_ key. It tells the sidebar to find all `layout: doc` pages _inside_ the `_playersguide/appendices/` sub-folder and list them under the "Appendices" sub-menu.
-    
-
-**This is the 1-level-submenu limit.** This "Hybrid" model is the only way this site is configured to handle sub-menus.
-
-## Part 4: How-To Guides
-
-### How to Add a Page to "Rules & Roles"
-
-1. Create a new file, e.g., `_rules/my-new-rule.md`.
-    
-2. Add this Front Matter to the top:
-    
-    ```
     ---
     layout: doc
     title: "My New Rule"
     order: 50
+    background_image: /assets/images/mybackground.jpg
     ---
-    
-    My content starts here...
-    ```
-    
-3. Save the file. It will be added to the menu automatically.
-    
 
-### How to Add a Page to "Player's Guide (Appendices)"
+|Front Matter|	|Description|
+|:----------------|	|:--------------------------------------------------|
+|layout|	|tells Jekyll which layout to use:  in almost all cases, it's "doc" for document.  There is also "statblock" for the monster statblocks but those are handled in a custom fashion|
+|title|	|Name of the page.  You can have a different page name than file name|
+|order|	|Sets the order in which a document shows up in its section.  So it's generally good practice to have pages set with gaps in the order number, so if you want to add a new page, you don't need to re-order every single page after it.|
+|background_image|	|Sets a custom background image on the page.  Can be an internal link (like the example) or a https: external link|
 
-1. Create a new file in the sub-folder, e.g., `_playersguide/appendices/my-appendix.md`.
-    
-2. Add this Front Matter to the top:
-    
-    ```
-    ---
-    layout: doc
-    title: "My New Appendix"
-    order: 30
-    ---
-    
-    My content starts here...
-    ```
-    
-3. Save the file. It will be added to the "Appendices" sub-menu automatically.
-    
-
-## Part 5: Troubleshooting
-
-### "My page isn't showing up in the menu!"
-
-Check these four things:
-
-1. **Is the file in the right collection folder?** (e.g., `_rules/`)
-    
-2. **Does it have `layout: doc`?** If it has `layout: statblock` or no layout, it will be ignored by the menu.
-    
-3. **Is the collection itself listed in `_config.yml`?** If you made a new `_newstuff/` folder, it won't do anything until you add it to `_config.yml`.
-    
-4. **Does it have an `order:` number?** Missing `order` can cause it to sort to the end or not appear.
-    
-
-### "My links are broken!"
-
-- In your `_config.yml`, the `permalink:` setting for each collection controls the URL.
-    
-- Most are set to `/:path/`, which means `_playersguide/foo.md` becomes `/playersguide/foo/`.
-    
-- **Exception:** `rules` is set to `/:name.html`. This is an older style, and means `_rules/foo.md` becomes `/rules/foo.html`.
+**The only optional front-matter is the background image (which you can have and just leave blank).  All other front matter are mandatory for a page to show up**

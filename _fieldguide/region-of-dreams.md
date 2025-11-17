@@ -207,6 +207,26 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 
 ---
 
+### References
+This document is an adaptation of various materials regarding the Region of Dreams made for our server and serves as canon for server play. Here is a list of the various
+documentation that has been used to inspire and create this document.
+
+***Advanced D&D 2nd edition*** 
+* Hensley, Shane Lacy and Bill Slavicsek. The Nightmare Lands. TSR, 1995.
+* Cordell, Bruce. A Guide to the Ethereal Plane. TSR, 1998. pp. 54 - 57.
+* Cook, Monte. A Guide to the Astral Plane. TSR, 1996. p.43
+
+***D&D 3rd edition***
+* Cordell, Bruce, et al. Manual of the Planes. Wizards of the Coast, 2001. pp. 201 - 204.
+* Baker, Keith. "Living Nightmares: Dream Creatures of Dal Quor." Dragon 324. Paizo, October 2004. pp. 44 - 54.
+* McArtor, Mike. "Diaboli." Dragon 327. Paizo, January 2005. pp. 62 - 65.
+
+***D&D 5th edition***
+* Crawford, Jeremy, et al. Eberron: Rising from the Last War.
+* Wizards of the Coast, 2019. pp. 29 - 31, 229, 305 - 307.
+
+---
+
 ## Credits
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
