@@ -233,7 +233,7 @@
   --generator-success-text: var(--palette-alert-success-action);
 
   /* Stat Blocks */
-  --statblock-bg-image: url('/Guides/assets/images/fieldguide-back.png');
+  --statblock-bg-image: url('/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--palette-neutral-white);
   --statblock-body-bg: var(--palette-bg-page-dark);
   --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5EkJggg==');
