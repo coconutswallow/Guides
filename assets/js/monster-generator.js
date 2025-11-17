@@ -96,7 +96,7 @@ creator: ${state.creator}`;
         abilityKeys.forEach(key => {
             if (abilities[key].hasOverride) {
                 const abilityName = key.charAt(0).toUpperCase() + key.slice(1);
-                saveOverrides.push(`${abilityName} ${abilities[key].save}`);
+                saveOverrides.push(`${abilityName} ${abilities[key].saveOverride}`);
             }
         });
 

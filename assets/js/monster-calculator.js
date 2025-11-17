@@ -108,8 +108,9 @@ const MonsterCalculator = (function() {
                 score: score,
                 mod: mod,
                 formattedMod: formatModifier(mod),
-                save: calculateSave(score, proficiencyBonus, saveOverride),
-                hasOverride: !!(saveOverride && saveOverride.trim())
+                save: calculateSave(score, proficiencyBonus, saveOverride), // This is still (Mod + PB)
+                hasOverride: !!(saveOverride && saveOverride.trim()),
+                saveOverride: saveOverride // <-- This is the fix (e.g., "+9")
             };
         });
         

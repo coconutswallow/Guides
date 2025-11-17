@@ -508,7 +508,7 @@ const MonsterUI = (function() {
         abilityKeys.forEach(key => {
             if (abilities[key].hasOverride) {
                 const name = key.charAt(0).toUpperCase() + key.slice(1);
-                saveOverrides.push(`${name} ${abilities[key].save}`);
+                saveOverrides.push(`${name} ${abilities[key].saveOverride}`);
             }
         });
 
