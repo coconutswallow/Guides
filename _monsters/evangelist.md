@@ -21,13 +21,12 @@ ___
 > 
 > **Initiative** +1 (13)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 16| +3 | +3 |Dex| 13| +1 | +1 |Con| 15| +2 | +2 |
-> |Int| 16| +3 | +3 |Wis| 12| +1 | +1 |Cha| 12| +1 | +1 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +2 | **Dex** | 13 | +1 | +2 | **Con** | 15 | +2 | +2 |
+> | **Int** | 16 | +3 | +2 | **Wis** | 12 | +1 | +2 | **Cha** | 12 | +1 | +2 |
 >
-> **Skills** N/A  
-> **Resistances** Fire  
+> **Damage Resistances** Fire  
 > **Senses** Darkvision 60 ft., Passive Perception 11  
 > **Languages** Common  
 > **CR** 3 (XP 700; PB +2)

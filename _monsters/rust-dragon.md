@@ -6,7 +6,7 @@ type: Monstrosity
 size: Large
 alignment: typically Lawful Neutral
 category: 2014 Fair Game
-creator: Hawthorne Dragon Mash 2022
+creator: Greenjuice
 ---
 
 ## Mature Rust Dragon
@@ -63,11 +63,12 @@ ___
 >
 > **AC** 17 (natural armor) **HP** 133 (14d10 + 56) **Speed** 40 ft., burrow 30 ft., fly 60 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 19| +4 | +4 |Dex| 14| +2 | +6 |Con| 18| +4 | +8 |
-> |Int| 6| -2 | -2 |Wis| 15| +2 | +6 |Cha| 13| +1 | +5 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 19 | +4 | +4 | **Dex** | 14 | +2 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 6 | -2 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 13 | +1 | +4 |
 >
+> **Saving Throws** Dex +6, Con +8, Wis +6, Cha +5
 > **Skills** Perception +10, Stealth +6  
 > **Immunities** Acid  
 > **Senses** Blindsight 30 ft., Darkvision 90 ft., Passive Perception 20  

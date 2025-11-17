@@ -6,7 +6,7 @@ type: Humanoid
 size: Medium
 alignment: typically matches alignment of corresponding dragon
 category: 2014 Fair Game
-creator: Hawthorne Dragon Mash 2022
+creator: xgrnrgrx
 image: https://64.media.tumblr.com/2be365272bcdce44b1f52c86cbdad149/tumblr_nmf2h4dW7d1r7r8d2o1_500.png
 image_credit: Art by #my.art
 ---
@@ -51,13 +51,13 @@ ___
 >
 > **AC** 13 (studded leather) in humanoid form, 14 (natural armor) in hybrid form **HP** 119 (14d8 + 56) **Speed** 30 ft. (fly 60 ft. in hybrid form)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 20| +5 | +5 |Dex| 12| +1 | +1 |Con| 19| +4 | +4 |
-> |Int| 12| +1 | +1 |Wis| 14| +2 | +2 |Cha| 12| +1 | +1 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 20 | +5 | +4 | **Dex** | 12 | +1 | +4 | **Con** | 19 | +4 | +4 |
+> | **Int** | 12 | +1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 12 | +1 | +4 |
 >
 > **Skills** Perception +6, Stealth +5  
-> **Immunities** Damage type corresponding to a kind of dragon (see Draconic Form below); Bludgeoning, Piercing, and Slashing from nonmagical attacks that aren't silvered  
+> **Damage Immunities** Damage type corresponding to a kind of dragon (see Draconic Form below); Bludgeoning, Piercing, and Slashing from nonmagical attacks that aren't silvered  
 > **Senses** Blindsight 10 ft. (hybrid form only), Darkvision 60 ft., Passive Perception 16  
 > **Languages** Common, Draconic  
 > **CR** 9 (XP 5,000; PB +4)

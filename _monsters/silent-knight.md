@@ -30,11 +30,12 @@ ___
 > 
 > **Initiative** +2 (14)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4 | **+7** |Dex| 14| +2 | +2 |Con| 16| +3 | +3 |
-> |Int| 10| +0 | +0 |Wis| 10| +0 | **+3** |Cha| 14| +2 | **+5** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +3 | **Dex** | 14 | +2 | +3 | **Con** | 16 | +3 | +3 |
+> | **Int** | 10 | +0 | +3 | **Wis** | 10 | +0 | +3 | **Cha** | 14 | +2 | +3 |
 >
+> Saving Throws Str +7, Wis +3, Cha +5
 > **Skills** Athletics +7, Perception +3, Stealth +5  
 > **Resistances** Radiant; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
 > **Immunities** Thunder  

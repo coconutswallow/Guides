@@ -14,9 +14,11 @@ image_credit: Art by Iren Horrors
 ## Gøbblervøki
 
 A Gøbblervøki is created from the shadow of a mortal that becomes lost in the Feywild. Over time, the mortal's thoughts and fears coalesce into a wicked winged creature that seeks to unmake everything that its originator stood for. A Gøbblervøki born from a lost hunter or conservationist may attack nearby livestock or farmland, and one created from a lost priest may attack churches or temples.
+
 More notably, a Gøbblervøki is sometimes created directly as the result of a punishment by one of the **queens of Faerie**. Mortals that earn the ire of the Queens of Summer and Winter may find themselves bound to servitude, and separated from their shadow, which then becomes a Gøbblervøki free to wreak havoc in the areas of life that the mortal found important in the Material Plane.
 
 #### Gøbblervøki Tactics
+
 The Gøbblervøki is an ambusher that uses hit-and-run tactics to defeat its foes. A typical encounter begins with the Lashing Shadows, often before the party is even aware of the creature's presence. Then, utilizing its Shadow Stealth and Shadow Stride abilities, it moves around the battlefield picking apart opponents before moving into position and delivering the finishing blow with another big Lashing Shadows.
 
 ___
@@ -25,10 +27,10 @@ ___
 >
 > **AC** 17 (Natural Armor) **HP** 120 (16d10 + 32) **Speed** 30 ft., fly 60 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 12| +1| +5|Dex| 16| +3 | +7|Con| 14| +2 | +6|
-> |Int| 18| +4 | +8|Wis| 17| +3 | +7|Cha| 14| +2 | +6|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 12 | +1 | +4 | **Dex** | 16 | +3 | +4 | **Con** | 14 | +2 | +4 |
+> | **Int** | 18 | +4 | +4 | **Wis** | 17 | +3 | +4 | **Cha** | 14 | +2 | +4 |
 >
 > **Skills** Perception +11, Stealth +7  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Poisoned, Prone, Restrained  

@@ -13,7 +13,6 @@ image_credit: Art by Chaos-Draco
 
 ## Young Magmeleon
 
-## Magmeleon
 Magmeleon are rare lizardlike creatures with small wings protruding from their back and torchlike tail continually aflame. Their eggs are hidden inside volcanoes for safety and hatch only during volcanic eruptions. As such, some followers of **Kossuth** see them as a blessing from the Firelord and a sign of good luck.
 
 #### Heat Rises
@@ -31,11 +30,12 @@ ___
 >
 > **AC** 15 (natural armor) **HP** 127 (15d8 + 60) **Speed** 40 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4 | +4 |Dex| 14| +2 | +5 |Con| 18| +4 | +4 |
-> |Int| 10| +0 | +3 |Wis| 12| +1 | +1 |Cha| 10| +0 | +3 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +3 | **Dex** | 14 | +2 | +3 | **Con** | 18 | +4 | +3 |
+> | **Int** | 10 | +0 | +3 | **Wis** | 12 | +1 | +3 | **Cha** | 10 | +0 | +3 |
 >
+> **Saving Throws** Dex +5, Int +3, Cha +3
 > **Skills** Perception +7, Stealth +5  
 > **Immunities** Fire  
 > **Senses** Blindsight 30 ft., Darkvision 120 ft., Passive Perception 17  

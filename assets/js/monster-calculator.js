@@ -61,19 +61,16 @@ const MonsterCalculator = (function() {
 
     /**
      * Calculate saving throw modifier
-     * Uses override if provided, otherwise calculates from ability score + proficiency
+     * Always calculates from ability score + proficiency (ignores override for calculation,
+     * but the override value is still tracked for display purposes)
      * @param {number} abilityScore - Ability score
      * @param {number} proficiencyBonus - Proficiency bonus
-     * @param {string} override - Optional override value (e.g., "+7")
+     * @param {string} override - Optional override value (tracked but not used in calculation)
      * @returns {string} Formatted saving throw modifier
      */
     function calculateSave(abilityScore, proficiencyBonus, override = '') {
-        // If there's an override, use it
-        if (override && override.trim()) {
-            return override.trim();
-        }
-        
-        // Otherwise calculate: ability modifier + proficiency
+        // Always calculate: ability modifier + proficiency
+        // Override parameter exists but is not used for calculation
         const abilityMod = calculateModifier(abilityScore);
         const saveBonus = abilityMod + proficiencyBonus;
         return formatModifier(saveBonus);
@@ -88,12 +85,12 @@ const MonsterCalculator = (function() {
      * @param {number} state.int - Intelligence score
      * @param {number} state.wis - Wisdom score
      * @param {number} state.cha - Charisma score
-     * @param {string} state.strSave - Optional Strength save override
-     * @param {string} state.dexSave - Optional Dexterity save override
-     * @param {string} state.conSave - Optional Constitution save override
-     * @param {string} state.intSave - Optional Intelligence save override
-     * @param {string} state.wisSave - Optional Wisdom save override
-     * @param {string} state.chaSave - Optional Charisma save override
+     * @param {string} state.strSave - Optional Strength save override (displayed separately)
+     * @param {string} state.dexSave - Optional Dexterity save override (displayed separately)
+     * @param {string} state.conSave - Optional Constitution save override (displayed separately)
+     * @param {string} state.intSave - Optional Intelligence save override (displayed separately)
+     * @param {string} state.wisSave - Optional Wisdom save override (displayed separately)
+     * @param {string} state.chaSave - Optional Charisma save override (displayed separately)
      * @param {string} state.cr - Challenge Rating
      * @returns {Object} Object with calculated values for each ability
      */

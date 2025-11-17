@@ -21,13 +21,13 @@ ___
 > 
 > **Initiative** +1 (13)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 21| +5 | +5 |Dex| 13| +1 | +1 |Con| 17| +3 | +3 |
-> |Int| 2| -4 | -4 |Wis| 10| +0 | +0 |Cha| 7| -2 | -2 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 21 | +5 | +7 | **Dex** | 13 | +1 | +3 | **Con** | 17 | +3 | +5 |
+> | **Int** | 2 | -4 | -2 | **Wis** | 10 | +0 | +2 | **Cha** | 7 | -2 | +0
 >
 > **Skills** Stealth +7  
-> **Immunities** Poison  
+> **Damage Immunities** Poison  
 > **Condition Immunities** Poisoned  
 > **Senses** Darkvision 30 ft., Passive Perception 10  
 > **Languages** None  

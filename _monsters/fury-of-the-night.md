@@ -11,8 +11,6 @@ creator: Grimm
 
 ## Fury of the Night
 
-
-
 ___
 > ## Fury of the Night
 > *Large Monstrosity, Chaotic Evil*
@@ -21,14 +19,15 @@ ___
 > 
 > **Initiative** +4 (18)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4 | **+8** |Dex| 18| +4 | **+8** |Con| 16| +3 | **+7** |
-> |Int| 10| +0 | +0 |Wis| 16| +3 | **+7** |Cha| 8| -1 | -1 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +4 | **Dex** | 18 | +4 | +4 | **Con** | 16 | +3 | +4 |
+> | **Int** | 10 | +0 | +4 | **Wis** | 16 | +3 | +4 | **Cha** | 8 | -1 | +4 |
 >
+> **Saving Throws** Dex +8, Con +7, Wis +7
 > **Skills** Athletics +8, Perception +7, Stealth +8  
-> **Resistances** Fire, Lightning  
-> **Immunities** Cold  
+> **Damage Resistances** Fire, Lightning  
+> **Damage Immunities** Cold  
 > **Senses** Blindsight 60 ft., Darkvision 120 ft., Passive Perception 17  
 > **Languages** Understands Common but can't speak  
 > **CR** 10 (XP 5,900; PB +4)

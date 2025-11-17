@@ -17,7 +17,9 @@ A possessor is a type of lesser elemental formed from stray negative emotions an
 
 Though they are not especially intelligent, they often gather in abandoned buildings near small settlements, lying in wait for curious individuals to investigate rumors of "the old haunted house on the hill."
 
-#### Note on Challenge Rating
+***Elemental Nature.*** A possessor doesn't require air, food, drink, or sleep.
+
+#### Note
 A Possessor always favors beginning combat inside an object and is likely to surprise the adventuring party given its **False Appearance** trait. Treat the possessor as a **CR 3** (700 XP) if it begins combat already possessing an object.
 
 ___
@@ -28,15 +30,15 @@ ___
 > 
 > **Initiative** +1 (13)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 5| -3 | -3 |Dex| 13| +1 | +1 |Con| 12| +1 | +1 |
-> |Int| 7| -2 | -2 |Wis| 13| +1 | +1 |Cha| 16| +3 | +3 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 5 | -3 | +2 | **Dex** | 13 | +1 | +2 | **Con** | 12 | +1 | +2 |
+> | **Int** | 7 | -2 | +2 | **Wis** | 13 | +1 | +2 | **Cha** | 16 | +3 | +2 |
 >
 > **Skills** Perception +3, Stealth +3 (+5 in dim light/darkness)  
-> **Vulnerabilities** Radiant  
-> **Resistances** Bludgeoning, Piercing, and Slashing from nonmagical attacks  
-> **Immunities** Necrotic, Poison  
+> **Damage Vulnerabilities** Radiant  
+> **Damage Resistances** Bludgeoning, Piercing, and Slashing from nonmagical attacks  
+> **Damage Immunities** Necrotic, Poison  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained  
 > **Senses** Blindsight 30 ft., Darkvision 120 ft., Passive Perception 13 (15 in dim light/darkness)  
 > **Languages** None  
@@ -47,8 +49,6 @@ ___
 > ***Amorphous.*** The possessor can move through a space as narrow as 1 inch wide without squeezing.
 >
 > ***Born of Darkness.*** Magical darkness does not impede the possessor's darkvision. While in dim light or darkness, its Perception bonus and Stealth bonus both increase to +5.
->
-> ***Elemental Nature.*** A possessor doesn't require air, food, drink, or sleep.
 >
 > ***False Appearance.*** While the possessor remains motionless while possessing an object, it is indistinguishable from a normal inanimate object.
 >

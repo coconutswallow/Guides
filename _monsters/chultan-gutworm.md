@@ -28,10 +28,10 @@ ___
 > 
 > **Initiative** +3 (17)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 16| +3 | +3 |Dex| 17| +3 | +3 |Con| 20| +5 | +7 |
-> |Int| 1| -5 | -5 |Wis| 12| +1 | +1 |Cha| 5| -3 | -3 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +2 | **Dex** | 17 | +3 | +2 | **Con** | 20 | +5 | +2 |
+> | **Int** | 1 | -5 | +2 | **Wis** | 12 | +1 | +2 | **Cha** | 5 | -3 | +2 |
 >
 > **Skills** Stealth +5  
 > **Resistances** Bludgeoning, Piercing, and Slashing from nonmagical attacks  

@@ -32,10 +32,10 @@ ___
 >
 > **AC** 16 (natural armor) **HP** 201 (13d20 + 65) **Speed** 0 ft., fly 80 ft. (hover)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 22| +6| +10|Dex| 10| +0 | +4|Con| 20| +5 | +9|
-> |Int| 3| -4 | +0|Wis| 12| +1 | +5|Cha| 5| -3 | +1|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 22 | +6 | +4 | **Dex** | 10 | +0 | +4 | **Con** | 20 | +5 | +4 |
+> | **Int** | 3 | -4 | +4 | **Wis** | 12 | +1 | +4 | **Cha** | 5 | -3 | +4 |
 >
 > **Skills** Perception +5, Stealth +4  
 > **Damage Resistances** bludgeoning, piercing and slashing from nonmagical attacks  
@@ -67,7 +67,4 @@ ___
 >
 > ***Consuming Void (Recharges on 5-6).*** The phantasmorca opens its mouth and inhales, drawing in Large or smaller creatures and objects that are not worn or carried into its mouth. Targets within a 30-foot cone must make a DC 17 Strength saving throw or take 21 (6d6) bludgeoning damage and be pulled into the phantasmorca's mouth. A swallowed creature has total cover against attacks and other effects outside the phantasmorca. If the phantasmorca takes 30 damage or more on a single turn from a creature inside it, the phantasmorca must succeed on a DC 17 Constitution saving throw at the end of that turn or regurgitate all consumed creatures, which fall prone in a space within 10 feet of the whale. If the phantasmorca dies, a swallowed creature can escape from the corpse by using 20 feet of movement, exiting prone. If a swallowed creature ends their turn inside the mouth of the phantasmorca, they are sent to a dreamscape in the Region of Dreams as determined by the DM.
 >
-> ### Bonus Actions
->
-> ***Astral Step..*** The kodragon magically teleports to an unoccupied space it can see within 60 feet of it.
->
+

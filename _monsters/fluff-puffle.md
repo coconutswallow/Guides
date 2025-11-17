@@ -23,10 +23,10 @@ ___
 >
 > **AC** 13 (natural armor) **HP** 40 (16d4) **Speed** 0 ft., fly 20 ft. (hover)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str|7| −2 | — |Dex|15| +2 | — |Con|10| +0 | — |
-> |Int|12| +1 | — |Wis|16| +3 | — |Cha|18| +4 | — |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 7 | -2 | +2 | **Dex** | 15 | +2 | +2 | **Con** | 10 | +0 | +2 |
+> | **Int** | 12 | +1 | +2 | **Wis** | 16 | +3 | +2 | **Cha** | 18 | +4 | +2 |
 >
 > **Skills** Insight +5, Performance +6  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Prone  

@@ -19,7 +19,8 @@ Once it renders a creature unconscious with its powers, a dreamstalker will begi
 Over the period of a week, a dreamstalker will digest the trapped consciousness after which it's destroyed and no mortal magic can return the creature to consciousness. After a consciousness is digested, a young cub dreamstalker buds off of the parent, and begins to grow into a adult dreamstalker over the course of six months.
 
 #### DM Notes: Devour Consciousness
-Creatures that cannot be magically put to sleep, such as elves, are immune to the Devour Consciousness trait. A divine intervention can still awaken a creature whose consciousness has been digested via Devour Consciousness.
+- Creatures that cannot be magically put to sleep, such as elves, are immune to the Devour Consciousness trait. 
+- A divine intervention can still awaken a creature whose consciousness has been digested via Devour Consciousness.
 
 ___
 > ## Aether Dreamstalker
@@ -29,14 +30,14 @@ ___
 > 
 > **Initiative** +3 (13)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 12| +1 | +1 |Dex| 16| +3 | +3 |Con| 14| +2 | +2 |
-> |Int| 5| -3 | -3 |Wis| 14| +2 | +2 |Cha| 16| +3 | +5 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 12 | +1 | +2 | **Dex** | 16 | +3 | +2 | **Con** | 14 | +2 | +2 |
+> | **Int** | 5 | -3 | +2 | **Wis** | 14 | +2 | +2 | **Cha** | 16 | +3 | +2 |
 >
 > **Saving Throws** Cha +5  
 > **Skills** Survival +4, Perception +4, Stealth +5  
-> **Resistances** acid, cold, fire, lightning, thunder; bludgeoning, piercing, and slashing from weapon attacks made outside of the Region of Dreams  
+> **Damage Resistances** acid, cold, fire, lightning, thunder; bludgeoning, piercing, and slashing from weapon attacks made outside of the Region of Dreams  
 > **Damage Immunities** psychic
 > **Condition Immunities** charmed, unconscious  
 > **Senses** truesight 60 ft., Passive Perception 14  

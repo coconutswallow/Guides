@@ -24,12 +24,12 @@ ___
 >
 > **AC** 9 **HP** 95 (10d8 + 50) **Speed** 20 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 16| +3 | +3 |Dex| 9| -1 | -1 |Con| 20| +5 | +5 |
-> |Int| 5| -3 | -3 |Wis| 6| -2 | -2 |Cha| 1| -5 | -5 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +3 | **Dex** | 9 | -1 | +3 | **Con** | 20 | +5 | +3 |
+> | **Int** | 5 | -3 | +3 | **Wis** | 6 | -2 | +3 | **Cha** | 1 | -5 | +3 |
 >
-> **Resistances** Lightning  
+> **Damage Resistances** Lightning  
 > **Damage Immunities** Acid, Fire, Slashing
 > **Conditions Immunities** Blinded, Charmed, Deafened, Exhaustion, Frightened, Prone  
 > **Senses** Blindsight 60 ft. (blind beyond this radius), Passive Perception 8  
@@ -40,8 +40,8 @@ ___
 >
 > ***False Appearance.*** While the pudding remains motionless, it is indistinguishable from a warm and sticky figgy pudding.  
 >
-> ***Feed on Fire.*** Whenever the pudding is subjected to fire damage, it takes no damage and instead its size increases by one category. If there isn't enough room for the pudding to increase in size, it attains the maximum size possible in the space available. While the pudding is Large or bigger, it makes Strength checks and saving throws with advantage.  
-> If the pudding starts its turn at Gargantuan size, the pudding releases energy in an explosion. Each creature within 30 feet of the pudding must make a DC 16 Dexterity saving throw, taking 12 (4d6) fire damage on a failed save, or half as much on a successful one. The explosion ignites flammable objects in the area that aren't being worn or carried. The pudding's size then becomes Medium, and it expels any creatures that can no longer fit inside it.  
+> ***Feed on Fire.*** Whenever the pudding is subjected to fire damage, it takes no damage and instead its size increases by one category. If there isn't enough room for the pudding to increase in size, it attains the maximum size possible in the space available. While the pudding is Large or bigger, it makes Strength checks and saving throws with advantage. If the pudding starts its turn at Gargantuan size, the pudding releases energy in an explosion. Each creature within 30 feet of the pudding must make a DC 16 Dexterity saving throw, taking 12 (4d6) fire damage on a failed save, or half as much damage on a successful one. The explosion ignites flammable objects in the area that aren't being
+worn or carried. The pudding's size then becomes Medium, and it expels any creatures that can no longer fit inside of it. 
 >
 > ***Heated Body.*** A creature that touches the pudding or hits it with a melee attack while within 5 feet takes 7 (2d6) fire damage.  
 >

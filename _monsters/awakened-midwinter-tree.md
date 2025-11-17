@@ -24,6 +24,7 @@ The bright light cast upon the star placed atop the tree allows the awakened mid
 Grincheuse is said to use the trees to capture villagers, notably children, during the time of Midwinter, hence the name ''awakened midwinter tree''. Rumors say she does so out of pure cruelty and desire to ruin the villagers happiness. Winter being harsh and cold, it is displeasing to her some could find warmth and joy in their hearts during that time. Those are only speculations, for no one was ever known to return from her clutches.
 
 #### Combat Tactics
+
 The main goal of the tree is to capture people and return them to their creator. It will:
 • Target the easiest prey to grapple and drag away and hit them with a garland attack twice.
 • If both attacks hit the tree use their engulf ability.
@@ -38,13 +39,13 @@ ___
 > 
 > **Initiative** +2 (14)
 >
-> | | | MOD | | | MOD | | | MOD |
-> |:--|:-:|:----:|:--|:-:|:----:|:--|:-:|:----:|
-> |Str| 19| +4 |Dex| 14| +2 |Con| 15| +2 |
-> |Int| 10| +0 |Wis| 10| +0 |Cha| 7| -2 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 19 | +4 | +3 | **Dex** | 14 | +2 | +3 | **Con** | 15 | +2 | +3 |
+> | **Int** | 10 | +0 | +3 | **Wis** | 10 | +0 | +3 | **Cha** | 7 | -2 | +3 |
 > 
-> **Vulnerabilities** Fire  
-> **Resistances** Bludgeoning, Piercing  
+> **Damage Vulnerabilities** Fire  
+> **Damage Resistances** Bludgeoning, Piercing  
 > **Senses** Passive Perception 10  
 > **Languages** One language known by its creator  
 > **CR** 6 (XP 2,300; PB +3)

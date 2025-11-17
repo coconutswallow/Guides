@@ -13,7 +13,7 @@ image_credit: Art by Lily Vonk
 
 ## The Bitter Maiden
 
-The lone traveler came across a strange sight that night. The visage of a woman dressed in warm furs and a white gown upon her slender frame was standing just over a bridge. A white porcelain mask was the only thing seen of her face as the cold storm picks up around him, the sound of tearful weeping accompanies him as he succumbs to a biting cold.
+> *The lone traveler came across a strange sight that night. The visage of a woman dressed in warm furs and a white gown upon her slender frame was standing just over a bridge. A white porcelain mask was the only thing seen of her face as the cold storm picks up around him, the sound of tearful weeping accompanies him as he succumbs to a biting cold.*
 
 ## The Bitter Maiden
 Wearing a decorated mask resembling their once-glowing faces, the Bitter Maiden is a mournful spirit whose feelings of melancholy have caused it to come back to the living world in order to try to fill the holes left in them in life. Whether or not that is physically or metaphorically is largely up to interpretation.
@@ -31,9 +31,10 @@ When its mask is removed, the bitter maiden can no longer keep up its guise and 
 **Undead Nature**. A bitter maiden doesn't require air, food,
 
 #### Combat Tactics
-Before combat, Bitter Maidens will never try to actively go after the party unless they pose a problem and put themselves between them and their target. They will watch and remain within eyeshot, especially with their Aura of Bitter Winter active around them until it is the perfect time to strike. In combat, the maiden will use their Bitter Hoarfrost on the first turn before using their bonus action to turn on their aura. They will then take advantage of their vision through the aura and move over to the back line to pick on anyone who looks most vulnerable and squishy with an Icy Glare then a Life Drain.
 
-**Toria's Advice**. Never actually use one of these to torture your players with loss unless you know the characters enough.
+> Before combat, Bitter Maidens will never try to actively go after the party unless they pose a problem and put themselves between them and their target. They will watch and remain within eyeshot, especially with their Aura of Bitter Winter active around them until it is the perfect time to strike. In combat, the maiden will use their Bitter Hoarfrost on the first turn before using their bonus action to turn on their aura. They will then take advantage of their vision through the aura and move over to the back line to pick on anyone who looks most vulnerable and squishy with an Icy Glare then a Life Drain.
+>
+> **Toria's Advice**. Never actually use one of these to torture your players with loss unless you know the characters enough.
 
 ___
 > ## Bitter Maiden
@@ -43,14 +44,14 @@ ___
 > 
 > **Initiative** +2 (14)
 >
-> | | | MOD | | | MOD | | | MOD |
-> |:--|:-:|:----:|:--|:-:|:----:|:--|:-:|:----:|
-> |Str| 16| +3 |Dex| 14| +2 |Con| 16| +3 |
-> |Int| 10| +0 |Wis| 14| +2 |Cha| 16| +3 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +3 | **Dex** | 14 | +2 | +3 | **Con** | 16 | +3 | +3 |
+> | **Int** | 10 | +0 | +3 | **Wis** | 14 | +2 | +3 | **Cha** | 16 | +3 | +3 |
 >
 > **Skills** Deception +9, Perception +5  
-> **Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
-> **Immunities** Cold, Poison  
+> **Damage Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
+> **Damage Immunities** Cold, Poison  
 > **Condition Immunities** Poisoned  
 > **Senses** Darkvision 60 ft., Passive Perception 15  
 > **Languages** The languages it knew in life  

@@ -25,12 +25,15 @@ ___
 >
 > **AC** 14 **HP** 71 (11d8 + 22) **Speed** 30 ft., burrow 30 ft., climb 30 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 16| +3| +5|Dex| 18| +4 | +6|Con| 14| +2 | +4|
-> |Int| 13| +1 | +3|Wis| 15| +2 | +4|Cha| 7| -2 | +0|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +2 | **Dex** | 18 | +4 | +2 | **Con** | 14 | +2 | +2 |
+> | **Int** | 13 | +1 | +2 | **Wis** | 15 | +2 | +2 | **Cha** | 7 | -2 | +2 |
 >
+> **Saving Throws** Wis +4, Cha +0
 > **Skills** Perception +4, Stealth +6  
+> **Damage Immunities** bludgeoning, piercing and slashing
+from nonmagical attackss
 > **Condition Immunities** Blinded  
 > **Senses** Blindsight 60 ft. (blind beyond this radius), Tremorsense 120 ft., Passive Perception 14  
 > **Languages** Sylvan  
@@ -42,7 +45,9 @@ ___
 >
 > ***Stone Camouflage.*** The autumn gremlin has advantage on Dexterity (Stealth) checks when in rocky terrain.
 >
-> ***Scurry.*** As a bonus action, the autumn gremlin can create an invisible and immobile rift provided that the rift is no bigger than 10 feet on any side and is on dirt, unworked stone or other natural terrain it can see within 5 feet of it. The dimensional rift bridges the distance between that space and any point within 30 feet of it that the gremlin can see or specify by distance and direction. While next to the rift, the autumn gremlin can see through it and is considered to be next to the destination as well, and anything the gremlin puts through the rift (including a portion of its body) emerges at the destination. Only the autumn gremlin can use the rift, and it lasts until the end of the gremlin's next turn.
+> ***Scurry.*** As a bonus action, the autumn gremlin can create an invisible and immobile rift provided that the rift is no bigger than 10 feet on any side and is on dirt, unworked stone or other natural terrain it can see within 5 feet of it. The dimensional rift bridges the distance between that space and any point within 30 feet of it that the gremlin can see or specify by distance and direction. 
+>
+> While next to the rift, the autumn gremlin can see through it and is considered to be next to the destination as well, and anything the gremlin puts through the rift (including a portion of its body) emerges at the destination. Only the autumn gremlin can use the rift, and it lasts until the end of the gremlin's next turn.
 >
 > ### Actions
 >

@@ -34,14 +34,15 @@ ___
 > 
 > **Initiative** +1 (12)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4 | **+8** |Dex| 12| +1 | +1 |Con| 18| +4 | +4 |
-> |Int| 10| +0 | **+4** |Wis| 18| +4 | **+8** |Cha| 18| +4 | **+8** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +4 | **Dex** | 12 | +1 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 10 | +0 | +4 | **Wis** | 18 | +4 | +4 | **Cha** | 18 | +4 | +4 |
 >
+> **Saving Throws** Str +8, Int +4, Wis +8, Cha +8
 > **Skills** Deception +8, Stealth +9  
-> **Resistances** Damage from spells; Bludgeoning, Piercing, Slashing from nonmagical attacks  
-> **Immunities** Poison  
+> **Damage Resistances** Damage from spells; Bludgeoning, Piercing, Slashing from nonmagical attacks  
+> **Damage Immunities** Poison  
 > **Condition Immunities** Poisoned  
 > **Senses** Darkvision 60 ft., Passive Perception 14  
 > **Languages** Common, Druidic, Telepathy 60 ft.  
@@ -74,6 +75,8 @@ ___
 >
 > ***Javelin (Humanoid or Monstrosity Form Only).*** *Melee or Ranged Attack Roll:* +8, reach 5 ft. or range 30/120 ft., one target. *Hit:* 7 (1d6 + 4) Piercing damage.
 >
-> ***Lash (Beast Form Only).*** *Melee Attack Roll:* +8, reach 5 ft., one target. *Hit:* 11 (2d6 + 4) Slashing damage. If the target is a creature other than an undead or a construct, it must succeed on a DC 16 Constitution saving throw or become **poisoned** for 1 minute. While **poisoned** in this way, the target takes 3 (1d6) poison damage at the start of its turn. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.
+> ***Lash (Beast Form Only).*** Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage. If the target is a creature other than an undead
+or a construct, it must succeed on a DC 16 Constitution saving throw or become poisoned for 1 minute. While poisoned in this way, the target takes 3(1d6) poison damage at the start of its turn. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.
 >
-> ***Charm.*** The yee naaldlooshii targets one beast or humanoid it can see within 30 feet of it. If the target can see the yee naaldlooshii, the target must succeed on a DC 16 Wisdom saving throw against this magic or be **charmed** by the yee naaldlooshii. The **charmed** target regards the yee naaldlooshii as a trusted friend to be heeded and protected. The effect lasts 24 hours (or until conditions met). A target that succeeds on the saving throw is immune to the Charm of all yee naaldlooshiis for the next 24 hours.
+> ***Charm.*** The yee naaldlooshii targets one beast or humanoid it can see within 30 feet of it. If the target can see the yee naaldlooshii, the target must succeed on a DC 16 Wisdom saving throw against this magic or be charmed by the yee naaldlooshii. The charmed target regards the yee naaldlooshii as a trusted friend to be heeded and protected. Although the target isn't under the yee naaldlooshii's control, it takes the yee naaldlooshii's requests or actions in the most favorable way it can. Each time the yee naaldlooshii or the yee naaldlooshii's companions do anything harmful to the target, it can repeat the saving throw, ending the effect on itself on a success. Otherwise, the effect lasts 24
+hours or until the yee naaldlooshii is destroyed, is on a different plane of existence than the target, or takes a bonus action to end the effect. A target that succeeds on the saving throw is immune to the Charm of all yee naaldlooshiis for the next 24 hours.

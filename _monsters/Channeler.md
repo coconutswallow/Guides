@@ -12,9 +12,6 @@ creator: km.d
 ---
 
 ## Channeler
-
-
-
 ___
 > ## Channeler
 > *Medium Monstrosity, Neutral Evil*
@@ -23,10 +20,10 @@ ___
 > 
 > **Initiative** +0 (11)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 16| +3 | +3 |Dex| 11| +0 | +0 |Con| 15| +2 | +2 |
-> |Int| 16| +3 | +3 |Wis| 10| +0 | +0 |Cha| 9| -1 | -1 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +2 | **Dex** | 11 | +0 | +2 | **Con** | 15 | +2 | +2 |
+> | **Int** | 16 | +3 | +2 | **Wis** | 10 | +0 | +2 | **Cha** | 9 | -1 | +2 |
 >
 > **Skills** Perception +4  
 > **Senses** Darkvision 60 ft., Passive Perception 14  

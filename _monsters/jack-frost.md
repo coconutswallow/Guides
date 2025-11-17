@@ -32,11 +32,12 @@ ___
 >
 > **AC** 19 **HP** 120 (16d6 + 64) **Speed** 30 ft., fly 60 ft. (hover)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 6| -2| +2|Dex| 19| +4 | +8|Con| 18| +4 | +8|
-> |Int| 14| +2 | +6|Wis| 13| +1 | +5|Cha| 20| +5 | +9|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 6 | -2 | +4 | **Dex** | 19 | +4 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 14 | +2 | +4 | **Wis** | 13 | +1 | +4 | **Cha** | 20 | +5 | +4 |
 >
+> **Saving Throws** Dex +8, Wis +5
 > **Skills** Acrobatics +8, Deception +9, Perception +9, Stealth +8  
 > **Damage Resistances** bludgeoning, piercing and slashing from nonmagical attacks  
 > **Damage Immunities** cold  
@@ -77,6 +78,48 @@ While in mist form, it appears as a shimmering cloud of snowflakes, can only use
 > ***Hypnotizing Pattern (Mist Form Only).*** The jack frost casts *hypnotic pattern* (save DC 17) centered on itself.
 >
 > ***Polar Midnight (1/Day).*** The jack frost plunges an area  within 60 feet of it into the brutal chill of the arctic night. A 30-foot-radius sphere of nonmagical darkness spreads out from that point. The darkness spreads around corners. The effect lasts for 1 minute, until the jack frost's concentration ends (as if concentrating on a spell), or if the effect is dispelled (as a 7th-level spell). As a bonus action on the jack frost's turn, it can move the area up to 10 feet in a direction of its choice. 
-
-A creature that starts its turn inside of the area or enters the area for the first time on its turn takes 14 (4d6) cold damage. A creature that ends its turn inside of the area is encased in a sheath of ice, unless it is immune to cold damage. While encased in ice, a creature is restrained and cannot breathe. A restrained creature must make a DC 17 Constitution saving throw at the end of each of its turns. If it fails this saving throw three times, it is turned to ice and subjected to the petrified condition. The ice around the creature can be damaged and breached to free the trapped creature; it has AC 5, 20 hit points, vulnerability to fire damage, and immunity to acid, cold, necrotic, poison, and psychic damage. A creature killed while encased in ice, or petrified, is transmuted into solid ice, and can only be revived by means of a true resurrection or wish spell.
 >
+> A creature that starts its turn inside of the area or enters the area for the first time on its turn takes 14 (4d6) cold damage. A creature that ends its turn inside of the area is encased in a sheath of ice, unless it is immune to cold damage. While encased in ice, a creature is restrained and cannot breathe. A restrained creature must make a DC 17 Constitution saving throw at the end of each of its turns. If it fails this saving throw three times, it is turned to ice and subjected to the petrified condition. The ice around the creature can be damaged and breached to free the trapped creature; it has AC 5, 20 hit points, vulnerability to fire damage, and immunity to acid, cold, necrotic, poison, and psychic damage. A creature killed while encased in ice, or petrified, is transmuted into solid ice, and can only be revived by means of a true resurrection or wish spell.
+>
+> ### Reactions
+>
+> ***Cold Shoulder***. When the jack frost takes damage from a creature the jack frost can see within 10 feet of it, the jack frost can force that creature to succeed on a DC 17
+Constitution saving throw or be restrained until the start of its next turn.
+>
+___
+
+## Combat Tactics
+
+The jack frost is an agile creature that should be played as a malicious troublemaker that can make life miserable for the party. When engaging in combat, the jack frost should use its flight speed and flyby to weave in and out of range when making attacks, and make use of its spells from range. The jack frost should never touch the ground if it can help
+it nor end its turn directly next to a creature if possible. If any characters are heavily armoured or heavy hitters, ensure that the jack frost avoids coming into direct contact with them, stays flying at least 20 feet above the ground, and engages with softer targets. Any creatures that can deal fire damage should be prioritized, and any creature that manages to reach the jack frost in melee should be given the Cold Shoulder.
+
+### Ambush Tactics
+
+With a Stealth of +8, a jack frost should be very difficult to spot as it can easily camouflage itself up near clouds in its mist form (passive perception DC 23 to spot). Even if spotted, the party would only see a cloud of dazzling snowflakes in the air.  If the jack frost has managed to sneak up on the party in mist form without any of them noticing, it should cast hypnotic pattern to catch as many surprised party members as possible. Any creatures that are not caught in the effect should then be prioritised and finished off.
+
+### Engaging Tactics 
+
+The jack frost won't survive long against a well-equipped party, so its abilities need to be used to outmanoeuvre and deal with the most challenging party members. Even though
+a jack frost is not a genius, it is still intelligent and malicious enough to know how to make the use of its abilities. 
+
+If the party is either clustered, caught in a place with little to no room to move, or on difficult terrain (such as ice or deep snow), the jack frost should use its Polar Midnight to catch as many creatures as possible. With Polar Midnight active, the party should be struggling to see if they have no magical light sources or darkvision, and they should be taking damage each turn they remain inside. Any creatures that are sheathed in ice can be ignored unless they have fire damage or threatening abilities. Once Polar Midnight is active, the jack frost should then keep to the air and engage with softer targets. Cone of Cold can be used with Polar Midnight active, causing high damage to the party if they are still clustered together. If the party moves well outside of Polar Midnight (and the jack frost cannot catch any more by moving it), Wall of Ice should be used to split off members of the party.
+
+Trapping either casters or the heavy hitters behind the wall can allow the jack frost to engage against its highest priority targets. If the jack frost isn't concentrating on Polar Midnight or one of its big spells, it should use its heat metal on any armoured characters.  
+
+The jack frost's regeneration should be made use of as much as possible by making it use hit and run tactics. Always assume that a jack frost is fighting at a disadvantage against a
+party of adventurers. If a fight isn't going well, a jack frost should retreat by dashing well away and breaking line of sight. After all, it can heal up and always engage a wounded
+party later on if they encounter other threats. If it has managed to land frostbite on a party member, the jack frost should then try to pursue the party at a distance and prevent
+them from treating it with heat properly. 
+
+### Terrain
+
+The jack frost works best in terrain that is difficult for the party, such as deep snow, ice, or even blizzards. The party should be fearful of being set upon by roaming monsters in
+such dangerous situations, which makes the job much easier for the jack frost.  Caves are also hunting grounds for jack frosts, for they can hide in the shadows and trap creatures with their Polar Midnight or wall of ice, and retreat to cover that breaks line of sight.
+
+### Minions and Allies
+Jack frosts typically hang around in groups, called flurries, to show off their maliciousness to each other, and they work best when they are not alone. A jack frost hunts with its kin against more powerful foes, or it could be acting alone by using the wilderness and other creatures against the party. Packs of roaming winter wolves, yeti, remorhaz, or other
+arctic threats can easily become more dangerous if a jack frost decides to fly by.  
+
+Alternatively, the jack frost can be paired with other creatures that it could efficiently work with (or deceive) such as Frost Giants, Bheur Hags or White Dragons. When paired with these monsters, the jack frost can be played as an insightful manipulator that is assisting the other creature in survival or cruelty.
+
+A Frost Giant Jarl with a Jack Frost advisor can make for a terrifying villainous duo in the mountains, especially if the party is trying to make peace with giants. After all, a jack frost thrives on its cruelty onto others and having its machinations undermine the party's efforts is what it lives for.

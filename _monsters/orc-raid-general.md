@@ -23,11 +23,12 @@ ___
 > 
 > **Initiative** +2 (14)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 20| +5 | **+9** |Dex| 14| +2 | **+6** |Con| 18| +4 | **+8** |
-> |Int| 12| +1 | +1 |Wis| 14| +2 | **+6** |Cha| 18| +4 | **+8** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 20 | +5 | +4 | **Dex** | 14 | +2 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 12 | +1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 18 | +4 | +4 |
 >
+> **Saving Throws** Str +9, Dex +6, Con +8, Wis +6
 > **Skills** Athletics +9, Intimidation +8, Perception +6  
 > **Senses** Darkvision 60 ft., Passive Perception 16  
 > **Languages** Common, Orc  

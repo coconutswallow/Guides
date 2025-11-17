@@ -36,13 +36,13 @@ ___
 > 
 > **Initiative** +5 (20)
 >
-> | | | MOD | | | MOD | | | MOD |
-> |:--|:-:|:----:|:--|:-:|:----:|:--|:-:|:----:|
-> |Str| 3| -4 |Dex| 20| +5 |Con| 16| +3 |
-> |Int| 6| -2 |Wis| 14| +2 |Cha| 14| +2 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 3 | -4 | +2 | **Dex** | 20 | +5 | +2 | **Con** | 16 | +3 | +2 |
+> | **Int** | 6 | -2 | +2 | **Wis** | 14 | +2 | +2 | **Cha** | 14 | +2 | +2 |
 >
 > **Skills** Acrobatics +7, Perception +4, Performance +6  
-> **Immunities** Poison, Psychic  
+> **Damage Immunities** Poison, Psychic  
 > **Condition Immunities** Exhausted, Frightened, Poisoned  
 > **Senses** Passive Perception 14  
 > **Languages** Understands the languages of its creator but can't speak  

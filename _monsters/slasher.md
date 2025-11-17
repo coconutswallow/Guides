@@ -35,11 +35,12 @@ ___
 > 
 > **Initiative** +2 (15)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4 | **+7** |Dex| 15| +2 | +2 |Con| 16| +3 | **+6** |
-> |Int| 7| -2 | -2 |Wis| 12| +1 | +1 |Cha| 11| +0 | +0 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +3 | **Dex** | 15 | +2 | +3 | **Con** | 16 | +3 | +3 |
+> | **Int** | 7 | -2 | +3 | **Wis** | 12 | +1 | +3 | **Cha** | 11 | +0 | +3 |
 >
+> **Saving Throws** Str +7, Con +6
 > **Skills** Athletics +7, Acrobatics +5, Deception +6, Perception +4, Stealth +8, Survival +4  
 > **Condition Immunities** Charmed, Frightened  
 > **Senses** Darkvision 60 ft., Passive Perception 14  
@@ -68,11 +69,3 @@ ___
 >
 > ***Knife.*** *Melee Attack Roll:* +7, reach 5 ft., one target. *Hit:* 9 (2d4 + 4) Piercing damage. The slasher can also **grapple** the target (escape DC 17) if it is a creature and the slasher has a hand free. While **grappled** in this way the target can't speak.
 >
-> ---
-> ## Lair Actions
->
-> When a slasher takes residence in any building for at least an hour, it becomes the slasher's lair. On initiative count 20 (losing initiative ties), the slasher can take one lair action to cause one of the following effects. It can't use the same effect two rounds in a row:
->
-> * The floors within the lair becomes unnaturally resonant. Until a different lair action is used, creatures walking within the lair have disadvantage on Dexterity (**Stealth**) checks made to hide.
-> * The slasher chooses a room within the lair that is no larger in any dimension than 100 feet. Until a different lair action is used, any number of doors and windows it can see open or close as it wishes. Closed doors can be magically locked (needing a successful DC 20 Strength check to force open) until the slasher chooses to end the effect, or until the slasher uses this lair action again.
-> * The slasher chooses a corridor or room within the lair that is no larger in any dimension than 100 feet. All candles, torches or other open non-magical light sources are extinguished.

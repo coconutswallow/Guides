@@ -31,16 +31,27 @@ ___
 >
  **Speed** 25 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 21| +5| +9|Dex| 5| -3 | +1|Con| 23| +6 | +10|
-> |Int| 9| -1 | +3|Wis| 10| +0 | +4|Cha| 14| +2 | +6|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 21 | +5 | +4 | **Dex** | 5 | -3 | +4 | **Con** | 23 | +6 | +4 |
+> | **Int** | 9 | -1 | +4 | **Wis** | 10 | +0 | +4 | **Cha** | 14 | +2 | +4 |
 >
+> **Damage Vulnerabilities** fire
+> **Damage Resistances** acid, bludgeoning, piercing
+> **Damage Immunities** cold
 > **Condition Immunities** blinded, deafened, exhaustion  
 > **Senses** blindsight 60 ft. (blind beyond this radius), passive Perception 10  
 > **Languages** understands any languages known by those that awakened it but cannot speak, read, write, or hear  
 > **CR** 10 (PB +4)
 >
+> ### Traits
+>
+> **Acidic Sap.** A creature that touches the conibrr or hits it with a melee attack while within 5 feet of it takes 5 (2d4) acid damage.
+> 
+> **False Appearance.** While the conibrr remains motionless, it is indistinguishable from a normal tree.
+>
+> **Siege Monster.** The conibrr deals double damage to objects and structures.
+> 
 > ### Actions
 >
 > ***Multiattack.*** The conibrr makes two **Slam** attacks.
@@ -51,3 +62,6 @@ ___
 >
 > ***Acid Spray (1/Day).*** The conibrr can only use this action after having taken at least a combined total of 45 slashing or fire damage since it has last been healed. The conibrr shoots acid out of the gashes in its bark. Each creature within 40 feet of it must make a DC 18 Dexterity saving throw, taking 23 (5d6 + 6) acid damage on a failure or half as much on a success.
 >
+> ### Reactions
+>
+> Eject Needles. Upon taking slashing damage, the conibrr shoots out needles. Each creature within 40 feet of it that isn't behind total cover takes 2 (1d4) piercing damage plus 5 (2d4) acid damage.

@@ -12,8 +12,6 @@ creator: Monoxide At Work
 
 ## Greater Mimic
 
-
-
 ___
 > ## Greater Mimic
 > *Medium Monstrosity (Shapechanger), Neutral*
@@ -22,13 +20,13 @@ ___
 > 
 > **Initiative** +3 (17)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 20| +5 | +5 |Dex| 17| +3 | +3 |Con| 18| +4 | +4 |
-> |Int| 8| -1 | -1 |Wis| 13| +1 | +1 |Cha| 8| -1 | -1 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 20 | +5 | +3 | **Dex** | 17 | +3 | +3 | **Con** | 18 | +4 | +3 |
+> | **Int** | 8 | -1 | +3 | **Wis** | 13 | +1 | +3 | **Cha** | 8 | -1 | +3 |
 >
 > **Skills** Stealth +9  
-> **Immunities** Acid  
+> **Damage Immunities** Acid  
 > **Condition Immunities** Prone  
 > **Senses** Darkvision 60 ft., Passive Perception 11  
 > **Languages** Common  

@@ -6,7 +6,7 @@ type: Dragon
 size: Large
 alignment: typically Neutral
 category: 2014 Fair Game
-creator: Hawthorne Dragon Mash 2022
+creator: Luolang
 ---
 
 ## Temporal Drake
@@ -46,11 +46,12 @@ ___
 >
 > **AC** 19 (natural armor) **HP** 133 (14d10 + 56) **Speed** 60 ft., fly 60 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 22| +6 | +6 |Dex| 21| +5 | +5 |Con| 18| +4 | +4 |
-> |Int| 8| -1 | -1 |Wis| 14| +2 | +6 |Cha| 16| +3 | +7 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 22 | +6 | +4 | **Dex** | 21 | +5 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 8 | -1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 16 | +3 | +4 |
 >
+> **Saving Throws** Wis +6, Cha +7
 > **Skills** Perception +10, Stealth +9  
 > **Senses** Darkvision 60 ft., Passive Perception 20  
 > **Languages** Draconic  

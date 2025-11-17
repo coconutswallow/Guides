@@ -21,15 +21,15 @@ ___
 > 
 > **Initiative** +1 (13)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 11| +0 | +0 |Dex| 13| +1 | **+3** |Con| 11| +0 | +0 |
-> |Int| 10| +0 | +0 |Wis| 10| +0 | **+2** |Cha| 13| +1 | **+3** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 11 | +0 | +2 | **Dex** | 13 | +1 | +2 | **Con** | 11 | +0 | +2 |
+> | **Int** | 10 | +0 | +2 | **Wis** | 10 | +0 | +2 | **Cha** | 13 | +1 | +2 |
 >
-> **Skills** N/A
+> **Saving Throws** Dex +3, Wis +2, Cha +3
 > **Vulnerabilities** Thunder
-> **Resistances** Bludgeoning, Piercing, and Slashing from nonmagical weapons that aren't adamantine
-> **Immunities** Poison, Psychic
+> **Damage Resistances** Bludgeoning, Piercing, and Slashing from nonmagical weapons that aren't adamantine
+> **Damage Immunities** Poison, Psychic
 > **Condition Immunities** Charmed, Deafened, Exhaustion, Frightened, Paralyzed, Poisoned
 > **Senses** Blindsight 10 ft., Darkvision 60 ft., Passive Perception 10
 > **Languages** Understands Abyssal and Common but can't speak, Telepathy 60 ft.

@@ -23,6 +23,7 @@ Living creatures remind these specters that life is beyond their grasp. The mere
 A Specter of Winters Past is a remnant of a humanoid that met its untimely end during winter and was prevented from passing on into the afterlife. It is doomed to haunt the place of its death during the winter months.
 
 #### Combat Tactics
+
 The Specter of Winters Past would start combat with its Candle Extinguisher on its head, would use its Summon Spectral Helpers on its first turn of combat. On its second turn, it would remove its Candle Extinguisher from its head, hopefully after enemies have moved in to engage it, causing them to potentially be blinded. It would then try and use its Memory Twist ability, specifically to try and target as many enemies as possible so that its helpers can gang up on stunned targets. It will try and stay within melee range of its foes, using its Blinding Candle to its advantage as it pummels its enemies.
 
 ___
@@ -31,13 +32,15 @@ ___
 >
 > **AC** 17 (natural armor) **HP** 105 (14d8 + 42) **Speed** 0 ft., fly 50 ft. (hover)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4| +8|Dex| 19| +4 | +8|Con| 16| +3 | +7|
-> |Int| 7| -2 | +2|Wis| 17| +3 | +7|Cha| 11| +0 | +4|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +4 | **Dex** | 19 | +4 | +4 | **Con** | 16 | +3 | +4 |
+> | **Int** | 7 | -2 | +4 | **Wis** | 17 | +3 | +4 | **Cha** | 11 | +0 | +4 |
 >
+> **Saving Throws** Dex +8, Wis +7
 > **Skills** Insight +7, Perception +7, Stealth +8  
 > **Damage Immunities** Poison  
+> **Damage Resistances** acid, cold, fire, lightning, thunder; bludgeoning, piercing, and slashing from nonmagical attacks
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained  
 > **Senses** Darkvision 120 ft., Passive Perception 17  
 > **Languages** Common  

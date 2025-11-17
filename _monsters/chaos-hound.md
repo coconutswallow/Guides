@@ -21,8 +21,6 @@ Chaos hounds are vicious fiends that **relentlessly track** their prey. Once the
 ### Devourer of Souls
 A chaos hound may feed on the corpse of a humanoid that it killed that has been dead for less than 10 minutes, devouring both the flesh and soul in doing so. This feeding takes at least 1 minute, and it destroys the victim's body. The victim's soul is trapped in the chaos hound for 24 hours, after which time it is digested. If the chaos hound dies before the soul is digested, the soul is released. While a humanoid's soul is trapped in a chaos hound, any form of revival that could work has only a 50 percent chance of doing so, freeing the soul from the chaos hound if it is successful. Once a creature's soul is digested, however, the creature may only be returned to life by a wish spell or divine intervention.
 
-Creation by Case
-
 ___
 > ## Chaos Hound
 > *Large Fiend, Chaotic Evil*
@@ -31,13 +29,14 @@ ___
 > 
 > **Initiative** +2 (15)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 20| +5 | **+9** |Dex| 15| +2 | +2 |Con| 17| +3 | +3 |
-> |Int| 8| -1 | -1 |Wis| 16| +3 | **+7** |Cha| 14| +2 | **+6** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 20 | +5 | +4 | **Dex** | 15 | +2 | +4 | **Con** | 17 | +3 | +4 |
+> | **Int** | 8 | -1 | +4 | **Wis** | 16 | +3 | +4 | **Cha** | 14 | +2 | +4 |
 >
+> **Saving Throws** Str +9, Wis +7, Cha +6
 > **Skills** Perception +7, Survival +7  
-> **Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from non-magical weapons  
+> **Damage Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from non-magical weapons  
 > **Damage Immunities** Acid
 > **Condition Immunities** Poisoned  
 > **Senses** Truesight 30 ft., Darkvision 60 ft., Passive Perception 17  
@@ -46,13 +45,13 @@ ___
 >
 > ### Traits
 >
-> ***Corrosive Body.*** A creature that touches the chaos hound or hits it with a melee attack while within 5 feet of it takes 7 ($2d6$) acid damage.
+> ***Corrosive Body.*** A creature that touches the chaos hound or hits it with a melee attack while within 5 feet of it takes 7 (2d6) acid damage.
 >
 > ***Flawless Tracker.*** The chaos hound has advantage on Wisdom (Survival) checks to track prey.
 >
 > ***Insubstantial.*** The chaos hound can take the Disengage action as a bonus action on each of its turns.
 >
-> ***Stench.*** The chaos hound gives off the cloying smell of ancient death. Any creature other than a fiend that starts its turn within 10 feet of it must make a DC 15 Constitution saving throw or be **poisoned** until the start of the creature's next turn. On a successful saving throw, the creature is immune to the stench of all chaos hounds for one hour.
+> ***Stench.*** The chaos hound gives off the cloying smell of ancient death. Any creature other than a fiend that starts its turn within 10 feet of it must make a DC 15 Constitution saving throw or be poisoned until the start of the creature's next turn. On a successful saving throw, the creature is immune to the stench of all chaos hounds for one hour.
 >
 > ### Actions
 >
@@ -60,11 +59,8 @@ ___
 >
 > ***Bite.*** *Melee Attack Roll:* +9, reach 5ft., one target. *Hit:* 18 (3d8 + 5) Piercing damage. If the target is a creature, if must succeed on a DC 15 Dexterity saving throw or take an additional 9 (2d8) acid damage.
 >
-> ***Terrifying Howl.*** The chaos hound unleashes a terrifying cry. Each creature of the chaos hound's choice within 30 ft. must make a DC 14 Wisdom saving throw or be **frightened** of it for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the chaos hound's Terrifying Howl for the next 24 hours.
+> ***Terrifying Howl.*** The chaos hound unleashes a terrifying cry. Each creature of the chaos hound's choice within 30 ft. must make a DC 14 Wisdom saving throw or be frightened of it for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the chaos hound's Terrifying Howl for the next 24 hours.
 >
 > ***Acid Breath (Recharge 5-6).*** The chaos hound spews forth acid in a 15 foot cone. Each creature in that cone must make a DC 15 Dexterity saving throw, taking 35 (10d6) acid damage or half as much on a successful save.
 >
-> ##### Devourer of Souls
-> 
->A chaos hound may feed on the corpse of a humanoid that it killed that has been dead for less than 10 minutes, devouring both the flesh and soul in doing so. This feeding takes at least 1 minute, and it destroys the victim's body. The victim's soul is trapped in the chaos hound for 24 hours, after which time it is digested. If the chaos hound dies before the soul is digested, the soul is released.
->While a humanoid's soul is trapped in a chaos hound, any form of revival that could work has only a 50 percent chance of doing so, freeing the soul from the chaos hound if it is successful. Once a creature's soul is digested, however, the creature may only be returned to life by a *wish* spell or divine intervention.
+

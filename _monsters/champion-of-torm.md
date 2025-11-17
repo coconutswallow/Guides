@@ -11,7 +11,7 @@ creator: Case
 
 ## Champion of Torm
 
-The **Champion of Torm** represents the military might and unwavering conviction of the various orders that worship the deity of duty and loyalty. These champions are sent throughout the world as beacons of hope and courage.
+The Champion of Torm represents the military might and unwavering conviction of the various orders that worship the deity of duty and loyalty. These champions are sent throughout the world as beacons of hope and courage.
 
 They value honesty, loyalty, and truth above all else, offering aid to all those in need. Individual champions are often on some form of penance, seeking to do good in the world to atone for a past event they blame themselves for. Their divine duty includes finding and destroying any cults of Cyric and Bane, and locating and recording any areas of dead or wild magic.
 
@@ -23,12 +23,13 @@ ___
 > 
 > **Initiative** +2 (15)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4 | +8 |Dex| 15| +2 | **+6** |Con| 18| +4 | **+8** |
-> |Int| 14| +2 | +2 |Wis| 18| +4 | **+8** |Cha| 15| +2 | +2 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +4 | **Dex** | 15 | +2 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 14 | +2 | +4 | **Wis** | 18 | +4 | +4 | **Cha** | 15 | +2 | +4 |
 >
-> **Skills** Athletics +8, Perception +8  
+> **Skills** Dex +6, Wis +8
+> **Saving Throws** Athletics +8, Perception +8  
 > **Resistances** Bludgeoning, Piercing, and Slashing from nonmagical weapons  
 > **Senses** Passive Perception 18  
 > **Languages** Common  
@@ -47,6 +48,11 @@ ___
 > * 1st level (4 slots): *bless, command, guiding bolt, shield of faith*
 > * 2nd level (3 slots): *calm emotions, lesser restoration, spiritual weapon*
 > * 3rd level (2 slots): *beacon of hope, spirit guardians*
+>
+> ***Steadfast*** The Champion can't be Frightened when he can see an allied creature within 30 feet.
+>
+> ***Torm's Blessing.*** The Champion's weapon attacks are
+magical. When the Champion hits with any weapon, the weapon deals an extra 2d6 radiant damage (included in the attack).
 >
 > ### Actions
 >

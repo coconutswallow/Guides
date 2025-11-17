@@ -24,14 +24,15 @@ ___
 > 
 > **Initiative** +6 (23)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 16| +3 | +3 |Dex| 23| +6 | **+10** |Con| 18| +4 | +4 |
-> |Int| 13| +1 | +1 |Wis| 14| +2 | **+6** |Cha| 12| +1 | +1 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +4 | **Dex** | 23 | +6 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 13 | +1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 12 | +1 | +4 |
 >
+> **Saving Throws** Dex +10, Wis +6
 > **Skills** Acrobatics +10, Intimidation +5, Perception +6, Stealth +14  
-> **Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from nonmagical weapons  
-> **Immunities** Poison  
+> **Damage Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from nonmagical weapons  
+> **Damage Immunities** Poison  
 > **Condition Immunities** Charmed, Frightened, Poisoned  
 > **Senses** Darkvision 120 ft., Blindsight 30 ft., Passive Perception 16  
 > **Languages** Understands Undercommon but doesn't speak  

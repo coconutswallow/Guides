@@ -33,14 +33,15 @@ ___
 > 
 > **Initiative** +4 (18)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 15| +2 | +2 |Dex| 18| +4 | **+6** |Con| 16| +3 | +3 |
-> |Int| 14| +2 | +2 |Wis| 8| -1 | -1 |Cha| 18| +4 | **+6** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 15 | +2 | +2 | **Dex** | 18 | +4 | +2 | **Con** | 16 | +3 | +2 |
+> | **Int** | 14 | +2 | +2 | **Wis** | 8 | -1 | +2 | **Cha** | 18 | +4 | +2 |
 >
+> **Saving Throws** Dex +6, Cha +6
 > **Skills** Acrobatics +6, Deception +6, Intimidation +6  
-> **Resistances** Fire  
-> **Immunities** Cold, Poison, Bludgeoning, Piercing, and Slashing from nonmagical attacks that aren't silvered  
+> **Damage Resistances** Fire  
+> **Damage Immunities** Cold, Poison, Bludgeoning, Piercing, and Slashing from nonmagical attacks that aren't silvered  
 > **Condition Immunities** Paralyzed; Charmed (while in the Feywild)  
 > **Senses** Darkvision 60 ft., Blindsight 30 ft., Passive Perception 9  
 > **Languages** Common, Sylvan  
@@ -60,11 +61,6 @@ ___
 >
 > ***Ice-Sickle.*** *Melee Attack Roll:* +4, reach 5 ft., one target. *Hit:* 3 (1d4 + 2) Slashing damage.
 >
-> ***Snowball.*** *Ranged Attack Roll:* +6, range 60/120 ft., one target. *Hit:* 6 (1d4 + 4) Bludgeoning damage plus 7 ($2d6$) Cold damage (Total 13 damage).
+> ***Snowball.*** *Ranged Attack Roll:* +6, range 60/120 ft., one target. *Hit:* 6 (1d4 + 4) Bludgeoning damage plus 7 (2d6) Cold damage (Total 13 damage).
 
 ---
-## Variant: Frost Fairy Familiar
-
-A Frost Fairy can enter into a compact to serve another creature as a familiar, forming a telepathic bond with its willing creature. While the fairy is within 10 feet of its bonded creature, the creature shares the fairy's **cold immunity** and **fire resistance**. The fairy can end its service as a familiar at any time on a whim, ending the telepathic bond.
-
-Would you like to explore a specific scenario involving a Frost Fairy, such as a strategy for bribing one or a battle where they break their non-lethal compact?

@@ -21,17 +21,32 @@ The original Animated Snowmen were built by a group of nomadic gnomes traveling 
 
 Animated Snowmen will create festive displays in order to hide in plain sight. Displays are created with snow and available foliage in the area to make circlets, necklaces, and facial expressions. If the snowmen kill a creature near their display, they will hide the body in another snowman and add it to the display. Any blood spilled will be used to add rosy cheeks, red lips, and festive stripes to elements of the display. Animated snowmen will not leave the area they were charged to protect, even if the snow melts to the point where their festive display is reduced to a ghastly display of thawing corpses and an ominous snowman remaining perfectly frozen.
 
+### Combat Tactics
+
+* **Step 1.** Describe happy snow scene.
+* **Step 2.** If party doesn't go look, describe how some type of scavenger animals are in the area.
+* **Step 3.** If the party investigates, they find a dead body inside the snowman, then get smacked by the Animated Snowman for messing up the display. 
+* **Step 4.** Laugh when the monk hits it 4 times and drives the AC up real high.
+* **Step 5.** Cry when someone hits it with fire.
+* **Step 6.** ???
+* **Step 7.** Profit.
+
 ___
+
 > ## Animated Snowman
 > *Medium construct, unaligned*
 >
 > **AC** 9 (can increase to 20 via Compacted Snow) **HP** 93 (11d8 + 44) **Speed** 30 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 19| +4| +7|Dex| 9| -1 | +2|Con| 18| +4 | +7|
-> |Int| 1| -5 | -2|Wis| 7| -2 | +1|Cha| 1| -5 | -2|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 19 | +4 | +3 | **Dex** | 9 | -1 | +3 | **Con** | 18 | +4 | +3 |
+> | **Int** | 1 | -5 | +3 | **Wis** | 7 | -2 | +3 | **Cha** | 1 | -5 | +3 |
 >
+> **Damage Vulnerabilities** fire
+> **Damage Resistances** bludgeoning, piercing, and slashing
+from nonmagical attacks
+> **Damage Immunities** cold, poison, psychic
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned  
 > **Senses** Passive Perception 8  
 > **Languages** Understands the languages of its creator but can't speak  

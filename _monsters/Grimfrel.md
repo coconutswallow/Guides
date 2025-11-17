@@ -21,6 +21,7 @@ The Queen of Air and Darkness employs fey spirits of wind and snow to retrieve c
 in the flaying and eating of naughty children, presumably to procure more material to make vellum for its list.
 
 #### Combat Tactics
+
 Grimfrel are employed by the Queen of Air and Darkness to subdue and retrieve those that have   earned the ire of the Unseelie Fey, whether it by offering insult, or breaking a fey bargain. The   Grimfrel tracks its charge invisibly, attacking when the target least expects it. During an ambush, it first strikes with its claws and Frostbite to capitalize upon catching its target sleeping or otherwise unaware. After delivering vicious slashes, it uses its Frigid Visage to sap the creature's stamina, to prevent escape. When the prey begins to falter and stumble, it then freezes it solid with Winter's Grasp, in preparation for transport back to the lands of Winter in the Feywild. Once its charge is captured, it may choose to seek out any nearby   humanoids, rewarding the nice with gifts, while flaying the naughty in their beds, sure to return to the lands of its Queen before the morning light.
 
 ___
@@ -29,14 +30,14 @@ ___
 >
 > **AC** 16 (natural armor) **HP** 170 (20d10 + 60) **Speed** 40 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 21| +5 | +9 |Dex| 18| +4 | +8 |Con| 16| +3 | — |
-> |Int| 11| +0 | — |Wis| 16| +3 | +7 |Cha| 12| +1 | — |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 21 | +5 | +4 | **Dex** | 18 | +4 | +4 | **Con** | 16 | +3 | +4 |
+> | **Int** | 11 | +0 | +4 | **Wis** | 16 | +3 | +4 | **Cha** | 12 | +1 | +4 |
 >
 > **Skills** Athletics +9, Perception +7, Stealth +8, Survival +7  
-> **Resistances** Bludgeoning, Piercing, and Slashing from Nonmagical Attacks  
-> **Immunities** Cold, Fire; Exhaustion, Stunned  
+> **Damage Resistances** Bludgeoning, Piercing, and Slashing from Nonmagical Attacks  
+> **Damage Immunities** Cold, Fire; Exhaustion, Stunned  
 > **Senses** Darkvision 120 ft., Passive Perception 17  
 > **Languages** Common, Sylvan, Elvish  
 > **CR** 11 (XP 7,200; PB +4)
@@ -57,10 +58,11 @@ ___
 >
 > ***Icy Claws.*** *Melee Weapon Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 12 (2d6 + 5) slashing damage plus 14 (4d6) cold damage.  
 >
-> ***Frostbite.*** *Melee Weapon Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 14 (2d8 + 5) piercing damage.  
-> If the target is a creature other than an undead or a construct, it must succeed on a DC 15 Constitution saving throw or take 1d10 cold damage at the start of each of its turns due to spreading frostbite. Each time the Grimfrel hits the wounded target with this attack, the cold damage increases by 1d10. A creature can tend to the frostbite with a successful DC 15 Wisdom (Medicine) check, or the frostbite ends if the target receives magical healing.  
+> ***Frostbite.*** Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 14 (2d8 + 5) piercing damage.
+> If the target is a creature other than an undead or a construct, it must succeed on a DC 15 Constitution saving throw or take 1d10 cold damage at the start of each of its turns due to spreading frostbite. Each time the Grimfrel hits the wounded target with this attack, the cold damage increases by 1d10. A creature can use an action to tend to the frostbite with a successful DC 15 Wisdom (Medicine) check, or the frostbite ends if the target receives magical healing
 >
-> ***Frigid Visage.*** Each creature within 60 feet of the Grimfrel that can see it must succeed on a DC 15 Constitution saving throw or gain one level of exhaustion. An affected creature can repeat the saving throw at the end of each of its turns, with disadvantage if the Grimfrel remains in sight. On a success, one level of exhaustion imposed this way ends. A creature immune to this effect for 24 hours after succeeding.  
+> ***Frigid Visage.*** Each creature within 60 feet of the Grimfrel that can see it must succeed on a DC 15 Consti
+tution saving throw or gain one level of exhaustion. An affected creature can repeat the saving throw at the end of each of its turns, with disadvantage if the Grimfrel remains in sight. On a success, one level of exhaustion imposed this way ends. A creature immune to this effect for 24 hours after succeeding.  
 >
 > ***Sense Guilt.*** The Grimfrel targets a creature it can see within 10 feet and magically perceives the creature’s emotional state. The target must succeed on a DC 15 Charisma saving throw or the Grimfrel also learns its alignment. On a success, the creature is immune to this effect for 24 hours.  
 >

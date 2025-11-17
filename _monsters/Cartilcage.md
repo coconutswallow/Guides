@@ -21,14 +21,14 @@ ___
 > 
 > **Initiative** +0 (10)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 16| +3 | +3 |Dex| 10| +0 | +0 |Con| 14| +2 | +2 |
-> |Int| 8| -1 | -1 |Wis| 10| +0 | +0 |Cha| 14| +2 | +2 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 16 | +3 | +3 | **Dex** | 10 | +0 | +3 | **Con** | 14 | +2 | +3 |
+> | **Int** | 8 | -1 | +3 | **Wis** | 10 | +0 | +3 | **Cha** | 14 | +2 | +3 |
 >
 > **Skills** Stealth +3  
-> **Resistances** Necrotic, Piercing  
-> **Immunities** Poison  
+> **Damage Resistances** Necrotic, Piercing  
+> **Damage Immunities** Poison  
 > **Condition Immunities** Exhaustion, Poisoned  
 > **Senses** Darkvision 60 ft., Passive Perception 10  
 > **Languages** Understands all languages it knew in life but can't speak  

@@ -2,10 +2,10 @@ import os
 import csv
 import re
 
-def extract_title_from_frontmatter(content):
-    """Extract title from YAML frontmatter"""
-    match = re.search(r'^---\s*\n.*?^title:\s*(.+?)\s*$.*?^---\s*\n', 
-                     content, re.MULTILINE | re.DOTALL)
+def extract_from_frontmatter(content, field):
+    """Extract a field from YAML frontmatter"""
+    pattern = r'^' + field + r':\s*(.+?)\s*$'
+    match = re.search(pattern, content, re.MULTILINE)
     if match:
         return match.group(1).strip()
     return None
@@ -38,12 +38,17 @@ def main():
             try:
                 with open(filepath, 'r', encoding='utf-8') as f:
                     content = f.read()
-                    title = extract_title_from_frontmatter(content)
+                    title = extract_from_frontmatter(content, 'title')
+                    creator = extract_from_frontmatter(content, 'creator')
                     
                     if title:
                         url = generate_url(filename)
-                        monsters.append({'title': title, 'url': url})
-                        print(f"Processed: {title}")
+                        monsters.append({
+                            'title': title,
+                            'creator': creator if creator else '',
+                            'url': url
+                        })
+                        print(f"Processed: {title} (Creator: {creator if creator else 'N/A'})")
                     else:
                         print(f"Warning: No title found in {filename}")
             except Exception as e:
@@ -52,7 +57,7 @@ def main():
     # Write to CSV
     if monsters:
         with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=['title', 'url'])
+            writer = csv.DictWriter(csvfile, fieldnames=['title', 'creator', 'url'])
             writer.writeheader()
             writer.writerows(monsters)
         

@@ -15,8 +15,8 @@ image_credit: Art by Demonic-Criminal
 
 The first Skinner, or Fleshworm, is rumored to have been created as an act of retribution sometime in the year 1303 during the fall of Thar. The city of Corsil, faced with destruction by ogres was converted by the last of its defenders into a vengeance dungeon. Locking themselves away behind the walls of their city, the citizens of Corsil became something else. Something wretched. A great evil laired in the sunken ruins of Corsil: Skinner. The guardian, ruler, and keeper of Skinner's Tomb, once the magnificent city of Corsil wanders the halls of its prison and crypt, ever seeking more flesh to add to its body, as under its rule, the dead of Corsil maintain their lasting vigil.
 
-***"Skinner, Skinner! He’ll eat your heads and tear off your skin! He’ll pluck out your eyeballs and devour your kin! Skinner, Skinner! Run while you can! Your flesh will be taken with a touch of his hand! Hide in the darkness, hide in the light. Fighting is useless; Skinner is fright. He takes our hides and hides our bones And makes this place our very last home. Skinner, Skinner, never open his door. Or soon your bones will lie on this floor."***
-- Carved ogre children's poem found on the door to Skinner's Tomb
+> ***"Skinner, Skinner! He’ll eat your heads and tear off your skin! He’ll pluck out your eyeballs and devour your kin! Skinner, Skinner! Run while you can! Your flesh will be taken with a touch of his hand! Hide in the darkness, hide in the light. Fighting is useless; Skinner is fright. He takes our hides and hides our bones And makes this place our very last home. Skinner, Skinner, never open his door. Or soon your bones will lie on this floor."***
+ -Carved ogre children's poem found on the door to Skinner's Tomb
 
 *"Skinner, Skinner! He’ll eat your heads and tear off your skin! He’ll pluck out your eyeballs and devour your kin! Skinner, Skinner! Run while you can! Your flesh will be taken with a touch of his hand! Hide in the darkness, hide in the light. Fighting is useless; Skinner is fright. He takes our hides and hides our bones And makes this place our very last home. Skinner, Skinner, never open his door. Or soon your bones will lie on this floor."*
 
@@ -49,18 +49,23 @@ When faced with either acid or with its barrier defeated, a Skinner will prefer 
 
 When facing creatures immune to the paralyzing effect of its frightening gaze, a Skinner will prefer to crush the creature into unconsciousness before relieving the victim of its skin through the use of its Flensing Touch.
 
+> "Flesh so fine, so fine to tear, to gnash the skin; skin to strip, to plait, so nice to plait the strips, so nice, so red the drops that fall; blood so red, so red, so sweet; sweet screams, pretty screams, singing screams, scream your song, sing your screams..."
+> -The ramblings of the sole survivor of an adventuring party encountering a Skinner unprepared.
+
 ___
 > ## Skinner
 > *Huge monstrosity, neutral evil*
 >
 > **AC** 12 (natural armor) **HP** 92 (8d12 + 40) **Speed** 20 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 21| +5| +9|Dex| 7| -2 | +2|Con| 20| +5 | +9|
-> |Int| 14| +2 | +6|Wis| 15| +2 | +6|Cha| 20| +5 | +9|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 21 | +5 | +4 | **Dex** | 7 | -2 | +4 | **Con** | 20 | +5 | +4 |
+> | **Int** | 14 | +2 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 20 | +5 | +4 |
 >
-> **Skills** Intimidation +9  
+> **Saving Throws** Str +9, Con +9, Wis +6
+> **Skills** Intimidation +9
+> **Damage Resistances** Necrotic
 > **Condition Immunities** Charmed, Frightened, Paralyzed  
 > **Senses** Blindsight 120 ft., Passive Perception 12  
 > **Languages** Common, Telepathy 120 ft.  

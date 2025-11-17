@@ -21,10 +21,10 @@ ___
 > 
 > **Initiative** +3 (16)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 10| +0 | +0 |Dex| 16| +3 | +3 |Con| 15| +2 | +2 |
-> |Int| 15| +2 | +2 |Wis| 16| +3 | **+6** |Cha| 20| +5 | **+8** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 10 | +0 | +3 | **Dex** | 16 | +3 | +3 | **Con** | 15 | +2 | +3 |
+> | **Int** | 15 | +2 | +3 | **Wis** | 16 | +3 | +3 | **Cha** | 20 | +5 | +3 |
 >
 > **Skills** Arcana +5, History +5  
 > **Resistances** Psychic  
@@ -58,13 +58,13 @@ ___
 >
 > ### Actions
 >
-> ***Dagger.*** *Melee or Ranged Attack Roll:* +7, reach 5 ft. or range 20/60 ft., one target. *Hit:* 5 ($1d4 + 3$) Piercing damage and 7 ($2d6$) Necrotic damage.
+> ***Dagger.*** *Melee or Ranged Attack Roll:* +7, reach 5 ft. or range 20/60 ft., one target. *Hit:* 5 (1d4 + 3) Piercing damage and 7 (2d6) Necrotic damage.
 >
 > ### Legendary Actions
 >
 > The warlock can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The warlock regains spent legendary actions at the start of its turn.
 >
-> ***Know This.*** The warlock whispers eldritch thoughts into the mind of a creature it can see within 30 feet of it. The target must make a DC 16 Wisdom saving throw. On a failed save, it takes 10 ($3d6$) psychic damage and it is **frightened** until the end of its next turn. On a successful save, the target takes half as much damage and isn't frightened.
+> ***Know This.*** The warlock whispers eldritch thoughts into the mind of a creature it can see within 30 feet of it. The target must make a DC 16 Wisdom saving throw. On a failed save, it takes 10 (3d6) psychic damage and it is **frightened** until the end of its next turn. On a successful save, the target takes half as much damage and isn't frightened.
 >
 > ***Cantrip (Costs 2 actions).*** The warlock casts a cantrip.
 >

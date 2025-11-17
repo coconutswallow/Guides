@@ -14,8 +14,6 @@ creator: Constantine
 **Pain and Porcelain**
 The Dollmaker is a creature of unnatural origin, corrupted by the energies of the Far Realm and the evil darkness of the Shadowfell. It takes on a harmless form, often that of a small child, and lures victims in. Once it has established a relationship, it drains their life essence, and places what remains of the soul into a porcelain figure that it conjures to its clawed hand. The dolls that it creates are then sold to local villages and small towns, where they attach themselves to a small child or other vulnerable individual. Over time, they form a bond with the child, turning them against their parents. They convince the child to do dark things, such as conjure demons or bring harm to innocents. It provides guidance on these matters. After the bond has been solidified, the doll brings the child to *The dollmaker*, where they will be turned into a doll themselves.
 
-**Note** Size can change (shapechanger)
-
 ___
 > ## The Dollmaker
 > *Medium Fiend (Shapechanger), Chaotic Evil*
@@ -24,14 +22,15 @@ ___
 > 
 > **Initiative** +1 (12)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 14| +2 | +2 |Dex| 12| +1 | +1 |Con| 14| +2 | +2 |
-> |Int| 18| +4 | **+8** |Wis| 15| +2 | +2 |Cha| 20| +5 | **+9** |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 14 | +2 | +4 | **Dex** | 12 | +1 | +4 | **Con** | 14 | +2 | +4 |
+> | **Int** | 18 | +4 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 20 | +5 | +4 |
 >
+> **Saving Throws** Int +8, Cha +9
 > **Skills** Deception +9, Perception +6, Persuasion +9  
-> **Resistances** Bludgeoning, Piercing, and Slashing from nonmagical weapons that aren't adamantine  
-> **Immunities** Poison  
+> **Damage Resistances** Bludgeoning, Piercing, and Slashing from nonmagical weapons that aren't adamantine  
+> **Damage Immunities** Poison  
 > **Condition Immunities** Charmed, Exhausted, Frightened, Paralyzed, Poisoned, Unconscious  
 > **Senses** Blindsight 30 ft., Darkvision 120 ft., Passive Perception 16  
 > **Languages** Common, Abyssal, Telepathy 120 ft.  

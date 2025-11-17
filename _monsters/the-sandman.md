@@ -28,12 +28,14 @@ ___
 >
 > **AC** 17 (natural armor) **HP** 130 (20d8 + 40) **Speed** 40 ft., fly 30 ft. (hover)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 12| +1| +5|Dex| 21| +5 | +9|Con| 14| +2 | +6|
-> |Int| 20| +5 | +9|Wis| 15| +2 | +6|Cha| 17| +3 | +7|
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 12 | +1 | +4 | **Dex** | 21 | +5 | +4 | **Con** | 14 | +2 | +4 |
+> | **Int** | 20 | +5 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 17 | +3 | +4 |
 >
+> **Saving Throws** Con +6, Dex +9, Int +9, Wis +6
 > **Skills** Athletics +9, Arcana +13, Intimidation +7, Perception +6, Stealth +13  
+> **Damage Immunities** psychic, radiant
 > **Condition Immunities** blinded, charmed, exhaustion, frightened  
 > **Senses** darkvision 120 ft., Passive Perception 16  
 > **Languages** understands all languages but mostly speaks to children  

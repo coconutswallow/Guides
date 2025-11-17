@@ -23,10 +23,10 @@ ___
 > 
 > **Initiative** +3 (16)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 2| -4 | -4 |Dex| 16| +3 | +3 |Con| 8| -1 | -1 |
-> |Int| 10| +0 | +0 |Wis| 10| +0 | +0 |Cha| 4| -3 | -3 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 2 | -4 | +2 | **Dex** | 16 | +3 | +2 | **Con** | 8 | -1 | +2 |
+> | **Int** | 10 | +0 | +2 | **Wis** | 10 | +0 | +2 | **Cha** | 4 | -3 | +2 |
 >
 > **Skills** Perception +2, Stealth +5  
 > **Senses** Darkvision 60 ft., Passive Perception 12  
@@ -48,4 +48,4 @@ ___
 >
 > ### Actions
 >
-> ***Bite.*** *Melee Attack Roll:* +5, reach 5 ft., one creature. *Hit:* 5 ($1d4 + 3$) Piercing damage.
+> ***Bite.*** *Melee Attack Roll:* +5, reach 5 ft., one creature. *Hit:* 5 (1d4 + 3) Piercing damage.

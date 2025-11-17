@@ -29,13 +29,14 @@ ___
 >
 > **AC** 18 (natural armor) **HP** 127 (15d10 + 45) **Speed** 40 ft., fly 80 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 18| +4 | +4 |Dex| 16| +3 | +6 |Con| 17| +3 | +6 |
-> |Int| 12| +1 | +1 |Wis| 13| +1 | +4 |Cha| 15| +2 | +5 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 18 | +4 | +3 | **Dex** | 16 | +3 | +3 | **Con** | 17 | +3 | +3 |
+> | **Int** | 12 | +1 | +3 | **Wis** | 13 | +1 | +3 | **Cha** | 15 | +2 | +3 |
 >
+> **Saving Throws** Dex +6, Con +6, Wis +4, Cha +5
 > **Skills** Perception +7, Stealth +6  
-> **Immunities** Fire  
+> **Damage Immunities** Fire  
 > **Condition Immunities** Blinded  
 > **Senses** Blindsight 30 ft., Darkvision 120 ft., Passive Perception 17  
 > **Languages** Common, Draconic  

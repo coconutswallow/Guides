@@ -18,10 +18,11 @@ The Inukpasugjuit (pronounced *e-nook-pa-soog-ju-it*) are a rare variety of Fros
 #### Winter Festival
 It is said that Inukpasugjuits go out after the first blizzard of winter as part of a brutish festival celebrating Thrym and pillage the settlements of the area. During these times, they are believed to carry a massive bag in which they capture humanoids after petrifying them to use them as playthings and decorations in their icy caverns. It is the reason they are seen carrying great clubs instead of great axes for this festival—they do not want to slice their future belongings apart.
 
-*"I saw it grab my brother and breathe what seemed like ice upon him. I saw my brother begin to freeze and stop moving. It then put him in a large bag on its back and carried him away. Against my better judgment, I followed it. It was such a massive creature, yet so fast. After hours of walking, it reached a cavern where it brought my brother. I was exhausted. Once I saw it leave the cavern, I went to peek inside... and I saw him. My brother, petrified in ice, was placed around a large table where tea had been set. Many others that had suffered the same fate as my brother were also around the table. What seemed like a younger version of the creature that got my brother was having a tea party with them. I wanted to scream, but I knew I shouldn't. I just ran. I ran away. I'm a coward. If you ever see an Inukpasugjuik, run and hide as best as you can; your best chance of escape is to avoid being noticed in the first place. I think they can sense your fear."*  
-— *Anyu Iqniq, villager*
+*"I saw it grab my brother and breathe what seemed like ice upon him. I saw my brother begin to freeze and stop moving. It then put him in a large bag on its back and carried him away. Against my better judgment, I followed it. It was such a massive creature, yet so fast. After hours of walking, it reached a cavern where it brought my brother. I was  exhausted. Once I saw it leave the cavern, I went to peek inside... and I saw him. My brother, petrified in ice, was placed around a large table where tea had been set. Many others that had suffered the same fate as my brother were also around the table. What seemed like a younger version of the creature that got my brother was having a tea party with them. I wanted to scream, but I knew I shouldn't. I just ran. I ran away. I'm a coward. If you ever see an Inukpasugjuik, run and hide as best as you can; your best chance of escape is to avoid being noticed in the first place. I think they can sense your fear."*  
+   — *Anyu Iqniq, villager*
 
 #### Combat Tactics
+
 When hunting for “friends” during Midwinter, the Inukpasugjuit carries a greatclub. Unless it considers itself to be in danger, the Inukpasugjuit will attempt to incapacitate rather than kill its target, getting more pleasure from petrifying its living victim forever in ice rather than ending its life. Its first step will be to get within reach of the target to hit it with its greatclub, attempting to knock its target out. Whether or not it is successful, it will attempt to grasp its target and use its freezing breath to turn it into ice. When the Inukpasugjuit has frozen one of its victims, it will carefully place this newfound friend into one of its massive bags and carefully bring it home. If the Inukpasugjuit is attacked from range and cannot reach the attacker, it'll throw nearby rocks or boulders. If there are none nearby, it may reluctantly grab one of its “friends” from its bag and throw it at its attacker before trying to close in on the distance and make this new target the replacement for its now broken “friend.”
 
 ___
@@ -30,13 +31,14 @@ ___
 >
 > **AC** 15 (natural armor) **HP** 138 (12d12 + 60) **Speed** 40 ft.
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 23| +6 | +9 |Dex| 9| -1 | -1 |Con| 21| +5 | +8 |
-> |Int| 9| -1 | -1 |Wis| 10| +0 | +3 |Cha| 12| +1 | +4 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 23 | +6 | +3 | **Dex** | 9 | -1 | +3 | **Con** | 21 | +5 | +3 |
+> | **Int** | 9 | -1 | +3 | **Wis** | 10 | +0 | +3 | **Cha** | 12 | +1 | +3 |
 >
+> **Saving Throws** Con +8, Wis +3, Cha +4
 > **Skills** Athletics +9, Perception +3  
-> **Immunities** Cold  
+> **Damage Immunities** Cold  
 > **Senses** Passive Perception 13  
 > **Languages** Giant  
 > **CR** 8 (XP 3,900; PB +3)
@@ -57,6 +59,6 @@ ___
 >
 > ***Freezing Breath.*** The Inukpasugjuit exhales freezing breath in a 15-foot line targeting the creature it has grappled. Each creature in that line must succeed on a DC 16 Constitution saving throw. On a failed save, a target begins to turn to ice and is restrained. The restrained target must repeat the saving throw at the end of its next turn. On a success, the effect ends on the target. On a failure, the target is petrified until freed by the *greater restoration* spell or other magic. Any water or liquid that is principally water in the area of the breath instantly freezes to a depth of 6 inches.  
 >
-> ***“Friendcicle” Special.*** The Inukpasugjuit grabs one of the petrified humanoids in its massive bag and throws it up to 60 feet in a direction of its choice. If a thrown target strikes a solid surface, it takes 7 (2d6) bludgeoning damage for every 10 feet it was thrown. If this damage would reduce the thrown target to 0 hit points, it shatters into pieces. If the target is thrown at another creature, that creature must succeed on a DC 17 Dexterity saving throw or take the same damage and be knocked prone. If there are no more humanoids in the bag, the Inukpasugjuit can use any creature that has been petrified with its freezing breath. It cannot use this ability if there are no petrified humanoids available.  
+> ***“Friendcicle” Special.*** The Inukpasugjuit grabs one of the petrified humanoids in his massive bag and throws it up to 60 feet in a direction of its choice. If a thrown target strikes a solid surface, the target takes 7 (2d6) bludgeoning damage for every 10 feet it was thrown. If this damage would reduce the thrown target to 0 hit points, it shatters into pieces. If the target is thrown at another creature, that creature must succeed on a DC 17 Dexterity saving throw or take the same damage and be knocked prone. If there is no more humanoid creatures in the bag, the Inukpasugjuit can use any creature that has been petrified with its freezing breath.  It cannot use this ability if there is no more petrified humanoids to throw in the area.
 >
 > ***Rock.*** *Ranged Weapon Attack:* +9 to hit, range 60/240 ft., one target. *Hit:* 28 (4d10 + 6) bludgeoning damage.

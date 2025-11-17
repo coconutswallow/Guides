@@ -19,6 +19,7 @@ Nevertheless, when a dreamscape discorporates into undifferentiated dream-stuff,
 Occasionally, however, a denizen of the Region of Dreams will gather together a curated selection of these dream-stuff fragments. By combining solidified parts chosen from dreams (or dreamers) sharing similar qualities, it is possible to create something greater than the sum of its parts: a sapient consciousness consisting entirely of dream-stuff.
 
 #### Living Nightmares
+
 A **cauchemar** is a creature composed of dream-stuff harvested from the dreams of the hateful, the selfish, and the cruel. Typically, it is created with the intent of using it as a servant or something akin to a pet; this goal rarely comes to fruition, as a cauchemar is an intelligent creature, and resents being beholden to another's orders.
 
 Left to its own devices, a cauchemar wanders the Region of Dreams, searching for unsuspecting dreamers to terrorize. Luckily for the dreamers in question, this behaviour has no ramifications for a physical body, so long as the cauchemar stays within the Region of Dreams. This matters to the cauchemar little: traumatizing dreamers is, after all, its own reward.
@@ -41,10 +42,10 @@ ___
 > 
 > **Initiative** +2 (12)
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 1| -5 | -5 |Dex| 15| +2 | +2 |Con| 14| +2 | +2 |
-> |Int| 16| +3 | +6 |Wis| 18| +4 | +7 |Cha| 21| +5 | +8 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 1 | -5 | +3 | **Dex** | 15 | +2 | +3 | **Con** | 14 | +2 | +3 |
+> | **Int** | 16 | +3 | +3 | **Wis** | 18 | +4 | +3 | **Cha** | 21 | +5 | +3 |
 >
 > **Saving Throws** Int +6, Wis +7, Cha +8  
 > **Damage Resistances** acid, cold, fire, lightning, psychic, thunder; bludgeoning, piercing, and slashing from nonmagical attacks  
