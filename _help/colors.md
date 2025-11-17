@@ -5,7 +5,7 @@ order: 51
 ---
 # Color System
 
-Our color system is built on a two-layer model to make it powerful, flexible, and easy to maintain. This approach, often called "design tokens," separates the _literal color values_ (the Palette) from their _purpose_ (the Theme).
+Our color system is built on a two-layer model to make it flexible, and easy to maintain. This approach, often called "design tokens," separates the _literal color values_ (the Palette) from their _purpose_ (the Theme).
 
 - Layer 1: The Palette (--palette-...)
     
@@ -18,20 +18,10 @@ Our color system is built on a two-layer model to make it powerful, flexible, an
 
 ## How to Use This System
 
-- **To style an element:** Always use a **Layer 2 (Theme)** variable.
-    
-    > /* GOOD */
-    > 
-    > .my-button { background-color: var(--color-primary); }
-    
-    > /* BAD */
-    > 
-    > .my-button { background-color: var(--palette-brand-main); }
-    
+- **To style an individual element:** Always use a **Layer 2 (Theme)** variable.
+     
 - **To change the entire brand's look:** You only need to change the **Layer 1 (Palette)** variables.
-    
-    > For example, to change the brand from burgundy to blue, you would only change `--palette-brand-main` and `--palette-brand-accent` in `style.css`. The entire site, in both light and dark mode, will update automatically.
-    
+  
 
 ## Layer 1: The Palette Tokens
 

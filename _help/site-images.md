@@ -26,14 +26,20 @@ background_image: /assets/images/tavern_brawl.jpg
 
 The syntax to add images inside regular documents unfortunately need a bit of a custom syntax:
 
-<code>!\[Example of a Trade in #trade-logs]({{ '/assets/images/trade-example.png' | relative_url }})</code>
+```
+![Example of a Trade in #trade-logs]({{ '/assets/images/trade-example.png' | relative_url }})
+```
 
-You need the `{{` in front of the URL and the `| relative_url }}` after the url for it to work.  But following this format
-Makes it more maintainable, so that if we can have a development copy of this site with a different URL and we don't need to
-fix the code when we migrate code from one site to the other
+Or...
+
+add Guides in front...
+
+```
+![Example of a Trade in #trade-logs]('Guides/assets/images/trade-example.png')
+```
+
 
 ## Crediting Images
 
-I add the source of the images in /resources/credit.md or at the bottom of the page.
+I add the source of the images in /resources/credit.md or at the bottom of the page itself (e.g. Adventure Locations).
 
-![]( "this is a test")
