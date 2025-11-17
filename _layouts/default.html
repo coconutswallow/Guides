@@ -12,14 +12,17 @@
     {% for stylesheet in page.extra_css %}
         <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
     {% endfor %}
+    {% for stylesheet in layout.extra_css %}
+    <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
+{% endfor %}
 </head>
-<body class="{{ page.body_class }}" {% if page.background_image %}style="--page-bg-image: url('{{ page.background_image | relative_url }}')"{% endif %}>
+<body class="{{ page.body_class }} {{ layout.body_class }}" {% if page.background_image or layout.background_image %}style="--page-bg-image: url('{{ page.background_image | default: layout.background_image | relative_url }}')"{% endif %}>
     {% if page.background_image %}
     <script>
     // Fallback: Set background image if not already set
     if (!document.body.style.getPropertyValue('--page-bg-image')) {
-        document.body.style.setProperty('--page-bg-image', 'url("{{ page.background_image | relative_url }}")');
-    }
+    document.body.style.setProperty('--page-bg-image', 'url("{{ page.background_image | default: layout.background_image | relative_url }}")');
+}
     </script>
     {% endif %}
         
