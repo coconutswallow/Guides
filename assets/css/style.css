@@ -1074,6 +1074,22 @@ tbody tr:hover {
   color: var(--color-bg-light);
 }
 
+.export-button-container {
+  display: flex;
+  gap: 1em;
+  margin: 1.5em 0;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* Optional: Make back button use secondary color scheme */
+.back-button {
+  background: var(--color-secondary);
+}
+
+.back-button:hover {
+  background: var(--color-primary);
+}
 
 /* ============================================
    13. CARDS & CONTAINERS
