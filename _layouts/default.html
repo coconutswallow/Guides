@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
     {% endfor %}
 </head>
-<body {% if page.background_image %}style="--page-bg-image: url('{{ page.background_image | relative_url }}')"{% endif %}>
+<body class="{{ page.body_class }}" {% if page.background_image %}style="--page-bg-image: url('{{ page.background_image | relative_url }}')"{% endif %}>
     {% if page.background_image %}
     <script>
     // Fallback: Set background image if not already set
