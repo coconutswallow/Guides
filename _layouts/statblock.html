@@ -12,19 +12,19 @@ extra_css:
 
 {{ content }}
 
-{% if page.layout == "statblock" %}
-<div class="export-button-container">
-    <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Index</button>
-    <button class="btn export-json-button" onclick="exportToJSON()">Export as JSON</button>
-</div>
-{% endif %}
-
 {% if page.image %}
 <div class="monster-image-container">
     <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
     {% if page.image_credit %}
     <p class="image-credit">{{ page.image_credit }}</p>
     {% endif %}
+</div>
+{% endif %}
+
+{% if page.layout == "statblock" %}
+<div class="export-button-container">
+    <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Index</button>
+    <button class="btn export-json-button" onclick="exportToJSON()">Export as JSON</button>
 </div>
 {% endif %}
 
