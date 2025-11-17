@@ -51,7 +51,7 @@ ___
 > | **Str** | 22 | +6 | +4 | **Dex** | 21 | +5 | +4 | **Con** | 18 | +4 | +4 |
 > | **Int** | 8 | -1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 16 | +3 | +4 |
 >
-> **Saving Throws** Wis +6, Cha +7
+> **Saving Throws** Wis +6, Cha +7  
 > **Skills** Perception +10, Stealth +9  
 > **Senses** Darkvision 60 ft., Passive Perception 20  
 > **Languages** Draconic  

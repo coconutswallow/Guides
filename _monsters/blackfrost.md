@@ -43,10 +43,10 @@ ___
 > | **Str** | 20 | +5 | +4 | **Dex** | 11 | +0 | +4 | **Con** | 18 | +4 | +4 |
 > | **Int** | 13 | +1 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 18 | +4 | +4 |
 >
-> **Saving Throws** Dex +4,Wis +6 Cha +8
+> **Saving Throws** Dex +4,Wis +6 Cha +8  
 > **Damage Resistances** Necrotic  
-> **Damage Immunities** Cold, Poison 
-> **Condition Immunities** Exhaustion, Frightened, Poisoned  
+> **Damage Immunities** Cold, Poison  
+> **Condition Immunities** Exhaustion, Frightened, Poisoned    
 > **Senses** Darkvision 120 ft., Passive Perception 12  
 > **Languages** Abyssal, Common  
 > **CR** 12 (XP 8,400; PB +4)

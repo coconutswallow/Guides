@@ -39,7 +39,7 @@ ___
 > | **Str** | 18 | +4 | +4 | **Dex** | 12 | +1 | +4 | **Con** | 18 | +4 | +4 |
 > | **Int** | 10 | +0 | +4 | **Wis** | 18 | +4 | +4 | **Cha** | 18 | +4 | +4 |
 >
-> **Saving Throws** Str +8, Int +4, Wis +8, Cha +8
+> **Saving Throws** Str +8, Int +4, Wis +8, Cha +8  
 > **Skills** Deception +8, Stealth +9  
 > **Damage Resistances** Damage from spells; Bludgeoning, Piercing, Slashing from nonmagical attacks  
 > **Damage Immunities** Poison  

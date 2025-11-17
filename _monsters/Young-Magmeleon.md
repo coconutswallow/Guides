@@ -35,7 +35,7 @@ ___
 > | **Str** | 18 | +4 | +3 | **Dex** | 14 | +2 | +3 | **Con** | 18 | +4 | +3 |
 > | **Int** | 10 | +0 | +3 | **Wis** | 12 | +1 | +3 | **Cha** | 10 | +0 | +3 |
 >
-> **Saving Throws** Dex +5, Int +3, Cha +3
+> **Saving Throws** Dex +5, Int +3, Cha +3  
 > **Skills** Perception +7, Stealth +5  
 > **Immunities** Fire  
 > **Senses** Blindsight 30 ft., Darkvision 120 ft., Passive Perception 17  

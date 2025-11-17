@@ -40,7 +40,7 @@ ___
 > | **Str** | 18 | +4 | +3 | **Dex** | 15 | +2 | +3 | **Con** | 16 | +3 | +3 |
 > | **Int** | 7 | -2 | +3 | **Wis** | 12 | +1 | +3 | **Cha** | 11 | +0 | +3 |
 >
-> **Saving Throws** Str +7, Con +6
+> **Saving Throws** Str +7, Con +6  
 > **Skills** Athletics +7, Acrobatics +5, Deception +6, Perception +4, Stealth +8, Survival +4  
 > **Condition Immunities** Charmed, Frightened  
 > **Senses** Darkvision 60 ft., Passive Perception 14  

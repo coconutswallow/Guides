@@ -44,8 +44,8 @@ ___
 > | **Str** | 21 | +5 | +4 | **Dex** | 12 | +1 | +4 | **Con** | 20 | +5 | +4 |
 > | **Int** | 14 | +2 | +4 | **Wis** | 16 | +3 | +4 | **Cha** | 21 | +5 | +4 |
 >
-> **Saving Throws** Dex +5, Con +9, Wis +7
-> **Skills** Insight +7, Perception +11, Stealth +5
+> **Saving Throws** Dex +5, Con +9, Wis +7  
+> **Skills** Insight +7, Perception +11, Stealth +5  
 > **Damage Immunities** fire  
 > **Condition Immunities** Charmed  
 > **Senses** Blindsight 120 ft., Darkvision 120 ft., Passive Perception 21  

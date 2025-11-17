@@ -63,9 +63,9 @@ ___
 > | **Str** | 21 | +5 | +4 | **Dex** | 7 | -2 | +4 | **Con** | 20 | +5 | +4 |
 > | **Int** | 14 | +2 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 20 | +5 | +4 |
 >
-> **Saving Throws** Str +9, Con +9, Wis +6
-> **Skills** Intimidation +9
-> **Damage Resistances** Necrotic
+> **Saving Throws** Str +9, Con +9, Wis +6  
+> **Skills** Intimidation +9  
+> **Damage Resistances** Necrotic  
 > **Condition Immunities** Charmed, Frightened, Paralyzed  
 > **Senses** Blindsight 120 ft., Passive Perception 12  
 > **Languages** Common, Telepathy 120 ft.  

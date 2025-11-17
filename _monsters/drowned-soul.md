@@ -28,9 +28,9 @@ ___
 > | **Str** | 13 | +1 | +2 | **Dex** | 6 | -2 | +2 | **Con** | 16 | +3 | +2 |
 > | **Int** | 3 | -4 | +2 | **Wis** | 6 | -2 | +2 | **Cha** | 5 | -3 | +2 |
 >
-> **Saving Throws** Wis +0 
-> **Resistances** Fire  
-> **Immunities** Poison  
+> **Saving Throws** Wis +0   
+> **Damage Resistances** Fire  
+> **Damage Immunities** Poison  
 > **Condition Immunities** Poisoned  
 > **Senses** Darkvision 60 ft., Passive Perception 8  
 > **Languages** Understands all languages it spoke in life but can't speak  

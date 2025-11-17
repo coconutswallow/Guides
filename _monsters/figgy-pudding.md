@@ -30,7 +30,7 @@ ___
 > | **Int** | 5 | -3 | +3 | **Wis** | 6 | -2 | +3 | **Cha** | 1 | -5 | +3 |
 >
 > **Damage Resistances** Lightning  
-> **Damage Immunities** Acid, Fire, Slashing
+> **Damage Immunities** Acid, Fire, Slashing  
 > **Conditions Immunities** Blinded, Charmed, Deafened, Exhaustion, Frightened, Prone  
 > **Senses** Blindsight 60 ft. (blind beyond this radius), Passive Perception 8  
 > **Languages** —  

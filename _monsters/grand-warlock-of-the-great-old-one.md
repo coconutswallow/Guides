@@ -27,7 +27,7 @@ ___
 > | **Int** | 15 | +2 | +3 | **Wis** | 16 | +3 | +3 | **Cha** | 20 | +5 | +3 |
 >
 > **Skills** Arcana +5, History +5  
-> **Resistances** Psychic  
+> **Damage Resistances** Psychic  
 > **Senses** Darkvision 120 ft., Telepathy 30 ft., Passive Perception 13  
 > **Languages** Any four languages  
 > **CR** 8 (XP 3,900; PB +3)

@@ -43,7 +43,7 @@ ___
 > | **Str** | 12 | +1 | +4 | **Dex** | 14 | +2 | +4 | **Con** | 14 | +2 | +4 |
 > | **Int** | 16 | +3 | +4 | **Wis** | 12 | +1 | +4 | **Cha** | 18 | +4 | +4 |
 >
-> **Saving Throws** Con +6, Int +7
+> **Saving Throws** Con +6, Int +7  
 > **Skills** Deception +8, Perception +5  
 > **Damage Resistances** Acid, Fire, Lightning, Thunder; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
 > **Damage Immunities** Cold, Necrotic, Poison  

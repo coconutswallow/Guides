@@ -34,7 +34,7 @@ ___
 > | **Str** | 18 | +4 | +3 | **Dex** | 16 | +3 | +3 | **Con** | 17 | +3 | +3 |
 > | **Int** | 12 | +1 | +3 | **Wis** | 13 | +1 | +3 | **Cha** | 15 | +2 | +3 |
 >
-> **Saving Throws** Dex +6, Con +6, Wis +4, Cha +5
+> **Saving Throws** Dex +6, Con +6, Wis +4, Cha +5  
 > **Skills** Perception +7, Stealth +6  
 > **Damage Immunities** Fire  
 > **Condition Immunities** Blinded  

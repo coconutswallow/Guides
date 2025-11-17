@@ -33,9 +33,9 @@ ___
 > | **Str** | 12 | +1 | +4 | **Dex** | 21 | +5 | +4 | **Con** | 14 | +2 | +4 |
 > | **Int** | 20 | +5 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 17 | +3 | +4 |
 >
-> **Saving Throws** Con +6, Dex +9, Int +9, Wis +6
+> **Saving Throws** Con +6, Dex +9, Int +9, Wis +6  
 > **Skills** Athletics +9, Arcana +13, Intimidation +7, Perception +6, Stealth +13  
-> **Damage Immunities** psychic, radiant
+> **Damage Immunities** psychic, radiant  
 > **Condition Immunities** blinded, charmed, exhaustion, frightened  
 > **Senses** darkvision 120 ft., Passive Perception 16  
 > **Languages** understands all languages but mostly speaks to children  

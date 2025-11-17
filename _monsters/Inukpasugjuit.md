@@ -36,7 +36,7 @@ ___
 > | **Str** | 23 | +6 | +3 | **Dex** | 9 | -1 | +3 | **Con** | 21 | +5 | +3 |
 > | **Int** | 9 | -1 | +3 | **Wis** | 10 | +0 | +3 | **Cha** | 12 | +1 | +3 |
 >
-> **Saving Throws** Con +8, Wis +3, Cha +4
+> **Saving Throws** Con +8, Wis +3, Cha +4  
 > **Skills** Athletics +9, Perception +3  
 > **Damage Immunities** Cold  
 > **Senses** Passive Perception 13  

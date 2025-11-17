@@ -81,7 +81,7 @@ ___
 > **Condition Immunities** Frightened, Paralyzed, Poisoned  
 > **Senses** Blindsight 60 ft., Darkvision 120 ft., Passive Perception 28  
 > **Languages** Common, Draconic  
-> **Challenge** 25 (1,800 XP) **Proficiency Bonus** +8
+> **Challenge** 25 (1,800 XP)  
 >
 > ### Traits
 >

@@ -29,7 +29,7 @@ ___
 > | **Str** | 16 | +3 | +4 | **Dex** | 23 | +6 | +4 | **Con** | 18 | +4 | +4 |
 > | **Int** | 13 | +1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 12 | +1 | +4 |
 >
-> **Saving Throws** Dex +10, Wis +6
+> **Saving Throws** Dex +10, Wis +6  
 > **Skills** Acrobatics +10, Intimidation +5, Perception +6, Stealth +14  
 > **Damage Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from nonmagical weapons  
 > **Damage Immunities** Poison  

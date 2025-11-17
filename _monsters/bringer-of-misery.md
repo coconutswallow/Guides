@@ -31,7 +31,7 @@ ___
 > | **Str** | 6 | -2 | +4 | **Dex** | 18 | +4 | +4 | **Con** | 16 | +3 | +4 |
 > | **Int** | 11 | +0 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 10 | +0 | +4 |
 >
-> **Saving Throws** Dex +8, Wis +6
+> **Saving Throws** Dex +8, Wis +6  
 > **Skills** Perception +6, Stealth +8  
 > **Resistances** Acid, Fire, Lightning, Thunder; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
 > **Immunities** Cold, Necrotic, Poison  

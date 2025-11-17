@@ -74,7 +74,7 @@ ___
 > | **Str** | 22 | +6 | +4 | **Dex** | 10 | +0 | +4 | **Con** | 20 | +5 | +4 |
 > | **Int** | 8 | -1 | +4 | **Wis** | 12 | +1 | +4 | **Cha** | 14 | +2 | +4 |
 >
-> **Saving Throws** Dex +4, Con +9, Wis +5, Cha +
+> **Saving Throws** Dex +4, Con +9, Wis +5, Cha +6  
 > **Skills** Perception +9, Stealth +4  
 > **Damage Resistances** Necrotic  
 > **Damage Immunities** Poison  

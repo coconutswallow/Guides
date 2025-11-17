@@ -27,7 +27,7 @@ ___
 > | **Str** | 14 | +2 | +4 | **Dex** | 12 | +1 | +4 | **Con** | 14 | +2 | +4 |
 > | **Int** | 18 | +4 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 20 | +5 | +4 |
 >
-> **Saving Throws** Int +8, Cha +9
+> **Saving Throws** Int +8, Cha +9  
 > **Skills** Deception +9, Perception +6, Persuasion +9  
 > **Damage Resistances** Bludgeoning, Piercing, and Slashing from nonmagical weapons that aren't adamantine  
 > **Damage Immunities** Poison  

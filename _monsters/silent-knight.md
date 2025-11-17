@@ -35,10 +35,10 @@ ___
 > | **Str** | 18 | +4 | +3 | **Dex** | 14 | +2 | +3 | **Con** | 16 | +3 | +3 |
 > | **Int** | 10 | +0 | +3 | **Wis** | 10 | +0 | +3 | **Cha** | 14 | +2 | +3 |
 >
-> Saving Throws Str +7, Wis +3, Cha +5
+> Saving Throws Str +7, Wis +3, Cha +5  
 > **Skills** Athletics +7, Perception +3, Stealth +5  
-> **Resistances** Radiant; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
-> **Immunities** Thunder  
+> **Damage Resistances** Radiant; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
+> **Damage Immunities** Thunder  
 > **Condition Immunities** Charmed, Deafened, Exhaustion, Frightened  
 > **Senses** Darkvision 120 ft., Passive Perception 13  
 > **Languages** Doesn't Speak but understands Common, Dwarvish, Draconic, and Undercommon  

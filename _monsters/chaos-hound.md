@@ -34,7 +34,7 @@ ___
 > | **Str** | 20 | +5 | +4 | **Dex** | 15 | +2 | +4 | **Con** | 17 | +3 | +4 |
 > | **Int** | 8 | -1 | +4 | **Wis** | 16 | +3 | +4 | **Cha** | 14 | +2 | +4 |
 >
-> **Saving Throws** Str +9, Wis +7, Cha +6
+> **Saving Throws** Str +9, Wis +7, Cha +6  
 > **Skills** Perception +7, Survival +7  
 > **Damage Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from non-magical weapons  
 > **Damage Immunities** Acid

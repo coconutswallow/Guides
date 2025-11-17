@@ -43,10 +43,9 @@ ___
 > | **Str** | 19 | +4 | +3 | **Dex** | 9 | -1 | +3 | **Con** | 18 | +4 | +3 |
 > | **Int** | 1 | -5 | +3 | **Wis** | 7 | -2 | +3 | **Cha** | 1 | -5 | +3 |
 >
-> **Damage Vulnerabilities** fire
-> **Damage Resistances** bludgeoning, piercing, and slashing
-from nonmagical attacks
-> **Damage Immunities** cold, poison, psychic
+> **Damage Vulnerabilities** fire  
+> **Damage Resistances** bludgeoning, piercing, and slashing from nonmagical attacks
+> **Damage Immunities** cold, poison, psychic  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned  
 > **Senses** Passive Perception 8  
 > **Languages** Understands the languages of its creator but can't speak  

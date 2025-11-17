@@ -38,14 +38,14 @@ ___
 > | **Str** | 15 | +2 | +2 | **Dex** | 18 | +4 | +2 | **Con** | 16 | +3 | +2 |
 > | **Int** | 14 | +2 | +2 | **Wis** | 8 | -1 | +2 | **Cha** | 18 | +4 | +2 |
 >
-> **Saving Throws** Dex +6, Cha +6
+> **Saving Throws** Dex +6, Cha +6  
 > **Skills** Acrobatics +6, Deception +6, Intimidation +6  
 > **Damage Resistances** Fire  
 > **Damage Immunities** Cold, Poison, Bludgeoning, Piercing, and Slashing from nonmagical attacks that aren't silvered  
 > **Condition Immunities** Paralyzed; Charmed (while in the Feywild)  
 > **Senses** Darkvision 60 ft., Blindsight 30 ft., Passive Perception 9  
 > **Languages** Common, Sylvan  
-> **CR** 4 (XP 1,100; PB +2)
+> **CR** 4 (XP 1,100; PB +2)  
 >
 > ### Traits
 >

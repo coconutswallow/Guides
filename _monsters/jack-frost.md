@@ -37,7 +37,7 @@ ___
 > | **Str** | 6 | -2 | +4 | **Dex** | 19 | +4 | +4 | **Con** | 18 | +4 | +4 |
 > | **Int** | 14 | +2 | +4 | **Wis** | 13 | +1 | +4 | **Cha** | 20 | +5 | +4 |
 >
-> **Saving Throws** Dex +8, Wis +5
+> **Saving Throws** Dex +8, Wis +5  
 > **Skills** Acrobatics +8, Deception +9, Perception +9, Stealth +8  
 > **Damage Resistances** bludgeoning, piercing and slashing from nonmagical attacks  
 > **Damage Immunities** cold  

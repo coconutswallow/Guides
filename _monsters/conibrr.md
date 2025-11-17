@@ -36,9 +36,9 @@ ___
 > | **Str** | 21 | +5 | +4 | **Dex** | 5 | -3 | +4 | **Con** | 23 | +6 | +4 |
 > | **Int** | 9 | -1 | +4 | **Wis** | 10 | +0 | +4 | **Cha** | 14 | +2 | +4 |
 >
-> **Damage Vulnerabilities** fire
-> **Damage Resistances** acid, bludgeoning, piercing
-> **Damage Immunities** cold
+> **Damage Vulnerabilities** fire  
+> **Damage Resistances** acid, bludgeoning, piercing  
+> **Damage Immunities** cold  
 > **Condition Immunities** blinded, deafened, exhaustion  
 > **Senses** blindsight 60 ft. (blind beyond this radius), passive Perception 10  
 > **Languages** understands any languages known by those that awakened it but cannot speak, read, write, or hear  

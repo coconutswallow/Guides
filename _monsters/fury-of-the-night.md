@@ -24,7 +24,7 @@ ___
 > | **Str** | 18 | +4 | +4 | **Dex** | 18 | +4 | +4 | **Con** | 16 | +3 | +4 |
 > | **Int** | 10 | +0 | +4 | **Wis** | 16 | +3 | +4 | **Cha** | 8 | -1 | +4 |
 >
-> **Saving Throws** Dex +8, Con +7, Wis +7
+> **Saving Throws** Dex +8, Con +7, Wis +7  
 > **Skills** Athletics +8, Perception +7, Stealth +8  
 > **Damage Resistances** Fire, Lightning  
 > **Damage Immunities** Cold  
