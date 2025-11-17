@@ -1,6 +1,7 @@
 ---
 layout: default
 body_class: monster-page
+background_image: /assets/images/fieldguide-back.png
 extra_css:
   - /assets/css/statblock.css
 ---
@@ -30,6 +31,7 @@ extra_css:
 <script>
     // Export stat block to JSON (5etools format)
     function exportToJSON() {
+        // ... (Your complete, unchanged exportToJSON javascript) ...
         const statBlock = document.querySelector('blockquote');
         if (!statBlock) {
             alert('No stat block found on this page.');
