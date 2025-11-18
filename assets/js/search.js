@@ -49,6 +49,14 @@
       
       // Build the Lunr.js index.
       index = lunr(function () {
+        
+        // --- CHANGE 1: Tell Lunr to store token positions ---
+        // This is the magic line that makes contextual snippets possible.
+        // It tells Lunr to save the [start, length] position of each
+        // word in its metadata.
+        this.metadataWhitelist.push('position');
+        // ----------------------------------------------------
+
         // Tell Lunr which fields from our JSON data to index.
         // 'boost: 10' makes a match in the 'title' 10 times more important
         // (i.e., higher-scoring) than a match in the 'content'.
@@ -100,11 +108,27 @@
       results.classList.remove('active'); // Hide the results container
       return; // Stop the function
     }
+    
+    // --- CHANGE 2: Add wildcard to query for better position matching ---
+    // We add a wildcard to the end. This makes Lunr return position
+    // data for partial word matches (e.g., searching "java" finds "javascript").
+    // We also run the search with the original query in case the user
+    // is using their own wildcards.
+    var searchResults = [];
+    try {
+      // Try searching with a wildcard appended for better metadata
+      searchResults = index.search(query + '*');
+      if (searchResults.length === 0) {
+        // Fallback to the exact query the user typed
+        searchResults = index.search(query);
+      }
+    } catch (e) {
+      // Handle cases where the query is invalid (e.g., just a "+")
+      console.warn("Invalid search query:", query, e);
+      searchResults = []; // Ensure it's an empty array
+    }
+    // -------------------------------------------------------------------
 
-    // Run the search! Ask Lunr to find the 'query' in its 'index'.
-    // This returns an array of result objects, e.g.,
-    // [ { ref: "/my-page-url", score: 1.23 }, { ref: "/another-url", score: 0.98 } ]
-    var searchResults = index.search(query);
 
     // Check if we found any results
     if (searchResults.length > 0) {
@@ -126,8 +150,59 @@
         // Create a new <li> element for this result
         var resultList = document.createElement('li');
         
-        // Create a short preview of the content (first 250 characters)
-        var contentSnippet = doc.content.substring(0, 250) + '...'; 
+        // --- CHANGE 2: Build a smart snippet ---
+        var contentSnippet = '';
+        var docContent = doc.content;
+        var earliestPosition = Infinity;
+
+        // 1. Get all match positions from the metadata
+        var allPositions = [];
+        // 'res.matchData.metadata' is an object where keys are the
+        // search terms that matched (e.g., "javascript", "react")
+        for (const term in res.matchData.metadata) {
+          // For each term, find where it matched
+          for (const field in res.matchData.metadata[term]) {
+            // We only want to snippet the 'content' field
+            if (field === 'content' && res.matchData.metadata[term][field].position) {
+              
+              // Add every start position (e.g., [120, 10]) to our list
+              res.matchData.metadata[term][field].position.forEach(function(pos) {
+                allPositions.push(pos[0]); // pos[0] is the start index
+              });
+            }
+          }
+        }
+
+        // 2. Find the earliest (smallest) position
+        if (allPositions.length > 0) {
+          earliestPosition = Math.min(...allPositions);
+        }
+
+        // 3. Create the snippet
+        var snippetStart = 0;
+        var snippetEnd = 250; // Total snippet length
+        var prefix = "";
+
+        // If the first match is far into the document,
+        // start the snippet ~80 chars *before* the match.
+        if (earliestPosition !== Infinity && earliestPosition > 100) {
+          snippetStart = earliestPosition - 80;
+          snippetEnd = earliestPosition + 170; // (80 + 170 = 250)
+          prefix = "..."; // Show we skipped the beginning
+        }
+        
+        // Get the snippet from the full content
+        contentSnippet = docContent.substring(snippetStart, snippetEnd);
+        
+        // Fallback: If something went wrong, just show the start of the doc
+        if (!contentSnippet) {
+          contentSnippet = docContent.substring(0, 250);
+          prefix = "";
+        }
+        
+        // Add the prefix and suffix
+        contentSnippet = prefix + contentSnippet + '...';
+        // -------------------------------------------
 
         // Build the HTML for this result item
         // Note: 'res.ref' is the URL, so it's used for the <a> link's href.

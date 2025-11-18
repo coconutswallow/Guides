@@ -2,6 +2,7 @@
 layout: doc
 title: Monster-Compendium
 order: 34
+exclude_from_search: true
 ---
 # Monster Compendium Engineering Notes
 

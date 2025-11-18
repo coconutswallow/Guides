@@ -2,6 +2,7 @@
 title: Navigation Setup
 layout: doc
 order: 20
+exclude_from_search: true
 ---
 
 # Site Documentation: Managing Collections & Navigation

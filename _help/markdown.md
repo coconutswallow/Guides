@@ -2,6 +2,7 @@
 title: Markdown Guide
 layout: doc
 order: 12
+exclude_from_search: true
 ---
 
 # Markdown Author's Guide

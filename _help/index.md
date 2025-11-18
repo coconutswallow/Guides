@@ -2,6 +2,7 @@
 title: Help Index
 layout: doc
 order: 1
+exclude_from_search: true
 ---
 ## Site Documentation
 

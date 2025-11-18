@@ -2,6 +2,7 @@
 layout: doc
 title: "Home Page"
 order: 32
+exclude_from_search: true
 ---
 
 # Site Documentation: Editing the Homepage

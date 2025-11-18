@@ -2,6 +2,7 @@
 title: Site Images
 layout: doc
 order: 52
+exclude_from_search: true
 ---
 ## Home Page Images
 

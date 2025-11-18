@@ -2,6 +2,7 @@
 title: Site Editor
 layout: doc
 order: 10
+exclude_from_search: true
 ---
 ## Using the Web Editor to Edit documents
 

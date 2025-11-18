@@ -2,6 +2,7 @@
 layout: doc
 title: "Color System"
 order: 51
+exclude_from_search: true
 ---
 # Color System
 

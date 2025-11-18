@@ -2,6 +2,7 @@
 layout: doc
 title: "FAQ Engineering Notes"
 order: 36
+exclude_from_search: true
 ---
 
 # FAQ Feature Engineering Notes
