@@ -52,8 +52,9 @@
         // Tell Lunr which fields from our JSON data to index.
         // 'boost: 10' makes a match in the 'title' 10 times more important
         // (i.e., higher-scoring) than a match in the 'content'.
-        this.field('title', { boost: 10 });
-        this.field('content', { boost: 10 }); // You might want to lower this boost
+        this.field('title', { boost: 20 });
+        this.field('headers', { boost: 10 });
+        this.field('content', { boost: 2 }); 
         
         // Tell Lunr what to use as the unique identifier for each document.
         // When we search, Lunr will give us this 'ref' back.

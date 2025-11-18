@@ -13,10 +13,26 @@ permalink: /search.json
 
   {% for doc in search_docs %}
     {% if doc.content and doc.url != "/404.html" and doc.exclude_from_search != true %}
+
+      {% comment %}
+        NEW: This block captures all text from h1-h6 tags.
+        It splits the HTML content by '<h', then splits that by '</h',
+        then grabs the text in between. It's a "best-effort" parser
+        that works well for simple headers.
+      {% endcomment %}
+      {% capture headers %}
+        {% assign heading_parts = doc.content | split: '<h' %}
+        {% for part in heading_parts offset:1 %}
+          {% assign h_content = part | split: '</h' | first | split: '>' | last %}
+          {{ h_content | strip_html | strip_newlines | append: " " }}
+        {% endfor %}
+      {% endcapture %}
+
       {
         "title": {{ doc.title | strip_html | strip_newlines | replace: '\', '\\' | replace: '"', '\"' | jsonify }},
         "url": "{{ doc.url | absolute_url | xml_escape }}",
         "date": "{{ doc.date | date: "%Y-%m-%d" }}",
+        "headers": {{ headers | replace: '\', '\\' | replace: '"', '\"' | jsonify }},
         "content": {{ doc.content | strip_html | strip_newlines | replace: '\', '\\' | replace: '"', '\"' | jsonify }}
       }
       {% unless forloop.last %},{% endunless %}
