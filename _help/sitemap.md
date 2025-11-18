@@ -7,50 +7,53 @@ order: 21
 
 # Site Map & Content Index
 
-This index lists only those documents using the standard `layout: doc` or `layout: default` template. Collections like the Monster Compendium (which uses `layout: statblock`), DM's Guide, and Arcana are explicitly excluded. Pages are ordered by the **`order`** key defined in their front matter.
+This index lists only documents using the standard `layout: doc` or `layout: default` template. Collections like the Monster Compendium, DM's Guide, and Arcana are explicitly excluded. Pages are ordered by the **`order`** key defined in their front matter.
 
 ---
 
 {% comment %}
-    1. Define the exact collection labels to include in the sitemap.
+    Iterate over all defined collections and explicitly skip the ones we don't want to index.
 {% endcomment %}
-{% assign allowed_collections = "rules, playersguide, fieldguide, help" | split: ", " %}
-
-{% for label in allowed_collections %}
-    {% assign collection = site.collections | where: "label", label | first %}
+{% for collection in site.collections %}
+  
+  {% comment %} 
+      EXCLUSION: Skip all non-documentation collections immediately. 
+  {% endcomment %}
+  {% assign excluded_labels = "posts, data, monsters, dms_guide, arcana, resources" | split: ", " %}
+  {% if excluded_labels contains collection.label %}
+    {% continue %}
+  {% endif %}
     
-    {% if collection %}
+    {% comment %} Now we only process the desired collections (rules, playersguide, fieldguide, help) {% endcomment %}
+    
+    {% comment %} Filter for only standard documentation layouts ('doc' or 'default') {% endcomment %}
+    {% assign collection_pages = collection.docs | where_exp: "page", "page.layout == 'doc' or page.layout == 'default'" %}
+    
+    {% comment %} Sort the resulting pages by the 'order' variable in the front matter {% endcomment %}
+    {% assign sorted_pages = collection_pages | sort: 'order' %}
+
+    {% if sorted_pages.size > 0 %}
         {% comment %} 
-            2. CRITICAL FILTER: Only include documents that explicitly use 'doc' or 'default' layout.
-            This excludes 'statblock' and any other custom layouts.
+            Header for the collection, with clean title formatting
         {% endcomment %}
-        {% assign collection_pages = collection.docs | where_exp: "page", "page.layout == 'doc' or page.layout == 'default'" %}
+        {% assign clean_label = collection.label | capitalize | replace: 'Dms_guide', "DM's Guide" | replace: 'Playersguide', "Player's Guide" | replace: '_', ' ' %}
+
+        ## 📚 {{ clean_label }}
         
-        {% comment %} Sort the resulting pages by the 'order' variable in the front matter {% endcomment %}
-        {% assign sorted_pages = collection_pages | sort: 'order' %}
-
-        {% if sorted_pages.size > 0 %}
+        | Order | Title | URL Path |
+        | :---: | :--- | :--- |
+        {% for page in sorted_pages %}
             {% comment %} 
-                Header for the collection, with clean title formatting
+                Display the order number. Default to a hyphen if 'order' is not set.
             {% endcomment %}
-            {% assign clean_label = collection.label | capitalize | replace: 'Dms_guide', "DM's Guide" | replace: 'Playersguide', "Player's Guide" | replace: '_', ' ' %}
+            {% assign order_display = page.order | default: "-" %}
 
-            ## 📚 {{ clean_label }}
-            
-            | Order | Title | URL Path |
-            | :---: | :--- | :--- |
-            {% for page in sorted_pages %}
-                {% comment %} 
-                    Display the order number. Default to a hyphen if 'order' is not set.
-                {% endcomment %}
-                {% assign order_display = page.order | default: "-" %}
+            | **{{ order_display }}** | [{{ page.title | default: page.slug | replace: '-', ' ' | capitalize }}]({{ page.url | relative_url }}) | `{{ page.url }}` |
+        {% endfor %}
 
-                | **{{ order_display }}** | [{{ page.title | default: page.slug | replace: '-', ' ' | capitalize }}]({{ page.url | relative_url }}) | `{{ page.url }}` |
-            {% endfor %}
-
-            ---
-        {% endif %}
+        ---
     {% endif %}
+
 {% endfor %}
 
 
