@@ -7,48 +7,50 @@ order: 21
 
 # Site Map & Content Index
 
-This index lists all documentation pages categorized by their collection. The Monster Compendium, DM's Guide, and Arcana are excluded as they are external links or use custom indexing. Pages are ordered by the **`order`** key defined in their front matter.
+This index lists only those documents using the standard `layout: doc` or `layout: default` template. Collections like the Monster Compendium (which uses `layout: statblock`), DM's Guide, and Arcana are explicitly excluded. Pages are ordered by the **`order`** key defined in their front matter.
 
 ---
 
 {% comment %}
-    Iterate over all defined collections in the site's configuration
+    1. Define the exact collection labels to include in the sitemap.
 {% endcomment %}
-{% for collection in site.collections %}
-  {% comment %}
-    EXCLUSION LIST: 
-    - posts/data: Standard Jekyll internal collections.
-    - monsters: Excluded as requested (special handling).
-    - dms_guide/arcana/resources: Defined as external links or content in _config.yml
-  {% endcomment %}
-  {% unless collection.label == 'posts' or collection.label == 'data' or collection.label == 'monsters' or collection.label == 'dms_guide' or collection.label == 'arcana' or collection.label == 'resources' %}
-    
-    {% comment %} Filter for documents that have a title or a URL (i.e., they are renderable pages) {% endcomment %}
-    {% assign collection_pages = collection.docs | where_exp: "page", "page.title != null or page.url != null" %}
-    
-    {% comment %} Sort the resulting pages by the 'order' variable in the front matter {% endcomment %}
-    {% assign sorted_pages = collection_pages | sort: 'order' %}
+{% assign allowed_collections = "rules, playersguide, fieldguide, help" | split: ", " %}
 
-    {% if sorted_pages.size > 0 %}
+{% for label in allowed_collections %}
+    {% assign collection = site.collections | where: "label", label | first %}
+    
+    {% if collection %}
         {% comment %} 
-            Header for the collection, with clean title formatting
+            2. CRITICAL FILTER: Only include documents that explicitly use 'doc' or 'default' layout.
+            This excludes 'statblock' and any other custom layouts.
         {% endcomment %}
-        ## 📚 {{ collection.label | capitalize | replace: 'Dms_guide', "DM's Guide" | replace: 'Playersguide', "Player's Guide" | replace: '_', ' ' }}
+        {% assign collection_pages = collection.docs | where_exp: "page", "page.layout == 'doc' or page.layout == 'default'" %}
         
-        | Order | Title | URL Path |
-        | :---: | :--- | :--- |
-        {% for page in sorted_pages %}
+        {% comment %} Sort the resulting pages by the 'order' variable in the front matter {% endcomment %}
+        {% assign sorted_pages = collection_pages | sort: 'order' %}
+
+        {% if sorted_pages.size > 0 %}
             {% comment %} 
-                Display the order number. Default to a hyphen if 'order' is not set.
+                Header for the collection, with clean title formatting
             {% endcomment %}
-            {% assign order_display = page.order | default: "-" %}
+            {% assign clean_label = collection.label | capitalize | replace: 'Dms_guide', "DM's Guide" | replace: 'Playersguide', "Player's Guide" | replace: '_', ' ' %}
 
-            | **{{ order_display }}** | [{{ page.title | default: page.slug | replace: '-', ' ' | capitalize }}]({{ page.url | relative_url }}) | `{{ page.url }}` |
-        {% endfor %}
+            ## 📚 {{ clean_label }}
+            
+            | Order | Title | URL Path |
+            | :---: | :--- | :--- |
+            {% for page in sorted_pages %}
+                {% comment %} 
+                    Display the order number. Default to a hyphen if 'order' is not set.
+                {% endcomment %}
+                {% assign order_display = page.order | default: "-" %}
 
-        ---
+                | **{{ order_display }}** | [{{ page.title | default: page.slug | replace: '-', ' ' | capitalize }}]({{ page.url | relative_url }}) | `{{ page.url }}` |
+            {% endfor %}
+
+            ---
+        {% endif %}
     {% endif %}
-  {% endunless %}
 {% endfor %}
 
 
@@ -60,7 +62,7 @@ These pages are not part of a documentation collection.
 | :--- | :--- |
 {% assign standalones = site.html_pages | where_exp: "page", "page.collection == null and page.url != '/404.html'" | sort: 'title' %}
 {% for page in standalones %}
-  {% comment %} Exclude internal Jekyll files and the sitemap itself {% endcomment %}
+  {% comment %} Exclude internal Jekyll files and the sitemap itself, and special compendium pages {% endcomment %}
   {% unless page.url contains '/monster-compendium/' or page.url contains '/help/site-map/' %}
     | [{{ page.title | default: page.slug | replace: '-', ' ' | capitalize }}]({{ page.url | relative_url }}) | `{{ page.url }}` |
   {% endunless %}
