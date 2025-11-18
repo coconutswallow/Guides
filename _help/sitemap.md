@@ -2,12 +2,12 @@
 layout: doc
 title: Site Map & Content Index
 permalink: /help/site-map/
-nav_order: 100 
+order: 21 
 ---
 
 # Site Map & Content Index
 
-This index lists all documentation pages categorized by their collection. Pages are ordered by the `nav_order` defined in their front matter. Pages without a `nav_order` appear last within their section and are marked with a hyphen (-).
+This index lists all documentation pages categorized by their collection. The Monster Compendium, DM's Guide, and Arcana are excluded as they are external links or use custom indexing. Pages are ordered by the **`order`** key defined in their front matter.
 
 ---
 
@@ -15,13 +15,19 @@ This index lists all documentation pages categorized by their collection. Pages 
     Iterate over all defined collections in the site's configuration
 {% endcomment %}
 {% for collection in site.collections %}
-  {% unless collection.label == 'posts' or collection.label == 'data' or collection.label == 'monsters' or collection.label == 'dms_guide' or collection.label == 'arcana' %}
+  {% comment %}
+    EXCLUSION LIST: 
+    - posts/data: Standard Jekyll internal collections.
+    - monsters: Excluded as requested (special handling).
+    - dms_guide/arcana/resources: Defined as external links or content in _config.yml
+  {% endcomment %}
+  {% unless collection.label == 'posts' or collection.label == 'data' or collection.label == 'monsters' or collection.label == 'dms_guide' or collection.label == 'arcana' or collection.label == 'resources' %}
     
-    {% comment %} Filter for documents that have a title and a URL (i.e., they are renderable pages) {% endcomment %}
+    {% comment %} Filter for documents that have a title or a URL (i.e., they are renderable pages) {% endcomment %}
     {% assign collection_pages = collection.docs | where_exp: "page", "page.title != null or page.url != null" %}
     
-    {% comment %} Sort the resulting pages by the 'nav_order' variable in the front matter {% endcomment %}
-    {% assign sorted_pages = collection_pages | sort: 'nav_order' %}
+    {% comment %} Sort the resulting pages by the 'order' variable in the front matter {% endcomment %}
+    {% assign sorted_pages = collection_pages | sort: 'order' %}
 
     {% if sorted_pages.size > 0 %}
         {% comment %} 
@@ -33,9 +39,9 @@ This index lists all documentation pages categorized by their collection. Pages 
         | :---: | :--- | :--- |
         {% for page in sorted_pages %}
             {% comment %} 
-                Display the order number. Default to a hyphen if nav_order is not set.
+                Display the order number. Default to a hyphen if 'order' is not set.
             {% endcomment %}
-            {% assign order_display = page.nav_order | default: "-" %}
+            {% assign order_display = page.order | default: "-" %}
 
             | **{{ order_display }}** | [{{ page.title | default: page.slug | replace: '-', ' ' | capitalize }}]({{ page.url | relative_url }}) | `{{ page.url }}` |
         {% endfor %}
@@ -48,7 +54,7 @@ This index lists all documentation pages categorized by their collection. Pages 
 
 ## 📌 Top-Level Standalone Pages
 
-These pages are not part of a documentation collection but are accessible via a direct path.
+These pages are not part of a documentation collection.
 
 | Title | URL Path |
 | :--- | :--- |
