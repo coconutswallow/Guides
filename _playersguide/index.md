@@ -17,3 +17,7 @@ background_image:
     {% endif %}
   {% endfor %}
 </ul>
+
+### Image Credit
+
+- [Tavern Brawl Image - Art by velinov](https://www.deviantart.com/velinov/art/Tavern-Brawl-96471746)
