@@ -12,10 +12,14 @@ extra_css:
 <p>If you are a DM and would like to submit a monster that can be used by DMs across the server, <a href="{{ site.baseurl }}/monster-compendium/monsters-submit/">follow the instructions here.</a> </p>
 
 <h3>Filter Monsters</h3>
-<p>Use the filter below to quickly find monsters by type, size and CR.   To search by Monster Name, use your browser's search function (Ctrl+F or Cmd+F).
+<p>Use the filter below to quickly find monsters by type, size and CR.
   <br>2014 Fair Game monsters are open to all DMs to use.  2014 Full DM monsters (as the name implies) require the <span class="role-full-dm">Full DM</span> tag to use.</p>
 
 <div class="filter-container">
+  <div class="filter-group">
+    <label for="name-search">Name:</label>
+    <input type="text" id="name-search" class="filter-input" placeholder="Search by name...">
+  </div>
   <div class="filter-group">
     <label for="type-filter">Type:</label>
     <select id="type-filter" class="filter-select">
@@ -268,6 +272,7 @@ extra_css:
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  const nameSearchInput = document.getElementById('name-search');
   const typeFilter = document.getElementById('type-filter');
   const crFromInput = document.getElementById('cr-from');
   const crToInput = document.getElementById('cr-to');
@@ -339,6 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const crFrom = crFromInput.value ? Number(crFromInput.value) : null; 
     const crTo = crToInput.value ? Number(crToInput.value) : null;
     const selectedSize = sizeFilter.value;
+    const selectedName = nameSearchInput.value.toLowerCase().trim();
     
     let visibleCount = 0;
     
@@ -346,9 +352,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const cardType = card.dataset.type;
       const cardCR = parseCR(card.dataset.cr);
       const cardSize = card.dataset.size;
+      const cardName = card.querySelector('h3 a').textContent.toLowerCase();
       
       const typeMatch = !selectedType || cardType === selectedType;
       const sizeMatch = !selectedSize || cardSize === selectedSize;
+      const nameMatch = !selectedName || cardName.includes(selectedName);
       
       // CR range matching
       let crMatch = true;
@@ -360,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       // Apply visibility based on all matches
-      if (typeMatch && crMatch && sizeMatch) {
+      if (typeMatch && crMatch && sizeMatch && nameMatch) {
         card.classList.remove('hidden');
         visibleCount++;
       } else {
@@ -414,6 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
     crFromInput.value = '';
     crToInput.value = '';
     sizeFilter.value = '';
+    nameSearchInput.value = '';
     filterMonsters();
   }
   
@@ -422,6 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
   crFromInput.addEventListener('input', filterMonsters);
   crToInput.addEventListener('input', filterMonsters);
   sizeFilter.addEventListener('change', filterMonsters);
+  nameSearchInput.addEventListener('input', filterMonsters);
   resetButton.addEventListener('click', resetFilters);
   
   // Initial count and filter execution
