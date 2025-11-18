@@ -16,9 +16,6 @@ permalink: /search.json
 
       {% comment %}
         NEW: This block captures all text from h1-h6 tags.
-        It splits the HTML content by '<h', then splits that by '</h',
-        then grabs the text in between. It's a "best-effort" parser
-        that works well for simple headers.
       {% endcomment %}
       {% capture headers %}
         {% assign heading_parts = doc.content | split: '<h' %}
@@ -29,11 +26,11 @@ permalink: /search.json
       {% endcapture %}
 
       {
-        "title": {{ doc.title | strip_html | strip_newlines | replace: '\', '\\' | replace: '"', '\"' | jsonify }},
+        "title": {{ doc.title | strip_html | strip_newlines | jsonify }},
         "url": "{{ doc.url | absolute_url | xml_escape }}",
         "date": "{{ doc.date | date: "%Y-%m-%d" }}",
-        "headers": {{ headers | replace: '\', '\\' | replace: '"', '\"' | jsonify }},
-        "content": {{ doc.content | strip_html | strip_newlines | replace: '\', '\\' | replace: '"', '\"' | jsonify }}
+        "headers": {{ headers | strip_newlines | jsonify }},
+        "content": {{ doc.content | strip_html | strip_newlines | jsonify }}
       }
       {% unless forloop.last %},{% endunless %}
     {% endif %}
