@@ -15,6 +15,10 @@ extra_css:
 <p>Use the filter below to quickly find monsters by name, type, size and CR.
   <br>2014 Fair Game monsters are open to all DMs to use.  2014 Full DM monsters (as the name implies) require the <span class="role-full-dm">Full DM</span> tag to use.</p>
 
+<!-- ============================================ -->
+<!-- FILTER UI CONTROLS -->
+<!-- Inputs for name search, type, CR range, and size filtering -->
+<!-- ============================================ -->
 <div class="filter-container">
   <div class="filter-group">
     <label for="name-search">Name:</label>
@@ -47,8 +51,13 @@ extra_css:
   <button id="reset-filters" class="reset-button">Reset Filters</button>
 </div>
 
+<!-- Monster count display - shows "X of Y monsters" -->
 <div id="monster-count" class="monster-count"></div>
 
+<!-- ============================================ -->
+<!-- MONSTER LISTING BY CATEGORY -->
+<!-- Jekyll liquid template generates categories and monster cards -->
+<!-- ============================================ -->
 {% assign monsters_by_category = site.monsters | where_exp:"item", "item.category != null" | group_by: 'category' %}
 
 {% for category in monsters_by_category %}
@@ -62,6 +71,7 @@ extra_css:
 
     <div class="monster-list">
       {% for monster in category.items %}
+        <!-- Each monster card contains filter data attributes -->
         <div class="monster-card" 
              data-cr="{{ monster.cr }}" 
              data-type="{{ monster.type }}" 
@@ -82,7 +92,12 @@ extra_css:
   </div>
 {% endfor %}
 
+<!-- ============================================ -->
+<!-- FILTER UI STYLES -->
+<!-- All CSS for the filter interface -->
+<!-- ============================================ -->
 <style>
+/* Main container for all filter controls */
 .filter-container {
   background: #FDF1DC;
   border: 2px solid var(--color-primary);
@@ -92,17 +107,19 @@ extra_css:
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
-  align-items: flex-end;
+  align-items: flex-end; /* Aligns button with inputs */
 }
 
+/* Individual filter input group (label + input/select) */
 .filter-group {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   flex: 1;
-  min-width: 150px;
+  min-width: 150px; /* Prevents inputs from getting too narrow */
 }
 
+/* Filter labels styling */
 .filter-group label {
   font-family: var(--font-header);
   font-weight: 700;
@@ -112,6 +129,7 @@ extra_css:
   letter-spacing: 0.5px;
 }
 
+/* Dropdown select boxes */
 .filter-select {
   padding: 0.5em;
   border: 2px solid var(--color-primary);
@@ -129,6 +147,7 @@ extra_css:
   box-shadow: 0 0 0 2px rgba(88, 24, 13, 0.2);
 }
 
+/* Text and number input fields */
 .filter-input {
   padding: 0.5em;
   border: 2px solid var(--color-primary);
@@ -151,6 +170,7 @@ extra_css:
   font-style: italic;
 }
 
+/* Reset filters button */
 .reset-button {
   padding: 0.5em 1.5em;
   background: var(--color-primary);
@@ -162,13 +182,14 @@ extra_css:
   text-transform: uppercase;
   cursor: pointer;
   transition: background 0.2s;
-  height: fit-content;
+  height: fit-content; /* Matches height with input fields */
 }
 
 .reset-button:hover {
   background: var(--color-secondary);
 }
 
+/* "Showing X of Y monsters" text */
 .monster-count {
   font-family: var(--font-body);
   font-style: italic;
@@ -177,14 +198,20 @@ extra_css:
   font-size: 0.95em;
 }
 
+/* ============================================ */
+/* CATEGORY SECTION STYLES */
+/* Collapsible category headers and containers */
+/* ============================================ -->
 .category-section {
   margin-bottom: 2em;
 }
 
+/* Hide entire category when no monsters match filters */
 .category-section.hidden {
   display: none;
 }
 
+/* Collapsible category header button */
 .category-toggle {
   background: none;
   border: none;
@@ -206,27 +233,35 @@ extra_css:
   color: var(--color-secondary);
 }
 
+/* Arrow icon that rotates when collapsed */
 .toggle-icon {
   display: inline-block;
   transition: transform 0.3s ease;
   font-size: 0.8em;
 }
 
+/* Rotated arrow for collapsed state */
 .category-toggle[aria-expanded="false"] .toggle-icon {
   transform: rotate(-90deg);
 }
 
+/* Hide monster list when category is collapsed */
 .category-section[aria-expanded="false"] .monster-list {
   display: none;
 }
 
-/* FIX: Removed the !important from display: flex to allow the .hidden class to work */
+/* ============================================ */
+/* MONSTER CARD STYLES */
+/* Layout for individual monster cards */
+/* ============================================ -->
+/* Monster card layout - horizontal with image and content */
 .monster-list .monster-card {
-  display: flex; 
+  display: flex; /* Removed !important to allow .hidden class to work */
   gap: 1em;
   align-items: center;
 }
 
+/* Monster thumbnail image container */
 .monster-list .monster-card-image {
   flex-shrink: 0;
   width: 80px !important;
@@ -236,6 +271,7 @@ extra_css:
   border: 2px solid var(--color-primary);
 }
 
+/* Monster thumbnail image */
 .monster-list .monster-card-image img {
   width: 100% !important;
   height: 100% !important;
@@ -245,15 +281,21 @@ extra_css:
   display: block;
 }
 
+/* Monster card text content area */
 .monster-list .monster-card-content {
   flex: 1;
-  min-width: 0;
+  min-width: 0; /* Prevents text overflow issues */
 }
 
+/* Hide filtered out monster cards */
 .monster-card.hidden {
   display: none;
 }
 
+/* ============================================ */
+/* RESPONSIVE DESIGN - MOBILE */
+/* Stack filters vertically on small screens */
+/* ============================================ -->
 @media (max-width: 768px) {
   .filter-container {
     flex-direction: column;
@@ -270,8 +312,15 @@ extra_css:
 }
 </style>
 
+<!-- ============================================ -->
+<!-- FILTERING AND SORTING JAVASCRIPT -->
+<!-- Handles all interactive filtering functionality -->
+<!-- ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // ==========================================
+  // GET DOM ELEMENTS
+  // ==========================================
   const nameSearchInput = document.getElementById('name-search');
   const typeFilter = document.getElementById('type-filter');
   const crFromInput = document.getElementById('cr-from');
@@ -282,12 +331,21 @@ document.addEventListener('DOMContentLoaded', function() {
   const categorySections = document.querySelectorAll('.category-section');
   const monsterCount = document.getElementById('monster-count');
   
-  // Function to parse CR values (handles fractions like "1/4")
+  // ==========================================
+  // HELPER FUNCTIONS
+  // ==========================================
+  
+  /**
+   * Parse CR string to number
+   * Handles fractions like "1/4" and standard numbers
+   * @param {string} crString - CR value from data attribute
+   * @returns {number} Numeric CR value
+   */
   function parseCR(crString) {
-    // If the data attribute is missing or empty, return a very high number 
+    // Return high number if CR is missing
     if (!crString) return 9999; 
     
-    // Check if it's a fraction
+    // Handle fractional CRs (e.g., "1/4" = 0.25)
     if (crString.includes('/')) {
       const parts = crString.split('/');
       return parseFloat(parts[0]) / parseFloat(parts[1]);
@@ -296,7 +354,10 @@ document.addEventListener('DOMContentLoaded', function() {
     return parseFloat(crString);
   }
   
-  // Collect unique values for filters
+  // ==========================================
+  // POPULATE FILTER DROPDOWNS
+  // Extract unique types and sizes from monster data
+  // ==========================================
   const types = new Set();
   const sizes = new Set();
   
@@ -307,7 +368,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (type) types.add(type);
     if (size) sizes.add(size);
   });
-    // Add collapse/expand functionality
+    
+  // ==========================================
+  // CATEGORY COLLAPSE/EXPAND FUNCTIONALITY
+  // ==========================================
   const categoryToggles = document.querySelectorAll('.category-toggle');
   categoryToggles.forEach(toggle => {
     toggle.addEventListener('click', function() {
@@ -319,7 +383,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Populate filter dropdowns
+  // ==========================================
+  // POPULATE TYPE DROPDOWN
+  // Add all unique monster types alphabetically
+  // ==========================================
   Array.from(types).sort().forEach(type => {
     const option = document.createElement('option');
     option.value = type;
@@ -327,7 +394,10 @@ document.addEventListener('DOMContentLoaded', function() {
     typeFilter.appendChild(option);
   });
   
-  // Sort sizes by D&D standard order
+  // ==========================================
+  // POPULATE SIZE DROPDOWN
+  // Sort by D&D standard size order
+  // ==========================================
   const sizeOrder = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
   Array.from(sizes).sort((a, b) => {
     return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
@@ -338,8 +408,12 @@ document.addEventListener('DOMContentLoaded', function() {
     sizeFilter.appendChild(option);
   });
   
-  // Filter function
+  // ==========================================
+  // MAIN FILTER FUNCTION
+  // Filters and sorts monsters based on all criteria
+  // ==========================================
   function filterMonsters() {
+    // Get current filter values
     const selectedType = typeFilter.value;
     const crFrom = crFromInput.value ? Number(crFromInput.value) : null; 
     const crTo = crToInput.value ? Number(crToInput.value) : null;
@@ -348,12 +422,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let visibleCount = 0;
     
+    // ==========================================
+    // FILTER EACH MONSTER CARD
+    // Show/hide based on all filter criteria
+    // ==========================================
     monsterCards.forEach(card => {
       const cardType = card.dataset.type;
       const cardCR = parseCR(card.dataset.cr);
       const cardSize = card.dataset.size;
       const cardName = card.querySelector('h3 a').textContent.toLowerCase();
       
+      // Check each filter criterion
       const typeMatch = !selectedType || cardType === selectedType;
       const sizeMatch = !selectedSize || cardSize === selectedSize;
       const nameMatch = !selectedName || cardName.includes(selectedName);
@@ -372,36 +451,41 @@ document.addEventListener('DOMContentLoaded', function() {
         card.classList.remove('hidden');
         visibleCount++;
       } else {
-        // Correctly hide non-matches
-        card.classList.add('hidden'); 
+        card.classList.add('hidden');
       }
     });
     
-    // This correctly sorts all monsters (visible first by CR, hidden last) and re-appends ALL
+    // ==========================================
+    // SORT MONSTERS WITHIN CATEGORIES
+    // Visible monsters sorted by CR, hidden at end
+    // ==========================================
     categorySections.forEach(section => {
       const monsterList = section.querySelector('.monster-list');
       const allCards = Array.from(monsterList.querySelectorAll('.monster-card'));
       
-      // Custom sort logic
+      // Custom sort: visible first (by CR), then hidden
       allCards.sort((a, b) => {
         const aIsHidden = a.classList.contains('hidden');
         const bIsHidden = b.classList.contains('hidden');
         
-        // Rule 1: Visible cards (-1) come before hidden cards (1)
+        // Visible cards come before hidden cards
         if (aIsHidden && !bIsHidden) return 1;
         if (!aIsHidden && bIsHidden) return -1;
         
-        // Rule 2: If visibility is the same, sort by CR
+        // If same visibility, sort by CR
         const crA = parseCR(a.dataset.cr);
         const crB = parseCR(b.dataset.cr);
         return crA - crB;
       });
       
-      // Re-append ALL cards to fix the DOM order
+      // Re-append cards in sorted order
       allCards.forEach(card => monsterList.appendChild(card));
     });
       
-    // Hide/show category sections based on visible monsters
+    // ==========================================
+    // HIDE EMPTY CATEGORIES
+    // Categories with no visible monsters are hidden
+    // ==========================================
     categorySections.forEach(section => {
       const visibleCardsInSection = section.querySelectorAll('.monster-card:not(.hidden)');
       if (visibleCardsInSection.length === 0) {
@@ -411,12 +495,15 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     
-    // Update count
+    // Update count display
     const totalCount = monsterCards.length;
     monsterCount.textContent = `Showing ${visibleCount} of ${totalCount} monsters`;
   }
   
-  // Reset function
+  // ==========================================
+  // RESET ALL FILTERS
+  // Clear all inputs and show all monsters
+  // ==========================================
   function resetFilters() {
     typeFilter.value = '';
     crFromInput.value = '';
@@ -426,7 +513,10 @@ document.addEventListener('DOMContentLoaded', function() {
     filterMonsters();
   }
   
-  // Add event listeners
+  // ==========================================
+  // EVENT LISTENERS
+  // Attach filter function to all inputs
+  // ==========================================
   typeFilter.addEventListener('change', filterMonsters);
   crFromInput.addEventListener('input', filterMonsters);
   crToInput.addEventListener('input', filterMonsters);
@@ -434,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
   nameSearchInput.addEventListener('input', filterMonsters);
   resetButton.addEventListener('click', resetFilters);
   
-  // Initial count and filter execution
+  // Initialize - show count and apply any default filters
   filterMonsters();
 });
 </script>

@@ -1,6 +1,23 @@
-/* ============================================
-   HERO SECTION
-   ============================================ */
+/* ============================================ */
+/* HOME PAGE STYLES */
+/* ============================================ */
+/* 
+ * PURPOSE: Styles for the Hawthorne Guild homepage
+ * DEPENDENCIES: 
+ *   - CSS variables from style.css (--color-primary, --font-header, etc.)
+ * SCOPE: Homepage-specific layout, hero section, and feature cards
+ * LAYOUT: Mobile-first responsive grid with card-based design
+ */
+
+
+/* ============================================ */
+/* HERO SECTION */
+/* ============================================ */
+/* 
+ * Top banner welcoming users to the Hawthorne Guild
+ * Features centered text with bordered container
+ * Creates strong visual entry point for the homepage
+ */
 
 .home-hero {
   background: var(--color-bg-light);
@@ -11,6 +28,7 @@
   text-align: center;
 }
 
+/* Main hero heading */
 .home-hero h1 {
   font-family: var(--font-header);
   color: var(--color-text);
@@ -20,22 +38,29 @@
   letter-spacing: 1px;
 }
 
+/* Hero description/tagline text */
 .hero-description {
   color: var(--color-text);
   font-size: 1.1em;
   line-height: 1.6;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 0 auto; /* Center the description */
 }
 
-/* ============================================
-   HOME SECTIONS
-   ============================================ */
+
+/* ============================================ */
+/* HOME SECTIONS */
+/* ============================================ */
+/* 
+ * Main content sections (Getting Started, For Players, For DMs)
+ * Each section contains a header, description, and card grid
+ */
 
 .home-section {
-  margin: 4em 0;
+  margin: 4em 0; /* Large vertical spacing between sections */
 }
 
+/* Section headings with optional icon */
 .home-section h2 {
   font-family: var(--font-header);
   color: var(--color-primary);
@@ -43,15 +68,17 @@
   margin-bottom: 0.5em;
   display: flex;
   align-items: center;
-  gap: 0.5em;
+  gap: 0.5em; /* Space between icon and text */
   border-bottom: 3px solid var(--color-border);
   padding-bottom: 0.3em;
 }
 
+/* Optional icon in section header */
 .section-icon {
   font-size: 1.2em;
 }
 
+/* Introductory text for each section */
 .section-description {
   color: var(--color-text);
   font-size: 1.05em;
@@ -59,9 +86,16 @@
   margin-bottom: 2em;
 }
 
-/* ============================================
-   CARD GRID
-   ============================================ */
+
+/* ============================================ */
+/* CARD GRID */
+/* ============================================ */
+/* 
+ * Responsive grid layout for feature cards
+ * Auto-fits cards based on available width
+ * Minimum card width: 280px
+ * Cards expand to fill available space equally
+ */
 
 .card-grid {
   display: grid;
@@ -70,9 +104,15 @@
   margin-top: 2em;
 }
 
-/* ============================================
-   FEATURE CARDS
-   ============================================ */
+
+/* ============================================ */
+/* FEATURE CARDS */
+/* ============================================ */
+/* 
+ * Individual cards for features, guides, and resources
+ * Includes hover effects for interactivity
+ * Flexbox layout ensures buttons stay at bottom
+ */
 
 .feature-card {
   background: var(--color-bg-light);
@@ -81,20 +121,23 @@
   padding: 2em;
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Enables flex-grow for content */
 }
 
+/* Hover effect - lift card and add shadow */
 .feature-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
 
+/* Work-in-progress card state (disabled) */
 .feature-card.wip {
   opacity: 0.6;
-  pointer-events: none;
+  pointer-events: none; /* Prevents clicking */
   cursor: not-allowed;
 }
 
+/* Card title/heading */
 .feature-card h3 {
   font-family: var(--font-header);
   color: var(--color-primary);
@@ -103,16 +146,23 @@
   text-transform: uppercase;
 }
 
+/* Card description text */
 .feature-card p {
   color: var(--color-text);
   line-height: 1.5;
-  flex-grow: 1;
+  flex-grow: 1; /* Pushes button to bottom of card */
   margin-bottom: 1.5em;
 }
 
-/* ============================================
-   CARD BUTTONS
-   ============================================ */
+
+/* ============================================ */
+/* CARD BUTTONS */
+/* ============================================ */
+/* 
+ * Call-to-action buttons within feature cards
+ * Styled to match theme with hover effects
+ * margin-top: auto keeps button at bottom of card
+ */
 
 .card-button {
   display: inline-block;
@@ -127,19 +177,26 @@
   text-align: center;
   transition: background 0.2s, color 0.2s;
   cursor: pointer;
-  margin-top: auto;
+  margin-top: auto; /* Pushes button to bottom of flex container */
   border: none;
 }
 
+/* Button hover state */
 .card-button:hover {
   background: var(--color-secondary);
   color: var(--color-card-button-text);
-  text-decoration: none;
+  text-decoration: none; /* Prevents underline on hover */
 }
 
-/* ============================================
-   HOME CREDITS SECTION
-   ============================================ */
+
+/* ============================================ */
+/* HOME CREDITS SECTION */
+/* ============================================ */
+/* 
+ * Credits and acknowledgments section
+ * Appears at bottom of homepage
+ * Bordered container with contained content
+ */
 
 .home-credits {
   background: var(--color-bg-light);
@@ -149,6 +206,7 @@
   margin: 4em 0 2em 0;
 }
 
+/* Credits section heading */
 .home-credits h2 {
   font-family: var(--font-header);
   color: var(--color-primary);
@@ -157,43 +215,56 @@
   text-transform: uppercase;
 }
 
+/* Credits text paragraphs */
 .home-credits p {
   color: var(--color-text);
   line-height: 1.6;
   margin-bottom: 1em;
 }
 
+/* Remove bottom margin from last paragraph */
 .home-credits p:last-child {
   margin-bottom: 0;
 }
 
+/* Emphasized text in credits */
 .home-credits strong {
   font-weight: 700;
   color: var(--color-text);
 }
 
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
+
+/* ============================================ */
+/* RESPONSIVE DESIGN - MOBILE */
+/* ============================================ */
+/* 
+ * Adjustments for screens 768px wide or smaller
+ * Reduces text sizes and switches to single-column layout
+ */
 
 @media (max-width: 768px) {
+  /* Smaller hero heading on mobile */
   .home-hero h1 {
     font-size: 1.8em;
   }
   
+  /* Smaller hero description text */
   .hero-description {
     font-size: 1em;
   }
   
+  /* Smaller section headings */
   .home-section h2 {
     font-size: 1.6em;
   }
   
+  /* Single column layout for cards on mobile */
   .card-grid {
     grid-template-columns: 1fr;
-    gap: 1.5em;
+    gap: 1.5em; /* Slightly tighter spacing */
   }
   
+  /* Adjust hero padding for mobile */
   .home-hero {
     padding: 2em 1.5em;
   }

@@ -6,12 +6,24 @@ extra_css:
   - /assets/css/statblock.css
 ---
 
+<!-- ============================================ -->
+<!-- CREATOR CREDIT -->
+<!-- Displays monster creator attribution if provided -->
+<!-- ============================================ -->
 {% if page.creator %}
 <p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
 {% endif %}
 
+<!-- ============================================ -->
+<!-- MAIN CONTENT -->
+<!-- Monster stat block markdown is rendered here -->
+<!-- ============================================ -->
 {{ content }}
 
+<!-- ============================================ -->
+<!-- MONSTER IMAGE -->
+<!-- Displays monster artwork with optional credit -->
+<!-- ============================================ -->
 {% if page.image %}
 <div class="monster-image-container">
     <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
@@ -21,6 +33,11 @@ extra_css:
 </div>
 {% endif %}
 
+<!-- ============================================ -->
+<!-- ACTION BUTTONS -->
+<!-- Navigation and export controls -->
+<!-- Only shown on actual stat block pages -->
+<!-- ============================================ -->
 {% if page.layout == "statblock" %}
 <div class="export-button-container">
     <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Compendium Index</button>
@@ -28,38 +45,60 @@ extra_css:
 </div>
 {% endif %}
 
+<!-- ============================================ -->
+<!-- JSON EXPORT FUNCTIONALITY -->
+<!-- Extracts stat block data and exports to 5etools format -->
+<!-- ============================================ -->
 <script>
-    // Export stat block to JSON (5etools format)
+    /**
+     * Export stat block to JSON in 5etools format
+     * Parses the HTML stat block and converts to structured JSON
+     */
     function exportToJSON() {
-        // ... (Your complete, unchanged exportToJSON javascript) ...
+        // ==========================================
+        // FIND STAT BLOCK
+        // ==========================================
         const statBlock = document.querySelector('blockquote');
         if (!statBlock) {
             alert('No stat block found on this page.');
             return;
         }
         
-        // Helper functions
+        // ==========================================
+        // HELPER FUNCTIONS
+        // ==========================================
+        
+        /** Extract text content safely */
         const extractText = (element) => element ? element.textContent.trim() : '';
+        
+        /** Parse modifier string to get +/- value */
         const parseModifier = (str) => {
             const match = str.match(/([+-]\d+)/);
             return match ? match[1] : '+0';
         };
         
-        // Extract monster name from h2
+        // ==========================================
+        // EXTRACT BASIC INFO
+        // Name, size, type, alignment
+        // ==========================================
         const nameEl = statBlock.querySelector('h2');
         const name = extractText(nameEl);
         
-        // Extract size, type, alignment from first paragraph
+        // Parse "Medium humanoid, lawful good" format
         const typeLineEl = statBlock.querySelector('p:first-of-type');
         const typeLine = extractText(typeLineEl);
         const typeMatch = typeLine.match(/^(\w+)\s+(\w+),\s+(.+)$/);
         
+        // Map size to single letter abbreviations
         const sizeMap = { 'Tiny': 'T', 'Small': 'S', 'Medium': 'M', 'Large': 'L', 'Huge': 'H', 'Gargantuan': 'G' };
         const size = typeMatch ? sizeMap[typeMatch[1]] || 'M' : 'M';
         const type = typeMatch ? typeMatch[2].toLowerCase() : 'unknown';
         const alignment = typeMatch ? typeMatch[3] : 'unaligned';
         
-        // Parse alignment to abbreviations
+        // ==========================================
+        // PARSE ALIGNMENT TO ABBREVIATIONS
+        // Convert "lawful good" to ["L", "G"]
+        // ==========================================
         const alignmentMap = {
             'lawful good': ['L', 'G'], 'neutral good': ['N', 'G'], 'chaotic good': ['C', 'G'],
             'lawful neutral': ['L', 'N'], 'neutral': ['N'], 'chaotic neutral': ['C', 'N'],
@@ -69,23 +108,31 @@ extra_css:
         const alignmentKey = alignment.toLowerCase().replace('typically ', '');
         const alignmentArr = alignmentMap[alignmentKey] || ['N'];
         
-        // Extract AC, HP, Speed
+        // ==========================================
+        // EXTRACT AC, HP, SPEED
+        // Parse the stat line "AC 15, HP 45, Speed 30 ft."
+        // ==========================================
         const statLineEl = Array.from(statBlock.querySelectorAll('p')).find(p => p.textContent.includes('AC'));
         const statLine = extractText(statLineEl);
         
+        // Extract AC value
         const acMatch = statLine.match(/AC\s+(\d+)/i);
         const ac = acMatch ? parseInt(acMatch[1]) : 10;
         
+        // Extract HP value
         const hpMatch = statLine.match(/HP\s+(\d+)/i);
         const hp = hpMatch ? parseInt(hpMatch[1]) : 1;
         
+        // Extract speed values
         const speedMatch = statLine.match(/Speed\s+(.+?)(?=\n|$)/i);
         const speedText = speedMatch ? speedMatch[1].trim() : '30 ft.';
         const speed = { walk: 30 };
         
+        // Parse walk speed (default)
         const walkMatch = speedText.match(/(\d+)\s*ft\./);
         if (walkMatch) speed.walk = parseInt(walkMatch[1]);
         
+        // Parse fly speed with optional hover
         const flyMatch = speedText.match(/fly\s+(\d+)\s*ft\./i);
         if (flyMatch) {
             speed.fly = parseInt(flyMatch[1]);
@@ -95,29 +142,35 @@ extra_css:
             }
         }
         
+        // Parse swim speed
         const swimMatch = speedText.match(/swim\s+(\d+)\s*ft\./i);
         if (swimMatch) speed.swim = parseInt(swimMatch[1]);
         
+        // Parse climb speed
         const climbMatch = speedText.match(/climb\s+(\d+)\s*ft\./i);
         if (climbMatch) speed.climb = parseInt(climbMatch[1]);
         
+        // Parse burrow speed
         const burrowMatch = speedText.match(/burrow\s+(\d+)\s*ft\./i);
         if (burrowMatch) speed.burrow = parseInt(burrowMatch[1]);
         
-        // Extract ability scores from table
+        // ==========================================
+        // EXTRACT ABILITY SCORES FROM TABLE
+        // Parse the 6 abilities and their saves
+        // ==========================================
         const table = statBlock.querySelector('table');
         const cells = table ? Array.from(table.querySelectorAll('td')) : [];
         
         const abilities = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
         const saves = {};
         
+        // First row: STR, DEX, CON (columns 1, 5, 9)
         if (cells.length >= 12) {
-            // First row: STR, DEX, CON (columns 1, 5, 9)
             abilities.str = parseInt(extractText(cells[1])) || 10;
             abilities.dex = parseInt(extractText(cells[5])) || 10;
             abilities.con = parseInt(extractText(cells[9])) || 10;
             
-            // Saves (columns 3, 7, 11)
+            // Save bonuses (columns 3, 7, 11)
             const strSave = extractText(cells[3]);
             const dexSave = extractText(cells[7]);
             const conSave = extractText(cells[11]);
@@ -126,13 +179,13 @@ extra_css:
             if (conSave && conSave !== '—') saves.con = conSave;
         }
         
+        // Second row: INT, WIS, CHA (columns 13, 17, 21)
         if (cells.length >= 24) {
-            // Second row: INT, WIS, CHA (columns 13, 17, 21)
             abilities.int = parseInt(extractText(cells[13])) || 10;
             abilities.wis = parseInt(extractText(cells[17])) || 10;
             abilities.cha = parseInt(extractText(cells[21])) || 10;
             
-            // Saves (columns 15, 19, 23)
+            // Save bonuses (columns 15, 19, 23)
             const intSave = extractText(cells[15]);
             const wisSave = extractText(cells[19]);
             const chaSave = extractText(cells[23]);
@@ -141,7 +194,10 @@ extra_css:
             if (chaSave && chaSave !== '—') saves.cha = chaSave;
         }
         
-        // Extract skills, senses, languages, CR
+        // ==========================================
+        // EXTRACT SKILLS, SENSES, LANGUAGES, CR
+        // Parse remaining stat block paragraphs
+        // ==========================================
         const paragraphs = Array.from(statBlock.querySelectorAll('p'));
         let skills = null, senses = [], languages = [], cr = '0', passive = 10;
         let immune = [], resist = [], vulnerable = [], conditionImmune = [];
@@ -149,6 +205,7 @@ extra_css:
         paragraphs.forEach(p => {
             const text = extractText(p);
             
+            // Parse skills (e.g., "Skills Perception +5, Stealth +3")
             if (text.startsWith('Skills')) {
                 const skillsMatch = text.match(/Skills\s+(.+)/i);
                 if (skillsMatch) {
@@ -163,26 +220,31 @@ extra_css:
                 }
             }
             
+            // Parse damage immunities
             if (text.startsWith('Damage Immunities')) {
                 const match = text.match(/Damage Immunities\s+(.+)/i);
                 if (match) immune = match[1].split(',').map(s => s.trim().toLowerCase());
             }
             
+            // Parse damage resistances
             if (text.startsWith('Damage Resistances')) {
                 const match = text.match(/Damage Resistances\s+(.+)/i);
                 if (match) resist = match[1].split(',').map(s => s.trim().toLowerCase());
             }
             
+            // Parse damage vulnerabilities
             if (text.startsWith('Damage Vulnerabilities')) {
                 const match = text.match(/Damage Vulnerabilities\s+(.+)/i);
                 if (match) vulnerable = match[1].split(',').map(s => s.trim().toLowerCase());
             }
             
+            // Parse condition immunities
             if (text.startsWith('Condition Immunities')) {
                 const match = text.match(/Condition Immunities\s+(.+)/i);
                 if (match) conditionImmune = match[1].split(',').map(s => s.trim().toLowerCase());
             }
             
+            // Parse senses (e.g., "Senses darkvision 60 ft., Passive Perception 12")
             if (text.startsWith('Senses')) {
                 const sensesMatch = text.match(/Senses\s+(.+?)(?:Passive Perception\s+(\d+))?$/i);
                 if (sensesMatch) {
@@ -192,18 +254,23 @@ extra_css:
                 }
             }
             
+            // Parse languages
             if (text.startsWith('Languages')) {
                 const langMatch = text.match(/Languages\s+(.+)/i);
                 if (langMatch) languages = langMatch[1].split(',').map(s => s.trim());
             }
             
+            // Parse CR
             if (text.includes('CR')) {
                 const crMatch = text.match(/CR\s+([\d/]+)/i);
                 if (crMatch) cr = crMatch[1];
             }
         });
         
-        // Build the JSON structure
+        // ==========================================
+        // BUILD JSON STRUCTURE
+        // Construct 5etools compatible format
+        // ==========================================
         const fullData = {
             siteVersion: "1.197.0",
             _meta: {
@@ -240,7 +307,10 @@ extra_css:
         
         const monster = fullData.monster[0];
         
-        // Add optional fields
+        // ==========================================
+        // ADD OPTIONAL FIELDS
+        // Only include if data exists
+        // ==========================================
         if (Object.keys(saves).length > 0) monster.save = saves;
         if (skills) monster.skill = skills;
         if (immune.length > 0) monster.immune = immune;
@@ -250,7 +320,10 @@ extra_css:
         if (senses.length > 0) monster.senses = senses;
         if (languages.length > 0) monster.languages = languages;
         
-        // Download the JSON
+        // ==========================================
+        // DOWNLOAD JSON FILE
+        // Create blob and trigger download
+        // ==========================================
         const dataStr = JSON.stringify(fullData, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(dataBlob);

@@ -4,6 +4,9 @@ title: Hawthorne Guild
 background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
 
+<!-- ============================================ -->
+<!-- HERO SECTION -->
+<!-- ============================================ -->
 <div class="home-hero">
   <h2>Welcome to the Hawthorne Guild</h2>
   <p class="hero-description">
@@ -11,6 +14,9 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
   </p>
 </div>
 
+<!-- ============================================ -->
+<!-- GETTING STARTED SECTION -->
+<!-- ============================================ -->
 <div class="home-section">
   <h3>
     <span class="section-icon"></span>
@@ -21,6 +27,7 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
   </p>
   
   <div class="card-grid">
+    <!-- CARD: Server Rules & Registration -->
     <div class="feature-card">
       <h4>Rules & Registration</h4>
       <img src="{{ '/assets/thumbnails/guild-icon-300.png' | relative_url }}" alt="Player's Guide" class="card-thumbnail">
@@ -28,6 +35,7 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
       <a href="{{ 'rules/server-rules/' | relative_url }}" class="card-button">Read Rules</a>
     </div>
     
+    <!-- CARD: About Hawthorne -->
     <div class="feature-card">
       <h4>About Hawthorne</h4>
       <img src="{{ '/assets/thumbnails/adventure_party-300.jpg' | relative_url }}" alt="Hawthorne Map" class="card-thumbnail">
@@ -35,6 +43,7 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
       <a href="{{ 'playersguide/about-hawthorne/' | relative_url }}" class="card-button">Learn More</a>
     </div>
     
+    <!-- CARD: Important Links & Channels -->
     <div class="feature-card">
       <h4>Important Links</h4>
       <img src="{{ '/assets/thumbnails/portal-300.png' | relative_url }}" alt="Portal" class="card-thumbnail">
@@ -44,6 +53,9 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
   </div>
 </div>
 
+<!-- ============================================ -->
+<!-- FOR PLAYERS SECTION -->
+<!-- ============================================ -->
 <div class="home-section">
   <h3>
     <span class="section-icon"></span>
@@ -51,19 +63,24 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
   </h3>
 
   <div class="card-grid">
+    <!-- CARD: Player's Guide -->
     <div class="feature-card">
       <h4>Player's Guide</h4>
       <img src="{{ '/assets/thumbnails/players-300.png' | relative_url }}" alt="Player's Guide" class="card-thumbnail">
       <p>Everything you need to know to create characters and play on the Hawthorne D&D 5e Server</p>
       <a href="{{ 'playersguide/index/' | relative_url }}" class="card-button">Read Guide</a>
     </div>
-        
+    
+    <!-- CARD: Hawthorne Arcana (Homebrew Content) -->
     <div class="feature-card">
       <h4>Hawthorne Arcana</h4>
       <img src="{{ '/assets/thumbnails/arcana-300.png' | relative_url }}" alt="Player's Guide" class="card-thumbnail">
-      <p> Server approved homebrew races, classes, spells, and equipment</p>
+      <p>Server approved homebrew races, classes, spells, and equipment</p>
+      <!-- External link to Google Drive document -->
       <a href="https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view" class="card-button">View Arcana</a>
     </div>
+    
+    <!-- CARD: FAQ -->
     <div class="feature-card">
       <h4>FAQ</h4>
       <img src="{{ '/assets/thumbnails/faq-300.jpg' | relative_url }}" alt="FAQ" class="card-thumbnail">
@@ -73,19 +90,26 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
   </div>
 </div>
 
+<!-- ============================================ -->
+<!-- FOR DUNGEON MASTERS SECTION -->
+<!-- ============================================ -->
 <div class="home-section">
   <h3>
     <span class="section-icon"></span>
     For Dungeon Masters
   </h3>
+  
   <div class="card-grid">
+    <!-- CARD: DM's Guide -->
     <div class="feature-card">
       <h4>DM's Guide</h4>
       <img src="{{ '/assets/thumbnails/dmg-300.png' | relative_url }}" alt="DM's Guide" class="card-thumbnail">
       <p>Guide to applying & running games on the Hawthorne Server</p>
+      <!-- External link to Google Drive document -->
       <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" class="card-button">Read Guide</a>
     </div>
     
+    <!-- CARD: Monster Compendium -->
     <div class="feature-card">
       <h4>Monster Compendium</h4>
       <img src="{{ '/assets/thumbnails/fieldguide-small.png' | relative_url }}" alt="Monster Compendium" class="card-thumbnail">
@@ -93,6 +117,7 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
       <a href="{{ '/monster-compendium/' | relative_url }}" class="card-button">View Monsters</a>
     </div>
     
+    <!-- CARD: Adventure Locations -->
     <div class="feature-card">
       <h4>Adventure Locations</h4>
       <img src="{{ '/assets/thumbnails/locations-300.jpg' | relative_url }}" alt="Adventure Locations" class="card-thumbnail">
@@ -101,12 +126,20 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
     </div>
   </div>
 </div>
-<style>
 
+<!-- ============================================ -->
+<!-- CARD THUMBNAIL STYLES -->
+<!-- ============================================ -->
+<style>
+/* 
+ * Card thumbnail images
+ * Displays at top of each feature card
+ * Fixed height with cover fit to prevent distortion
+ */
 .card-thumbnail {
   width: 100%;
   height: 180px;
-  object-fit: cover;
+  object-fit: cover; /* Crops image to fill space without distortion */
   border: none;
   margin-bottom: 1em;
   display: block;
