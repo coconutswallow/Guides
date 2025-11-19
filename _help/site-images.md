@@ -4,6 +4,8 @@ layout: doc
 order: 52
 exclude_from_search: true
 ---
+
+
 ## Home Page Images
 
 On the main home-page, I created thumbnail images per "card".  You can see in index.html the format to add images, which I save to
@@ -28,7 +30,7 @@ background_image: /assets/images/tavern_brawl.jpg
 The syntax to add images inside regular documents unfortunately need a bit of a custom syntax:
 
 ```
-![Example of a Trade in #trade-logs]({{ '/assets/images/trade-example.png' | relative_url }})
+![Example of a Trade in #trade-logs]('Guides/assets/images/trade-example.png' )
 ```
 
 Or...

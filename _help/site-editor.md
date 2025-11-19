@@ -4,7 +4,8 @@ layout: doc
 order: 10
 exclude_from_search: true
 ---
-## Using the Web Editor to Edit documents
+
+**Using the Web Editor to Edit documents**
 
 To make it easier for authors to add / edit documents, I installed a back-end web-editor onto the development site (hawthorneguild.github.io/Guides).
 

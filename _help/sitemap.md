@@ -5,8 +5,6 @@ order: 13
 exclude_from_search: true
 ---
 
-# Site Map
-
 This page shows all content organized by collection and folder.
 
 <table>

@@ -5,7 +5,7 @@ order: 32
 exclude_from_search: true
 ---
 
-# Site Documentation: Editing the Homepage
+**Site Documentation: Editing the Homepage**
 
 This guide explains how to make simple edits to the main homepage (`index.html`) of the guild website.
 Think of the `index.html` file as the **"lobby" or "front page"** of the entire website. 

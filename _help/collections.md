@@ -5,7 +5,7 @@ order: 20
 exclude_from_search: true
 ---
 
-# Site Documentation: Managing Collections & Navigation
+**Site Documentation: Managing Collections & Navigation**
 
 This guide explains the technical backbone of the site: how content is organized using Jekyll (the built-in CMS in GithHub Pages) **Collections** and how those collections automatically build the sidebar **Navigation** menu.
 

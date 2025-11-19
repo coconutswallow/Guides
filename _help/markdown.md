@@ -5,7 +5,7 @@ order: 12
 exclude_from_search: true
 ---
 
-# Markdown Author's Guide
+Markdown Author's Guide
 
 ## IMPORTANT:  Top of the Page Front Matter
 Every document **needs** to start with "front matter" - a small block at the very top that tells the website about your page.
