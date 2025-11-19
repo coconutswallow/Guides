@@ -9,6 +9,7 @@ exclude_from_search: true
 ### For Authors:
 - <a href="{{ 'help/site-editor/' | relative_url }}">Site Page Editing tool</a>
 - <a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a>
+- <a href="{{ 'help/sitemap/' | relative_url }}">Site Map to help you figure out the page orders quickly</a>
 
 ### For Engineers
 

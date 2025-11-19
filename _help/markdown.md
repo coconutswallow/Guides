@@ -172,9 +172,10 @@ Check out the [D&D Beyond website](https://www.dndbeyond.com) for more info.
 **How it looks:** Check out the [D&D Beyond website](https://www.dndbeyond.com) for more info.
 
 **For internal links (other pages on our site):**
-```markdown
-See the [Server Rules]({{ 'location in the github' | relative_url }}) for more information.
-```
+Easiest to just go to the page and copy the link.  Note you can go to a header of a section of a page, hover over it and you'll see an anchor icon. Click on it to link to 
+that specific heading on that specific page. It should look something like `http://url_of_page/#section_name`
+
+Similarly, if you're linking to a heading WITHIN THE SAME PAGE, just link to the `#section_name`
 
 **Tips:**
 - The text in square brackets `[]` is what people see

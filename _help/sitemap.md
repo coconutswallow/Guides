@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Site Map
-order: 21
+order: 13
 exclude_from_search: true
 ---
 
@@ -60,38 +60,6 @@ This page shows all content organized by collection and folder.
       {% endunless %}
     {% endfor %}
     
-  </tbody>
-</table>
-
----
-
-## By Folder Structure
-
-<table>
-  <thead>
-    <tr>
-      <th>Folder Path</th>
-      <th>Page Title</th>
-      <th>Order</th>
-      <th>URL</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for collection in sorted_collections %}
-      {% if collection.label != "monsters" and collection.label != "posts" %}
-        {% assign docs = site[collection.label] | sort: "path" %}
-        {% for doc in docs %}
-          {% assign path_parts = doc.path | split: "/" %}
-          {% assign folder = path_parts | slice: 0, path_parts.size | minus: 1 | join: "/" %}
-          <tr>
-            <td><code>{{ folder }}</code></td>
-            <td>{{ doc.title | default: doc.name }}</td>
-            <td>{{ doc.order | default: "—" }}</td>
-            <td><a href="{{ doc.url | relative_url }}">{{ doc.url }}</a></td>
-          </tr>
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
   </tbody>
 </table>
 
