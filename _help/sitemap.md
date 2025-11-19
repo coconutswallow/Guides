@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: doc
 title: Site Map
 order: 13
 exclude_from_search: true
