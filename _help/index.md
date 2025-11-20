@@ -4,7 +4,8 @@ layout: doc
 order: 1
 exclude_from_search: true
 ---
-## Site Documentation
+
+**Site Documentation**
 
 ### For Authors:
 - <a href="{{ 'help/site-editor/' | relative_url }}">Site Page Editing tool</a>

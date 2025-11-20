@@ -34,3 +34,8 @@ Once installed, these are the recommended settings for Beyond20:
 ![Dnd Beyond Settings]({{ '/assets/images/dndb-8.png' | relative_url }})
 
 ![Dnd Beyond Settings]({{ '/assets/images/dndb-9.png' | relative_url }})
+
+
+#### Credit
+
+This guide courtesy of @don2347

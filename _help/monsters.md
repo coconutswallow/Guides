@@ -4,6 +4,7 @@ title: Monster-Compendium
 order: 34
 exclude_from_search: true
 ---
+
 **Monster Compendium Engineering Notes**
 
 The monster compendium is - and will most likely be the most complex part of the site; but once built the objective is that it's 90% automated and require minimum tech maintenance.

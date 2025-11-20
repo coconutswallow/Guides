@@ -4,6 +4,7 @@ title: "Color System"
 order: 51
 exclude_from_search: true
 ---
+
 **Color System**
 
 Our color system is built on a two-layer model to make it flexible, and easy to maintain. This approach, often called "design tokens," separates the _literal color values_ (the Palette) from their _purpose_ (the Theme).
