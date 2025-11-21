@@ -16,7 +16,7 @@ order: 80
 - [Adventurer Traverses the landscape 2 - Art by Tirinium1 ](https://www.deviantart.com/tirinium1/art/The-adventurers-party-traverses-the-landscape-2-1219674888)
 - [White Blue Red clouds by Hangmoon Alexander Komorov*](https://hangmoon.artstation.com/projects/qmGVy)
 - [The Contract - Art by Exphrasis](https://www.deviantart.com/exphrasis/art/The-Contract-624868109)
-- [Gateway of the Deep Stars - Art by plumsy460](https://www.deviantart.com/plumsy460/art/Gateway-of-the-Deep-Stars-1255313053)
+- [Portals_7th heaven - Art by IvanLaliashvili](https://www.deviantart.com/ivanlaliashvili/art/Portals-7th-heaven-399845666)
 
 ---
 
