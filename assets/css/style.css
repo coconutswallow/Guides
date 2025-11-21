@@ -1961,43 +1961,41 @@ tbody tr:hover {
    23. EXTERNAL LINK INDICATORS
    ============================================ */
 
-/* Add a small arrow after external links */
 a[target="_blank"]::after {
-  content: "↗"; 
+  content: "\2197"; /* Standard text arrow (↗) */
   display: inline-block;
-  margin-left: 3px;
-  font-size: 0.8em;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-  vertical-align: text-top; /* Align slightly higher */
-  line-height: 1;
+  margin-left: 4px;
+  font-weight: bold; /* Makes it slightly easier to see */
+  font-size: 0.9em;  
+  opacity: 0.7;      /* Keeps it subtle */
+  transition: transform 0.2s ease;
 }
 
-/* Hover effect for the arrow */
+/* Hover effect: small diagonal nudge */
 a[target="_blank"]:hover::after {
+  transform: translate(2px, -2px);
   opacity: 1;
-  transform: translate(1px, -1px); /* Subtle movement */
 }
 
-/* EXCEPTIONS - Do not show the arrow on these elements */
+/* EXCEPTIONS - Keep the arrow off these elements */
 
-/* 1. Footer social icons (they are images, so text after looks messy) */
+/* 1. Footer social icons */
 .footer-icons a[target="_blank"]::after {
   content: none;
 }
 
-/* 2. Card buttons (if they link externally) */
+/* 2. Buttons */
 .button[target="_blank"]::after, 
 .btn[target="_blank"]::after {
   content: none;
 }
 
-/* 3. The site title/logo link */
+/* 3. Site Title */
 .site-title a[target="_blank"]::after {
   content: none;
 }
 
-/* 4. Images wrapped in links (prevents arrow appearing next to image) */
+/* 4. Linked Images */
 a:has(img)[target="_blank"]::after {
   content: none;
 }
