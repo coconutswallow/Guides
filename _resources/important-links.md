@@ -22,8 +22,8 @@ order: 10
 |/hgexp|	|to determine the XP earned for a game|
 |/hglookup|	|to lookup entries in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857)|
 |/hgtzset|	|to set your home location timezone for /hgtimestamp|
-|/hgtimestamp|	|to look up and get discord markdown time (so everyone sees the pasted date/time in their own timezones)|
-|/hgenloot|	|to roll for loot in #treasure log by DMs|
+|/hgtimestamp|	|to look up and get discord markdown time (so other sees the pasted date/time adjusted to their own timezones)|
+|/hgenloot|	|to roll for loot in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) by DMs|
 
 ## Important Channels
 
