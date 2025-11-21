@@ -611,6 +611,13 @@ tbody tr:hover {
   background: var(--color-table-hover);
 }
 
+[data-theme="dark"] thead,
+[data-theme="dark"] th {
+  background: var(--palette-bg-header-start-dark); /* Uses the dark header color (#0a0a0a) */
+  color: var(--color-text); /* Uses the standard light text color */
+  border-color: var(--color-border);
+}
+
 
 /* ============================================
    8. PAGE STRUCTURE
