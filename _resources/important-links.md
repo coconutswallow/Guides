@@ -14,6 +14,17 @@ order: 10
 |[Hawthorne Award Nomination](https://docs.google.com/forms/d/e/1FAIpQLScHdywQI2i9Kqs0jOfqma31x1VzUvLO7BjjO5qDlq8_L42MUg/viewform)|Form to nominate a community member for a Hawthorne Award|
 |[Hawthorne Incident Report](https://docs.google.com/forms/d/e/1FAIpQLSfAKWb9rl_w2IRZ6zXKJZ42Kez3C4aTZtwkfTjhSUWuciKwHw/viewform)|Form to report an incident to be reviewed by the PR team|
 
+## Important Discord Commands
+
+|Discord Command|	|Description|
+|:---------------|	|:--------------------------------------------------|
+|/register|	|to register as an Adventurer|
+|/hgexp|	|to determine the XP earned for a game|
+|/hglookup|	|to lookup entries in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857)|
+|/hgtzset|	|to set your home location timezone for /hgtimestamp|
+|/hgtimestamp|	|to look up and get discord markdown time (so everyone sees the pasted date/time in their own timezones)|
+|/hgenloot|	|to roll for loot in #treasure log by DMs|
+
 ## Important Channels
 
 |**Channel**|**Purpose**|
