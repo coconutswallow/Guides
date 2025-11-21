@@ -2,7 +2,7 @@
 layout: doc
 title: "Split Tooth Mountain"
 order: 12
-background_image: /assets/images/mountain_landscape.jpg
+background_image: https://cdna.artstation.com/p/assets/images/images/030/025/982/large/martin-hatala-landscape-walking-mautain.jpg?1599383196
 ---
 
 ## Split Tooth Mountain
@@ -184,5 +184,5 @@ For DMs wanting to learn more about the Far Realm and add their own effects or m
 ##### Image Credits
 
 * [Bone Spire by logan-feliciano](https://cdnb.artstation.com/p/assets/images/images/021/394/125/4k/logan-feliciano-bonespire-002s.jpg?1571510286)
-* [Mountains Landscape, Curvy River by VoltureArachnids](https://www.deviantart.com/volturearachnids/art/Mountains-Landscape-Curvy-River-1245573683)
+* [Fantasy Landscape with a Walking Moutain by Martin Hatala](https://www.artstation.com/artwork/OoE9Gv)
 
