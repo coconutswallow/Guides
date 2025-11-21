@@ -284,13 +284,20 @@
         for (var i = 0; i < links.length; i++) {
             var link = links[i];
             
-            // Check if the link has an href and is not a local anchor link (#)
-            if (link.href && link.hostname !== currentDomain && !link.href.startsWith('mailto:') && !link.href.startsWith('tel:')) {
+            // 1. Check if link exists
+            if (!link.href) continue;
+
+            // 2. Check if it's a local anchor (#section)
+            if (link.getAttribute('href').startsWith('#')) continue;
+
+            // 3. Check if it's a mailto or tel link
+            if (link.href.startsWith('mailto:') || link.href.startsWith('tel:')) continue;
+
+            // 4. Main Check: Is the hostname different?
+            // We also check if the protocol is http/https to avoid messing with javascript: calls
+            if (link.hostname !== currentDomain && (link.protocol === 'http:' || link.protocol === 'https:')) {
                 link.target = '_blank';
-                link.rel = 'noopener noreferrer'; // Security best practice
-                
-                // Optional: Add a visual indicator class if you want to style external links differently later
-                // link.classList.add('external-link'); 
+                link.rel = 'noopener noreferrer';
             }
         }
     });

@@ -155,7 +155,6 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 
 ##### Image Credits
 
-* [The underwater world, with the aqua-dragons by RayaA5](https://www.deviantart.com/rayaa5/art/The-underwater-world-with-the-aqua-dragons-1241138160)
 * [Red Tide by SitwithMeNtheDark](https://www.deviantart.com/sitwithmenthedark/art/Red-Tide-1020824483)
 * [Depth by Shoonyah](https://www.artstation.com/artwork/29XP6g)
 
