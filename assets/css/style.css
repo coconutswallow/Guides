@@ -1957,3 +1957,45 @@ tbody tr:hover {
     page-break-inside: avoid;
   }
 }
+/* ============================================
+   23. EXTERNAL LINK INDICATORS
+   ============================================ */
+
+a[target="_blank"]::after {
+  content: "\2197"; /* Standard text arrow (↗) */
+  display: inline-block;
+  margin-left: 4px;
+  font-weight: bold; /* Makes it slightly easier to see */
+  font-size: 0.9em;  
+  opacity: 0.7;      /* Keeps it subtle */
+  transition: transform 0.2s ease;
+}
+
+/* Hover effect: small diagonal nudge */
+a[target="_blank"]:hover::after {
+  transform: translate(2px, -2px);
+  opacity: 1;
+}
+
+/* EXCEPTIONS - Keep the arrow off these elements */
+
+/* 1. Footer social icons */
+.footer-icons a[target="_blank"]::after {
+  content: none;
+}
+
+/* 2. Buttons */
+.button[target="_blank"]::after, 
+.btn[target="_blank"]::after {
+  content: none;
+}
+
+/* 3. Site Title */
+.site-title a[target="_blank"]::after {
+  content: none;
+}
+
+/* 4. Linked Images */
+a:has(img)[target="_blank"]::after {
+  content: none;
+}
