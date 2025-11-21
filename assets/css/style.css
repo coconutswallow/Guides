@@ -735,6 +735,15 @@ tbody tr:hover {
   border-radius: 2px;
 }
 
+/* Dark Mode Override for Hamburger Menu */
+[data-theme="dark"] #menu-toggle {
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] #menu-toggle .bar {
+  background: var(--color-border);
+}
+
 /* Sidebar Menu */
 #sidebar-menu {
   position: fixed;
