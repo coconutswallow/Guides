@@ -275,5 +275,25 @@
         }
     })();
 </script>
+<script>
+    // Automatically set external links to open in a new tab
+    document.addEventListener("DOMContentLoaded", function() {
+        var links = document.getElementsByTagName('a');
+        var currentDomain = window.location.hostname;
+
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            
+            // Check if the link has an href and is not a local anchor link (#)
+            if (link.href && link.hostname !== currentDomain && !link.href.startsWith('mailto:') && !link.href.startsWith('tel:')) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer'; // Security best practice
+                
+                // Optional: Add a visual indicator class if you want to style external links differently later
+                // link.classList.add('external-link'); 
+            }
+        }
+    });
+</script>
 </body>
 </html>

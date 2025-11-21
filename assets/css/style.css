@@ -1957,3 +1957,47 @@ tbody tr:hover {
     page-break-inside: avoid;
   }
 }
+/* ============================================
+   23. EXTERNAL LINK INDICATORS
+   ============================================ */
+
+/* Add a small arrow after external links */
+a[target="_blank"]::after {
+  content: "↗"; 
+  display: inline-block;
+  margin-left: 3px;
+  font-size: 0.8em;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  vertical-align: text-top; /* Align slightly higher */
+  line-height: 1;
+}
+
+/* Hover effect for the arrow */
+a[target="_blank"]:hover::after {
+  opacity: 1;
+  transform: translate(1px, -1px); /* Subtle movement */
+}
+
+/* EXCEPTIONS - Do not show the arrow on these elements */
+
+/* 1. Footer social icons (they are images, so text after looks messy) */
+.footer-icons a[target="_blank"]::after {
+  content: none;
+}
+
+/* 2. Card buttons (if they link externally) */
+.button[target="_blank"]::after, 
+.btn[target="_blank"]::after {
+  content: none;
+}
+
+/* 3. The site title/logo link */
+.site-title a[target="_blank"]::after {
+  content: none;
+}
+
+/* 4. Images wrapped in links (prevents arrow appearing next to image) */
+a:has(img)[target="_blank"]::after {
+  content: none;
+}
