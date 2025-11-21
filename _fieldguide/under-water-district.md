@@ -76,8 +76,6 @@ Sultan Rezzo is a noble marid (see [ *Sultan Rezzo's Statblock* ]({{ '/monster-c
 ### Sultan Rezzo's Palace
 Sultan Rezzo's palace is a grandiose building covered in coral and algae. It is filled with wonders and sensory delights that goes beyond one's wildest dreams. This opulent palace floats in a deep part of the Plane of Water and contains many luxurious chambers and rooms filled with air for his guests or slaves.
 
-![Sultan's Palace](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/aa825589-b5f2-443a-8874-546a7eac55d8/djtqo6r-849a4c39-c94e-400d-a7bc-fa892876936c.jpg/v1/fill/w_1192,h_670,q_70,strp/submerged_palace_by_arcaedes_djtqo6r-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTE1MiIsInBhdGgiOiIvZi9hYTgyNTU4OS1iNWYyLTQ0M2EtODg3NC01NDZhN2VhYzU1ZDgvZGp0cW82ci04NDlhNGMzOS1jOTRlLTQwMGQtYTdiYy1mYTg5Mjg3NjkzNmMuanBnIiwid2lkdGgiOiI8PTIwNDgifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.82Y_8CkgKb7YA4UlDNPvgWvpugYOZMFHxHWhg4Lh2Tg)
-
 ### Roleplaying Sultan Rezzo
 
 Rezzo is a Marid who sees himself as a superior being and expects to be treated as such. He wears fine and colorful clothes that resemble outfits usually seen in the Calimshan region.
