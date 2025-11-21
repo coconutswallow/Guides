@@ -17,8 +17,6 @@ The entrance of the cave is located about 500 feet underwater, underneath Hawtho
 
 The majority of this district serves as a residential area, but a few shops and inns have been built there as well. The buildings of the district are mostly made of more exotic material like coral, or other water resistant material.  Most houses of this district are built in the bottom section, underwater, whereas the shops and inns are located on the island of the top section, outside the water. Only those that can breathe underwater and are comfortable underwater can live in the underwater portion of the district.
 
-![Underwwater World]({{ '/assets/images/underwater-world.jpg' | relative_url }} )
-
 ### The Portal
 
 At the bottom of the cave, on the south-eastern side, a portal leading to the Elemental Plane of Water can be found. The portal to the Elemental Plane of Water is now guarded and secured for all Hawthorne Guild members to go through for adventures. The Sultan himself also gives missions to Hawthorne Adventurers whenever he needs something done via two of his emissaries that occasionally travel to and from Sultan Rezzo's palace through the portal. These emissaries are Aukai, the Wanderer, a sea elf, and Brooke, the Swift, a water genasi.
@@ -26,8 +24,6 @@ At the bottom of the cave, on the south-eastern side, a portal leading to the El
 ## The Elemental Plane of Water
 
 The Inner Planes surround the Material Plane, the Shadowfell and the Feywild. They provide the substance from which the world was made. They are also known as the Elemental Planes. One of these planes is the Plane of Water, an endless sea with a warm sun across the sky and a plane in which the weather varies extremely. Throughout this plane are scattered gigantic coral reefs stretching out underneath the sea and above it, forming various islands. For more information on the Elemental Plane of Water, please refer to the *Dungeon Master's Guide,* pp. 56 - 57. 
-
-
 
 ### Adventures in the Elemental Plane of Water
 
@@ -162,7 +158,6 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 ##### Image Credits
 
 * [The underwater world, with the aqua-dragons by RayaA5](https://www.deviantart.com/rayaa5/art/The-underwater-world-with-the-aqua-dragons-1241138160)
-* [Submerged Palace by Arcaedes](https://www.deviantart.com/arcaedes/art/Submerged-Palace-1198810611)
 * [Red Tide by SitwithMeNtheDark](https://www.deviantart.com/sitwithmenthedark/art/Red-Tide-1020824483)
 * [Depth by Shoonyah](https://www.artstation.com/artwork/29XP6g)
 
