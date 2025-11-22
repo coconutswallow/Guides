@@ -21,7 +21,8 @@ Your MAL is the single-source-of truth logging all pertinent activity for your c
 
 Once you've created your first character sheet, you should create add the character in your MAL.  The first row of each character should be a "character creation" session, which logs the character's initial XP and GP (depending on whether they start at level 3 or level 5), and starting equipment.  
 
-- The MAL already defaults to starting level 3.  If you wish to create a level 5 character, add 5600XP and 600GP in your character creation entry.
+- The MAL already defaults to starting level 3.  
+- If you wish to create a level 5 character, add 5600XP and 600GP in your character creation entry.
 - If you decided to purchase additional equipment (from the equipment tab on the Allowed Content), log the purchase under Downtime Log and add the inventory in the inventory sections. 
 
 ![MAL Example]({{ '/assets/images/mal-create.gif' | relative_url }})
