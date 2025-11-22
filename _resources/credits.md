@@ -18,10 +18,6 @@ order: 80
 - [The Contract - Art by Exphrasis](https://www.deviantart.com/exphrasis/art/The-Contract-624868109)
 - [Magic the Gathering - OmenPath Arc concept art - Art by Leon Tukker](https://www.artstation.com/artwork/XgWyKD)
 
-### Monster Compendium
-
-[Background Image:  Goblin Chaos by David Mandryk](https://www.artstation.com/mandryk)
-
 ---
 
 Additional image credits at the end of applicable pages.
