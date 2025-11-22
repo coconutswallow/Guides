@@ -6,7 +6,7 @@ order: 80
 
 ## Image Credits
 
-### Home Page
+### Home Page Thumbnails
 
 - [Tavern Brawl Image - Art by velinov](https://www.deviantart.com/velinov/art/Tavern-Brawl-96471746)
 - [TSR Jam Image - Art by Todd Lockwood](https://www.toddlockwood.com/dungeons-and-dragons#/tsr-jam/)
@@ -20,7 +20,7 @@ order: 80
 
 ### Monster Compendium
 
-- [Background Image:  Goblin Chaos by David Mandryk](https://www.artstation.com/mandryk)
+[Background Image:  Goblin Chaos by David Mandryk](https://www.artstation.com/mandryk)
 
 ---
 
