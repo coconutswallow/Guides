@@ -13,17 +13,14 @@ Your MAL is the single-source-of truth logging all pertinent activity for your c
 ## What do you need to log in your MAL
 
 - **Session Logs**  The results of a game session, including XP and DTP earned, gold and items gained (or used, etc.)
-
 - **Downtime Logs** Downtime activities such as equipment purchases, crafting, bastion activities, etc.
-
 - **Trade Logs** Trades with other members of the community
 
 
 ## Your first MAL entry
 
-Once you've created your first character sheet, you should create add the character in your MAL.
+Once you've created your first character sheet, you should create add the character in your MAL.  The first row of each character should be a "character creation" session, which logs the character's initial XP and GP (depending on whether they start at level 3 or level 5), and starting equipment.  The MAL already defaults to starting level 3.  If you wish to create a level 5 character, add 5600XP and 600GP in your character creation entry.
 
-The first row of each character should be a "character creation" session, which logs the character's initial XP and GP (depending on whether they start at level 3 or level 5), starting equipment.
 
 If you decided to purchase additional equipment (from the equipment tab on the Allowed Content), log the purchase under Downtime Log and add the inventory in the inventory sections. 
 

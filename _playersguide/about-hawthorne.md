@@ -50,3 +50,7 @@ The city of Hawthorne has a list of laws that guild members are nominally expect
 * Don’t act against the guild’s interests.
 
 Flagrant or repeated violations of the guild’s code of conduct can be grounds for imprisonment, exile, or even execution. Beyond that, the guild tolerates tolerates a wide array of activities from its members.
+
+> **IMPORTANT**
+>
+> In addition to the guild rules above, please also ensure you have fully read and will adhere to the [Hawthorn server rules]("Guides/rules/server-rules")
