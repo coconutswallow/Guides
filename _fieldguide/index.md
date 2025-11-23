@@ -6,6 +6,7 @@ background_image:
 ---
 
 ![Adventure Locations](https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001)
+[*White Blue Red clouds by Hangmoon Alexander Komorov*](https://hangmoon.artstation.com/projects/qmGVy)
 
 
 {% assign sorted_guides = site.fieldguide | sort: 'order' %}
@@ -20,4 +21,3 @@ background_image:
 </ul>
 
 ---
-[*Image Credit - White Blue Red clouds by Hangmoon Alexander Komorov*](https://hangmoon.artstation.com/projects/qmGVy)
