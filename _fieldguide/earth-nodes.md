@@ -260,11 +260,10 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
     It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM. <br><br>
 
     In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
-  </div>
-  
+  </div>  
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
-  <p><span class="image-caption"><a href="https://i.imgur.com/pfAp3Pa.png">Artist unknown</a></span>
 </div>
+<span class="image-caption"><a href="https://i.imgur.com/pfAp3Pa.png">Artist unknown</a></span>
 
 ## Creating Earth Nodes
 

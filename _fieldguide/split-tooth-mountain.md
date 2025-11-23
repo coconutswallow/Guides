@@ -134,6 +134,7 @@ Typical marrow can be as much as 20 miles square in size, with foci scattered ab
 *Cerebriotic Core.* At the center of the marrow lies a persisting Rift to the Far Realm, which itself can take any number of nightmarish forms, such as black voids or portals with tentacles sprouting from within.
 
 ![Cerebrotic Periphery](https://i.imgur.com/zbWkxLJ.png)
+<span class="image-caption">Dragon Magazine #300</span>
 
 ### Minor Properties
 
