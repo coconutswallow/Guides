@@ -263,7 +263,6 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
   </div>  
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
 </div>
-<span class="image-caption"><a href="https://i.imgur.com/pfAp3Pa.png">Artist unknown</a></span>
 
 ## Creating Earth Nodes
 
