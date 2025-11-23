@@ -152,7 +152,7 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 
 ## Credits
 
-> *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
+*This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
 <span class="image-caption"><a href="https://www.artstation.com/artwork/29XP6g">Background Image: Depth by Shoonyah</a></span>
 

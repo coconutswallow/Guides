@@ -263,10 +263,7 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
   </div>
   
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
-  <span class="image-caption"><a href="https://www.artstation.com/artwork/bKmQJn">Galaxy by Acidify Art</a></span>
-
-  
-
+  <br><span class="image-caption"><a href="https://i.imgur.com/pfAp3Pa.png">Artist unknown</a></span>
 </div>
 
 ## Creating Earth Nodes
@@ -616,9 +613,7 @@ The table below summarizes the different quantities associated with earth nodes 
 
 ## Credits
 
-> *This document has been created by Luolang  in collaboration with the Lore Consultants and Rules Architects of the Hawthorne Dungeons & Dragons Guild.*
-
----
+*This document has been created by Luolang  in collaboration with the Lore Consultants and Rules Architects of the Hawthorne Dungeons & Dragons Guild.*
 
 <span class="image-caption"><a href="https://www.artstation.com/artwork/9Xxav">Background Image: Crystal Cave by Jocelyn Tang</a></span>
 

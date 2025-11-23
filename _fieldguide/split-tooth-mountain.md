@@ -180,7 +180,7 @@ For DMs wanting to learn more about the Far Realm and add their own effects or m
 
 ## Credits
 
-> *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
+*This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
 <span class="image-caption"><a href="https://www.artstation.com/artwork/OoE9Gv">Background Image: Fantasy Landscape with a Walking Moutain by Martin Hatala</a></span>
 
