@@ -6,8 +6,7 @@ background_image:
 ---
 
 ![Player's Guide Cover]({{ '/assets/images/players-guide-cover.png' | relative_url }})
-[*Tavern Brawl - Art by velinov*](https://www.deviantart.com/velinov/art/Tavern-Brawl-96471746)
-
+<span class="image-caption"><a href="https://www.deviantart.com/velinov/art/Tavern-Brawl-96471746">Tavern Brawl - Art by Velinov</a></span>
 
 {% assign sorted_guides = site.playersguide | sort: 'order' %}
 <ul>
