@@ -1429,6 +1429,16 @@ tbody tr:hover {
   line-height: 1.4;
 }
 
+/* Ensure links inside captions are also italicized */
+.image-caption a {
+  font-style: italic;
+}
+
+/* Remove bottom margin from images when followed by caption */
+img:has(+ .image-caption) {
+  margin-bottom: 0.25em !important;
+}
+
 /* Tighter spacing when caption follows an image */
 img + .image-caption {
   margin-top: 0.25em;
@@ -1439,6 +1449,10 @@ img + .image-caption {
   color: var(--color-text-secondary);
 }
 
+/* Optional: Remove external link indicator from caption links */
+.image-caption a[target="_blank"]::after {
+  content: none;
+}
 /* ============================================
    17. DOCUMENTATION LAYOUT
    ============================================ */
