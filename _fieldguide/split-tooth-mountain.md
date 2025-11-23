@@ -54,6 +54,7 @@ The landscape is utterly alien, the usual terrain, trees and plants have melted 
 skin must make a DC 15 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
 ![Bone Spire]( {{ '/assets/images/bonespire.jpg' | relative_url }} )
+<span class="image-caption"><a href="https://cdnb.artstation.com/p/assets/images/images/021/394/125/4k/logan-feliciano-bonespire-002s.jpg?1571510286">Bone Spire by logan-feliciano</a></span>
 
 #### Absolute Territory
 
@@ -181,8 +182,6 @@ For DMs wanting to learn more about the Far Realm and add their own effects or m
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
-##### Image Credits
+<span class="image-caption"><a href="https://www.artstation.com/artwork/OoE9Gv">Background Image: Fantasy Landscape with a Walking Moutain by Martin Hatala</a></span>
 
-* [Bone Spire by logan-feliciano](https://cdnb.artstation.com/p/assets/images/images/021/394/125/4k/logan-feliciano-bonespire-002s.jpg?1571510286)
-* [Fantasy Landscape with a Walking Moutain by Martin Hatala](https://www.artstation.com/artwork/OoE9Gv)
 

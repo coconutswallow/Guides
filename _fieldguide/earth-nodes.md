@@ -263,6 +263,8 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
   </div>
   
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
+  <span class="image-caption"><a href="https://www.artstation.com/artwork/bKmQJn">Galaxy by Acidify Art</a></span>
+
   
 
 </div>

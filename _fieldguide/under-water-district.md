@@ -68,6 +68,7 @@ Red tides are rare but dangerous patches of infected water. A creature caught in
 As blinding sickness is a natural disease, any effect that removes a disease or otherwise ameliorates a disease's effects apply to the target.
 
 ![Red Tide]({{ '/assets/images/red_tide.jpg' | relative_url }} )
+<span class="image-caption"><a href="https://www.deviantart.com/sitwithmenthedark/art/Red-Tide-1020824483">Red Tide by SitwithMeNtheDark</a></span>
 
 ## Sultan Rezzo the Marvelous
 
@@ -153,9 +154,5 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
-##### Image Credits
-
-* [Red Tide by SitwithMeNtheDark](https://www.deviantart.com/sitwithmenthedark/art/Red-Tide-1020824483)
-* [Depth by Shoonyah](https://www.artstation.com/artwork/29XP6g)
-
+<span class="image-caption"><a href="https://www.artstation.com/artwork/29XP6g">Background Image: Depth by Shoonyah</a></span>
 
