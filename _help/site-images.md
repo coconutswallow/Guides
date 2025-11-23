@@ -27,22 +27,26 @@ background_image: /assets/images/tavern_brawl.jpg
 
 ## Adding images in pages
 
-The syntax to add images inside regular documents unfortunately need a bit of a custom syntax:
-
+Internal Images (saved onto the site):
 ```
-![Example of a Trade in #trade-logs]('Guides/assets/images/trade-example.png' )
-```
-
-Or...
-
-add Guides in front...
-
-```
-![Example of a Trade in #trade-logs]('Guides/assets/images/trade-example.png')
+![Example of a Trade in #trade-logs](Guides/assets/images/trade-example.png)
 ```
 
+External Images:
+```
+![Example of a Trade in #trade-logs](https://image.com/example-image.png)
+```
 
 ## Crediting Images
 
-I add the source of the images in /resources/credit.md or at the bottom of the page itself (e.g. Adventure Locations).
+To credit an image, we need to use an html tag (span class="image caption"):
+
+```
+<span class="image-caption">Dragon Magazine #300</span>
+```
+
+You can also insert links to the caption, but require the HTML tag instead of markdown:
+```
+<span class="image-caption"><a href="https://cdnb.artstation.com/p/assets/images/images/021/394/125/4k/logan-feliciano-bonespire-002s.jpg?1571510286">Bone Spire by logan-feliciano</a></span>
+```
 
