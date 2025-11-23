@@ -37,7 +37,7 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 ### Map of Hawthorne
 
 ![City of Hawthorne]({{'/assets/images/hawthorne-city-map.jpg' | relative_url}})
-<span class="image-caption">Hawthorne Map by Kathy in collaboration with the Lore team/span>
+<span class="image-caption">Hawthorne Map by Kathy in collaboration with the Lore team</span>
 
 
 
