@@ -12,7 +12,7 @@ The Region of Dream is filled with undifferentiated dream-stuff, thus it would e
 dreaming or not. Its edges expand and contract continuously as dreamers sleep and wake, creating various dreamscapes. These dreamscapes last a short time and they rarely impinge on one another accidentally.
 
 ![Dreamland](https://cdna.artstation.com/p/assets/images/images/005/220/398/large/hangmoon-alexander-komarov-dreamland.jpg?1489427215)
-<span class="image-caption"><a href="https://hangmoon.artstation.com/projects/lKLok">Image: Dreamland by Hangmoon Alexander Komarov</a></span>
+<span class="image-caption"><a href="https://hangmoon.artstation.com/projects/lKLok">Dreamland by Hangmoon Alexander Komarov</a></span>
 
 ## Dreamscapes
 
@@ -63,7 +63,7 @@ Spells can be cast normally in a dream, but aren’t actually cast by the physic
 A wide variety of creatures can be found within the Region of Dreams. The creatures living within the dreamscapes are created through the whim of the dreamer. Whether it is an adorable bunny, or a horrifying cluster of the most grotesque creatures prancing around; anything is possible.
 
 ![Dark Land](https://cdna.artstation.com/p/assets/images/images/015/496/568/large/hangmoon-alexander-komarov-dark-land.jpg?1548585025)
-<span class="image-caption"><a href="https://hangmoon.artstation.com/projects/qAob5n">Image: Dark Land by Hangmoon Alexander Komarov</a></span>
+<span class="image-caption"><a href="https://hangmoon.artstation.com/projects/qAob5n">Dark Land by Hangmoon Alexander Komarov</a></span>
 
 
 ### The Quori
@@ -97,7 +97,7 @@ When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the 
 ## Reaching the Region of Dreams
 
 ![]({{'/assets/images/hangmoon-alexander-komarov-sail-away.jpg' | relative_url }})
-<span class="image-caption"><a href="https://hangmoon.artstation.com/projects/qxa4a">Image: Sail Away by Hangmoon Alexander Komarov</a></span>
+<span class="image-caption"><a href="https://hangmoon.artstation.com/projects/qxa4a">Sail Away by Hangmoon Alexander Komarov</a></span>
 
 
 There are a few methods to reach the Region of Dreams, whether it is consciously or not, and physically or not. A traveler choosing to travel there physically must know that they will be subjected to the whims of the dreams they enter and risk being injured or die, unlike an unconscious dreamer whose mind is within its own dreamscape. A physical traveler must also be aware they can stumble into the dreamscape of a powerful entity, and could potentially become trapped within it. (Note: Unlike the normal rules for dreaming, items used, spells cast, and other consumables are still gone when you return to the waking world after leaving the Region of Dreams if it was accessed physically. Likewise, items you gain and experience you accumulate while you were there
@@ -189,7 +189,7 @@ Like any storm, each Dreamheart Tempest has an eye. A traveler can visit the Eye
 Although it is called the Region of Dreams, the dreamscapes within it sometimes contain vile creatures, landscapes and images, charged with dark emotions. Sometimes, these elements rampage from dreamscape to dreamscape, giving rise to terrible nightmares. Whether these nightmares originate from dreamers’ dark thoughts or have been birthed by the near presence of the Demiplane of Nightmares is unclear, but one thing remains certain: the Demiplane of Nightmares is a place where one’s darkest thoughts and fears become reality. 
 
 ![](/Guides/assets/images/mikail-il-wipi15.jpg)
-<span class="image-caption"><a href="https://mikail.artstation.com/store/art_posters/lbPR/nightmare">Image: Nightmare by MIKAIL IL</a></span>
+<span class="image-caption"><a href="https://mikail.artstation.com/store/art_posters/lbPR/nightmare">Nightmare by MIKAIL IL</a></span>
 
 
 ### Description

@@ -70,6 +70,8 @@ The table below describes various associated properties of an earth node.
 </td><td width=300 style="text-align:left;">
 
  <img src="https://i.imgur.com/Qayoqbp.png" alt="Diagram of typical earth node sizes">
+ <span class="image-caption"><a href="https://www.dmsguild.com/en/product/28621/underdark-3-5">Modifying Earth Nodes by Wizards of the Coast</a></span>
+
 
 </td></tr></table>
 
@@ -161,6 +163,8 @@ Certain earth nodes are charged with the energies of other planes of existence, 
 The portal that is created is similar to portals to other locations as previously above, except that it links to a specific fixed location on another plane of existence as determined by the DM. Using the *plane shift* spell in this way does not require the spell's material component.
 
 ![](https://i.imgur.com/cXOoAzg.jpeg)
+<span class="image-caption"><a href="https://www.inprnt.com/gallery/samburley/mtg-cavern-of-souls/">Cavern of Souls by Sam Burley</a></span>
+
 
 ### Granted Spells (Restricted)
 
@@ -259,6 +263,8 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
   </div>
   
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
+  
+
 </div>
 
 ## Creating Earth Nodes
@@ -397,6 +403,7 @@ Only willing creatures can be imprisoned in an evil node, including those that h
 Using holy water or the *hallow* spell to purify desecrated ground may suppress the effects of an evil node in an area for no more than 24 hours, but is unlikely to permanently purify an evil node without extensive effort. Acts of singular and powerful goodness done in the area of an evil node may damage or destroy an evil node as determined by the DM. 
 
 ![](/Guides/assets/images/acidify-art-deviantfixed.jpg)
+<span class="image-caption"><a href="https://www.artstation.com/acidify">Node Manifestestation by Acidify Art</a></span>
 
 **Creating Evil Nodes** <br>Just as acts of singular goodness can damage or destroy evil nodes, acts of prime or ultimate evil can help to create one. As evil nodes are tied to forces of evil that often result from the wicked choices of creatures, the question of whether or not an evil node arose naturally or inadvertently generally comes down to intent. Often, an evil node is created as a natural course of events owing to a concentration of evil energy that results from particularly wicked acts, shrines to dark deities and other entities, or due to the lingering presence of a particularly evil creature. However, certain foul and profane rituals are known to exist by which an evil node can be intentionally created, themselves often involving acts of horrific evil and sacrifice as a means by which to stain the landscape with a concentration of evil energy so as to create an evil node.
 
@@ -517,6 +524,7 @@ You have learned to attune your senses and psionic powers to the magic of nodes:
 * **Modifying Earth Nodes.** You have a greater ability in helping to redirect the flow of energy of a node when supervising any project that involves modifying the area around a node and are able to make Intelligence (Arcana) checks to do so. 
 
 ![](/Guides/assets/images/acidify-art-deviant.jpg)
+<span class="image-caption"><a href="https://www.artstation.com/acidify">Node Manifestestation by Acidify Art</a></span>
 
 <br>
 
@@ -608,12 +616,9 @@ The table below summarizes the different quantities associated with earth nodes 
 
 > *This document has been created by Luolang  in collaboration with the Lore Consultants and Rules Architects of the Hawthorne Dungeons & Dragons Guild.*
 
-> ##### Image Credits
+---
 
-* [Crystal Cave by Jocelyn Tang](https://www.artstation.com/artwork/9Xxav)
-* [Cavern of Souls by Sam Burley](https://www.inprnt.com/gallery/samburley/mtg-cavern-of-souls/)
-* [Modifying Earth Nodes by Wizards of the Coast](https://www.dmsguild.com/en/product/28621/underdark-3-5)
-* [Node Manifestestation by Acidify Art](https://www.artstation.com/acidify)
+<span class="image-caption"><a href="https://www.artstation.com/artwork/9Xxav">Background Image: Crystal Cave by Jocelyn Tang</a></span>
 
 
 
