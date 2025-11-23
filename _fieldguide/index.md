@@ -18,5 +18,3 @@ background_image:
     {% endif %}
   {% endfor %}
 </ul>
-
----

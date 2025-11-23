@@ -240,5 +240,4 @@ documentation that has been used to inspire and create this document.
 
 ---
 
-* [Background Image: White Blue Red clouds by Hangmoon Alexander Komarov](https://hangmoon.artstation.com/projects/qmGVy)
-
+<span class="image-caption"><a href="https://hangmoon.artstation.com/projects/qmGVy">Background Image: White Blue Red clouds by Hangmoon Alexander Komarov</a></span>
