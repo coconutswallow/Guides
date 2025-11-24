@@ -38,4 +38,4 @@ Once installed, these are the recommended settings for Beyond20:
 
 #### Credit
 
-This guide courtesy of @don2347
+These D&D Beyond recommended settings courtesy of @don2347

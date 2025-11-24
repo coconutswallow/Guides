@@ -6,8 +6,10 @@ const MonsterParser = (function() {
     function parseFrontMatter(content) {
         const frontMatterMatch = content.match(/^---[\r\n]+([\s\S]*?)[\r\n]+---/);
         if (!frontMatterMatch) throw new Error("No valid YAML frontmatter found");
+        
         const frontMatter = {};
         const lines = frontMatterMatch[1].split(/\r?\n/);
+        
         lines.forEach(line => {
             const colonIndex = line.indexOf(':');
             if (colonIndex === -1) return;
@@ -15,12 +17,59 @@ const MonsterParser = (function() {
             const value = line.substring(colonIndex + 1).trim();
             frontMatter[key] = value.replace(/^['"]|['"]$/g, '');
         });
+        
         return frontMatter;
     }
 
     function parseLoreDescription(content) {
+        // Captures text between the first Header (## Title) and the first horizontal rule (___)
         const loreMatch = content.match(/## [^\r\n]+[\r\n]+[\r\n]+([\s\S]*?)[\r\n]+___/);
         return loreMatch ? loreMatch[1].trim() : '';
+    }
+
+    /**
+     * Splits the content after the frontmatter/lore into the Blockquoted Statblock
+     * and any Additional Info (Markdown) that follows it.
+     */
+    function splitStatBlockAndInfo(fullBody) {
+        const lines = fullBody.split('\n');
+        let statBlockLines = [];
+        let additionalInfoLines = [];
+        let pastStatBlock = false;
+        let foundFirstDivider = false;
+
+        for (let line of lines) {
+            const trimmed = line.trim();
+
+            // Handle horizontal rules (___)
+            if (trimmed === '___') {
+                if (!foundFirstDivider) {
+                   foundFirstDivider = true; // Consumes the first divider (start of statblock)
+                   continue;
+                }
+                // A second divider explicitly marks the end of the statblock
+                pastStatBlock = true;
+            }
+
+            if (pastStatBlock) {
+                additionalInfoLines.push(line);
+                continue;
+            }
+
+            // Heuristic: If we hit a non-quoted line that has content, we've likely left the blockquote
+            if (!line.startsWith('>') && trimmed !== '') {
+                 pastStatBlock = true;
+                 additionalInfoLines.push(line);
+            } else {
+                 statBlockLines.push(line);
+            }
+        }
+
+        return {
+            // Join lines and strip the blockquote '>' markers
+            statBlock: statBlockLines.join('\n').replace(/^>\s*/gm, ''),
+            additionalInfo: additionalInfoLines.join('\n').trim()
+        };
     }
 
     function parseAbilityScores(blockContent) {
@@ -38,6 +87,7 @@ const MonsterParser = (function() {
                 cha: parseInt(simpleMatch[6])
             };
         }
+        
         // Try extended format (with bold headers)
         const extendedMatch = blockContent.match(
             /\|\s*\*\*Str\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Dex\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Con\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Int\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Wis\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Cha\*\*\s*\|\s*(\d+)\s*\|/
@@ -52,12 +102,18 @@ const MonsterParser = (function() {
                 cha: parseInt(extendedMatch[6])
             };
         }
+        
         return { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
     }
 
     function parseStat(blockContent, statName) {
-        // Regex looks for **StatName** followed by content, stopping at the next double-asterisk, table start, or double newline
-        const pattern = new RegExp(`\\*\\*${statName}\\*\\*\\s+(.+?)(?=\\s*\\*\\*|\\n{2,}|\\s*\\||$)`, 's');
+        // Look for **StatName** followed by content.
+        // Captures content until:
+        // 1. The next bold header (e.g., **HP)
+        // 2. A newline (if stats are on separate lines)
+        // 3. A pipe (table start)
+        // 4. End of string
+        const pattern = new RegExp(`\\*\\*${statName}\\*\\*\\s+([\\s\\S]+?)(?=\\s*\\*\\*|\\n|\\s*\\||$)`);
         const match = blockContent.match(pattern);
         return match ? match[1].trim() : '';
     }
@@ -66,8 +122,10 @@ const MonsterParser = (function() {
         const saves = {};
         const savingThrowsMatch = blockContent.match(/\*\*Saving Throws\*\*\s+(.+)/);
         if (!savingThrowsMatch) return saves;
+        
         const saveText = savingThrowsMatch[1].trim();
         const abilities = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Cha'];
+        
         abilities.forEach(ability => {
             const regex = new RegExp(`${ability}\\s+([+\\-]\\d+)`, 'i');
             const match = saveText.match(regex);
@@ -81,11 +139,16 @@ const MonsterParser = (function() {
 
     function parseAbilitySection(blockContent, sectionName) {
         const abilities = [];
+        // Regex finds header "### Traits" followed by content until the next header or end
         const sectionPattern = new RegExp(`### ${sectionName}\\n+([\\s\\S]*?)(?=\\n###|$)`);
         const sectionMatch = blockContent.match(sectionPattern);
+        
         if (!sectionMatch) return abilities;
+        
         const sectionContent = sectionMatch[1];
+        // Regex finds "***Name.*** Description"
         const abilityPattern = /\*\*\*([^.]+)\.\*\*\*\s*([\s\S]*?)(?=\n\*\*\*|\n###|$)/g;
+        
         let match;
         while ((match = abilityPattern.exec(sectionContent)) !== null) {
             const description = match[2].trim().replace(/^\n+/, '').replace(/\n+$/, '');
@@ -102,15 +165,20 @@ const MonsterParser = (function() {
     function parseLegendaryActions(blockContent) {
         const result = { description: '', actions: [] };
         const sectionMatch = blockContent.match(/### Legendary Actions\n+([\s\S]*?)(?=\n+###|$)/);
+        
         if (!sectionMatch) return result;
+        
         const legendaryContent = sectionMatch[1];
         let actionSearchContent = legendaryContent;
+        
+        // Extract the intro description (text before the first action)
         const descMatch = legendaryContent.match(/^([\s\S]*?)(?=\n+\*\*\*)/);
         if (descMatch) {
             const desc = descMatch[1].trim();
             if (desc) result.description = desc;
             actionSearchContent = legendaryContent.substring(descMatch[0].length).trim();
         }
+        
         const actionPattern = /\*\*\*([^.]+)\.\*\*\*\s*([\s\S]*?)(?=\*\*\*|###|$)/g;
         let match;
         while ((match = actionPattern.exec(actionSearchContent)) !== null) {
@@ -130,14 +198,18 @@ const MonsterParser = (function() {
 
     function deduceInitiativeProficiency(initText, dex, cr) {
         if (!initText) return '0';
+        
         const match = initText.match(/([+-]\d+)/);
         if (!match) return '0';
+        
         const totalMod = parseInt(match[1]);
         const dexMod = Math.floor((dex - 10) / 2);
         const pb = MonsterCalculator.getProficiencyBonus(cr);
+        
         if (totalMod === dexMod) return '0';
         if (totalMod === dexMod + pb) return '1';
         if (totalMod === dexMod + (pb * 2)) return '2';
+        
         return '0';
     }
 
@@ -175,7 +247,7 @@ const MonsterParser = (function() {
             legendaryActionDescription: '',
             lairActions: '',
             regionalEffects: '',
-            additionalInfo: '' // NEW FIELD
+            additionalInfo: ''
         };
 
         try {
@@ -192,93 +264,51 @@ const MonsterParser = (function() {
 
         state.description = parseLoreDescription(markdownContent);
         
-        // Find the main stat block (after ___)
+        // Find the main body content (everything after the first separation rule)
         const bodyMatch = markdownContent.match(/___[\s\S]*$/);
         if (!bodyMatch) {
             console.error('No stat block found');
             return state;
         }
 
-        // Logic to separate the Blockquoted Statblock from any Additional Info below it
-        const fullBody = bodyMatch[0];
-        
-        // We look for where the lines stop starting with '>'
-        const lines = fullBody.split('\n');
-        let statBlockLines = [];
-        let additionalInfoLines = [];
-        let foundDivider = false;
-        let pastStatBlock = false;
+        // Split body into the clean statblock and any additional info
+        const { statBlock, additionalInfo } = splitStatBlockAndInfo(bodyMatch[0]);
 
-        for (let line of lines) {
-            if (line.trim() === '___') {
-                if (!foundDivider) {
-                   foundDivider = true; // This is the first divider
-                   continue;
-                } else {
-                   // A second divider usually implies the end of the statblock section if users use it
-                   pastStatBlock = true;
-                }
-            }
+        // Assign Additional Info
+        state.additionalInfo = additionalInfo;
 
-            if (pastStatBlock) {
-                additionalInfoLines.push(line);
-                continue;
-            }
-
-            // Check if line is part of the statblock (starts with >)
-            // Or is empty inside the statblock
-            if (line.startsWith('>') || (line.trim() === '' && !pastStatBlock)) {
-                 // However, if we hit a non-quoted line that has content, the statblock is likely over
-                 if (!line.startsWith('>') && line.trim() !== '') {
-                     pastStatBlock = true;
-                     additionalInfoLines.push(line);
-                 } else {
-                     statBlockLines.push(line);
-                 }
-            } else {
-                pastStatBlock = true;
-                additionalInfoLines.push(line);
-            }
-        }
-
-        // Join statblock lines and strip '>'
-        let blockContent = statBlockLines.join('\n').replace(/^>\s*/gm, '');
-
-        // Join additional info lines
-        state.additionalInfo = additionalInfoLines.join('\n').trim();
-
-        // --- Parsing the specific statblock fields ---
-        const abilities = parseAbilityScores(blockContent);
+        // Parse Statblock Fields
+        const abilities = parseAbilityScores(statBlock);
         Object.assign(state, abilities);
 
-        state.ac = parseStat(blockContent, 'AC') || parseStat(blockContent, 'Armor Class');
-        state.hp = parseStat(blockContent, 'HP') || parseStat(blockContent, 'Hit Points');
-        state.speed = parseStat(blockContent, 'Speed');
+        state.ac = parseStat(statBlock, 'AC') || parseStat(statBlock, 'Armor Class');
+        state.hp = parseStat(statBlock, 'HP') || parseStat(statBlock, 'Hit Points');
+        state.speed = parseStat(statBlock, 'Speed');
         
-        const initText = parseStat(blockContent, 'Initiative');
+        const initText = parseStat(statBlock, 'Initiative');
         state.initiativeProficiency = deduceInitiativeProficiency(initText, state.dex, state.cr);
 
-        const saves = parseSavingThrows(blockContent);
+        const saves = parseSavingThrows(statBlock);
         Object.assign(state, saves);
 
-        state.skills = parseStat(blockContent, 'Skills');
-        state.senses = parseStat(blockContent, 'Senses');
-        state.languages = parseStat(blockContent, 'Languages');
-        state.conditionImmunities = parseStat(blockContent, 'Condition Immunities');
-        state.damageResistances = parseStat(blockContent, 'Damage Resistances');
-        state.damageImmunities = parseStat(blockContent, 'Damage Immunities');
+        state.skills = parseStat(statBlock, 'Skills');
+        state.senses = parseStat(statBlock, 'Senses');
+        state.languages = parseStat(statBlock, 'Languages');
+        state.conditionImmunities = parseStat(statBlock, 'Condition Immunities');
+        state.damageResistances = parseStat(statBlock, 'Damage Resistances');
+        state.damageImmunities = parseStat(statBlock, 'Damage Immunities');
 
-        state.traits = parseAbilitySection(blockContent, 'Traits');
-        state.actions = parseAbilitySection(blockContent, 'Actions');
-        state.bonusActions = parseAbilitySection(blockContent, 'Bonus Actions');
-        state.reactions = parseAbilitySection(blockContent, 'Reactions');
+        state.traits = parseAbilitySection(statBlock, 'Traits');
+        state.actions = parseAbilitySection(statBlock, 'Actions');
+        state.bonusActions = parseAbilitySection(statBlock, 'Bonus Actions');
+        state.reactions = parseAbilitySection(statBlock, 'Reactions');
 
-        const legendary = parseLegendaryActions(blockContent);
+        const legendary = parseLegendaryActions(statBlock);
         state.legendaryActions = legendary.actions;
         state.legendaryActionDescription = legendary.description;
 
-        state.lairActions = parseTextBlock(blockContent, 'Lair Actions');
-        state.regionalEffects = parseTextBlock(blockContent, 'Regional Effects');
+        state.lairActions = parseTextBlock(statBlock, 'Lair Actions');
+        state.regionalEffects = parseTextBlock(statBlock, 'Regional Effects');
 
         return state;
     }

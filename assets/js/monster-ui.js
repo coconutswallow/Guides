@@ -39,6 +39,10 @@ const MonsterUI = (function() {
         return singulars[field] || 'Item';
     }
 
+    /* =========================================
+       FORM RENDERING
+       ========================================= */
+
     function renderForm(state) {
         const pb = MonsterCalculator.getProficiencyBonus(state.cr || 0);
         const abilities = MonsterCalculator.calculateAllAbilities(state);
@@ -299,6 +303,10 @@ const MonsterUI = (function() {
         `;
     }
 
+    /* =========================================
+       PREVIEW RENDERING
+       ========================================= */
+
     function renderPreview(state) {
         const validation = MonsterValidator.validateMonster(state);
         const abilities = MonsterCalculator.calculateAllAbilities(state);
@@ -334,6 +342,7 @@ const MonsterUI = (function() {
     function parseMarkdown(text) {
         if (!text) return '';
         let html = text;
+        // Standard replacements
         html = html.replace(/^(---+|___+)$/gm, '<hr class="statblock-divider">');
         html = html.replace(/^#### (.+)$/gm, '<h6>$1</h6>');
         html = html.replace(/^### (.+)$/gm, '<h5>$1</h5>');
@@ -341,14 +350,22 @@ const MonsterUI = (function() {
         html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
         html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        
+        // Table Parsing
         html = parseMarkdownTables(html);
+        
+        // Paragraph and List Parsing
         const paragraphs = html.split(/\n\n+/);
         html = paragraphs.map(p => {
             p = p.trim();
             if (!p) return '';
+            
+            // Skip block tags
             if (p.startsWith('<h') || p.startsWith('<hr') || p.startsWith('<table')) {
                 return p;
             }
+            
+            // Handle lists
             if (p.startsWith('-') || p.startsWith('*')) {
                 const items = p.split(/\n/).map(line => {
                     line = line.trim();
@@ -359,8 +376,10 @@ const MonsterUI = (function() {
                 }).join('');
                 return `<ul>${items}</ul>`;
             }
+            
             return `<p>${p}</p>`;
         }).join('');
+        
         return html;
     }
 
@@ -412,6 +431,14 @@ const MonsterUI = (function() {
         return html;
     }
 
+    /**
+     * Helper to render generic sections inside the blockquote
+     */
+    function renderVisualSection(title, htmlContent) {
+        if (!htmlContent) return '';
+        return `<h3>${title}</h3>${htmlContent}`;
+    }
+
     function renderVisualStatBlock(state, abilities) {
         if (!state.title) {
             return '<div class="statblock-placeholder">Fill in the form to see preview...</div>';
@@ -431,12 +458,11 @@ const MonsterUI = (function() {
             }
         });
 
+        // Pre-parse markdown sections
         const descriptionHtml = state.description.trim() ? parseMarkdown(state.description.trim()) : '';
         const additionalInfoHtml = state.additionalInfo && state.additionalInfo.trim() 
                                    ? parseMarkdown(state.additionalInfo.trim()) 
                                    : '';
-        
-        // NEW: Parse markdown for Lair Actions and Regional Effects
         const lairActionsHtml = state.lairActions && state.lairActions.trim() 
                                 ? parseMarkdown(state.lairActions.trim()) 
                                 : '';
@@ -444,6 +470,7 @@ const MonsterUI = (function() {
                                     ? parseMarkdown(state.regionalEffects.trim()) 
                                     : '';
 
+        // Modular Construction of the HTML string
         return `
             ${descriptionHtml ? `
                 <div class="monster-description">
@@ -451,6 +478,7 @@ const MonsterUI = (function() {
                 </div>
                 <hr class="statblock-divider">
             ` : ''}
+
             <blockquote class="stat-block statblock-visual">
                 <h2>${escapeHtml(state.title)}</h2>
                 <p><em>${escapeHtml(state.size)} ${escapeHtml(state.type.toLowerCase())}, ${escapeHtml(state.alignment.toLowerCase())}</em></p>
@@ -500,14 +528,9 @@ const MonsterUI = (function() {
                 ${renderVisualItemSection(state.bonusActions, 'Bonus Actions')}
                 ${renderVisualItemSection(state.reactions, 'Reactions')}
                 ${renderVisualLegendaryActions(state)}
-                ${lairActionsHtml ? `
-                    <h3>Lair Actions</h3>
-                    ${lairActionsHtml}
-                ` : ''}
-                ${regionalEffectsHtml ? `
-                    <h3>Regional Effects</h3>
-                    ${regionalEffectsHtml}
-                ` : ''}
+                
+                ${renderVisualSection('Lair Actions', lairActionsHtml)}
+                ${renderVisualSection('Regional Effects', regionalEffectsHtml)}
             </blockquote>
             
             ${additionalInfoHtml ? `

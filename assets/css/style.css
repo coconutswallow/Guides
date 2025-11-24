@@ -174,7 +174,7 @@
   --color-bg-page: var(--palette-bg-page-light);
   --color-bg-light: var(--palette-bg-card-light);
   --color-bg-medium: var(--palette-bg-row-light);
-  --color-bg-page-container: var(--palette-bg-page-light); /* New: for .page container - lightest */
+  --color-bg-page-container: var(--palette-bg-page-light);
 
   /* Links & Buttons */
   --color-link: var(--color-secondary);
@@ -278,7 +278,7 @@
   --color-bg-page: var(--palette-bg-page-dark);
   --color-bg-light: var(--palette-bg-card-dark);
   --color-bg-medium: var(--palette-bg-row-dark);
-  --color-bg-page-container: var(--palette-bg-page-dark); /* New: for .page container - pure black */
+  --color-bg-page-container: var(--palette-bg-page-dark);
 
   /* Links & Buttons */
   --color-btn-text: var(--color-bg-light);
