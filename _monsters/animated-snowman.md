@@ -44,7 +44,7 @@ ___
 > | **Int** | 1 | -5 | +3 | **Wis** | 7 | -2 | +3 | **Cha** | 1 | -5 | +3 |
 >
 > **Damage Vulnerabilities** fire  
-> **Damage Resistances** bludgeoning, piercing, and slashing from nonmagical attacks
+> **Damage Resistances** bludgeoning, piercing, and slashing from nonmagical attacks  
 > **Damage Immunities** cold, poison, psychic  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned  
 > **Senses** Passive Perception 8  
@@ -67,6 +67,6 @@ ___
 >
 > ***Winter's Breath (Recharge 5-6).*** The snowman exhales an icy blast in a 15-foot cone. Each creature in that area must make a DC 15 Constitution saving throw, taking 18 (4d8) cold damage on a failed save, or half as much damage on a successful one.
 >
-> **Slam.** Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit 13 (2d8 + 4) bludgeoning damage.
+> ***Slam.*** Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit 13 (2d8 + 4) bludgeoning damage.
 >
 > ***Snowball.*** Ranged Weapon Attack: +7 to hit, range 20/60 ft., one target. Hit 6 (1d4 + 4) bludgeoning damage plus 5 (2d4) cold damage.
