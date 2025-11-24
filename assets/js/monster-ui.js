@@ -137,7 +137,7 @@ const MonsterUI = (function() {
                         <select id="initiativeProficiency">
                             <option value="0" ${state.initiativeProficiency == '0' ? 'selected' : ''}>None (Dex Mod)</option>
                             <option value="1" ${state.initiativeProficiency == '1' ? 'selected' : ''}>Proficient (+PB)</option>
-                            <option value="2" ${state.initiativeProficiency == '2' ? 'selected' : ''}>Expertise (+2 PB)</option>
+                            <option value="2" ${state.initiativeProficiency == '2' ? 'selected' : ''}>Expertise (2x PB)</option>
                         </select>
                     </div>
                 </div>
