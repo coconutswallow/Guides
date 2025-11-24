@@ -37,7 +37,7 @@ ___
 > ## Adult Faerie Linnorm
 > *Huge dragon, typically chaotic neutral*
 >
-> **AC** 18 (natural armor) **HP** 138 (12d12 + 60) **Speed** 20 ft., fly 80 ft. (hover), swim 80 ft.
+> **AC** 18 (natural armor) **HP** 138 (12d12 + 60) **Speed** 20 ft., fly 80 ft. (hover), swim 80 ft. **Initiative** +1 (11)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

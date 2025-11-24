@@ -6,24 +6,35 @@ extra_css:
   - /assets/css/statblock.css
 ---
 
-<!-- ============================================ -->
-<!-- CREATOR CREDIT -->
-<!-- Displays monster creator attribution if provided -->
-<!-- ============================================ -->
+<style>
+    /* Grid container for the top stats line */
+    .stat-grid-container {
+        display: grid;
+        grid-template-columns: 1fr auto; /* Left column flexible, Right column fits content */
+        column-gap: 10px;
+        row-gap: 2px;
+        margin-bottom: 1em;
+    }
+
+    /* Individual cells */
+    .stat-cell-ac { grid-column: 1; }
+    .stat-cell-init { grid-column: 2; text-align: right; }
+    .stat-cell-hp { grid-column: 1 / -1; } /* Spans full width */
+    .stat-cell-speed { grid-column: 1 / -1; } /* Spans full width */
+    
+    /* Ensure bold headers look correct */
+    .stat-grid-container strong {
+        font-weight: bold;
+        color: #7a200d; /* Matching standard 5e statblock red/brown */
+    }
+</style>
+
 {% if page.creator %}
 <p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
 {% endif %}
 
-<!-- ============================================ -->
-<!-- MAIN CONTENT -->
-<!-- Monster stat block markdown is rendered here -->
-<!-- ============================================ -->
 {{ content }}
 
-<!-- ============================================ -->
-<!-- MONSTER IMAGE -->
-<!-- Displays monster artwork with optional credit -->
-<!-- ============================================ -->
 {% if page.image %}
 <div class="monster-image-container">
     <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
@@ -33,11 +44,6 @@ extra_css:
 </div>
 {% endif %}
 
-<!-- ============================================ -->
-<!-- ACTION BUTTONS -->
-<!-- Navigation and export controls -->
-<!-- Only shown on actual stat block pages -->
-<!-- ============================================ -->
 {% if page.layout == "statblock" %}
 <div class="export-button-container">
     <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Compendium Index</button>
@@ -45,10 +51,83 @@ extra_css:
 </div>
 {% endif %}
 
-<!-- ============================================ -->
-<!-- JSON EXPORT FUNCTIONALITY -->
-<!-- Extracts stat block data and exports to 5etools format -->
-<!-- ============================================ -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        formatStatLine();
+    });
+
+    function formatStatLine() {
+        const statBlock = document.querySelector('blockquote');
+        if (!statBlock) return;
+
+        // Find the paragraph containing "AC" and "HP"
+        const paragraphs = Array.from(statBlock.querySelectorAll('p'));
+        const statP = paragraphs.find(p => p.textContent.includes('AC') && p.textContent.includes('HP'));
+        
+        if (!statP) return;
+
+        // Get inner HTML to preserve <strong> tags
+        let html = statP.innerHTML;
+
+        // Regex to extract segments. 
+        // We assume the format: AC ... HP ... Speed ... Initiative ...
+        const acMatch = html.match(/(<strong>AC<\/strong>.*?)(?=<strong>HP)/i);
+        const hpMatch = html.match(/(<strong>HP<\/strong>.*?)(?=<strong>Speed)/i);
+        
+        // Speed might be the end, or Initiative might follow
+        const speedMatch = html.match(/(<strong>Speed<\/strong>.*?)(?=<strong>Initiative|$)/i);
+        const initMatch = html.match(/(<strong>Initiative<\/strong>)\s*(.*)/i);
+
+        if (acMatch && hpMatch && speedMatch) {
+            const acHtml = acMatch[1].trim();
+            const hpHtml = hpMatch[1].trim();
+            const speedHtml = speedMatch[1].trim();
+            
+            let initHtml = "";
+            
+            if (initMatch) {
+                // Input Format:  <strong>Initiative</strong> (+1) 11
+                // Target Format: <strong>Initiative</strong> +1 (11)
+                
+                const initLabel = initMatch[1]; // <strong>Initiative</strong>
+                const rawValues = initMatch[2]; // (+1) 11
+                
+                // Parse specific value groups
+                // Capture group 1: (+1), Capture group 2: 11
+                const valMatch = rawValues.match(/(\([+-]\d+\))\s*(\d+)/);
+                
+                if (valMatch) {
+                    const modifierWithParens = valMatch[1]; // (+1)
+                    const score = valMatch[2];              // 11
+                    
+                    // Strip parens from modifier for the new display
+                    const modifierClean = modifierWithParens.replace(/[()]/g, '');
+                    
+                    // Construct new HTML: Label +1 (11)
+                    initHtml = `${initLabel} ${modifierClean} (${score})`;
+                } else {
+                    // Fallback if regex fails (just use what was there)
+                    initHtml = initMatch[0];
+                }
+            }
+
+            // Construct new Grid Layout
+            const newContainer = document.createElement('div');
+            newContainer.className = 'stat-grid-container';
+            
+            newContainer.innerHTML = `
+                <div class="stat-cell-ac">${acHtml}</div>
+                ${initHtml ? `<div class="stat-cell-init">${initHtml}</div>` : ''}
+                <div class="stat-cell-hp">${hpHtml}</div>
+                <div class="stat-cell-speed">${speedHtml}</div>
+            `;
+
+            // Replace the old paragraph with the new grid
+            statP.parentNode.replaceChild(newContainer, statP);
+        }
+    }
+</script>
+
 <script>
     /**
      * Export stat block to JSON in 5etools format
@@ -109,22 +188,34 @@ extra_css:
         const alignmentArr = alignmentMap[alignmentKey] || ['N'];
         
         // ==========================================
-        // EXTRACT AC, HP, SPEED
-        // Parse the stat line "AC 15, HP 45, Speed 30 ft."
+        // EXTRACT AC, HP, SPEED, INITIATIVE
         // ==========================================
-        const statLineEl = Array.from(statBlock.querySelectorAll('p')).find(p => p.textContent.includes('AC'));
-        const statLine = extractText(statLineEl);
+        // We look for the paragraph containing AC. If the visual script ran, this might be in a grid,
+        // so we search 'p' or the text content of the whole block if needed.
+        // Usually, querying the blockquote text content is safer if structure changed.
+        let statText = "";
         
+        // Try finding the original P first (if script hasn't run or failed)
+        const statP = Array.from(statBlock.querySelectorAll('p')).find(p => p.textContent.includes('AC') && p.textContent.includes('HP'));
+        
+        if (statP) {
+            statText = statP.textContent;
+        } else {
+            // If script ran, look for the grid container
+            const grid = statBlock.querySelector('.stat-grid-container');
+            if (grid) statText = grid.textContent;
+        }
+
         // Extract AC value
-        const acMatch = statLine.match(/AC\s+(\d+)/i);
+        const acMatch = statText.match(/AC\s+(\d+)/i);
         const ac = acMatch ? parseInt(acMatch[1]) : 10;
         
         // Extract HP value
-        const hpMatch = statLine.match(/HP\s+(\d+)/i);
+        const hpMatch = statText.match(/HP\s+(\d+)/i);
         const hp = hpMatch ? parseInt(hpMatch[1]) : 1;
         
         // Extract speed values
-        const speedMatch = statLine.match(/Speed\s+(.+?)(?=\n|$)/i);
+        const speedMatch = statText.match(/Speed\s+(.+?)(?=Initiative|$)/i);
         const speedText = speedMatch ? speedMatch[1].trim() : '30 ft.';
         const speed = { walk: 30 };
         
@@ -142,17 +233,27 @@ extra_css:
             }
         }
         
-        // Parse swim speed
+        // Parse swim/climb/burrow
         const swimMatch = speedText.match(/swim\s+(\d+)\s*ft\./i);
         if (swimMatch) speed.swim = parseInt(swimMatch[1]);
         
-        // Parse climb speed
         const climbMatch = speedText.match(/climb\s+(\d+)\s*ft\./i);
         if (climbMatch) speed.climb = parseInt(climbMatch[1]);
         
-        // Parse burrow speed
         const burrowMatch = speedText.match(/burrow\s+(\d+)\s*ft\./i);
         if (burrowMatch) speed.burrow = parseInt(burrowMatch[1]);
+
+        // Parse Initiative
+        // Input text might be "(+1) 11" or "+1 (11)" depending on if formatting script ran
+        let initMod = 0;
+        const initMatch = statText.match(/Initiative\s*(.*)/i);
+        if (initMatch) {
+            // Look for a signed number like +1 or -1
+            const modMatch = initMatch[1].match(/[+-]\d+/);
+            if (modMatch) {
+                initMod = parseInt(modMatch[0]);
+            }
+        }
         
         // ==========================================
         // EXTRACT ABILITY SCORES FROM TABLE
@@ -294,6 +395,7 @@ extra_css:
                 ac: [{ ac: ac }],
                 hp: { average: hp },
                 speed: speed,
+                init: initMod,
                 str: abilities.str,
                 dex: abilities.dex,
                 con: abilities.con,
