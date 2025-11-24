@@ -1,21 +1,19 @@
 import os
 
 def standardize_statblocks():
-    # Determine the path to the _monsters directory
-    # Assumes this script is running from /tools, so we go up one level (..) then into _monsters
+    # Go up one level from /tools to root, then into _monsters
     base_dir = os.path.dirname(__file__)
     target_dir = os.path.normpath(os.path.join(base_dir, '..', '_monsters'))
 
     print(f"Target Directory: {os.path.abspath(target_dir)}")
 
     if not os.path.exists(target_dir):
-        print("Error: '_monsters' directory not found at the expected path.")
+        print("Error: '_monsters' directory not found.")
         return
 
     files_modified = 0
     files_scanned = 0
 
-    # Walk through the directory structure
     for root, dirs, files in os.walk(target_dir):
         for filename in files:
             if filename.endswith(".md"):
@@ -28,16 +26,14 @@ def standardize_statblocks():
                     
                     original_content = content
                     
-                    # specific string replacements
-                    # 1. Replace **Armor Class** with **AC**
+                    # Safely replace bolded long-form headers with abbreviations
+                    # This ensures we don't accidentally replace "Hit Points" in a sentence description
                     if "**Armor Class**" in content:
                         content = content.replace("**Armor Class**", "**AC**")
                     
-                    # 2. Replace **Hit Points** with **HP**
                     if "**Hit Points**" in content:
                         content = content.replace("**Hit Points**", "**HP**")
 
-                    # Write back only if changes were made
                     if content != original_content:
                         with open(filepath, 'w', encoding='utf-8') as f:
                             f.write(content)
