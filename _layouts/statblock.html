@@ -26,6 +26,24 @@ extra_css:
         font-weight: bold;
         color: #7a200d; 
     }
+    /* FORCE BULLETS IN STAT BLOCKS */
+    blockquote ul {
+        list-style-type: disc !important; /* Forces the dot */
+        padding-left: 2em !important;     /* Indents the list so dots are visible */
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
+    blockquote li {
+        display: list-item !important;    /* Ensures it behaves like a list item */
+        margin-bottom: 0.25em;            /* Adds a tiny space between items */
+    }
+    
+    /* Optional: Fix nested paragraphs inside list items so they don't add extra space */
+    blockquote li p {
+        margin: 0;
+        display: inline;
+    }
 </style>
 
 {% if page.creator %}
