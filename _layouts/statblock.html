@@ -6,9 +6,6 @@ extra_css:
   - /assets/css/statblock.css
 ---
 
-<!-- ============================================ -->
-<!-- DYNAMIC STAT BLOCK STYLES -->
-<!-- ============================================ -->
 <style>
     /* Grid container for the top stats line */
     .stat-grid-container {
@@ -41,21 +38,12 @@ extra_css:
     }
 </style>
 
-<!-- ============================================ -->
-<!-- CREATOR CREDIT -->
-<!-- ============================================ -->
 {% if page.creator %}
 <p class="creator-credit"><strong>Creator:</strong> {{ page.creator }}</p>
 {% endif %}
 
-<!-- ============================================ -->
-<!-- MAIN CONTENT -->
-<!-- ============================================ -->
 {{ content }}
 
-<!-- ============================================ -->
-<!-- MONSTER IMAGE -->
-<!-- ============================================ -->
 {% if page.image %}
 <div class="monster-image-container">
     <img src="{{ page.image | relative_url }}" alt="Art of {{ page.title }}">
@@ -65,9 +53,6 @@ extra_css:
 </div>
 {% endif %}
 
-<!-- ============================================ -->
-<!-- ACTION BUTTONS -->
-<!-- ============================================ -->
 {% if page.layout == "statblock" %}
 <div class="export-button-container">
     <button class="btn back-button" onclick="window.location.href='{{ '/monster-compendium/' | relative_url }}'">← Back to Compendium Index</button>
@@ -75,37 +60,32 @@ extra_css:
 </div>
 {% endif %}
 
-<!-- ============================================ -->
-<!-- VISUAL FORMATTING SCRIPT -->
-<!-- ============================================ -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         formatStatLine();
     });
 
-    function formatStatLine() {
-        // Strategy: Find the LAST <hr> on the page (usually the one before the statblock)
-        // Then look for the first blockquote after it. This avoids flavor text blockquotes.
+    function getStatBlockElement() {
+        // IMPROVED LOGIC:
+        // Instead of relying on HR tags (which might exist after the statblock),
+        // we look for the specific Blockquote that contains the stats.
         
-        const hrs = document.querySelectorAll('hr');
-        let statBlock = null;
+        const blocks = document.querySelectorAll('blockquote');
+        
+        // Convert NodeList to Array to use .find()
+        return Array.from(blocks).find(block => {
+            // Check if this block contains a paragraph with AC and HP markers
+            const paragraphs = Array.from(block.querySelectorAll('p'));
+            return paragraphs.some(p => {
+                const text = p.textContent;
+                return (text.includes('AC') || text.includes('Armor Class')) && 
+                       (text.includes('HP') || text.includes('Hit Points'));
+            });
+        });
+    }
 
-        if (hrs.length > 0) {
-            // Start searching from the last HR found (common pattern for statblocks)
-            let element = hrs[hrs.length - 1].nextElementSibling;
-            while (element) {
-                if (element.tagName === 'BLOCKQUOTE') {
-                    statBlock = element;
-                    break;
-                }
-                element = element.nextElementSibling;
-            }
-        } else {
-            // Fallback: Just grab the last blockquote on the page if no HR found
-            const blocks = document.querySelectorAll('blockquote');
-            if (blocks.length > 0) statBlock = blocks[blocks.length - 1];
-        }
-
+    function formatStatLine() {
+        const statBlock = getStatBlockElement();
         if (!statBlock) return;
 
         // 1. Find the paragraph containing "AC" (or "Armor Class") and "HP" (or "Hit Points")
@@ -127,8 +107,7 @@ extra_css:
         const acLabelPattern = "(?:AC|Armor Class)";
         const hpLabelPattern = "(?:HP|Hit Points)";
         
-        // 2. Extract AC and HP using multiline match [\s\S]*? to handle line wrapping in HTML source
-        // This is critical for long lines like Bitter Maiden where browser might insert a newline
+        // 2. Extract AC and HP using multiline match [\s\S]*? to handle line wrapping
         const acRegex = new RegExp(`(${tagRegex}${acLabelPattern}${closeTagRegex}[\\s\\S]*?)(?=${tagRegex}${hpLabelPattern})`, 'i');
         const hpRegex = new RegExp(`(${tagRegex}${hpLabelPattern}${closeTagRegex}[\\s\\S]*?)(?=${tagRegex}Speed)`, 'i');
         
@@ -139,7 +118,11 @@ extra_css:
             let acHtml = acMatch[1].trim();
             let hpHtml = hpMatch[1].trim();
 
-            // Standardize labels to short form for the grid display
+            // Clean up trailing <br> tags if the parser added them
+            acHtml = acHtml.replace(/<br\s*\/?>$/i, '');
+            hpHtml = hpHtml.replace(/<br\s*\/?>$/i, '');
+
+            // Standardize labels to short form
             acHtml = acHtml.replace(/Armor Class/, 'AC');
             hpHtml = hpHtml.replace(/Hit Points/, 'HP');
             
@@ -147,6 +130,7 @@ extra_css:
             let speedRegex = new RegExp(`(${tagRegex}Speed${closeTagRegex}[\\s\\S]*?)(?=${tagRegex}Initiative|$)`, 'i');
             let speedMatch = html.match(speedRegex);
             let speedHtml = speedMatch ? speedMatch[1].trim() : "";
+            speedHtml = speedHtml.replace(/<br\s*\/?>$/i, '');
             
             // 4. Find Initiative
             let initHtml = "";
@@ -156,6 +140,7 @@ extra_css:
             let initMatch = html.match(initTagRegex);
             
             // Strategy B: If not found, look in the NEXT paragraph
+            // (Sometimes parsers break separate lines into separate paragraphs)
             if (!initMatch) {
                 const nextP = statP.nextElementSibling;
                 if (nextP && nextP.tagName === 'P') {
@@ -206,28 +191,10 @@ extra_css:
     }
 </script>
 
-<!-- ============================================ -->
-<!-- JSON EXPORT FUNCTIONALITY -->
-<!-- ============================================ -->
 <script>
     function exportToJSON() {
-        // Strategy: Same block finding logic as visual script
-        const hrs = document.querySelectorAll('hr');
-        let statBlock = null;
-
-        if (hrs.length > 0) {
-            let element = hrs[hrs.length - 1].nextElementSibling;
-            while (element) {
-                if (element.tagName === 'BLOCKQUOTE') {
-                    statBlock = element;
-                    break;
-                }
-                element = element.nextElementSibling;
-            }
-        } else {
-            const blocks = document.querySelectorAll('blockquote');
-            if (blocks.length > 0) statBlock = blocks[blocks.length - 1];
-        }
+        // Re-use the improved logic to find the correct block
+        const statBlock = getStatBlockElement();
 
         if (!statBlock) {
             alert('No valid stat block found on this page.');

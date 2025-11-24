@@ -119,10 +119,34 @@ creator: ${state.creator}`;
     function generateTextBlock(content, sectionTitle) {
         if (!content || !content.trim()) return '';
         let section = `> ### ${sectionTitle}\n>\n`;
+        
         const lines = content.split(NEWLINE_REGEX);
-        const formattedLines = lines.map(line => 
-            line.trim() ? `> ${line}` : '>'
-        );
+        let previousLineWasList = false;
+        let previousLineWasEmpty = true;
+
+        const formattedLines = lines.map(line => {
+            const trimmed = line.trim();
+            if (!trimmed) {
+                previousLineWasEmpty = true;
+                previousLineWasList = false;
+                return '>';
+            }
+
+            // Check if this line is a list item
+            const isList = trimmed.startsWith('* ') || trimmed.startsWith('- ');
+            let result = `> ${trimmed}`;
+
+            // FIX: If we are starting a list, and the previous line wasn't empty and wasn't a list,
+            // insert a spacer line to ensure Markdown parsers recognize the list.
+            if (isList && !previousLineWasList && !previousLineWasEmpty) {
+                result = `>\n> ${trimmed}`;
+            }
+
+            previousLineWasList = isList;
+            previousLineWasEmpty = false;
+            return result;
+        });
+
         section += formattedLines.join('\n') + '\n>\n';
         return section;
     }
@@ -147,7 +171,8 @@ creator: ${state.creator}`;
         basicStats.push(`**Initiative** ${init.formatted} (${init.score})`);
 
         if (basicStats.length > 0) {
-            markdown += `> ${basicStats.join(' ')}\n>\n`;
+            // Join with a newline and a blockquote arrow to ensure they are on separate lines
+            markdown += `> ${basicStats.join('\n> ')}\n>\n`;
         }
 
         markdown += generateAbilityTable(abilities);
@@ -165,7 +190,6 @@ creator: ${state.creator}`;
         markdown += generateTextBlock(state.lairActions, 'Lair Actions');
         markdown += generateTextBlock(state.regionalEffects, 'Regional Effects');
         
-        // NEW: Append Additional Info
         if (state.additionalInfo && state.additionalInfo.trim()) {
             markdown += `\n___\n${state.additionalInfo.trim()}\n`;
         }

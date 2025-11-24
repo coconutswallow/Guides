@@ -287,7 +287,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    // NEW: Render the Additional Info section
     function renderAdditionalInfoSection(state) {
         return `
             <div class="form-section">
@@ -422,10 +421,6 @@ const MonsterUI = (function() {
         const init = MonsterCalculator.calculateInitiative(state.dex, state.cr, state.initiativeProficiency);
 
         const optionalStat = (label, value) => value ? `<p><strong>${label}</strong> ${escapeHtml(value)}</p>` : '';
-        const formatBlock = (text) => {
-            if (!text) return '';
-            return text.split(/\n/).map(p => `<p>${escapeHtml(p)}</p>`).join('');
-        };
 
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const saveOverrides = [];
@@ -437,11 +432,17 @@ const MonsterUI = (function() {
         });
 
         const descriptionHtml = state.description.trim() ? parseMarkdown(state.description.trim()) : '';
-        
-        // NEW: Parse the additional info markdown
         const additionalInfoHtml = state.additionalInfo && state.additionalInfo.trim() 
                                    ? parseMarkdown(state.additionalInfo.trim()) 
                                    : '';
+        
+        // NEW: Parse markdown for Lair Actions and Regional Effects
+        const lairActionsHtml = state.lairActions && state.lairActions.trim() 
+                                ? parseMarkdown(state.lairActions.trim()) 
+                                : '';
+        const regionalEffectsHtml = state.regionalEffects && state.regionalEffects.trim() 
+                                    ? parseMarkdown(state.regionalEffects.trim()) 
+                                    : '';
 
         return `
             ${descriptionHtml ? `
@@ -499,13 +500,13 @@ const MonsterUI = (function() {
                 ${renderVisualItemSection(state.bonusActions, 'Bonus Actions')}
                 ${renderVisualItemSection(state.reactions, 'Reactions')}
                 ${renderVisualLegendaryActions(state)}
-                ${state.lairActions ? `
+                ${lairActionsHtml ? `
                     <h3>Lair Actions</h3>
-                    ${formatBlock(state.lairActions)}
+                    ${lairActionsHtml}
                 ` : ''}
-                ${state.regionalEffects ? `
+                ${regionalEffectsHtml ? `
                     <h3>Regional Effects</h3>
-                    ${formatBlock(state.regionalEffects)}
+                    ${regionalEffectsHtml}
                 ` : ''}
             </blockquote>
             
