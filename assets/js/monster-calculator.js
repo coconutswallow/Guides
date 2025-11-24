@@ -77,21 +77,34 @@ const MonsterCalculator = (function() {
     }
 
     /**
+     * Calculate Initiative 
+     * @param {number} dexScore - Dexterity score
+     * @param {string|number} cr - Challenge Rating (for PB)
+     * @param {number|string} profLevel - 0=None, 1=Proficient, 2=Expertise
+     * @returns {Object} { mod, formatted, score }
+     */
+    function calculateInitiative(dexScore, cr, profLevel) {
+        const dexMod = calculateModifier(dexScore);
+        const pb = getProficiencyBonus(cr);
+        const level = parseInt(profLevel) || 0;
+        
+        // Init Mod = Dex Mod + (PB * level)
+        const totalMod = dexMod + (pb * level);
+        
+        // Init Score = 10 + Init Mod
+        // (Similar to Passive Perception, but for Initiative)
+        const score = 10 + totalMod;
+
+        return {
+            mod: totalMod,
+            formatted: formatModifier(totalMod),
+            score: score
+        };
+    }
+
+    /**
      * Calculate all ability modifiers and saves for a monster
      * @param {Object} state - Monster state with ability scores and save overrides
-     * @param {number} state.str - Strength score
-     * @param {number} state.dex - Dexterity score
-     * @param {number} state.con - Constitution score
-     * @param {number} state.int - Intelligence score
-     * @param {number} state.wis - Wisdom score
-     * @param {number} state.cha - Charisma score
-     * @param {string} state.strSave - Optional Strength save override (displayed separately)
-     * @param {string} state.dexSave - Optional Dexterity save override (displayed separately)
-     * @param {string} state.conSave - Optional Constitution save override (displayed separately)
-     * @param {string} state.intSave - Optional Intelligence save override (displayed separately)
-     * @param {string} state.wisSave - Optional Wisdom save override (displayed separately)
-     * @param {string} state.chaSave - Optional Charisma save override (displayed separately)
-     * @param {string} state.cr - Challenge Rating
      * @returns {Object} Object with calculated values for each ability
      */
     function calculateAllAbilities(state) {
@@ -110,7 +123,7 @@ const MonsterCalculator = (function() {
                 formattedMod: formatModifier(mod),
                 save: calculateSave(score, proficiencyBonus, saveOverride), // This is still (Mod + PB)
                 hasOverride: !!(saveOverride && saveOverride.trim()),
-                saveOverride: saveOverride // <-- This is the fix (e.g., "+9")
+                saveOverride: saveOverride
             };
         });
         
@@ -123,6 +136,7 @@ const MonsterCalculator = (function() {
         formatModifier,
         getProficiencyBonus,
         calculateSave,
+        calculateInitiative,
         calculateAllAbilities
     };
 

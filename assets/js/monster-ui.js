@@ -7,13 +7,10 @@ const MonsterUI = (function() {
     const SIZES = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
     const TYPES = ['Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental', 
                    'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'];
-    // NEW: Added categories constant
     const CATEGORIES = ['2014 Fair Game', '2014 Full DM Only'];
 
     /**
      * Escape HTML to prevent XSS
-     * @param {*} unsafe - Value to escape
-     * @returns {string} Escaped string
      */
     function escapeHtml(unsafe) {
         if (typeof unsafe !== 'string') {
@@ -31,11 +28,6 @@ const MonsterUI = (function() {
             .replace(/'/g, "&#039;");
     }
 
-    /**
-     * Get singular form of section name
-     * @param {string} field - Field name (e.g., "traits")
-     * @returns {string} Singular form
-     */
     function singular(field) {
         const singulars = {
             'traits': 'Trait',
@@ -47,11 +39,6 @@ const MonsterUI = (function() {
         return singulars[field] || 'Item';
     }
 
-    /**
-     * Render the main form
-     * @param {Object} state - Monster state
-     * @returns {string} HTML for form
-     */
     function renderForm(state) {
         const pb = MonsterCalculator.getProficiencyBonus(state.cr || 0);
         const abilities = MonsterCalculator.calculateAllAbilities(state);
@@ -71,9 +58,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render Monster Identity section
-     */
     function renderIdentitySection(state) {
         return `
             <div class="form-section">
@@ -130,9 +114,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render Basic Statistics section
-     */
     function renderBasicStatsSection(state) {
         return `
             <div class="form-section">
@@ -150,14 +131,19 @@ const MonsterUI = (function() {
                         <label for="speed">Speed</label>
                         <input type="text" id="speed" value="${escapeHtml(state.speed)}" placeholder="e.g., 30 ft., swim 30 ft.">
                     </div>
+                    <div class="form-field">
+                        <label for="initiativeProficiency">Initiative Proficiency</label>
+                        <select id="initiativeProficiency">
+                            <option value="0" ${state.initiativeProficiency == '0' ? 'selected' : ''}>None (Dex Mod)</option>
+                            <option value="1" ${state.initiativeProficiency == '1' ? 'selected' : ''}>Proficient (+PB)</option>
+                            <option value="2" ${state.initiativeProficiency == '2' ? 'selected' : ''}>Expertise (+2 PB)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         `;
     }
 
-    /**
-     * Render Ability Scores section
-     */
     function renderAbilityScoresSection(state, abilities, pb) {
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         
@@ -199,9 +185,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render Optional Statistics section
-     */
     function renderOptionalStatsSection(state) {
         return `
             <div class="form-section">
@@ -236,9 +219,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render an item section (Traits, Actions, etc.)
-     */
     function renderItemSection(state, field, title) {
         const singularTitle = singular(field);
         return `
@@ -250,9 +230,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render list of items (name/description pairs)
-     */
     function renderItemList(state, field) {
         if (!state[field]) state[field] = [];
         
@@ -283,9 +260,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render Legendary Actions section
-     */
     function renderLegendaryActionsSection(state) {
         return `
             <div class="form-section">
@@ -300,9 +274,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render text block section (Lair Actions, Regional Effects)
-     */
     function renderTextBlockSection(state, field, title) {
         return `
             <div class="form-section">
@@ -315,9 +286,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render preview view
-     */
     function renderPreview(state) {
         const validation = MonsterValidator.validateMonster(state);
         const abilities = MonsterCalculator.calculateAllAbilities(state);
@@ -350,45 +318,24 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Simple markdown parser for description
-     */
-     /**
-     * Simple markdown parser for description
-     */
     function parseMarkdown(text) {
         if (!text) return '';
-        
         let html = text;
-        
-        // Horizontal rules (--- or ___)
         html = html.replace(/^(---+|___+)$/gm, '<hr class="statblock-divider">');
-        
-        // Headers (#### -> <h6>, ### -> <h5>, ## -> <h4>)
         html = html.replace(/^#### (.+)$/gm, '<h6>$1</h6>');
         html = html.replace(/^### (.+)$/gm, '<h5>$1</h5>');
         html = html.replace(/^## (.+)$/gm, '<h4>$1</h4>');
-        
-        // Bold and italic
         html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
         html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-        
-        // Parse tables
         html = parseMarkdownTables(html);
-        
-        // Split into paragraphs and wrap in <p> tags
         const paragraphs = html.split(/\n\n+/);
         html = paragraphs.map(p => {
             p = p.trim();
             if (!p) return '';
-            
-            // Don't wrap certain elements in <p> tags
             if (p.startsWith('<h') || p.startsWith('<hr') || p.startsWith('<table')) {
                 return p;
             }
-            
-            // Handle list items
             if (p.startsWith('-') || p.startsWith('*')) {
                 const items = p.split(/\n/).map(line => {
                     line = line.trim();
@@ -399,16 +346,11 @@ const MonsterUI = (function() {
                 }).join('');
                 return `<ul>${items}</ul>`;
             }
-            
             return `<p>${p}</p>`;
         }).join('');
-        
         return html;
     }
 
-    /**
-     * Parse markdown tables
-     */
     function parseMarkdownTables(text) {
         const lines = text.split('\n');
         let inTable = false;
@@ -417,8 +359,6 @@ const MonsterUI = (function() {
         
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
-            
-            // Check if this looks like a table row (starts and ends with |)
             if (line.startsWith('|') && line.endsWith('|')) {
                 if (!inTable) {
                     inTable = true;
@@ -426,9 +366,7 @@ const MonsterUI = (function() {
                 }
                 tableLines.push(line);
             } else {
-                // Not a table line
                 if (inTable) {
-                    // We were in a table, now we're not - process it
                     result.push(convertTableToHtml(tableLines));
                     inTable = false;
                     tableLines = [];
@@ -436,73 +374,45 @@ const MonsterUI = (function() {
                 result.push(line);
             }
         }
-        
-        // Handle table at end of text
         if (inTable && tableLines.length > 0) {
             result.push(convertTableToHtml(tableLines));
         }
-        
         return result.join('\n');
     }
 
-    /**
-     * Convert markdown table to HTML
-     */
     function convertTableToHtml(tableLines) {
         if (tableLines.length < 2) return tableLines.join('\n');
-        
         const rows = tableLines.map(line => {
-            // Remove leading/trailing pipes and split by pipe
-            return line.substring(1, line.length - 1)
-                .split('|')
-                .map(cell => cell.trim());
+            return line.substring(1, line.length - 1).split('|').map(cell => cell.trim());
         });
-        
-        // First row is headers
         const headers = rows[0];
-        
-        // Second row is alignment (ignore it for now, just skip it)
         const dataRows = rows.slice(2);
-        
         let html = '<table>\n<thead>\n<tr>\n';
-        headers.forEach(header => {
-            html += `<th>${header}</th>\n`;
-        });
+        headers.forEach(header => { html += `<th>${header}</th>\n`; });
         html += '</tr>\n</thead>\n<tbody>\n';
-        
         dataRows.forEach(row => {
             html += '<tr>\n';
-            row.forEach(cell => {
-                html += `<td>${cell}</td>\n`;
-            });
+            row.forEach(cell => { html += `<td>${cell}</td>\n`; });
             html += '</tr>\n';
         });
-        
         html += '</tbody>\n</table>';
-        
         return html;
     }
 
-    /**
-     * Render visual stat block preview
-     */
     function renderVisualStatBlock(state, abilities) {
         if (!state.title) {
             return '<div class="statblock-placeholder">Fill in the form to see preview...</div>';
         }
 
         const pb = MonsterCalculator.getProficiencyBonus(state.cr);
+        const init = MonsterCalculator.calculateInitiative(state.dex, state.cr, state.initiativeProficiency);
 
-        // Helper for optional stats
         const optionalStat = (label, value) => value ? `<p><strong>${label}</strong> ${escapeHtml(value)}</p>` : '';
-        
-        // Helper for text blocks
         const formatBlock = (text) => {
             if (!text) return '';
             return text.split(/\n/).map(p => `<p>${escapeHtml(p)}</p>`).join('');
         };
 
-        // Get saving throw overrides for display in the "Saving Throws" line
         const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         const saveOverrides = [];
         abilityKeys.forEach(key => {
@@ -512,9 +422,9 @@ const MonsterUI = (function() {
             }
         });
 
-        // Parse description as markdown and render outside the stat block
         const descriptionHtml = state.description.trim() ? parseMarkdown(state.description.trim()) : '';
 
+        // Note: Using a simplified simulation of the Grid CSS layout for preview
         return `
             ${descriptionHtml ? `
                 <div class="monster-description">
@@ -526,9 +436,12 @@ const MonsterUI = (function() {
                 <h2>${escapeHtml(state.title)}</h2>
                 <p><em>${escapeHtml(state.size)} ${escapeHtml(state.type.toLowerCase())}, ${escapeHtml(state.alignment.toLowerCase())}</em></p>
 
-                <p><strong>Armor Class</strong> ${escapeHtml(state.ac || '—')}</p>
-                <p><strong>Hit Points</strong> ${escapeHtml(state.hp || '—')}</p>
-                <p><strong>Speed</strong> ${escapeHtml(state.speed || '—')}</p>
+                <div style="display: grid; grid-template-columns: max-content max-content; justify-content: start; column-gap: 4em; margin-bottom: 10px;">
+                    <div><strong>AC</strong> ${escapeHtml(state.ac || '—')}</div>
+                    <div><strong>Initiative</strong> ${init.formatted} (${init.score})</div>
+                    <div style="grid-column: 1 / -1;"><strong>HP</strong> ${escapeHtml(state.hp || '—')}</div>
+                    <div style="grid-column: 1 / -1;"><strong>Speed</strong> ${escapeHtml(state.speed || '—')}</div>
+                </div>
 
                 <table>
                     <thead>
@@ -580,17 +493,10 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render visual item section
-     */
     function renderVisualItemSection(items, title) {
-        if (!items || items.length === 0 || !items.some(i => i.name)) {
-            return '';
-        }
-
+        if (!items || items.length === 0 || !items.some(i => i.name)) return '';
         const validItems = items.filter(i => i.name && i.name.trim());
         if (validItems.length === 0) return '';
-
         return `
             <h3>${title}</h3>
             ${validItems.map(item => {
@@ -600,21 +506,12 @@ const MonsterUI = (function() {
         `;
     }
 
-    /**
-     * Render visual legendary actions
-     */
     function renderVisualLegendaryActions(state) {
-        if (!state.legendaryActions || state.legendaryActions.length === 0 || 
-            !state.legendaryActions.some(l => l.name)) {
-            return '';
-        }
-
+        if (!state.legendaryActions || state.legendaryActions.length === 0 || !state.legendaryActions.some(l => l.name)) return '';
         const validActions = state.legendaryActions.filter(l => l.name && l.name.trim());
         if (validActions.length === 0) return '';
-
         const defaultDesc = "The creature can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature's turn. The creature regains spent legendary actions at the start of its turn.";
         const desc = state.legendaryActionDescription.trim() || defaultDesc;
-
         return `
             <h3>Legendary Actions</h3>
             <p>${escapeHtml(desc)}</p>
@@ -625,7 +522,6 @@ const MonsterUI = (function() {
         `;
     }
 
-    // Public API
     return {
         renderForm,
         renderPreview,
