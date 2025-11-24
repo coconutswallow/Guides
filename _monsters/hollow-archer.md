@@ -17,9 +17,7 @@ ___
 > ## Hollow Archer
 > *Medium Undead, Neutral Evil*
 > 
-> **AC** 14 (chain shirt) **HP** 45 (7d8 + 14) **Speed** 30 ft.
-> 
-> **Initiative** +1 (13)
+> **AC** 14 (chain shirt) **HP** 45 (7d8 + 14) **Speed** 30 ft. **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
