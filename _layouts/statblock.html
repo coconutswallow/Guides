@@ -10,15 +10,24 @@ extra_css:
     /* Grid container for the top stats line */
     .stat-grid-container {
         display: grid;
-        grid-template-columns: 1fr auto; /* Left column flexible, Right column fits content */
-        column-gap: 10px;
+        /* "max-content" makes the columns only as wide as the text inside them */
+        grid-template-columns: max-content max-content; 
+        /* Aligns the columns to the left (start) rather than stretching them */
+        justify-content: start;
+        /* Adds the requested spacing (approx 2 tabs width) between AC and Init */
+        column-gap: 4em; 
         row-gap: 2px;
         margin-bottom: 1em;
     }
 
     /* Individual cells */
     .stat-cell-ac { grid-column: 1; }
-    .stat-cell-init { grid-column: 2; text-align: right; }
+    
+    .stat-cell-init { 
+        grid-column: 2; 
+        text-align: left; 
+    }
+    
     .stat-cell-hp { grid-column: 1 / -1; } /* Spans full width */
     .stat-cell-speed { grid-column: 1 / -1; } /* Spans full width */
     
