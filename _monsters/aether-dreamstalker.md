@@ -26,7 +26,7 @@ ___
 > ## Aether Dreamstalker
 > *Medium Monstrosity, Unaligned*
 > 
-> **AC** 16 (natural armor) **HP** 58 (9d8 + 18) **Speed** 30 ft.
+> **AC** 16 (natural armor) **HP** 58 (9d8 + 18) **Speed** 30 ft. **Initiative** +3 (13)  
 > 
 > **Initiative** +3 (13)
 >

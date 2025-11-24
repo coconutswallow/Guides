@@ -17,9 +17,7 @@ ___
 > ## Playful Pulp
 > *Small Ooze, Unaligned*
 > 
-> **AC** 10 **HP** 51 (6d6 + 30) **Speed** 30 ft., climb 30 ft.
-> 
-> **Initiative** +0 (10)
+> **AC** 10 **HP** 51 (6d6 + 30) **Speed** 30 ft., climb 30 ft. **Initiative** +0 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

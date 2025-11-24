@@ -45,14 +45,12 @@ ___
 > ## Wendigo
 > *Large Monstrosity, Chaotic Evil*
 > 
-> **AC** 18 (natural armor) **HP** 102 (12d10 + 36) **Speed** 0 ft., fly 120 ft. (hover)
-> 
-> **Initiative** +5 (21)
+> **AC** 18 (natural armor) **HP** 102 (12d10 + 36) **Speed** 0 ft., fly 120 ft. (hover) **Initiative** +5 (15)  
 >
-> | | | MOD | SAVE | | | MOD | SAVE | | | MOD | SAVE |
-> |:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|:--|:-:|:----:|:----:|
-> |Str| 22| +6 | +4 |Dex| 21| +5 | **+9** |Con| 16| +3 | **+7** |
-> |Int| 14| +2 | +4 |Wis| 15| +2 | **+6** |Cha| 19| +4 | +4 |
+> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
+> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
+> | **Str** | 22 | +6 | +10 | **Dex** | 21 | +5 | +9 | **Con** | 16 | +3 | +7 |
+> | **Int** | 14 | +2 | +6 | **Wis** | 15 | +2 | +6 | **Cha** | 19 | +4 | +8 |
 >
 > **Saving Throws** Dex +9, Con +7, Wis +6  
 > **Skills** Acrobatics +9, Deception +8, Perception +6, Stealth +9, Survival +6  

@@ -26,9 +26,7 @@ ___
 > ## Possessor
 > *Tiny Elemental, Neutral*
 > 
-> **AC** 11 **HP** 14 (4d4 + 4) **Speed** 0 ft., fly 20 ft. (hover)
-> 
-> **Initiative** +1 (13)
+> **AC** 11 **HP** 14 (4d4 + 4) **Speed** 0 ft., fly 20 ft. (hover) **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

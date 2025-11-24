@@ -20,9 +20,7 @@ ___
 > ## Dark Stalker
 > *Huge Monstrosity, Neutral Evil*
 > 
-> **AC** 16 **HP** 73 (7d12 + 28) **Speed** 40 ft., climb 40 ft.
-> 
-> **Initiative** +6 (23)
+> **AC** 16 **HP** 73 (7d12 + 28) **Speed** 40 ft., climb 40 ft. **Initiative** +6 (16)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

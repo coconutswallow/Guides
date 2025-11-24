@@ -38,9 +38,7 @@ ___
 > ## Cauchemar
 > *Medium Aberration, Chaotic Evil*
 > 
-> **AC** 12 **HP** 58 (9d8 + 18) **Speed** 0 ft., fly 30 ft. (hover)
-> 
-> **Initiative** +2 (12)
+> **AC** 12 **HP** 58 (9d8 + 18) **Speed** 0 ft., fly 30 ft. (hover) **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

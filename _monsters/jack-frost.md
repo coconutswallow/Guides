@@ -30,7 +30,7 @@ ___
 > ## Jack Frost
 > *Small fey, neutral evil*
 >
-> **AC** 19 **HP** 120 (16d6 + 64) **Speed** 30 ft., fly 60 ft. (hover)
+> **AC** 19 **HP** 120 (16d6 + 64) **Speed** 30 ft., fly 60 ft. (hover) **Initiative** +4 (14)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

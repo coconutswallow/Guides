@@ -25,7 +25,7 @@ ___
 > ## Kodragon
 > *Small dragon, typically neutral good*
 >
-> **AC** 15 **HP** 17 (5d4 + 5) **Speed** 20 ft., fly 60 ft.
+> **AC** 15 **HP** 17 (5d4 + 5) **Speed** 20 ft., fly 60 ft. **Initiative** +5 (15)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

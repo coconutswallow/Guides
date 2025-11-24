@@ -19,9 +19,7 @@ ___
 > ## Drowned Soul
 > *Medium Undead, Lawful Evil*
 > 
-> **AC** 13 (natural armor) **HP** 22 (3d8 + 9) **Speed** 20 ft., swim 30 ft.
-> 
-> **Initiative** -2 (6)
+> **AC** 13 (natural armor) **HP** 22 (3d8 + 9) **Speed** 20 ft., swim 30 ft. **Initiative** -2 (8)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

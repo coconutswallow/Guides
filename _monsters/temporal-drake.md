@@ -44,7 +44,7 @@ ___
 > ## Temporal Drake
 > *Large Dragon, typically Neutral*
 >
-> **AC** 19 (natural armor) **HP** 133 (14d10 + 56) **Speed** 60 ft., fly 60 ft.
+> **AC** 19 (natural armor) **HP** 133 (14d10 + 56) **Speed** 60 ft., fly 60 ft. **Initiative** +5 (15)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

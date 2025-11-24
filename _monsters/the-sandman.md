@@ -26,7 +26,7 @@ ___
 > ## The Sandman
 > *Medium humanoid, unaligned*
 >
-> **AC** 17 (natural armor) **HP** 130 (20d8 + 40) **Speed** 40 ft., fly 30 ft. (hover)
+> **AC** 17 (natural armor) **HP** 130 (20d8 + 40) **Speed** 40 ft., fly 30 ft. (hover) **Initiative** +5 (15)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

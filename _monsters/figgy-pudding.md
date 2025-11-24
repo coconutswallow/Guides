@@ -22,7 +22,7 @@ ___
 > ## Figgy Pudding
 > *Medium ooze, unaligned*
 >
-> **AC** 9 **HP** 95 (10d8 + 50) **Speed** 20 ft.
+> **AC** 9 **HP** 95 (10d8 + 50) **Speed** 20 ft. **Initiative** -1 (9)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

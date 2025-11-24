@@ -30,7 +30,7 @@ ___
 > ## Annum
 > *Small aberration, neutral*
 >
-> **AC** 13 **HP** 44 (8d6 + 16) **Speed** 5 ft., fly 30 ft. (hover)
+> **AC** 13 **HP** 44 (8d6 + 16) **Speed** 5 ft., fly 30 ft. (hover)  **Initiative** +3 (13)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

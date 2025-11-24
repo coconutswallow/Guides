@@ -30,9 +30,7 @@ ___
 > ## Yee Naaldlooshii
 > *Medium Monstrosity (Shapechanger), Chaotic Evil*
 > 
-> **AC** 17 (natural armor) **HP** 119 (14d8 + 56) **Speed** 30 ft.
-> 
-> **Initiative** +1 (12)
+> **AC** 17 (natural armor) **HP** 119 (14d8 + 56) **Speed** 30 ft. **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

@@ -17,9 +17,7 @@ ___
 > ## Skeleton Wheel
 > *Medium Undead, Lawful Evil*
 > 
-> **AC** 14 (natural armor) **HP** 45 (7d8 + 14) **Speed** 20 ft., (40 ft. when rolling in one direction chosen at the start of its turn)
-> 
-> **Initiative** +3 (16)
+> **AC** 14 (natural armor) **HP** 45 (7d8 + 14) **Speed** 20 ft., (40 ft. when rolling in one direction chosen at the start of its turn) **Initiative** +3 (13)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

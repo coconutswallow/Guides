@@ -16,9 +16,7 @@ ___
 > ## Channeler
 > *Medium Monstrosity, Neutral Evil*
 > 
-> **AC** 15 (half plate) **HP** 65 (10d8 + 20) **Speed** 30 ft.
-> 
-> **Initiative** +0 (11)
+> **AC** 15 (half plate) **HP** 65 (10d8 + 20) **Speed** 30 ft. **Initiative** +0 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

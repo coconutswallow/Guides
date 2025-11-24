@@ -30,7 +30,7 @@ ___
 > ## Phantasmorca
 > *Gargantuan monstrosity, typically neutral good*
 >
-> **AC** 16 (natural armor) **HP** 201 (13d20 + 65) **Speed** 0 ft., fly 80 ft. (hover)
+> **AC** 16 (natural armor) **HP** 201 (13d20 + 65) **Speed** 0 ft., fly 80 ft. (hover) **Initiative** +0 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

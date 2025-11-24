@@ -15,7 +15,7 @@ ___
 > ## Fury of the Night
 > *Large Monstrosity, Chaotic Evil*
 > 
-> **AC** 14 (natural armor) **HP** 136 (16d10 + 48) **Speed** 30 ft., fly 90 ft.
+> **AC** 14 (natural armor) **HP** 136 (16d10 + 48) **Speed** 30 ft., fly 90 ft. **Initiative** +4 (14)  
 > 
 > **Initiative** +4 (18)
 >

@@ -29,7 +29,7 @@ ___
 > ## Inukpasugjuit
 > *Huge giant, neutral evil*
 >
-> **AC** 15 (natural armor) **HP** 138 (12d12 + 60) **Speed** 40 ft.
+> **AC** 15 (natural armor) **HP** 138 (12d12 + 60) **Speed** 40 ft. **Initiative** -1 (9)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

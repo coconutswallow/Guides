@@ -19,9 +19,7 @@ ___
 > ## Fallanox
 > *Large Monstrosity, Unaligned*
 > 
-> **AC** 16 (natural armor) **HP** 45 (7d10 + 7) **Speed** 30 ft., climb 30 ft.
-> 
-> **Initiative** +4 (18)
+> **AC** 16 (natural armor) **HP** 45 (7d10 + 7) **Speed** 30 ft., climb 30 ft. **Initiative** +4 (14)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

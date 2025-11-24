@@ -25,9 +25,7 @@ ___
 > ## Deadeye
 > *Medium Undead, Lawful Evil*
 > 
-> **AC** 16 (natural armor) **HP** 82 (11d8 + 33) **Speed** 30 ft.
-> 
-> **Initiative** +6 (16 DEX + 16 WIS)
+> **AC** 16 (natural armor) **HP** 82 (11d8 + 33) **Speed** 30 ft. **Initiative** +3 (13)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

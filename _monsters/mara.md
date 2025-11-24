@@ -33,9 +33,7 @@ ___
 > ## Mara
 > *Medium Aberration, Chaotic Neutral*
 > 
-> **AC** 14 **HP** 55 (10d8 + 10) **Speed** 40 ft., fly 40 ft. (hover)
-> 
-> **Initiative** +4 (14)
+> **AC** 14 **HP** 55 (10d8 + 10) **Speed** 40 ft., fly 40 ft. (hover) **Initiative** +4 (14)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

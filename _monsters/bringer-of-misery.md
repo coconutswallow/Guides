@@ -22,9 +22,7 @@ ___
 > ## Bringer of Misery
 > *Medium Undead, Chaotic Evil*
 > 
-> **AC** 14 **HP** 112 (15d8 + 45) **Speed** 0 ft., fly 40 ft. (hover)
-> 
-> **Initiative** +4 (18)
+> **AC** 14 **HP** 112 (15d8 + 45) **Speed** 0 ft., fly 40 ft. (hover)  **Initiative** +4 (14)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

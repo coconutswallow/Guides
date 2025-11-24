@@ -31,9 +31,7 @@ ___
 > ## Slasher
 > *Medium Humanoid (Any Race), Chaotic Evil*
 > 
-> **AC** 15 (**Unarmored Defense**) **HP** 97 (13d8 + 39) **Speed** 30 ft.
-> 
-> **Initiative** +2 (15)
+> **AC** 15 (**Unarmored Defense**) **HP** 97 (13d8 + 39) **Speed** 30 ft. **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

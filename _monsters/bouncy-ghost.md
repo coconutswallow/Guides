@@ -34,9 +34,7 @@ ___
 > ## Bouncy Ghost
 > *Medium Undead, Any Alignment*
 > 
-> **AC** 14 (natural armor) **HP** 104 (16d8 + 32) **Speed** 0 ft., fly 40 ft. (hover)
-> 
-> **Initiative** +2 (14)
+> **AC** 14 (natural armor) **HP** 104 (16d8 + 32) **Speed** 0 ft., fly 40 ft. (hover) **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

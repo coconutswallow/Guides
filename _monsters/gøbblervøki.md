@@ -25,7 +25,7 @@ ___
 > ## Gøbblervøki
 > *Large monstrosity, typically lawful evil*
 >
-> **AC** 17 (Natural Armor) **HP** 120 (16d10 + 32) **Speed** 30 ft., fly 60 ft.
+> **AC** 17 (Natural Armor) **HP** 120 (16d10 + 32) **Speed** 30 ft., fly 60 ft. **Initiative** +3 (13)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

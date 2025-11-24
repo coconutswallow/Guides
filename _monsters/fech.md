@@ -22,9 +22,7 @@ ___
 > ## Fech
 > *Medium Fey, Chaotic Evil*
 > 
-> **AC** 16 (natural armor) **HP** 110 (13d8 + 52) **Speed** 40 ft., fly 40 ft. (hover)
-> 
-> **Initiative** +2 (12)
+> **AC** 16 (natural armor) **HP** 110 (13d8 + 52) **Speed** 40 ft., fly 40 ft. (hover) **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

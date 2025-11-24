@@ -29,7 +29,7 @@ ___
 > ## Frost Fairy
 > *Tiny Fey, Chaotic Evil*
 > 
-> **AC** 17 (natural armor) **HP** 27 (5d4 + 15) **Speed** 10 ft., fly 60 ft.
+> **AC** 17 (natural armor) **HP** 27 (5d4 + 15) **Speed** 10 ft., fly 60 ft. **Initiative** +4 (14)  
 > 
 > **Initiative** +4 (18)
 >

@@ -36,7 +36,7 @@ ___
 > ## Animated Snowman
 > *Medium construct, unaligned*
 >
-> **AC** 9 (can increase to 20 via Compacted Snow) **HP** 93 (11d8 + 44) **Speed** 30 ft.
+> **AC** 9 (can increase to 20 via Compacted Snow) **HP** 93 (11d8 + 44) **Speed** 30 ft. **Initiative** -1 (9)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

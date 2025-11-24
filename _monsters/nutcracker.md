@@ -32,9 +32,7 @@ ___
 > ## The Nutcracker
 > *Tiny Construct, Chaotic Good (50%) or Chaotic Evil (50%)*
 > 
-> **AC** 16 (Natural armor) **HP** 33 (6d4 + 18) **Speed** 25 ft.
-> 
-> **Initiative** +5 (20)
+> **AC** 16 (Natural armor) **HP** 33 (6d4 + 18) **Speed** 25 ft. **Initiative** +5 (15)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

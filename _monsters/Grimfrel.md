@@ -28,7 +28,7 @@ ___
 > ## Grimfrel
 > *Large fey, neutral evil*
 >
-> **AC** 16 (natural armor) **HP** 170 (20d10 + 60) **Speed** 40 ft.
+> **AC** 16 (natural armor) **HP** 170 (20d10 + 60) **Speed** 40 ft. **Initiative** +4 (14)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

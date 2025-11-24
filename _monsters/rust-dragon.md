@@ -61,7 +61,7 @@ ___
 > ## Mature Rust Dragon
 > *Large Monstrosity, typically Lawful Neutral*
 >
-> **AC** 17 (natural armor) **HP** 133 (14d10 + 56) **Speed** 40 ft., burrow 30 ft., fly 60 ft.
+> **AC** 17 (natural armor) **HP** 133 (14d10 + 56) **Speed** 40 ft., burrow 30 ft., fly 60 ft. **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

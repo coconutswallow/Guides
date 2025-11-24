@@ -17,9 +17,7 @@ ___
 > ## Evangelist
 > *Medium Undead, Lawful Evil*
 > 
-> **AC** 15 (Breastplate) **HP** 65 (10d8 + 20) **Speed** 30 ft.
-> 
-> **Initiative** +1 (13)
+> **AC** 15 (Breastplate) **HP** 65 (10d8 + 20) **Speed** 30 ft. **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

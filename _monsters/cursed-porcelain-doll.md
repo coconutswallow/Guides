@@ -17,9 +17,7 @@ ___
 > ## Cursed Porcelain Doll
 > *Small Construct, Chaotic Evil*
 > 
-> **AC** 13 (natural armor) **HP** 17 (5d6) **Speed** 20 ft., climb 10 ft.
-> 
-> **Initiative** +1 (13)
+> **AC** 13 (natural armor) **HP** 17 (5d6) **Speed** 20 ft., climb 10 ft. **Initiative** +1 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

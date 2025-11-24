@@ -23,7 +23,7 @@ ___
 > ## Autumn Gremlin
 > *Medium fey, chaotic neutral*
 >
-> **AC** 14 **HP** 71 (11d8 + 22) **Speed** 30 ft., burrow 30 ft., climb 30 ft.
+> **AC** 14 **HP** 71 (11d8 + 22) **Speed** 30 ft., burrow 30 ft., climb 30 ft.  **Initiative** +4 (14)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

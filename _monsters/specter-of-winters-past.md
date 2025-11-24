@@ -30,7 +30,7 @@ ___
 > ## Specter of Winters Past
 > *Medium undead, chaotic neutral*
 >
-> **AC** 17 (natural armor) **HP** 105 (14d8 + 42) **Speed** 0 ft., fly 50 ft. (hover)
+> **AC** 17 (natural armor) **HP** 105 (14d8 + 42) **Speed** 0 ft., fly 50 ft. (hover) **Initiative** +4 (14)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

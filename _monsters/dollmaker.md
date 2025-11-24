@@ -18,9 +18,7 @@ ___
 > ## The Dollmaker
 > *Medium Fiend (Shapechanger), Chaotic Evil*
 > 
-> **AC** 15 (natural armor) **HP** 104 (16d8 + 32) **Speed** 30 ft., climb 30 ft.
-> 
-> **Initiative** +1 (12)
+> **AC** 15 (natural armor) **HP** 104 (16d8 + 32) **Speed** 30 ft., climb 30 ft. **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

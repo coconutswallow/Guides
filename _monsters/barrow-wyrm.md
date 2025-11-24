@@ -67,7 +67,7 @@ ___
 > ## Barrow Wyrm
 > *Huge Undead, typically Lawful Neutral*
 >
-> **AC** 19 (natural armor) **HP** 126 (11d12 + 55) **Speed** 40 ft., burrow 30 ft.
+> **AC** 19 (natural armor) **HP** 126 (11d12 + 55) **Speed** 40 ft., burrow 30 ft. **Initiative** +0 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

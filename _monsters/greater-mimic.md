@@ -16,9 +16,7 @@ ___
 > ## Greater Mimic
 > *Medium Monstrosity (Shapechanger), Neutral*
 > 
-> **AC** 15 (natural armor) **HP** 190 (20d10 + 80) **Speed** 25 ft.
-> 
-> **Initiative** +3 (17)
+> **AC** 15 (natural armor) **HP** 190 (20d10 + 80) **Speed** 25 ft. **Initiative** +3 (13)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

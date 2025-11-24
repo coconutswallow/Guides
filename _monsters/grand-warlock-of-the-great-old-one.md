@@ -17,9 +17,7 @@ ___
 > ## Grand Warlock of the Great Old One
 > *Medium Humanoid (any race), Any Alignment*
 > 
-> **AC** 13 (16 with *mage armor*) **HP** 104 (16d8 + 32) **Speed** 30 ft.
-> 
-> **Initiative** +3 (16)
+> **AC** 13 (16 with *mage armor*) **HP** 104 (16d8 + 32) **Speed** 30 ft. **Initiative** +3 (13)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

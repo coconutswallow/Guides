@@ -56,7 +56,7 @@ ___
 > ## Skinner
 > *Huge monstrosity, neutral evil*
 >
-> **AC** 12 (natural armor) **HP** 92 (8d12 + 40) **Speed** 20 ft.
+> **AC** 12 (natural armor) **HP** 92 (8d12 + 40) **Speed** 20 ft. **Initiative** -2 (8)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

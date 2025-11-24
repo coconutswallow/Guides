@@ -28,7 +28,7 @@ ___
 > ## Young Magmeleon
 > *Medium Dragon, Any Alignment*
 >
-> **AC** 15 (natural armor) **HP** 127 (15d8 + 60) **Speed** 40 ft.
+> **AC** 15 (natural armor) **HP** 127 (15d8 + 60) **Speed** 40 ft. **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

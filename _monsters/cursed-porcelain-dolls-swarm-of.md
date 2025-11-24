@@ -17,7 +17,7 @@ ___
 > ## Swarm of Cursed Porcelain Dolls
 > *Medium Swarm of Small Constructs, Chaotic Evil*
 > 
-> **AC** 13 (natural armor) **HP** 66 (12d8 + 12) **Speed** 20 ft., climb 10 ft.
+> **AC** 13 (natural armor) **HP** 66 (12d8 + 12) **Speed** 20 ft., climb 10 ft. **Initiative** +1 (10)  
 > 
 > **Initiative** +1 (13)
 >

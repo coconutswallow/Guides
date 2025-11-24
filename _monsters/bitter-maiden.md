@@ -40,9 +40,7 @@ ___
 > ## Bitter Maiden
 > *Medium Undead, Chaotic Evil*
 > 
-> **AC** 16 (natural armor) **HP** 120 (16d8 + 48) **Speed** 30 ft.
-> 
-> **Initiative** +2 (14)
+> **AC** 16 (natural armor) **HP** 120 (16d8 + 48) **Speed** 30 ft. **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

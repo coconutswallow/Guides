@@ -17,9 +17,7 @@ ___
 > ## Hollow
 > *Medium Undead, Neutral Evil*
 > 
-> **AC** 11 **HP** 26 (4d8 + 8) **Speed** 30 ft.
-> 
-> **Initiative** +1 (13)
+> **AC** 11 **HP** 26 (4d8 + 8) **Speed** 30 ft. **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

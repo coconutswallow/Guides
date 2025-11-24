@@ -49,7 +49,7 @@ ___
 > ## Weredragon
 > *Medium Humanoid (Human, Shapechanger), typically matches alignment of corresponding dragon*
 >
-> **AC** 13 (studded leather) in humanoid form, 14 (natural armor) in hybrid form **HP** 119 (14d8 + 56) **Speed** 30 ft. (fly 60 ft. in hybrid form)
+> **AC** 13 (studded leather) in humanoid form, 14 (natural armor) in hybrid form **HP** 119 (14d8 + 56) **Speed** 30 ft. (fly 60 ft. in hybrid form) **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

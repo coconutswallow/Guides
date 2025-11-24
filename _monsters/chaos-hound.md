@@ -25,10 +25,8 @@ ___
 > ## Chaos Hound
 > *Large Fiend, Chaotic Evil*
 > 
-> **AC** 16 (natural armor) **HP** 102 (12d10 + 36) **Speed** 50 ft.
+> **AC** 16 (natural armor) **HP** 102 (12d10 + 36) **Speed** 50 ft.  **Initiative** +2 (12)  
 > 
-> **Initiative** +2 (15)
->
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
 > | **Str** | 20 | +5 | +4 | **Dex** | 15 | +2 | +4 | **Con** | 17 | +3 | +4 |

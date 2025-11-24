@@ -36,7 +36,7 @@ ___
 > ## Blackfrost
 > *Medium undead, chaotic evil*
 >
-> **AC** 18 (plate armor) **HP** 170 (20d8 + 80) **Speed** 30 ft.
+> **AC** 18 (plate armor) **HP** 170 (20d8 + 80) **Speed** 30 ft. **Initiative** +0 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

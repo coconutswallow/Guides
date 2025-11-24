@@ -26,9 +26,7 @@ ___
 > ## Silent Knight
 > *Medium Celestial, Lawful Neutral*
 > 
-> **AC** 20 (plate armor, shield) **HP** 120 (16d8 + 48) **Speed** 30 ft.
-> 
-> **Initiative** +2 (14)
+> **AC** 20 (plate armor, shield) **HP** 120 (16d8 + 48) **Speed** 30 ft. **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

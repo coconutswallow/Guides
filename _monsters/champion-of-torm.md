@@ -19,9 +19,7 @@ ___
 > ## Champion of Torm
 > *Medium Humanoid, Lawful Good*
 > 
-> **AC** 18 (plate armor) **HP** 136 (16d8 + 64) **Speed** 30 ft.
-> 
-> **Initiative** +2 (15)
+> **AC** 18 (plate armor) **HP** 136 (16d8 + 64) **Speed** 30 ft.  **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

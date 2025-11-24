@@ -17,9 +17,7 @@ ___
 > ## Starved Hound
 > *Medium Undead, Neutral Evil*
 > 
-> **AC** 12 **HP** 52 (8d8 + 16) **Speed** 40 ft.
-> 
-> **Initiative** +2 (14)
+> **AC** 12 **HP** 52 (8d8 + 16) **Speed** 40 ft. **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

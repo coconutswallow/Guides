@@ -17,9 +17,7 @@ ___
 > ## Terrorsquid
 > *Large Aberration, Neutral Evil*
 > 
-> **AC** 12 (natural armor) **HP** 58 (9d10 + 9) **Speed** 10 ft., fly 30 ft. (hover), swim 60 ft.
-> 
-> **Initiative** +1 (13)
+> **AC** 12 (natural armor) **HP** 58 (9d10 + 9) **Speed** 10 ft., fly 30 ft. (hover), swim 60 ft. **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

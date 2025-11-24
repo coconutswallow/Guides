@@ -17,9 +17,7 @@ ___
 > ## Bone Golem
 > *Huge Construct, Unaligned*
 > 
-> **AC** 15 (natural armor) **HP** 126 (12d12 + 48) **Speed** 30 ft.
-> 
-> **Initiative** +0 (10)
+> **AC** 15 (natural armor) **HP** 126 (12d12 + 48) **Speed** 30 ft. **Initiative** +0 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

@@ -27,7 +27,7 @@ ___
 > ## Young Mercury Dragon
 > *Large Dragon, typically Chaotic Neutral*
 >
-> **AC** 18 (natural armor) **HP** 127 (15d10 + 45) **Speed** 40 ft., fly 80 ft.
+> **AC** 18 (natural armor) **HP** 127 (15d10 + 45) **Speed** 40 ft., fly 80 ft. **Initiative** +3 (13)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

@@ -21,7 +21,7 @@ ___
 > ## Fluff-Puffle
 > *Tiny beast, lawful good*
 >
-> **AC** 13 (natural armor) **HP** 40 (16d4) **Speed** 0 ft., fly 20 ft. (hover)
+> **AC** 13 (natural armor) **HP** 40 (16d4) **Speed** 0 ft., fly 20 ft. (hover) **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

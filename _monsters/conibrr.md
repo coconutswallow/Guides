@@ -29,7 +29,7 @@ ___
 > ## Conibrr
 > *Huge plant, neutral evil*
 >
- **Speed** 25 ft.
+> **AC** 16 (natural armor) **HP** 150 (12d12+72) **Speed** 25 ft. **Initiative** -3 (7)    
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

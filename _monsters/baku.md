@@ -35,7 +35,7 @@ ___
 > ## Baku
 > *Large Celestial (Shapechanger), Chaotic Good*
 > 
-> **AC** 15 (natural armor) **HP** 95 (10d10 + 40) **Speed** 30 ft., fly 40 ft. (hover)
+> **AC** 15 (natural armor) **HP** 95 (10d10 + 40) **Speed** 30 ft., fly 40 ft. (hover) **Initiative** +1 (11)  
 > 
 > **Initiative** +1 (11)
 >

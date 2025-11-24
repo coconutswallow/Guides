@@ -17,9 +17,7 @@ ___
 > ## Cartilcage
 > *Medium Undead, Lawful Evil*
 > 
-> **AC** 15 (natural armor) **HP** 72 (11d8 + 22) **Speed** 30 ft.
-> 
-> **Initiative** +0 (10)
+> **AC** 15 (natural armor) **HP** 72 (11d8 + 22) **Speed** 30 ft. **Initiative** +0 (10)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

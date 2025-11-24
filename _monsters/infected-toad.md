@@ -17,9 +17,7 @@ ___
 > ## Infected Toad
 > *Huge Beast, Unaligned*
 > 
-> **AC** 14 (natural armor) **HP** 114 (12d12 + 36) **Speed** 30 ft., swim 40 ft.
-> 
-> **Initiative** +1 (13)
+> **AC** 14 (natural armor) **HP** 114 (12d12 + 36) **Speed** 30 ft., swim 40 ft. **Initiative** +1 (11)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
