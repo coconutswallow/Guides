@@ -65,7 +65,7 @@ ___
 > ## Ancient Sword Dragon
 > *Gargantuan dragon, typically neutral*
 >
-> **Armor Class** 22 (natural armor) **Hit Points** 472 (27d20 + 189) **Speed** 40 ft., fly 80 ft.  **Initiative** +2 (12)  
+> **AC** 22 (natural armor) **HP** 472 (27d20 + 189) **Speed** 40 ft., fly 80 ft.  **Initiative** +2 (12)  
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
