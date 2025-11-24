@@ -42,10 +42,10 @@ When a wendigo assumes the body of a mortal, it warps the tattered corpse into a
 When intelligent prey is scarce, a wendigo will indulge in its bestial desires and hunt weaker animals to feed upon. A wendigo is constantly wracked with intense hunger pangs, manifestations of its ravenous greed that are only temporarily relieved by feasting on such creatures that know fear. It is for this reason that wendigos prefer to feed upon humanoids, magical beasts, and any other creatures that know to be afraid of the dark and shudder at the sound of howling winds.
 
 ___
-> ## Wendigo
-> *Large Monstrosity, Chaotic Evil*
-> 
-> **AC** 18 (natural armor) **HP** 102 (12d10 + 36) **Speed** 0 ft., fly 120 ft. (hover) **Initiative** +5 (15)  
+> ## The Wendigo
+> *Large monstrosity, chaotic evil*
+>
+> **AC** 18 (natural armor) **HP** 102 (12d10 + 36) **Speed** 0 ft., fly 120 ft. (hover) **Initiative** +5 (15)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
@@ -55,12 +55,10 @@ ___
 > **Saving Throws** Dex +9, Con +7, Wis +6  
 > **Skills** Acrobatics +9, Deception +8, Perception +6, Stealth +9, Survival +6  
 > **Damage Resistances** Bludgeoning, Piercing, and Slashing from nonmagical weapons that aren't silvered  
-> **DamageImmunities** Cold  
 > **Condition Immunities** Frightened  
 > **Senses** Blindsight 60 ft., Darkvision 120 ft., Passive Perception 16  
 > **Languages** Common, Deep Speech, Giant, Telepathy 120 ft.  
-> **CR** 9 (XP 5,000; **CR 10 (5,900 XP) when encountered in lair**)  
-> **Proficiency Bonus** +4
+> **Challenge** 9 (1,800 XP) **Proficiency Bonus** +4
 >
 > ### Traits
 >
