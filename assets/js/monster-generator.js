@@ -136,7 +136,7 @@ creator: ${state.creator}`;
             const isList = trimmed.startsWith('* ') || trimmed.startsWith('- ');
             let result = `> ${trimmed}`;
 
-            // FIX: If we are starting a list, and the previous line wasn't empty and wasn't a list,
+            // If we are starting a list, and the previous line wasn't empty and wasn't a list,
             // insert a spacer line to ensure Markdown parsers recognize the list.
             if (isList && !previousLineWasList && !previousLineWasEmpty) {
                 result = `>\n> ${trimmed}`;

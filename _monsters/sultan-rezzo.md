@@ -43,7 +43,7 @@ ___
 > ## Sultan Rezzo
 > *Huge Elemental, Chaotic Neutral*
 > 
-> **AC** 19 (natural armor) **HP** 246 (17d12 + 136) **Speed** 30 ft., fly 60 ft., swim 90 ft.
+> **AC** 19 (natural armor) **HP** 246 (17d12 + 136) **Speed** 30 ft., fly 60 ft., swim 90 ft. **Initiative** +1 (11)  
 > 
 > **Initiative** +1 (11)
 >
