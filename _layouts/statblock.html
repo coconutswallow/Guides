@@ -10,28 +10,18 @@ extra_css:
     /* Grid container for the top stats line */
     .stat-grid-container {
         display: grid;
-        /* "max-content" makes the columns only as wide as the text inside them */
         grid-template-columns: max-content max-content; 
-        /* Aligns the columns to the left (start) */
         justify-content: start;
-        /* Adds the requested spacing (approx 2 tabs width) */
         column-gap: 4em; 
         row-gap: 2px;
         margin-bottom: 1em;
     }
 
-    /* Individual cells */
     .stat-cell-ac { grid-column: 1; }
+    .stat-cell-init { grid-column: 2; text-align: left; }
+    .stat-cell-hp { grid-column: 1 / -1; }
+    .stat-cell-speed { grid-column: 1 / -1; }
     
-    .stat-cell-init { 
-        grid-column: 2; 
-        text-align: left; 
-    }
-    
-    .stat-cell-hp { grid-column: 1 / -1; } /* Spans full width */
-    .stat-cell-speed { grid-column: 1 / -1; } /* Spans full width */
-    
-    /* Ensure bold headers look correct */
     .stat-grid-container strong, .stat-grid-container b {
         font-weight: bold;
         color: #7a200d; 
@@ -63,18 +53,13 @@ extra_css:
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         formatStatLine();
+        formatListsInBlockquotes();
     });
 
     function getStatBlockElement() {
-        // IMPROVED LOGIC:
-        // Instead of relying on HR tags (which might exist after the statblock),
-        // we look for the specific Blockquote that contains the stats.
-        
+        // Find the blockquote containing stats
         const blocks = document.querySelectorAll('blockquote');
-        
-        // Convert NodeList to Array to use .find()
         return Array.from(blocks).find(block => {
-            // Check if this block contains a paragraph with AC and HP markers
             const paragraphs = Array.from(block.querySelectorAll('p'));
             return paragraphs.some(p => {
                 const text = p.textContent;
@@ -84,11 +69,64 @@ extra_css:
         });
     }
 
+    // NEW: Fix for unparsed Markdown lists
+    function formatListsInBlockquotes() {
+        const statBlock = getStatBlockElement();
+        if (!statBlock) return;
+
+        // Iterate over all paragraphs in the statblock to find broken lists
+        const paragraphs = Array.from(statBlock.querySelectorAll('p'));
+        
+        paragraphs.forEach(p => {
+            // Check if paragraph contains literal bullet points that weren't parsed
+            if (p.innerHTML.match(/(?:^|<br\s*\/?>)\s*[\*-]\s+/)) {
+                
+                const html = p.innerHTML;
+                const lines = html.split(/<br\s*\/?>|\n/);
+                
+                let newHtml = '';
+                let inList = false;
+                
+                lines.forEach(line => {
+                    // Clean text content (remove html tags to check for * or -)
+                    const cleanText = line.replace(/<[^>]*>/g, '').trim();
+                    const isListItem = cleanText.startsWith('* ') || cleanText.startsWith('- ');
+                    
+                    if (isListItem) {
+                        if (!inList) {
+                            newHtml += '<ul>';
+                            inList = true;
+                        }
+                        // Remove the marker (* or -) and wrap in li
+                        // Note: We process 'line' (keeping existing bold/italic tags) but strip the leading marker
+                        const content = line.trim().replace(/^((?:<[^>]+>)*)\s*[\*-]\s+/, '$1');
+                        newHtml += `<li>${content}</li>`;
+                    } else {
+                        if (inList) {
+                            newHtml += '</ul>';
+                            inList = false;
+                        }
+                        // Only add non-empty lines
+                        if (line.trim()) {
+                            newHtml += line + (inList ? '' : '<br>'); 
+                        }
+                    }
+                });
+                
+                if (inList) newHtml += '</ul>';
+                
+                // Update the DOM if we made changes
+                if (newHtml !== html) {
+                    p.innerHTML = newHtml;
+                }
+            }
+        });
+    }
+
     function formatStatLine() {
         const statBlock = getStatBlockElement();
         if (!statBlock) return;
 
-        // 1. Find the paragraph containing "AC" (or "Armor Class") and "HP" (or "Hit Points")
         const paragraphs = Array.from(statBlock.querySelectorAll('p'));
         const statP = paragraphs.find(p => {
             const text = p.textContent;
@@ -99,15 +137,11 @@ extra_css:
         if (!statP) return;
 
         let html = statP.innerHTML;
-
-        // Regex helpers (allow <strong> or <b>)
         const tagRegex = "(?:<(?:strong|b)>)";
         const closeTagRegex = "(?:<\/(?:strong|b)>)";
-        
         const acLabelPattern = "(?:AC|Armor Class)";
         const hpLabelPattern = "(?:HP|Hit Points)";
         
-        // 2. Extract AC and HP using multiline match [\s\S]*? to handle line wrapping
         const acRegex = new RegExp(`(${tagRegex}${acLabelPattern}${closeTagRegex}[\\s\\S]*?)(?=${tagRegex}${hpLabelPattern})`, 'i');
         const hpRegex = new RegExp(`(${tagRegex}${hpLabelPattern}${closeTagRegex}[\\s\\S]*?)(?=${tagRegex}Speed)`, 'i');
         
@@ -115,41 +149,24 @@ extra_css:
         const hpMatch = html.match(hpRegex);
         
         if (acMatch && hpMatch) {
-            let acHtml = acMatch[1].trim();
-            let hpHtml = hpMatch[1].trim();
-
-            // Clean up trailing <br> tags if the parser added them
-            acHtml = acHtml.replace(/<br\s*\/?>$/i, '');
-            hpHtml = hpHtml.replace(/<br\s*\/?>$/i, '');
-
-            // Standardize labels to short form
-            acHtml = acHtml.replace(/Armor Class/, 'AC');
-            hpHtml = hpHtml.replace(/Hit Points/, 'HP');
+            let acHtml = acMatch[1].trim().replace(/<br\s*\/?>$/i, '').replace(/Armor Class/, 'AC');
+            let hpHtml = hpMatch[1].trim().replace(/<br\s*\/?>$/i, '').replace(/Hit Points/, 'HP');
             
-            // 3. Handling Speed
             let speedRegex = new RegExp(`(${tagRegex}Speed${closeTagRegex}[\\s\\S]*?)(?=${tagRegex}Initiative|$)`, 'i');
             let speedMatch = html.match(speedRegex);
-            let speedHtml = speedMatch ? speedMatch[1].trim() : "";
-            speedHtml = speedHtml.replace(/<br\s*\/?>$/i, '');
+            let speedHtml = speedMatch ? speedMatch[1].trim().replace(/<br\s*\/?>$/i, '') : "";
             
-            // 4. Find Initiative
             let initHtml = "";
-            
-            // Strategy A: Look in the SAME paragraph
             const initTagRegex = new RegExp(`(${tagRegex}Initiative${closeTagRegex})\\s*([\\s\\S]*)`, 'i');
             let initMatch = html.match(initTagRegex);
             
-            // Strategy B: If not found, look in the NEXT paragraph
-            // (Sometimes parsers break separate lines into separate paragraphs)
             if (!initMatch) {
                 const nextP = statP.nextElementSibling;
                 if (nextP && nextP.tagName === 'P') {
                     const nextHtml = nextP.innerHTML;
                     if (nextHtml.match(new RegExp(`^${tagRegex}Initiative`, 'i'))) {
                         initMatch = nextHtml.match(initTagRegex);
-                        if (initMatch) {
-                            nextP.remove(); // Merge it by removing the extra paragraph
-                        }
+                        if (initMatch) nextP.remove();
                     }
                 }
             }
@@ -157,27 +174,18 @@ extra_css:
             if (initMatch) {
                 const initLabel = initMatch[1]; 
                 const rawValues = initMatch[2];
-                
-                // Formatting: Change (+1) 11 -> +1 (11) if needed
                 const swapMatch = rawValues.match(/^\s*(\([+-]\d+\))\s*(\d+)/);
-                
                 if (swapMatch) {
-                     const modifierWithParens = swapMatch[1];
-                     const score = swapMatch[2];
-                     const modifierClean = modifierWithParens.replace(/[()]/g, '');
-                     initHtml = `${initLabel} ${modifierClean} (${score})`;
+                     initHtml = `${initLabel} ${swapMatch[1].replace(/[()]/g, '')} (${swapMatch[2]})`;
                 } else {
                     initHtml = `${initLabel} ${rawValues}`;
                 }
             }
             
-            // Cleanup Speed HTML (remove trailing Initiative text if regex leaked)
             speedHtml = speedHtml.replace(new RegExp(`${tagRegex}Initiative.*`, 'i'), '').trim();
 
-            // 5. Construct the new Grid
             const newContainer = document.createElement('div');
             newContainer.className = 'stat-grid-container';
-            
             newContainer.innerHTML = `
                 <div class="stat-cell-ac">${acHtml}</div>
                 ${initHtml ? `<div class="stat-cell-init">${initHtml}</div>` : ''}
@@ -185,7 +193,6 @@ extra_css:
                 <div class="stat-cell-speed">${speedHtml}</div>
             `;
 
-            // Replace the old paragraph with the new grid
             statP.parentNode.replaceChild(newContainer, statP);
         }
     }
@@ -193,7 +200,6 @@ extra_css:
 
 <script>
     function exportToJSON() {
-        // Re-use the improved logic to find the correct block
         const statBlock = getStatBlockElement();
 
         if (!statBlock) {
@@ -204,7 +210,6 @@ extra_css:
         const extractText = (element) => element ? element.textContent.trim() : '';
         const fullText = statBlock.innerText;
         
-        // --- EXTRACT BASIC INFO ---
         const nameEl = statBlock.querySelector('h2');
         const name = extractText(nameEl);
         
@@ -225,7 +230,6 @@ extra_css:
         const alignmentKey = typeMatch ? typeMatch[3].toLowerCase().replace('typically ', '') : 'neutral';
         const alignmentArr = alignmentMap[alignmentKey] || ['N'];
         
-        // --- EXTRACT STATS ---
         const acMatch = fullText.match(/AC\s+(\d+)/i) || fullText.match(/Armor Class\s+(\d+)/i);
         const ac = acMatch ? parseInt(acMatch[1]) : 10;
         
@@ -252,7 +256,6 @@ extra_css:
         const initMatch = fullText.match(/Initiative\s*([+-]\d+)/i);
         if (initMatch) initMod = parseInt(initMatch[1]);
         
-        // --- ABILITIES ---
         const table = statBlock.querySelector('table');
         const cells = table ? Array.from(table.querySelectorAll('td')) : [];
         const abilities = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
@@ -270,7 +273,6 @@ extra_css:
             }
         });
         
-        // --- OTHERS ---
         const paragraphs = Array.from(statBlock.querySelectorAll('p'));
         let skills = null, senses = [], languages = [], cr = '0', passive = 10;
         let immune = [], resist = [], vulnerable = [], conditionImmune = [];
