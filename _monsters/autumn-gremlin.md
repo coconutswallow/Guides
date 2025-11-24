@@ -59,7 +59,10 @@ from nonmagical attackss
 >
 > ***Greataxe.*** *Melee Attack Roll:* +5, reach 5 ft., one target. *Hit:* 9 (1d12 + 3) Slashing damage.
 >
-> ***Cave In.*** The autumn gremlin hits the ground in front of it, causing it to collapse. A Medium or smaller creature of the autumn gremlin’s choice standing on loose earth or unworked stone within 5 feet of it must make a DC 13 Dexterity saving throw. On a failed save, the creature falls into a hole 5 feet long on each side and 5 feet deep, taking 21 (6d6) bludgeoning damage, and is **restrained** by the collapsed earth on top of it. The **restrained** creature can use its action to make a DC 13 Strength (Athletics) check in order to escape. On a successful save, the target takes half as much damage, does not fall into the hole and is not **restrained**. The autumn gremlin cannot affect a creature already under the effects of and **restrained** by Cave In.
+> ***Cave In.*** The autumn gremlin hits the ground in front of it, causing it to collapse. A Medium or smaller creature of the autumn gremlin’s choice standing on loose earth or unworked stone within 5 feet of it must make a DC 13 Dexterity saving throw. 
+> * On a failed save, the creature falls into a hole 5 feet long on each side and 5 feet deep, taking 21 (6d6) bludgeoning damage, and is **restrained** by the collapsed earth on top of it. 
+> * The **restrained** creature can use its action to make a DC 13 Strength (Athletics) check in order to escape. On a successful save, the target takes half as much damage, does not fall into the hole and is not **restrained**. 
+> * The autumn gremlin cannot affect a creature already under the effects of and **restrained** by Cave In.
 >
 > ***Dust Cloud (Recharge 5 - 6).*** The autumn gremlin kicks up loose dirt, gravel, mud, or similar terrain around it into the eyes of its opponents. Each creature within 10 feet of the autumn gremlin must make a DC 13 Dexterity saving throw or be **blinded** until the end of the autumn gremlin’s next turn.
 >

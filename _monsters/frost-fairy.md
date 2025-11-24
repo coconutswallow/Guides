@@ -51,10 +51,10 @@ ___
 >
 > ***Innate Spellcasting.*** The frost fairy’s innate spellcasting ability is Charisma (spell save DC 14, +6 to hit with spell attacks). It can innately cast the following spells, requiring only verbal components:
 > 
-> **At will**: frostbite (cantrip), ray of frost (cantrip)
-> **3/day**: frost fingers (1st level)
-> **2/day**: sleet storm (3rd level)
-> **1/day**: wall of ice (6th level) OR ice storm (4th level), investiture of ice (6th level, targeting another creature other than itself with a range of touch)
+> * **At will**: frostbite (cantrip), ray of frost (cantrip)
+> * **3/day**: frost fingers (1st level)
+> * **2/day**: sleet storm (3rd level)
+> * **1/day**: wall of ice (6th level) OR ice storm (4th level), investiture of ice (6th level, targeting another creature other than itself with a range of touch)
 >
 > ### Actions
 >

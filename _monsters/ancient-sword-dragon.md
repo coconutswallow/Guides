@@ -88,9 +88,9 @@ ___
 > ***Bladed Body.*** A creature that touches the dragon or hits it with a melee attack while within 5 feet of it takes 7 (2d6) slashing damage.
 >
 > ***Innate Spellcasting.*** The dragon's innate spellcasting ability is Charisma (spell save DC 25, +17 to hit with spell attacks). It can innately cast the following spells, requiring no material components:
-> At will: cloud of daggers (20-foot cube), sword burst (17th-level)
-> 3/day each: animate objects, blade barrier, steel wind strike
-> 1/day: invulnerability
+> * **At will**: cloud of daggers (20-foot cube), sword burst (17th-level)
+> * **3/day each**: animate objects, blade barrier, steel wind strike
+> * **1/day**: invulnerability
 >
 > ***Legendary Resistance (3/Day).*** If the dragon fails a saving throw, it can choose to succeed instead.
 >
