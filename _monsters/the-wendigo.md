@@ -94,18 +94,20 @@ ___
 > ### Lair Actions
 >
 > On Initiative count 20 (losing initiative ties), the wendigo can take a lair action to cause one of the following effects: it can’t use the same effect two rounds in a row:
-> The wendigo creates a blizzard in a 40-foot-high, 20-foot radius cylinder centered on a point it can see within 120 feet of itself. The effect lasts until initiative count 20 on the next round. The blizzard lightly obscures every creature and object in the area for the duration. A creature that enters the blizzard for the first time on a turn or starts its turn there is blinded until initiative count 20 on the next round.
-> A blisteringly cold wind blows through the lair near the wendigo. Each creature within 120 feet of the wendigo must succeed on a DC 15 Constitution saving throw or take 5 (1d10) cold damage. Gases and vapors are dispersed by the wind, and unprotected flames are extinguished. Protected flames, such as lanterns, have a 50 percent chance of being extinguished.
-> The wendigo seals one entryway within the lair. The opening must be unoccupied. It is filled with solid ice for 1 minute or until the wendigo creates this effect again. Each 10-foot section of ice has AC 5, 30 hit points, vulnerability to fire damage, and immunity to acid, cold, necrotic, poison, and psychic damage.
+>
+> * The wendigo creates a blizzard in a 40-foot-high, 20-foot radius cylinder centered on a point it can see within 120 feet of itself. The effect lasts until initiative count 20 on the next round. The blizzard lightly obscures every creature and object in the area for the duration. A creature that enters the blizzard for the first time on a turn or starts its turn there is blinded until initiative count 20 on the next round.
+> * A blisteringly cold wind blows through the lair near the wendigo. Each creature within 120 feet of the wendigo must succeed on a DC 15 Constitution saving throw or take 5 (1d10) cold damage. Gases and vapors are dispersed by the wind, and unprotected flames are extinguished. Protected flames, such as lanterns, have a 50 percent chance of being extinguished.
+> * The wendigo seals one entryway within the lair. The opening must be unoccupied. It is filled with solid ice for 1 minute or until the wendigo creates this effect again. Each 10-foot section of ice has AC 5, 30 hit points, vulnerability to fire damage, and immunity to acid, cold, necrotic, poison, and psychic damage.
 >
 > ### Regional Effects
 >
 > The region containing the wendigo’s lair is warped by its magic, creating the following effects:
-> Chilly fog lightly obscures the land within 6 miles of the wendigo’s lair.
-> Freezing precipitation falls within 6 miles of the wendigo’s lair, forming blizzard conditions without warning. A blizzard occurs once every 2d12 hours and lasts 1d3 hours. During a storm, creatures moving overland travel at half normal speed, and normal visibility is reduced to 30 feet.
-> Beasts within 6 miles of the lair become violent and crazed with hunger, even docile creatures.
-> If a humanoid spends at least 1 hour within 1 mile of the lair, that creature must succeed on a DC 15 Wisdom saving throw or gain a short-term madness. A creature that succeeds on this saving throw can’t be affected by this regional effect again for 24 hours.
-> If the wendigo dies, these effects fade over the course of 1d10 days.
+>
+> * Chilly fog lightly obscures the land within 6 miles of the wendigo’s lair.
+> * Freezing precipitation falls within 6 miles of the wendigo’s lair, forming blizzard conditions without warning. * A blizzard occurs once every 2d12 hours and lasts 1d3 hours. During a storm, creatures moving overland travel at half normal speed, and normal visibility is reduced to 30 feet.
+> * Beasts within 6 miles of the lair become violent and crazed with hunger, even docile creatures.
+> * If a humanoid spends at least 1 hour within 1 mile of the lair, that creature must succeed on a DC 15 Wisdom saving throw or gain a short-term madness. A creature that succeeds on this saving throw can’t be affected by this regional effect again for 24 hours.
+> * If the wendigo dies, these effects fade over the course of 1d10 days.
 >
 
 ___
