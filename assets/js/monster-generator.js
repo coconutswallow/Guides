@@ -164,6 +164,11 @@ creator: ${state.creator}`;
         markdown += generateLegendaryActions(state);
         markdown += generateTextBlock(state.lairActions, 'Lair Actions');
         markdown += generateTextBlock(state.regionalEffects, 'Regional Effects');
+        
+        // NEW: Append Additional Info
+        if (state.additionalInfo && state.additionalInfo.trim()) {
+            markdown += `\n___\n${state.additionalInfo.trim()}\n`;
+        }
 
         return markdown;
     }
@@ -193,7 +198,6 @@ creator: ${state.creator}`;
 
 })();
 
-// Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MonsterGenerator;
 }

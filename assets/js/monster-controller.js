@@ -70,6 +70,9 @@ const MonsterController = (function() {
             // Text blocks for lair mechanics
             lairActions: '', 
             regionalEffects: '',
+
+            // NEW: Additional Info (Tactics, Customizable Traits, etc.)
+            additionalInfo: ''
         };
     }
 

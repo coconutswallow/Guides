@@ -128,31 +128,16 @@ const MonsterParser = (function() {
         return match ? match[1].trim() : '';
     }
 
-    /**
-     * Deduces the initiative proficiency level based on the parsed string.
-     * Logic: Compare the text value (e.g. +5) to the monster's Dex Mod.
-     */
     function deduceInitiativeProficiency(initText, dex, cr) {
         if (!initText) return '0';
-        
-        // Expected text: "+1 (11)" or similar
         const match = initText.match(/([+-]\d+)/);
         if (!match) return '0';
-        
         const totalMod = parseInt(match[1]);
         const dexMod = Math.floor((dex - 10) / 2);
         const pb = MonsterCalculator.getProficiencyBonus(cr);
-        
-        // 1. Is it just Dex?
         if (totalMod === dexMod) return '0';
-        
-        // 2. Is it Dex + PB? (Proficient)
         if (totalMod === dexMod + pb) return '1';
-        
-        // 3. Is it Dex + 2*PB? (Expertise)
         if (totalMod === dexMod + (pb * 2)) return '2';
-        
-        // Default to 0 if it matches nothing (custom bonuses are not supported by this calculator)
         return '0';
     }
 
@@ -189,7 +174,8 @@ const MonsterParser = (function() {
             legendaryActions: [],
             legendaryActionDescription: '',
             lairActions: '',
-            regionalEffects: ''
+            regionalEffects: '',
+            additionalInfo: '' // NEW FIELD
         };
 
         try {
@@ -205,24 +191,70 @@ const MonsterParser = (function() {
         }
 
         state.description = parseLoreDescription(markdownContent);
+        
+        // Find the main stat block (after ___)
         const bodyMatch = markdownContent.match(/___[\s\S]*$/);
         if (!bodyMatch) {
             console.error('No stat block found');
             return state;
         }
 
-        let blockContent = bodyMatch[0].replace(/^>\s*/gm, '');
+        // Logic to separate the Blockquoted Statblock from any Additional Info below it
+        const fullBody = bodyMatch[0];
+        
+        // We look for where the lines stop starting with '>'
+        const lines = fullBody.split('\n');
+        let statBlockLines = [];
+        let additionalInfoLines = [];
+        let foundDivider = false;
+        let pastStatBlock = false;
 
+        for (let line of lines) {
+            if (line.trim() === '___') {
+                if (!foundDivider) {
+                   foundDivider = true; // This is the first divider
+                   continue;
+                } else {
+                   // A second divider usually implies the end of the statblock section if users use it
+                   pastStatBlock = true;
+                }
+            }
+
+            if (pastStatBlock) {
+                additionalInfoLines.push(line);
+                continue;
+            }
+
+            // Check if line is part of the statblock (starts with >)
+            // Or is empty inside the statblock
+            if (line.startsWith('>') || (line.trim() === '' && !pastStatBlock)) {
+                 // However, if we hit a non-quoted line that has content, the statblock is likely over
+                 if (!line.startsWith('>') && line.trim() !== '') {
+                     pastStatBlock = true;
+                     additionalInfoLines.push(line);
+                 } else {
+                     statBlockLines.push(line);
+                 }
+            } else {
+                pastStatBlock = true;
+                additionalInfoLines.push(line);
+            }
+        }
+
+        // Join statblock lines and strip '>'
+        let blockContent = statBlockLines.join('\n').replace(/^>\s*/gm, '');
+
+        // Join additional info lines
+        state.additionalInfo = additionalInfoLines.join('\n').trim();
+
+        // --- Parsing the specific statblock fields ---
         const abilities = parseAbilityScores(blockContent);
         Object.assign(state, abilities);
 
-        // Updated to support both "AC" and "Armor Class"
         state.ac = parseStat(blockContent, 'AC') || parseStat(blockContent, 'Armor Class');
-        // Updated to support both "HP" and "Hit Points"
         state.hp = parseStat(blockContent, 'HP') || parseStat(blockContent, 'Hit Points');
         state.speed = parseStat(blockContent, 'Speed');
         
-        // NEW: Parse Initiative
         const initText = parseStat(blockContent, 'Initiative');
         state.initiativeProficiency = deduceInitiativeProficiency(initText, state.dex, state.cr);
 
@@ -265,7 +297,6 @@ const MonsterParser = (function() {
 
 })();
 
-// Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MonsterParser;
 }

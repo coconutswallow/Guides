@@ -55,6 +55,7 @@ const MonsterUI = (function() {
             ${renderLegendaryActionsSection(state)}
             ${renderTextBlockSection(state, 'lairActions', 'Lair Actions')}
             ${renderTextBlockSection(state, 'regionalEffects', 'Regional Effects')}
+            ${renderAdditionalInfoSection(state)}
         `;
     }
 
@@ -286,6 +287,19 @@ const MonsterUI = (function() {
         `;
     }
 
+    // NEW: Render the Additional Info section
+    function renderAdditionalInfoSection(state) {
+        return `
+            <div class="form-section">
+                <h2>Additional Information</h2>
+                <div class="form-field full-width">
+                    <label for="additionalInfo">Custom Traits, Tactics, etc. (Markdown Supported)</label>
+                    <textarea id="additionalInfo" rows="8" placeholder="Enter any extra markdown content here (like Tactics or Customizable Traits)...">${escapeHtml(state.additionalInfo)}</textarea>
+                </div>
+            </div>
+        `;
+    }
+
     function renderPreview(state) {
         const validation = MonsterValidator.validateMonster(state);
         const abilities = MonsterCalculator.calculateAllAbilities(state);
@@ -423,8 +437,12 @@ const MonsterUI = (function() {
         });
 
         const descriptionHtml = state.description.trim() ? parseMarkdown(state.description.trim()) : '';
+        
+        // NEW: Parse the additional info markdown
+        const additionalInfoHtml = state.additionalInfo && state.additionalInfo.trim() 
+                                   ? parseMarkdown(state.additionalInfo.trim()) 
+                                   : '';
 
-        // Note: Using a simplified simulation of the Grid CSS layout for preview
         return `
             ${descriptionHtml ? `
                 <div class="monster-description">
@@ -490,6 +508,13 @@ const MonsterUI = (function() {
                     ${formatBlock(state.regionalEffects)}
                 ` : ''}
             </blockquote>
+            
+            ${additionalInfoHtml ? `
+                <hr class="statblock-divider">
+                <div class="monster-description">
+                    ${additionalInfoHtml}
+                </div>
+            ` : ''}
         `;
     }
 
@@ -532,7 +557,6 @@ const MonsterUI = (function() {
 
 })();
 
-// Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MonsterUI;
 }
