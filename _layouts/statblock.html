@@ -12,9 +12,9 @@ extra_css:
         display: grid;
         /* "max-content" makes the columns only as wide as the text inside them */
         grid-template-columns: max-content max-content; 
-        /* Aligns the columns to the left (start) rather than stretching them */
+        /* Aligns the columns to the left (start) */
         justify-content: start;
-        /* Adds the requested spacing (approx 2 tabs width) between AC and Init */
+        /* Adds the requested spacing (approx 2 tabs width) */
         column-gap: 4em; 
         row-gap: 2px;
         margin-bottom: 1em;
@@ -32,9 +32,9 @@ extra_css:
     .stat-cell-speed { grid-column: 1 / -1; } /* Spans full width */
     
     /* Ensure bold headers look correct */
-    .stat-grid-container strong {
+    .stat-grid-container strong, .stat-grid-container b {
         font-weight: bold;
-        color: #7a200d; /* Matching standard 5e statblock red/brown */
+        color: #7a200d; 
     }
 </style>
 
@@ -69,58 +69,82 @@ extra_css:
         const statBlock = document.querySelector('blockquote');
         if (!statBlock) return;
 
-        // Find the paragraph containing "AC" and "HP"
+        // 1. Find the paragraph containing "AC" and "HP"
         const paragraphs = Array.from(statBlock.querySelectorAll('p'));
         const statP = paragraphs.find(p => p.textContent.includes('AC') && p.textContent.includes('HP'));
         
         if (!statP) return;
 
-        // Get inner HTML to preserve <strong> tags
         let html = statP.innerHTML;
 
-        // Regex to extract segments. 
-        // We assume the format: AC ... HP ... Speed ... Initiative ...
-        const acMatch = html.match(/(<strong>AC<\/strong>.*?)(?=<strong>HP)/i);
-        const hpMatch = html.match(/(<strong>HP<\/strong>.*?)(?=<strong>Speed)/i);
+        // Regex helpers to allow either <strong> or <b> tags
+        const tagRegex = "(?:<(?:strong|b)>)";
+        const closeTagRegex = "(?:<\/(?:strong|b)>)";
         
-        // Speed might be the end, or Initiative might follow
-        const speedMatch = html.match(/(<strong>Speed<\/strong>.*?)(?=<strong>Initiative|$)/i);
-        const initMatch = html.match(/(<strong>Initiative<\/strong>)\s*(.*)/i);
-
-        if (acMatch && hpMatch && speedMatch) {
+        // 2. Extract AC and HP
+        // We use a non-greedy match .*? up to the next bold tag
+        const acRegex = new RegExp(`(${tagRegex}AC${closeTagRegex}.*?)(?=${tagRegex}HP)`, 'i');
+        const hpRegex = new RegExp(`(${tagRegex}HP${closeTagRegex}.*?)(?=${tagRegex}Speed)`, 'i');
+        
+        const acMatch = html.match(acRegex);
+        const hpMatch = html.match(hpRegex);
+        
+        if (acMatch && hpMatch) {
             const acHtml = acMatch[1].trim();
             const hpHtml = hpMatch[1].trim();
-            const speedHtml = speedMatch[1].trim();
             
+            // 3. Handling Speed and Initiative
+            // We look for Speed. It stops if it hits "Initiative" OR the end of the string ($)
+            let speedRegex = new RegExp(`(${tagRegex}Speed${closeTagRegex}.*?)(?=${tagRegex}Initiative|$)`, 'i');
+            let speedMatch = html.match(speedRegex);
+            let speedHtml = speedMatch ? speedMatch[1].trim() : "";
+            
+            // 4. Find Initiative
             let initHtml = "";
+            let initFoundInNextP = false;
             
-            if (initMatch) {
-                // Input Format:  <strong>Initiative</strong> (+1) 11
-                // Target Format: <strong>Initiative</strong> +1 (11)
-                
-                const initLabel = initMatch[1]; // <strong>Initiative</strong>
-                const rawValues = initMatch[2]; // (+1) 11
-                
-                // Parse specific value groups
-                // Capture group 1: (+1), Capture group 2: 11
-                const valMatch = rawValues.match(/(\([+-]\d+\))\s*(\d+)/);
-                
-                if (valMatch) {
-                    const modifierWithParens = valMatch[1]; // (+1)
-                    const score = valMatch[2];              // 11
-                    
-                    // Strip parens from modifier for the new display
-                    const modifierClean = modifierWithParens.replace(/[()]/g, '');
-                    
-                    // Construct new HTML: Label +1 (11)
-                    initHtml = `${initLabel} ${modifierClean} (${score})`;
-                } else {
-                    // Fallback if regex fails (just use what was there)
-                    initHtml = initMatch[0];
+            // Strategy A: Look in the SAME paragraph (This covers your Awakened Tree case)
+            const initTagRegex = new RegExp(`(${tagRegex}Initiative${closeTagRegex})\\s*(.*)`, 'i');
+            let initMatch = html.match(initTagRegex);
+            
+            // Strategy B: If not found, look in the NEXT paragraph (Fallback for wrapped lines)
+            if (!initMatch) {
+                const nextP = statP.nextElementSibling;
+                if (nextP && nextP.tagName === 'P') {
+                    const nextHtml = nextP.innerHTML;
+                    if (nextHtml.match(new RegExp(`^${tagRegex}Initiative`, 'i'))) {
+                        initMatch = nextHtml.match(initTagRegex);
+                        if (initMatch) {
+                            initFoundInNextP = true;
+                            nextP.remove(); // Merge it by removing the extra paragraph
+                        }
+                    }
                 }
             }
 
-            // Construct new Grid Layout
+            if (initMatch) {
+                // Formatting: Change (+1) 11 -> +1 (11) if needed
+                const initLabel = initMatch[1]; // <strong>Initiative</strong>
+                const rawValues = initMatch[2]; // (+1) 11 OR +4 (14)
+                
+                // We check if it starts with a paren like "(+1)"
+                const swapMatch = rawValues.match(/^\s*(\([+-]\d+\))\s*(\d+)/);
+                
+                if (swapMatch) {
+                     const modifierWithParens = swapMatch[1]; // (+1)
+                     const score = swapMatch[2];              // 11
+                     const modifierClean = modifierWithParens.replace(/[()]/g, '');
+                     initHtml = `${initLabel} ${modifierClean} (${score})`;
+                } else {
+                    // It is likely already in "+4 (14)" format or just a number
+                    initHtml = `${initLabel} ${rawValues}`;
+                }
+            }
+            
+            // Safety Check: Remove any trailing Initiative text from speedHtml if the lookahead failed
+            speedHtml = speedHtml.replace(new RegExp(`${tagRegex}Initiative.*`, 'i'), '').trim();
+
+            // 5. Construct the new Grid
             const newContainer = document.createElement('div');
             newContainer.className = 'stat-grid-container';
             
@@ -138,55 +162,28 @@ extra_css:
 </script>
 
 <script>
-    /**
-     * Export stat block to JSON in 5etools format
-     * Parses the HTML stat block and converts to structured JSON
-     */
     function exportToJSON() {
-        // ==========================================
-        // FIND STAT BLOCK
-        // ==========================================
         const statBlock = document.querySelector('blockquote');
         if (!statBlock) {
             alert('No stat block found on this page.');
             return;
         }
         
-        // ==========================================
-        // HELPER FUNCTIONS
-        // ==========================================
-        
-        /** Extract text content safely */
         const extractText = (element) => element ? element.textContent.trim() : '';
         
-        /** Parse modifier string to get +/- value */
-        const parseModifier = (str) => {
-            const match = str.match(/([+-]\d+)/);
-            return match ? match[1] : '+0';
-        };
-        
-        // ==========================================
-        // EXTRACT BASIC INFO
-        // Name, size, type, alignment
-        // ==========================================
+        // --- EXTRACT BASIC INFO ---
         const nameEl = statBlock.querySelector('h2');
         const name = extractText(nameEl);
         
-        // Parse "Medium humanoid, lawful good" format
         const typeLineEl = statBlock.querySelector('p:first-of-type');
         const typeLine = extractText(typeLineEl);
         const typeMatch = typeLine.match(/^(\w+)\s+(\w+),\s+(.+)$/);
         
-        // Map size to single letter abbreviations
         const sizeMap = { 'Tiny': 'T', 'Small': 'S', 'Medium': 'M', 'Large': 'L', 'Huge': 'H', 'Gargantuan': 'G' };
         const size = typeMatch ? sizeMap[typeMatch[1]] || 'M' : 'M';
         const type = typeMatch ? typeMatch[2].toLowerCase() : 'unknown';
         const alignment = typeMatch ? typeMatch[3] : 'unaligned';
         
-        // ==========================================
-        // PARSE ALIGNMENT TO ABBREVIATIONS
-        // Convert "lawful good" to ["L", "G"]
-        // ==========================================
         const alignmentMap = {
             'lawful good': ['L', 'G'], 'neutral good': ['N', 'G'], 'chaotic good': ['C', 'G'],
             'lawful neutral': ['L', 'N'], 'neutral': ['N'], 'chaotic neutral': ['C', 'N'],
@@ -196,43 +193,25 @@ extra_css:
         const alignmentKey = alignment.toLowerCase().replace('typically ', '');
         const alignmentArr = alignmentMap[alignmentKey] || ['N'];
         
-        // ==========================================
-        // EXTRACT AC, HP, SPEED, INITIATIVE
-        // ==========================================
-        // We look for the paragraph containing AC. If the visual script ran, this might be in a grid,
-        // so we search 'p' or the text content of the whole block if needed.
-        // Usually, querying the blockquote text content is safer if structure changed.
-        let statText = "";
+        // --- EXTRACT STATS ---
+        let fullText = statBlock.innerText; 
         
-        // Try finding the original P first (if script hasn't run or failed)
-        const statP = Array.from(statBlock.querySelectorAll('p')).find(p => p.textContent.includes('AC') && p.textContent.includes('HP'));
-        
-        if (statP) {
-            statText = statP.textContent;
-        } else {
-            // If script ran, look for the grid container
-            const grid = statBlock.querySelector('.stat-grid-container');
-            if (grid) statText = grid.textContent;
-        }
-
-        // Extract AC value
-        const acMatch = statText.match(/AC\s+(\d+)/i);
+        // Extract AC
+        const acMatch = fullText.match(/AC\s+(\d+)/i) || fullText.match(/Armor Class\s+(\d+)/i);
         const ac = acMatch ? parseInt(acMatch[1]) : 10;
         
-        // Extract HP value
-        const hpMatch = statText.match(/HP\s+(\d+)/i);
+        // Extract HP
+        const hpMatch = fullText.match(/HP\s+(\d+)/i) || fullText.match(/Hit Points\s+(\d+)/i);
         const hp = hpMatch ? parseInt(hpMatch[1]) : 1;
         
-        // Extract speed values
-        const speedMatch = statText.match(/Speed\s+(.+?)(?=Initiative|$)/i);
+        // Extract Speed
+        const speedMatch = fullText.match(/Speed\s+(.+?)(?=Initiative|STR|Str|$)/i);
         const speedText = speedMatch ? speedMatch[1].trim() : '30 ft.';
         const speed = { walk: 30 };
         
-        // Parse walk speed (default)
         const walkMatch = speedText.match(/(\d+)\s*ft\./);
         if (walkMatch) speed.walk = parseInt(walkMatch[1]);
         
-        // Parse fly speed with optional hover
         const flyMatch = speedText.match(/fly\s+(\d+)\s*ft\./i);
         if (flyMatch) {
             speed.fly = parseInt(flyMatch[1]);
@@ -242,45 +221,31 @@ extra_css:
             }
         }
         
-        // Parse swim/climb/burrow
         const swimMatch = speedText.match(/swim\s+(\d+)\s*ft\./i);
         if (swimMatch) speed.swim = parseInt(swimMatch[1]);
-        
         const climbMatch = speedText.match(/climb\s+(\d+)\s*ft\./i);
         if (climbMatch) speed.climb = parseInt(climbMatch[1]);
-        
         const burrowMatch = speedText.match(/burrow\s+(\d+)\s*ft\./i);
         if (burrowMatch) speed.burrow = parseInt(burrowMatch[1]);
 
-        // Parse Initiative
-        // Input text might be "(+1) 11" or "+1 (11)" depending on if formatting script ran
+        // Extract Initiative
         let initMod = 0;
-        const initMatch = statText.match(/Initiative\s*(.*)/i);
+        // Looks for "+X" immediately following the word Initiative
+        const initMatch = fullText.match(/Initiative\s*([+-]\d+)/i);
         if (initMatch) {
-            // Look for a signed number like +1 or -1
-            const modMatch = initMatch[1].match(/[+-]\d+/);
-            if (modMatch) {
-                initMod = parseInt(modMatch[0]);
-            }
+            initMod = parseInt(initMatch[1]);
         }
         
-        // ==========================================
-        // EXTRACT ABILITY SCORES FROM TABLE
-        // Parse the 6 abilities and their saves
-        // ==========================================
+        // --- ABILITIES & SAVES ---
         const table = statBlock.querySelector('table');
         const cells = table ? Array.from(table.querySelectorAll('td')) : [];
-        
         const abilities = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
         const saves = {};
         
-        // First row: STR, DEX, CON (columns 1, 5, 9)
         if (cells.length >= 12) {
             abilities.str = parseInt(extractText(cells[1])) || 10;
             abilities.dex = parseInt(extractText(cells[5])) || 10;
             abilities.con = parseInt(extractText(cells[9])) || 10;
-            
-            // Save bonuses (columns 3, 7, 11)
             const strSave = extractText(cells[3]);
             const dexSave = extractText(cells[7]);
             const conSave = extractText(cells[11]);
@@ -289,13 +254,10 @@ extra_css:
             if (conSave && conSave !== '—') saves.con = conSave;
         }
         
-        // Second row: INT, WIS, CHA (columns 13, 17, 21)
         if (cells.length >= 24) {
             abilities.int = parseInt(extractText(cells[13])) || 10;
             abilities.wis = parseInt(extractText(cells[17])) || 10;
             abilities.cha = parseInt(extractText(cells[21])) || 10;
-            
-            // Save bonuses (columns 15, 19, 23)
             const intSave = extractText(cells[15]);
             const wisSave = extractText(cells[19]);
             const chaSave = extractText(cells[23]);
@@ -304,10 +266,7 @@ extra_css:
             if (chaSave && chaSave !== '—') saves.cha = chaSave;
         }
         
-        // ==========================================
-        // EXTRACT SKILLS, SENSES, LANGUAGES, CR
-        // Parse remaining stat block paragraphs
-        // ==========================================
+        // --- OTHERS ---
         const paragraphs = Array.from(statBlock.querySelectorAll('p'));
         let skills = null, senses = [], languages = [], cr = '0', passive = 10;
         let immune = [], resist = [], vulnerable = [], conditionImmune = [];
@@ -315,7 +274,6 @@ extra_css:
         paragraphs.forEach(p => {
             const text = extractText(p);
             
-            // Parse skills (e.g., "Skills Perception +5, Stealth +3")
             if (text.startsWith('Skills')) {
                 const skillsMatch = text.match(/Skills\s+(.+)/i);
                 if (skillsMatch) {
@@ -323,38 +281,26 @@ extra_css:
                     const skillParts = skillsMatch[1].split(',');
                     skillParts.forEach(part => {
                         const match = part.trim().match(/(\w+)\s+([+-]\d+)/);
-                        if (match) {
-                            skills[match[1].toLowerCase()] = match[2];
-                        }
+                        if (match) skills[match[1].toLowerCase()] = match[2];
                     });
                 }
             }
-            
-            // Parse damage immunities
             if (text.startsWith('Damage Immunities')) {
                 const match = text.match(/Damage Immunities\s+(.+)/i);
                 if (match) immune = match[1].split(',').map(s => s.trim().toLowerCase());
             }
-            
-            // Parse damage resistances
             if (text.startsWith('Damage Resistances')) {
                 const match = text.match(/Damage Resistances\s+(.+)/i);
                 if (match) resist = match[1].split(',').map(s => s.trim().toLowerCase());
             }
-            
-            // Parse damage vulnerabilities
             if (text.startsWith('Damage Vulnerabilities')) {
                 const match = text.match(/Damage Vulnerabilities\s+(.+)/i);
                 if (match) vulnerable = match[1].split(',').map(s => s.trim().toLowerCase());
             }
-            
-            // Parse condition immunities
             if (text.startsWith('Condition Immunities')) {
                 const match = text.match(/Condition Immunities\s+(.+)/i);
                 if (match) conditionImmune = match[1].split(',').map(s => s.trim().toLowerCase());
             }
-            
-            // Parse senses (e.g., "Senses darkvision 60 ft., Passive Perception 12")
             if (text.startsWith('Senses')) {
                 const sensesMatch = text.match(/Senses\s+(.+?)(?:Passive Perception\s+(\d+))?$/i);
                 if (sensesMatch) {
@@ -363,24 +309,16 @@ extra_css:
                     if (sensesMatch[2]) passive = parseInt(sensesMatch[2]);
                 }
             }
-            
-            // Parse languages
             if (text.startsWith('Languages')) {
                 const langMatch = text.match(/Languages\s+(.+)/i);
                 if (langMatch) languages = langMatch[1].split(',').map(s => s.trim());
             }
-            
-            // Parse CR
             if (text.includes('CR')) {
                 const crMatch = text.match(/CR\s+([\d/]+)/i);
                 if (crMatch) cr = crMatch[1];
             }
         });
         
-        // ==========================================
-        // BUILD JSON STRUCTURE
-        // Construct 5etools compatible format
-        // ==========================================
         const fullData = {
             siteVersion: "1.197.0",
             _meta: {
@@ -417,11 +355,6 @@ extra_css:
         };
         
         const monster = fullData.monster[0];
-        
-        // ==========================================
-        // ADD OPTIONAL FIELDS
-        // Only include if data exists
-        // ==========================================
         if (Object.keys(saves).length > 0) monster.save = saves;
         if (skills) monster.skill = skills;
         if (immune.length > 0) monster.immune = immune;
@@ -431,10 +364,6 @@ extra_css:
         if (senses.length > 0) monster.senses = senses;
         if (languages.length > 0) monster.languages = languages;
         
-        // ==========================================
-        // DOWNLOAD JSON FILE
-        // Create blob and trigger download
-        // ==========================================
         const dataStr = JSON.stringify(fullData, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(dataBlob);

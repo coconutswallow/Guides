@@ -24,6 +24,7 @@ const MonsterParser = (function() {
     }
 
     function parseAbilityScores(blockContent) {
+        // Try simple format first
         const simpleMatch = blockContent.match(
             /\|\s*STR\s*\|\s*DEX\s*\|\s*CON\s*\|\s*INT\s*\|\s*WIS\s*\|\s*CHA\s*\|[\s\S]*?\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|/
         );
@@ -37,6 +38,7 @@ const MonsterParser = (function() {
                 cha: parseInt(simpleMatch[6])
             };
         }
+        // Try extended format (with bold headers)
         const extendedMatch = blockContent.match(
             /\|\s*\*\*Str\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Dex\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Con\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Int\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Wis\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Cha\*\*\s*\|\s*(\d+)\s*\|/
         );
@@ -54,6 +56,7 @@ const MonsterParser = (function() {
     }
 
     function parseStat(blockContent, statName) {
+        // Regex looks for **StatName** followed by content, stopping at the next double-asterisk, table start, or double newline
         const pattern = new RegExp(`\\*\\*${statName}\\*\\*\\s+(.+?)(?=\\s*\\*\\*|\\n{2,}|\\s*\\||$)`, 's');
         const match = blockContent.match(pattern);
         return match ? match[1].trim() : '';
@@ -126,12 +129,13 @@ const MonsterParser = (function() {
     }
 
     /**
-     * Deduce initiative proficiency based on text values
+     * Deduces the initiative proficiency level based on the parsed string.
+     * Logic: Compare the text value (e.g. +5) to the monster's Dex Mod.
      */
     function deduceInitiativeProficiency(initText, dex, cr) {
         if (!initText) return '0';
         
-        // initText format expected: "+1 (11)" or similar
+        // Expected text: "+1 (11)" or similar
         const match = initText.match(/([+-]\d+)/);
         if (!match) return '0';
         
@@ -139,16 +143,17 @@ const MonsterParser = (function() {
         const dexMod = Math.floor((dex - 10) / 2);
         const pb = MonsterCalculator.getProficiencyBonus(cr);
         
-        // Logic:
-        // if Total == Dex, then 0
-        // if Total == Dex + PB, then 1
-        // if Total == Dex + 2*PB, then 2
-        
+        // 1. Is it just Dex?
         if (totalMod === dexMod) return '0';
+        
+        // 2. Is it Dex + PB? (Proficient)
         if (totalMod === dexMod + pb) return '1';
+        
+        // 3. Is it Dex + 2*PB? (Expertise)
         if (totalMod === dexMod + (pb * 2)) return '2';
         
-        return '0'; // Default
+        // Default to 0 if it matches nothing (custom bonuses are not supported by this calculator)
+        return '0';
     }
 
     function parseMonster(markdownContent) {
@@ -211,11 +216,13 @@ const MonsterParser = (function() {
         const abilities = parseAbilityScores(blockContent);
         Object.assign(state, abilities);
 
+        // Updated to support both "AC" and "Armor Class"
         state.ac = parseStat(blockContent, 'AC') || parseStat(blockContent, 'Armor Class');
+        // Updated to support both "HP" and "Hit Points"
         state.hp = parseStat(blockContent, 'HP') || parseStat(blockContent, 'Hit Points');
         state.speed = parseStat(blockContent, 'Speed');
         
-        // Parse Initiative
+        // NEW: Parse Initiative
         const initText = parseStat(blockContent, 'Initiative');
         state.initiativeProficiency = deduceInitiativeProficiency(initText, state.dex, state.cr);
 
