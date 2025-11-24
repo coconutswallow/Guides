@@ -74,49 +74,61 @@ extra_css:
         const statBlock = getStatBlockElement();
         if (!statBlock) return;
 
-        // Iterate over all paragraphs in the statblock to find broken lists
         const paragraphs = Array.from(statBlock.querySelectorAll('p'));
         
         paragraphs.forEach(p => {
-            // Check if paragraph contains literal bullet points that weren't parsed
-            if (p.innerHTML.match(/(?:^|<br\s*\/?>)\s*[\*-]\s+/)) {
+            const html = p.innerHTML;
+            
+            // Check if the paragraph contains "fake" bullets (dash or asterisk followed by space)
+            // We look for them preceded by a colon (:), period (.), or existing break (<br>) 
+            // to avoid splitting hyphenated words.
+            if (html.match(/(?:<br\s*\/?>|[\.:])\s*[\*-]\s+/)) {
                 
-                const html = p.innerHTML;
-                const lines = html.split(/<br\s*\/?>|\n/);
+                // 1. Split by newlines or <br> tags
+                // We also strictly look for the " - " or " * " pattern 
+                let parts = html.split(/(?:<br\s*\/?>|\n)+/);
                 
+                // If split didn't work (browser flattened newlines), try splitting by the bullet pattern directly
+                // Pattern: Look for a dash/star preceded by whitespace/punctuation
+                if (parts.length === 1 && html.includes('- ')) {
+                     parts = html.split(/(?<=[\.:])\s+(?=- )/);
+                }
+
                 let newHtml = '';
                 let inList = false;
-                
-                lines.forEach(line => {
-                    // Clean text content (remove html tags to check for * or -)
-                    const cleanText = line.replace(/<[^>]*>/g, '').trim();
-                    const isListItem = cleanText.startsWith('* ') || cleanText.startsWith('- ');
+
+                parts.forEach(part => {
+                    let cleanPart = part.trim();
                     
+                    // Check if this specific part starts with a bullet
+                    // (Allowing for HTML tags like <em> or <strong> at start)
+                    const isListItem = cleanPart.match(/^((?:<[^>]+>)*)\s*[\*-]\s+/);
+
                     if (isListItem) {
                         if (!inList) {
                             newHtml += '<ul>';
                             inList = true;
                         }
                         // Remove the marker (* or -) and wrap in li
-                        // Note: We process 'line' (keeping existing bold/italic tags) but strip the leading marker
-                        const content = line.trim().replace(/^((?:<[^>]+>)*)\s*[\*-]\s+/, '$1');
+                        const content = cleanPart.replace(/^((?:<[^>]+>)*)\s*[\*-]\s+/, '$1');
                         newHtml += `<li>${content}</li>`;
                     } else {
                         if (inList) {
                             newHtml += '</ul>';
                             inList = false;
                         }
-                        // Only add non-empty lines
-                        if (line.trim()) {
-                            newHtml += line + (inList ? '' : '<br>'); 
+                        if (cleanPart) {
+                            // If we just closed a list, add the text. 
+                            // If we are continuing text, add a break if it's not the first line.
+                            newHtml += (newHtml.length > 0 ? '<br>' : '') + cleanPart; 
                         }
                     }
                 });
-                
+
                 if (inList) newHtml += '</ul>';
                 
-                // Update the DOM if we made changes
-                if (newHtml !== html) {
+                // Only update if we actually created a list
+                if (newHtml.includes('<ul>')) {
                     p.innerHTML = newHtml;
                 }
             }
