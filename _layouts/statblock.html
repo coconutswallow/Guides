@@ -69,7 +69,6 @@ extra_css:
         });
     }
 
-    // NEW: Fix for unparsed Markdown lists
     function formatListsInBlockquotes() {
         const statBlock = getStatBlockElement();
         if (!statBlock) return;
@@ -77,60 +76,83 @@ extra_css:
         const paragraphs = Array.from(statBlock.querySelectorAll('p'));
         
         paragraphs.forEach(p => {
-            const html = p.innerHTML;
+            let html = p.innerHTML;
             
-            // Check if the paragraph contains "fake" bullets (dash or asterisk followed by space)
-            // We look for them preceded by a colon (:), period (.), or existing break (<br>) 
-            // to avoid splitting hyphenated words.
-            if (html.match(/(?:<br\s*\/?>|[\.:])\s*[\*-]\s+/)) {
-                
-                // 1. Split by newlines or <br> tags
-                // We also strictly look for the " - " or " * " pattern 
-                let parts = html.split(/(?:<br\s*\/?>|\n)+/);
-                
-                // If split didn't work (browser flattened newlines), try splitting by the bullet pattern directly
-                // Pattern: Look for a dash/star preceded by whitespace/punctuation
-                if (parts.length === 1 && html.includes('- ')) {
-                     parts = html.split(/(?<=[\.:])\s+(?=- )/);
-                }
+            // 1. SPLIT: Break the paragraph into lines based on <br> tags or newlines
+            // We use a placeholder regex to keep the delimiter so we don't lose data
+            let lines = html.split(/(<br\s*\/?>|\n)/i);
+            
+            let newHtml = '';
+            let inList = false;
 
-                let newHtml = '';
-                let inList = false;
+            // We iterate chunks. Some are text, some are <br>.
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                
+                // Skip literal <br> tags in the loop, we handle breaks via list logic
+                if (line.match(/<br\s*\/?>/i) || line === '\n') continue;
 
-                parts.forEach(part => {
-                    let cleanPart = part.trim();
+                let cleanLine = line.trim();
+                if (!cleanLine) continue;
+
+                // 2. DETECT: Check for List Candidates
+                // Case A: Starts with a dash "- "
+                const isDash = cleanLine.match(/^-\s+/);
+                
+                // Case B: Starts with an asterisk "* " (literal)
+                const isStar = cleanLine.match(/^\*\s+/);
+                
+                // Case C: Starts with Italics "<em>" that was meant to be a bullet
+                // (Parser swallowed the * and made it <em>)
+                let isItalicBullet = false;
+                if (cleanLine.startsWith('<em>') || cleanLine.startsWith('<i>')) {
+                    // Check if it looks like a full sentence or header inside italics
+                    // If the italics wrap the WHOLE line, it's likely a bullet error.
+                    // If the italics end quickly (e.g. <em>Melee Attack:</em>), it's just a header.
                     
-                    // Check if this specific part starts with a bullet
-                    // (Allowing for HTML tags like <em> or <strong> at start)
-                    const isListItem = cleanPart.match(/^((?:<[^>]+>)*)\s*[\*-]\s+/);
-
-                    if (isListItem) {
-                        if (!inList) {
-                            newHtml += '<ul>';
-                            inList = true;
-                        }
-                        // Remove the marker (* or -) and wrap in li
-                        const content = cleanPart.replace(/^((?:<[^>]+>)*)\s*[\*-]\s+/, '$1');
-                        newHtml += `<li>${content}</li>`;
-                    } else {
-                        if (inList) {
-                            newHtml += '</ul>';
-                            inList = false;
-                        }
-                        if (cleanPart) {
-                            // If we just closed a list, add the text. 
-                            // If we are continuing text, add a break if it's not the first line.
-                            newHtml += (newHtml.length > 0 ? '<br>' : '') + cleanPart; 
-                        }
-                    }
-                });
-
-                if (inList) newHtml += '</ul>';
-                
-                // Only update if we actually created a list
-                if (newHtml.includes('<ul>')) {
-                    p.innerHTML = newHtml;
+                    // Simple heuristic: If it was > * Text, it became > <em>Text</em>.
+                    // We assume ALL starting italics in these specific sections are list items 
+                    // unless they are followed by immediate text on the same line.
+                    isItalicBullet = true;
                 }
+
+                if (isDash || isStar || isItalicBullet) {
+                    if (!inList) {
+                        newHtml += '<ul>';
+                        inList = true;
+                    }
+
+                    let content = cleanLine;
+
+                    // CLEANUP: Remove the marker that triggered the list
+                    if (isDash) content = content.replace(/^-\s+/, '');
+                    if (isStar) content = content.replace(/^\*\s+/, '');
+                    if (isItalicBullet) {
+                        // If it's an italic bullet, we usually want to KEEP the italics 
+                        // because they likely indicate a spell name or feature name.
+                        // We just wrap it in <li>.
+                        // However, if the parser italicized the whole line purely due to the bullet error,
+                        // you might strictly want to strip it. 
+                        // For now, we keep the italics as they might be intentional formatting (like spell names).
+                    }
+
+                    newHtml += `<li>${content}</li>`;
+                } else {
+                    // Not a list item
+                    if (inList) {
+                        newHtml += '</ul>';
+                        inList = false;
+                    }
+                    // Append text with a trailing space/break if needed
+                    newHtml += (newHtml ? '<br>' : '') + line;
+                }
+            }
+
+            if (inList) newHtml += '</ul>';
+
+            // Only update DOM if we actually built a list
+            if (newHtml.includes('<ul>')) {
+                p.innerHTML = newHtml;
             }
         });
     }
@@ -207,171 +229,5 @@ extra_css:
 
             statP.parentNode.replaceChild(newContainer, statP);
         }
-    }
-</script>
-
-<script>
-    function exportToJSON() {
-        const statBlock = getStatBlockElement();
-
-        if (!statBlock) {
-            alert('No valid stat block found on this page.');
-            return;
-        }
-        
-        const extractText = (element) => element ? element.textContent.trim() : '';
-        const fullText = statBlock.innerText;
-        
-        const nameEl = statBlock.querySelector('h2');
-        const name = extractText(nameEl);
-        
-        const typeLineEl = statBlock.querySelector('p:first-of-type');
-        const typeLine = extractText(typeLineEl);
-        const typeMatch = typeLine.match(/^(\w+)\s+(\w+),\s+(.+)$/);
-        
-        const sizeMap = { 'Tiny': 'T', 'Small': 'S', 'Medium': 'M', 'Large': 'L', 'Huge': 'H', 'Gargantuan': 'G' };
-        const size = typeMatch ? sizeMap[typeMatch[1]] || 'M' : 'M';
-        const type = typeMatch ? typeMatch[2].toLowerCase() : 'unknown';
-        
-        const alignmentMap = {
-            'lawful good': ['L', 'G'], 'neutral good': ['N', 'G'], 'chaotic good': ['C', 'G'],
-            'lawful neutral': ['L', 'N'], 'neutral': ['N'], 'chaotic neutral': ['C', 'N'],
-            'lawful evil': ['L', 'E'], 'neutral evil': ['N', 'E'], 'chaotic evil': ['C', 'E'],
-            'unaligned': ['U'], 'any alignment': ['A'], 'typically neutral': ['N']
-        };
-        const alignmentKey = typeMatch ? typeMatch[3].toLowerCase().replace('typically ', '') : 'neutral';
-        const alignmentArr = alignmentMap[alignmentKey] || ['N'];
-        
-        const acMatch = fullText.match(/AC\s+(\d+)/i) || fullText.match(/Armor Class\s+(\d+)/i);
-        const ac = acMatch ? parseInt(acMatch[1]) : 10;
-        
-        const hpMatch = fullText.match(/HP\s+(\d+)/i) || fullText.match(/Hit Points\s+(\d+)/i);
-        const hp = hpMatch ? parseInt(hpMatch[1]) : 1;
-        
-        const speedMatch = fullText.match(/Speed\s+(.+?)(?=Initiative|STR|Str|$)/i);
-        const speedText = speedMatch ? speedMatch[1].trim() : '30 ft.';
-        const speed = { walk: 30 };
-        
-        const walkMatch = speedText.match(/(\d+)\s*ft\./);
-        if (walkMatch) speed.walk = parseInt(walkMatch[1]);
-        
-        if (speedText.match(/fly\s+(\d+)/i)) {
-            const flyVal = parseInt(speedText.match(/fly\s+(\d+)/i)[1]);
-            speed.fly = speedText.includes('hover') ? { number: flyVal, condition: "(hover)" } : flyVal;
-            if (speedText.includes('hover')) speed.canHover = true;
-        }
-        if (speedText.match(/swim\s+(\d+)/i)) speed.swim = parseInt(speedText.match(/swim\s+(\d+)/i)[1]);
-        if (speedText.match(/climb\s+(\d+)/i)) speed.climb = parseInt(speedText.match(/climb\s+(\d+)/i)[1]);
-        if (speedText.match(/burrow\s+(\d+)/i)) speed.burrow = parseInt(speedText.match(/burrow\s+(\d+)/i)[1]);
-
-        let initMod = 0;
-        const initMatch = fullText.match(/Initiative\s*([+-]\d+)/i);
-        if (initMatch) initMod = parseInt(initMatch[1]);
-        
-        const table = statBlock.querySelector('table');
-        const cells = table ? Array.from(table.querySelectorAll('td')) : [];
-        const abilities = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
-        const saves = {};
-        
-        const findCellIndex = (text) => cells.findIndex(c => c.textContent.includes(text));
-        
-        ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Cha'].forEach(ab => {
-            const idx = findCellIndex(ab);
-            if (idx !== -1 && cells.length > idx + 1) {
-                const key = ab.toLowerCase();
-                abilities[key] = parseInt(extractText(cells[idx + 1])) || 10;
-                const saveVal = extractText(cells[idx + 3]);
-                if (saveVal && saveVal !== '—') saves[key] = saveVal;
-            }
-        });
-        
-        const paragraphs = Array.from(statBlock.querySelectorAll('p'));
-        let skills = null, senses = [], languages = [], cr = '0', passive = 10;
-        let immune = [], resist = [], vulnerable = [], conditionImmune = [];
-        
-        paragraphs.forEach(p => {
-            const text = extractText(p);
-            
-            if (text.startsWith('Skills')) {
-                const skillsMatch = text.match(/Skills\s+(.+)/i);
-                if (skillsMatch) {
-                    skills = {};
-                    skillsMatch[1].split(',').forEach(part => {
-                        const match = part.trim().match(/(\w+)\s+([+-]\d+)/);
-                        if (match) skills[match[1].toLowerCase()] = match[2];
-                    });
-                }
-            }
-            if (text.startsWith('Damage Immunities')) immune = text.replace('Damage Immunities ', '').split(',').map(s=>s.trim().toLowerCase());
-            if (text.startsWith('Damage Resistances')) resist = text.replace('Damage Resistances ', '').split(',').map(s=>s.trim().toLowerCase());
-            if (text.startsWith('Damage Vulnerabilities')) vulnerable = text.replace('Damage Vulnerabilities ', '').split(',').map(s=>s.trim().toLowerCase());
-            if (text.startsWith('Condition Immunities')) conditionImmune = text.replace('Condition Immunities ', '').split(',').map(s=>s.trim().toLowerCase());
-            
-            if (text.startsWith('Senses')) {
-                const sensesMatch = text.match(/Senses\s+(.+?)(?:Passive Perception\s+(\d+))?$/i);
-                if (sensesMatch) {
-                    senses = sensesMatch[1].split(',').map(s => s.trim()).filter(s => s);
-                    if (sensesMatch[2]) passive = parseInt(sensesMatch[2]);
-                }
-            }
-            if (text.startsWith('Languages')) languages = text.replace('Languages ', '').split(',').map(s=>s.trim());
-            if (text.match(/(?:CR|Challenge)\s+([\d/]+)/i)) cr = text.match(/(?:CR|Challenge)\s+([\d/]+)/i)[1];
-        });
-        
-        const fullData = {
-            siteVersion: "1.197.0",
-            _meta: {
-                sources: [{
-                    json: "HawthorneGuild",
-                    abbreviation: "HG",
-                    full: "Hawthorne Guild",
-                    url: "{{ site.url }}{{ site.baseurl }}",
-                    authors: ["{{ page.creator | default: 'Hawthorne Guild' }}"],
-                    convertedBy: []
-                }],
-                dateAdded: Math.floor(Date.now() / 1000),
-                dateLastModified: Math.floor(Date.now() / 1000)
-            },
-            monster: [{
-                name: name,
-                size: [size],
-                type: type,
-                source: "HawthorneGuild",
-                alignment: alignmentArr,
-                ac: [{ ac: ac }],
-                hp: { average: hp },
-                speed: speed,
-                init: initMod,
-                str: abilities.str,
-                dex: abilities.dex,
-                con: abilities.con,
-                int: abilities.int,
-                wis: abilities.wis,
-                cha: abilities.cha,
-                passive: passive,
-                cr: cr
-            }]
-        };
-        
-        const monster = fullData.monster[0];
-        if (Object.keys(saves).length > 0) monster.save = saves;
-        if (skills) monster.skill = skills;
-        if (immune.length > 0) monster.immune = immune;
-        if (resist.length > 0) monster.resist = resist;
-        if (vulnerable.length > 0) monster.vulnerable = vulnerable;
-        if (conditionImmune.length > 0) monster.conditionImmune = conditionImmune;
-        if (senses.length > 0) monster.senses = senses;
-        if (languages.length > 0) monster.languages = languages;
-        
-        const dataStr = JSON.stringify(fullData, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = name.toLowerCase().replace(/\s+/g, '-') + '.json';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
     }
 </script>
