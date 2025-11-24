@@ -292,7 +292,7 @@ const MonsterUI = (function() {
             <div class="form-section">
                 <h2>Additional Information</h2>
                 <div class="form-field full-width">
-                    <label for="additionalInfo">Custom Traits, Tactics, etc. (Markdown Supported)</label>
+                    <label for="additionalInfo">Customization options, detailed tactics, etc. (Markdown Supported)</label>
                     <textarea id="additionalInfo" rows="8" placeholder="Enter any extra markdown content here (like Tactics or Customizable Traits)...">${escapeHtml(state.additionalInfo)}</textarea>
                 </div>
             </div>
