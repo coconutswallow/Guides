@@ -20,8 +20,6 @@ ___
 > *Tiny Monstrosity, Neutral Good*
 > 
 > **AC** 13 **HP** 9 (6d4 - 6) **Speed** 30 ft. **Initiative** +3 (13)  
-> 
-> **Initiative** +3 (16)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|

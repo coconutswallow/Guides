@@ -20,8 +20,6 @@ ___
 > *Medium Humanoid (Orc), Chaotic Evil*
 > 
 > **AC** 17 (splint) **HP** 170 (20d8 + 80) **Speed** 30 ft. **Initiative** +2 (12)  
-> 
-> **Initiative** +2 (14)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
