@@ -13,7 +13,10 @@ ___
 > ## Hollow Soldier
 > *Medium undead, neutral evil*
 >
-> **AC** 16 (chain shirt, shield) **HP** 58 (9d8 + 18) **Speed** 30 ft. **Initiative** +1 (11)
+> **AC** 16 (chain shirt, shield)
+> **HP** 58 (9d8 + 18)
+> **Speed** 30 ft.
+> **Initiative** +1 (11)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
@@ -27,11 +30,11 @@ ___
 >
 > ### Actions
 >
-> ***Longsword.*** Melee Attack Roll: +3, reach 5ft., one target. Hit: 5 (1d8 + 1) Slashing damage, or 6 (1d10 + 1) Slashing damage if used with two hands
+> ***Longsword.*** *Melee Attack Roll*: +3, reach 5ft., one target. *Hit*: 5 (1d8 + 1) Slashing damage, or 6 (1d10 + 1) Slashing damage if used with two hands
 >
-> ***Spear.*** Melee or Ranged Attack Roll: +3, reach 5ft. or range 20/60 ft., one target. Hit: 4 (1d6 + 1) Piercing damage, or 5 (1d8 + 1) Piercing damage if used with two hands
+> ***Spear.*** *Melee or Ranged Attack Roll*: +3, reach 5ft. or range 20/60 ft., one target. *Hit*: 4 (1d6 + 1) Piercing damage, or 5 (1d8 + 1) Piercing damage if used with two hands
 >
-> ***Light Crossbow.*** Ranged Attack Roll: +3, range 80/320 ft., one target. Hit: 5 (1d8 + 1) Piercing damage
+> ***Light Crossbow.*** *Ranged Attack Roll*: +3, range 80/320 ft., one target. *Hit:* 5 (1d8 + 1) Piercing damage
 >
 > ***Flurry (Recharge 6).*** The hollow makes four Longsword or Spear attacks against one target
 >
