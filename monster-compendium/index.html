@@ -6,19 +6,16 @@ extra_css:
   - /assets/css/statblock.css
 ---
 
-<h2>Hawthorne Monsters Compendium</h2>
-<p>The monsters in this compendium have been created by various members of the community of the Hawthorne Dungeons & Dragons Guild. The credits are listed on the footer of the monster pages.</p>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<p>If you are a DM and would like to submit a monster that can be used by DMs across the server, <a href="{{ site.baseurl }}/monster-compendium/monsters-submit/">follow the instructions here.</a> </p>
+<h2>Hawthorne Monsters Compendium</h2>
+<p>The monsters in this compendium have been created by various members of the community of the Hawthorne Dungeons & Dragons Guild.</p>
+
+<p>If you are a DM and would like to submit a monster that can be used by DMs across the server, <a href="{{ site.baseurl }}/monster-compendium/generator/">use the Monster Generator here.</a></p>
 
 <h3>Filter Monsters</h3>
-<p>Use the filter below to quickly find monsters by name, type, size and CR.
-  <br>2014 Fair Game monsters are open to all DMs to use.  2014 Full DM monsters (as the name implies) require the <span class="role-full-dm">Full DM</span> tag to use.</p>
+<p>Use the filter below to quickly find monsters by name, type, size and CR.</p>
 
-<!-- ============================================ -->
-<!-- FILTER UI CONTROLS -->
-<!-- Inputs for name search, type, CR range, and size filtering -->
-<!-- ============================================ -->
 <div class="filter-container">
   <div class="filter-group">
     <label for="name-search">Name:</label>
@@ -28,7 +25,7 @@ extra_css:
     <label for="type-filter">Type:</label>
     <select id="type-filter" class="filter-select">
       <option value="">All Types</option>
-    </select>
+      </select>
   </div>
   
   <div class="filter-group">
@@ -45,488 +42,228 @@ extra_css:
     <label for="size-filter">Size:</label>
     <select id="size-filter" class="filter-select">
       <option value="">All Sizes</option>
-    </select>
+      </select>
   </div>
   
   <button id="reset-filters" class="reset-button">Reset Filters</button>
 </div>
 
-<!-- Monster count display - shows "X of Y monsters" -->
-<div id="monster-count" class="monster-count"></div>
+<div id="monster-count" class="monster-count">Loading Compendium...</div>
 
-<!-- ============================================ -->
-<!-- MONSTER LISTING BY CATEGORY -->
-<!-- Jekyll liquid template generates categories and monster cards -->
-<!-- ============================================ -->
-{% assign monsters_by_category = site.monsters | where_exp:"item", "item.category != null" | group_by: 'category' %}
+<div id="dynamic-monster-list"></div>
 
-{% for category in monsters_by_category %}
-  <div class="category-section" data-category="{{ category.name }}">
-    <h2 class="category-title">
-      <button class="category-toggle" aria-expanded="true">
-        <span class="toggle-icon">▼</span>
-        {{ category.name }}
-      </button>
-    </h2>
+<a href="https://www.artstation.com/mandryk" style="display:block; margin-top: 40px; font-size: 0.8em; color: #666;">Background Image: Goblin Chaos by David Mandryk</a>
 
-    <div class="monster-list">
-      {% for monster in category.items %}
-        <!-- Each monster card contains filter data attributes -->
-        <div class="monster-card" 
-             data-cr="{{ monster.cr }}" 
-             data-type="{{ monster.type }}" 
-             data-size="{{ monster.size }}">
-          {% if monster.image %}
-          <div class="monster-card-image">
-            <img src="{{ monster.image | relative_url }}" alt="{{ monster.title }}">
-          </div>
-          {% endif %}
-          <div class="monster-card-content">
-            <h3><a href="{{ monster.url | relative_url }}">{{ monster.title }}</a></h3>
-            <p class="monster-cr">CR {{ monster.cr }}</p>
-            <p class="monster-type">{{ monster.type }}</p>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-{% endfor %}
-
-<a href="https://www.artstation.com/mandryk">Background Image:  Goblin Chaos by David Mandryk</a>
-
-<!-- ============================================ -->
-<!-- FILTER UI STYLES -->
-<!-- All CSS for the filter interface -->
-<!-- ============================================ -->
 <style>
-/* Main container for all filter controls */
-.filter-container {
-  background: #FDF1DC;
-  border: 2px solid var(--color-primary);
-  border-radius: 0px;
-  padding: 1.5em;
-  margin: 2em 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1em;
-  align-items: flex-end; /* Aligns button with inputs */
-}
-
-/* Individual filter input group (label + input/select) */
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  flex: 1;
-  min-width: 150px; /* Prevents inputs from getting too narrow */
-}
-
-/* Filter labels styling */
-.filter-group label {
-  font-family: var(--font-header);
-  font-weight: 700;
-  color: var(--color-primary);
-  text-transform: uppercase;
-  font-size: 0.9em;
-  letter-spacing: 0.5px;
-}
-
-/* Dropdown select boxes */
-.filter-select {
-  padding: 0.5em;
-  border: 2px solid var(--color-primary);
-  border-radius: 0px;
-  background: white;
-  font-family: var(--font-body);
-  font-size: 1em;
-  color: var(--color-primary);
-  cursor: pointer;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px rgba(88, 24, 13, 0.2);
-}
-
-/* Text and number input fields */
-.filter-input {
-  padding: 0.5em;
-  border: 2px solid var(--color-primary);
-  border-radius: 0px;
-  background: white;
-  font-family: var(--font-body);
-  font-size: 1em;
-  color: var(--color-primary);
-  width: 100%;
-}
-
-.filter-input:focus {
-  outline: none;
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px rgba(88, 24, 13, 0.2);
-}
-
-.filter-input::placeholder {
-  color: #999;
-  font-style: italic;
-}
-
-/* Reset filters button */
-.reset-button {
-  padding: 0.5em 1.5em;
-  background: var(--color-primary);
-  color: #FDF1DC;
-  border: none;
-  border-radius: 0px;
-  font-family: var(--font-header);
-  font-size: 0.9em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s;
-  height: fit-content; /* Matches height with input fields */
-}
-
-.reset-button:hover {
-  background: var(--color-secondary);
-}
-
-/* "Showing X of Y monsters" text */
-.monster-count {
-  font-family: var(--font-body);
-  font-style: italic;
-  color:var(--color-primary);
-  margin: 1em 0;
-  font-size: 0.95em;
-}
-
-/* ============================================ */
-/* CATEGORY SECTION STYLES */
-/* Collapsible category headers and containers */
-/* ============================================ -->
-.category-section {
-  margin-bottom: 2em;
-}
-
-/* Hide entire category when no monsters match filters */
-.category-section.hidden {
-  display: none;
-}
-
-/* Collapsible category header button */
-.category-toggle {
-  background: none;
-  border: none;
-  font-family: var(--font-header);
-  font-size: 1.0em;
-  font-weight: 700;
-  color: var( --color-secondary);
-  cursor: pointer;
-  padding: 0.5em 0;
-  width: 100%;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  transition: color 0.2s;
-}
-
-.category-toggle:hover {
-  color: var(--color-secondary);
-}
-
-/* Arrow icon that rotates when collapsed */
-.toggle-icon {
-  display: inline-block;
-  transition: transform 0.3s ease;
-  font-size: 0.8em;
-}
-
-/* Rotated arrow for collapsed state */
-.category-toggle[aria-expanded="false"] .toggle-icon {
-  transform: rotate(-90deg);
-}
-
-/* Hide monster list when category is collapsed */
-.category-section[aria-expanded="false"] .monster-list {
-  display: none;
-}
-
-/* ============================================ */
-/* MONSTER CARD STYLES */
-/* Layout for individual monster cards */
-/* ============================================ -->
-/* Monster card layout - horizontal with image and content */
-.monster-list .monster-card {
-  display: flex; /* Removed !important to allow .hidden class to work */
-  gap: 1em;
-  align-items: center;
-}
-
-/* Monster thumbnail image container */
-.monster-list .monster-card-image {
-  flex-shrink: 0;
-  width: 80px !important;
-  height: 80px !important;
-  overflow: hidden;
-  border-radius: 0px;
-  border: 2px solid var(--color-primary);
-}
-
-/* Monster thumbnail image */
-.monster-list .monster-card-image img {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 80px !important;
-  max-height: 80px !important;
-  object-fit: cover;
-  display: block;
-}
-
-/* Monster card text content area */
-.monster-list .monster-card-content {
-  flex: 1;
-  min-width: 0; /* Prevents text overflow issues */
-}
-
-/* Hide filtered out monster cards */
-.monster-card.hidden {
-  display: none;
-}
-
-/* ============================================ */
-/* RESPONSIVE DESIGN - MOBILE */
-/* Stack filters vertically on small screens */
-/* ============================================ -->
-@media (max-width: 768px) {
-  .filter-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .filter-group {
-    min-width: 100%;
-  }
-  
-  .reset-button {
-    width: 100%;
-  }
-}
+/* ... [Keep all your existing CSS from the previous file] ... */
+/* Add this for the loading state */
+.monster-count { font-weight: bold; color: var(--color-primary); }
 </style>
 
-<!-- ============================================ -->
-<!-- FILTERING AND SORTING JAVASCRIPT -->
-<!-- Handles all interactive filtering functionality -->
-<!-- ============================================ -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // ==========================================
-  // GET DOM ELEMENTS
-  // ==========================================
-  const nameSearchInput = document.getElementById('name-search');
-  const typeFilter = document.getElementById('type-filter');
-  const crFromInput = document.getElementById('cr-from');
-  const crToInput = document.getElementById('cr-to');
-  const sizeFilter = document.getElementById('size-filter');
-  const resetButton = document.getElementById('reset-filters');
-  const monsterCards = document.querySelectorAll('.monster-card');
-  const categorySections = document.querySelectorAll('.category-section');
-  const monsterCount = document.getElementById('monster-count');
-  
-  // ==========================================
-  // HELPER FUNCTIONS
-  // ==========================================
-  
-  /**
-   * Parse CR string to number
-   * Handles fractions like "1/4" and standard numbers
-   * @param {string} crString - CR value from data attribute
-   * @returns {number} Numeric CR value
-   */
-  function parseCR(crString) {
-    // Return high number if CR is missing
-    if (!crString) return 9999; 
+  // --- CONFIGURATION ---
+  // Replace with your actual project details
+  const SUPABASE_URL = 'https://iepqxczcyvrxcbyeiscc.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcHF4Y3pjeXZyeGNieWVpc2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjU2MDEsImV4cCI6MjA3OTk0MTYwMX0.9fK4TppNy7IekO3n4Uwd37dbqMQ7KRhFkex_P_JSeVA';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  document.addEventListener('DOMContentLoaded', async function() {
     
-    // Handle fractional CRs (e.g., "1/4" = 0.25)
-    if (crString.includes('/')) {
-      const parts = crString.split('/');
-      return parseFloat(parts[0]) / parseFloat(parts[1]);
-    }
-    
-    return parseFloat(crString);
-  }
-  
-  // ==========================================
-  // POPULATE FILTER DROPDOWNS
-  // Extract unique types and sizes from monster data
-  // ==========================================
-  const types = new Set();
-  const sizes = new Set();
-  
-  monsterCards.forEach(card => {
-    const type = card.dataset.type;
-    const size = card.dataset.size;
-    
-    if (type) types.add(type);
-    if (size) sizes.add(size);
-  });
-    
-  // ==========================================
-  // CATEGORY COLLAPSE/EXPAND FUNCTIONALITY
-  // ==========================================
-  const categoryToggles = document.querySelectorAll('.category-toggle');
-  categoryToggles.forEach(toggle => {
-    toggle.addEventListener('click', function() {
-      const isExpanded = this.getAttribute('aria-expanded') === 'true';
-      this.setAttribute('aria-expanded', !isExpanded);
-      
-      const section = this.closest('.category-section');
-      section.setAttribute('aria-expanded', !isExpanded);
-    });
-  });
-  
-  // ==========================================
-  // POPULATE TYPE DROPDOWN
-  // Add all unique monster types alphabetically
-  // ==========================================
-  Array.from(types).sort().forEach(type => {
-    const option = document.createElement('option');
-    option.value = type;
-    option.textContent = type;
-    typeFilter.appendChild(option);
-  });
-  
-  // ==========================================
-  // POPULATE SIZE DROPDOWN
-  // Sort by D&D standard size order
-  // ==========================================
-  const sizeOrder = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
-  Array.from(sizes).sort((a, b) => {
-    return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
-  }).forEach(size => {
-    const option = document.createElement('option');
-    option.value = size;
-    option.textContent = size;
-    sizeFilter.appendChild(option);
-  });
-  
-  // ==========================================
-  // MAIN FILTER FUNCTION
-  // Filters and sorts monsters based on all criteria
-  // ==========================================
-  function filterMonsters() {
-    // Get current filter values
-    const selectedType = typeFilter.value;
-    const crFrom = crFromInput.value ? Number(crFromInput.value) : null; 
-    const crTo = crToInput.value ? Number(crToInput.value) : null;
-    const selectedSize = sizeFilter.value;
-    const selectedName = nameSearchInput.value.toLowerCase().trim();
-    
-    let visibleCount = 0;
-    
-    // ==========================================
-    // FILTER EACH MONSTER CARD
-    // Show/hide based on all filter criteria
-    // ==========================================
-    monsterCards.forEach(card => {
-      const cardType = card.dataset.type;
-      const cardCR = parseCR(card.dataset.cr);
-      const cardSize = card.dataset.size;
-      const cardName = card.querySelector('h3 a').textContent.toLowerCase();
-      
-      // Check each filter criterion
-      const typeMatch = !selectedType || cardType === selectedType;
-      const sizeMatch = !selectedSize || cardSize === selectedSize;
-      const nameMatch = !selectedName || cardName.includes(selectedName);
-      
-      // CR range matching
-      let crMatch = true;
-      if (crFrom !== null && cardCR < crFrom) {
-        crMatch = false;
+    // 1. Fetch Data
+    const container = document.getElementById('dynamic-monster-list');
+    const countLabel = document.getElementById('monster-count');
+
+    try {
+      // Fetch only Approved monsters
+      // We explicitly select columns to minimize payload size
+      const { data: monsters, error } = await supabase
+        .from('monsters')
+        .select('id, title, cr, type, data') 
+        .eq('status', 'approved')
+        .order('title');
+
+      if (error) throw error;
+
+      if (!monsters || monsters.length === 0) {
+        container.innerHTML = '<p>No monsters found in the compendium yet.</p>';
+        countLabel.textContent = '';
+        return;
       }
-      if (crTo !== null && cardCR > crTo) {
-        crMatch = false;
-      }
-      
-      // Apply visibility based on all matches
-      if (typeMatch && crMatch && sizeMatch && nameMatch) {
-        card.classList.remove('hidden');
-        visibleCount++;
-      } else {
-        card.classList.add('hidden');
-      }
-    });
-    
-    // ==========================================
-    // SORT MONSTERS WITHIN CATEGORIES
-    // Visible monsters sorted by CR, hidden at end
-    // ==========================================
-    categorySections.forEach(section => {
-      const monsterList = section.querySelector('.monster-list');
-      const allCards = Array.from(monsterList.querySelectorAll('.monster-card'));
-      
-      // Custom sort: visible first (by CR), then hidden
-      allCards.sort((a, b) => {
-        const aIsHidden = a.classList.contains('hidden');
-        const bIsHidden = b.classList.contains('hidden');
-        
-        // Visible cards come before hidden cards
-        if (aIsHidden && !bIsHidden) return 1;
-        if (!aIsHidden && bIsHidden) return -1;
-        
-        // If same visibility, sort by CR
-        const crA = parseCR(a.dataset.cr);
-        const crB = parseCR(b.dataset.cr);
-        return crA - crB;
+
+      // 2. Group by Category
+      // We extract category from the JSONB 'data' column
+      const grouped = monsters.reduce((acc, monster) => {
+        const cat = monster.data.category || 'Uncategorized';
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(monster);
+        return acc;
+      }, {});
+
+      // Sort categories (optional, but nice)
+      const sortedCategories = Object.keys(grouped).sort();
+
+      // 3. Render HTML
+      let html = '';
+
+      sortedCategories.forEach(category => {
+        // Generate Cards HTML
+        const cardsHtml = grouped[category].map(m => {
+            // Extract details
+            const size = m.data.size || 'Medium';
+            const image = m.data.image || ''; // Optional image
+            const thumbUrl = image ? `https://wsrv.nl/?url=${encodeURIComponent(image)}&w=80&h=80&output=webp` : '';
+            
+            // Note: We point to viewer.html with the ID
+            return `
+            <div class="monster-card" 
+                 data-cr="${m.cr}" 
+                 data-type="${m.type}" 
+                 data-size="${size}">
+              
+              ${ image ? `
+              <div class="monster-card-image">
+                <img src="${thumbUrl}" alt="${m.title}" loading="lazy" onerror="this.style.display='none'">
+              </div>` : '' }
+              
+              <div class="monster-card-content">
+                <h3><a href="/monster-compendium/monster-viewer.html?id=${m.id}">${m.title}</a></h3>
+                <p class="monster-cr">CR ${m.cr}</p>
+                <p class="monster-type">${m.type}</p>
+              </div>
+            </div>
+            `;
+        }).join('');
+
+        // Generate Category Wrapper HTML
+        html += `
+          <div class="category-section" data-category="${category}" aria-expanded="true">
+            <h2 class="category-title">
+              <button class="category-toggle" aria-expanded="true">
+                <span class="toggle-icon">▼</span>
+                ${category}
+              </button>
+            </h2>
+            <div class="monster-list">
+              ${cardsHtml}
+            </div>
+          </div>
+        `;
       });
-      
-      // Re-append cards in sorted order
-      allCards.forEach(card => monsterList.appendChild(card));
+
+      container.innerHTML = html;
+      countLabel.textContent = `Showing ${monsters.length} monsters`;
+
+      // 4. Initialize Filters & UI
+      initializeFilters();
+      initializeToggles();
+
+    } catch (err) {
+      console.error('Error loading compendium:', err);
+      container.innerHTML = '<p class="error">Failed to load monsters. Please try again later.</p>';
+    }
+  });
+
+  /* --- UI INITIALIZATION HELPERS --- */
+
+  function initializeToggles() {
+    document.querySelectorAll('.category-toggle').forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+        const section = this.closest('.category-section');
+        section.setAttribute('aria-expanded', !isExpanded);
+      });
     });
-      
-    // ==========================================
-    // HIDE EMPTY CATEGORIES
-    // Categories with no visible monsters are hidden
-    // ==========================================
-    categorySections.forEach(section => {
-      const visibleCardsInSection = section.querySelectorAll('.monster-card:not(.hidden)');
-      if (visibleCardsInSection.length === 0) {
-        section.classList.add('hidden');
-      } else {
-        section.classList.remove('hidden');
-      }
+  }
+
+  function initializeFilters() {
+    const nameInput = document.getElementById('name-search');
+    const typeSelect = document.getElementById('type-filter');
+    const sizeSelect = document.getElementById('size-filter');
+    const crFrom = document.getElementById('cr-from');
+    const crTo = document.getElementById('cr-to');
+    const resetBtn = document.getElementById('reset-filters');
+    const cards = document.querySelectorAll('.monster-card');
+    const sections = document.querySelectorAll('.category-section');
+    const countLabel = document.getElementById('monster-count');
+
+    // Populate Dropdowns
+    const types = new Set();
+    const sizes = new Set();
+    cards.forEach(c => {
+        types.add(c.dataset.type);
+        sizes.add(c.dataset.size);
     });
+
+    Array.from(types).sort().forEach(t => {
+        typeSelect.add(new Option(t, t));
+    });
+
+    const sizeOrder = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
+    Array.from(sizes).sort((a,b) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b)).forEach(s => {
+        sizeSelect.add(new Option(s, s));
+    });
+
+    // Helper: Parse CR
+    const parseCR = (str) => {
+        if (!str) return 999;
+        if (str.includes('/')) {
+            const [n, d] = str.split('/');
+            return parseFloat(n) / parseFloat(d);
+        }
+        return parseFloat(str);
+    };
+
+    // Main Filter Logic
+    const runFilter = () => {
+        const sName = nameInput.value.toLowerCase().trim();
+        const sType = typeSelect.value;
+        const sSize = sizeSelect.value;
+        const minCr = crFrom.value ? parseFloat(crFrom.value) : -1;
+        const maxCr = crTo.value ? parseFloat(crTo.value) : 999;
+
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const cName = card.querySelector('h3').textContent.toLowerCase();
+            const cType = card.dataset.type;
+            const cSize = card.dataset.size;
+            const cCr = parseCR(card.dataset.cr);
+
+            let visible = true;
+            if (sName && !cName.includes(sName)) visible = false;
+            if (sType && cType !== sType) visible = false;
+            if (sSize && cSize !== sSize) visible = false;
+            if (cCr < minCr || cCr > maxCr) visible = false;
+
+            if (visible) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        // Hide empty categories
+        sections.forEach(sec => {
+            const hasVisible = sec.querySelectorAll('.monster-card:not(.hidden)').length > 0;
+            if(hasVisible) sec.classList.remove('hidden');
+            else sec.classList.add('hidden');
+        });
+
+        countLabel.textContent = `Showing ${visibleCount} monsters`;
+    };
+
+    // Attach Listeners
+    [nameInput, typeSelect, sizeSelect, crFrom, crTo].forEach(el => el.addEventListener('input', runFilter));
     
-    // Update count display
-    const totalCount = monsterCards.length;
-    monsterCount.textContent = `Showing ${visibleCount} of ${totalCount} monsters`;
+    resetBtn.addEventListener('click', () => {
+        nameInput.value = '';
+        typeSelect.value = '';
+        sizeSelect.value = '';
+        crFrom.value = '';
+        crTo.value = '';
+        runFilter();
+    });
   }
-  
-  // ==========================================
-  // RESET ALL FILTERS
-  // Clear all inputs and show all monsters
-  // ==========================================
-  function resetFilters() {
-    typeFilter.value = '';
-    crFromInput.value = '';
-    crToInput.value = '';
-    sizeFilter.value = '';
-    nameSearchInput.value = '';
-    filterMonsters();
-  }
-  
-  // ==========================================
-  // EVENT LISTENERS
-  // Attach filter function to all inputs
-  // ==========================================
-  typeFilter.addEventListener('change', filterMonsters);
-  crFromInput.addEventListener('input', filterMonsters);
-  crToInput.addEventListener('input', filterMonsters);
-  sizeFilter.addEventListener('change', filterMonsters);
-  nameSearchInput.addEventListener('input', filterMonsters);
-  resetButton.addEventListener('click', resetFilters);
-  
-  // Initialize - show count and apply any default filters
-  filterMonsters();
-});
 </script>
