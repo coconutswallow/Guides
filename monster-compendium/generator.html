@@ -1,14 +1,17 @@
 ---
 layout: default 
-title: Monster Factory
+title: Stat Block Generator 
 permalink: /monster-compendium/generator/
 ---
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <div class="generator-container">
-    <div id="auth-header" class="auth-bar"></div>
-
+    <div class="page-intro">
+        <h2>Hawthorne Bestiary: Monster Creator</h2>
+        <div id="auth-header" class="auth-bar"></div>
+    </div>
+    
     <div class="generator-controls">
         <div class="view-toggles">
             <button class="toggle-btn" data-view="dashboard">My Monsters</button>
@@ -16,26 +19,40 @@ permalink: /monster-compendium/generator/
             <button class="toggle-btn" data-view="preview">Preview</button>
         </div>
         <div class="editor-actions">
-            <div id="status-indicator"></div>
-            <button id="save-db-btn" class="primary-btn">💾 Save</button>
-            <button id="new-monster-btn" class="secondary-btn">➕ New</button>
+            <div id="status-indicator" style="display:inline-block; margin-right:15px;"></div>
+            
+            <button id="save-db-btn" class="download-btn">💾 Save to Cloud</button>
+            <button id="new-monster-btn" class="download-btn secondary">➕ New Monster</button>
         </div>
     </div>
     
-    <div id="dashboard-view" class="view-container"></div>
-    <div id="form-view" class="view-container active"></div>
-    <div id="preview-view" class="view-container"></div>
+    <div id="dashboard-view" class="view-container">
+        <div class="loading-spinner">Loading dashboard...</div>
+    </div>
+    
+    <div id="form-view" class="view-container active">
+        </div>
+    
+    <div id="preview-view" class="view-container">
+        </div>
 </div>
 
+<link rel="stylesheet" href="{{ '/assets/css/generator.css' | relative_url }}">
 <style>
+    /* Additions for Dashboard & Auth */
+    .auth-bar { margin-bottom: 20px; padding: 10px; background: #eee; border-radius: 5px; display: flex; justify-content: flex-end; }
     .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; text-transform: uppercase; font-weight: bold; }
     .status-approved { background: #d4edda; color: #155724; }
     .status-draft { background: #fff3cd; color: #856404; }
     .status-submitted { background: #cce5ff; color: #004085; }
     .status-rejected { background: #f8d7da; color: #721c24; }
-    .revision-mark { color: #888; font-style: italic; font-size: 0.9em; margin-right: 5px; }
-    .admin-tag { background: gold; color: black; padding: 2px 5px; font-weight: bold; font-size: 0.7em; border-radius: 3px; }
-    /* Add table styles similar to your map gallery */
+    .download-btn.secondary { background: #6c757d; }
+    
+    /* Table Styles for Dashboard */
+    .monster-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .monster-table th, .monster-table td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+    .monster-table th { background-color: #f8f9fa; }
+    .btn-group button { margin-right: 5px; padding: 5px 10px; cursor: pointer; }
 </style>
 
 <script src="{{ '/assets/js/monster-service.js' | relative_url }}"></script>
@@ -46,8 +63,10 @@ permalink: /monster-compendium/generator/
 <script src="{{ '/assets/js/monster-controller.js' | relative_url }}"></script>
 
 <script>
-    // Initialize
+    // Start the app
     document.addEventListener('DOMContentLoaded', () => {
-        MonsterController.init();
+        if(MonsterController && MonsterController.init) {
+            MonsterController.init();
+        }
     });
 </script>
