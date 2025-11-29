@@ -2,8 +2,8 @@ const MonsterService = (function() {
     'use strict';
 
     // 🔴 CONFIGURATION: REPLACE THESE WITH YOUR NEW PROJECT KEYS 🔴
-    const SUPABASE_URL = 'https://YOUR_NEW_PROJECT_ID.supabase.co';
-    const SUPABASE_KEY = 'YOUR_ANON_PUBLIC_KEY'; 
+    const SUPABASE_URL = 'https://iepqxczcyvrxcbyeiscc.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcHF4Y3pjeXZyeGNieWVpc2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjU2MDEsImV4cCI6MjA3OTk0MTYwMX0.9fK4TppNy7IekO3n4Uwd37dbqMQ7KRhFkex_P_JSeVA'; 
     
     let supabase = null;
     let currentUser = null;
