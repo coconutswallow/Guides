@@ -32,6 +32,68 @@ const MonsterController = (function() {
         
         // Initial Render
         render('form');
+        // 1. Define the UI Updater function
+function updateAuthUI(session) {
+    const authHeader = document.getElementById('auth-header');
+    
+    if (session) {
+        // User is LOGGED IN
+        const email = session.user.email;
+        // Optionally get Discord metadata like avatar:
+        // const avatar = session.user.user_metadata.avatar_url;
+        
+        authHeader.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span>Signed in as <strong>${email}</strong></span>
+                <button id="logout-btn" class="download-btn secondary" style="padding: 5px 10px; font-size: 0.8rem;">Sign Out</button>
+            </div>
+        `;
+        
+        // Attach Logout Handler
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) console.error('Error logging out:', error);
+        });
+        
+    } else {
+        // User is LOGGED OUT
+        authHeader.innerHTML = `
+            <button id="login-btn" class="download-btn" style="background-color: #5865F2;">Login with Discord</button>
+        `;
+        
+        // Attach Login Handler
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'discord',
+                options: {
+                    redirectTo: window.location.href // Returns to current page
+                }
+            });
+        });
+    }
+}
+
+// 2. Setup the Listeners (Put this in your init function)
+async function initAuth() {
+    // Check initial session
+    const { data: { session } } = await supabase.auth.getSession();
+    updateAuthUI(session);
+
+    // Listen for changes (Login, Logout, Auto-refresh)
+    supabase.auth.onAuthStateChange((event, session) => {
+        console.log("Auth event:", event); // Helpful for debugging
+        updateAuthUI(session);
+        
+        // Optional: Reload dashboard if they just logged in
+        if (event === 'SIGNED_IN' && MonsterController && MonsterController.loadDashboard) {
+            MonsterController.loadDashboard(); 
+        }
+    });
+}
+
+// 3. Call it!
+initAuth();
+        
     }
 
     function setupGlobalListeners() {
