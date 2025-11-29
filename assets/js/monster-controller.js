@@ -23,7 +23,7 @@ const MonsterController = (function() {
             type: 'Beast',
             alignment: 'Unaligned',
             category: '2014 Fair Game',
-            creator: '',
+            creator: '', // Will be auto-filled by Auth
             
             // Visual elements
             image: '',
@@ -36,20 +36,11 @@ const MonsterController = (function() {
             speed: '',
             
             // Ability scores (default to 10)
-            str: 10,
-            dex: 10,
-            con: 10,
-            int: 10,
-            wis: 10,
-            cha: 10,
+            str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
             
             // Optional proficient saving throw overrides
-            strSave: '', 
-            dexSave: '',
-            conSave: '',
-            intSave: '',
-            wisSave: '',
-            chaSave: '',
+            strSave: '', dexSave: '', conSave: '', 
+            intSave: '', wisSave: '', chaSave: '',
             
             // Additional statistics
             skills: '',
@@ -59,7 +50,7 @@ const MonsterController = (function() {
             senses: '',
             languages: '',
             
-            // Monster abilities (arrays of {name, description} objects)
+            // Monster abilities
             traits: [],
             actions: [],
             reactions: [],
@@ -67,25 +58,16 @@ const MonsterController = (function() {
             legendaryActions: [],
             legendaryActionDescription: '',
             
-            // Text blocks for lair mechanics
+            // Text blocks
             lairActions: '', 
             regionalEffects: '',
-
-            // NEW: Additional Info (Tactics, Customizable Traits, etc.)
             additionalInfo: ''
         };
     }
 
-    /**
-     * Reset state to initial values
-     */
-    function resetState() {
-        state = getInitialState();
-    }
+    // --- STANDARD HELPER FUNCTIONS (No Changes Here) ---
+    function resetState() { state = getInitialState(); }
 
-    /**
-     * Save focus information before re-render
-     */
     function saveFocus() {
         const activeElement = document.activeElement;
         if (activeElement && 
@@ -100,12 +82,8 @@ const MonsterController = (function() {
         }
     }
 
-    /**
-     * Restore focus after re-render
-     */
     function restoreFocus() {
         if (!focusedElementInfo) return;
-        
         const elementToFocus = document.getElementById(focusedElementInfo.id);
         if (elementToFocus) {
             elementToFocus.focus();
@@ -116,18 +94,13 @@ const MonsterController = (function() {
         }
     }
 
-    /**
-     * Sync form inputs to state
-     */
     function syncFormState() {
         const formView = document.getElementById('form-view');
         if (!formView) return;
 
         const inputs = formView.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
-            // Skip item name/description fields (they have data attributes)
             if (input.hasAttribute('data-field')) return;
-            
             if (input.id in state) {
                 if (input.type === 'number') {
                     state[input.id] = parseInt(input.value) || 10;
@@ -138,10 +111,6 @@ const MonsterController = (function() {
         });
     }
 
-    /**
-     * Render the current view
-     * @param {string} activeView - 'form' or 'preview'
-     */
     function render(activeView = 'form') {
         const formView = document.getElementById('form-view');
         const previewView = document.getElementById('preview-view');
@@ -159,25 +128,18 @@ const MonsterController = (function() {
         }
     }
 
-    /**
-     * Attach event listeners to form inputs
-     */
     function attachFormListeners() {
         const formView = document.getElementById('form-view');
         if (!formView) return;
         
-        // Fields that trigger full re-render (affect calculations)
         const dynamicFields = [
             'str', 'dex', 'con', 'int', 'wis', 'cha', 
             'strSave', 'dexSave', 'conSave', 'intSave', 'wisSave', 'chaSave',
             'cr'
         ];
 
-        // Regular input fields
         const inputs = formView.querySelectorAll('input:not([data-field]), select, textarea:not([data-field])');
         inputs.forEach(input => {
-            // For ability scores and save overrides, use 'change' and 'blur' to avoid premature calculation
-            // For other fields, use 'input' for immediate updates
             const isDynamicField = dynamicFields.includes(input.id);
             const eventType = isDynamicField ? 'change' : (input.tagName === 'SELECT' ? 'change' : 'input');
             
@@ -187,14 +149,9 @@ const MonsterController = (function() {
                 } else {
                     state[input.id] = input.value;
                 }
-
-                // Re-render if it's a dynamic field that affects calculations
-                if (isDynamicField) {
-                    render('form');
-                }
+                if (isDynamicField) render('form');
             });
 
-            // Also add blur event for number inputs to ensure final value is captured
             if (input.type === 'number' && isDynamicField) {
                 input.addEventListener('blur', () => {
                     state[input.id] = parseInt(input.value) || 10;
@@ -203,108 +160,70 @@ const MonsterController = (function() {
             }
         });
 
-        // Item list inputs (name/description fields)
         const itemInputs = formView.querySelectorAll('input[data-field], textarea[data-field]');
         itemInputs.forEach(input => {
             input.addEventListener('input', () => {
                 const field = input.getAttribute('data-field');
                 const index = parseInt(input.getAttribute('data-index'));
                 const prop = input.getAttribute('data-prop');
-                
                 if (state[field] && state[field][index]) {
                     state[field][index][prop] = input.value;
                 }
             });
         });
 
-        // Add item buttons
-        const addButtons = formView.querySelectorAll('.add-button');
-        addButtons.forEach(button => {
+        formView.querySelectorAll('.add-button').forEach(button => {
             button.addEventListener('click', () => {
-                const field = button.getAttribute('data-field');
-                addItem(field);
+                addItem(button.getAttribute('data-field'));
             });
         });
 
-        // Remove item buttons
-        const removeButtons = formView.querySelectorAll('.remove-button');
-        removeButtons.forEach(button => {
+        formView.querySelectorAll('.remove-button').forEach(button => {
             button.addEventListener('click', () => {
-                const field = button.getAttribute('data-field');
-                const index = parseInt(button.getAttribute('data-index'));
-                removeItem(field, index);
+                removeItem(button.getAttribute('data-field'), parseInt(button.getAttribute('data-index')));
             });
         });
     }
 
-    /**
-     * Add an item to an array field
-     * @param {string} field - Field name (traits, actions, etc.)
-     */
     function addItem(field) {
         if (!state[field]) state[field] = [];
         state[field].push({ name: '', description: '' });
         render('form');
     }
 
-    /**
-     * Remove an item from an array field
-     * @param {string} field - Field name
-     * @param {number} index - Index to remove
-     */
     function removeItem(field, index) {
         if (!state[field]) return;
         state[field].splice(index, 1);
         render('form');
     }
 
-    /**
-     * Switch between form and preview views
-     * @param {string} view - 'form' or 'preview'
-     */
     function switchView(view) {
         const formView = document.getElementById('form-view');
         const previewView = document.getElementById('preview-view');
-        
         if (!formView || !previewView) return;
 
-        // Update view visibility
         formView.classList.remove('active');
         previewView.classList.remove('active');
         document.getElementById(`${view}-view`).classList.add('active');
         
-        // Update button states
-        document.querySelectorAll('.toggle-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
+        document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
         const activeButton = document.querySelector(`[data-view="${view}"]`);
-        if (activeButton) {
-            activeButton.classList.add('active');
-        }
+        if (activeButton) activeButton.classList.add('active');
 
-        // Render the active view
         render(view);
     }
 
-    /**
-     * Download markdown file
-     */
     function downloadMarkdown() {
         syncFormState();
-        
-        // Validate before download
         const validation = MonsterValidator.validateMonster(state);
         if (!validation.valid) {
             alert("Please fix the following errors before downloading:\n\n- " + validation.errors.join("\n- "));
             return;
         }
-
-        // Generate markdown
         const abilities = MonsterCalculator.calculateAllAbilities(state);
         const markdown = MonsterGenerator.generateMarkdown(state, abilities);
         const filename = MonsterGenerator.generateFilename(state.title);
 
-        // Create and trigger download
         const blob = new Blob([markdown], { type: 'text/markdown' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -316,44 +235,55 @@ const MonsterController = (function() {
         URL.revokeObjectURL(url);
     }
 
-    /**
-     * Load markdown file
-     * @param {Event} event - File input change event
-     */
     function loadMarkdownFile(event) {
         const file = event.target.files[0];
         if (!file) return;
-        
         const reader = new FileReader();
         reader.onload = function(e) {
             const content = e.target.result;
-            
             try {
                 const loadedState = MonsterParser.parseMonster(content);
-                
                 if (!loadedState) {
-                    alert("Failed to parse the markdown file. Please check the format.");
+                    alert("Failed to parse the markdown file.");
                     return;
                 }
-
-                // Update state with loaded data
                 state = loadedState;
-                
-                // Re-render form
                 render('form');
                 switchView('form');
-                
                 alert(`Successfully loaded: ${file.name}`);
             } catch (error) {
                 console.error('Error loading markdown:', error);
                 alert("Error loading file: " + error.message);
             }
-
-            // Reset file input
             event.target.value = null;
         };
-
         reader.readAsText(file);
+    }
+
+    // --- NEW: AUTH UI HANDLING ---
+    function updateAuthUI(user) {
+        const authContainer = document.getElementById('auth-status');
+        if (!authContainer) return;
+
+        if (user) {
+            const userName = window.authManager.getUserName();
+            authContainer.innerHTML = `
+                <span style="font-size: 0.9em; margin-right: 10px;">👤 ${userName}</span>
+                <button id="logout-btn" class="download-btn" style="background:#444; padding: 4px 10px; font-size: 0.8em;">Log Out</button>
+            `;
+            document.getElementById('logout-btn').addEventListener('click', () => window.authManager.logout());
+
+            // Auto-fill creator name if empty
+            if (!state.creator) {
+                state.creator = userName;
+                render('form'); // Re-render to show the name in the input
+            }
+        } else {
+            authContainer.innerHTML = `
+                <button id="login-btn" class="download-btn" style="background: #5865F2; padding: 4px 10px; font-size: 0.8em;">Login with Discord</button>
+            `;
+            document.getElementById('login-btn').addEventListener('click', () => window.authManager.login());
+        }
     }
 
     /**
@@ -366,16 +296,19 @@ const MonsterController = (function() {
             return;
         }
 
-        // Create main UI structure
+        // --- NEW: UPDATED HTML STRUCTURE TO INCLUDE AUTH STATUS ---
         container.innerHTML = `
-            <div class="generator-controls">
+            <div class="generator-controls" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <div class="view-toggles">
                     <button class="toggle-btn active" data-view="form">Edit Form</button>
                     <button class="toggle-btn" data-view="preview">Preview</button>
                 </div>
+
+                <div id="auth-status" style="display:flex; align-items:center;">Loading...</div>
+
                 <div style="display: flex; gap: 0.5em;">
-                    <button class="download-btn" id="download-btn">📥 Download Markdown</button>
-                    <button class="download-btn" style="background: #007bff;" id="upload-btn">📤 Load Markdown</button>
+                    <button class="download-btn" id="download-btn">📥 Download MD</button>
+                    <button class="download-btn" style="background: #007bff;" id="upload-btn">📤 Load MD</button>
                     <input type="file" id="upload-input" accept=".md" style="display: none;">
                 </div>
             </div>
@@ -393,15 +326,21 @@ const MonsterController = (function() {
         });
 
         document.getElementById('download-btn').addEventListener('click', downloadMarkdown);
-        
-        document.getElementById('upload-btn').addEventListener('click', () => {
-            document.getElementById('upload-input').click();
-        });
-
+        document.getElementById('upload-btn').addEventListener('click', () => document.getElementById('upload-input').click());
         document.getElementById('upload-input').addEventListener('change', loadMarkdownFile);
 
         // Initial render
         render('form');
+
+        // --- NEW: INITIALIZE AUTH MANAGER ---
+        if (window.authManager) {
+            window.authManager.init((user) => {
+                updateAuthUI(user);
+            });
+        } else {
+            console.error("Auth Manager not loaded.");
+            document.getElementById('auth-status').innerHTML = "Auth Error";
+        }
     }
 
     // Public API
