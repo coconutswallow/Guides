@@ -13,13 +13,18 @@ const MonsterStorage = (function() {
 
     // --- Helper to get client securely ---
     function getClient() {
-        if (window.supabase) {
-            return window.supabase;
-        }
+        // 1. Prioritize AuthManager (It holds the correctly initialized client)
         if (window.authManager) {
             return window.authManager.getClient();
         }
-        console.error("MonsterStorage: Supabase client not found.");
+
+        // 2. Check if window.supabase is actually the client (has .from method)
+        // If it's just the SDK library, this check prevents the crash.
+        if (window.supabase && typeof window.supabase.from === 'function') {
+            return window.supabase;
+        }
+
+        console.error("MonsterStorage: No valid Supabase client found.");
         return null;
     }
 
