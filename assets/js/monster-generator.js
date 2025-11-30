@@ -1,362 +1,227 @@
-// Monster Controller Module
-// Orchestrates all other modules and handles user interactions
-const MonsterController = (function() {
+// Monster Generator Module
+// Converts monster state object to markdown format
+const MonsterGenerator = (function() {
     'use strict';
 
-    // Application state
-    let state = getInitialState();
-    
-    // Focus management for re-rendering
-    let focusedElementInfo = null;
+    const NEWLINE_REGEX = /\n/g;
 
-    /**
-     * Get initial empty state
-     * @returns {Object} Initial monster state
-     */
-    function getInitialState() {
-        return {
-            // Layout and identification
-            layout: 'statblock',
-            title: '',
-            cr: '',
-            size: 'Medium',
-            type: 'Beast',
-            alignment: 'Unaligned',
-            category: '2014 Fair Game',
-            creator: '', // Will be auto-filled by Auth
-            
-            // Visual elements
-            image: '',
-            image_credit: '',
-            description: '',
-            
-            // Core combat statistics
-            ac: '',
-            hp: '',
-            speed: '',
-            
-            // Ability scores (default to 10)
-            str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
-            
-            // Optional proficient saving throw overrides
-            strSave: '', dexSave: '', conSave: '', 
-            intSave: '', wisSave: '', chaSave: '',
-            
-            // Additional statistics
-            skills: '',
-            damageResistances: '',
-            damageImmunities: '',
-            conditionImmunities: '',
-            senses: '',
-            languages: '',
-            
-            // Monster abilities
-            traits: [],
-            actions: [],
-            reactions: [],
-            bonusActions: [],
-            legendaryActions: [],
-            legendaryActionDescription: '',
-            
-            // Text blocks
-            lairActions: '', 
-            regionalEffects: '',
-            additionalInfo: ''
-        };
-    }
+    function generateFrontMatter(state) {
+        let yaml = `---
+layout: ${state.layout}
+title: ${state.title}
+cr: ${state.cr}
+size: ${state.size}
+type: ${state.type}
+alignment: ${state.alignment}
+category: ${state.category}
+creator: ${state.creator}`;
 
-    // --- STANDARD HELPER FUNCTIONS (No Changes Here) ---
-    function resetState() { state = getInitialState(); }
-
-    function saveFocus() {
-        const activeElement = document.activeElement;
-        if (activeElement && 
-            (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT') && 
-            activeElement.id) {
-            focusedElementInfo = {
-                id: activeElement.id,
-                cursor: activeElement.selectionStart !== null ? activeElement.selectionStart : activeElement.value.length
-            };
-        } else {
-            focusedElementInfo = null;
+        if (state.image) {
+            yaml += `\nimage: ${state.image}`;
         }
-    }
-
-    function restoreFocus() {
-        if (!focusedElementInfo) return;
-        const elementToFocus = document.getElementById(focusedElementInfo.id);
-        if (elementToFocus) {
-            elementToFocus.focus();
-            if (elementToFocus.setSelectionRange) {
-                const cursor = Math.min(focusedElementInfo.cursor, elementToFocus.value.length);
-                elementToFocus.setSelectionRange(cursor, cursor);
-            }
+        if (state.image_credit) {
+            yaml += `\nimage_credit: ${state.image_credit}`;
         }
+
+        yaml += `\n---\n\n`;
+        return yaml;
     }
 
-    function syncFormState() {
-        const formView = document.getElementById('form-view');
-        if (!formView) return;
-
-        const inputs = formView.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            if (input.hasAttribute('data-field')) return;
-            if (input.id in state) {
-                if (input.type === 'number') {
-                    state[input.id] = parseInt(input.value) || 10;
-                } else {
-                    state[input.id] = input.value;
-                }
-            }
-        });
+    function generateLoreSection(state) {
+        if (!state.description || !state.description.trim()) {
+            return '';
+        }
+        let lore = '';
+        lore += `## ${state.title}\n\n`;
+        lore += state.description.trim();
+        lore += '\n\n'; 
+        return lore;
     }
 
-    function render(activeView = 'form') {
-        const formView = document.getElementById('form-view');
-        const previewView = document.getElementById('preview-view');
+    function generateAbilityTable(abilities) {
+        let table = `> |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |\n`;
+        table += `> |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|\n`;
+        table += `> | **Str** | ${abilities.str.score} | ${abilities.str.formattedMod} | ${abilities.str.save} | `;
+        table += `**Dex** | ${abilities.dex.score} | ${abilities.dex.formattedMod} | ${abilities.dex.save} | `;
+        table += `**Con** | ${abilities.con.score} | ${abilities.con.formattedMod} | ${abilities.con.save} |\n`;
+        table += `> | **Int** | ${abilities.int.score} | ${abilities.int.formattedMod} | ${abilities.int.save} | `;
+        table += `**Wis** | ${abilities.wis.score} | ${abilities.wis.formattedMod} | ${abilities.wis.save} | `;
+        table += `**Cha** | ${abilities.cha.score} | ${abilities.cha.formattedMod} | ${abilities.cha.save} |\n>\n`;
+        return table;
+    }
+
+    function generateSavingThrows(abilities) {
+        const saveOverrides = [];
+        const abilityKeys = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         
-        if (!formView || !previewView) return;
+        abilityKeys.forEach(key => {
+            if (abilities[key].hasOverride) {
+                const abilityName = key.charAt(0).toUpperCase() + key.slice(1);
+                saveOverrides.push(`${abilityName} ${abilities[key].saveOverride}`);
+            }
+        });
 
-        if (activeView === 'form') {
-            saveFocus();
-            formView.innerHTML = MonsterUI.renderForm(state);
-            restoreFocus();
-            attachFormListeners();
-        } else {
-            syncFormState();
-            previewView.innerHTML = MonsterUI.renderPreview(state);
+        if (saveOverrides.length > 0) {
+            return `> **Saving Throws** ${saveOverrides.join(', ')}  \n`;
         }
+        return '';
     }
 
-    function attachFormListeners() {
-        const formView = document.getElementById('form-view');
-        if (!formView) return;
+    function generateOptionalStats(state) {
+        let stats = '';
+        if (state.skills) stats += `> **Skills** ${state.skills}  \n`;
+        if (state.damageResistances) stats += `> **Damage Resistances** ${state.damageResistances}  \n`;
+        if (state.damageImmunities) stats += `> **Damage Immunities** ${state.damageImmunities}  \n`;
+        if (state.conditionImmunities) stats += `> **Condition Immunities** ${state.conditionImmunities}  \n`;
+        if (state.senses) stats += `> **Senses** ${state.senses}  \n`;
+        if (state.languages) stats += `> **Languages** ${state.languages}  \n`;
+        return stats;
+    }
+
+    function formatDescription(description) {
+        if (!description) return '';
+        return description.replace(NEWLINE_REGEX, '\n> ');
+    }
+
+    function generateAbilitySection(items, sectionTitle) {
+        if (!items || items.length === 0) return '';
+        const validItems = items.filter(item => 
+            item.name && item.name.trim() && 
+            item.description && item.description.trim()
+        );
+        if (validItems.length === 0) return '';
+        let section = `> ### ${sectionTitle}\n>\n`;
+        validItems.forEach(item => {
+            const formattedDesc = formatDescription(item.description);
+            section += `> ***${item.name}.*** ${formattedDesc}\n>\n`;
+        });
+        return section;
+    }
+
+    function generateLegendaryActions(state) {
+        if (!state.legendaryActions || state.legendaryActions.length === 0) return '';
+        const validActions = state.legendaryActions.filter(action =>
+            action.name && action.name.trim() &&
+            action.description && action.description.trim()
+        );
+        if (validActions.length === 0) return '';
+        const defaultDesc = "The creature can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature's turn. The creature regains spent legendary actions at the start of its turn.";
+        const legendaryDesc = state.legendaryActionDescription.trim() || defaultDesc;
+        let section = `> ### Legendary Actions\n>\n`;
+        section += `> ${formatDescription(legendaryDesc)}\n>\n`;
+        validActions.forEach(action => {
+            const formattedDesc = formatDescription(action.description);
+            section += `> ***${action.name}.*** ${formattedDesc}\n>\n`;
+        });
+        return section;
+    }
+
+    function generateTextBlock(content, sectionTitle) {
+        if (!content || !content.trim()) return '';
+        let section = `> ### ${sectionTitle}\n>\n`;
         
-        const dynamicFields = [
-            'str', 'dex', 'con', 'int', 'wis', 'cha', 
-            'strSave', 'dexSave', 'conSave', 'intSave', 'wisSave', 'chaSave',
-            'cr'
-        ];
+        const lines = content.split(NEWLINE_REGEX);
+        let previousLineWasList = false;
+        let previousLineWasEmpty = true;
 
-        const inputs = formView.querySelectorAll('input:not([data-field]), select, textarea:not([data-field])');
-        inputs.forEach(input => {
-            const isDynamicField = dynamicFields.includes(input.id);
-            const eventType = isDynamicField ? 'change' : (input.tagName === 'SELECT' ? 'change' : 'input');
-            
-            input.addEventListener(eventType, () => {
-                if (input.type === 'number') {
-                    state[input.id] = parseInt(input.value) || 10;
-                } else {
-                    state[input.id] = input.value;
-                }
-                if (isDynamicField) render('form');
-            });
-
-            if (input.type === 'number' && isDynamicField) {
-                input.addEventListener('blur', () => {
-                    state[input.id] = parseInt(input.value) || 10;
-                    render('form');
-                });
+        const formattedLines = lines.map(line => {
+            const trimmed = line.trim();
+            if (!trimmed) {
+                previousLineWasEmpty = true;
+                previousLineWasList = false;
+                return '>';
             }
+
+            // Check if this line is a list item
+            const isList = trimmed.startsWith('* ') || trimmed.startsWith('- ');
+            let result = `> ${trimmed}`;
+
+            // If we are starting a list, and the previous line wasn't empty and wasn't a list,
+            // insert a spacer line to ensure Markdown parsers recognize the list.
+            if (isList && !previousLineWasList && !previousLineWasEmpty) {
+                result = `>\n> ${trimmed}`;
+            }
+
+            previousLineWasList = isList;
+            previousLineWasEmpty = false;
+            return result;
         });
 
-        const itemInputs = formView.querySelectorAll('input[data-field], textarea[data-field]');
-        itemInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const field = input.getAttribute('data-field');
-                const index = parseInt(input.getAttribute('data-index'));
-                const prop = input.getAttribute('data-prop');
-                if (state[field] && state[field][index]) {
-                    state[field][index][prop] = input.value;
-                }
-            });
-        });
-
-        formView.querySelectorAll('.add-button').forEach(button => {
-            button.addEventListener('click', () => {
-                addItem(button.getAttribute('data-field'));
-            });
-        });
-
-        formView.querySelectorAll('.remove-button').forEach(button => {
-            button.addEventListener('click', () => {
-                removeItem(button.getAttribute('data-field'), parseInt(button.getAttribute('data-index')));
-            });
-        });
+        section += formattedLines.join('\n') + '\n>\n';
+        return section;
     }
 
-    function addItem(field) {
-        if (!state[field]) state[field] = [];
-        state[field].push({ name: '', description: '' });
-        render('form');
-    }
+    function generateMarkdown(state, abilities) {
+        let markdown = '';
+        markdown += generateFrontMatter(state);
+        markdown += generateLoreSection(state);
 
-    function removeItem(field, index) {
-        if (!state[field]) return;
-        state[field].splice(index, 1);
-        render('form');
-    }
+        markdown += `___\n`;
+        markdown += `> ## ${state.title}\n`;
+        markdown += `> *${state.size} ${state.type.toLowerCase()}, ${state.alignment.toLowerCase()}*\n>\n`;
 
-    function switchView(view) {
-        const formView = document.getElementById('form-view');
-        const previewView = document.getElementById('preview-view');
-        if (!formView || !previewView) return;
-
-        formView.classList.remove('active');
-        previewView.classList.remove('active');
-        document.getElementById(`${view}-view`).classList.add('active');
+        // Basic combat stats
+        const basicStats = [];
+        if (state.ac) basicStats.push(`**AC** ${state.ac}`);
+        if (state.hp) basicStats.push(`**HP** ${state.hp}`);
+        if (state.speed) basicStats.push(`**Speed** ${state.speed}`);
         
-        document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
-        const activeButton = document.querySelector(`[data-view="${view}"]`);
-        if (activeButton) activeButton.classList.add('active');
+        // Calculate Initiative
+        const init = MonsterCalculator.calculateInitiative(state.dex, state.cr, state.initiativeProficiency);
+        basicStats.push(`**Initiative** ${init.formatted} (${init.score})`);
 
-        render(view);
-    }
-
-    function downloadMarkdown() {
-        syncFormState();
-        const validation = MonsterValidator.validateMonster(state);
-        if (!validation.valid) {
-            alert("Please fix the following errors before downloading:\n\n- " + validation.errors.join("\n- "));
-            return;
-        }
-        const abilities = MonsterCalculator.calculateAllAbilities(state);
-        const markdown = MonsterGenerator.generateMarkdown(state, abilities);
-        const filename = MonsterGenerator.generateFilename(state.title);
-
-        const blob = new Blob([markdown], { type: 'text/markdown' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
-    function loadMarkdownFile(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const content = e.target.result;
-            try {
-                const loadedState = MonsterParser.parseMonster(content);
-                if (!loadedState) {
-                    alert("Failed to parse the markdown file.");
-                    return;
-                }
-                state = loadedState;
-                render('form');
-                switchView('form');
-                alert(`Successfully loaded: ${file.name}`);
-            } catch (error) {
-                console.error('Error loading markdown:', error);
-                alert("Error loading file: " + error.message);
-            }
-            event.target.value = null;
-        };
-        reader.readAsText(file);
-    }
-
-    // --- NEW: AUTH UI HANDLING ---
-    function updateAuthUI(user) {
-        const authContainer = document.getElementById('auth-status');
-        if (!authContainer) return;
-
-        if (user) {
-            const userName = window.authManager.getUserName();
-            authContainer.innerHTML = `
-                <span style="font-size: 0.9em; margin-right: 10px;">👤 ${userName}</span>
-                <button id="logout-btn" class="download-btn" style="background:#444; padding: 4px 10px; font-size: 0.8em;">Log Out</button>
-            `;
-            document.getElementById('logout-btn').addEventListener('click', () => window.authManager.logout());
-
-            // Auto-fill creator name if empty
-            if (!state.creator) {
-                state.creator = userName;
-                render('form'); // Re-render to show the name in the input
-            }
-        } else {
-            authContainer.innerHTML = `
-                <button id="login-btn" class="download-btn" style="background: #5865F2; padding: 4px 10px; font-size: 0.8em;">Login with Discord</button>
-            `;
-            document.getElementById('login-btn').addEventListener('click', () => window.authManager.login());
-        }
-    }
-
-    /**
-     * Initialize the application
-     */
-    function init() {
-        const container = document.getElementById('generator-app');
-        if (!container) {
-            console.error('Generator app container not found');
-            return;
+        if (basicStats.length > 0) {
+            // Join with a newline and a blockquote arrow to ensure they are on separate lines
+            markdown += `> ${basicStats.join('\n> ')}\n>\n`;
         }
 
-        // --- NEW: UPDATED HTML STRUCTURE TO INCLUDE AUTH STATUS ---
-        container.innerHTML = `
-            <div class="generator-controls" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                <div class="view-toggles">
-                    <button class="toggle-btn active" data-view="form">Edit Form</button>
-                    <button class="toggle-btn" data-view="preview">Preview</button>
-                </div>
+        markdown += generateAbilityTable(abilities);
+        markdown += generateSavingThrows(abilities);
+        markdown += generateOptionalStats(state);
 
-                <div id="auth-status" style="display:flex; align-items:center;">Loading...</div>
+        const profBonus = MonsterCalculator.getProficiencyBonus(state.cr);
+        markdown += `> **Challenge** ${state.cr} (1,800 XP) **Proficiency Bonus** +${profBonus}\n>\n`;
 
-                <div style="display: flex; gap: 0.5em;">
-                    <button class="download-btn" id="download-btn">📥 Download MD</button>
-                    <button class="download-btn" style="background: #007bff;" id="upload-btn">📤 Load MD</button>
-                    <input type="file" id="upload-input" accept=".md" style="display: none;">
-                </div>
-            </div>
-            
-            <div id="form-view" class="view-container active"></div>
-            <div id="preview-view" class="view-container"></div>
-        `;
-
-        // Attach control button listeners
-        document.querySelectorAll('[data-view]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const view = btn.getAttribute('data-view');
-                switchView(view);
-            });
-        });
-
-        document.getElementById('download-btn').addEventListener('click', downloadMarkdown);
-        document.getElementById('upload-btn').addEventListener('click', () => document.getElementById('upload-input').click());
-        document.getElementById('upload-input').addEventListener('change', loadMarkdownFile);
-
-        // Initial render
-        render('form');
-
-        // --- NEW: INITIALIZE AUTH MANAGER ---
-        if (window.authManager) {
-            window.authManager.init((user) => {
-                updateAuthUI(user);
-            });
-        } else {
-            console.error("Auth Manager not loaded.");
-            document.getElementById('auth-status').innerHTML = "Auth Error";
+        markdown += generateAbilitySection(state.traits, 'Traits');
+        markdown += generateAbilitySection(state.actions, 'Actions');
+        markdown += generateAbilitySection(state.bonusActions, 'Bonus Actions');
+        markdown += generateAbilitySection(state.reactions, 'Reactions');
+        markdown += generateLegendaryActions(state);
+        markdown += generateTextBlock(state.lairActions, 'Lair Actions');
+        markdown += generateTextBlock(state.regionalEffects, 'Regional Effects');
+        
+        if (state.additionalInfo && state.additionalInfo.trim()) {
+            markdown += `\n___\n${state.additionalInfo.trim()}\n`;
         }
+
+        return markdown;
     }
 
-    // Public API
+    function generateFilename(title) {
+        if (!title || !title.trim()) return 'statblock.md';
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s-]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            + '.md';
+    }
+
     return {
-        init,
-        switchView,
-        downloadMarkdown,
-        getState: () => state,
-        setState: (newState) => { state = newState; render('form'); }
+        generateMarkdown,
+        generateFilename,
+        generateFrontMatter,
+        generateLoreSection,
+        generateAbilityTable,
+        generateSavingThrows,
+        generateOptionalStats,
+        generateAbilitySection,
+        generateLegendaryActions,
+        generateTextBlock
     };
 
 })();
 
-// Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => MonsterController.init());
-} else {
-    MonsterController.init();
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = MonsterGenerator;
 }

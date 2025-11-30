@@ -142,15 +142,6 @@ const MonsterCalculator = (function() {
 
 })();
 
-// --- ADD THIS SECTION ---
-window.MonsterCalculator = MonsterCalculator;
-console.log("MonsterCalculator loaded");
-// ------------------------
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MonsterCalculator;
-}
-
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MonsterCalculator;

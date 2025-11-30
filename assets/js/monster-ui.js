@@ -7,7 +7,7 @@ const MonsterUI = (function() {
     const SIZES = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
     const TYPES = ['Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental', 
                    'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'];
-    const CATEGORIES = ['2014 Fair Game', '2014 Full DM Only'];
+    const CATEGORIES = ['2014 Fair Game', '2014 Full DM Only','2024 Fair Game','2024 Full DM Only'];
 
     /**
      * Escape HTML to prevent XSS
@@ -574,21 +574,12 @@ const MonsterUI = (function() {
     return {
         renderForm,
         renderPreview,
-        renderVisualStatBlock, // <--- ADD THIS LINE
         escapeHtml,
         SIZES,
         TYPES
     };
 
 })();
-
-window.MonsterUI = MonsterUI;
-console.log("MonsterUI loaded"); 
-// ------------------------
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MonsterUI;
-}
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MonsterUI;
