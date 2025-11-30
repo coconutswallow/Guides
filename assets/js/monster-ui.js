@@ -574,6 +574,7 @@ const MonsterUI = (function() {
     return {
         renderForm,
         renderPreview,
+        renderVisualStatBlock, // <--- ADD THIS LINE
         escapeHtml,
         SIZES,
         TYPES
