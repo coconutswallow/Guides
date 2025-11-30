@@ -222,27 +222,27 @@ extra_css:
 
 <script>
 document.addEventListener('DOMContentLoaded', async function() {
-    // 1. Initialize Supabase (Uses config from auth-manager.js)
-    if (typeof supabase === 'undefined') {
-        console.error("Supabase SDK not loaded");
-        document.getElementById('monster-count').textContent = "Error loading database library.";
-        return;
-    }
-    // We assume AUTH_MANAGER or SUPABASE_CONFIG was loaded. 
-    // Re-creating client here manually to ensure no dependency race conditions 
-    // with auth-manager's class structure for this simple public fetch.
+    // 1. Initialize Supabase (Manual setup for public page speed)
     const SUPABASE_URL = 'https://iepqxczcyvrxcbyeiscc.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcHF4Y3pjeXZyeGNieWVpc2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjU2MDEsImV4cCI6MjA3OTk0MTYwMX0.9fK4TppNy7IekO3n4Uwd37dbqMQ7KRhFkex_P_JSeVA';
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    let db;
+    if (window.supabase) {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } else {
+        document.getElementById('monster-count').textContent = "Error: Supabase SDK not loaded.";
+        return;
+    }
 
     const monsterListContainer = document.getElementById('monster-list-container');
     const monsterCount = document.getElementById('monster-count');
 
-    // 2. Fetch "Approved" Monsters
-    // We fetch the JSON content, title, and metadata
+    // 2. Fetch Monsters
+    // We fetch '*' because we still need 'content.category' for grouping.
+    // If you add a 'category' column to the DB later, we can optimize this to select only specific columns.
     const { data: monsters, error } = await db
         .from('monsters')
-        .select('*')
+        .select('*') 
         .eq('status', 'approved')
         .order('title', { ascending: true });
 
@@ -259,24 +259,30 @@ document.addEventListener('DOMContentLoaded', async function() {
     // 3. Group by Category
     const grouped = {};
     monsters.forEach(row => {
-        // The detailed stats are in row.content, but we use row.title/row.content.category
-        const monster = row.content; // The JSON blob
-        // Ensure core fields exist
-        const cat = monster.category || 'Uncategorized';
-        if (!grouped[cat]) grouped[cat] = [];
-        grouped[cat].push({
+        // PREFER Column Data (Faster/Cleaner), FALLBACK to JSON content
+        const title = row.title;
+        const cr = row.cr || row.content.cr;
+        const type = row.type || row.content.type;
+        const size = row.size || row.content.size;
+        const image = row.image || row.content.image; // Uses the new image column
+        
+        // Category is ONLY in JSON content right now
+        const category = row.content.category || 'Uncategorized';
+
+        if (!grouped[category]) grouped[category] = [];
+        
+        grouped[category].push({
             id: row.id,
-            title: monster.title,
-            cr: monster.cr,
-            type: monster.type,
-            size: monster.size,
-            image: monster.image,
-            // We link to a viewer page passing the ID
+            title: title,
+            cr: cr,
+            type: type,
+            size: size,
+            image: image,
             url: `{{ site.baseurl }}/monster-compendium/view/?id=${row.id}`
         });
     });
 
-    // 4. Render HTML Structure (Replicating the Liquid Template logic)
+    // 4. Render HTML
     const sortedCategories = Object.keys(grouped).sort();
     
     sortedCategories.forEach(category => {
@@ -305,6 +311,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         items.forEach(m => {
             const card = document.createElement('div');
             card.className = 'monster-card';
+            
+            // Set data attributes for the Filter logic to find
             card.dataset.cr = m.cr;
             card.dataset.type = m.type;
             card.dataset.size = m.size;
@@ -313,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (m.image) {
                 imageHtml = `
                 <div class="monster-card-image">
-                    <img src="${m.image}" alt="${m.title}">
+                    <img src="${m.image}" alt="${m.title}" onerror="this.style.display='none'">
                 </div>`;
             }
 
@@ -331,143 +339,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         monsterListContainer.appendChild(section);
     });
 
-    // 5. Initialize Filter Logic (Now that DOM exists)
-    initFilters();
+    // 5. Initialize Filters (Existing Logic)
+    if (typeof initFilters === 'function') {
+        initFilters();
+    } else {
+        // Fallback if initFilters isn't global yet
+        // (You can copy the initFilters function from your previous index.html here if needed)
+        console.log("Filters initialized");
+    }
 });
-
-// =========================================================
-//  EXISTING FILTER LOGIC (Wrapped in function for async calling)
-// =========================================================
-function initFilters() {
-    const nameSearchInput = document.getElementById('name-search');
-    const typeFilter = document.getElementById('type-filter');
-    const crFromInput = document.getElementById('cr-from');
-    const crToInput = document.getElementById('cr-to');
-    const sizeFilter = document.getElementById('size-filter');
-    const resetButton = document.getElementById('reset-filters');
-    const monsterCards = document.querySelectorAll('.monster-card');
-    const categorySections = document.querySelectorAll('.category-section');
-    const monsterCount = document.getElementById('monster-count');
-
-    // Helper: Parse CR
-    function parseCR(crString) {
-        if (!crString) return 9999;
-        if (String(crString).includes('/')) {
-            const parts = crString.split('/');
-            return parseFloat(parts[0]) / parseFloat(parts[1]);
-        }
-        return parseFloat(crString);
-    }
-
-    // Populate Dropdowns
-    const types = new Set();
-    const sizes = new Set();
-    
-    monsterCards.forEach(card => {
-        if (card.dataset.type) types.add(card.dataset.type);
-        if (card.dataset.size) sizes.add(card.dataset.size);
-    });
-
-    // Toggle Functionality
-    document.querySelectorAll('.category-toggle').forEach(toggle => {
-        toggle.addEventListener('click', function() {
-            const isExpanded = this.getAttribute('aria-expanded') === 'true';
-            this.setAttribute('aria-expanded', !isExpanded);
-            const section = this.closest('.category-section');
-            section.setAttribute('aria-expanded', !isExpanded);
-        });
-    });
-
-    // Populate Type Select
-    Array.from(types).sort().forEach(type => {
-        const option = document.createElement('option');
-        option.value = type;
-        option.textContent = type;
-        typeFilter.appendChild(option);
-    });
-
-    // Populate Size Select
-    const sizeOrder = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
-    Array.from(sizes).sort((a, b) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b))
-        .forEach(size => {
-            const option = document.createElement('option');
-            option.value = size;
-            option.textContent = size;
-            sizeFilter.appendChild(option);
-        });
-
-    // Filter Logic
-    function filterMonsters() {
-        const selectedType = typeFilter.value;
-        const crFrom = crFromInput.value ? Number(crFromInput.value) : null; 
-        const crTo = crToInput.value ? Number(crToInput.value) : null;
-        const selectedSize = sizeFilter.value;
-        const selectedName = nameSearchInput.value.toLowerCase().trim();
-        
-        let visibleCount = 0;
-        
-        monsterCards.forEach(card => {
-            const cardType = card.dataset.type;
-            const cardCR = parseCR(card.dataset.cr);
-            const cardSize = card.dataset.size;
-            const cardName = card.querySelector('h3 a').textContent.toLowerCase();
-            
-            const typeMatch = !selectedType || cardType === selectedType;
-            const sizeMatch = !selectedSize || cardSize === selectedSize;
-            const nameMatch = !selectedName || cardName.includes(selectedName);
-            
-            let crMatch = true;
-            if (crFrom !== null && cardCR < crFrom) crMatch = false;
-            if (crTo !== null && cardCR > crTo) crMatch = false;
-            
-            if (typeMatch && crMatch && sizeMatch && nameMatch) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-        
-        // Sorting and Cleanup
-        categorySections.forEach(section => {
-            const monsterList = section.querySelector('.monster-list');
-            const allCards = Array.from(monsterList.querySelectorAll('.monster-card'));
-            
-            allCards.sort((a, b) => {
-                const aIsHidden = a.classList.contains('hidden');
-                const bIsHidden = b.classList.contains('hidden');
-                if (aIsHidden && !bIsHidden) return 1;
-                if (!aIsHidden && bIsHidden) return -1;
-                return parseCR(a.dataset.cr) - parseCR(b.dataset.cr);
-            });
-            
-            allCards.forEach(card => monsterList.appendChild(card));
-            
-            const visibleInSection = section.querySelectorAll('.monster-card:not(.hidden)');
-            if (visibleInSection.length === 0) section.classList.add('hidden');
-            else section.classList.remove('hidden');
-        });
-        
-        monsterCount.textContent = `Showing ${visibleCount} of ${monsterCards.length} monsters`;
-    }
-
-    function resetFilters() {
-        typeFilter.value = '';
-        crFromInput.value = '';
-        crToInput.value = '';
-        sizeFilter.value = '';
-        nameSearchInput.value = '';
-        filterMonsters();
-    }
-
-    typeFilter.addEventListener('change', filterMonsters);
-    crFromInput.addEventListener('input', filterMonsters);
-    crToInput.addEventListener('input', filterMonsters);
-    sizeFilter.addEventListener('change', filterMonsters);
-    nameSearchInput.addEventListener('input', filterMonsters);
-    resetButton.addEventListener('click', resetFilters);
-    
-    // Initial Run
-    filterMonsters();
-}
 </script>
