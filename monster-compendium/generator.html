@@ -6,33 +6,38 @@ permalink: /monster-compendium/generator/
 
 <div class="generator-container">
     <div class="page-intro">
-        <h2>Hawthorne Bestiary: Markdown Generator</h2>
-        <p>Use this tool to make a 2024-compatible statblock for the Hawthorne Monster Compendium.  
+        <h2>Hawthorne Bestiary: Creator Studio</h2>
+        <p>Use this tool to create, manage, and submit monsters for the Hawthorne Monster Compendium.</p>
     </div>
     <div class="generator-instructions">
         <h3>How to Use This Tool</h3>
-        <p>Follow these steps to create and submit your monster:</p>
+        <p>This tool connects directly to the guild database:</p>
         <ul>
-            <li><strong>Fill out the form:</strong> Complete all the fields in the "Form" tab. Note if you want to use headers in sections like Lore or Regional Effects, please use Heading 4 (####)</li>
-            <li><strong>Preview your work:</strong> Click the "Preview" tab to see a live visual of your stat block. Any errors or suggestions will be listed at the top.</li>
-            <li><strong>Download the file:</strong> Once you're satisfied, click the "Download Markdown" button. This will save a <code>.md</code> file to your computer.</li>
-            <li><strong>Submit for review:</strong> Go to the <strong>#dm-requests</strong> channel on Discord and upload your <code>.md</code> file to have it added to the compendium.</li>
-            <li><strong>To edit an existing monster:</strong> Click the "Load Markdown" button, select your saved <code>.md</code> file, and the form will be populated with its data.</li>
+            <li><strong>Login:</strong> You must log in with Discord to save or submit monsters.</li>
+            <li><strong>Dashboard:</strong> View your existing drafts and their status (Draft, Pending, Approved).</li>
+            <li><strong>Create/Edit:</strong> Use the form to build your statblock. Changes are local until you save.</li>
+            <li><strong>Save Cloud:</strong> Saves your work to the database. If the monster is already approved, this creates a new "Pending" version.</li>
+            <li><strong>Submit:</strong> Once saved, click "Submit for Review" to alert the Admin team.</li>
         </ul>
-        <p>Note:  The save/mod calculations are re-calculated upon Preview or Save</p>
+        <p><em>Backup Option: You can still download/upload Markdown files using the buttons at the bottom right.</em></p>
     </div>    
+    
     <div id="generator-app">
-        <div style="text-align: center; padding: 20px;">Loading generator...</div>
+        <div style="text-align: center; padding: 20px;">Loading generator application...</div>
     </div>
 </div>
 
 <link rel="stylesheet" href="{{ '/assets/css/generator.css' | relative_url }}">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
 
 <script src="{{ '/assets/js/monster-parser.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/monster-calculator.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/monster-validator.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/monster-generator.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/monster-ui.js' | relative_url }}"></script>
+
+<script src="{{ '/assets/js/monster-storage.js' | relative_url }}"></script>
+
 <script src="{{ '/assets/js/monster-controller.js' | relative_url }}"></script>
