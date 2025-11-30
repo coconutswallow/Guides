@@ -582,6 +582,14 @@ const MonsterUI = (function() {
 
 })();
 
+window.MonsterUI = MonsterUI;
+console.log("MonsterUI loaded"); 
+// ------------------------
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = MonsterUI;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MonsterUI;
 }
