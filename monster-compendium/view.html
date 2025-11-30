@@ -21,73 +21,82 @@ extra_css:
 <script>
 document.addEventListener('DOMContentLoaded', async function() {
     const container = document.getElementById('monster-viewer-container');
-    const params = new URLSearchParams(window.location.search);
-    const monsterId = params.get('id');
-
-    // 1. Validate ID
-    if (!monsterId) {
-        container.innerHTML = `
-            <div class="error-message">
-                <h3>⚠️ No Monster Selected</h3>
-                <p>Please return to the <a href="{{ '/monster-compendium/' | relative_url }}">Compendium</a> and select a monster.</p>
-            </div>`;
-        return;
-    }
-
-    // 2. Initialize Auth (Required to get the Supabase Client)
-    // We don't need a user to be logged in, but we need the client initialized
-    if (!window.authManager) {
-        container.innerHTML = "Error: Auth Manager not loaded.";
-        return;
-    }
-
-    // 3. Fetch Monster Data
-    // We use the storage module we created earlier
-    const { data, error } = await MonsterStorage.getMonsterById(monsterId);
-
-    if (error || !data) {
-        console.error(error);
-        container.innerHTML = `
-            <div class="error-message">
-                <h3>❌ Monster Not Found</h3>
-                <p>This monster may have been deleted or does not exist.</p>
-                <p><a href="{{ '/monster-compendium/' | relative_url }}">Return to Compendium</a></p>
-            </div>`;
-        return;
-    }
-
-    // 4. Render the Visual Statblock
+    
     try {
+        // 1. Check Dependencies
+        if (typeof supabase === 'undefined') throw new Error("Supabase SDK not loaded.");
+        if (!window.authManager) throw new Error("AuthManager not loaded.");
+        if (!window.MonsterStorage) throw new Error("MonsterStorage not loaded. Check file path.");
+        if (!window.MonsterUI) throw new Error("MonsterUI not loaded.");
+
+        // 2. Get ID
+        const params = new URLSearchParams(window.location.search);
+        const monsterId = params.get('id');
+        
+        if (!monsterId) {
+            container.innerHTML = `
+                <div class="error-message">
+                    <h3>⚠️ No Monster Selected</h3>
+                    <p>Please return to the <a href="{{ '/monster-compendium/' | relative_url }}">Compendium</a>.</p>
+                </div>`;
+            return;
+        }
+
+        // 3. Fetch Data (Now wrapped in try/catch)
+        console.log("Fetching monster:", monsterId);
+        const result = await MonsterStorage.getMonsterById(monsterId);
+        
+        // Handle Supabase network/logic errors
+        if (result.error) {
+            console.error("Supabase Error:", result.error);
+            throw new Error(result.error.message || "Database error");
+        }
+        
+        if (!result.data) {
+            container.innerHTML = `
+                <div class="error-message">
+                    <h3>❌ Monster Not Found</h3>
+                    <p>This monster may have been deleted or is not approved for public viewing.</p>
+                    <p><a href="{{ '/monster-compendium/' | relative_url }}">Return to Compendium</a></p>
+                </div>`;
+            return;
+        }
+
+        // 4. Render
+        const data = result.data;
         const state = data.content;
         
-        // Update Page Title
         document.title = `${state.title} | Hawthorne Monster Compendium`;
+        
+        // Ensure UI function exists
+        if (typeof MonsterUI.renderVisualStatBlock !== 'function') {
+            throw new Error("MonsterUI.renderVisualStatBlock is missing. Did you update monster-ui.js?");
+        }
 
-        // Calculate Modifiers (Required for rendering)
         const abilities = MonsterCalculator.calculateAllAbilities(state);
-
-        // Render HTML
-        // Note: renderVisualStatBlock returns just the statblock HTML without the editor warnings
         const statBlockHtml = MonsterUI.renderVisualStatBlock(state, abilities);
 
-        // Inject into page
-        // We wrap it in a div to ensure the statblock CSS applies correctly
         container.innerHTML = `
             <div style="margin-bottom: 20px;">
                 <a href="{{ '/monster-compendium/' | relative_url }}" style="text-decoration: none;">&larr; Back to Compendium</a>
             </div>
             ${statBlockHtml}
-            
             <div style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.9em; color: #666;">
                 <p><strong>Created by:</strong> ${MonsterUI.escapeHtml(state.creator)}</p>
-                <p><strong>Version:</strong> ${data.version} (${data.status})</p>
+                <p><strong>Version:</strong> ${data.version}</p>
                 ${state.image_credit ? `<p><strong>Art Credit:</strong> ${MonsterUI.escapeHtml(state.image_credit)}</p>` : ''}
             </div>
         `;
 
     } catch (err) {
-        console.error("Render Error:", err);
-        container.innerHTML = `<div class="error">Error rendering monster: ${err.message}</div>`;
+        console.error("View Page Error:", err);
+        container.innerHTML = `
+            <div style="background:#ffebee; border:1px solid red; padding:20px; text-align:center; color:#c62828;">
+                <h3>⚠️ Error Loading Monster</h3>
+                <p>${err.message}</p>
+                <small>Check the browser console (F12) for details.</small>
+            </div>
+        `;
     }
 });
 </script>
