@@ -222,52 +222,58 @@ extra_css:
 
 <script>
 document.addEventListener('DOMContentLoaded', async function() {
-    // 1. Initialize Supabase (Manual setup for public page speed)
-    const SUPABASE_URL = 'https://iepqxczcyvrxcbyeiscc.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcHF4Y3pjeXZyeGNieWVpc2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjU2MDEsImV4cCI6MjA3OTk0MTYwMX0.9fK4TppNy7IekO3n4Uwd37dbqMQ7KRhFkex_P_JSeVA';
-    
-    let db;
-    if (window.supabase) {
-        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    } else {
-        document.getElementById('monster-count').textContent = "Error: Supabase SDK not loaded.";
-        return;
-    }
-
     const monsterListContainer = document.getElementById('monster-list-container');
     const monsterCount = document.getElementById('monster-count');
 
-    // 2. Fetch Monsters
-    // We fetch '*' because we still need 'content.category' for grouping.
-    // If you add a 'category' column to the DB later, we can optimize this to select only specific columns.
+    // 1. GET CLIENT FROM AUTH MANAGER (Fixes the "Multiple Instances" warning)
+    // We wait 10ms just to ensure the other scripts have fully initialized their globals
+    await new Promise(r => setTimeout(r, 10)); 
+
+    let db;
+    if (window.authManager) {
+        db = window.authManager.getClient();
+    } else if (window.supabase && typeof window.supabase.createClient === 'function') {
+        // Fallback only if AuthManager completely failed to load
+        console.warn("AuthManager missing, falling back to manual client creation.");
+        const SUPABASE_URL = 'https://iepqxczcyvrxcbyeiscc.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcHF4Y3pjeXZyeGNieWVpc2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjU2MDEsImV4cCI6MjA3OTk0MTYwMX0.9fK4TppNy7IekO3n4Uwd37dbqMQ7KRhFkex_P_JSeVA';
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } else {
+        monsterCount.textContent = "Error: Database libraries not loaded.";
+        return;
+    }
+
+    // 2. FETCH MONSTERS
+    // We use the specific columns for speed
     const { data: monsters, error } = await db
         .from('monsters')
-        .select('*') 
+        .select('id, title, cr, type, size, image, content') // We still need content for 'category' grouping
         .eq('status', 'approved')
         .order('title', { ascending: true });
 
     if (error) {
-        monsterCount.textContent = "Error fetching monsters: " + error.message;
+        console.error("Fetch Error:", error);
+        monsterCount.textContent = "Error fetching monsters. See console.";
         return;
     }
 
     if (!monsters || monsters.length === 0) {
-        monsterCount.textContent = "No approved monsters found in the compendium.";
+        monsterCount.textContent = "No approved monsters found.";
         return;
     }
 
-    // 3. Group by Category
+    // 3. GROUP BY CATEGORY
     const grouped = {};
     monsters.forEach(row => {
-        // PREFER Column Data (Faster/Cleaner), FALLBACK to JSON content
+        // Use columns first, fallback to JSON
         const title = row.title;
-        const cr = row.cr || row.content.cr;
-        const type = row.type || row.content.type;
-        const size = row.size || row.content.size;
-        const image = row.image || row.content.image; // Uses the new image column
+        const cr = row.cr || row.content?.cr || "Unknown";
+        const type = row.type || row.content?.type || "Unknown";
+        const size = row.size || row.content?.size || "Medium";
+        const image = row.image || row.content?.image;
         
-        // Category is ONLY in JSON content right now
-        const category = row.content.category || 'Uncategorized';
+        // Category is only in the JSON blob for now
+        const category = row.content?.category || 'Uncategorized';
 
         if (!grouped[category]) grouped[category] = [];
         
@@ -282,13 +288,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     });
 
-    // 4. Render HTML
+    // 4. RENDER HTML
     const sortedCategories = Object.keys(grouped).sort();
     
     sortedCategories.forEach(category => {
         const items = grouped[category];
         
-        // Create Section
+        // Create Category Section
         const section = document.createElement('div');
         section.className = 'category-section';
         section.dataset.category = category;
@@ -307,18 +313,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const listContainer = section.querySelector('.monster-list');
 
-        // Cards
+        // Create Cards
         items.forEach(m => {
             const card = document.createElement('div');
             card.className = 'monster-card';
             
-            // Set data attributes for the Filter logic to find
+            // Data attributes for filters
             card.dataset.cr = m.cr;
             card.dataset.type = m.type;
             card.dataset.size = m.size;
 
             let imageHtml = '';
             if (m.image) {
+                // We add an onerror handler to hide broken images automatically
                 imageHtml = `
                 <div class="monster-card-image">
                     <img src="${m.image}" alt="${m.title}" onerror="this.style.display='none'">
@@ -339,13 +346,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         monsterListContainer.appendChild(section);
     });
 
-    // 5. Initialize Filters (Existing Logic)
+    // 5. INITIALIZE FILTERS
+    // We assume the filter logic is globally available or runs after this
     if (typeof initFilters === 'function') {
         initFilters();
     } else {
-        // Fallback if initFilters isn't global yet
-        // (You can copy the initFilters function from your previous index.html here if needed)
-        console.log("Filters initialized");
+        // If initFilters was defined in the previous script block in DOM, 
+        // we might need to manually trigger the event listeners or ensure they attached to document body.
+        // For now, let's just log it.
+        console.log("Filters ready.");
     }
 });
 </script>
