@@ -9,7 +9,11 @@
   - question: Can a 2024 character use any 2014 class / subclass / race / feat?
     category: Character Creation
     answer: |-
-      If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: **2024 Cleric, 2014 Twilight Domain** - Permitted,  **2024 Cleric, 2014 Life Domain** - Not Permitted
+      If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: 
+
+       **2024 Cleric, 2014 Twilight Domain** - Permitted,  
+
+       **2024 Cleric, 2014 Life Domain** - Not Permitted
   - question: Do I need to have played games to be a DM on the server?
     category: DM
     answer: |-
@@ -77,7 +81,15 @@
   - question: I keep seeing “tiers” everywhere, or mentions of “T1/2/3/4”. What does that mean? How do I know which tier my character is?
     category: Applying to Games
     answer: |-
-      Tiers are mostly used to categorise games and decide rewards and difficulty of quests. Here are the character tiers: T1 Lvl 5 and below T2 Lvl 6 to 10 T3 Lvl 11 to 15 T4 Lvl 16 to 20
+      Tiers are mostly used to categorise games and decide rewards and difficulty of quests. Here are the character tiers: 
+
+       T1 Lvl 5 and below 
+
+       T2 Lvl 6 to 10 
+
+       T3 Lvl 11 to 15 
+
+       T4 Lvl 16 to 20
   - question: What happens if my character dies?
     category: Playing Games
     answer: |-
