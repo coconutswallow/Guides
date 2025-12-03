@@ -147,7 +147,7 @@
     answer: |-
       The full Crafting rules are here, but the basics are that you must have a bastion with the right facility, the required tool proficiency, proficiency in the Arcana skill, and the ability to cast any spells yourself that the item can cast.
   - question: Who do I ask if I have an issue with my MAL?
-    category: ''
+    category: MAL
     answer: |-
       Depending on the issue, you can ask either the Auditors in [Auditors Corner](https://discord.com/channels/308324031478890497/617821516054265861) or the Player Relations team in [#PR Couch](https://discord.com/channels/308324031478890497/719671742141956157).
   - question: Who do I ask if I have an issue with character creation?
