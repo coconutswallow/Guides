@@ -104,8 +104,7 @@ Other events besides death can occur during a game that prevents you from playin
 
 The rules below apply to the following specific situations:
 
-- **Lycanthropy**. A PC that contracts lycanthropy can’t be played in another game until the lycanthropy is cured via Remove Curse or similar magic. A lycanthrope during the full moon is an NPC under the DM’s control.
-- **Vampirism**. A PC that contracts vampirism becomes an NPC under the DM’s control. They can’t be played in another game until their vampirism is cured via True Resurrection or Wish.
+- **Monstrous Transformation**. A PC that contracts an effect that transforms them into a monster under the DM’s control can’t be played in another game until the transformation is reversed (e.g. Remove Curse for lycanthropy or True Resurrection for vampirism).
 - **Leaving the Guild**. A PC that leaves the guild either willingly or unwillingly becomes an NPC and relinquishes their guild badge. A PC that leaves the guild on good terms can have the blood or body part they initially gave returned to them or destroyed.
 - **Retirement**. A PC that retires from adventuring becomes an NPC. (This can often occur as part of full character reworks)
 
