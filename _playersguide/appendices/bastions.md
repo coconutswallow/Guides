@@ -31,7 +31,7 @@ Your character must either be present at the Bastion or have a way to communicat
 
 > ## Bastion Events
 > 
-> Bastion Events can’t occur during downtime as the Maintain order can’t be issued in downtime. However, a DM can use Bastion Events for adventures they run that can include your > Bastion. Unless the Maintain order is issued, you must still expend 7 DTP for Bastion Turns taken during adventures unless the benefits are limited to the scope of the adventure.
+> Bastion Events can’t occur during downtime as the Maintain order can’t be issued in downtime. However, a DM can use Bastion Events for adventures they run that can include your Bastion. Unless the Maintain order is issued, you must still expend 7 DTP for Bastion Turns taken during adventures unless the benefits are limited to the scope of the adventure.
 >
 
 ## Additional Bastions
