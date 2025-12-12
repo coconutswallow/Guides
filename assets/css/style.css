@@ -1461,30 +1461,31 @@ img + .image-caption {
   margin: 0 auto;
 }
 
+/* 1. DEFINE THE GRID */
 .doc-content {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 280px; /* Text takes available space, TOC gets 280px */
-  gap: 3rem; /* Spacing between body and TOC */
+  /* Main text gets flexible space (1fr), TOC gets fixed 280px */
+  grid-template-columns: 1fr 280px; 
+  gap: 3rem; /* Space between text and sidebar */
   align-items: start;
 }
 
-/* Centering Logic:
-   If the container has the class 'no-toc' (added via HTML) OR 
-   doesn't contain a .doc-toc element (modern browsers), 
-   switch to a single column layout.
-*/
+/* 2. HANDLE PAGES WITHOUT A TOC */
+/* If the container has 'no-toc' class OR doesn't contain a .doc-toc element */
 .doc-content.no-toc,
 .doc-content:not(:has(.doc-toc)) {
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Single column layout */
 }
 
-/* Full-width elements that span across both columns */
+/* 3. FULL WIDTH ELEMENTS */
+/* These span across both columns */
 .breadcrumb,
 .doc-title,
 .doc-meta,
 .doc-footer-nav {
   grid-column: 1 / -1;
+  width: 100%;
 }
 
 /* Breadcrumb Navigation */
@@ -1540,12 +1541,13 @@ img + .image-caption {
   font-style: italic;
 }
 
-/* Documentation Body */
+/* 4. MAIN BODY TEXT (Left Column) */
 .doc-body {
-  /* This naturally falls into column 1 */
+  grid-column: 1 / 2;
+  min-width: 0;
+  width: auto;
   line-height: 1.8;
   color: var(--color-doc-body);
-  min-width: 0; /* Prevents large tables/code from breaking the grid */
 }
 
 .doc-body h2 {
@@ -1562,7 +1564,7 @@ img + .image-caption {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
+  box-shadow: 0 2px 8px var(--shadow-color-doc-image); /* Restored Shadow */
   margin: 1.5em 0;
 }
 
@@ -1570,14 +1572,14 @@ img + .image-caption {
   margin: 1.5em 0;
 }
 
-/* Table of Contents Sidebar */
+/* 5. TABLE OF CONTENTS SIDEBAR (Right Column) */
 .doc-toc {
-  /* This naturally falls into column 2 */
+  grid-column: 2 / 3;
   position: sticky;
-  top: 100px; /* Stick to top while scrolling */
-  width: 100%;
-  margin: 0;
-  margin-bottom: 2em;
+  top: 100px;
+  float: none !important; /* Force disable float */
+  width: 100% !important;
+  margin: 0 0 2em 0;
   background: var(--color-bg-light);
   border: 2px solid var(--color-border);
   border-radius: 8px;
@@ -1611,7 +1613,7 @@ img + .image-caption {
   color: var(--color-primary);
   text-decoration: none;
   font-size: 0.95em;
-  line-height: 1.4;
+  line-height: 1.4; /* Restored line-height */
   display: block;
   padding: 0.25em 0;
 }
@@ -1621,7 +1623,7 @@ img + .image-caption {
   text-decoration: underline;
 }
 
-/* Documentation Footer Navigation */
+/* 6. FOOTER NAVIGATION */
 .doc-footer-nav {
   display: flex;
   justify-content: space-between;
@@ -1646,7 +1648,7 @@ img + .image-caption {
   font-family: var(--font-header);
   text-transform: uppercase;
   font-size: 0.9em;
-  max-width: 45%;
+  max-width: 45%; /* Restored max-width */
 }
 
 .prev-link:hover, .next-link:hover {
@@ -1658,11 +1660,11 @@ img + .image-caption {
 }
 
 .prev-link {
-  margin-right: auto;
+  margin-right: auto; /* Restored margin for single-button layouts */
 }
 
 .next-link {
-  margin-left: auto;
+  margin-left: auto; /* Restored margin for single-button layouts */
   flex-direction: row-reverse;
 }
 
@@ -1671,6 +1673,7 @@ img + .image-caption {
   font-weight: bold;
 }
 
+/* Restored Missing Class */
 .nav-label {
   font-size: 0.85em;
 }
@@ -1944,6 +1947,17 @@ img + .image-caption {
     height: 45px;
     font-size: 1.3em;
   }
+  /* Disable grid on mobile so sidebar stacks below text */
+  .doc-content, 
+  .doc-content.no-toc {
+    display: block !important;
+  }
+  
+  .doc-toc {
+    position: static;
+    width: 100% !important;
+    margin: 2em 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1970,6 +1984,17 @@ img + .image-caption {
   
   .guild-icon {
     display: none;
+  }
+  /* Disable grid on mobile so sidebar stacks below text */
+  .doc-content, 
+  .doc-content.no-toc {
+    display: block !important;
+  }
+  
+  .doc-toc {
+    position: static;
+    width: 100% !important;
+    margin: 2em 0;
   }
 }
 
