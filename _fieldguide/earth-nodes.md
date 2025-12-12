@@ -255,13 +255,14 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
 
     If projects involving moderate or extensive changes aren't supervised, there is a cumulative 5% chance for each day of the project that the class rating of the node is reduced by 1. This chance resets to 5% after the node's class rating is reduced, before accumulating with each day once more.<br><br>
 
-    It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM.<br><br>
-
-    In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
-  </div>  
+    </div>  
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
 </div>
 
+It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM.
+
+    In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
+  
 <span class="image-caption">Image: A Wizard summons the power of an earth node, Forgotten Realms Underdark</span>
 
 ## Creating Earth Nodes
