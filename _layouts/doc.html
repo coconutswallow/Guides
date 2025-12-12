@@ -3,44 +3,41 @@ layout: default
 ---
 <style>
     /* FORCE LAYOUT OVERRIDES */
-    /* Make the content container a flexbox */
     .doc-content {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: flex-start; /* Crucial for sticky TOC to work */
-        gap: 30px; /* Space between body and TOC */
+        align-items: flex-start;
+        gap: 30px;
         position: relative;
     }
 
-    /* The Main Body: Grows to fill space */
+    /* The Main Body: Contains Title, Content, Footer */
     .doc-body {
-        flex: 1 1 auto; /* Grow and shrink */
-        min-width: 0;   /* Prevent flex item from overflowing container */
-        max-width: 100%; 
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 100%;
+        /* Ensure this container behaves as the main 'card' */
+        display: block; 
     }
 
     /* The Table of Contents: Fixed narrow width */
     .doc-toc {
-        flex: 0 0 200px; /* Fixed width of 200px */
+        flex: 0 0 200px;
         width: 200px;
         min-width: 200px;
         max-width: 200px;
-        font-size: 0.85rem; 
-        
-        /* STICKY POSITIONING FIXES */
-        position: -webkit-sticky; /* Safari support */
+        font-size: 0.85rem;
+        position: -webkit-sticky;
         position: sticky;
-        top: 80px; /* Increased to clear the site header */
-        max-height: calc(100vh - 100px); /* Height of viewport minus top offset */
-        overflow-y: auto; /* Scroll internally if TOC is too long */
-        
-        /* Visual tweak to separate it slightly */
+        top: 100px; /* Clear the header */
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
         padding-left: 10px;
         border-left: 1px solid #eee;
     }
 
-    /* Responsive: Stack them on small screens */
+    /* Responsive: Stack on small screens */
     @media (max-width: 1000px) {
         .doc-content {
             flex-direction: column;
@@ -61,7 +58,9 @@ layout: default
 
 <div class="doc-container">
     <div class="doc-content">
-        <div style="flex: 1; min-width: 0;">
+        
+        <div class="doc-body">
+            
             <nav class="breadcrumb">
                 <a href="{{ site.baseurl }}/">Home</a>
                 {% assign url_parts = page.url | split: '/' %}
@@ -84,11 +83,9 @@ layout: default
             </div>
             {% endif %}
 
-            <div class="doc-body">
-                {{ content }}
-            </div>
+            {{ content }}
 
-             {% if page.collection %}
+            {% if page.collection %}
             <nav class="doc-footer-nav">
                 {% assign collection_items = site[page.collection] | sort: 'order' %}
                 {% assign current_index_0 = -1 %}
@@ -100,7 +97,6 @@ layout: default
                     {% endif %}
                 {% endfor %}
                 
-                {% comment %} Previous Link Logic {% endcomment %}
                 {% if current_index_0 > 0 %} 
                     {% assign prev_item_index = current_index_0 | minus: 1 %}
                     {% assign prev_item = collection_items[prev_item_index] %}
@@ -110,7 +106,6 @@ layout: default
                     </a>
                 {% endif %}
                 
-                {% comment %} Next Link Logic {% endcomment %}
                 {% assign next_item_index = current_index_0 | plus: 1 %}
                 {% if next_item_index < collection_items.size %}
                     {% assign next_item = collection_items[next_item_index] %}  
@@ -129,26 +124,28 @@ layout: default
             <div id="toc-container"></div>
         </aside>
         {% endif %}
+        
     </div>
 </div>
 
 {% if page.toc %}
 <script>
-// Generate table of contents from h2 and h3 headers
 document.addEventListener('DOMContentLoaded', function() {
     const content = document.querySelector('.doc-body');
     const tocContainer = document.getElementById('toc-container');
     
     if (!content || !tocContainer) return;
     
+    // Select headers but EXCLUDE the Page Title (h1.doc-title) from TOC
+    // We only want headers that were generated from markdown content
     const headers = content.querySelectorAll('h2, h3');
+    
     if (headers.length === 0) return;
     
     const toc = document.createElement('ul');
     toc.className = 'toc-list';
     
     headers.forEach((header, index) => {
-        // Add ID to header if it doesn't have one
         if (!header.id) {
             header.id = 'heading-' + index;
         }
