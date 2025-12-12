@@ -1454,7 +1454,7 @@ img + .image-caption {
 }
 
 /* ============================================
-   17. DOCUMENTATION LAYOUT (Table Fix + Final Layout)
+   17. DOCUMENTATION LAYOUT (Fixed Tables)
    ============================================ */
 
 .doc-container {
@@ -1462,33 +1462,72 @@ img + .image-caption {
   margin: 0 auto;
 }
 
-/* --- 1. MOBILE DEFAULTS (Simple Stack) --- */
+/* --- 1. BASE LAYOUT & TYPOGRAPHY --- */
 .doc-content {
-  display: block;
-  width: 100%;
   position: relative;
-}
-
-.doc-toc {
-  display: none; 
-}
-
-/* Mobile Body: Seamless text */
-.doc-body {
-  display: block;
   width: 100%;
-  background-color: transparent; 
-  padding: 0;
-  box-shadow: none;
-  border: none;
+}
+
+.doc-body {
   line-height: 1.8;
   color: var(--color-doc-body);
 }
 
-/* --- 2. DESKTOP ENHANCEMENTS (Screens > 1100px) --- */
+.doc-body h2 { margin-top: 2em; margin-bottom: 1em; }
+.doc-body h3 { margin-top: 1.5em; margin-bottom: 0.75em; }
+
+/* Image Safety */
+.doc-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
+  margin: 1.5em 0;
+}
+
+/* Code Block Safety */
+.doc-body pre {
+  white-space: pre-wrap;    
+  word-break: break-all;    
+  max-width: 100%;          
+}
+
+
+/* --- 2. MOBILE LAYOUT (Screens UP TO 1100px) --- */
+@media (max-width: 1099px) {
+  
+  .doc-content {
+    display: block;
+  }
+  
+  .doc-toc {
+    display: none; /* Hide ToC on mobile */
+  }
+
+  .doc-body {
+    display: block;
+    width: 100%;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+
+  /* MOBILE TABLE BEHAVIOR: SCROLLABLE */
+  /* This turns the table into a sliding block so it doesn't break the screen */
+  .doc-body table {
+    display: block; 
+    width: 100%;
+    overflow-x: auto; 
+    white-space: nowrap; /* Keeps rows from wrapping weirdly */
+  }
+}
+
+
+/* --- 3. DESKTOP LAYOUT (Screens 1100px AND UP) --- */
 @media (min-width: 1100px) {
   
-  /* A. Transparent Page Trick */
+  /* Transparent Page Background Wrapper */
   .page:has(.doc-content) {
     background-color: transparent !important;
     box-shadow: none !important;
@@ -1496,7 +1535,7 @@ img + .image-caption {
     padding-bottom: 0;
   }
 
-  /* B. Flex Layout */
+  /* Flex Layout */
   .doc-content {
     display: flex;
     flex-direction: row;
@@ -1504,7 +1543,7 @@ img + .image-caption {
     gap: 3rem; 
   }
 
-  /* C. Text Column (Left) - THE MAIN CARD */
+  /* Text Column (Left) */
   .doc-body {
     order: 1; 
     flex: 1; 
@@ -1518,7 +1557,7 @@ img + .image-caption {
     border: 1px solid var(--color-border);            
   }
 
-  /* D. Navigation Column (Right) - THE SIDE CARD */
+  /* Navigation Column (Right) */
   .doc-toc {
     display: block; 
     order: 2;
@@ -1542,28 +1581,23 @@ img + .image-caption {
     z-index: 10; 
   }
 
-  /* E. TABLE FIX FOR DESKTOP */
-  /* This restores normal table behavior on large screens */
+  /* DESKTOP TABLE BEHAVIOR: FULL WIDTH */
+  /* We strictly enforce 'table' display so columns fill the width */
   .doc-body table {
-    display: table;  /* <--- The Fix: Forces standard column calculation */
-    width: 100%;     /* Fills the card width */
-    overflow-x: visible;
+    display: table !important;
+    width: 100% !important;
+    table-layout: auto; /* Allows columns to size based on content */
+  }
+  
+  /* OPTIONAL: Distribute columns evenly */
+  /* This helps 2-column tables look balanced */
+  .doc-body table th {
+    width: auto;
   }
 }
 
 
-/* --- 3. TYPOGRAPHY & HEADINGS --- */
-.doc-body h2 {
-  margin-top: 2em;
-  margin-bottom: 1em;
-}
-
-.doc-body h3 {
-  margin-top: 1.5em;
-  margin-bottom: 0.75em;
-}
-
-/* ToC Styles */
+/* --- 4. TOC STYLING --- */
 .doc-toc h3 {
   font-family: var(--font-header);
   font-size: 1.1em;
@@ -1600,30 +1634,6 @@ img + .image-caption {
 .toc-link.active {
   color: var(--color-secondary);
   font-weight: bold;
-}
-
-/* --- 4. SAFETY VALVES (Mobile Only) --- */
-.doc-body img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
-  margin: 1.5em 0;
-}
-
-/* Code Blocks */
-.doc-body pre {
-  white-space: pre-wrap;    
-  word-break: break-all;    
-  max-width: 100%;          
-}
-
-/* Default Table Style (Mobile First) */
-.doc-body table {
-  margin: 1.5em 0;
-  display: block;       /* Allows scrolling on mobile */
-  width: 100%;          
-  overflow-x: auto; 
 }
 
 
