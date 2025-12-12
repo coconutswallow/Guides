@@ -1,186 +1,33 @@
 ---
 layout: default
 ---
-<style>
-    /* --- LAYOUT OVERRIDES --- */
-
-    /* 1. BREAKOUT CONTAINER */
-    /* Forces the layout to span the full browser width, ignoring parent constraints */
-    .doc-container {
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
-        
-        /* Flex alignment to center the inner content */
-        display: flex;
-        justify-content: center;
-    }
-
-    /* 2. INNER CONTENT WRAPPER */
-    /* Limits the total width so it doesn't stretch to infinity on huge screens */
-    .doc-content {
-        width: 100%;
-        max-width: 1500px; /* 1200px Body + Gap + Sidebar */
-        padding: 0 40px;   /* Outer gutters */
-        
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 40px; /* Space between Body and TOC */
-    }
-
-    /* 3. The Main Body */
-    .doc-body {
-        flex: 1 1 auto;  
-        min-width: 0;
-        
-        /* This keeps the text column consistent with your standard non-TOC pages */
-        max-width: 1200px; 
-        display: block; 
-    }
-
-    /* 4. The Table of Contents */
-    .doc-toc {
-        flex: 0 0 180px; 
-        width: 180px;
-        min-width: 180px;
-        max-width: 180px;
-        font-size: 0.85rem;
-        
-        /* Sticky Positioning */
-        position: -webkit-sticky;
-        position: sticky;
-        top: 100px; 
-        max-height: calc(100vh - 120px);
-        overflow-y: auto;
-        
-        /* Visuals */
-        padding-left: 15px;
-        border-left: 1px solid var(--color-border);
-    }
-
-    /* --- Active State Styles (Scroll Spy) --- */
-    .toc-link {
-        display: block;
-        padding: 2px 0;
-        color: var(--color-text-secondary); /* Use theme secondary text color */
-        text-decoration: none;
-        transition: all 0.2s ease;
-        border-left: 2px solid transparent;
-        padding-left: 8px;
-        margin-left: -10px;
-        line-height: 1.4;
-        margin-bottom: 4px;
-    }
-
-    .toc-link:hover {
-        color: var(--color-primary);
-    }
-
-    .toc-link.active {
-        /* USE THEME VARIABLES HERE */
-        color: var(--color-secondary); 
-        font-weight: 700;
-        border-left: 2px solid var(--color-secondary);
-    }
-
-    /* --- Responsive: Stack on small screens --- */
-    @media (max-width: 1200px) {
-        /* Disable breakout on smaller screens to prevent scrolling issues */
-        .doc-container {
-            width: 100%;
-            margin-left: 0;
-            margin-right: 0;
-            left: 0;
-            right: 0;
-            display: block;
-        }
-        
-        .doc-content {
-            padding: 0;
-            max-width: 100%;
-            flex-direction: column;
-        }
-
-        .doc-toc {
-            width: 100%;
-            max-width: 100%;
-            flex: none;
-            position: relative;
-            top: 0;
-            max-height: none;
-            margin-top: 20px;
-            border-left: none;
-            padding-left: 0;
-            border-top: 1px solid var(--color-border);
-            padding-top: 20px;
-        }
-    }
-</style>
-
 <div class="doc-container">
-    <div class="doc-content">
+    <div class="doc-content {% unless page.toc %}no-toc{% endunless %}">
         
+        <nav class="breadcrumb">
+            <a href="{{ site.baseurl }}/">Home</a>
+            {% assign url_parts = page.url | split: '/' %}
+            {% assign current_path = '' %}
+            {% for part in url_parts %}
+                {% unless forloop.first or forloop.last %}
+                    {% assign current_path = current_path | append: '/' | append: part %}
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item">{{ part | replace: '-', ' ' | capitalize }}</span>
+                {% endunless %}
+            {% endfor %}
+        </nav>
+
+        <h1 class="doc-title">{{ page.title }}</h1>
+
+        {% if page.author or page.date %}
+        <div class="doc-meta">
+            {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
+            {% if page.date %}<span class="doc-date">{{ page.date | date: "%B %d, %Y" }}</span>{% endif %}
+        </div>
+        {% endif %}
+
         <div class="doc-body">
-            
-            <nav class="breadcrumb">
-                <a href="{{ site.baseurl }}/">Home</a>
-                {% assign url_parts = page.url | split: '/' %}
-                {% assign current_path = '' %}
-                {% for part in url_parts %}
-                    {% unless forloop.first or forloop.last %}
-                        {% assign current_path = current_path | append: '/' | append: part %}
-                        <span class="breadcrumb-separator">›</span>
-                        <span class="breadcrumb-item">{{ part | replace: '-', ' ' | capitalize }}</span>
-                    {% endunless %}
-                {% endfor %}
-            </nav>
-
-            <h1 class="doc-title">{{ page.title }}</h1>
-
-            {% if page.author or page.date %}
-            <div class="doc-meta">
-                {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
-                {% if page.date %}<span class="doc-date">{{ page.date | date: "%B %d, %Y" }}</span>{% endif %}
-            </div>
-            {% endif %}
-
             {{ content }}
-
-            {% if page.collection %}
-            <nav class="doc-footer-nav">
-                {% assign collection_items = site[page.collection] | sort: 'order' %}
-                {% assign current_index_0 = -1 %}
-
-                {% for item in collection_items %}
-                    {% if item.url == page.url %}
-                        {% assign current_index_0 = forloop.index0 %}
-                        {% break %}
-                    {% endif %}
-                {% endfor %}
-                
-                {% if current_index_0 > 0 %} 
-                    {% assign prev_item_index = current_index_0 | minus: 1 %}
-                    {% assign prev_item = collection_items[prev_item_index] %}
-                    <a href="{{ prev_item.url | relative_url }}" class="prev-link">
-                        <span class="nav-arrow">‹</span>
-                        <span class="nav-label">{{ prev_item.title }}</span>
-                    </a>
-                {% endif %}
-                
-                {% assign next_item_index = current_index_0 | plus: 1 %}
-                {% if next_item_index < collection_items.size %}
-                    {% assign next_item = collection_items[next_item_index] %}  
-                    <a href="{{ next_item.url | relative_url }}" class="next-link">
-                        <span class="nav-label">{{ next_item.title }}</span>
-                        <span class="nav-arrow">›</span>
-                    </a>
-                {% endif %}
-            </nav>
-            {% endif %}
         </div>
 
         {% if page.toc %}
@@ -189,19 +36,52 @@ layout: default
             <div id="toc-container"></div>
         </aside>
         {% endif %}
-        
+
+        {% if page.collection %}
+        <nav class="doc-footer-nav">
+            {% assign collection_items = site[page.collection] | sort: 'order' %}
+            {% assign current_index_0 = -1 %}
+
+            {% for item in collection_items %}
+                {% if item.url == page.url %}
+                    {% assign current_index_0 = forloop.index0 %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+            
+            {% comment %} Previous Link Logic {% endcomment %}
+            {% if current_index_0 > 0 %} 
+                {% assign prev_item_index = current_index_0 | minus: 1 %}
+                {% assign prev_item = collection_items[prev_item_index] %}
+                <a href="{{ prev_item.url | relative_url }}" class="prev-link">
+                    <span class="nav-arrow">‹</span>
+                    <span class="nav-label">{{ prev_item.title }}</span>
+                </a>
+            {% endif %}
+            
+            {% comment %} Next Link Logic {% endcomment %}
+            {% assign next_item_index = current_index_0 | plus: 1 %}
+            {% if next_item_index < collection_items.size %}
+                {% assign next_item = collection_items[next_item_index] %}  
+                <a href="{{ next_item.url | relative_url }}" class="next-link">
+                    <span class="nav-label">{{ next_item.title }}</span>
+                    <span class="nav-arrow">›</span>
+                </a>
+            {% endif %}
+        </nav>
+        {% endif %}
     </div>
 </div>
 
 {% if page.toc %}
 <script>
+// Generate table of contents from h2 and h3 headers
 document.addEventListener('DOMContentLoaded', function() {
     const content = document.querySelector('.doc-body');
     const tocContainer = document.getElementById('toc-container');
     
     if (!content || !tocContainer) return;
     
-    // 1. GENERATE THE TOC
     const headers = content.querySelectorAll('h2, h3');
     if (headers.length === 0) return;
     
@@ -209,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     toc.className = 'toc-list';
     
     headers.forEach((header, index) => {
+        // Add ID to header if it doesn't have one
         if (!header.id) {
             header.id = 'heading-' + index;
         }
@@ -226,34 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     tocContainer.appendChild(toc);
-
-    // 2. ADD SCROLL SPY FUNCTIONALITY
-    const tocLinks = document.querySelectorAll('.toc-link');
-    const sections = Array.from(headers);
-
-    function onScroll() {
-        let current = '';
-        // Offset logic: triggers when header is ~150px from top
-        const scrollPosition = window.scrollY + 150; 
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (scrollPosition >= sectionTop) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        tocLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === '#' + current) {
-                link.classList.add('active');
-            }
-        });
-    }
-
-    window.addEventListener('scroll', onScroll);
-    // Run once on load
-    onScroll();
 });
 </script>
 {% endif %}
