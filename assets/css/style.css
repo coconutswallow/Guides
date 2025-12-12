@@ -1454,11 +1454,11 @@ img + .image-caption {
 }
 
 /* ============================================
-   17. DOCUMENTATION LAYOUT (Fixed Tables)
+   17. DOCUMENTATION LAYOUT (Wider Body + Table Fixes)
    ============================================ */
 
 .doc-container {
-  max-width: 1400px; 
+  max-width: 1600px;  /* <--- INCREASED from 1400px to 1600px */
   margin: 0 auto;
 }
 
@@ -1513,13 +1513,12 @@ img + .image-caption {
     border: none;
   }
 
-  /* MOBILE TABLE BEHAVIOR: SCROLLABLE */
-  /* This turns the table into a sliding block so it doesn't break the screen */
+  /* MOBILE TABLE BEHAVIOR: SCROLLABLE BLOCK */
   .doc-body table {
     display: block; 
     width: 100%;
     overflow-x: auto; 
-    white-space: nowrap; /* Keeps rows from wrapping weirdly */
+    white-space: nowrap; 
   }
 }
 
@@ -1581,16 +1580,15 @@ img + .image-caption {
     z-index: 10; 
   }
 
-  /* DESKTOP TABLE BEHAVIOR: FULL WIDTH */
-  /* We strictly enforce 'table' display so columns fill the width */
+  /* DESKTOP TABLE BEHAVIOR: FULL WIDTH TABLE */
+  /* We strictly enforce 'table' display so columns fill the width properly */
   .doc-body table {
     display: table !important;
     width: 100% !important;
-    table-layout: auto; /* Allows columns to size based on content */
+    table-layout: auto; 
   }
   
-  /* OPTIONAL: Distribute columns evenly */
-  /* This helps 2-column tables look balanced */
+  /* Distribute columns evenly */
   .doc-body table th {
     width: auto;
   }
