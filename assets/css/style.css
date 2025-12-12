@@ -1453,49 +1453,81 @@ img + .image-caption {
   content: none;
 }
 /* ============================================
-   17. DOCUMENTATION LAYOUT
+   17. DOCUMENTATION LAYOUT (Mobile Safe Version)
    ============================================ */
+
 .doc-container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* --- LAYOUT CONTAINER (Mobile First / Default) --- */
+/* --- 1. MOBILE DEFAULTS (Simple & Robust) --- */
+/* On mobile, we do NOT want the transparent trick. 
+   We just want the text to sit normally on the page background. */
+
 .doc-content {
   display: block;
   width: 100%;
   position: relative;
 }
 
-/* --- TABLE OF CONTENTS (Mobile First / Default) --- */
 .doc-toc {
-  display: none; 
+  display: none; /* Hidden on mobile */
 }
 
-/* --- DESKTOP ENHANCEMENTS (Only triggers on screens > 1100px) --- */
+/* Ensure body text has no "Card" styling on mobile to avoid theme conflicts */
+.doc-body {
+  display: block;
+  width: 100%;
+  background-color: transparent; /* Blends into the main page */
+  padding: 0;
+  box-shadow: none;
+  border: none;
+}
+
+
+/* --- 2. DESKTOP ENHANCEMENTS (Screens > 1100px ONLY) --- */
 @media (min-width: 1100px) {
   
-  /* Switch to Flexbox for side-by-side layout */
+  /* A. The "Transparent Page" Trick (NOW DESKTOP ONLY) */
+  /* This prevents the mobile theme toggle from breaking */
+  .page:has(.doc-content) {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    padding-top: 0; 
+    padding-bottom: 0;
+  }
+
+  /* B. Flex Layout */
   .doc-content {
     display: flex;
     flex-direction: row;
     align-items: flex-start; 
-    gap: 3rem; 
+    gap: 4rem; 
   }
 
-  /* --- SWAPPING THE ORDER --- */
-  
-  /* 1. Main Text goes FIRST (Left) */
+  /* C. Text Column (Left) - NOW BECOMES THE "CARD" */
   .doc-body {
     order: 1; 
+    flex: 1; 
+    min-width: 0; 
+    
+    /* Card Styling applies ONLY on desktop */
+    background-color: var(--color-bg-page-container); 
+    padding: var(--spacing-md) var(--spacing-lg);     
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);                     
+    border: 1px solid var(--color-border);            
   }
 
-  /* 2. Navigation goes SECOND (Right) */
+  /* D. Navigation Column (Right) */
   .doc-toc {
     display: block; 
-    order: 2;         /* <--- This moves it to the right side */
+    order: 2;
     width: 260px;   
     flex-shrink: 0; 
+    
+    /* Sticky Positioning */
     position: -webkit-sticky;
     position: sticky;
     top: 120px; 
@@ -1503,73 +1535,19 @@ img + .image-caption {
     max-height: calc(100vh - 140px); 
     overflow-y: auto;
     
-    /* Visual Styling */
-    background: var(--color-bg-light);
-    border-left: 4px solid var(--color-border); /* Acts as a divider line */
-    padding: 1em 0 1em 1.5em;
+    /* Floating Visual Style */
+    background: transparent; 
+    border-left: 2px solid var(--color-border); 
+    padding: 0.5em 0 0.5em 1.5em;
     z-index: 10; 
   }
 }
 
-/* --- TOC VISUAL STYLES --- */
-.doc-toc h3 {
-  font-family: var(--font-header);
-  font-size: 1.1em;
-  margin-top: 0;
-  margin-bottom: 1em;
-  color: var(--color-primary);
-  text-transform: uppercase;
-}
+/* --- 3. COMMON TYPOGRAPHY & SAFETY (Applies to both) --- */
 
-.toc-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.toc-item {
-  margin-bottom: 0.6em;
-  line-height: 1.3;
-}
-
-.toc-h3 {
-  margin-left: 1rem;
-  font-size: 0.9em;
-  border-left: 2px solid var(--color-border);
-  padding-left: 0.5rem;
-}
-
-.toc-link {
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  transition: all 0.2s;
-  display: block;
-}
-
-.toc-link:hover {
-  color: var(--color-primary);
-}
-
-.toc-link.active {
-  color: var(--color-secondary);
-  font-weight: bold;
-  transform: translateX(5px);
-}
-
-/* Dark Mode Support */
-[data-theme="dark"] .doc-toc {
-  background: transparent;
-  border-color: var(--color-border);
-}
-
-
-/* --- DOCUMENT BODY TEXT AREA --- */
 .doc-body {
-  flex: 1; 
-  min-width: 0; /* CRITICAL: Prevents flex items from overflowing */
   line-height: 1.8;
   color: var(--color-doc-body);
-  width: 100%; 
 }
 
 .doc-body h2 {
@@ -1582,11 +1560,53 @@ img + .image-caption {
   margin-bottom: 0.75em;
 }
 
-/* --- SAFETY VALVES (Mobile Protection) --- */
+/* Toc Typography */
+.doc-toc h3 {
+  font-family: var(--font-header);
+  font-size: 1.1em;
+  margin-top: 0;
+  margin-bottom: 1em;
+  color: var(--color-primary); 
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+}
+
+[data-theme="dark"] .doc-toc h3 {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.toc-list { list-style: none; padding: 0; margin: 0; }
+.toc-item { margin-bottom: 0.6em; line-height: 1.3; }
+.toc-h3 { margin-left: 1rem; font-size: 0.9em; border-left: 2px solid var(--color-border); padding-left: 0.5rem; }
+
+.toc-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: all 0.2s;
+  display: block;
+}
+
+.toc-link:hover {
+  color: var(--color-primary);
+  transform: translateX(2px);
+}
+
+.toc-link.active {
+  color: var(--color-secondary);
+  font-weight: bold;
+  border-left: 3px solid var(--color-secondary);
+  padding-left: 8px;
+  margin-left: -11px;
+}
+
+
+/* --- 4. SAFETY VALVES (Crucial for Mobile Width) --- */
+/* These ensure content never breaks the screen width */
+
 .doc-body img {
   max-width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 2px 8px var(--shadow-color-doc-image);
   margin: 1.5em 0;
 }
@@ -1604,11 +1624,8 @@ img + .image-caption {
   max-width: 100%;          
 }
 
-.doc-body code {
-  word-break: break-word;
-}
 
-/* --- BREADCRUMB NAVIGATION --- */
+/* --- 5. PAGE ELEMENTS (Breadcrumbs, Title, Footer) --- */
 .breadcrumb {
   font-size: 0.9em;
   color: var(--color-breadcrumb);
@@ -1616,25 +1633,10 @@ img + .image-caption {
   padding: 0.5em 0;
 }
 
-.breadcrumb a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
+.breadcrumb a { color: var(--color-primary); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb-separator { margin: 0 0.5em; color: var(--color-breadcrumb-sep); }
 
-.breadcrumb a:hover {
-  text-decoration: underline;
-}
-
-.breadcrumb-separator {
-  margin: 0 0.5em;
-  color: var(--color-breadcrumb-sep);
-}
-
-.breadcrumb-item {
-  color: var(--color-breadcrumb);
-}
-
-/* --- PAGE TITLE & META --- */
 .doc-title {
   font-family: var(--font-header);
   color: var(--color-primary);
@@ -1653,15 +1655,6 @@ img + .image-caption {
   border-bottom-color: var(--color-doc-meta-border);
 }
 
-.doc-author {
-  margin-right: 1em;
-}
-
-.doc-date {
-  font-style: italic;
-}
-
-/* --- FOOTER NAVIGATION --- */
 .doc-footer-nav {
   display: flex;
   justify-content: space-between;
@@ -1672,17 +1665,32 @@ img + .image-caption {
   gap: 1em;
 }
 
+/* Responsive adjustment for footer buttons */
+@media (max-width: 768px) {
+  .doc-footer-nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .prev-link, .next-link {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+  }
+  .next-link {
+    margin-left: 0;
+  }
+}
+
 .prev-link, .next-link {
   display: flex;
   align-items: center;
   gap: 0.5em;
   padding: 0.75em 1.5em;
-  background: var(--color-bg-light);
+  background: var(--color-bg-light); 
   border: 2px solid var(--color-border);
   border-radius: var(--border-radius);
   text-decoration: none;
   color: var(--color-primary);
-  transition: all 0.2s;
   font-family: var(--font-header);
   text-transform: uppercase;
   font-size: 0.9em;
@@ -1692,24 +1700,12 @@ img + .image-caption {
 .prev-link:hover, .next-link:hover {
   background: var(--color-primary);
   color: var(--color-btn-hover-text);
-  text-decoration: none;
-  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
-.prev-link {
-  margin-right: auto;
-}
-
-.next-link {
-  margin-left: auto;
-  flex-direction: row-reverse;
-}
-
-.nav-arrow {
-  font-size: 1.2em;
-  font-weight: bold;
-}
+.prev-link { margin-right: auto; }
+.next-link { margin-left: auto; flex-direction: row-reverse; }
+.nav-arrow { font-size: 1.2em; font-weight: bold; }
 
 .nav-label {
   font-size: 0.85em;
