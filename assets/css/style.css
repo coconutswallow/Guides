@@ -1939,10 +1939,7 @@ img + .image-caption {
   }
   
   .doc-toc {
-    position: static;
-    float: none;
-    width: 100%;
-    margin: 2em 0;
+    display: none !important; 
   }
   
   .guild-icon {
