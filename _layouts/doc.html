@@ -5,37 +5,46 @@ layout: default
     /* --- LAYOUT OVERRIDES --- */
 
     /* 1. BREAKOUT CONTAINER */
-    /* This forces the container to ignore parent width limits (like .page) */
+    /* Forces the layout to span the full browser width, ignoring parent constraints */
     .doc-container {
-        width: 95vw !important;       /* Occupy 95% of the viewport width */
-        position: relative !important; 
-        left: 50% !important; 
-        right: 50% !important; 
-        margin-left: -47.5vw !important; /* Pull to the left edge */
-        margin-right: -47.5vw !important;/* Pull to the right edge */
-        max-width: 1600px !important;    /* Cap width on huge screens */
-        box-sizing: border-box !important;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        
+        /* Flex alignment to center the inner content */
+        display: flex;
+        justify-content: center;
     }
 
-    /* 2. Flex Container Setup */
+    /* 2. INNER CONTENT WRAPPER */
+    /* Limits the total width so it doesn't stretch to infinity on huge screens */
     .doc-content {
+        width: 100%;
+        max-width: 1450px; /* 1200px Body + Gap + Sidebar */
+        padding: 0 40px;   /* Outer gutters */
+        
         display: flex;
         flex-direction: row;
-        justify-content: center; /* Center the content block */
         align-items: flex-start;
-        gap: 40px; /* Increased gap for better readability */
+        gap: 40px; /* Space between Body and TOC */
     }
 
     /* 3. The Main Body */
     .doc-body {
-        flex: 1 1 auto;  /* Grow to fill all available space */
-        min-width: 0;    /* Prevent flex items from failing to shrink */
+        flex: 1 1 auto;  
+        min-width: 0;
+        
+        /* This keeps the text column consistent with your standard non-TOC pages */
+        max-width: 1200px; 
         display: block; 
     }
 
     /* 4. The Table of Contents */
     .doc-toc {
-        flex: 0 0 180px; /* Fixed narrow width */
+        flex: 0 0 180px; 
         width: 180px;
         min-width: 180px;
         max-width: 180px;
@@ -44,20 +53,20 @@ layout: default
         /* Sticky Positioning */
         position: -webkit-sticky;
         position: sticky;
-        top: 100px; /* Push down further to avoid headers */
+        top: 100px; 
         max-height: calc(100vh - 120px);
         overflow-y: auto;
         
         /* Visuals */
         padding-left: 15px;
-        border-left: 1px solid #eee;
+        border-left: 1px solid var(--color-border);
     }
 
     /* --- Active State Styles (Scroll Spy) --- */
     .toc-link {
         display: block;
         padding: 2px 0;
-        color: inherit;
+        color: var(--color-text-secondary); /* Use theme secondary text color */
         text-decoration: none;
         transition: all 0.2s ease;
         border-left: 2px solid transparent;
@@ -68,29 +77,34 @@ layout: default
     }
 
     .toc-link:hover {
-        color: #555;
+        color: var(--color-primary);
     }
 
     .toc-link.active {
-        color: #2c7bb6;
+        /* USE THEME VARIABLES HERE */
+        color: var(--color-secondary); 
         font-weight: 700;
-        border-left: 2px solid #2c7bb6;
+        border-left: 2px solid var(--color-secondary);
     }
 
     /* --- Responsive: Stack on small screens --- */
-    @media (max-width: 1100px) {
-        /* Disable breakout on small screens to prevent horizontal scrolling */
+    @media (max-width: 1200px) {
+        /* Disable breakout on smaller screens to prevent scrolling issues */
         .doc-container {
-            width: 100% !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            left: 0;
+            right: 0;
+            display: block;
         }
-
+        
         .doc-content {
+            padding: 0;
+            max-width: 100%;
             flex-direction: column;
         }
+
         .doc-toc {
             width: 100%;
             max-width: 100%;
@@ -101,6 +115,8 @@ layout: default
             margin-top: 20px;
             border-left: none;
             padding-left: 0;
+            border-top: 1px solid var(--color-border);
+            padding-top: 20px;
         }
     }
 </style>
@@ -217,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function onScroll() {
         let current = '';
+        // Offset logic: triggers when header is ~150px from top
         const scrollPosition = window.scrollY + 150; 
 
         sections.forEach(section => {
@@ -235,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.addEventListener('scroll', onScroll);
+    // Run once on load
     onScroll();
 });
 </script>
