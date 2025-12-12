@@ -1456,104 +1456,91 @@ img + .image-caption {
 /* ============================================
    17. DOCUMENTATION LAYOUT
    ============================================ */
+
+/* 1. CONTAINER & PARENT OVERRIDES */
 .doc-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   width: 100%;
 }
 
-/* 1. DEFINE THE GRID */
-.doc-content {
-  position: relative;
-  display: grid;
-  /* Col 1: Flexible Left Margin
-     Col 2: Main Content (max 800px)
-     Col 3: TOC Area (Fixed 280px) 
-  */
-  grid-template-columns: 1fr minmax(auto, 800px) 280px;
-  gap: 2rem;
-  align-items: start;
+/* Remove default card styling from the parent .page wrapper 
+   so we can render the card ONLY behind the text column. 
+   This works in all modern browsers. */
+.page:has(.doc-container) {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
 }
 
-/* 2. HANDLE PAGES WITHOUT A TOC */
-/* Collapse to single centered column if 'no-toc' is present */
+/* 2. MAIN GRID LAYOUT */
+.doc-content {
+  display: grid;
+  position: relative;
+  /* Columns: 
+     1. Flexible Spacer (Left)
+     2. Main Content (Fixed max-width)
+     3. TOC (Fixed width)
+     4. Flexible Spacer (Right) 
+  */
+  grid-template-columns: 1fr minmax(auto, 800px) 280px 1fr;
+  gap: 3rem;
+  align-items: start;
+  padding-top: var(--spacing-md);
+}
+
+/* Fallback: If no TOC exists, center the content with equal spacers */
 .doc-content.no-toc,
 .doc-content:not(:has(.doc-toc)) {
   grid-template-columns: 1fr minmax(auto, 800px) 1fr;
 }
 
-/* 3. PLACEMENT: MAIN CONTENT (Middle Column) */
+/* 3. RE-DRAW THE CARD (Background for Text Only) */
+.doc-content::before {
+  content: "";
+  grid-column: 2 / 3;      /* Behind the text column */
+  grid-row: 1 / span 20;   /* Span full height */
+  background: var(--color-bg-light); /* Uses your theme's card color */
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--border-radius);
+  margin: -2.5rem;         /* Expand background to create internal padding */
+  z-index: -1;             /* Place behind text */
+}
+
+/* 4. CONTENT PLACEMENT (Middle Column) */
 .breadcrumb,
 .doc-title,
 .doc-meta,
 .doc-body,
 .doc-footer-nav {
-  grid-column: 2 / 3; /* Forces text to stay in the center column */
+  grid-column: 2 / 3;
   width: 100%;
+  z-index: 1;
 }
 
-/* 4. PLACEMENT: TOC (Right Column) */
+/* 5. TOC PLACEMENT (Right Margin) */
 .doc-toc {
-  grid-column: 3 / 4; /* Forces TOC to the right column */
+  grid-column: 3 / 4;
   position: sticky;
-  top: 100px;
-  width: 100% !important; /* Overrides any previous width settings */
-  background: var(--color-bg-light);
-  border: 2px solid var(--color-border);
-  border-radius: 8px;
-  padding: 1.5em;
-  z-index: 10;
-  margin-top: 0;
-}
-
-/* TOC TEXT STYLES */
-.doc-toc h3 {
-  font-family: var(--font-header);
-  font-size: 1.1em;
-  margin: 0 0 1em 0;
-  color: var(--color-primary);
-  text-transform: uppercase;
-}
-
-.toc-list {
-  list-style: none;
-  padding: 0;
+  top: 120px;
+  width: 100% !important;
+  float: none !important;
+  background: transparent; /* No card background */
+  border: none;
+  border-left: 2px solid var(--color-border); /* Simple divider line */
+  border-radius: 0;
+  padding: 0 0 0 1.5em;
   margin: 0;
+  z-index: 10;
 }
 
-.toc-item {
-  margin: 0.5em 0;
-}
+/* ============================================
+   COMPONENT STYLES
+   ============================================ */
 
-.toc-link {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-size: 0.95em;
-  line-height: 1.4;
-  display: block;
-  padding: 0.25em 0;
-}
-
-.toc-link:hover {
-  color: var(--color-secondary);
-  text-decoration: underline;
-}
-
-/* STYLES FOR CONTENT ELEMENTS */
-.doc-body {
-  min-width: 0;
-  line-height: 1.8;
-  color: var(--color-doc-body);
-}
-
-.doc-body img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
-  margin: 1.5em 0;
-}
-
+/* Typography & Elements */
 .doc-title {
   font-family: var(--font-header);
   color: var(--color-primary);
@@ -1563,7 +1550,91 @@ img + .image-caption {
   padding-bottom: 0.3em;
 }
 
-/* FOOTER NAV */
+.doc-meta {
+  font-size: 0.9em;
+  color: var(--color-doc-meta);
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+  border-bottom-color: var(--color-doc-meta-border);
+}
+
+.doc-author { margin-right: 1em; }
+.doc-date { font-style: italic; }
+
+.doc-body {
+  min-width: 0;
+  line-height: 1.8;
+  color: var(--color-doc-body);
+}
+
+.doc-body h2 { margin-top: 2em; margin-bottom: 1em; }
+.doc-body h3 { margin-top: 1.5em; margin-bottom: 0.75em; }
+
+.doc-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
+  margin: 1.5em 0;
+}
+
+.doc-body table { margin: 1.5em 0; }
+
+/* Breadcrumbs */
+.breadcrumb {
+  font-size: 0.9em;
+  color: var(--color-breadcrumb);
+  margin-bottom: 1em;
+  padding: 0.5em 0;
+}
+
+.breadcrumb a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover { text-decoration: underline; }
+
+.breadcrumb-separator {
+  margin: 0 0.5em;
+  color: var(--color-breadcrumb-sep);
+}
+
+.breadcrumb-item { color: var(--color-breadcrumb); }
+
+/* TOC Internal Styles */
+.doc-toc h3 {
+  font-family: var(--font-header);
+  font-size: 0.9em;
+  margin: 0 0 1em 0;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-item { margin: 0.4em 0; }
+
+.toc-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.9em;
+  line-height: 1.4;
+  display: block;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.toc-link:hover {
+  color: var(--color-secondary);
+  transform: translateX(2px);
+}
+
+/* Footer Navigation */
 .doc-footer-nav {
   display: flex;
   justify-content: space-between;
@@ -1579,22 +1650,68 @@ img + .image-caption {
   align-items: center;
   gap: 0.5em;
   padding: 0.75em 1.5em;
-  background: var(--color-bg-light);
+  background: var(--color-bg-light); /* Keep button background */
   border: 2px solid var(--color-border);
   border-radius: var(--border-radius);
   text-decoration: none;
   color: var(--color-primary);
+  transition: all 0.2s;
   font-family: var(--font-header);
   text-transform: uppercase;
   font-size: 0.9em;
   max-width: 45%;
 }
 
-.next-link { margin-left: auto; flex-direction: row-reverse; }
+.prev-link:hover, .next-link:hover {
+  background: var(--color-primary);
+  color: var(--color-btn-hover-text);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
 .prev-link { margin-right: auto; }
+.next-link { margin-left: auto; flex-direction: row-reverse; }
+
+.nav-arrow {
+  font-size: 1.2em;
+  font-weight: bold;
+}
 
 .nav-label {
   font-size: 0.85em;
+}
+
+/* 6. RESPONSIVE FALLBACK */
+@media (max-width: 1200px) {
+  /* Restore default stacking behavior */
+  .doc-content {
+    display: block; 
+    padding: 0;
+  }
+  
+  /* Restore the original parent card background */
+  .page:has(.doc-container) {
+    background: var(--color-bg-light); /* Or var(--color-bg-page-container) depending on theme */
+    border: 2px solid var(--color-border);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-lg); /* Restore shadow if needed */
+  }
+  
+  /* Hide the pseudo-card we created for desktop */
+  .doc-content::before {
+    display: none;
+  }
+  
+  /* Reset TOC to sit below content */
+  .doc-toc {
+    position: static;
+    border-left: none;
+    border-top: 2px solid var(--color-border);
+    padding: 1.5em 0;
+    margin-top: 2em;
+  }
+  
+  .doc-toc h3 { font-size: 1.1em; color: var(--color-primary); }
 }
 
 /* ============================================
