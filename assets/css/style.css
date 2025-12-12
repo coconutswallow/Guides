@@ -37,6 +37,9 @@
    22. PRINT STYLES
    ============================================ */
 
+   * {
+  outline: 1px solid red !important;
+}
 
 /* ============================================
    1. COLOR PALETTE (Design Tokens)
