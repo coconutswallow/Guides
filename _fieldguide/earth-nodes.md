@@ -250,20 +250,20 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
 
     In the event that the project makes either no or at most minor modifications to the area in which the earth node is situated, then the earth node is unaffected by the project. However, projects which involve moderate or extensive changes to the area risk damaging the earth node.<br><br>
 
-    At the end of each workweek associated with the project, a creature that has become <b>proficient</b> in their understanding of a given earth node can make an ability check using their spellcasting ability while within the area of that earth node. A creature with the <b>Node Spellcasting</b> Supernatural Gift can instead make an Arcana check using their spellcasting ability, and a creature with the <b>Node Manifestation</b> Supernatural Gift can make an Intelligence (Arcana) check. (A creature without a spellcasting ability instead makes an Intelligence check.) A creature proficient in mason's tools that is also overseeing the project can provide Help on the ability check.<br><br>
-	
-	<span class="image-caption">Image: A Wizard summons the power of an earth node, Forgotten Realms Underdark</span>
+    At the end of each workweek associated with the project, a creature that has become <b>proficient</b> in their understanding of a given earth node can make an ability check using their spellcasting ability while within the area of that earth node. A creature with the <b>Node Spellcasting</b> Supernatural Gift can instead make an Arcana check using their spellcasting ability, and a creature with the <b>Node Manifestation</b> Supernatural Gift can make an Intelligence (Arcana) check. (A creature without a spellcasting ability instead makes an Intelligence check.) A creature proficient in mason's tools that is also overseeing the project can provide Help on the ability check
   </div>  
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
 </div>
 
-The DC of the ability check is equal to the node DC if the project involves moderate changes to the area as determined by the DM. If the project involves extensive changes to the area as determined by the DM, the DC for the ability check is equal to the node DC + 5. <br><br>
+<span class="image-caption">Image: A Wizard summons the power of an earth node, Forgotten Realms Underdark</span>
 
-On a success, the creature is able to help reroute and smooth the flow of magical energy in the new physical arrangement as associated with the project. On a failure, the class rating of the earth node decreases by 1. An earth node whose class rating is reduced to 0 is destroyed. <br><br>
+The DC of the ability check is equal to the node DC if the project involves moderate changes to the area as determined by the DM. If the project involves extensive changes to the area as determined by the DM, the DC for the ability check is equal to the node DC + 5.
 
-If projects involving moderate or extensive changes aren't supervised, there is a cumulative 5% chance for each day of the project that the class rating of the node is reduced by 1. This chance resets to 5% after the node's class rating is reduced, before accumulating with each day once more.  <br><br>
+On a success, the creature is able to help reroute and smooth the flow of magical energy in the new physical arrangement as associated with the project. On a failure, the class rating of the earth node decreases by 1. An earth node whose class rating is reduced to 0 is destroyed. 
 
-It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM. <br><br>
+If projects involving moderate or extensive changes aren't supervised, there is a cumulative 5% chance for each day of the project that the class rating of the node is reduced by 1. This chance resets to 5% after the node's class rating is reduced, before accumulating with each day once more.
+
+It is possible for an earth node to naturally repair itself over time, with a typical rate that a layer is regained after a number of years equal to 2 x (the earth node's current class rating). For example, a class 3 earth node that was damaged down to class 1 takes 2 years to return to class 2 and another 4 years to return to class 3.  This process can sometimes proceed more rapidly or be magically assisted, as determined by the DM.
 
 In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
 
