@@ -37,6 +37,7 @@
    22. PRINT STYLES
    ============================================ */
 
+
 /* ============================================
    1. COLOR PALETTE (Design Tokens)
    Raw color values - do not use directly
@@ -1452,100 +1453,45 @@ img + .image-caption {
 .image-caption a[target="_blank"]::after {
   content: none;
 }
-
 /* ============================================
    17. DOCUMENTATION LAYOUT
    ============================================ */
-
-/* Base Container */
 .doc-container {
-  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-/* ---------------------------------------------------------
-   SCENARIO A: PAGE HAS A TABLE OF CONTENTS (Split Layout)
-   --------------------------------------------------------- */
-
-/* 1. PARENT OVERRIDE 
-   Only overrides the parent .page styles if .doc-toc exists.
-   Removes the global white card so we can draw our own split layout. */
-.page:has(.doc-toc),
-body:has(.doc-toc) .page {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  max-width: 100% !important; /* Allow wider layout for margin TOC */
-}
-
-/* 2. THE GRID (Only if TOC exists) */
-.doc-content:has(.doc-toc) {
-  display: grid;
+.doc-content {
   position: relative;
-  /* Columns: Spacer | Content (800px) | TOC (280px) | Spacer */
-  grid-template-columns: 1fr 800px 280px 1fr;
-  gap: 3rem;
-  align-items: start;
-  padding: 2rem 1rem;
 }
 
-/* 3. THE TEXT CARD (Only if TOC exists)
-   Draws a white box specifically behind the text column */
-.doc-content:has(.doc-toc)::before {
-  content: "";
-  grid-column: 2 / 3;
-  grid-row: 1 / span 20;
-  background: var(--color-bg-page-container); /* Theme card color */
-  border: 2px solid var(--color-border);
-  box-shadow: var(--shadow-lg);
-  border-radius: var(--border-radius);
-  margin: -3rem; /* Internal padding for the text card */
-  z-index: -1;
+/* Breadcrumb Navigation */
+.breadcrumb {
+  font-size: 0.9em;
+  color: var(--color-breadcrumb);
+  margin-bottom: 1em;
+  padding: 0.5em 0;
 }
 
-/* 4. CONTENT POSITIONING (Only if TOC exists) */
-.doc-content:has(.doc-toc) .breadcrumb,
-.doc-content:has(.doc-toc) .doc-title,
-.doc-content:has(.doc-toc) .doc-meta,
-.doc-content:has(.doc-toc) .doc-body,
-.doc-content:has(.doc-toc) .doc-footer-nav {
-  grid-column: 2 / 3; /* Lock to center column */
-  width: 100%;
+.breadcrumb a {
+  color: var(--color-primary);
+  text-decoration: none;
 }
 
-/* 5. TOC POSITIONING */
-.doc-toc {
-  grid-column: 3 / 4; /* Lock to right column */
-  position: sticky;
-  top: 120px;
-  width: 100% !important;
-  background: transparent;
-  border: none;
-  border-left: 2px solid var(--color-border);
-  border-radius: 0;
-  padding: 0 0 0 1.5em;
-  margin: 0;
+.breadcrumb a:hover {
+  text-decoration: underline;
 }
 
-/* ---------------------------------------------------------
-   SCENARIO B: NO TOC (Standard Card Layout)
-   --------------------------------------------------------- */
-
-/* If NO TOC exists, the parent .page keeps its white background.
-   We just need to ensure the text inside is readable (not too wide). */
-.doc-content:not(:has(.doc-toc)) {
-  display: block;
-  max-width: 800px;
-  margin: 0 auto; /* Center the text inside the standard card */
+.breadcrumb-separator {
+  margin: 0 0.5em;
+  color: var(--color-breadcrumb-sep);
 }
 
-/* ---------------------------------------------------------
-   COMPONENT STYLES (Shared)
-   --------------------------------------------------------- */
+.breadcrumb-item {
+  color: var(--color-breadcrumb);
+}
 
-/* Typography */
+/* Documentation Title */
 .doc-title {
   font-family: var(--font-header);
   color: var(--color-primary);
@@ -1555,6 +1501,7 @@ body:has(.doc-toc) .page {
   padding-bottom: 0.3em;
 }
 
+/* Documentation Metadata */
 .doc-meta {
   font-size: 0.9em;
   color: var(--color-doc-meta);
@@ -1563,17 +1510,29 @@ body:has(.doc-toc) .page {
   border-bottom-color: var(--color-doc-meta-border);
 }
 
-.doc-author { margin-right: 1em; }
-.doc-date { font-style: italic; }
+.doc-author {
+  margin-right: 1em;
+}
 
+.doc-date {
+  font-style: italic;
+}
+
+/* Documentation Body */
 .doc-body {
-  min-width: 0;
   line-height: 1.8;
   color: var(--color-doc-body);
 }
 
-.doc-body h2 { margin-top: 2em; margin-bottom: 1em; }
-.doc-body h3 { margin-top: 1.5em; margin-bottom: 0.75em; }
+.doc-body h2 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.doc-body h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
 
 .doc-body img {
   max-width: 100%;
@@ -1583,45 +1542,61 @@ body:has(.doc-toc) .page {
   margin: 1.5em 0;
 }
 
-.doc-body table { margin: 1.5em 0; }
-
-/* Breadcrumbs */
-.breadcrumb {
-  font-size: 0.9em;
-  color: var(--color-breadcrumb);
-  margin-bottom: 1em;
-  padding: 0.5em 0;
+.doc-body table {
+  margin: 1.5em 0;
 }
-.breadcrumb a { color: var(--color-primary); text-decoration: none; }
-.breadcrumb a:hover { text-decoration: underline; }
-.breadcrumb-separator { margin: 0 0.5em; color: var(--color-breadcrumb-sep); }
-.breadcrumb-item { color: var(--color-breadcrumb); }
 
-/* TOC Links */
+/* Table of Contents Sidebar */
+.doc-toc {
+  position: sticky;
+  top: 100px;
+  float: right;
+  width: 250px;
+  margin-left: 2em;
+  margin-bottom: 2em;
+  background: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5em;
+}
+
 .doc-toc h3 {
   font-family: var(--font-header);
-  font-size: 0.9em;
+  font-size: 1.1em;
   margin: 0 0 1em 0;
-  color: var(--color-text-secondary);
+  color: var(--color-primary);
   text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.toc-list { list-style: none; padding: 0; margin: 0; }
-.toc-item { margin: 0.4em 0; }
-.toc-link {
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  font-size: 0.9em;
-  line-height: 1.4;
-  display: block;
-  transition: color 0.2s, transform 0.2s;
-}
-.toc-link:hover {
-  color: var(--color-secondary);
-  transform: translateX(2px);
 }
 
-/* Footer Nav */
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-item {
+  margin: 0.5em 0;
+}
+
+.toc-h3 {
+  margin-left: 1em;
+}
+
+.toc-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.95em;
+  line-height: 1.4;
+  display: block;
+  padding: 0.25em 0;
+}
+
+.toc-link:hover {
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+
+/* Documentation Footer Navigation */
 .doc-footer-nav {
   display: flex;
   justify-content: space-between;
@@ -1631,6 +1606,7 @@ body:has(.doc-toc) .page {
   border-top: 2px solid var(--color-border);
   gap: 1em;
 }
+
 .prev-link, .next-link {
   display: flex;
   align-items: center;
@@ -1647,52 +1623,33 @@ body:has(.doc-toc) .page {
   font-size: 0.9em;
   max-width: 45%;
 }
+
 .prev-link:hover, .next-link:hover {
   background: var(--color-primary);
   color: var(--color-btn-hover-text);
+  text-decoration: none;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
-.prev-link { margin-right: auto; }
-.next-link { margin-left: auto; flex-direction: row-reverse; }
-.nav-arrow { font-size: 1.2em; font-weight: bold; }
-.nav-label { font-size: 0.85em; }
 
-/* ---------------------------------------------------------
-   MOBILE / RESPONSIVE
-   --------------------------------------------------------- */
-@media (max-width: 1200px) {
-  /* Restore card look for TOC pages on mobile */
-  .page:has(.doc-toc),
-  body:has(.doc-toc) .page {
-    background: var(--color-bg-light) !important;
-    border: 2px solid var(--color-border) !important;
-    padding: var(--spacing-md) !important;
-    max-width: 1200px !important;
-    box-shadow: var(--shadow-lg) !important;
-  }
-
-  /* Reset Grid */
-  .doc-content:has(.doc-toc) {
-    display: block;
-    grid-template-columns: none;
-    padding: 0;
-  }
-  
-  /* Hide Pseudo Card */
-  .doc-content:has(.doc-toc)::before {
-    display: none;
-  }
-  
-  /* Reset TOC to bottom */
-  .doc-toc {
-    position: static;
-    border-left: none;
-    border-top: 2px solid var(--color-border);
-    padding: 1.5em 0;
-    margin-top: 2em;
-  }
+.prev-link {
+  margin-right: auto;
 }
+
+.next-link {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.nav-arrow {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.nav-label {
+  font-size: 0.85em;
+}
+
 
 /* ============================================
    18. DARK MODE TOGGLE BUTTON
@@ -1946,7 +1903,10 @@ body:has(.doc-toc) .page {
   }
   
   .doc-toc {
-    display: none !important; 
+    position: static;
+    float: none;
+    width: 100%;
+    margin: 2em 0;
   }
   
   .guild-icon {
@@ -1962,17 +1922,6 @@ body:has(.doc-toc) .page {
     width: 45px;
     height: 45px;
     font-size: 1.3em;
-  }
-  /* Disable grid on mobile so sidebar stacks below text */
-  .doc-content, 
-  .doc-content.no-toc {
-    display: block !important;
-  }
-  
-  .doc-toc {
-    position: static;
-    width: 100% !important;
-    margin: 2em 0;
   }
 }
 
@@ -2000,17 +1949,6 @@ body:has(.doc-toc) .page {
   
   .guild-icon {
     display: none;
-  }
-  /* Disable grid on mobile so sidebar stacks below text */
-  .doc-content, 
-  .doc-content.no-toc {
-    display: block !important;
-  }
-  
-  .doc-toc {
-    position: static;
-    width: 100% !important;
-    margin: 2em 0;
   }
 }
 
