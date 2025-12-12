@@ -1580,7 +1580,7 @@ img + .image-caption {
 }
 
 .toc-list { list-style: none; padding: 0; margin: 0; }
-.toc-item { margin: 0.5em 0; }
+.toc-item { margin: 0.1em 0; }
 .toc-h3 { margin-left: 1em; font-size: 0.9em; }
 
 .toc-link {
@@ -1589,7 +1589,7 @@ img + .image-caption {
   font-size: 0.95em;
   line-height: 1.4;
   display: block;
-  padding: 0.25em 0 0.25em 0.5em;
+  padding: 0.15em 0 0.15em 0.5em;
   border-left: 2px solid transparent;
   transition: all 0.2s;
 }
