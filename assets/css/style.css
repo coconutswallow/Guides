@@ -1683,6 +1683,16 @@ img + .image-caption {
     align-items: start;
   }
 
+  .doc-content.no-toc {
+    grid-template-columns: 100%;
+    grid-template-areas: 
+      "bread"
+      "title"
+      "meta"
+      "body"
+      "nav";
+  }
+
   .doc-toc {
     display: block; /* Show the ToC */
     position: sticky;

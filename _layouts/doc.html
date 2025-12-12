@@ -2,8 +2,7 @@
 layout: default
 ---
 <div class="doc-container">
-    <div class="doc-content">
-        <!-- Breadcrumb Navigation -->
+    <div class="doc-content {% unless page.toc %}no-toc{% endunless %}">
         <nav class="breadcrumb">
             <a href="{{ site.baseurl }}/">Home</a>
             {% assign url_parts = page.url | split: '/' %}
@@ -15,12 +14,12 @@ layout: default
                     <span class="breadcrumb-item">{{ part | replace: '-', ' ' | capitalize }}</span>
                 {% endunless %}
             {% endfor %}
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-item active">{{ page.title }}</span>
         </nav>
 
-        <!-- Page Title -->
         <h1 class="doc-title">{{ page.title }}</h1>
 
-        <!-- Page Metadata (optional) -->
         {% if page.author or page.date %}
         <div class="doc-meta">
             {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
@@ -28,12 +27,10 @@ layout: default
         </div>
         {% endif %}
 
-        <!-- Main Content -->
         <div class="doc-body">
             {{ content }}
         </div>
 
-        <!-- Table of Contents (if enabled) -->
         {% if page.toc %}
         <aside class="doc-toc">
             <h3>On This Page</h3>
@@ -41,7 +38,6 @@ layout: default
         </aside>
         {% endif %}
 
-        <!-- Footer Navigation (Previous/Next) -->
         {% if page.collection %}
         <nav class="doc-footer-nav">
             {% assign collection_items = site[page.collection] | sort: 'order' %}
