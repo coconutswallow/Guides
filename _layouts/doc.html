@@ -2,7 +2,14 @@
 layout: default
 ---
 <div class="doc-container">
-    
+
+    {% if page.toc %}
+    <aside class="doc-toc">
+        <h3>On This Page</h3>
+        <div id="toc-container"></div>
+    </aside>
+    {% endif %}
+
     <div class="doc-content">
         <nav class="breadcrumb">
             <a href="{{ site.baseurl }}/">Home</a>
@@ -62,14 +69,6 @@ layout: default
         </nav>
         {% endif %}
     </div>
-
-    {% if page.toc %}
-    <aside class="doc-toc">
-        <h3>On This Page</h3>
-        <div id="toc-container"></div>
-    </aside>
-    {% endif %}
-
 </div>
 
 {% if page.toc %}
