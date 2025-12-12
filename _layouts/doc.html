@@ -3,7 +3,6 @@ layout: default
 ---
 <div class="doc-container">
     <div class="doc-content">
-        <!-- Breadcrumb Navigation -->
         <nav class="breadcrumb">
             <a href="{{ site.baseurl }}/">Home</a>
             {% assign url_parts = page.url | split: '/' %}
@@ -17,10 +16,8 @@ layout: default
             {% endfor %}
         </nav>
 
-        <!-- Page Title -->
         <h1 class="doc-title">{{ page.title }}</h1>
 
-        <!-- Page Metadata (optional) -->
         {% if page.author or page.date %}
         <div class="doc-meta">
             {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
@@ -28,12 +25,10 @@ layout: default
         </div>
         {% endif %}
 
-        <!-- Main Content -->
         <div class="doc-body">
             {{ content }}
         </div>
 
-        <!-- Table of Contents (if enabled) -->
         {% if page.toc %}
         <aside class="doc-toc">
             <h3>On This Page</h3>
@@ -41,7 +36,6 @@ layout: default
         </aside>
         {% endif %}
 
-        <!-- Footer Navigation (Previous/Next) -->
         {% if page.collection %}
         <nav class="doc-footer-nav">
             {% assign collection_items = site[page.collection] | sort: 'order' %}
@@ -82,13 +76,18 @@ layout: default
 <script>
 // Generate table of contents from h2 and h3 headers
 document.addEventListener('DOMContentLoaded', function() {
-    const content = document.querySelector('.doc-body');
+    // Look specifically inside .doc-body to avoid picking up sidebar headers
+    const content = document.querySelector('.doc-body'); 
     const tocContainer = document.getElementById('toc-container');
     
     if (!content || !tocContainer) return;
     
     const headers = content.querySelectorAll('h2, h3');
-    if (headers.length === 0) return;
+    if (headers.length === 0) {
+        // If no headers, hide the ToC container entirely
+        document.querySelector('.doc-toc').style.display = 'none';
+        return;
+    }
     
     const toc = document.createElement('ul');
     toc.className = 'toc-list';
@@ -115,3 +114,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endif %}
+}
