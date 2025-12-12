@@ -1487,7 +1487,7 @@ img + .image-caption {
 .doc-footer-nav {
   grid-column: 1 / 2;
   width: 100%;
-  max-width: 800px; /* Limits width to readable size */
+  max-width: 1200px; /* Limits width to readable size */
   margin-left: auto; /* Centers the block horizontally */
   margin-right: auto; /* Centers the block horizontally */
 }
