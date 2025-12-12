@@ -631,6 +631,8 @@ tbody tr:hover {
   background-color: var(--color-bg-page-container);
   color: var(--color-text);
 }
+.page.page-wide {
+  max-width: 1400px; /* This unlocks the width when ToC is present */
 
 
 /* ============================================
