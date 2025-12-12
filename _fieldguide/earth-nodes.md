@@ -243,7 +243,7 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
 
 
 <div class="image-text-wrapper">
-  <div class="hierarchy-explanation" style="flex: 0 0 60%;">
+  <div class="hierarchy-explanation" style="flex: 1; min-width: 0;">
     The area around an earth node can be modified, from incorporating an earth node into a structure to opening up an earth node that resides within solid rock. However, such modifications to the area may affect the integrity of the earth node situated within it.<br><br>
 
     Any physical project involving building around or modifying the area around an earth node takes the normal amount of time to accomplish such a project, as determined by the DM. However, ensuring that the earth node remains intact throughout this process requires supervision by a creature familiar with the earth node.<br><br>
@@ -375,17 +375,17 @@ The specifics of how an evil node affects the region it is within as well as cre
 
 #### *Sample Evil Node Spells*
 
-|Earth Node Class / Maximum Spell Level|	|Evil Node Spell|
-|:--------------------------------------|	|:---------------------------|
-|1|	|inflict wounds|
-|2|	|ray of enfeeblement|
-|3|	|animate dead|
-|4|	|blight|
-|5|	|enervation|
-|6|	|circle of death|
-|7|	|finger of death|
-|8|	|Abi-Dalzim's horrid wilting|
-|9|	|power word kill|
+| Earth Node Class / Maximum Spell Level | Evil Node Spell |
+|:---:|:---|
+| 1 | inflict wounds |
+| 2 | ray of enfeeblement |
+| 3 | animate dead |
+| 4 | blight |
+| 5 | enervation |
+| 6 | circle of death |
+| 7 | finger of death |
+| 8 | Abi-Dalzim's horrid wilting |
+| 9 | power word kill |
 
 **Imprisonment** <br>Evil nodes can contain creatures following the same rules for storing items, with the following differences. An evil node can contain any number of creatures in its extradimensional space whose combined total Hit Dice does not exceed 3 x (the evil node's class)<sup>2</sup>. (For example, a class 3 evil node can contain up to 27 Hit Dice worth of creatures) Storing creatures inside an evil node does not count against its capacity for storing objects nor vice versa. 
 
@@ -440,17 +440,17 @@ These portals last indefinitely but otherwise behave similarly to and have prope
 
 #### *Sample Shadow Node Spells*
 
-|Earth Node Class / Maximum Spell Level|	|Shadow Node Spell|
-|:--------------------------------------|	|:------------------|
-|1|	|silent image|
-|2|	|darkness|
-|3|	|summon shadowspawn|
-|4|	|shadow of moil|
-|5|	|creation|
-|6|	|eyebite|
-|7|	|mirage arcane|
-|8|	|maddening darkness|
-|9|	|weird|
+| Earth Node Class / Maximum Spell Level | Shadow Node Spell |
+|:---:|:---|
+| 1 | silent image |
+| 2 | darkness |
+| 3 | summon shadowspawn |
+| 4 | shadow of moil |
+| 5 | creation |
+| 6 | eyebite |
+| 7 | mirage arcane |
+| 8 | maddening darkness |
+| 9 | weird |
 
 **Empowerment**  <br>A creature with the **Node Spellcasting** or the **Node Manifestation** Supernatural Gift that has become **proficient** in their understanding of a given shadow node (following the same rules as described under "Studying Earth Nodes" on page 4) can spend a short rest within the area attempting to draw upon its energy to strengthen themselves. At the end of the short rest, the creature can make an Arcana check using their spellcasting ability against the node DC of the shadow node. (A mystic can use their Intelligence modifier for the Arcana check) 
 
