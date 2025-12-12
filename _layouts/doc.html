@@ -1,99 +1,144 @@
 ---
 layout: default
 ---
+<style>
+    /* FORCE LAYOUT OVERRIDES */
+    /* Make the content container a flexbox if it isn't already */
+    .doc-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px; /* Space between body and TOC */
+    }
+
+    /* The Main Body: Grows to fill space */
+    .doc-body {
+        flex: 1 1 auto; /* Grow and shrink */
+        min-width: 0;   /* Prevent flex item from overflowing container */
+        max-width: 100%; /* Ensure it uses available width */
+    }
+
+    /* The Table of Contents: Fixed narrow width */
+    .doc-toc {
+        flex: 0 0 200px; /* Fixed width of 200px */
+        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
+        font-size: 0.85rem; /* Slightly smaller text to fit the narrower column */
+        position: sticky;
+        top: 20px; /* Stick to top while scrolling */
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    /* Responsive: Stack them on small screens */
+    @media (max-width: 1000px) {
+        .doc-content {
+            flex-direction: column;
+        }
+        .doc-toc {
+            width: 100%;
+            max-width: 100%;
+            flex: none;
+            position: relative;
+            margin-top: 20px;
+        }
+    }
+</style>
+
 <div class="doc-container">
-    <nav class="breadcrumb">
-        <a href="{{ site.baseurl }}/">Home</a>
-        {% assign url_parts = page.url | split: '/' %}
-        {% assign current_path = '' %}
-        {% for part in url_parts %}
-            {% unless forloop.first or forloop.last %}
-                {% assign current_path = current_path | append: '/' | append: part %}
-                <span class="breadcrumb-separator">›</span>
-                <span class="breadcrumb-item">{{ part | replace: '-', ' ' | capitalize }}</span>
-            {% endunless %}
-        {% endfor %}
-    </nav>
-
-    <h1 class="doc-title">{{ page.title }}</h1>
-
-    {% if page.author or page.date %}
-    <div class="doc-meta">
-        {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
-        {% if page.date %}<span class="doc-date">{{ page.date | date: "%B %d, %Y" }}</span>{% endif %}
-    </div>
-    {% endif %}
-
     <div class="doc-content">
-        
-        <div class="doc-body">
-            {{ content }}
+        <div style="flex: 1; min-width: 0;">
+            <nav class="breadcrumb">
+                <a href="{{ site.baseurl }}/">Home</a>
+                {% assign url_parts = page.url | split: '/' %}
+                {% assign current_path = '' %}
+                {% for part in url_parts %}
+                    {% unless forloop.first or forloop.last %}
+                        {% assign current_path = current_path | append: '/' | append: part %}
+                        <span class="breadcrumb-separator">›</span>
+                        <span class="breadcrumb-item">{{ part | replace: '-', ' ' | capitalize }}</span>
+                    {% endunless %}
+                {% endfor %}
+            </nav>
+
+            <h1 class="doc-title">{{ page.title }}</h1>
+
+            {% if page.author or page.date %}
+            <div class="doc-meta">
+                {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
+                {% if page.date %}<span class="doc-date">{{ page.date | date: "%B %d, %Y" }}</span>{% endif %}
+            </div>
+            {% endif %}
+
+            <div class="doc-body">
+                {{ content }}
+            </div>
+
+             {% if page.collection %}
+            <nav class="doc-footer-nav">
+                {% assign collection_items = site[page.collection] | sort: 'order' %}
+                {% assign current_index_0 = -1 %}
+
+                {% for item in collection_items %}
+                    {% if item.url == page.url %}
+                        {% assign current_index_0 = forloop.index0 %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% comment %} Previous Link Logic {% endcomment %}
+                {% if current_index_0 > 0 %} 
+                    {% assign prev_item_index = current_index_0 | minus: 1 %}
+                    {% assign prev_item = collection_items[prev_item_index] %}
+                    <a href="{{ prev_item.url | relative_url }}" class="prev-link">
+                        <span class="nav-arrow">‹</span>
+                        <span class="nav-label">{{ prev_item.title }}</span>
+                    </a>
+                {% endif %}
+                
+                {% comment %} Next Link Logic {% endcomment %}
+                {% assign next_item_index = current_index_0 | plus: 1 %}
+                {% if next_item_index < collection_items.size %}
+                    {% assign next_item = collection_items[next_item_index] %}  
+                    <a href="{{ next_item.url | relative_url }}" class="next-link">
+                        <span class="nav-label">{{ next_item.title }}</span>
+                        <span class="nav-arrow">›</span>
+                    </a>
+                {% endif %}
+            </nav>
+            {% endif %}
         </div>
 
         {% if page.toc %}
         <aside class="doc-toc">
-            <h3>Page Index</h3>
+            <h3>On This Page</h3>
             <div id="toc-container"></div>
         </aside>
         {% endif %}
     </div>
-
-    {% if page.collection %}
-    <nav class="doc-footer-nav">
-        {% assign collection_items = site[page.collection] | sort: 'order' %}
-        {% assign current_index_0 = -1 %}
-
-        {% for item in collection_items %}
-            {% if item.url == page.url %}
-                {% assign current_index_0 = forloop.index0 %}
-                {% break %}
-            {% endif %}
-        {% endfor %}
-        
-        {% if current_index_0 > 0 %} 
-            {% assign prev_item_index = current_index_0 | minus: 1 %}
-            {% assign prev_item = collection_items[prev_item_index] %}
-            <a href="{{ prev_item.url | relative_url }}" class="prev-link">
-                <span class="nav-arrow">‹</span>
-                <span class="nav-label">{{ prev_item.title }}</span>
-            </a>
-        {% endif %}
-        
-        {% assign next_item_index = current_index_0 | plus: 1 %}
-        {% if next_item_index < collection_items.size %}
-            {% assign next_item = collection_items[next_item_index] %}  
-            <a href="{{ next_item.url | relative_url }}" class="next-link">
-                <span class="nav-label">{{ next_item.title }}</span>
-                <span class="nav-arrow">›</span>
-            </a>
-        {% endif %}
-    </nav>
-    {% endif %}
 </div>
 
 {% if page.toc %}
 <script>
+// Generate table of contents from h2 and h3 headers
 document.addEventListener('DOMContentLoaded', function() {
     const content = document.querySelector('.doc-body');
     const tocContainer = document.getElementById('toc-container');
     
     if (!content || !tocContainer) return;
     
-    // Find headers
     const headers = content.querySelectorAll('h2, h3');
     if (headers.length === 0) return;
     
-    // Create TOC list
     const toc = document.createElement('ul');
     toc.className = 'toc-list';
     
     headers.forEach((header, index) => {
-        // Ensure ID exists
+        // Add ID to header if it doesn't have one
         if (!header.id) {
-            header.id = header.textContent
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)+/g, '');
+            header.id = 'heading-' + index;
         }
         
         const li = document.createElement('li');
@@ -103,35 +148,12 @@ document.addEventListener('DOMContentLoaded', function() {
         link.href = '#' + header.id;
         link.textContent = header.textContent;
         link.className = 'toc-link';
-        link.dataset.target = header.id; // Helper for ScrollSpy
         
         li.appendChild(link);
         toc.appendChild(li);
     });
     
     tocContainer.appendChild(toc);
-
-    // --- SCROLLSPY LOGIC ---
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -70% 0px', // Trigger when header is near the top
-        threshold: 0
-    };
-
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.getAttribute('id');
-                // Remove active class from all links
-                tocContainer.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
-                // Add active class to current link
-                const activeLink = tocContainer.querySelector(`a[data-target="${id}"]`);
-                if (activeLink) activeLink.classList.add('active');
-            }
-        });
-    }, observerOptions);
-
-    headers.forEach(header => observer.observe(header));
 });
 </script>
 {% endif %}
