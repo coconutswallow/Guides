@@ -15,7 +15,7 @@ layout: default
                 {% unless forloop.first or forloop.last %}
                     {% assign current_path = current_path | append: '/' | append: part %}
                     <span class="breadcrumb-separator">›</span>
-                    <a href="{{ site.baseurl }}{{ current_path }}/index.html" class="breadcrumb-item linkable">
+                    <a href="{{ site.baseurl }}{{ current_path }}/index/" class="breadcrumb-item linkable">
                         {{ part | replace: '-', ' ' | capitalize }}
                     </a>
                 {% endunless %}
