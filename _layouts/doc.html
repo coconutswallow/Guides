@@ -76,13 +76,13 @@ layout: default
 
 {% if page.toc %}
 <script>
-// Generate table of contents from h2 and h3 headers
 document.addEventListener('DOMContentLoaded', function() {
     const content = document.querySelector('.doc-body');
     const tocContainer = document.getElementById('toc-container');
     
     if (!content || !tocContainer) return;
     
+    // 1. Generate the Table of Contents
     const headers = content.querySelectorAll('h2, h3');
     if (headers.length === 0) return;
     
@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
     toc.className = 'toc-list';
     
     headers.forEach((header, index) => {
-        // Add ID to header if it doesn't have one
         if (!header.id) {
             header.id = 'heading-' + index;
         }
@@ -108,6 +107,45 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     tocContainer.appendChild(toc);
+
+    // 2. Add Scroll Highlighting Logic
+    const tocLinks = toc.querySelectorAll('.toc-link');
+    const sections = Array.from(headers);
+    let isScrolling = false;
+
+    function highlightNavigation() {
+        // 150px offset accounts for fixed header + visual breathing room
+        const scrollPosition = window.scrollY + 150; 
+        let currentSection = null;
+
+        // Find the last section header that has been scrolled past
+        sections.forEach(section => {
+            if (section.offsetTop <= scrollPosition) {
+                currentSection = section;
+            }
+        });
+
+        // Update classes
+        tocLinks.forEach(link => {
+            link.classList.remove('active');
+            if (currentSection && link.getAttribute('href') === '#' + currentSection.id) {
+                link.classList.add('active');
+            }
+        });
+
+        isScrolling = false;
+    }
+
+    // Listen for scroll events (throttled via requestAnimationFrame)
+    window.addEventListener('scroll', () => {
+        if (!isScrolling) {
+            window.requestAnimationFrame(highlightNavigation);
+            isScrolling = true;
+        }
+    });
+    
+    // Initial check in case we load halfway down the page
+    highlightNavigation();
 });
 </script>
 {% endif %}

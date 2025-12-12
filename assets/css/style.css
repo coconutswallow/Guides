@@ -1709,6 +1709,16 @@ img + .image-caption {
     padding-left: 1.5em;
     border-radius: 0;
   }
+  .toc-link.active {
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
+    font-weight: bold;
+    background: linear-gradient(90deg, var(--palette-bg-hover-light) 0%, transparent 100%);
+  }
+
+  [data-theme="dark"] .toc-link.active {
+    background: linear-gradient(90deg, var(--palette-bg-row-dark) 0%, transparent 100%);
+  }
 }
 
 /* Mobile Tweaks for Footer Nav */
