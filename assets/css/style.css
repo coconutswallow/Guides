@@ -1460,64 +1460,52 @@ img + .image-caption {
   margin: 0 auto;
 }
 
-/* --- MAIN FLEX LAYOUT (Side-by-Side) --- */
+/* --- LAYOUT CONTAINER (Mobile First / Default) --- */
+/* By default, we use a simple block layout. No Flexbox = No stretching. */
 .doc-content {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start; /* Required for sticky positioning */
-  gap: 3rem; /* Space between text and TOC */
+  display: block;
+  width: 100%;
   position: relative;
 }
 
-/* --- DOCUMENT TEXT AREA --- */
-.doc-body {
-  flex: 1; /* Takes up all remaining space */
-  min-width: 0; /* Prevents overflow issues */
-  line-height: 1.8;
-  color: var(--color-doc-body);
-}
-
-/* Typography & Content Styling (Restored) */
-.doc-body h2 {
-  margin-top: 2em;
-  margin-bottom: 1em;
-}
-
-.doc-body h3 {
-  margin-top: 1.5em;
-  margin-bottom: 0.75em;
-}
-
-.doc-body img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
-  margin: 1.5em 0;
-}
-
-.doc-body table {
-  margin: 1.5em 0;
-}
-
-/* --- TABLE OF CONTENTS (Right Side Sticky) --- */
+/* --- TABLE OF CONTENTS (Mobile First / Default) --- */
+/* Hidden by default on small screens */
 .doc-toc {
-  width: 260px; /* Fixed width */
-  flex-shrink: 0; /* Prevents squishing */
-  position: -webkit-sticky;
-  position: sticky;
-  top: 120px; /* Distance from top (clears header) */
-  align-self: flex-start;
-  max-height: calc(100vh - 140px); /* Internal scrolling if too long */
-  overflow-y: auto;
-  
-  /* Visual Styling */
-  background: var(--color-bg-light);
-  border-left: 4px solid var(--color-border);
-  padding: 1em 0 1em 1.5em;
-  z-index: 10; /* Lower than Sidebar (1000) */
+  display: none; 
 }
 
+/* --- DESKTOP ENHANCEMENTS (Only triggers on screens > 1100px) --- */
+@media (min-width: 1100px) {
+  
+  /* Switch to Flexbox for side-by-side layout */
+  .doc-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Required for sticky positioning */
+    gap: 3rem; /* Space between text and TOC */
+  }
+
+  /* Show and Style the ToC */
+  .doc-toc {
+    display: block; /* Un-hide it */
+    width: 260px;   /* Fixed width */
+    flex-shrink: 0; /* Prevents squishing */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 120px; /* Distance from top (clears header) */
+    align-self: flex-start;
+    max-height: calc(100vh - 140px); /* Internal scrolling if too long */
+    overflow-y: auto;
+    
+    /* Visual Styling */
+    background: var(--color-bg-light);
+    border-left: 4px solid var(--color-border);
+    padding: 1em 0 1em 1.5em;
+    z-index: 10; 
+  }
+}
+
+/* --- TOC VISUAL STYLES (Applies whenever ToC is visible) --- */
 .doc-toc h3 {
   font-family: var(--font-header);
   font-size: 1.1em;
@@ -1556,7 +1544,6 @@ img + .image-caption {
   color: var(--color-primary);
 }
 
-/* Active State (Triggered by JS) */
 .toc-link.active {
   color: var(--color-secondary);
   font-weight: bold;
@@ -1569,15 +1556,54 @@ img + .image-caption {
   border-color: var(--color-border);
 }
 
-/* Mobile Responsiveness (Stack vertically on small screens) */
-@media (max-width: 1100px) {
-  .doc-content {
-    flex-direction: column; 
-  }
 
-  .doc-toc {
-    display: none !important; /* Hide TOC on mobile */
-  }
+/* --- DOCUMENT BODY TEXT AREA --- */
+.doc-body {
+  flex: 1; /* Takes remaining space on Desktop */
+  min-width: 0; /* CRITICAL: Prevents flex items from overflowing */
+  line-height: 1.8;
+  color: var(--color-doc-body);
+  width: 100%; /* Ensures full width on Mobile */
+}
+
+.doc-body h2 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.doc-body h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+/* --- SAFETY VALVES (Prevent Wide Screen Issues) --- */
+
+/* 1. Images must never exceed container width */
+.doc-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
+  margin: 1.5em 0;
+}
+
+/* 2. Tables must scroll if they get too wide */
+.doc-body table {
+  margin: 1.5em 0;
+  display: block;       /* Allows scrolling */
+  width: 100%;          /* Forces container fit */
+  overflow-x: auto;     /* Adds scrollbar on overflow */
+}
+
+/* 3. Code blocks must wrap text */
+.doc-body pre {
+  white-space: pre-wrap;    /* Wraps long lines */
+  word-break: break-all;    /* Breaks long words */
+  max-width: 100%;          /* stricter width enforcement */
+}
+
+.doc-body code {
+  word-break: break-word;
 }
 
 /* --- BREADCRUMB NAVIGATION --- */
@@ -1614,6 +1640,7 @@ img + .image-caption {
   margin: 0.5em 0;
   border-bottom: 3px solid var(--color-primary);
   padding-bottom: 0.3em;
+  word-break: break-word; /* Prevents long titles from breaking layout */
 }
 
 .doc-meta {
@@ -2066,23 +2093,3 @@ a[target="_blank"]:hover::after {
 a:has(img)[target="_blank"]::after {
   content: none;
 }
-
-/* 1. Tame the Tables (The usual suspect) */
-  table {
-    display: block !important;       /* Unlocks the table so it can shrink */
-    overflow-x: auto !important;     /* Adds a scrollbar if it's still too big */
-    width: 100% !important;
-  }
-
-  /* 2. Wrap Long Code/Text */
-  pre, code {
-    white-space: pre-wrap !important; /* Forces code to wrap to the next line */
-    word-break: break-all !important; /* Breaks extremely long words/variables */
-    max-width: 100% !important;
-  }
-
-  /* 3. Break Long URLs */
-  p, a, li, h1, h2, h3, h4 {
-    overflow-wrap: break-word !important;
-    word-break: break-word !important;
-  }
