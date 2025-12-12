@@ -548,15 +548,15 @@ The table below summarizes the different quantities associated with earth nodes 
 
 |Class|	Layer Width|	Node Diameter|	Node DC|	Enhanced Spellcasting Bonus|	Psionic Mastery Pool|	Portal to Nearby Earth Node Range|	Portal Diameter|	Portal Duration|
 |:|	:|	:-------------------|	:-------|	:---------------------------|	:--------------------|	:---------------------------------|	:---------------|	:---------------|
-|1|	5 to 30 feet|	10 to 60 feet|	14|	`+1 spell level|	9 psi points|	100 miles|	10 feet|	1 minute|
-|2|	10 to 40 feet|	40 to 160 feet|	16|	`+1 spell level|	10 psi points|	200 miles|	10 feet|	3 minutes|
-|3|	20 to 80 feet|	120 to 480 feet|	18|	`+2 spell levels|	11 psi points|	300 miles|	20 feet|	5 minutes|
-|4|	30 to 120 feet|	240 to 960 feet|	20|	`+2 spell levels|	12 psi points|	400 miles|	20 feet|	7 minutes|
-|5|	40 to 160 feet|	400 to 1,600 feet|	22|	`+3 spell levels|	13 psi points|	500 miles|	30 feet|	9 minutes|
-|6|	50 to 200 feet|	600 to 2,400 feet|	24|	`+3 spell levels|	14 psi points|	600 miles|	30 feet|	11 minutes|
-|7|	60 to 240 feet|	840 to 3,360 feet|	26|	`+4 spell levels|	15 psi points|	700 miles|	40 feet|	13 minutes|
-|8|	70 to 280 feet|	1,120 to 4,480 feet|	28|	`+4 spell levels|	16 psi points|	800 miles|	40 feet|	15 minutes|
-|9|	80 to 320 feet|	1,440 to 5,760 feet|	30|	`+5 spell levels|	17 psi points|	900 miles|	50 feet|	17 minutes|
+|1|	5 to 30 feet|	10 to 60 feet|	14|	+1 spell level|	9 psi points|	100 miles|	10 feet|	1 minute|
+|2|	10 to 40 feet|	40 to 160 feet|	16|	+1 spell level|	10 psi points|	200 miles|	10 feet|	3 minutes|
+|3|	20 to 80 feet|	120 to 480 feet|	18|	+2 spell levels|	11 psi points|	300 miles|	20 feet|	5 minutes|
+|4|	30 to 120 feet|	240 to 960 feet|	20|	+2 spell levels|	12 psi points|	400 miles|	20 feet|	7 minutes|
+|5|	40 to 160 feet|	400 to 1,600 feet|	22|	+3 spell levels|	13 psi points|	500 miles|	30 feet|	9 minutes|
+|6|	50 to 200 feet|	600 to 2,400 feet|	24|	+3 spell levels|	14 psi points|	600 miles|	30 feet|	11 minutes|
+|7|	60 to 240 feet|	840 to 3,360 feet|	26|	+4 spell levels|	15 psi points|	700 miles|	40 feet|	13 minutes|
+|8|	70 to 280 feet|	1,120 to 4,480 feet|	28|	+4 spell levels|	16 psi points|	800 miles|	40 feet|	15 minutes|
+|9|	80 to 320 feet|	1,440 to 5,760 feet|	30|	+5 spell levels|	17 psi points|	900 miles|	50 feet|	17 minutes|
 
 \- **Layer Width.** This value indicates the thickness of a given layer of the earth node.
 
