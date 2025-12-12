@@ -37,10 +37,6 @@
    22. PRINT STYLES
    ============================================ */
 
-   * {
-  outline: 1px solid red !important;
-}
-
 /* ============================================
    1. COLOR PALETTE (Design Tokens)
    Raw color values - do not use directly
@@ -2070,3 +2066,23 @@ a[target="_blank"]:hover::after {
 a:has(img)[target="_blank"]::after {
   content: none;
 }
+
+/* 1. Tame the Tables (The usual suspect) */
+  table {
+    display: block !important;       /* Unlocks the table so it can shrink */
+    overflow-x: auto !important;     /* Adds a scrollbar if it's still too big */
+    width: 100% !important;
+  }
+
+  /* 2. Wrap Long Code/Text */
+  pre, code {
+    white-space: pre-wrap !important; /* Forces code to wrap to the next line */
+    word-break: break-all !important; /* Breaks extremely long words/variables */
+    max-width: 100% !important;
+  }
+
+  /* 3. Break Long URLs */
+  p, a, li, h1, h2, h3, h4 {
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
