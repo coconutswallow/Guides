@@ -16,15 +16,12 @@ For players, this document presents information regarding earth nodes as you may
 
 This document describes a variety of mechanics associated with earth nodes, including their use in adventures and in downtime. A player character can **only** interact with and utilize the properties of an earth node in an adventure or during downtime given the permission of and as supervised by the DM that is utilizing the earth node in their storylines.
 
-<br>
 
 ## Features of Earth Nodes
 
 Beneath the earth, pools, and streams of invisible power sometimes collect and cross into a single location, creating an underground nexus of magical energy. Such areas are known as **earth nodes**. An earth node is not by itself visible to ordinary sight, but earth nodes are often located in places that are beautiful or bizarre. As an example, a large geode or an underground cavern in the Underdark might contain an earth node within it, but such sights aren't always present. 
 
 The power of an earth node isn't limited by physical boundaries. Some earth nodes lie within large underground caverns, while others exist entirely within solid rock. Still other earth nodes may have a portion that lies within a cave or tunnel, while the rest extends into stone. Some earth nodes may extend partly or even fully into the surface above. 
-
-<br>
 
 ## Properties of Earth Nodes
 
@@ -244,20 +241,21 @@ This "node lock" can only be removed by means of a *dispel magic* spell in the a
 
 <div class="image-text-wrapper">
   <div class="hierarchy-explanation" style="flex: 1; min-width: 0;">
-    The area around an earth node can be modified, from incorporating an earth node into a structure to opening up an earth node that resides within solid rock. However, such modifications to the area may affect the integrity of the earth node situated within it.<br><br>
+    The area around an earth node can be modified, from incorporating an earth node into a structure to opening up an earth node that resides within solid rock. However, such modifications to the area may affect the integrity of the earth node situated within it.<br>
 
     Any physical project involving building around or modifying the area around an earth node takes the normal amount of time to accomplish such a project, as determined by the DM. However, ensuring that the earth node remains intact throughout this process requires supervision by a creature familiar with the earth node.<br><br>
 
     In the event that the project makes either no or at most minor modifications to the area in which the earth node is situated, then the earth node is unaffected by the project. However, projects which involve moderate or extensive changes to the area risk damaging the earth node.<br><br>
 
     At the end of each workweek associated with the project, a creature that has become <b>proficient</b> in their understanding of a given earth node can make an ability check using their spellcasting ability while within the area of that earth node. A creature with the <b>Node Spellcasting</b> Supernatural Gift can instead make an Arcana check using their spellcasting ability, and a creature with the <b>Node Manifestation</b> Supernatural Gift can make an Intelligence (Arcana) check. (A creature without a spellcasting ability instead makes an Intelligence check.) A creature proficient in mason's tools that is also overseeing the project can provide Help on the ability check
+
+    The DC of the ability check is equal to the node DC if the project involves moderate changes to the area as determined by the DM. If the project involves extensive changes to the area as determined by the DM, the DC for the ability check is equal to the node DC + 5.
+  
   </div>  
   <img src="https://i.imgur.com/pfAp3Pa.png" alt="Description" class="hierarchy-image" style="flex: 0 0 20%;">
 </div>
 
 <span class="image-caption">Image: A Wizard summons the power of an earth node, Forgotten Realms Underdark</span>
-
-The DC of the ability check is equal to the node DC if the project involves moderate changes to the area as determined by the DM. If the project involves extensive changes to the area as determined by the DM, the DC for the ability check is equal to the node DC + 5.
 
 On a success, the creature is able to help reroute and smooth the flow of magical energy in the new physical arrangement as associated with the project. On a failure, the class rating of the earth node decreases by 1. An earth node whose class rating is reduced to 0 is destroyed. 
 
