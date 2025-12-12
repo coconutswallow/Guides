@@ -3,20 +3,21 @@ layout: default
 ---
 <style>
     /* FORCE LAYOUT OVERRIDES */
-    /* Make the content container a flexbox if it isn't already */
+    /* Make the content container a flexbox */
     .doc-content {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px; /* Space between body and TOC */
+        align-items: flex-start; /* Crucial for sticky TOC to work */
+        gap: 30px; /* Space between body and TOC */
+        position: relative;
     }
 
     /* The Main Body: Grows to fill space */
     .doc-body {
         flex: 1 1 auto; /* Grow and shrink */
         min-width: 0;   /* Prevent flex item from overflowing container */
-        max-width: 100%; /* Ensure it uses available width */
+        max-width: 100%; 
     }
 
     /* The Table of Contents: Fixed narrow width */
@@ -25,11 +26,18 @@ layout: default
         width: 200px;
         min-width: 200px;
         max-width: 200px;
-        font-size: 0.85rem; /* Slightly smaller text to fit the narrower column */
+        font-size: 0.85rem; 
+        
+        /* STICKY POSITIONING FIXES */
+        position: -webkit-sticky; /* Safari support */
         position: sticky;
-        top: 20px; /* Stick to top while scrolling */
-        max-height: 90vh;
-        overflow-y: auto;
+        top: 80px; /* Increased to clear the site header */
+        max-height: calc(100vh - 100px); /* Height of viewport minus top offset */
+        overflow-y: auto; /* Scroll internally if TOC is too long */
+        
+        /* Visual tweak to separate it slightly */
+        padding-left: 10px;
+        border-left: 1px solid #eee;
     }
 
     /* Responsive: Stack them on small screens */
@@ -42,7 +50,11 @@ layout: default
             max-width: 100%;
             flex: none;
             position: relative;
+            top: 0;
+            max-height: none;
             margin-top: 20px;
+            border-left: none;
+            padding-left: 0;
         }
     }
 </style>
@@ -113,7 +125,7 @@ layout: default
 
         {% if page.toc %}
         <aside class="doc-toc">
-            <h3>On This Page</h3>
+            <h3>Page Contents</h3>
             <div id="toc-container"></div>
         </aside>
         {% endif %}
