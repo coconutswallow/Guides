@@ -1461,7 +1461,6 @@ img + .image-caption {
 }
 
 /* --- LAYOUT CONTAINER (Mobile First / Default) --- */
-/* By default, we use a simple block layout. No Flexbox = No stretching. */
 .doc-content {
   display: block;
   width: 100%;
@@ -1469,7 +1468,6 @@ img + .image-caption {
 }
 
 /* --- TABLE OF CONTENTS (Mobile First / Default) --- */
-/* Hidden by default on small screens */
 .doc-toc {
   display: none; 
 }
@@ -1481,31 +1479,39 @@ img + .image-caption {
   .doc-content {
     display: flex;
     flex-direction: row;
-    align-items: flex-start; /* Required for sticky positioning */
-    gap: 3rem; /* Space between text and TOC */
+    align-items: flex-start; 
+    gap: 3rem; 
   }
 
-  /* Show and Style the ToC */
+  /* --- SWAPPING THE ORDER --- */
+  
+  /* 1. Main Text goes FIRST (Left) */
+  .doc-body {
+    order: 1; 
+  }
+
+  /* 2. Navigation goes SECOND (Right) */
   .doc-toc {
-    display: block; /* Un-hide it */
-    width: 260px;   /* Fixed width */
-    flex-shrink: 0; /* Prevents squishing */
+    display: block; 
+    order: 2;         /* <--- This moves it to the right side */
+    width: 260px;   
+    flex-shrink: 0; 
     position: -webkit-sticky;
     position: sticky;
-    top: 120px; /* Distance from top (clears header) */
+    top: 120px; 
     align-self: flex-start;
-    max-height: calc(100vh - 140px); /* Internal scrolling if too long */
+    max-height: calc(100vh - 140px); 
     overflow-y: auto;
     
     /* Visual Styling */
     background: var(--color-bg-light);
-    border-left: 4px solid var(--color-border);
+    border-left: 4px solid var(--color-border); /* Acts as a divider line */
     padding: 1em 0 1em 1.5em;
     z-index: 10; 
   }
 }
 
-/* --- TOC VISUAL STYLES (Applies whenever ToC is visible) --- */
+/* --- TOC VISUAL STYLES --- */
 .doc-toc h3 {
   font-family: var(--font-header);
   font-size: 1.1em;
@@ -1550,7 +1556,7 @@ img + .image-caption {
   transform: translateX(5px);
 }
 
-/* Dark Mode Support for TOC */
+/* Dark Mode Support */
 [data-theme="dark"] .doc-toc {
   background: transparent;
   border-color: var(--color-border);
@@ -1559,11 +1565,11 @@ img + .image-caption {
 
 /* --- DOCUMENT BODY TEXT AREA --- */
 .doc-body {
-  flex: 1; /* Takes remaining space on Desktop */
+  flex: 1; 
   min-width: 0; /* CRITICAL: Prevents flex items from overflowing */
   line-height: 1.8;
   color: var(--color-doc-body);
-  width: 100%; /* Ensures full width on Mobile */
+  width: 100%; 
 }
 
 .doc-body h2 {
@@ -1576,9 +1582,7 @@ img + .image-caption {
   margin-bottom: 0.75em;
 }
 
-/* --- SAFETY VALVES (Prevent Wide Screen Issues) --- */
-
-/* 1. Images must never exceed container width */
+/* --- SAFETY VALVES (Mobile Protection) --- */
 .doc-body img {
   max-width: 100%;
   height: auto;
@@ -1587,19 +1591,17 @@ img + .image-caption {
   margin: 1.5em 0;
 }
 
-/* 2. Tables must scroll if they get too wide */
 .doc-body table {
   margin: 1.5em 0;
-  display: block;       /* Allows scrolling */
-  width: 100%;          /* Forces container fit */
-  overflow-x: auto;     /* Adds scrollbar on overflow */
+  display: block;       
+  width: 100%;          
+  overflow-x: auto;     
 }
 
-/* 3. Code blocks must wrap text */
 .doc-body pre {
-  white-space: pre-wrap;    /* Wraps long lines */
-  word-break: break-all;    /* Breaks long words */
-  max-width: 100%;          /* stricter width enforcement */
+  white-space: pre-wrap;    
+  word-break: break-all;    
+  max-width: 100%;          
 }
 
 .doc-body code {
@@ -1640,7 +1642,7 @@ img + .image-caption {
   margin: 0.5em 0;
   border-bottom: 3px solid var(--color-primary);
   padding-bottom: 0.3em;
-  word-break: break-word; /* Prevents long titles from breaking layout */
+  word-break: break-word; 
 }
 
 .doc-meta {
@@ -1659,7 +1661,7 @@ img + .image-caption {
   font-style: italic;
 }
 
-/* --- FOOTER NAVIGATION (Prev/Next) --- */
+/* --- FOOTER NAVIGATION --- */
 .doc-footer-nav {
   display: flex;
   justify-content: space-between;
