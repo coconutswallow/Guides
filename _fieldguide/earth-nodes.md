@@ -375,27 +375,17 @@ The specifics of how an evil node affects the region it is within as well as cre
 
 #### *Sample Evil Node Spells*
 
-<table style="text-align:center;" border=1>
-
-<tr><th>Earth Node Class /<br> Maximum Spell Level</th><th>Evil Node Spell</th></tr>
-
-<tr><td>1</td><td>inflict wounds</td></tr>
-
-<tr><td>2</td><td>ray of enfeeblement</td></tr>
-
-<tr><td>3</td><td>animate dead</td></tr>
-
-<tr><td>4</td><td>blight</td></tr>
-
-<tr><td>5</td><td>enervation</td></tr>
-
-<tr><td>6</td><td>circle of death</td></tr>
-
-<tr><td>7</td><td>finger of death</td></tr>
-
-<tr><td>8</td><td>Abi-Dalzim's horrid wilting</td></tr>
-
-<tr><td>9</td><td>power word kill</td></tr></table>
+|Earth Node Class / Maximum Spell Level|	|Evil Node Spell|
+|:--------------------------------------|	|:---------------------------|
+|1|	|inflict wounds|
+|2|	|ray of enfeeblement|
+|3|	|animate dead|
+|4|	|blight|
+|5|	|enervation|
+|6|	|circle of death|
+|7|	|finger of death|
+|8|	|Abi-Dalzim's horrid wilting|
+|9|	|power word kill|
 
 **Imprisonment** <br>Evil nodes can contain creatures following the same rules for storing items, with the following differences. An evil node can contain any number of creatures in its extradimensional space whose combined total Hit Dice does not exceed 3 x (the evil node's class)<sup>2</sup>. (For example, a class 3 evil node can contain up to 27 Hit Dice worth of creatures) Storing creatures inside an evil node does not count against its capacity for storing objects nor vice versa. 
 
@@ -450,27 +440,17 @@ These portals last indefinitely but otherwise behave similarly to and have prope
 
 #### *Sample Shadow Node Spells*
 
-<table style="text-align:center;" border=1>
-
-<tr><th>Earth Node Class /<br> Maximum Spell Level</th><th>Shadow Node Spell</th></tr>
-
-<tr><td>1</td><td>silent image</td></tr>
-
-<tr><td>2</td><td>darkness</td></tr>
-
-<tr><td>3</td><td>summon shadowspawn</td></tr>
-
-<tr><td>4</td><td>shadow of moil</td></tr>
-
-<tr><td>5</td><td>creation</td></tr>
-
-<tr><td>6</td><td>eyebite</td></tr>
-
-<tr><td>7</td><td>mirage arcane</td></tr>
-
-<tr><td>8</td><td>maddening darkness</td></tr>
-
-<tr><td>9</td><td>weird</td></tr></table>
+|Earth Node Class / Maximum Spell Level|	|Shadow Node Spell|
+|:--------------------------------------|	|:------------------|
+|1|	|silent image|
+|2|	|darkness|
+|3|	|summon shadowspawn|
+|4|	|shadow of moil|
+|5|	|creation|
+|6|	|eyebite|
+|7|	|mirage arcane|
+|8|	|maddening darkness|
+|9|	|weird|
 
 **Empowerment**  <br>A creature with the **Node Spellcasting** or the **Node Manifestation** Supernatural Gift that has become **proficient** in their understanding of a given shadow node (following the same rules as described under "Studying Earth Nodes" on page 4) can spend a short rest within the area attempting to draw upon its energy to strengthen themselves. At the end of the short rest, the creature can make an Arcana check using their spellcasting ability against the node DC of the shadow node. (A mystic can use their Intelligence modifier for the Arcana check) 
 
