@@ -1462,7 +1462,7 @@ img + .image-caption {
    Standard width for regular pages (no sidebar)
 */
 .doc-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -2093,14 +2093,6 @@ a[target="_blank"]:hover::after {
 /* 4. Linked Images */
 a:has(img)[target="_blank"]::after {
   content: none;
-}
-
-/* Unlock the default page width restriction for Documentation pages */
-.page.page-doc {
-  max-width: 100%;
-  padding: 0;
-  /* Resetting margin isn't strictly necessary but good safety */
-  margin: 0; 
 }
 
 /* Ensure the doc-container (inside .page.page-doc) manages the spacing now */
