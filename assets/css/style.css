@@ -1467,7 +1467,7 @@ img + .image-caption {
   display: grid;
   /* Main text gets flexible space (1fr), TOC gets fixed 280px */
   grid-template-columns: 1fr 280px; 
-  gap: 3rem; /* Space between text and sidebar */
+  gap: 4rem; /* Increased gap for better visual separation */
   align-items: start;
 }
 
@@ -1478,14 +1478,18 @@ img + .image-caption {
   grid-template-columns: 1fr; /* Single column layout */
 }
 
-/* 3. FULL WIDTH ELEMENTS */
-/* These span across both columns */
+/* 3. CONTENT ALIGNMENT & CENTERING */
+/* These items now share the first column and are visually centered */
 .breadcrumb,
 .doc-title,
 .doc-meta,
+.doc-body,
 .doc-footer-nav {
-  grid-column: 1 / -1;
+  grid-column: 1 / 2;
   width: 100%;
+  max-width: 800px; /* Limits width to readable size */
+  margin-left: auto; /* Centers the block horizontally */
+  margin-right: auto; /* Centers the block horizontally */
 }
 
 /* Breadcrumb Navigation */
@@ -1519,7 +1523,7 @@ img + .image-caption {
   font-family: var(--font-header);
   color: var(--color-primary);
   font-size: 2.5em;
-  margin: 0.5em 0;
+  margin: 0.5em auto; /* Auto ensures centering */
   border-bottom: 3px solid var(--color-primary);
   padding-bottom: 0.3em;
 }
@@ -1543,9 +1547,7 @@ img + .image-caption {
 
 /* 4. MAIN BODY TEXT (Left Column) */
 .doc-body {
-  grid-column: 1 / 2;
   min-width: 0;
-  width: auto;
   line-height: 1.8;
   color: var(--color-doc-body);
 }
@@ -1564,7 +1566,7 @@ img + .image-caption {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: 0 2px 8px var(--shadow-color-doc-image); /* Restored Shadow */
+  box-shadow: 0 2px 8px var(--shadow-color-doc-image);
   margin: 1.5em 0;
 }
 
@@ -1577,7 +1579,7 @@ img + .image-caption {
   grid-column: 2 / 3;
   position: sticky;
   top: 100px;
-  float: none !important; /* Force disable float */
+  float: none !important;
   width: 100% !important;
   margin: 0 0 2em 0;
   background: var(--color-bg-light);
@@ -1613,7 +1615,7 @@ img + .image-caption {
   color: var(--color-primary);
   text-decoration: none;
   font-size: 0.95em;
-  line-height: 1.4; /* Restored line-height */
+  line-height: 1.4;
   display: block;
   padding: 0.25em 0;
 }
@@ -1648,7 +1650,7 @@ img + .image-caption {
   font-family: var(--font-header);
   text-transform: uppercase;
   font-size: 0.9em;
-  max-width: 45%; /* Restored max-width */
+  max-width: 45%;
 }
 
 .prev-link:hover, .next-link:hover {
@@ -1660,11 +1662,11 @@ img + .image-caption {
 }
 
 .prev-link {
-  margin-right: auto; /* Restored margin for single-button layouts */
+  margin-right: auto;
 }
 
 .next-link {
-  margin-left: auto; /* Restored margin for single-button layouts */
+  margin-left: auto;
   flex-direction: row-reverse;
 }
 
@@ -1673,7 +1675,6 @@ img + .image-caption {
   font-weight: bold;
 }
 
-/* Restored Missing Class */
 .nav-label {
   font-size: 0.85em;
 }
