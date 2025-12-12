@@ -1,6 +1,7 @@
 ---
 title: Earth Nodes
 layout: doc
+toc: true
 order: 18
 background_image: /assets/images/earthnodes-background.jpg
 ---
