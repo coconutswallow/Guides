@@ -2,43 +2,77 @@
 layout: default
 ---
 <style>
-    /* FORCE LAYOUT OVERRIDES */
+    /* --- LAYOUT OVERRIDES --- */
+
+    /* 1. Widen the Main Container */
+    /* This allows the whole page to stretch wider, pushing the TOC to the right */
+    .doc-container {
+        max-width: 1400px !important; /* Increased from standard width */
+        width: 95% !important;        /* Use almost full screen width */
+        margin: 0 auto;               /* Keep it centered */
+    }
+
+    /* 2. Flex Container Setup */
     .doc-content {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 30px;
+        gap: 30px; /* Space between Body and TOC */
         position: relative;
     }
 
-    /* The Main Body: Contains Title, Content, Footer */
+    /* 3. The Main Body */
     .doc-body {
-        flex: 1 1 auto;
+        flex: 1 1 auto;  /* Grow to fill all available space */
         min-width: 0;
-        max-width: 100%;
-        /* Ensure this container behaves as the main 'card' */
         display: block; 
     }
 
-    /* The Table of Contents: Fixed narrow width */
+    /* 4. The Table of Contents */
     .doc-toc {
-        flex: 0 0 200px;
-        width: 200px;
-        min-width: 200px;
-        max-width: 200px;
+        flex: 0 0 180px; /* Slightly narrower (was 200px) */
+        width: 180px;
+        min-width: 180px;
+        max-width: 180px;
         font-size: 0.85rem;
+        
+        /* Sticky Positioning */
         position: -webkit-sticky;
         position: sticky;
-        top: 100px; /* Clear the header */
+        top: 100px; 
         max-height: calc(100vh - 100px);
         overflow-y: auto;
-        padding-left: 10px;
+        
+        /* Visuals */
+        padding-left: 15px;
         border-left: 1px solid #eee;
     }
 
-    /* Responsive: Stack on small screens */
-    @media (max-width: 1000px) {
+    /* --- Active State Styles (Scroll Spy) --- */
+    .toc-link {
+        display: block;
+        padding: 2px 0;
+        color: inherit;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-left: 2px solid transparent;
+        padding-left: 8px;
+        margin-left: -10px;
+    }
+
+    .toc-link:hover {
+        color: #555;
+    }
+
+    .toc-link.active {
+        color: #2c7bb6; /* Active Color */
+        font-weight: 700;
+        border-left: 2px solid #2c7bb6;
+    }
+
+    /* --- Responsive: Stack on small screens --- */
+    @media (max-width: 1100px) {
         .doc-content {
             flex-direction: column;
         }
@@ -136,10 +170,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!content || !tocContainer) return;
     
-    // Select headers but EXCLUDE the Page Title (h1.doc-title) from TOC
-    // We only want headers that were generated from markdown content
+    // 1. GENERATE THE TOC
     const headers = content.querySelectorAll('h2, h3');
-    
     if (headers.length === 0) return;
     
     const toc = document.createElement('ul');
@@ -163,6 +195,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     tocContainer.appendChild(toc);
+
+    // 2. ADD SCROLL SPY FUNCTIONALITY
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const sections = Array.from(headers);
+
+    function onScroll() {
+        let current = '';
+        const scrollPosition = window.scrollY + 150; 
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollPosition >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        tocLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', onScroll);
+    onScroll();
 });
 </script>
 {% endif %}
