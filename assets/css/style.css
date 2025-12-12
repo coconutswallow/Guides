@@ -633,7 +633,7 @@ tbody tr:hover {
 }
 .page.page-wide {
   max-width: 1400px; /* This unlocks the width when ToC is present */
-
+}
 
 /* ============================================
    9. SITE HEADER
