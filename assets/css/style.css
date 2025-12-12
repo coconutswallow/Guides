@@ -2094,3 +2094,17 @@ a[target="_blank"]:hover::after {
 a:has(img)[target="_blank"]::after {
   content: none;
 }
+
+/* Unlock the default page width restriction for Documentation pages */
+.page.page-doc {
+  max-width: 100%;
+  padding: 0;
+  /* Resetting margin isn't strictly necessary but good safety */
+  margin: 0; 
+}
+
+/* Ensure the doc-container (inside .page.page-doc) manages the spacing now */
+.page.page-doc .doc-container {
+  padding: var(--spacing-md);
+  margin: 0 auto;
+}

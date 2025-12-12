@@ -183,7 +183,7 @@
 
     <ul id="search-results"></ul>
 
-    <div class="page">
+    <div class="page {% if page.layout == 'doc' %}page-doc{% endif %}">
         {{ content }}
     </div>
     
