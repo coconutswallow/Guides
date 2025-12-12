@@ -1458,26 +1458,19 @@ img + .image-caption {
    17. DOCUMENTATION LAYOUT
    ============================================ */
 
+/* 1. Base Container 
+   Standard width for regular pages (no sidebar)
+*/
 .doc-container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* --- Base Grid (Mobile First) ---
-   Default layout is a single column stack.
-   The Sidebar/ToC is hidden by default on mobile.
+/* 2. Wider Container (ONLY when ToC is present)
+   This gives the main text back the space it lost to the sidebar.
 */
-.doc-content {
-  position: relative;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-areas: 
-    "bread"
-    "title"
-    "meta"
-    "body"
-    "nav";
-  gap: 1em;
+.doc-container.has-toc {
+  max-width: 1500px; /* Increased from 1200px */
 }
 
 /* --- Breadcrumb Navigation --- */
@@ -1489,6 +1482,7 @@ img + .image-caption {
   padding: 0.5em 0;
 }
 
+/* Base links (Home and intermediate) */
 .breadcrumb a {
   color: var(--color-primary);
   text-decoration: none;
@@ -1503,10 +1497,25 @@ img + .image-caption {
   color: var(--color-breadcrumb-sep);
 }
 
+/* Current page text (non-link) */
 .breadcrumb-item.active {
   color: var(--color-text);
   font-weight: 600;
   cursor: default;
+}
+
+/* --- Layout Grid --- */
+.doc-content {
+  position: relative;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-areas: 
+    "bread"
+    "title"
+    "meta"
+    "body"
+    "nav";
+  gap: 1em;
 }
 
 /* --- Documentation Title --- */
@@ -1529,7 +1538,6 @@ img + .image-caption {
   padding-bottom: 1em;
   border-bottom: 1px solid var(--color-doc-meta-border);
 }
-
 .doc-author { margin-right: 1em; }
 .doc-date { font-style: italic; }
 
@@ -1538,7 +1546,7 @@ img + .image-caption {
   grid-area: body;
   line-height: 1.8;
   color: var(--color-doc-body);
-  min-width: 0; /* Prevents large images from breaking the grid */
+  min-width: 0; 
 }
 
 .doc-body h2 { margin-top: 1.5em; margin-bottom: 1em; }
@@ -1554,7 +1562,7 @@ img + .image-caption {
 /* --- Table of Contents (Sidebar) --- */
 .doc-toc {
   grid-area: toc;
-  display: none; /* Hidden on mobile */
+  display: none; 
   background: var(--color-bg-light);
   border-left: 4px solid var(--color-primary);
   padding: 1em;
@@ -1589,7 +1597,6 @@ img + .image-caption {
   border-left-color: var(--color-secondary);
 }
 
-/* Active State (highlighted by JS) */
 .toc-link.active {
   color: var(--color-primary);
   border-left-color: var(--color-primary);
@@ -1601,8 +1608,7 @@ img + .image-caption {
   background: linear-gradient(90deg, var(--palette-bg-row-dark) 0%, transparent 100%);
 }
 
-
-/* --- Footer Navigation (Prev/Next) --- */
+/* --- Footer Navigation --- */
 .doc-footer-nav {
   grid-area: nav;
   display: flex;
@@ -1643,14 +1649,12 @@ img + .image-caption {
 .nav-arrow { font-size: 1.2em; font-weight: bold; }
 .nav-label { font-size: 0.85em; }
 
-
 /* ============================================
    DESKTOP VIEW (> 1100px)
-   Switches to a 2-column layout with sticky Sidebar
    ============================================ */
 @media (min-width: 1100px) {
   
-  /* 1. Standard Layout (Content Left | ToC Right) */
+  /* Standard Layout (2 columns) */
   .doc-content {
     grid-template-columns: 1fr 240px; 
     grid-template-areas: 
@@ -1658,13 +1662,12 @@ img + .image-caption {
       "title title"
       "meta meta"
       "body toc"
-      "nav toc"; /* Important: 'nav toc' prevents footer from crossing sidebar line */
+      "nav toc";
     column-gap: 3rem; 
     align-items: start;
   }
 
-  /* 2. No-ToC Layout (Full Width)
-     Applied via conditional class in doc.html */
+  /* No-ToC Layout (1 column) */
   .doc-content.no-toc {
     grid-template-columns: 100%;
     grid-template-areas: 
@@ -1675,16 +1678,14 @@ img + .image-caption {
       "nav";
   }
 
-  /* 3. Sidebar Styling for Desktop */
+  /* Sidebar Styling */
   .doc-toc {
     display: block; 
     position: sticky;
-    top: 120px; /* Offset for the fixed header */
+    top: 120px;
     margin-top: 0;
     max-height: calc(100vh - 140px);
     overflow-y: auto;
-    
-    /* Transparent background for cleaner look on desktop */
     background: transparent;
     border: none;
     padding: 0;
@@ -1702,13 +1703,11 @@ img + .image-caption {
     flex-direction: column;
     gap: 1em;
   }
-  
   .prev-link, .next-link {
     width: 100%;
     max-width: 100%;
     justify-content: center;
   }
-  
   .next-link { margin-left: 0; }
 }
 
