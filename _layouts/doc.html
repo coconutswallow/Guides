@@ -2,15 +2,8 @@
 layout: default
 ---
 <div class="doc-container">
-
-    {% if page.toc %}
-    <aside class="doc-toc">
-        <h3>On This Page</h3>
-        <div id="toc-container"></div>
-    </aside>
-    {% endif %}
-
     <div class="doc-content">
+        <!-- Breadcrumb Navigation -->
         <nav class="breadcrumb">
             <a href="{{ site.baseurl }}/">Home</a>
             {% assign url_parts = page.url | split: '/' %}
@@ -24,8 +17,10 @@ layout: default
             {% endfor %}
         </nav>
 
+        <!-- Page Title -->
         <h1 class="doc-title">{{ page.title }}</h1>
 
+        <!-- Page Metadata (optional) -->
         {% if page.author or page.date %}
         <div class="doc-meta">
             {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
@@ -33,10 +28,20 @@ layout: default
         </div>
         {% endif %}
 
+        <!-- Main Content -->
         <div class="doc-body">
             {{ content }}
         </div>
 
+        <!-- Table of Contents (if enabled) -->
+        {% if page.toc %}
+        <aside class="doc-toc">
+            <h3>On This Page</h3>
+            <div id="toc-container"></div>
+        </aside>
+        {% endif %}
+
+        <!-- Footer Navigation (Previous/Next) -->
         {% if page.collection %}
         <nav class="doc-footer-nav">
             {% assign collection_items = site[page.collection] | sort: 'order' %}
@@ -49,6 +54,7 @@ layout: default
                 {% endif %}
             {% endfor %}
             
+            {% comment %} Previous Link Logic {% endcomment %}
             {% if current_index_0 > 0 %} 
                 {% assign prev_item_index = current_index_0 | minus: 1 %}
                 {% assign prev_item = collection_items[prev_item_index] %}
@@ -58,6 +64,7 @@ layout: default
                 </a>
             {% endif %}
             
+            {% comment %} Next Link Logic {% endcomment %}
             {% assign next_item_index = current_index_0 | plus: 1 %}
             {% if next_item_index < collection_items.size %}
                 {% assign next_item = collection_items[next_item_index] %}  
@@ -73,26 +80,21 @@ layout: default
 
 {% if page.toc %}
 <script>
+// Generate table of contents from h2 and h3 headers
 document.addEventListener('DOMContentLoaded', function() {
-    const content = document.querySelector('.doc-body'); 
+    const content = document.querySelector('.doc-body');
     const tocContainer = document.getElementById('toc-container');
-    const tocWrapper = document.querySelector('.doc-toc');
     
-    if (!content || !tocContainer || !tocWrapper) return;
+    if (!content || !tocContainer) return;
     
-    // Find all headers
     const headers = content.querySelectorAll('h2, h3');
-    
-    // If NO headers are found, we explicitly hide the TOC container
-    if (headers.length === 0) {
-        tocWrapper.style.display = 'none';
-        return;
-    }
+    if (headers.length === 0) return;
     
     const toc = document.createElement('ul');
     toc.className = 'toc-list';
     
     headers.forEach((header, index) => {
+        // Add ID to header if it doesn't have one
         if (!header.id) {
             header.id = 'heading-' + index;
         }
