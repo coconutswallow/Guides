@@ -1534,6 +1534,12 @@ img + .image-caption {
     padding-bottom: 0;
   }
 
+  .doc-content:not(:has(.doc-toc)) .doc-body {
+    max-width: 1200px;
+    margin: 0 auto; /* Centers the block */
+    flex: none;     /* Stops it from trying to fill 100% */
+  }
+  
   /* Flex Layout */
   .doc-content {
     display: flex;
