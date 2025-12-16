@@ -35,7 +35,9 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
+      
 
   - name: "playersguide"
     label: "Player's Guide"
@@ -46,7 +48,9 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
+      
 
   - name: "dms_guide"
     label: "DM's Guide"
@@ -57,7 +61,9 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
+      
 
   - name: "arcana"
     label: "Arcana"
@@ -68,10 +74,12 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
+      
 
   - name: "fieldguide"
-    label: "Field Guide"
+    label: "Adventure Locations"
     folder: "_fieldguide"
     create: true
     fields:
@@ -79,7 +87,9 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
+      
 
   - name: "help"
     label: "Help"
@@ -90,7 +100,9 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
+      
 
   - name: "resources"
     label: "Resources"
@@ -101,4 +113,6 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
+      

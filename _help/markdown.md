@@ -31,6 +31,8 @@ background_image: /assets/images/fieldguide-back.png
 |`title:`|	|Mandatory|	|The title that appears at the top of the page and in the menu|	|`title: Your Page Title Here`|
 |`order:`|	|Mandatory|	|A number that determines where it appears in the menu (lower numbers = higher up)|	|`order: 10`|
 |`background_image:`|	|Optional|	|adds a background image to the page|	|`background_image: /assets/images/fieldguide-back.png`|
+|`toc:`|	|Optional|	|if true, adds a table of contents on the right side|	|`toc: true`|
+
 
 **Tips:**
 - Use order numbers like 10, 20, 30 so you can easily add pages in between later

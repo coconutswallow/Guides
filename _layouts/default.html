@@ -15,6 +15,7 @@
     {% for stylesheet in layout.extra_css %}
     <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
 {% endfor %}
+{% include analytics.html %}
 </head>
 <body class="{{ page.body_class }} {{ layout.body_class }}" {% if page.background_image or layout.background_image %}style="--page-bg-image: url('{{ page.background_image | default: layout.background_image | relative_url }}')"{% endif %}>
     {% if page.background_image %}
