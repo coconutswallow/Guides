@@ -35,7 +35,7 @@ Sexual harassment is grounds for immediate server ban, including unwelcome sexua
 
 Do not share the personal information or private messages of others without their permission. The only exceptions are to contact PR with this information if there is a concern for the health and safety of another player or to provide evidence if you are being harassed.
 
-The server’s Privacy Policy can be found [here](({{ '/rules/privacy-policy' | relative_url }})).
+The server’s Privacy Policy can be found [here](({{ '/rules/privacy-policy/' | relative_url }})).
 
 ### Integrity
 
