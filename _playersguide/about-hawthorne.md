@@ -60,4 +60,4 @@ Flagrant or repeated violations of the guild’s code of conduct can be grounds 
 
 > **IMPORTANT**
 >
-> In addition to the guild rules above, please also ensure you have fully read and agree to the [Server Rules](Guides/rules/server-rules)
+> In addition to the guild rules above, please also ensure you have fully read and agree to the [Server Rules](/Guides/rules/server-rules)
