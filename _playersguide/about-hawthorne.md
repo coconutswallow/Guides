@@ -45,11 +45,10 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
   <div class="hierarchy-explanation" style="flex: 1; min-width: 0;">
     The Hawthorne Guild is known for an unusually tolerant and egalitarian policy in accepting prospective adventurers of any alignment, affiliation, creed, or species provided they agree to cooperate with other Hawthorne adventurers on missions and to follow the guild’s laws and code of conduct. In this regard, it is not unusual to find traditionally “monstrous” species as among the guild’s ranks, which has become a recognizable quality of the guild across Faerûn.
 
-    Any prospective adventurer that wishes to join the guild must first provide some of their blood or another body part (such as hair) as to be used for Scrying or similar magic during emergencies. Guild members are furnished with a distinctive badge of a hawthorne tree (right), a symbol now known across Faerûn.
+    Any prospective adventurer that wishes to join the guild must first provide some of their blood or another body part (such as hair) as to be used for Scrying or similar magic during emergencies. Guild members are furnished with a distinctive badge of a hawthorn tree (right), a symbol now known across Faerûn.
   </div>  
   <img src="{{ '/assets/thumbnails/guild-badge-300.png' | relative_url }}" alt="Description" class="hierarchy-image" style="flex: 0 0 25%;">
 </div>
-
 The city of Hawthorne has a list of laws that guild members are nominally expected to know and follow, but enforcement of specific laws can vary and often is relaxed owing to the rowdy antics that adventurers can often get up to. However, all guild members are expected to adhere to the following guidelines that make up the guild’s code of conduct:
 
 * Cooperate with other guild members on missions.
