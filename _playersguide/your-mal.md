@@ -37,7 +37,7 @@ Once you've created your first character sheet, you should add the character in 
 
 ### Initial Equipment purchases
 
-Your character comes with initial gold and equipment based on the rules of the PHB.  You can purchase everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (but some conditions may apply - e.g. some require travel to locations other than Hawthorne).  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
+Your character comes with initial gold and equipment based on the rules of the PHB.  You can purchase everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (some conditions may apply - please read the item details).  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
 
 Equipment Purchase Log:
 
