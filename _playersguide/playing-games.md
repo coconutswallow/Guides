@@ -86,7 +86,7 @@ Example:
 
 ### Death
 
-f your character dies and remains dead at the end of the game, the DM will log the death in the <a href="https://discord.com/channels/308324031478890497/617814575840231443">#death-log</a> channel. Bodies brought back to Hawthorne are often kept at the Children of Mercy Hospital, which places dead bodies under the effects of Gentle Repose. If your PC’s body and items weren’t recovered by the end of the game, they can’t be recovered except as part of another adventure. 
+If your character dies and remains dead at the end of the game, the DM will log the death in the <a href="https://discord.com/channels/308324031478890497/617814575840231443">#death-log</a> channel. Bodies brought back to Hawthorne are often kept at the Children of Mercy Hospital, which places dead bodies under the effects of Gentle Repose. If your PC’s body and items weren’t recovered by the end of the game, they can’t be recovered except as part of another adventure. 
 
 The following additional rules apply:
 
@@ -96,7 +96,7 @@ The following additional rules apply:
 
 - **Disintegration**. A character that has been disintegrated can only be returned to life via True Resurrection or Wish.
 
-If you decide to let your character to remain dead, you can retire the character and distribute their possessions to other PCs as part of a will if you wish in the <a href="https://discord.com/channels/308324031478890497/617832619689902100">#trade-logs channel</a>. The character will be buried in the graveyard if there is a body and you may roleplay them as a ghost in the roleplay channels, though they can’t leave the graveyard.
+If you decide to let your character remain dead, you can retire the character and distribute their possessions to other PCs as part of a will if you wish in the <a href="https://discord.com/channels/308324031478890497/617832619689902100">#trade-logs channel</a>. The character will be buried in the graveyard if there is a body and you may roleplay them as a ghost in the roleplay channels, though they can’t leave the graveyard.
 
 ### Other Consequences
 

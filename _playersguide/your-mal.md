@@ -19,7 +19,7 @@ Your MAL is the single-source-of truth logging all pertinent activity for your c
 
 ## Your first MAL entry
 
-Once you've created your first character sheet, you should create add the character in your MAL.  The first row of each character should be a "character creation" session, which logs the character's initial XP and GP (depending on whether they start at level 3 or level 5), and starting equipment.  
+Once you've created your first character sheet, you should add the character in your MAL.  The first row of each character should be a "character creation" session, which logs the character's initial XP and GP (depending on whether they start at level 3 or level 5), and starting equipment.  
 
 - The MAL already defaults to starting level 3.  
 - If you wish to create a level 5 character, add 5600XP and 600GP in your character creation entry.
@@ -37,7 +37,7 @@ Once you've created your first character sheet, you should create add the charac
 
 ### Initial Equipment purchases
 
-Your character comes with initial gold and equipment based on the rules of the PHB.  Everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> you can make purchases whenever you want.  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
+Your character comes with initial gold and equipment based on the rules of the PHB.  You can purchase everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (some conditions may apply - please read the item details).  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
 
 Equipment Purchase Log:
 
