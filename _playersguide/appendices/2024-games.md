@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "2024 PCs & Games"
+title: "Appendix: 2024 PCs & Games"
 order: 90
 background_image: /assets/images/tavern_brawl.jpg
 ---
