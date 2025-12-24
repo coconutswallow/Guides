@@ -2157,7 +2157,7 @@ img + .image-caption {
 
 .timeline-content {
     width: 100%;
-    padding: 10px 25px;
+    padding: 15px 25px;
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     position: relative;
