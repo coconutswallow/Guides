@@ -6,18 +6,16 @@ toc: false
 ---
 
 <div class="timeline-container">
+  <div class="timeline-start-marker"></div>
+
   {% assign events = site.pages | where: "timeline_event", true | sort: "timeline_year" %}
   {% assign grouped_events = events | group_by: "timeline_year" %}
 
   {% for group in grouped_events %}
-    <details class="timeline-year-group">
-      <summary>
-        <div class="timeline-year-marker">
-          {{ group.name }} AE 
-          <span style="font-size: 0.8rem; margin-left: 10px; opacity: 0.8;">
-            ({{ group.items.size }} Events)
-          </span>
-        </div>
+    <details class="timeline-year-group" open>
+      <summary class="timeline-year-marker">
+        {{ group.name }} AE 
+        <span class="event-count">({{ group.items.size }} Events)</span>
       </summary>
       
       <div class="timeline-events-stack">

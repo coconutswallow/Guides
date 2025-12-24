@@ -2055,121 +2055,77 @@ img + .image-caption {
     page-break-inside: avoid;
   }
 }
-/* ============================================
-   23. EXTERNAL LINK INDICATORS
-   ============================================ */
-
-a[target="_blank"]::after {
-  content: "\2197"; /* Standard text arrow (↗) */
-  display: inline-block;
-  margin-left: 4px;
-  font-weight: bold; /* Makes it slightly easier to see */
-  font-size: 0.9em;  
-  opacity: 0.7;      /* Keeps it subtle */
-  transition: transform 0.2s ease;
-}
-
-/* Hover effect: small diagonal nudge */
-a[target="_blank"]:hover::after {
-  transform: translate(2px, -2px);
-  opacity: 1;
-}
-
-/* EXCEPTIONS - Keep the arrow off these elements */
-
-/* 1. Footer social icons */
-.footer-icons a[target="_blank"]::after {
-  content: none;
-}
-
-/* 2. Buttons */
-.button[target="_blank"]::after, 
-.btn[target="_blank"]::after {
-  content: none;
-}
-
-/* 3. Site Title */
-.site-title a[target="_blank"]::after {
-  content: none;
-}
-
-/* 4. Linked Images */
-a:has(img)[target="_blank"]::after {
-  content: none;
-}
-
-/* Ensure the doc-container (inside .page.page-doc) manages the spacing now */
-.page.page-doc .doc-container {
-  padding: var(--spacing-md);
-  margin: 0 auto;
-}
 
 /* ============================================
-   23. TIMELINES (High-Density Collapsible)
+   23. TIMELINES (Perfectly Centered & Collapsible)
    ============================================ */
 
 .timeline-container {
     position: relative;
     max-width: 850px;
     margin: 3em auto;
-    padding: 2em 0 2em 50px;
+    padding: 40px 0 2em 60px; /* Increased left padding for thicker line */
 }
 
-/* The Vertical Line */
+/* The Vertical Line - Thicker (6px) */
 .timeline-container::after {
     content: '';
     position: absolute;
-    width: 4px;
+    width: 6px; 
     background-color: var(--color-primary);
     top: 0;
     bottom: 0;
-    left: 20px; /* Reference point for the line */
+    left: 30px; /* Fixed anchor point */
+    transform: translateX(-50%); /* Centers the 6px width on the 30px mark */
     z-index: 1;
+}
+
+/* Starting Marker (Diamond or Circle at the very top) */
+.timeline-start-marker {
+    position: absolute;
+    top: 0;
+    left: 30px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--color-primary);
+    transform: translateX(-50%) rotate(45deg); /* Diamond shape */
+    z-index: 2;
+    border: 2px solid var(--color-bg-light);
 }
 
 /* Collapsible Year Block */
 .timeline-year-group {
-    margin-bottom: 1.5em;
-    border: none;
+    margin-bottom: 2em;
+    position: relative;
 }
 
 .timeline-year-group summary {
-    list-style: none; /* Remove default arrow */
-    cursor: pointer;
+    list-style: none;
     outline: none;
 }
+.timeline-year-group summary::-webkit-details-marker { display: none; }
 
-/* Custom Year Marker (The Button) */
+/* Year Marker Button */
 .timeline-year-marker {
     font-family: var(--font-header);
     background-color: var(--color-primary);
     color: white;
     display: inline-flex;
     align-items: center;
-    padding: 8px 20px;
+    padding: 10px 20px;
     font-weight: bold;
-    font-size: 1.2rem;
-    border-radius: 4px;
-    position: relative;
+    cursor: pointer;
     z-index: 5;
-    margin-left: -38px; /* Perfectly aligns marker over the line */
+    position: relative;
+    margin-left: -45px; /* Aligns with the thicker line */
     box-shadow: var(--shadow-sm);
-    transition: background 0.2s ease;
+    border-radius: 4px;
 }
 
-.timeline-year-marker:hover {
-    background-color: var(--color-secondary);
-}
-
-/* Add a custom + / - indicator */
-.timeline-year-marker::before {
-    content: '+';
-    margin-right: 12px;
-    font-family: monospace;
-}
-
-details[open] .timeline-year-marker::before {
-    content: '-';
+.timeline-year-marker .event-count {
+    font-size: 0.8rem;
+    margin-left: 10px;
+    opacity: 0.8;
 }
 
 /* --- THE NODES (Centering Fix) --- */
@@ -2177,40 +2133,42 @@ details[open] .timeline-year-marker::before {
 .timeline-item {
     position: relative;
     width: 100%;
-    margin: 15px 0;
-    padding-left: 25px;
+    margin: 20px 0;
+    padding-left: 30px;
 }
 
-/* Outer Ring - Centered using 50% and transform */
+/* Outer Ring - Centered exactly on the 6px line */
 .timeline-item::after {
     content: '';
     position: absolute;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     background-color: var(--color-bg-light);
     border: 3px solid var(--color-primary);
     border-radius: 50%;
     z-index: 3;
-    box-sizing: border-box;
-    /* This centers the circle exactly on the 20px line position */
-    left: -30px; 
     top: 14px;
+    left: -30px; 
+    /* The Magic Fix: Centers relative to the anchor */
+    transform: translateX(-50%); 
 }
 
-/* Inner Dot - Centered */
+/* Inner Dot - Centered exactly */
 .timeline-item::before {
     content: '';
     position: absolute;
-    width: 14px; /* Slightly bigger as requested */
+    width: 14px;
     height: 14px;
     background-color: var(--color-primary);
     border-radius: 50%;
     z-index: 4;
-    left: -25px; 
-    top: 19px;
+    top: 20px;
+    left: -30px;
+    transform: translateX(-50%);
 }
 
 /* --- THE CARDS --- */
+
 .timeline-content {
     padding: 20px 25px;
     background-color: var(--color-bg-light);
@@ -2218,14 +2176,23 @@ details[open] .timeline-year-marker::before {
     position: relative;
     outline: 1px solid var(--color-secondary);
     outline-offset: -10px;
+    box-shadow: var(--shadow-sm);
 }
 
+/* Connector Line */
 .timeline-content::before {
     content: '';
     position: absolute;
-    top: 24px;
+    top: 26px;
     left: -30px;
     width: 30px;
     height: 2px;
     background-color: var(--color-primary);
+    z-index: 2;
+}
+
+/* Hover Effect */
+.timeline-content:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-md);
 }
