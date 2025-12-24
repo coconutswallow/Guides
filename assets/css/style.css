@@ -2143,36 +2143,43 @@ a:has(img)[target="_blank"]::after {
 
 /* --- THE NODES (Circle in a Circle) --- */
 
-/* Outer Ring */
+/* Outer Ring (Big Circle) */
 .timeline-item::after {
     content: '';
     position: absolute;
-    width: 20px;
-    height: 20px;
-    right: -10px; /* Centered on the line */
+    width: 24px;         /* Slightly larger ring */
+    height: 24px;
+    right: -12px;        /* Half of width to center on the 4px line */
     background-color: var(--color-bg-light);
     border: 3px solid var(--color-primary);
-    top: 26px;
+    top: 24px;
     border-radius: 50%;
     z-index: 3;
+    box-sizing: border-box; /* Ensures border doesn't grow the circle */
 }
 
-/* Inner Dot */
+/* Inner Dot (Little Circle) */
 .timeline-item::before {
     content: '';
     position: absolute;
-    width: 8px;
-    height: 8px;
-    right: -4px;
+    width: 12px;         /* Increased from 8px to 12px */
+    height: 12px;
+    right: -6px;         /* Half of width to perfectly center */
     background-color: var(--color-primary);
-    top: 32px;
+    top: 30px;           /* Adjusted to center vertically within the 24px ring */
     border-radius: 50%;
     z-index: 4;
 }
 
-/* Adjust Ring/Dot for Even items */
-.timeline-item:nth-child(even)::after { left: -10px; }
-.timeline-item:nth-child(even)::before { left: -4px; }
+/* Adjust Ring/Dot for Even items (Right Side) */
+.timeline-item:nth-child(even)::after { 
+    left: -12px; 
+    right: auto;
+}
+.timeline-item:nth-child(even)::before { 
+    left: -6px; 
+    right: auto;
+}
 
 /* --- THE CONNECTORS (Horizontal Lines) --- */
 
