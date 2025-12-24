@@ -12,7 +12,7 @@ toc: false
   {% assign grouped_events = events | group_by: "timeline_year" %}
 
   {% for group in grouped_events %}
-    <details class="timeline-year-group" open>
+    <details class="timeline-year-group">
       <summary class="timeline-year-marker">
         {{ group.name }} AE 
         <span class="event-count">({{ group.items.size }} Events)</span>

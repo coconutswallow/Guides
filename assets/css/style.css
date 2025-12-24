@@ -2057,17 +2057,17 @@ img + .image-caption {
 }
 
 /* ============================================
-   23. TIMELINES (Perfectly Centered & Collapsible)
+   23. TIMELINES (Perfect Centering & Collapsible)
    ============================================ */
 
 .timeline-container {
     position: relative;
     max-width: 850px;
     margin: 3em auto;
-    padding: 40px 0 2em 60px; /* Increased left padding for thicker line */
+    padding: 40px 0 2em 60px;
 }
 
-/* The Vertical Line - Thicker (6px) */
+/* Thicker 6px Line */
 .timeline-container::after {
     content: '';
     position: absolute;
@@ -2075,12 +2075,12 @@ img + .image-caption {
     background-color: var(--color-primary);
     top: 0;
     bottom: 0;
-    left: 30px; /* Fixed anchor point */
-    transform: translateX(-50%); /* Centers the 6px width on the 30px mark */
+    left: 30px; 
+    transform: translateX(-50%);
     z-index: 1;
 }
 
-/* Starting Marker (Diamond or Circle at the very top) */
+/* Diamond Starting Marker */
 .timeline-start-marker {
     position: absolute;
     top: 0;
@@ -2088,24 +2088,15 @@ img + .image-caption {
     width: 16px;
     height: 16px;
     background-color: var(--color-primary);
-    transform: translateX(-50%) rotate(45deg); /* Diamond shape */
+    transform: translateX(-50%) rotate(45deg);
     z-index: 2;
     border: 2px solid var(--color-bg-light);
 }
 
-/* Collapsible Year Block */
-.timeline-year-group {
-    margin-bottom: 2em;
-    position: relative;
-}
-
-.timeline-year-group summary {
-    list-style: none;
-    outline: none;
-}
+.timeline-year-group { margin-bottom: 1.5em; position: relative; }
+.timeline-year-group summary { list-style: none; outline: none; cursor: pointer; }
 .timeline-year-group summary::-webkit-details-marker { display: none; }
 
-/* Year Marker Button */
 .timeline-year-marker {
     font-family: var(--font-header);
     background-color: var(--color-primary);
@@ -2114,85 +2105,79 @@ img + .image-caption {
     align-items: center;
     padding: 10px 20px;
     font-weight: bold;
-    cursor: pointer;
     z-index: 5;
     position: relative;
-    margin-left: -45px; /* Aligns with the thicker line */
-    box-shadow: var(--shadow-sm);
+    margin-left: -45px; 
     border-radius: 4px;
 }
 
-.timeline-year-marker .event-count {
-    font-size: 0.8rem;
-    margin-left: 10px;
-    opacity: 0.8;
-}
-
-/* --- THE NODES (Centering Fix) --- */
+/* --- THE NODES (Visual Fixes) --- */
 
 .timeline-item {
     position: relative;
     width: 100%;
-    margin: 20px 0;
+    min-height: 60px; /* Ensures enough space for centering */
+    margin: 10px 0;
     padding-left: 30px;
+    display: flex;
+    align-items: center; /* Vertically aligns the content with the dot */
 }
 
-/* Outer Ring - Centered exactly on the 6px line */
+/* Outer Ring */
 .timeline-item::after {
     content: '';
     position: absolute;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     background-color: var(--color-bg-light);
     border: 3px solid var(--color-primary);
     border-radius: 50%;
     z-index: 3;
-    top: 14px;
     left: -30px; 
-    /* The Magic Fix: Centers relative to the anchor */
-    transform: translateX(-50%); 
+    top: 50%; /* Center anchor */
+    transform: translate(-50%, -50%); /* Perfect X and Y centering */
+    box-sizing: border-box;
 }
 
-/* Inner Dot - Centered exactly */
+/* Inner Dot (Now Bigger & Perfectly Centered) */
 .timeline-item::before {
     content: '';
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 16px; /* Increased size */
+    height: 16px;
     background-color: var(--color-primary);
     border-radius: 50%;
     z-index: 4;
-    top: 20px;
     left: -30px;
-    transform: translateX(-50%);
+    top: 50%; /* Center anchor */
+    transform: translate(-50%, -50%); /* Perfect X and Y centering */
 }
 
 /* --- THE CARDS --- */
 
 .timeline-content {
+    width: 100%;
     padding: 20px 25px;
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     position: relative;
     outline: 1px solid var(--color-secondary);
     outline-offset: -10px;
-    box-shadow: var(--shadow-sm);
 }
 
-/* Connector Line */
+/* Horizontal Connector */
 .timeline-content::before {
     content: '';
     position: absolute;
-    top: 26px;
+    top: 50%;
     left: -30px;
     width: 30px;
-    height: 2px;
+    height: 3px; /* Slightly thicker to match 6px line */
     background-color: var(--color-primary);
+    transform: translateY(-50%);
     z-index: 2;
 }
 
-/* Hover Effect */
-.timeline-content:hover {
-    transform: translateX(5px);
-    box-shadow: var(--shadow-md);
-}
+.timeline-title { font-family: var(--font-header); margin: 0 0 5px 0; }
+.timeline-title a { color: var(--color-primary); text-decoration: none; }
+.timeline-excerpt { font-size: 0.95rem; margin: 0; color: var(--color-text); }
