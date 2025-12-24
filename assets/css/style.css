@@ -2157,12 +2157,17 @@ img + .image-caption {
 
 .timeline-content {
     width: 100%;
-    padding: 20px 25px;
+    padding: 10px 25px;
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     position: relative;
     outline: 1px solid var(--color-secondary);
     outline-offset: -10px;
+}
+
+.timeline-title {
+    margin-top: 0 !important; /* Removes the gap above the title */
+    margin-bottom: 8px;       /* Keeps a small gap below the title */
 }
 
 /* Horizontal Connector */
