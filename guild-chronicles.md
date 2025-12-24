@@ -5,8 +5,7 @@ description: "A chronological record of the Hawthorne Guild's history and major 
 toc: false
 ---
 
-<div class="timeline">
-  {% assign events = site.pages | where: "timeline_event", true | sort: "timeline_year" %}
+<div class="timeline-container"> {% assign events = site.pages | where: "timeline_event", true | sort: "timeline_year" %}
   {% for event in events %}
     <div class="timeline-item">
       <div class="timeline-content">

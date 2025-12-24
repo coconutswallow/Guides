@@ -2157,6 +2157,25 @@ a:has(img)[target="_blank"]::after {
   margin-bottom: 0.5em;
 }
 
+/* The dots on the center line */
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: -8px; /* Centers it on the line for odd items */
+    background-color: var(--color-bg-light);
+    border: 3px solid var(--color-primary);
+    top: 24px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Position the dot for even items */
+.timeline-item:nth-child(even)::after {
+    left: -8px;
+}
+
 /* Responsive: Single column for mobile */
 @media screen and (max-width: 600px) {
   .timeline-container::after { left: 31px; }
