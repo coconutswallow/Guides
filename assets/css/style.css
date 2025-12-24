@@ -2105,18 +2105,17 @@ a:has(img)[target="_blank"]::after {
 }
 
 /* ============================================
-   23. TIMELINES (High-Density Grouped Version)
+   23. TIMELINES (High-Density Collapsible)
    ============================================ */
 
-/* Main wrapper - Left aligned for better readability of many events */
 .timeline-container {
     position: relative;
     max-width: 850px;
     margin: 3em auto;
-    padding: 2em 0 2em 50px; /* Space on left for the line */
+    padding: 2em 0 2em 50px;
 }
 
-/* The Vertical Line (The Bloodline) - Positioned to the left */
+/* The Vertical Line */
 .timeline-container::after {
     content: '';
     position: absolute;
@@ -2124,66 +2123,103 @@ a:has(img)[target="_blank"]::after {
     background-color: var(--color-primary);
     top: 0;
     bottom: 0;
-    left: 20px; 
+    left: 20px; /* Reference point for the line */
     z-index: 1;
 }
 
-/* Year Header Block */
+/* Collapsible Year Block */
+.timeline-year-group {
+    margin-bottom: 1.5em;
+    border: none;
+}
+
+.timeline-year-group summary {
+    list-style: none; /* Remove default arrow */
+    cursor: pointer;
+    outline: none;
+}
+
+/* Custom Year Marker (The Button) */
 .timeline-year-marker {
     font-family: var(--font-header);
     background-color: var(--color-primary);
-    color: white; /* Contrast against the Hawthorne Red */
-    display: inline-block;
-    padding: 6px 16px;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
     font-weight: bold;
     font-size: 1.2rem;
     border-radius: 4px;
     position: relative;
     z-index: 5;
-    margin-bottom: 30px;
-    margin-left: -38px; /* Centers the label over the line */
+    margin-left: -38px; /* Perfectly aligns marker over the line */
     box-shadow: var(--shadow-sm);
+    transition: background 0.2s ease;
 }
 
-/* Individual Event Container */
+.timeline-year-marker:hover {
+    background-color: var(--color-secondary);
+}
+
+/* Add a custom + / - indicator */
+.timeline-year-marker::before {
+    content: '+';
+    margin-right: 12px;
+    font-family: monospace;
+}
+
+details[open] .timeline-year-marker::before {
+    content: '-';
+}
+
+/* --- THE NODES (Centering Fix) --- */
+
 .timeline-item {
     position: relative;
     width: 100%;
-    margin-bottom: 20px;
-    padding-left: 20px;
+    margin: 15px 0;
+    padding-left: 25px;
 }
 
-/* --- THE NODES (Circle in a Circle) --- */
-
-/* Outer Ring (Big Circle) */
+/* Outer Ring - Centered using 50% and transform */
 .timeline-item::after {
     content: '';
     position: absolute;
     width: 24px;
     height: 24px;
-    left: -30px; /* Aligned to the left line */
     background-color: var(--color-bg-light);
     border: 3px solid var(--color-primary);
-    top: 14px;
     border-radius: 50%;
     z-index: 3;
     box-sizing: border-box;
+    /* This centers the circle exactly on the 20px line position */
+    left: -30px; 
+    top: 14px;
 }
 
-/* Inner Dot (Little Circle - Centered) */
+/* Inner Dot - Centered */
 .timeline-item::before {
     content: '';
     position: absolute;
-    width: 12px;
-    height: 12px;
-    left: -24px; /* Centered inside the 24px ring */
+    width: 14px; /* Slightly bigger as requested */
+    height: 14px;
     background-color: var(--color-primary);
-    top: 20px;
     border-radius: 50%;
     z-index: 4;
+    left: -25px; 
+    top: 19px;
 }
 
-/* --- THE CONNECTORS (Horizontal Bridge) --- */
+/* --- THE CARDS --- */
+.timeline-content {
+    padding: 20px 25px;
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    position: relative;
+    outline: 1px solid var(--color-secondary);
+    outline-offset: -10px;
+}
+
 .timeline-content::before {
     content: '';
     position: absolute;
@@ -2192,55 +2228,4 @@ a:has(img)[target="_blank"]::after {
     width: 30px;
     height: 2px;
     background-color: var(--color-primary);
-    z-index: 2;
-}
-
-/* --- THE CARDS (Archive Look) --- */
-.timeline-content {
-    padding: 20px 25px;
-    background-color: var(--color-bg-light);
-    border: 1px solid var(--color-border);
-    position: relative;
-    border-radius: 0;
-    box-shadow: var(--shadow-sm);
-    
-    /* Fancy Inset Border */
-    outline: 1px solid var(--color-secondary);
-    outline-offset: -10px;
-    transition: transform 0.2s ease;
-}
-
-.timeline-content:hover {
-    transform: translateX(5px); /* Small nudge right instead of up */
-}
-
-.timeline-title {
-    margin: 0 0 5px 0;
-    font-size: 1.2rem;
-    font-family: var(--font-header);
-}
-
-.timeline-title a {
-    color: var(--color-primary);
-    text-decoration: none;
-}
-
-.timeline-excerpt {
-    font-size: 0.95rem;
-    margin: 0;
-    color: var(--color-text);
-    line-height: 1.4;
-}
-
-/* --- MOBILE ADJUSTMENTS --- */
-@media screen and (max-width: 600px) {
-    .timeline-container {
-        padding-left: 40px;
-        margin: 1em;
-    }
-    .timeline-container::after { left: 15px; }
-    .timeline-year-marker { margin-left: -30px; }
-    .timeline-item::after { left: -25px; }
-    .timeline-item::before { left: -19px; }
-    .timeline-content::before { left: -25px; width: 25px; }
 }
