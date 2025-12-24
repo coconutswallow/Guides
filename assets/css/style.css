@@ -35,6 +35,7 @@
    20. PDF RENDERING
    21. RESPONSIVE DESIGN
    22. PRINT STYLES
+   23. TIMELINES
    ============================================ */
 
 
@@ -2101,4 +2102,64 @@ a:has(img)[target="_blank"]::after {
 .page.page-doc .doc-container {
   padding: var(--spacing-md);
   margin: 0 auto;
+}
+
+/* ============================================
+   23. Timelines
+   ============================================ */
+   /* Timeline Container */
+.timeline-container {
+  position: relative;
+  max-width: 800px;
+  margin: 2em auto;
+  padding: 1em;
+}
+
+/* The Central Vertical Line */
+.timeline-container::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  background-color: var(--color-primary); /* Uses your Hawthorne red */
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -2px;
+}
+
+/* Individual Event Container */
+.timeline-item {
+  padding: 10px 40px;
+  position: relative;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+/* Alternating Sides */
+.timeline-item:nth-child(even) { left: 50%; }
+.timeline-item:nth-child(odd) { left: 0; }
+
+/* Event Card Style */
+.timeline-content {
+  padding: 20px;
+  background-color: var(--color-bg-light); /* Matches your site cards */
+  border: 1px solid var(--color-border);
+  position: relative;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.timeline-date {
+  font-family: var(--font-header); /* Cinzel font for a lore feel */
+  font-weight: bold;
+  color: var(--color-secondary);
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+/* Responsive: Single column for mobile */
+@media screen and (max-width: 600px) {
+  .timeline-container::after { left: 31px; }
+  .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+  .timeline-item:nth-child(even) { left: 0%; }
 }
