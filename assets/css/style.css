@@ -2105,80 +2105,167 @@ a:has(img)[target="_blank"]::after {
 }
 
 /* ============================================
-   23. Timelines
+   23. TIMELINES (Chronicles & History)
    ============================================ */
-   /* Timeline Container */
+
+/* Main wrapper */
 .timeline-container {
-  position: relative;
-  max-width: 800px;
-  margin: 2em auto;
-  padding: 1em;
+    position: relative;
+    max-width: 900px;
+    margin: 3em auto;
+    padding: 2em 0;
 }
 
-/* The Central Vertical Line */
+/* The Central Vertical Line (The Bloodline) */
 .timeline-container::after {
-  content: '';
-  position: absolute;
-  width: 4px;
-  background-color: var(--color-primary); /* Uses your Hawthorne red */
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  margin-left: -2px;
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--color-primary); /* Your Hawthorne Red */
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -2px;
+    z-index: 1;
 }
 
 /* Individual Event Container */
 .timeline-item {
-  padding: 10px 40px;
-  position: relative;
-  width: 50%;
-  box-sizing: border-box;
+    padding: 10px 50px;
+    position: relative;
+    width: 50%;
+    box-sizing: border-box;
 }
 
 /* Alternating Sides */
-.timeline-item:nth-child(even) { left: 50%; }
-.timeline-item:nth-child(odd) { left: 0; }
+.timeline-item:nth-child(even) { left: 50%; text-align: left; }
+.timeline-item:nth-child(odd) { left: 0; text-align: right; }
 
-/* Event Card Style */
-.timeline-content {
-  padding: 20px;
-  background-color: var(--color-bg-light); /* Matches your site cards */
-  border: 1px solid var(--color-border);
-  position: relative;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
-}
+/* --- THE NODES (Circle in a Circle) --- */
 
-.timeline-date {
-  font-family: var(--font-header); /* Cinzel font for a lore feel */
-  font-weight: bold;
-  color: var(--color-secondary);
-  display: block;
-  margin-bottom: 0.5em;
-}
-
-/* The dots on the center line */
+/* Outer Ring */
 .timeline-item::after {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 16px;
-    right: -8px; /* Centers it on the line for odd items */
+    width: 20px;
+    height: 20px;
+    right: -10px; /* Centered on the line */
     background-color: var(--color-bg-light);
     border: 3px solid var(--color-primary);
-    top: 24px;
+    top: 26px;
     border-radius: 50%;
-    z-index: 1;
+    z-index: 3;
 }
 
-/* Position the dot for even items */
-.timeline-item:nth-child(even)::after {
-    left: -8px;
+/* Inner Dot */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    right: -4px;
+    background-color: var(--color-primary);
+    top: 32px;
+    border-radius: 50%;
+    z-index: 4;
 }
 
-/* Responsive: Single column for mobile */
-@media screen and (max-width: 600px) {
-  .timeline-container::after { left: 31px; }
-  .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
-  .timeline-item:nth-child(even) { left: 0%; }
+/* Adjust Ring/Dot for Even items */
+.timeline-item:nth-child(even)::after { left: -10px; }
+.timeline-item:nth-child(even)::before { left: -4px; }
+
+/* --- THE CONNECTORS (Horizontal Lines) --- */
+
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    width: 50px;
+    height: 2px;
+    background-color: var(--color-primary);
+    z-index: 2;
+}
+
+/* Attach lines to the correct side */
+.timeline-item:nth-child(odd) .timeline-content::before { right: -50px; }
+.timeline-item:nth-child(even) .timeline-content::before { left: -50px; }
+
+/* --- THE CARDS (Fancy Archive Look) --- */
+
+.timeline-content {
+    padding: 25px;
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    position: relative;
+    border-radius: 0; /* Sharp corners for a formal document feel */
+    box-shadow: var(--shadow-sm);
+    
+    /* The Fancy Inset Border */
+    outline: 1px solid var(--color-secondary);
+    outline-offset: -10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.timeline-content:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.timeline-date {
+    font-family: var(--font-header); /* Cinzel */
+    font-weight: bold;
+    color: var(--color-secondary); /* Gold */
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.timeline-title {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+}
+
+.timeline-title a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.timeline-title a:hover {
+    text-decoration: underline;
+}
+
+.timeline-excerpt {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--color-text);
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+
+@media screen and (max-width: 768px) {
+    .timeline-container::after {
+        left: 31px;
+    }
+    
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+        text-align: left !important;
+    }
+    
+    .timeline-item:nth-child(even) {
+        left: 0%;
+    }
+    
+    .timeline-item::after { left: 21px !important; }
+    .timeline-item::before { left: 27px !important; }
+    
+    .timeline-item:nth-child(odd) .timeline-content::before,
+    .timeline-item:nth-child(even) .timeline-content::before {
+        left: -40px;
+        width: 40px;
+    }
 }
