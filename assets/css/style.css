@@ -2105,41 +2105,53 @@ a:has(img)[target="_blank"]::after {
 }
 
 /* ============================================
-   23. TIMELINES (Chronicles & History)
+   23. TIMELINES (High-Density Grouped Version)
    ============================================ */
 
-/* Main wrapper */
+/* Main wrapper - Left aligned for better readability of many events */
 .timeline-container {
     position: relative;
-    max-width: 900px;
+    max-width: 850px;
     margin: 3em auto;
-    padding: 2em 0;
+    padding: 2em 0 2em 50px; /* Space on left for the line */
 }
 
-/* The Central Vertical Line (The Bloodline) */
+/* The Vertical Line (The Bloodline) - Positioned to the left */
 .timeline-container::after {
     content: '';
     position: absolute;
     width: 4px;
-    background-color: var(--color-primary); /* Your Hawthorne Red */
+    background-color: var(--color-primary);
     top: 0;
     bottom: 0;
-    left: 50%;
-    margin-left: -2px;
+    left: 20px; 
     z-index: 1;
+}
+
+/* Year Header Block */
+.timeline-year-marker {
+    font-family: var(--font-header);
+    background-color: var(--color-primary);
+    color: white; /* Contrast against the Hawthorne Red */
+    display: inline-block;
+    padding: 6px 16px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    position: relative;
+    z-index: 5;
+    margin-bottom: 30px;
+    margin-left: -38px; /* Centers the label over the line */
+    box-shadow: var(--shadow-sm);
 }
 
 /* Individual Event Container */
 .timeline-item {
-    padding: 10px 50px;
     position: relative;
-    width: 50%;
-    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 20px;
+    padding-left: 20px;
 }
-
-/* Alternating Sides */
-.timeline-item:nth-child(even) { left: 50%; text-align: left; }
-.timeline-item:nth-child(odd) { left: 0; text-align: right; }
 
 /* --- THE NODES (Circle in a Circle) --- */
 
@@ -2147,90 +2159,65 @@ a:has(img)[target="_blank"]::after {
 .timeline-item::after {
     content: '';
     position: absolute;
-    width: 24px;         /* Slightly larger ring */
+    width: 24px;
     height: 24px;
-    right: -12px;        /* Half of width to center on the 4px line */
+    left: -30px; /* Aligned to the left line */
     background-color: var(--color-bg-light);
     border: 3px solid var(--color-primary);
-    top: 24px;
+    top: 14px;
     border-radius: 50%;
     z-index: 3;
-    box-sizing: border-box; /* Ensures border doesn't grow the circle */
+    box-sizing: border-box;
 }
 
-/* Inner Dot (Little Circle) */
+/* Inner Dot (Little Circle - Centered) */
 .timeline-item::before {
     content: '';
     position: absolute;
-    width: 12px;         /* Increased from 8px to 12px */
+    width: 12px;
     height: 12px;
-    right: -6px;         /* Half of width to perfectly center */
+    left: -24px; /* Centered inside the 24px ring */
     background-color: var(--color-primary);
-    top: 30px;           /* Adjusted to center vertically within the 24px ring */
+    top: 20px;
     border-radius: 50%;
     z-index: 4;
 }
 
-/* Adjust Ring/Dot for Even items (Right Side) */
-.timeline-item:nth-child(even)::after { 
-    left: -12px; 
-    right: auto;
-}
-.timeline-item:nth-child(even)::before { 
-    left: -6px; 
-    right: auto;
-}
-
-/* --- THE CONNECTORS (Horizontal Lines) --- */
-
+/* --- THE CONNECTORS (Horizontal Bridge) --- */
 .timeline-content::before {
     content: '';
     position: absolute;
     top: 24px;
-    width: 50px;
+    left: -30px;
+    width: 30px;
     height: 2px;
     background-color: var(--color-primary);
     z-index: 2;
 }
 
-/* Attach lines to the correct side */
-.timeline-item:nth-child(odd) .timeline-content::before { right: -50px; }
-.timeline-item:nth-child(even) .timeline-content::before { left: -50px; }
-
-/* --- THE CARDS (Fancy Archive Look) --- */
-
+/* --- THE CARDS (Archive Look) --- */
 .timeline-content {
-    padding: 25px;
+    padding: 20px 25px;
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     position: relative;
-    border-radius: 0; /* Sharp corners for a formal document feel */
+    border-radius: 0;
     box-shadow: var(--shadow-sm);
     
-    /* The Fancy Inset Border */
+    /* Fancy Inset Border */
     outline: 1px solid var(--color-secondary);
     outline-offset: -10px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .timeline-content:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-}
-
-.timeline-date {
-    font-family: var(--font-header); /* Cinzel */
-    font-weight: bold;
-    color: var(--color-secondary); /* Gold */
-    display: block;
-    margin-bottom: 8px;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    transform: translateX(5px); /* Small nudge right instead of up */
 }
 
 .timeline-title {
-    margin: 0 0 10px 0;
-    font-size: 1.3rem;
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+    font-family: var(--font-header);
 }
 
 .timeline-title a {
@@ -2238,41 +2225,22 @@ a:has(img)[target="_blank"]::after {
     text-decoration: none;
 }
 
-.timeline-title a:hover {
-    text-decoration: underline;
-}
-
 .timeline-excerpt {
     font-size: 0.95rem;
-    line-height: 1.5;
     margin: 0;
     color: var(--color-text);
+    line-height: 1.4;
 }
 
-/* --- MOBILE RESPONSIVENESS --- */
-
-@media screen and (max-width: 768px) {
-    .timeline-container::after {
-        left: 31px;
+/* --- MOBILE ADJUSTMENTS --- */
+@media screen and (max-width: 600px) {
+    .timeline-container {
+        padding-left: 40px;
+        margin: 1em;
     }
-    
-    .timeline-item {
-        width: 100%;
-        padding-left: 70px;
-        padding-right: 25px;
-        text-align: left !important;
-    }
-    
-    .timeline-item:nth-child(even) {
-        left: 0%;
-    }
-    
-    .timeline-item::after { left: 21px !important; }
-    .timeline-item::before { left: 27px !important; }
-    
-    .timeline-item:nth-child(odd) .timeline-content::before,
-    .timeline-item:nth-child(even) .timeline-content::before {
-        left: -40px;
-        width: 40px;
-    }
+    .timeline-container::after { left: 15px; }
+    .timeline-year-marker { margin-left: -30px; }
+    .timeline-item::after { left: -25px; }
+    .timeline-item::before { left: -19px; }
+    .timeline-content::before { left: -25px; width: 25px; }
 }
