@@ -162,3 +162,7 @@
     category: Support
     answer: |-
       If something makes you uncomfortable on the server, then it is more than enough to be a reason to reach out to PR. All genuine concerns are taken seriously and addressed accordingly.  When in doubt, let us make the call on how to handle it.
+  - question: What is the DMXP and GP?
+    category: DM
+    answer: |-
+      The table can be found in the [DM's Guide], but here is the table ![DMXP](/Guides/blob/main/assets/images/DMXPGP.png)
