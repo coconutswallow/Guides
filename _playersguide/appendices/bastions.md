@@ -48,7 +48,7 @@ If you rework your character into another character, the new character can retai
 
 ## Hawthorne Housing and Hirelings
 
-The previous Hawthorne Housing and Hawthorne Hirelings documents are retired. Players that utilized these systems are eligible to refund gold and DTP they spent as part of those systems, as well as for any permanent spells or effects at those locations. Any such refund must be logged in #player-requests for approval by the Auditors. Any such houses and NPCs narratively continue to exist but mechanically provide no benefit until rebuilt using the rules for Bastions.
+The previous Hawthorne Housing and Hawthorne Hirelings documents are retired. Players that utilized these systems are eligible to refund gold and DTP they spent as part of those systems, as well as for any permanent spells or effects at those locations. Any such refund must be logged in [#player-requests](https://discord.com/channels/308324031478890497/620751743025807390) for approval by the Auditors. Any such houses and NPCs narratively continue to exist but mechanically provide no benefit until rebuilt using the rules for Bastions.
 
 ## Bastion Statblocks
 
