@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}"> 
 	<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}"><link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
     <script src="{{ '/assets/js/heading-links.js' | relative_url }}"></script>
+
+    // Favicon
+    <link rel="icon" type="image/png" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">
+    <link rel="apple-touch-icon" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">
     
     {% for stylesheet in page.extra_css %}
         <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
