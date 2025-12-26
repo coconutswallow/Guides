@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "Contents"
+title: "Players Guide Contents"
 order: 1
 background_image: 
 ---
