@@ -32,9 +32,9 @@ As a player, you can create 2024 characters using the rules in the 2024 PHB and 
 
 DMs can run games using the D&D 2024 ruleset described in the 2024 PHB and new sourcebooks as per the following:
 
-* **Game Version**. DMs must indicate the ruleset to be used in the game by adding Game Version: 2014 or Game Version: 2024 to their ad in #game-advertisement.
+* **Game Version**. DMs must indicate the ruleset to be used in the game by adding Game Version: 2014 or Game Version: 2024 to their ad in [#game-advertisement](https://discord.com/channels/308324031478890497/343396172293210112).
 * **Player Characters**. Both PCs created using the 2014 or 2024 character options can play in a 2024 game.  2024 characters cannot play in 2014 games without versioning or the DM’s permission.
-* **Spells**. Spells. The revised version of spells updated in the 2024 ruleset must be used in 2024 games. 2014 characters can use the older version of spells they cast at **DM discretion**. Outside of games, a character uses the version of the spell corresponding to their PC’s game version, unless no equivalent exists.
+* **Spells**. The revised version of spells updated in the 2024 ruleset must be used in 2024 games. 2014 characters can use the older version of spells they cast at **DM discretion**. Outside of games, a character uses the version of the spell corresponding to their PC’s game version, unless no equivalent exists.
 
 ## 2024 Change Log
 
