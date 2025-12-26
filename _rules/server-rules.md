@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Server Rules"
-order: 1
+order: 10
 ---
 ## Basic Rules
 1. Be nice and treat each other with respect.

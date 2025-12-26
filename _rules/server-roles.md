@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Server Roles and Hierarchy"
-order: 2
+order: 21
 ---
 
 ## Server Roles and Hierarchy
