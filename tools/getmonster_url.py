@@ -1,69 +1,64 @@
 import os
-import csv
 import re
+import csv
 
-def extract_from_frontmatter(content, field):
-    """Extract a field from YAML frontmatter"""
-    pattern = r'^' + field + r':\s*(.+?)\s*$'
-    match = re.search(pattern, content, re.MULTILINE)
-    if match:
-        return match.group(1).strip()
-    return None
+def generate_slug(text):
+    """Converts title to a URL-friendly slug."""
+    slug = text.lower().strip()
+    slug = re.sub(r'[^a-z0-9\s-]', '', slug)
+    slug = re.sub(r'[\s-]+', '-', slug)
+    return slug
 
-def generate_url(filename):
-    """Generate URL from filename"""
-    # Remove .md extension and convert to URL format
-    name = filename.replace('.md', '')
+def process_monsters():
+    # Define paths relative to /tools
+    source_dir = os.path.join('..', '_monsters')
+    output_file = 'monster_list.csv'
     base_url = "https://hawthorneguild.github.io/Guides/monster-compendium/"
-    return f"{base_url}{name}/"
 
-def main():
-    # Set up paths
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    monsters_dir = os.path.join(os.path.dirname(script_dir), '_monsters')
-    output_file = os.path.join(script_dir, 'monsters.csv')
-    
-    # Check if _monsters directory exists
-    if not os.path.exists(monsters_dir):
-        print(f"Error: Directory {monsters_dir} not found")
+    monster_data = []
+
+    # Check if directory exists
+    if not os.path.exists(source_dir):
+        print(f"Error: Directory {source_dir} not found.")
         return
-    
-    monsters = []
-    
-    # Process each .md file
-    for filename in os.listdir(monsters_dir):
+
+    # Regex patterns for YAML frontmatter
+    title_pattern = re.compile(r'^title:\s*(.*)$', re.MULTILINE)
+    creator_pattern = re.compile(r'^creator:\s*(.*)$', re.MULTILINE)
+
+    for filename in os.listdir(source_dir):
         if filename.endswith('.md'):
-            filepath = os.path.join(monsters_dir, filename)
+            file_path = os.path.join(source_dir, filename)
             
-            try:
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    title = extract_from_frontmatter(content, 'title')
-                    creator = extract_from_frontmatter(content, 'creator')
-                    
-                    if title:
-                        url = generate_url(filename)
-                        monsters.append({
-                            'title': title,
-                            'creator': creator if creator else '',
-                            'url': url
-                        })
-                        print(f"Processed: {title} (Creator: {creator if creator else 'N/A'})")
-                    else:
-                        print(f"Warning: No title found in {filename}")
-            except Exception as e:
-                print(f"Error processing {filename}: {e}")
-    
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                
+                # Extract Title
+                title_match = title_pattern.search(content)
+                name = title_match.group(1).strip() if title_match else "Unknown"
+                
+                # Extract Creator
+                creator_match = creator_pattern.search(content)
+                creator = creator_match.group(1).strip() if creator_match else "Unknown"
+                
+                # Generate URL
+                slug = generate_slug(name)
+                url = f"{base_url}{slug}/"
+                
+                monster_data.append({
+                    'monster name': name,
+                    'monster creator': creator,
+                    'monster URL': url
+                })
+
     # Write to CSV
-    if monsters:
-        with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=['title', 'creator', 'url'])
-            writer.writeheader()
-            writer.writerows(monsters)
-        
-        print(f"\nSuccess! Created {output_file} with {len(monsters)} monsters")
-    else:
-        print("No monsters found to process")
+    keys = ['monster name', 'monster creator', 'monster URL']
+    with open(output_file, 'w', newline='', encoding='utf-8') as output_csv:
+        dict_writer = csv.DictWriter(output_csv, fieldnames=keys)
+        dict_writer.writeheader()
+        dict_writer.writerows(monster_data)
+
+    print(f"Successfully processed {len(monster_data)} monsters into {output_file}")
 
 if __name__ == "__main__":
-    main()
+    process_monsters()
