@@ -62,5 +62,5 @@ ___
 >
 > ### Bonus Actions
 >
-> ***Astral Step..*** The kodragon magically teleports to an unoccupied space it can see within 60 feet of it.
+> ***Astral Step.*** The kodragon magically teleports to an unoccupied space it can see within 60 feet of it.
 >
