@@ -3,7 +3,8 @@ layout: statblock
 title: Fech
 cr: 7
 type: Fey
-size: medium
+size: Medium
+alignment: Chaotic Evil
 category: 2014 Fair Game
 creator: MonoxideAtWork
 image: https://64.media.tumblr.com/3df6937e824e2d915024d5fb55e0a6e0/fe8f42cd89faad0a-d5/s1280x1920/e4b5892cb8a41e81446047b64e042327f863f422.jpg

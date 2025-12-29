@@ -4,6 +4,7 @@ title: Cauchemar
 cr: 5
 type: Aberration
 size: Medium
+alignment: Chaotic Evil
 category: 2014 Fair Game
 creator: Poutinerie
 image: https://cdnb.artstation.com/p/assets/images/images/002/671/213/large/petar-milivojevic-nightmare.jpg

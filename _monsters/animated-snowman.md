@@ -8,7 +8,7 @@ alignment: Unaligned
 category: 2014 Fair Game
 creator: Buront
 image: https://i.pinimg.com/736x/d7/1d/5f/d71d5f745b6cbf89efb11bc612b44dfd.jpg
-image_credit: Unknown (https://ca.pinterest.com/pin/476326098069095049/)
+image_credit: Art by Unknown (https://ca.pinterest.com/pin/476326098069095049/)
 ---
 
 ## Animated Snowman

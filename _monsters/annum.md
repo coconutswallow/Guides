@@ -5,7 +5,7 @@ cr: 2
 type: Aberration
 size: Small
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/bbb6ca82-46b9-4703-9611-23f28adacbce/d74weae-dfc3a8c9-2238-4b73-8ca7-eeb43af26fc7.png/v1/fill/w_894,h_894,q_70,strp/munna___nightmare_mist_by_stilith_d74weae-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTAwIiwicGF0aCI6IlwvZlwvYmJiNmNhODItNDZiOS00NzAzLTk2MTEtMjNmMjhhZGFjYmNlXC9kNzR3ZWFlLWRmYzNhOGM5LTIyMzgtNGI3My04Y2E3LWVlYjQzYWYyNmZjNy5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.2ISZqUthgQWGyOHcNcGXiPFiv_jvPQXQO7wlLJc0nGM
-image_credit: Stilith (https://www.deviantart.com/stilith)
+image_credit: Art by Stilith (https://www.deviantart.com/stilith)
 alignment: Neutral
 category: 2014 Fair Game
 creator: Krunk

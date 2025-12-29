@@ -3,7 +3,7 @@ layout: statblock
 title: Fallanox
 cr: 3
 image: https://i.imgur.com/BeWRrtW.png
-image_credit: art by The Kawaii Toaster
+image_credit: Art by The Kawaii Toaster
 type: Monstrosity
 size: Large
 alignment: Unaligned

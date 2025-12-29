@@ -8,7 +8,7 @@ alignment: Chaotic Evil
 category: 2014 Fair Game
 creator: km.d
 image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/55a976ff-7886-4ea3-85e6-4c54897e34be/d5kqm8o-77b72293-ad96-46d4-b986-f1f9c031d6e7.png/v1/fill/w_1172,h_682,q_70,strp/killer_by_byzwa_dher_d5kqm8o-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTc0NSIsInBhdGgiOiJcL2ZcLzU1YTk3NmZmLTc4ODYtNGVhMy04NWU2LTRjNTQ4OTdlMzRiZVwvZDVrcW04by03N2I3MjI5My1hZDk2LTQ2ZDQtYjk4Ni1mMWY5YzAzMWQ2ZTcucG5nIiwid2lkdGgiOiI8PTMwMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.NjqDJ95VbpnSW9e877K22X2YpjF9dyXZ9L9cDxQc8NU
-image_credit: Byzwa-Dher
+image_credit: Art by Byzwa-Dher
 ---
 
 ## Slasher

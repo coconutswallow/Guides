@@ -4,6 +4,7 @@ title: Baku
 cr: 11
 type: Celestial
 size: Large
+alignment: Chaotic Good
 category: 2014 Fair Game
 creator: Badwolf
 image: https://cdna.artstation.com/p/assets/images/images/005/726/274/large/deni-prakoso-baby-bestiary-baku-ig.jpg?1557391897

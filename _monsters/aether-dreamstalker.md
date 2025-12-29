@@ -4,6 +4,7 @@ title: Aether Dreamstalker
 cr: 4
 type: Monstrosity
 size: Medium
+alignment: Unaligned
 category: 2014 Fair Game
 creator: GreenSprout
 ---

@@ -3,7 +3,7 @@ layout: statblock
 title: Orc Raid General
 cr: 10
 image: https://i.imgur.com/NI0tlLi.jpg
-image_credit: Ricks Pictures(https://www.rickspictures.co.nz/character-design/orc-general-portrait/)
+image_credit: Art by Ricks Pictures (https://www.rickspictures.co.nz/character-design/orc-general-portrait/)
 type: Humanoid
 size: Medium
 alignment: Chaotic Evil
