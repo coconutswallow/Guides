@@ -2,8 +2,8 @@
 layout: statblock
 title: The Cookie Spooder
 cr: 1/4
-type: Monstrosity
 size: Tiny
+type: Monstrosity
 alignment: Neutral Good
 category: 2014 Fair Game
 creator: Aiko
@@ -18,27 +18,31 @@ The cookie spooder subsists on a diet of sweets and confectionaries and weaves w
 ___
 > ## The Cookie Spooder
 > *Tiny Monstrosity, Neutral Good*
-> 
-> **AC** 13 **HP** 9 (6d4 - 6) **Speed** 30 ft. **Initiative** +3 (13)  
+>
+> **AC** 13
+> **HP** 9 (6d4 - 6)
+> **Speed** 30 ft.
+> **Initiative** +3 (13)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 2 | -4 | +2 | **Dex** | 16 | +3 | +2 | **Con** | 8 | -1 | +2 |
-> | **Int** | 10 | +0 | +2 | **Wis** | 10 | +0 | +2 | **Cha** | 4 | -3 | +2 |
+> | **Str** | 2 | -4 | -4 | **Dex** | 16 | +3 | +3 | **Con** | 8 | -1 | -1 |
+> | **Int** | 10 | +0 | +0 | **Wis** | 10 | +0 | +0 | **Cha** | 4 | -3 | -3 |
 >
 > **Skills** Perception +2, Stealth +5  
 > **Senses** Darkvision 60 ft., Passive Perception 12  
 > **Languages** Understands Common but cannot speak  
-> **CR** 1/4 (XP 50; PB +2)
+> **Challenge** 1/4 (50 XP)  
+> **Proficiency Bonus** +2
 >
 > ### Traits
 >
-> ***Cookie Body.*** After it casts *goodberry*, it grows a chocolate chip on its body up to a maximum of 10. A creature can use its action to grab one *goodberry* from the cookie spooder's body and eat it. A creature can also use its action to grab and eat the cookie spooder. The cookie spooder can crawl into a willing creature's mouth to be eaten. A creature that eats the cookie spooder in this way regains a number of hit points equal to the number of chocolate chips on the cookie spooder's body. This kills the cookie spooder.
+> ***Cookie Body.*** After it casts goodberry, it grows a chocolate chip on its body up to a maximum of 10. A creature can use its action to grab one goodberry from the cookie spooder’s body and eat it. A creature can also use its action to grab and eat the cookie spooder. The cookie spooder can crawl into a willing creature’s mouth to be eaten. A creature that eats the cookie spooder in this way regains a number of hit points equal to the number of chocolate chips on the cookie spooder’s body. This kills the cookie spooder.
 >
-> ***Innate Spellcasting.*** The cookie spooder's innate spellcasting ability is Wisdom (spell save DC 10). It can innately cast the following spells, requiring no material components:
-> * 2/day: *goodberry*
+> ***Innate Spellcasting.*** The cookie spooder’s innate spellcasting ability is Wisdom (spell save DC 10). It can innately cast the following spells, requiring no material components:
+> * 2/day: goodberry
 >
-> ***Spider Climb.*** The cookie spooder can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.
+> ***Spider Climb.*** The cookie spooder can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check
 >
 > ***Web Sense.*** While in contact with a web, the cookie spooder knows the exact location of any other creature in contact with the same web.
 >
@@ -46,4 +50,5 @@ ___
 >
 > ### Actions
 >
-> ***Bite.*** *Melee Attack Roll:* +5, reach 5 ft., one creature. *Hit:* 5 (1d4 + 3) Piercing damage.
+> ***Bite.*** *Melee Attack Roll*: +5, reach 5 ft., one creature. *Hit*: 5 (1d4 + 3) Piercing damage.
+>
