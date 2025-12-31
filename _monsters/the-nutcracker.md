@@ -2,8 +2,8 @@
 layout: statblock
 title: The Nutcracker
 cr: 2
-type: Construct
 size: Tiny
+type: Construct
 alignment: Chaotic Good (50%) or Chaotic Evil (50%)
 category: 2014 Fair Game
 creator: Shaunuthun
@@ -31,36 +31,41 @@ Shaunuthun encourages you to run it however is fun for you and the players!
 ___
 > ## The Nutcracker
 > *Tiny Construct, Chaotic Good (50%) or Chaotic Evil (50%)*
-> 
-> **AC** 16 (Natural armor) **HP** 33 (6d4 + 18) **Speed** 25 ft. **Initiative** +5 (15)  
+>
+> **AC** 16 (Natural armor)
+> **HP** 33 (6d4 + 18)
+> **Speed** 25 ft.
+> **Initiative** +5 (15)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 3 | -4 | +2 | **Dex** | 20 | +5 | +2 | **Con** | 16 | +3 | +2 |
-> | **Int** | 6 | -2 | +2 | **Wis** | 14 | +2 | +2 | **Cha** | 14 | +2 | +2 |
+> | **Str** | 3 | -4 | -4 | **Dex** | 20 | +5 | +5 | **Con** | 16 | +3 | +3 |
+> | **Int** | 6 | -2 | -2 | **Wis** | 14 | +2 | +2 | **Cha** | 14 | +2 | +2 |
 >
 > **Skills** Acrobatics +7, Perception +4, Performance +6  
 > **Damage Immunities** Poison, Psychic  
 > **Condition Immunities** Exhausted, Frightened, Poisoned  
 > **Senses** Passive Perception 14  
 > **Languages** Understands the languages of its creator but can't speak  
-> **CR** 2 (XP 450; PB +2)
+> **Challenge** 2 (450 XP)  
+> **Proficiency Bonus** +2
 >
 > ### Traits
 >
 > ***Agile.*** The Nutcracker has advantage on skill checks to avoid being grappled.
 >
-> ***Antimagic Susceptibility.*** The Nutcracker is **incapacitated** while in the area of an *antimagic field*. If targeted by *dispel magic*, the Nutcracker must succeed on a Constitution saving throw against the caster's spell save DC or fall **unconscious** for 1 minute.
+> ***Antimagic Susceptibility.*** The Nutcracker is **incapacitated** while in the area of an antimagic field. If targeted by dispel magic, the Nutcracker must succeed on a Constitution saving throw against the caster’s spell save DC or fall **unconscious** for 1 minute.
 >
 > ***False Appearance.*** When it remains perfectly still, the Nutcracker appears as a harmless Midwinter ornament.
 >
-> ***Innate Spellcasting.*** The Nutcracker's innate spellcasting ability is Charisma (spell save DC 12, +4 to hit). The Nutcracker can innately cast the following spells, requiring no material components:
-> * **3/day:** *spiritual weapon* (appears as a giant slipper)
-> * **1/day:** *Otto's irresistible dance*
->
+> ***Innate Spellcasting.*** The Nutcracker’s innate spellcasting ability is Charisma (spell save DC 12, +4 to hit). The Nutcracker can innately cast the following spells, requiring no material components:
+> 
+> * **3/day**: spiritual weapon (appears as a giant slipper)
+> * **1/day**: Otto’s irresistible dance
 >
 > ### Actions
 >
-> ***Multiattack.*** The Nutcracker makes two **Rapier** attacks.
+> ***Multiattack.*** The Nutcracker makes two Rapier attacks.
 >
-> ***Rapier.*** *Melee Attack Roll:* +7, reach 5 ft., one target. *Hit:* 9 (1d8 + 5) Piercing damage.
+> ***Rapier.*** *Melee Attack Roll*: +7, reach 5 ft., one target. *Hit*: 9 (1d8 + 5) Piercing damage.
+>
