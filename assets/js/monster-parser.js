@@ -22,58 +22,47 @@ const MonsterParser = (function() {
     }
 
     function parseLoreDescription(content) {
-        // Captures text between the first Header (## Title) and the first horizontal rule (___)
         const loreMatch = content.match(/## [^\r\n]+[\r\n]+[\r\n]+([\s\S]*?)[\r\n]+___/);
         return loreMatch ? loreMatch[1].trim() : '';
     }
 
     /**
-     * Splits the content after the frontmatter/lore into the Blockquoted Statblock
-     * and any Additional Info (Markdown) that follows it.
+     * UPDATED: Uses horizontal rules as definitive bounds for the statblock.
+     * This prevents the parser from cutting off early if a line is missing a '>'
      */
     function splitStatBlockAndInfo(fullBody) {
         const lines = fullBody.split('\n');
         let statBlockLines = [];
         let additionalInfoLines = [];
-        let pastStatBlock = false;
-        let foundFirstDivider = false;
+        let dividerCount = 0;
 
         for (let line of lines) {
             const trimmed = line.trim();
 
-            // Handle horizontal rules (___)
+            // Detect the horizontal rule dividers
             if (trimmed === '___') {
-                if (!foundFirstDivider) {
-                   foundFirstDivider = true; // Consumes the first divider (start of statblock)
-                   continue;
-                }
-                // A second divider explicitly marks the end of the statblock
-                pastStatBlock = true;
+                dividerCount++;
+                continue; // Don't include the '___' in the parsed content
             }
 
-            if (pastStatBlock) {
+            // Everything between the first and second '___' is the Statblock
+            if (dividerCount === 1) {
+                statBlockLines.push(line);
+            } 
+            // Everything after the second '___' is Additional Info
+            else if (dividerCount >= 2) {
                 additionalInfoLines.push(line);
-                continue;
-            }
-
-            // Heuristic: If we hit a non-quoted line that has content, we've likely left the blockquote
-            if (!line.startsWith('>') && trimmed !== '') {
-                 pastStatBlock = true;
-                 additionalInfoLines.push(line);
-            } else {
-                 statBlockLines.push(line);
             }
         }
 
         return {
-            // Join lines and strip the blockquote '>' markers
+            // Clean the blockquote markers from the collected lines
             statBlock: statBlockLines.join('\n').replace(/^>\s*/gm, ''),
             additionalInfo: additionalInfoLines.join('\n').trim()
         };
     }
 
     function parseAbilityScores(blockContent) {
-        // Try simple format first
         const simpleMatch = blockContent.match(
             /\|\s*STR\s*\|\s*DEX\s*\|\s*CON\s*\|\s*INT\s*\|\s*WIS\s*\|\s*CHA\s*\|[\s\S]*?\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|\s*(\d+)\s*\([^)]+\)\s*\|/
         );
@@ -88,7 +77,6 @@ const MonsterParser = (function() {
             };
         }
         
-        // Try extended format (with bold headers)
         const extendedMatch = blockContent.match(
             /\|\s*\*\*Str\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Dex\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Con\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Int\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Wis\*\*\s*\|\s*(\d+)\s*\|[\s\S]*?\|\s*\*\*Cha\*\*\s*\|\s*(\d+)\s*\|/
         );
@@ -107,12 +95,6 @@ const MonsterParser = (function() {
     }
 
     function parseStat(blockContent, statName) {
-        // Look for **StatName** followed by content.
-        // Captures content until:
-        // 1. The next bold header (e.g., **HP)
-        // 2. A newline (if stats are on separate lines)
-        // 3. A pipe (table start)
-        // 4. End of string
         const pattern = new RegExp(`\\*\\*${statName}\\*\\*\\s+([\\s\\S]+?)(?=\\s*\\*\\*|\\n|\\s*\\||$)`);
         const match = blockContent.match(pattern);
         return match ? match[1].trim() : '';
@@ -139,14 +121,12 @@ const MonsterParser = (function() {
 
     function parseAbilitySection(blockContent, sectionName) {
         const abilities = [];
-        // Regex finds header "### Traits" followed by content until the next header or end
         const sectionPattern = new RegExp(`### ${sectionName}\\n+([\\s\\S]*?)(?=\\n###|$)`);
         const sectionMatch = blockContent.match(sectionPattern);
         
         if (!sectionMatch) return abilities;
         
         const sectionContent = sectionMatch[1];
-        // Regex finds "***Name.*** Description"
         const abilityPattern = /\*\*\*([^.]+)\.\*\*\*\s*([\s\S]*?)(?=\n\*\*\*|\n###|$)/g;
         
         let match;
@@ -171,7 +151,6 @@ const MonsterParser = (function() {
         const legendaryContent = sectionMatch[1];
         let actionSearchContent = legendaryContent;
         
-        // Extract the intro description (text before the first action)
         const descMatch = legendaryContent.match(/^([\s\S]*?)(?=\n+\*\*\*)/);
         if (descMatch) {
             const desc = descMatch[1].trim();
@@ -204,7 +183,10 @@ const MonsterParser = (function() {
         
         const totalMod = parseInt(match[1]);
         const dexMod = Math.floor((dex - 10) / 2);
-        const pb = MonsterCalculator.getProficiencyBonus(cr);
+        
+        // Note: This relies on an external MonsterCalculator object 
+        // which was implied in your original code.
+        const pb = (typeof MonsterCalculator !== 'undefined') ? MonsterCalculator.getProficiencyBonus(cr) : 2;
         
         if (totalMod === dexMod) return '0';
         if (totalMod === dexMod + pb) return '1';
@@ -264,20 +246,15 @@ const MonsterParser = (function() {
 
         state.description = parseLoreDescription(markdownContent);
         
-        // Find the main body content (everything after the first separation rule)
         const bodyMatch = markdownContent.match(/___[\s\S]*$/);
         if (!bodyMatch) {
             console.error('No stat block found');
             return state;
         }
 
-        // Split body into the clean statblock and any additional info
         const { statBlock, additionalInfo } = splitStatBlockAndInfo(bodyMatch[0]);
-
-        // Assign Additional Info
         state.additionalInfo = additionalInfo;
 
-        // Parse Statblock Fields
         const abilities = parseAbilityScores(statBlock);
         Object.assign(state, abilities);
 
