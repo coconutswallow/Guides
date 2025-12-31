@@ -217,7 +217,7 @@ creator: ${state.creator}`;
         const xp = MonsterCalculator.getExperiencePoints(state.cr);
         
         // SEPARATED CR AND PB LINES
-        markdown += `> **Challenge** ${state.cr} (${xp} XP)\n`;
+        markdown += `> **Challenge** ${state.cr} (${xp} XP)  \n`;
         markdown += `> **Proficiency Bonus** +${profBonus}\n>\n`;
 
         markdown += generateAbilitySection(state.traits, 'Traits');
