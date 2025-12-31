@@ -195,33 +195,37 @@ const MonsterUI = (function() {
             <div class="form-section">
                 <h2>Optional Statistics</h2>
                 <div class="field-group">
-                    <div class="form-field">
+                    <div class="form-field span-2">
                         <label for="skills">Skills</label>
                         <input type="text" id="skills" value="${escapeHtml(state.skills)}" placeholder="e.g., Perception +3, Stealth +3">
                     </div>
-                    <div class="form-field">
-                        <label for="damageResistances">Damage Resistances</label>
-                        <input type="text" id="damageResistances" value="${escapeHtml(state.damageResistances)}" placeholder="e.g., cold">
-                    </div>
-                    <div class="form-field">
-                        <label for="damageImmunities">Damage Immunities</label>
-                        <input type="text" id="damageImmunities" value="${escapeHtml(state.damageImmunities)}" placeholder="e.g., poison">
-                    </div>
-                    <div class="form-field">
+                    
                     <div class="form-field">
                         <label for="damageVulnerabilities">Damage Vulnerabilities</label>
-                        <input type="text" id="damageVulnerabilities" value="${escapeHtml(state.damageVulnerabilities)}" placeholder="e.g., fire, bludgeoning">
+                        <input type="text" id="damageVulnerabilities" value="${escapeHtml(state.damageVulnerabilities)}" placeholder="e.g., fire">
                     </div>
+                    <div class="form-field">
+                        <label for="damageResistances">Damage Resistances</label>
+                        <input type="text" id="damageResistances" value="${escapeHtml(state.damageResistances)}" placeholder="e.g., bludgeoning, piercing">
+                    </div>
+                    
+                    <div class="form-field span-2">
+                        <label for="damageImmunities">Damage Immunities</label>
+                        <input type="text" id="damageImmunities" value="${escapeHtml(state.damageImmunities)}" placeholder="e.g., poison, necrotic">
+                    </div>
+                    
+                    <div class="form-field span-2">
                         <label for="conditionImmunities">Condition Immunities</label>
-                        <input type="text" id="conditionImmunities" value="${escapeHtml(state.conditionImmunities)}" placeholder="e.g., poisoned">
+                        <input type="text" id="conditionImmunities" value="${escapeHtml(state.conditionImmunities)}" placeholder="e.g., charmed, frightened">
                     </div>
+                    
                     <div class="form-field">
                         <label for="senses">Senses</label>
                         <input type="text" id="senses" value="${escapeHtml(state.senses)}" placeholder="e.g., darkvision 60 ft., passive Perception 13">
                     </div>
                     <div class="form-field">
                         <label for="languages">Languages</label>
-                        <input type="text" id="languages" value="${escapeHtml(state.languages)}" placeholder="e.g., Common, Draconic or —">
+                        <input type="text" id="languages" value="${escapeHtml(state.languages)}" placeholder="e.g., Common, Draconic">
                     </div>
                 </div>
             </div>
