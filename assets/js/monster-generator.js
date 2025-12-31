@@ -187,8 +187,8 @@ creator: ${state.creator}`;
 
         markdown += `___\n`;
         markdown += `> ## ${state.title}\n`;
-        // Capitalize Type and Alignment using the helper or just outputting raw if user handles it
-        // We use capitalize() here to ensure consistent presentation
+        
+        // Use capitalization helper
         const typeStr = capitalize(state.type);
         const alignStr = capitalize(state.alignment);
         
@@ -216,7 +216,9 @@ creator: ${state.creator}`;
         const profBonus = MonsterCalculator.getProficiencyBonus(state.cr);
         const xp = MonsterCalculator.getExperiencePoints(state.cr);
         
-        markdown += `> **Challenge** ${state.cr} (${xp} XP) **Proficiency Bonus** +${profBonus}\n>\n`;
+        // SEPARATED CR AND PB LINES
+        markdown += `> **Challenge** ${state.cr} (${xp} XP)\n`;
+        markdown += `> **Proficiency Bonus** +${profBonus}\n>\n`;
 
         markdown += generateAbilitySection(state.traits, 'Traits');
         markdown += generateAbilitySection(state.actions, 'Actions');
