@@ -35,17 +35,12 @@ const MonsterCalculator = (function() {
 
     /**
      * Get proficiency bonus based on Challenge Rating
-     * Based on D&D 5e rules
-     * @param {string|number} cr - Challenge Rating (can be fraction like "1/4")
-     * @returns {number} Proficiency bonus (2-9)
      */
     function getProficiencyBonus(cr) {
         let crNum = 0;
         
         try {
             const cleanCr = String(cr).replace(/\s/g, '');
-            
-            // Handle fractions
             if (cleanCr.includes('/')) {
                 const parts = cleanCr.split('/');
                 if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[1] != 0) {
@@ -71,8 +66,6 @@ const MonsterCalculator = (function() {
 
     /**
      * Get Experience Points based on CR
-     * @param {string|number} cr - Challenge Rating
-     * @returns {string} Formatted XP string (e.g., "1,800")
      */
     function getExperiencePoints(cr) {
         const cleanCr = String(cr).trim();
@@ -81,32 +74,12 @@ const MonsterCalculator = (function() {
     }
 
     /**
-     * Calculate saving throw modifier
-     * Always calculates from ability score + proficiency (ignores override for calculation,
-     * but the override value is still tracked for display purposes)
-     * @param {number} abilityScore - Ability score
-     * @param {number} proficiencyBonus - Proficiency bonus
-     * @param {string} override - Optional override value (tracked but not used for calculation)
-     * @returns {string} Formatted saving throw modifier
-     */
-    function calculateSave(abilityScore, proficiencyBonus, override = '') {
-        const abilityMod = calculateModifier(abilityScore);
-        const saveBonus = abilityMod + proficiencyBonus;
-        return formatModifier(saveBonus);
-    }
-
-    /**
      * Calculate Initiative 
-     * @param {number} dexScore - Dexterity score
-     * @param {string|number} cr - Challenge Rating (for PB)
-     * @param {number|string} profLevel - 0=None, 1=Proficient, 2=Expertise
-     * @returns {Object} { mod, formatted, score }
      */
     function calculateInitiative(dexScore, cr, profLevel) {
         const dexMod = calculateModifier(dexScore);
         const pb = getProficiencyBonus(cr);
         const level = parseInt(profLevel) || 0;
-        
         const totalMod = dexMod + (pb * level);
         const score = 10 + totalMod;
 
@@ -119,8 +92,8 @@ const MonsterCalculator = (function() {
 
     /**
      * Calculate all ability modifiers and saves for a monster
-     * @param {Object} state - Monster state with ability scores and save overrides
-     * @returns {Object} Object with calculated values for each ability
+     * UPDATED: Now defaults 'save' to the Modifier. 
+     * Uses 'saveOverride' for the 'save' property ONLY if provided.
      */
     function calculateAllAbilities(state) {
         const proficiencyBonus = getProficiencyBonus(state.cr || 0);
@@ -131,13 +104,22 @@ const MonsterCalculator = (function() {
             const score = state[key] || 10;
             const mod = calculateModifier(score);
             const saveOverride = state[key + 'Save'] || '';
-            
+            const hasOverride = !!(saveOverride && saveOverride.trim());
+
+            // Determine effective save: Use override if present, else use modifier
+            let effectiveSave;
+            if (hasOverride) {
+                effectiveSave = saveOverride;
+            } else {
+                effectiveSave = formatModifier(mod);
+            }
+
             abilities[key] = {
                 score: score,
                 mod: mod,
                 formattedMod: formatModifier(mod),
-                save: calculateSave(score, proficiencyBonus, saveOverride),
-                hasOverride: !!(saveOverride && saveOverride.trim()),
+                save: effectiveSave, // Used in the table display
+                hasOverride: hasOverride,
                 saveOverride: saveOverride
             };
         });
@@ -151,7 +133,6 @@ const MonsterCalculator = (function() {
         formatModifier,
         getProficiencyBonus,
         getExperiencePoints,
-        calculateSave,
         calculateInitiative,
         calculateAllAbilities
     };
