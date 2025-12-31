@@ -28,7 +28,8 @@ ___
 > **Condition Immunities** Blinded, Charmed, Deafened, Exhaustion, Prone  
 > **Senses** Blindsight 60 ft. (blind beyond this radius), Passive Perception 13  
 > **Languages** Understands Common, Elvish, and Sylvan  
-> **Challenge** 0 (10 XP) **Proficiency Bonus** +2
+> **Challenge** 0 (10 XP)
+> **Proficiency Bonus** +2
 >
 > ### Traits
 >
