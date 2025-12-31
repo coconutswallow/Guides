@@ -3,6 +3,16 @@
 const MonsterCalculator = (function() {
     'use strict';
 
+    const XP_TABLE = {
+        "0": 10, "1/8": 25, "1/4": 50, "1/2": 100,
+        "1": 200, "2": 450, "3": 700, "4": 1100, "5": 1800,
+        "6": 2300, "7": 2900, "8": 3900, "9": 5000, "10": 5900,
+        "11": 7200, "12": 8400, "13": 10000, "14": 11500, "15": 13000,
+        "16": 15000, "17": 18000, "18": 20000, "19": 22000, "20": 25000,
+        "21": 33000, "22": 41000, "23": 50000, "24": 62000, "25": 75000,
+        "26": 90000, "27": 105000, "28": 120000, "29": 135000, "30": 155000
+    };
+
     /**
      * Calculate ability modifier from ability score
      * @param {number} score - Ability score (1-30)
@@ -60,17 +70,26 @@ const MonsterCalculator = (function() {
     }
 
     /**
+     * Get Experience Points based on CR
+     * @param {string|number} cr - Challenge Rating
+     * @returns {string} Formatted XP string (e.g., "1,800")
+     */
+    function getExperiencePoints(cr) {
+        const cleanCr = String(cr).trim();
+        const xp = XP_TABLE[cleanCr] || 0;
+        return xp.toLocaleString();
+    }
+
+    /**
      * Calculate saving throw modifier
      * Always calculates from ability score + proficiency (ignores override for calculation,
      * but the override value is still tracked for display purposes)
      * @param {number} abilityScore - Ability score
      * @param {number} proficiencyBonus - Proficiency bonus
-     * @param {string} override - Optional override value (tracked but not used in calculation)
+     * @param {string} override - Optional override value (tracked but not used for calculation)
      * @returns {string} Formatted saving throw modifier
      */
     function calculateSave(abilityScore, proficiencyBonus, override = '') {
-        // Always calculate: ability modifier + proficiency
-        // Override parameter exists but is not used for calculation
         const abilityMod = calculateModifier(abilityScore);
         const saveBonus = abilityMod + proficiencyBonus;
         return formatModifier(saveBonus);
@@ -88,11 +107,7 @@ const MonsterCalculator = (function() {
         const pb = getProficiencyBonus(cr);
         const level = parseInt(profLevel) || 0;
         
-        // Init Mod = Dex Mod + (PB * level)
         const totalMod = dexMod + (pb * level);
-        
-        // Init Score = 10 + Init Mod
-        // (Similar to Passive Perception, but for Initiative)
         const score = 10 + totalMod;
 
         return {
@@ -121,7 +136,7 @@ const MonsterCalculator = (function() {
                 score: score,
                 mod: mod,
                 formattedMod: formatModifier(mod),
-                save: calculateSave(score, proficiencyBonus, saveOverride), // This is still (Mod + PB)
+                save: calculateSave(score, proficiencyBonus, saveOverride),
                 hasOverride: !!(saveOverride && saveOverride.trim()),
                 saveOverride: saveOverride
             };
@@ -135,6 +150,7 @@ const MonsterCalculator = (function() {
         calculateModifier,
         formatModifier,
         getProficiencyBonus,
+        getExperiencePoints,
         calculateSave,
         calculateInitiative,
         calculateAllAbilities

@@ -8,8 +8,15 @@ load_dotenv()
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
 def extract_actions(text, category_name):
-    # This pattern captures from the header until the next ### or end of text
-    pattern = r'###\s+' + re.escape(category_name) + r'\s*\n(.*?)(?=\n###|\Z)'
+    # OLD PATTERN: pattern = r'###\s+' + re.escape(category_name) + r'\s*\n(.*?)(?=\n###|\Z)'
+    
+    # NEW PATTERN:
+    # 1. Matches ### Category Name
+    # 2. Handles optional trailing spaces/chars on that line
+    # 3. Captures content (.*?)
+    # 4. Lookahead stops at newline followed by optional '>' and spaces, then '###', OR End of String (\Z)
+    pattern = r'###\s+' + re.escape(category_name) + r'.*?\n(.*?)(?=\n(?:\s*>)?\s*###|\Z)'
+    
     section_match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
     if not section_match: return []
 
@@ -38,6 +45,7 @@ def extract_actions(text, category_name):
                 cost = int(cost_match.group(1))
                 name_raw = re.sub(r'\s*\(Costs \d+ Actions\)', '', name_raw, re.I)
             current_action = {"name": name_raw, "description": match.group(2).strip(), "cost": cost}
+        # Ensure we only treat simple bullets as actions if we are in the right category
         elif bullet_match and category_name in ["Regional Effects", "Lair Actions"]:
             if current_action: actions.append(current_action)
             current_action = {"name": "Effect", "description": bullet_match.group(1).strip(), "cost": 1}

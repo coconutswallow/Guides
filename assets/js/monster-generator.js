@@ -5,6 +5,12 @@ const MonsterGenerator = (function() {
 
     const NEWLINE_REGEX = /\n/g;
 
+    // Helper to title case strings (capitalize first letter)
+    function capitalize(str) {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     function generateFrontMatter(state) {
         let yaml = `---
 layout: ${state.layout}
@@ -78,9 +84,32 @@ creator: ${state.creator}`;
         return stats;
     }
 
+    /**
+     * Formats description text:
+     * 1. Replaces newlines with markdown blockquote prefixes
+     * 2. Bold-Italicizes specific action keywords
+     */
     function formatDescription(description) {
         if (!description) return '';
-        return description.replace(NEWLINE_REGEX, '\n> ');
+        
+        let text = description.replace(NEWLINE_REGEX, '\n> ');
+        
+        // Auto-format common action keywords to ***Bold Italic***
+        const keywords = [
+            'Melee Attack Roll:',
+            'Ranged Attack Roll:',
+            'Melee or Ranged Attack Roll:',
+            'Hit:',
+            'Miss:'
+        ];
+
+        keywords.forEach(keyword => {
+            // Regex matches the keyword not already wrapped in ***
+            const regex = new RegExp(`(?<!\\*\\*\\*)(${keyword})(?!\\*\\*\\*)`, 'g');
+            text = text.replace(regex, '***$1***');
+        });
+
+        return text;
     }
 
     function generateAbilitySection(items, sectionTitle) {
@@ -158,7 +187,12 @@ creator: ${state.creator}`;
 
         markdown += `___\n`;
         markdown += `> ## ${state.title}\n`;
-        markdown += `> *${state.size} ${state.type.toLowerCase()}, ${state.alignment.toLowerCase()}*\n>\n`;
+        // Capitalize Type and Alignment using the helper or just outputting raw if user handles it
+        // We use capitalize() here to ensure consistent presentation
+        const typeStr = capitalize(state.type);
+        const alignStr = capitalize(state.alignment);
+        
+        markdown += `> *${state.size} ${typeStr}, ${alignStr}*\n>\n`;
 
         // Basic combat stats
         const basicStats = [];
@@ -180,7 +214,9 @@ creator: ${state.creator}`;
         markdown += generateOptionalStats(state);
 
         const profBonus = MonsterCalculator.getProficiencyBonus(state.cr);
-        markdown += `> **Challenge** ${state.cr} (1,800 XP) **Proficiency Bonus** +${profBonus}\n>\n`;
+        const xp = MonsterCalculator.getExperiencePoints(state.cr);
+        
+        markdown += `> **Challenge** ${state.cr} (${xp} XP) **Proficiency Bonus** +${profBonus}\n>\n`;
 
         markdown += generateAbilitySection(state.traits, 'Traits');
         markdown += generateAbilitySection(state.actions, 'Actions');
