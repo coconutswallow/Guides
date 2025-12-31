@@ -2,8 +2,8 @@
 layout: statblock
 title: Mature Rust Dragon
 cr: 10
-type: Monstrosity
 size: Large
+type: Monstrosity
 alignment: typically Lawful Neutral
 category: 2014 Fair Game
 creator: Greenjuice
@@ -59,21 +59,24 @@ Here are some more examples of connections a rust dragon might form with other c
 
 ___
 > ## Mature Rust Dragon
-> *Large Monstrosity, typically Lawful Neutral*
+> *Large Monstrosity, Typically Lawful Neutral*
 >
-> **AC** 17 (natural armor) **HP** 133 (14d10 + 56) **Speed** 40 ft., burrow 30 ft., fly 60 ft. **Initiative** +2 (12)  
+> **AC** 17 (natural armor)
+> **HP** 133 (14d10 + 56)
+> **Speed** 40 ft., burrow 30 ft., fly 60 ft.
+> **Initiative** +2 (12)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 19 | +4 | +4 | **Dex** | 14 | +2 | +4 | **Con** | 18 | +4 | +4 |
-> | **Int** | 6 | -2 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 13 | +1 | +4 |
+> | **Str** | 19 | +4 | +4 | **Dex** | 14 | +2 | +6 | **Con** | 18 | +4 | +8 |
+> | **Int** | 6 | -2 | -2 | **Wis** | 15 | +2 | +6 | **Cha** | 13 | +1 | +5 |
 >
 > **Saving Throws** Dex +6, Con +8, Wis +6, Cha +5  
 > **Skills** Perception +10, Stealth +6  
-> **Immunities** Acid  
 > **Senses** Blindsight 30 ft., Darkvision 90 ft., Passive Perception 20  
 > **Languages** Typically speaks and understands Common  
-> **CR** 10 (XP 5,900; PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
@@ -87,23 +90,21 @@ ___
 >
 > ***Multiattack.*** The rust dragon makes one Bite attack and two Claw attacks.
 >
-> ***Bite.*** *Melee Weapon Attack:* +8 to hit, reach 10 ft., one target. *Hit:* 13 (2d8 + 4) piercing damage plus 4 (1d8) acid damage.
+> ***Bite.*** *Melee Weapon Attack*: +8 to hit, reach 10 ft., one target. *Hit*: 13 (2d8 + 4) piercing damage plus 4 (1d8) acid damage.
 >
-> ***Claw.*** *Melee Weapon Attack:* +8 to hit, reach 5 ft., one target. *Hit:* 8 (1d8 + 4) slashing damage.
+> ***Tail.*** *Melee Weapon Attack*: +8 to hit, reach 15 ft., one target. *Hit*: 9 (1d10 + 4) bludgeoning damage.
 >
-> ***Tail.*** *Melee Weapon Attack:* +8 to hit, reach 15 ft., one target. *Hit:* 9 (1d10 + 4) bludgeoning damage.
->
-> ***Breath Weapons (Recharge 5-6).*** The rust dragon uses one of the following breath weapons.
->
-> **Acid Breath.** The dragon exhales acid in a 60-foot line that is 5 feet wide. Each creature in that line must make a DC 16 Dexterity saving throw, taking 42 (12d6) acid damage on a failed save, or half as much damage on a successful one.
->
-> **Corrosion Breath.** The dragon exhales reddish-brown liquid in a 30-foot cone that corrodes nonmagical metal objects. If the object isn't being worn or carried, the liquid destroys a 5-foot cube of it. If the object is being worn or carried by a creature, the creature can make a DC 16 Dexterity saving throw to avoid the rust dragon's breath.
->
-> If the object touched is either metal armor or a metal shield being worn or carried, it takes a permanent and cumulative −1d4 penalty to the AC it offers. Armor reduced to an AC of 10 or a shield that drops to a +0 bonus is destroyed. If the object touched is a held metal weapon, it rusts as described in the Rust Metal trait, except the penalty is -1d4.
+> ***Breath Weapons (Recharge 5-6).*** The rust dragon uses one of the following breath weapons:
+> 
+> * **Acid Breath**. The dragon exhales acid in a 60-foot line that is 5 feet wide. Each creature in that line must make a DC 16 Dexterity saving throw, taking 42 (12d6) acid damage on a failed save, or half as much damage on a successful one.
+> 
+> * **Corrosion Breath**. The dragon exhales reddish-brown liquid in a 30-foot cone that corrodes nonmagical metal objects. If the object isn’t being worn or carried, the liquid destroys a 5-foot cube of it. If the object is being worn or carried by a creature, the creature can make a DC 16 Dexterity saving throw to avoid the rust dragon’s breath.  If the object touched is either metal armor or a metal shield being worn or carried, it takes a permanent and cumulative −1d4 penalty to the AC it offers. Armor reduced to an AC of 10 or a shield that drops to a +0 bonus is destroyed. If the object touched is a held metal weapon, it rusts as described in the Rust Metal trait, except the penalty is -1d4.
 >
 > ### Legendary Actions
-> The rust dragon can take 2 legendary actions, using the options below. It can take only one legendary action at a time and only at the end of another creature's turn. The rust dragon regains spent legendary actions at the start of its turn.
 >
-> **Tail.** The rust dragon makes one Tail attack.
+> The rust dragon can take 2 legendary actions, using the options below. It can take only one legendary action at a time and only at the end of another creature’s turn. The rust dragon regains spent legendary actions at the start of its turn.
 >
-> **Signal (Costs 2 Actions).** The rust dragon generates disruptive high-frequency vibrations using its antennae. Each creature within 30 feet of the rust dragon that can hear it must succeed on a DC 16 Wisdom saving throw or have disadvantage on attack rolls and ability checks until the end of its next turn.
+> ***Tail.*** The rust dragon makes one Tail attack.
+>
+> ***Signal (Costs 2 Actions).*** The rust dragon generates disruptive high-frequency vibrations using its antennae. Each creature within 30 feet of the rust dragon that can hear it must succeed on a DC 16 Wisdom saving throw or have disadvantage on attack rolls and ability checks until the end of its next turn.
+>

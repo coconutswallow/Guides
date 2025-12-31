@@ -28,14 +28,17 @@ Very few individuals are sure on how long they live, but many can agree that the
 
 ___
 > ## Phantasmorca
-> *Gargantuan monstrosity, typically neutral good*
+> *Gargantuan Monstrosity, Typically Neutral Good*
 >
-> **AC** 16 (natural armor) **HP** 201 (13d20 + 65) **Speed** 0 ft., fly 80 ft. (hover) **Initiative** +0 (10)  
+> **AC** 16 (natural armor)
+> **HP** 201 (13d20 + 65)
+> **Speed** 0 ft., fly 80 ft. (hover)
+> **Initiative** +0 (10)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 22 | +6 | +4 | **Dex** | 10 | +0 | +4 | **Con** | 20 | +5 | +4 |
-> | **Int** | 3 | -4 | +4 | **Wis** | 12 | +1 | +4 | **Cha** | 5 | -3 | +4 |
+> | **Str** | 22 | +6 | +6 | **Dex** | 10 | +0 | +0 | **Con** | 20 | +5 | +5 |
+> | **Int** | 3 | -4 | -4 | **Wis** | 12 | +1 | +1 | **Cha** | 5 | -3 | -3 |
 >
 > **Skills** Perception +5, Stealth +4  
 > **Damage Resistances** bludgeoning, piercing and slashing from nonmagical attacks  
@@ -43,28 +46,28 @@ ___
 > **Condition Immunities** charmed, exhaustion  
 > **Senses** blindsight 120 ft., Passive Perception 15  
 > **Languages** understands all languages but cannot speak  
-> **CR** 10 (PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
 > ***Visual Distortion.*** The phantasmorca has an area of distorted visual space within 10 feet of it that obscures it from creatures that view it from beyond 10 feet. It can see and hear outside of this area normally. Creatures outside of the visual distortion that are affected by its **Consuming Void** must make the Strength saving throw at disadvantage. Creatures native to the Region of Dreams such as a kalashtar and quori are aware of a phantasmorca within 300 feet of them even when the visual distortion obscures it.
 >
-> ***Dreaming Existence.*** The phantasmorca is immune to the *dream* spell and any effect that would put it to sleep. Both the Astral Plane and the Region of Dreams counterparts of the phantasmorca can't leave their respective planes, nor can they be banished or otherwise be transported out of them.
+> ***Dreaming Existence.*** The phantasmorca is immune to the dream spell and any effect that would put it to sleep. Both the Astral Plane and the Region of Dreams counterparts of the phantasmorca can’t leave their respective planes, nor can they be banished or otherwise be transported out of them.
 >
 > ***Paradox in the Region of Dreams.*** The phantasmorca exists as an adult in the Astral Plane and as a calf in the Region of Dreams. If the phantasmorca is killed on the Astral Plane, its counterpart in the Region of Dreams also dies. If the phantasmorca is killed in the Region of Dreams, it will reform within 30 days of dying as long as its counterpart in the Astral Plane is still alive.
 >
 > ***Hold Breath.*** The phantasmorca can hold its breath for 90 minutes.
 >
-> ***Echolocation.*** The phantasmorca can't use its blindsight while deafened.
+> ***Echolocation.*** The phantasmorca can’t use its blindsight while deafened.
 >
 > ### Actions
 >
-> ***Multiattack.*** The phantasmorca makes two attacks: one with its **Headbutt** and one with its **Tail**.
+> ***Multiattack.*** The phantasmorca makes two attacks: one with its Headbutt and one with its Tail.
 >
-> ***Headbutt.*** *Melee Weapon Attack:* +10 to hit, reach 5 ft., one target. *Hit:* 25 (3d12 + 6) bludgeoning damage. On hit, the targeted creature is knocked 10 feet away from the phantasmorca.
+> ***Headbutt.*** *Melee Weapon Attack*: +10 to hit, reach 5 ft., one target. *Hit*: 25 (3d12 + 6) bludgeoning damage. On hit, the targeted creature is knocked 10 feet away from the phantasmorca.
 >
-> ***Tail.*** *Melee Weapon Attack:* +10 to hit, reach 15 ft., one target. *Hit:* 22 (3d10 + 6) bludgeoning damage, or 45 (6d10 + 12) bludgeoning damage if the target is an object.
+> ***Tail.*** *Melee Weapon Attack*: +10 to hit, reach 15 ft., one target. *Hit*: 22 (3d10 + 6) bludgeoning damage, or 45 (6d10 + 12) bludgeoning damage if the target is an object.
 >
-> ***Consuming Void (Recharges on 5-6).*** The phantasmorca opens its mouth and inhales, drawing in Large or smaller creatures and objects that are not worn or carried into its mouth. Targets within a 30-foot cone must make a DC 17 Strength saving throw or take 21 (6d6) bludgeoning damage and be pulled into the phantasmorca's mouth. A swallowed creature has total cover against attacks and other effects outside the phantasmorca. If the phantasmorca takes 30 damage or more on a single turn from a creature inside it, the phantasmorca must succeed on a DC 17 Constitution saving throw at the end of that turn or regurgitate all consumed creatures, which fall prone in a space within 10 feet of the whale. If the phantasmorca dies, a swallowed creature can escape from the corpse by using 20 feet of movement, exiting prone. If a swallowed creature ends their turn inside the mouth of the phantasmorca, they are sent to a dreamscape in the Region of Dreams as determined by the DM.
+> ***Consuming Void (Recharges on 5-6).*** The phantasmorca opens its mouth and inhales, drawing in Large or smaller creatures and objects that are not worn or carried into its mouth. Targets within a 30-foot cone must make a DC 17 Strength saving throw or take 21 (6d6) bludgeoning damage and be pulled into the phantasmorca’s mouth. A swallowed creature has total cover against attacks and other effects outside the phantasmorca. If the phantasmorca takes 30 damage or more on a single turn from a creature inside it, the phantasmorca must succeed on a DC 17 Constitution saving throw at the end of that turn or regurgitate all consumed creatures, which fall prone in a space within 10 feet of the whale. If the phantasmorca dies, a swallowed creature can escape from the corpse by using 20 feet of movement, exiting prone. If a swallowed creature ends their turn inside the mouth of the phantasmorca, they are sent to a dreamscape in the Region of Dreams as determined by the DM.
 >
-

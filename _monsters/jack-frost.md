@@ -28,14 +28,17 @@ This disease affects a creature bitten by a jack frost, in which symptoms occur 
 
 ___
 > ## Jack Frost
-> *Small fey, neutral evil*
+> *Small Fey, Neutral Evil*
 >
-> **AC** 19 **HP** 120 (16d6 + 64) **Speed** 30 ft., fly 60 ft. (hover) **Initiative** +4 (14)  
+> **AC** 19
+> **HP** 120 (16d6 + 64)
+> **Speed** 30 ft., fly 60 ft. (hover)
+> **Initiative** +4 (14)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 6 | -2 | +4 | **Dex** | 19 | +4 | +4 | **Con** | 18 | +4 | +4 |
-> | **Int** | 14 | +2 | +4 | **Wis** | 13 | +1 | +4 | **Cha** | 20 | +5 | +4 |
+> | **Str** | 6 | -2 | -2 | **Dex** | 19 | +4 | +8 | **Con** | 18 | +4 | +4 |
+> | **Int** | 14 | +2 | +2 | **Wis** | 13 | +1 | +5 | **Cha** | 20 | +5 | +5 |
 >
 > **Saving Throws** Dex +8, Wis +5  
 > **Skills** Acrobatics +8, Deception +9, Perception +9, Stealth +8  
@@ -44,7 +47,8 @@ ___
 > **Condition Immunities** charmed  
 > **Senses** Blindsight 10 ft., Darkvision 120 ft., Passive Perception 19  
 > **Languages** Auran, Common, Jack Frost, Sylvan  
-> **CR** 11 (PB +4)
+> **Challenge** 11 (7,200 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
@@ -52,46 +56,44 @@ ___
 >
 > ***Flyby.*** The jack frost doesn’t provoke opportunity attacks when it flies out of an enemy’s reach.
 >
-> ***Innate Spellcasting.*** The jack frost’s innate spellcasting ability is Charisma (save DC 17, +9 to hit with spell attacks). It can innately cast the following spells, requiring no material components:  
-**At will:** *fog cloud, frost fingers, heat metal (cold), ray of frost (11th level, two beams)*  
-**1/day each:** *cone of cold, ice storm, wall of ice*
+> ***Innate Spellcasting.*** The jack frost’s innate spellcasting ability is Charisma (save DC 17, +9 to hit with spell attacks). It can innately cast the following spells, requiring no material components:
+> * **At will**: *fog cloud, frost fingers, heat metal (cold), ray of frost (11th level, two beams)*
+> * **1/day each**: *cone of cold, ice storm, wall of ice*
 >
 > ***Magic Resistance.*** The jack frost has advantage on saving throws against spells and other magical effects.
 >
 > ***Regeneration.*** The jack frost regains 10 hit points at the start of each of its turns. If it takes fire damage, this trait doesn’t function at the start of its next turn. It dies only if it starts its turn with 0 hit points and doesn’t regenerate.
 >
-> ***Shapechanger.*** In a cold region, the jack frost can use its action to polymorph into a Medium cloud of mist or revert to its true form.  
-While in mist form, it appears as a shimmering cloud of snowflakes, can only use its *Touch* or *Hypnotizing Pattern* actions, and cannot speak or manipulate objects. It is weightless, has a flying speed of 60 ft., can hover, and can enter other creatures’ spaces. It has advantage on Strength, Dexterity, and Constitution saving throws, and is immune to all nonmagical damage.
+> ***Shapechanger.*** In a cold region, the jack frost can use its action to polymorph into a Medium cloud of mist or revert to its true form.
+> While in mist form, it appears as a shimmering cloud of snowflakes, can only use its Touch or Hypnotizing Pattern actions, and cannot speak or manipulate objects. It is weightless, has a flying speed of 60 ft., can hover, and can enter other creatures’ spaces. It has advantage on Strength, Dexterity, and Constitution saving throws, and is immune to all nonmagical damage.
 >
 > ***Unearthly Grace.*** The jack frost’s AC includes its Charisma bonus.
 >
 > ### Actions
 >
-> ***Multiattack.*** The jack frost makes two attacks: one with its *Touch* and one with its *Bite*, or two *Icicle Spear* attacks.
+> ***Multiattack.*** The jack frost makes two attacks: one with its Touch and one with its Bite, or two Icicle Spear attacks.
 >
-> ***Touch.*** *Melee Spell Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 23 (4d8 + 5) cold damage, and the target must succeed on a DC 17 Constitution saving throw or be paralyzed until the end of its next turn.
+> ***Touch.*** *Melee Spell Attack*: +9 to hit, reach 5 ft., one target. *Hit*: 23 (4d8 + 5) cold damage, and the target must succeed on a DC 17 Constitution saving throw or be **paralyzed** until the end of its next turn.
 >
-> ***Bite (Fey Form Only).*** *Melee Weapon Attack:* +8 to hit, reach 5 ft., one target. *Hit:* 7 (1d6 + 4) piercing damage plus 9 (2d8) cold damage. The target must succeed on a DC 16 Constitution saving throw or contract frostbite. The target’s hit point maximum is reduced by the cold damage taken, and the jack frost regains hit points equal to that amount. This reduction lasts until the target finishes a long rest. A creature dies if this effect reduces its hit point maximum to 0.
+> ***Bite (Fey Form Only).*** *Melee Weapon Attack*: +8 to hit, reach 5 ft., one target. *Hit*: 7 (1d6 + 4) piercing damage plus 9 (2d8) cold damage. The target must succeed on a DC 16 Constitution saving throw or contract **frostbite**. The target’s hit point maximum is reduced by the cold damage taken, and the jack frost regains hit points equal to that amount. This reduction lasts until the target finishes a long rest. A creature dies if this effect reduces its hit point maximum to 0.
 >
-> ***Icicle Spear (Fey Form Only).*** *Ranged Weapon Attack:* +8 to hit, range 30/120 ft., one target. *Hit:* 7 (1d6 + 4) piercing damage plus 9 (2d8) cold damage.
+> ***Icicle Spear (Fey Form Only).*** *Ranged Weapon Attack*: +8 to hit, range 30/120 ft., one target. *Hit*: 7 (1d6 + 4) piercing damage plus 9 (2d8) cold damage.
 >
-> ***Hypnotizing Pattern (Mist Form Only).*** The jack frost casts *hypnotic pattern* (save DC 17) centered on itself.
+> ***Hypnotizing Pattern (Mist Form Only).*** The jack frost casts hypnotic pattern (save DC 17) centered on itself.
 >
-> ***Polar Midnight (1/Day).*** The jack frost plunges an area  within 60 feet of it into the brutal chill of the arctic night. A 30-foot-radius sphere of nonmagical darkness spreads out from that point. The darkness spreads around corners. The effect lasts for 1 minute, until the jack frost's concentration ends (as if concentrating on a spell), or if the effect is dispelled (as a 7th-level spell). As a bonus action on the jack frost's turn, it can move the area up to 10 feet in a direction of its choice. 
->
-> A creature that starts its turn inside of the area or enters the area for the first time on its turn takes 14 (4d6) cold damage. A creature that ends its turn inside of the area is encased in a sheath of ice, unless it is immune to cold damage. While encased in ice, a creature is restrained and cannot breathe. A restrained creature must make a DC 17 Constitution saving throw at the end of each of its turns. If it fails this saving throw three times, it is turned to ice and subjected to the petrified condition. The ice around the creature can be damaged and breached to free the trapped creature; it has AC 5, 20 hit points, vulnerability to fire damage, and immunity to acid, cold, necrotic, poison, and psychic damage. A creature killed while encased in ice, or petrified, is transmuted into solid ice, and can only be revived by means of a true resurrection or wish spell.
+> ***Polar Midnight (1/Day).*** The jack frost plunges an area within 60 feet of it into the brutal chill of the arctic night. A 30-foot-radius sphere of **nonmagical darkness** spreads out from that point. The darkness spreads around corners. The effect lasts for 1 minute, until the jack frost’s concentration ends (as if concentrating on a spell), or if the effect is dispelled (as a 7th-level spell). As a bonus action on the jack frost’s turn, it can move the area up to 10 feet in a direction of its choice.
+> 
+> A creature that starts its turn inside of the area or enters the area for the first time on its turn takes 14 (4d6) cold damage. A creature that ends its turn inside of the area is encased in a sheath of ice, unless it is immune to cold damage. While encased in ice, a creature is **restrained** and cannot breathe. A restrained creature must make a DC 17 Constitution saving throw at the end of each of its turns. If it fails this saving throw three times, it is turned to ice and subjected to the **petrified** condition. The ice around the creature can be damaged and breached to free the trapped creature; it has AC 5, 20 hit points, vulnerability to fire damage, and immunity to acid, cold, necrotic, poison, and psychic damage. A creature killed while encased in ice, or petrified, is transmuted into solid ice, and can only be revived by means of a true resurrection or wish spell.
 >
 > ### Reactions
 >
-> ***Cold Shoulder***. When the jack frost takes damage from a creature the jack frost can see within 10 feet of it, the jack frost can force that creature to succeed on a DC 17
-Constitution saving throw or be restrained until the start of its next turn.
+> ***Cold Shoulder.*** When the jack frost takes damage from a creature the jack frost can see within 10 feet of it, the jack frost can force that creature to succeed on a DC 17 Constitution saving throw or be restrained until the start of its next turn.
 >
-___
 
+___
 ## Combat Tactics
 
-The jack frost is an agile creature that should be played as a malicious troublemaker that can make life miserable for the party. When engaging in combat, the jack frost should use its flight speed and flyby to weave in and out of range when making attacks, and make use of its spells from range. The jack frost should never touch the ground if it can help
-it nor end its turn directly next to a creature if possible. If any characters are heavily armoured or heavy hitters, ensure that the jack frost avoids coming into direct contact with them, stays flying at least 20 feet above the ground, and engages with softer targets. Any creatures that can deal fire damage should be prioritized, and any creature that manages to reach the jack frost in melee should be given the Cold Shoulder.
+The jack frost is an agile creature that should be played as a malicious troublemaker that can make life miserable for the party. When engaging in combat, the jack frost should use its flight speed and flyby to weave in and out of range when making attacks, and make use of its spells from range. The jack frost should never touch the ground if it can help it nor end its turn directly next to a creature if possible. If any characters are heavily armoured or heavy hitters, ensure that the jack frost avoids coming into direct contact with them, stays flying at least 20 feet above the ground, and engages with softer targets. Any creatures that can deal fire damage should be prioritized, and any creature that manages to reach the jack frost in melee should be given the Cold Shoulder.
 
 ### Ambush Tactics
 

@@ -2,8 +2,8 @@
 layout: statblock
 title: Inukpasugjuit
 cr: 8
-type: Giant
 size: Huge
+type: Giant
 alignment: Neutral Evil
 category: 2014 Fair Game
 creator: Kathy
@@ -27,38 +27,43 @@ When hunting for “friends” during Midwinter, the Inukpasugjuit carries a gre
 
 ___
 > ## Inukpasugjuit
-> *Huge giant, neutral evil*
+> *Huge Giant, Neutral Evil*
 >
-> **AC** 15 (natural armor) **HP** 138 (12d12 + 60) **Speed** 40 ft. **Initiative** -1 (9)  
+> **AC** 15 (natural armor)
+> **HP** 138 (12d12 + 60)
+> **Speed** 40 ft.
+> **Initiative** -1 (9)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 23 | +6 | +3 | **Dex** | 9 | -1 | +3 | **Con** | 21 | +5 | +3 |
-> | **Int** | 9 | -1 | +3 | **Wis** | 10 | +0 | +3 | **Cha** | 12 | +1 | +3 |
+> | **Str** | 23 | +6 | +6 | **Dex** | 9 | -1 | -1 | **Con** | 21 | +5 | +8 |
+> | **Int** | 9 | -1 | -1 | **Wis** | 10 | +0 | +3 | **Cha** | 12 | +1 | +4 |
 >
 > **Saving Throws** Con +8, Wis +3, Cha +4  
 > **Skills** Athletics +9, Perception +3  
 > **Damage Immunities** Cold  
 > **Senses** Passive Perception 13  
 > **Languages** Giant  
-> **CR** 8 (XP 3,900; PB +3)
+> **Challenge** 8 (3,900 XP)  
+> **Proficiency Bonus** +3
 >
 > ### Traits
 >
-> ***Massive Bag.*** The Inukpasugjuit carries a massive bag that can contain up to five creatures of Medium size or smaller. When first encountered, an Inukpasugjuit's bag contains the petrified corpses of 1d4 + 1 humanoids. These petrified bodies have total cover against attacks and other effects outside the bag. If the Inukpasugjuit dies, the petrified bodies within it can be pulled free.  
+> ***Massive Bag.*** The Inukpasugjuit carries a massive bag that can contain up to five creatures of Medium size or smaller. When first encountered, an Inukpasugjuit’s bag contains the petrified corpses of 1d4 + 1 humanoids. These petrified bodies have total cover against attacks and other effects outside the bag. If the Inukpasugjuit dies, the petrified bodies within it can be pulled free.
 >
-> ***Overwhelming Strength.*** The Inukpasugjuit is considered to be a Gargantuan creature for the purposes of determining its carrying capacity and grapple attempts made by it or made against it.  
+> ***Overwhelming Strength.*** The Inukpasugjuit is considered to be a Gargantuan creature for the purposes of determining its carrying capacity and grapple attempts made by it or made against it
 >
 > ### Actions
 >
-> ***Multiattack.*** The Inukpasugjuit makes two greatclub attacks and a grasp attack. If the grasp attack hits, it then uses its freezing breath.  
+> ***Multiattack.*** The Inukpasugjuit makes two greatclub attacks and a grasp attack. If the grasp attack hits, it then uses its freezing breath.
 >
-> ***Grasp.*** *Melee Weapon Attack:* +9 to hit, reach 10 ft., one target. *Hit:* 13 (3d4 + 6) bludgeoning damage, and the target is grappled (escape DC 19) if it is a Medium or smaller creature. Until the grapple ends, the target is restrained and has disadvantage on Strength checks and Strength saving throws. The Inukpasugjuit can only have one creature grasped at a time.  
+> ***Grasp.*** *Melee Weapon Attack*: +9 to hit, reach 10 ft., one target. *Hit*: 13 (3d4 + 6) bludgeoning damage, and the target is grappled (escape DC 19) if it is a Medium or smaller creature. Until the grapple ends, the target is restrained and has disadvantage on Strength checks and Strength saving throws. The Inukpasugjuit can only have one creature grasped at a time.
 >
-> ***Greatclub.*** *Melee Weapon Attack:* +9 to hit, reach 10 ft., one target. *Hit:* 19 (3d8 + 6) bludgeoning damage.  
+> ***Greatclub.*** *Melee Weapon Attack*: +9 to hit, reach 10 ft., one target. *Hit*: 19 (3d8 + 6) bludgeoning damage.
 >
-> ***Freezing Breath.*** The Inukpasugjuit exhales freezing breath in a 15-foot line targeting the creature it has grappled. Each creature in that line must succeed on a DC 16 Constitution saving throw. On a failed save, a target begins to turn to ice and is restrained. The restrained target must repeat the saving throw at the end of its next turn. On a success, the effect ends on the target. On a failure, the target is petrified until freed by the *greater restoration* spell or other magic. Any water or liquid that is principally water in the area of the breath instantly freezes to a depth of 6 inches.  
+> ***Freezing Breath.*** The Inukpasugjuit exhales freezing breath in a 15-foot line targeting the creature it has grappled. Each creature in that line must succeed on a DC 16 Constitution saving throw. On a failed save, a target begins to turn to ice and is restrained. The restrained target must repeat the saving throw at the end of its next turn. On a success, the effect ends on the target. On a failure, the target is petrified until freed by the greater restoration spell or other magic. Any water or liquid that is principally water in the area of the breath instantly freezes to a depth of 6 inches.
 >
-> ***“Friendcicle” Special.*** The Inukpasugjuit grabs one of the petrified humanoids in his massive bag and throws it up to 60 feet in a direction of its choice. If a thrown target strikes a solid surface, the target takes 7 (2d6) bludgeoning damage for every 10 feet it was thrown. If this damage would reduce the thrown target to 0 hit points, it shatters into pieces. If the target is thrown at another creature, that creature must succeed on a DC 17 Dexterity saving throw or take the same damage and be knocked prone. If there is no more humanoid creatures in the bag, the Inukpasugjuit can use any creature that has been petrified with its freezing breath.  It cannot use this ability if there is no more petrified humanoids to throw in the area.
+> ***“Friendcicle” Special.*** The Inukpasugjuit grabs one of the petrified humanoids in his massive bag and throws it up to 60 feet in a direction of its choice. If a thrown target strikes a solid surface, the target takes 7 (2d6) bludgeoning damage for every 10 feet it was thrown. If this damage would reduce the thrown target to 0 hit points, it shatters into pieces. If the target is thrown at another creature, that creature must succeed on a DC 17 Dexterity saving throw or take the same damage and be knocked prone. If there is no more humanoid creatures in the bag, the Inukpasugjuit can use any creature that has been petrified with its freezing breath. It cannot use this ability if there is no more petrified humanoids to throw in the area.
 >
-> ***Rock.*** *Ranged Weapon Attack:* +9 to hit, range 60/240 ft., one target. *Hit:* 28 (4d10 + 6) bludgeoning damage.
+> ***Rock.*** *Ranged Weapon Attack*: +9 to hit, range 60/240 ft., one target. *Hit*: 28 (4d10 + 6) bludgeoning damage.
+>

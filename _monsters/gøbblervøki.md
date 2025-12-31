@@ -23,20 +23,24 @@ The Gøbblervøki is an ambusher that uses hit-and-run tactics to defeat its foe
 
 ___
 > ## Gøbblervøki
-> *Large monstrosity, typically lawful evil*
+> *Large Monstrosity, Typically Lawful Evil*
 >
-> **AC** 17 (Natural Armor) **HP** 120 (16d10 + 32) **Speed** 30 ft., fly 60 ft. **Initiative** +3 (13)  
+> **AC** 17 (Natural Armor)
+> **HP** 120 (16d10 + 32)
+> **Speed** 30 ft., fly 60 ft.
+> **Initiative** +3 (13)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 12 | +1 | +4 | **Dex** | 16 | +3 | +4 | **Con** | 14 | +2 | +4 |
-> | **Int** | 18 | +4 | +4 | **Wis** | 17 | +3 | +4 | **Cha** | 14 | +2 | +4 |
+> | **Str** | 12 | +1 | +1 | **Dex** | 16 | +3 | +3 | **Con** | 14 | +2 | +2 |
+> | **Int** | 18 | +4 | +4 | **Wis** | 17 | +3 | +3 | **Cha** | 14 | +2 | +2 |
 >
 > **Skills** Perception +11, Stealth +7  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Poisoned, Prone, Restrained  
 > **Senses** Senses blindsight 60 ft., darkvision 120 ft., passive Perception 21  
 > **Languages** Common, Draconic, Elvish, Sylvan  
-> **CR** 9 (PB +4)
+> **Challenge** 9 (5,000 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
@@ -46,11 +50,11 @@ ___
 >
 > ### Actions
 >
-> ***Multiattack.*** The Gøbblervøki makes three attacks: one with its **Bite** and two with its **Claws**.
+> ***Multiattack.*** The Gøbblervøki makes three attacks: one with its Bite and two with its Claws.
 >
-> ***Bite.*** *Melee Weapon Attack:* +7 to hit, reach 5 ft., one target. *Hit* 21 (4d8 + 3) piercing damage.
+> ***Bite.*** Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit 21 (4d8 + 3) piercing damage.
 >
-> ***Claw.*** *Melee Weapon Attack:* +7 to hit, reach 5 ft., one target. *Hit* 13 (3d6 + 3) slashing damage.
+> ***Claw.*** Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit 13 (3d6 + 3) slashing damage.
 >
 > ***Lashing Shadows (Recharge 5-6).*** Each creature within 60 feet of the Gøbblervøki must succeed on a DC 16 Dexterity saving throw, taking 27 (6d8) necrotic damage on a failed save or half as much damage on a successful save.
 >
@@ -58,7 +62,20 @@ ___
 >
 > ***Shadow Stealth.*** While in dim light or darkness, the Gøbblervøki takes the Hide action.
 >
-> ***Shadow Stride.*** The Gøbblervøki steps into a shadow within 5 feet of it and magically appears in an unoccupied space within 5 feet of a second shadow
+> ***Shadow Stride.*** The Gøbblervøki steps into a shadow within 5 feet of it and magically appears in an unoccupied space within 5 feet of a second shadow that is up to 60 feet away. Both shadows must be cast by a Small or larger creature or object.
+>
+> ### Legendary Actions
+>
+> The Gøbblervøki can take 3 legendary actions, choosing from the options below. Only one legendary option can be used at a time and only at the end of another creature’s turn. The Gøbblervøki regains spent legendary actions at the start of its turn.
+>
+> ***Move.*** The Gøbblervøki moves up to its speed.
+>
+> ***Shadow Stride.*** The Gøbblervøki uses its Shadow Stride.
+>
+> ***Lashing Shadows (Costs 2 Actions).*** The Gøbblervøki uses its Lashing Shadows if available or rolls a d6 to attempt to recharge it if it is unavailable
+>
+
+___
 that is up to 60 feet away. Both shadows must be cast by a Small or larger creature or object.
 >
 > ### Legendary Actions
