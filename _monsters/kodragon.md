@@ -61,9 +61,9 @@ ___
 >
 > ***Breath Weapons (Recharge 5–6).*** The dragon uses one of the following breath weapons. 
 > 
-> **Shrinking Breath**. The kodragon exhales a 5-foot radius sphere of shrinking gas centered on a point within 5 feet of it. Each creature in that area must succeed on a DC 11 Dexterity saving throw or have its size decreased by three categories for 1d4 hours. While the creature’s size is decreased, it has disadvantage on Strength checks and Strength saving throws, and additionally the target’s weapon attacks that use Strength have disadvantage and deal only half damage. This effect ends early on a creature if the dispel magic spell is cast on it. 
+> * **Shrinking Breath**. The kodragon exhales a 5-foot radius sphere of shrinking gas centered on a point within 5 feet of it. Each creature in that area must succeed on a DC 11 Dexterity saving throw or have its size decreased by three categories for 1d4 hours. While the creature’s size is decreased, it has disadvantage on Strength checks and Strength saving throws, and additionally the target’s weapon attacks that use Strength have disadvantage and deal only half damage. This effect ends early on a creature if the dispel magic spell is cast on it. 
 > 
-> **Restoring Breath**. The kodragon exhales a 5-foot radius sphere of gas centered on a point within 5 feet of it. Each creature in that area that had its size decreased by the kodragon’s shrinking breath is restored to its normal size.
+> * **Restoring Breath**. The kodragon exhales a 5-foot radius sphere of gas centered on a point within 5 feet of it. Each creature in that area that had its size decreased by the kodragon’s shrinking breath is restored to its normal size.
 >
 > ### Bonus Actions
 >
