@@ -11,7 +11,7 @@ creator: km.d
 
 ___
 > ## Hollow Soldier
-> *Medium undead, neutral evil*
+> *Medium Undead, Neutral Evil*
 >
 > **AC** 16 (chain shirt, shield)
 > **HP** 58 (9d8 + 18)
@@ -20,13 +20,14 @@ ___
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 13 | +1 | +3 | **Dex** | 13 | +1 | +3 | **Con** | 15 | +2 | +4 |
-> | **Int** | 6 | -2 | +0 | **Wis** | 8 | -1 | +1 | **Cha** | 5 | -3 | -1 |
+> | **Str** | 13 | +1 | +1 | **Dex** | 13 | +1 | +1 | **Con** | 15 | +2 | +2 |
+> | **Int** | 6 | -2 | -2 | **Wis** | 8 | -1 | -1 | **Cha** | 5 | -3 | -3 |
 >
 > **Condition Immunities** Exhaustion  
 > **Senses** Darkvision 60 ft., Passive Perception 9  
 > **Languages** Understands all languages it knew in life but can't speak  
-> **Challenge** 1 (1,800 XP) **Proficiency Bonus** +2
+> **Challenge** 1 (200 XP)  
+> **Proficiency Bonus** +2
 >
 > ### Actions
 >
@@ -34,7 +35,7 @@ ___
 >
 > ***Spear.*** *Melee or Ranged Attack Roll*: +3, reach 5ft. or range 20/60 ft., one target. *Hit*: 4 (1d6 + 1) Piercing damage, or 5 (1d8 + 1) Piercing damage if used with two hands
 >
-> ***Light Crossbow.*** *Ranged Attack Roll*: +3, range 80/320 ft., one target. *Hit:* 5 (1d8 + 1) Piercing damage
+> ***Light Crossbow.*** *Ranged Attack Roll*: +3, range 80/320 ft., one target. ****Hit:**** 5 (1d8 + 1) Piercing damage
 >
 > ***Flurry (Recharge 6).*** The hollow makes four Longsword or Spear attacks against one target
 >

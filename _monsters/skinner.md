@@ -54,14 +54,17 @@ When facing creatures immune to the paralyzing effect of its frightening gaze, a
 
 ___
 > ## Skinner
-> *Huge monstrosity, neutral evil*
+> *Huge Monstrosity, Neutral Evil*
 >
-> **AC** 12 (natural armor) **HP** 92 (8d12 + 40) **Speed** 20 ft. **Initiative** -2 (8)  
+> **AC** 12 (natural armor)
+> **HP** 92 (8d12 + 40)
+> **Speed** 20 ft.
+> **Initiative** -2 (8)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 21 | +5 | +4 | **Dex** | 7 | -2 | +4 | **Con** | 20 | +5 | +4 |
-> | **Int** | 14 | +2 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 20 | +5 | +4 |
+> | **Str** | 21 | +5 | +9 | **Dex** | 7 | -2 | -2 | **Con** | 20 | +5 | +9 |
+> | **Int** | 14 | +2 | +2 | **Wis** | 15 | +2 | +6 | **Cha** | 20 | +5 | +5 |
 >
 > **Saving Throws** Str +9, Con +9, Wis +6  
 > **Skills** Intimidation +9  
@@ -69,30 +72,32 @@ ___
 > **Condition Immunities** Charmed, Frightened, Paralyzed  
 > **Senses** Blindsight 120 ft., Passive Perception 12  
 > **Languages** Common, Telepathy 120 ft.  
-> **CR** 10 (PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
 > ***Magic Resistance.*** The Skinner has advantage on saving throws against spells and other magical effects.
 >
-> ***Mass of Flesh.*** The Skinner has a barrier of dead flesh with 90 hit points. If the Skinner would take damage, the barrier takes it instead. If the barrier is reduced to 0 hit points, the Skinner takes any remaining damage. The barrier has **vulnerability to acid damage**. When the Skinner reduces a creature to 0 hit points with a critical hit from its Flensing Touch, the barrier regains 30 hit points, up to its maximum of 90 hit points.
+> ***Mass of Flesh.*** The Skinner has a barrier of dead flesh with 90 hit points. If the Skinner would take damage, the barrier takes it instead. If the barrier is reduced to 0 hit points, the Skinner takes any remaining damage. The barrier has vulnerability to acid damage. When the Skinner reduces a creature to 0 hit points with a critical hit from its Flensing Touch, the barrier regains 30 hit points, up to its maximum of 90 hit points.
 >
-> ***Paralyzing Gaze.*** The horrifying presence of the Skinner freezes its prey in fear. When a creature that is **frightened** of the Skinner and that can see it starts its turn within 60 feet of the Skinner, it is **paralyzed** for as long as the creature can see the Skinner and is **frightened** of it. Unless surprised, a creature can avert its eyes to avoid this effect at the start of its turn. If the creature does so, it can't see the Skinner until the start of its next turn, when it can avert its eyes again. If the creature looks at the Skinner in the meantime while **frightened** of it, it is immediately **paralyzed**.
+> ***Paralyzing Gaze.*** The horrifying presence of the Skinner freezes its prey in fear. When a creature that is frightened of the Skinner and that can see it starts its turn within 60 feet of the Skinner, it is **paralyzed** for as long as the creature can see the Skinner and is **frightened** of it. Unless surprised, a creature can avert its eyes to avoid this effect at the start of its turn. If the creature does so, it can’t see the Skinner until the start of its next turn, when it can avert its eyes again. If the creature looks at the Skinner in the meantime while frightened of it, it is immediately paralyzed.
 >
 > ***Turning Defiance.*** Undead within 30 feet of the Skinner have advantage on saving throws against effects that turn undead.
 >
 > ### Actions
 >
-> ***Crush.*** *Melee Attack Roll:* +9, reach 5 ft., one target. *Hit:* 18 ($3d8 + 5$) Bludgeoning damage.
+> ***Crush.*** *Melee Attack Roll*: +9, reach 5 ft., one target. *Hit*: 18 (3d8 + 5) Bludgeoning damage.
 >
-> ***Flensing Touch.*** *Melee Attack Roll:* +9, reach 15 ft., one target. *Hit:* 15 (3d6 + 5) Slashing damage. If the attack is a critical hit, the target must make a DC 17 Constitution saving throw. On a failed save, the Skinner flays the target, tearing off the target's skin. The target drops to 0 hit points and its hit point maximum is **halved**, and the target succeeds on all subsequent saving throws against Flensing Touch. This effect can be removed by *regenerate* or similar effects that restore missing limbs or organs. On a successful save, the target takes 14 (4d6) Slashing damage.
+> ***Flensing Touch.*** *Melee Attack Roll*: +9, reach 15 ft., one target. *Hit*: 15 (3d6 + 5) Slashing damage. If the attack is a critical hit, the target must make a DC 17 Constitution saving throw. On a failed save, the Skinner flays the target, tearing off the target’s skin. The target drops to 0 hit points and its hit point maximum is halved, and the target succeeds on all subsequent saving throws against Flensing Touch. This effect can be removed by regenerate or similar effects that restore missing limbs or organs. On a successful save, the target takes 14 (4d6) Slashing damage.
 >
 > ### Legendary Actions
-> The creature can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature's turn. The creature regains spent legendary actions at the start of its turn.
 >
-> **Crush.** The Skinner uses its Crush attack.
+> The creature can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature’s turn. The creature regains spent legendary actions at the start of its turn.
 >
-> **Move.** The Skinner moves up to its speed without provoking opportunity attacks.
+> ***Crush.*** The Skinner uses its Crush attack.
 >
-> **Gaze of Fear (Costs 2 Actions).** The Skinner directs its gaze. Each creature of The Skinner's choice in a 60-foot cone originating from it must make a DC 17 Wisdom saving throw or become frightened for one minute, repeating the save at the end of its turn, ending the effect on a success. Creatures of non-evil alignment make this save at disadvantage.
+> ***Move.*** The Skinner moves up to its speed without provoking opportunity attacks.
+>
+> ***Gaze of Fear (Costs 2 Actions).*** The Skinner directs its gaze. Each creature of The Skinner’s choice in a 60-foot cone originating from it must make a DC 17 Wisdom saving throw or become **frightened** for one minute, repeating the save at the end of its turn, ending the effect on a success. Creatures of non-evil alignment make this save at disadvantage
 >

@@ -2,8 +2,8 @@
 layout: statblock
 title: Temporal Drake
 cr: 11
-type: Dragon
 size: Large
+type: Dragon
 alignment: typically Neutral
 category: 2014 Fair Game
 creator: Luolang
@@ -42,53 +42,58 @@ Decker, Jesse. "[Temporal Drake](https://web.archive.org/web/20161101074122/http
 
 ___
 > ## Temporal Drake
-> *Large Dragon, typically Neutral*
+> *Large Dragon, Typically Neutral*
 >
-> **AC** 19 (natural armor) **HP** 133 (14d10 + 56) **Speed** 60 ft., fly 60 ft. **Initiative** +5 (15)  
+> **AC** 19 (natural armor)
+> **HP** 133 (14d10 + 56)
+> **Speed** 60 ft., fly 60 ft.
+> **Initiative** +5 (15)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 22 | +6 | +4 | **Dex** | 21 | +5 | +4 | **Con** | 18 | +4 | +4 |
-> | **Int** | 8 | -1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 16 | +3 | +4 |
+> | **Str** | 22 | +6 | +6 | **Dex** | 21 | +5 | +5 | **Con** | 18 | +4 | +4 |
+> | **Int** | 8 | -1 | -1 | **Wis** | 14 | +2 | +6 | **Cha** | 16 | +3 | +7 |
 >
 > **Saving Throws** Wis +6, Cha +7  
 > **Skills** Perception +10, Stealth +9  
 > **Senses** Darkvision 60 ft., Passive Perception 20  
 > **Languages** Draconic  
-> **CR** 11 (XP 7,200; PB +4)
+> **Challenge** 11 (7,200 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
-> ***Alert.*** The drake has advantage on initiative rolls and can't be surprised.
+> ***Alert.*** The drake has advantage on initiative rolls and can’t be surprised.
 >
 > ***Avoidance.*** If the drake is subjected to an effect that allows it to make a saving throw to take only half damage, it instead takes no damage if it succeeds on the saving throw, and only half damage if it fails.
 >
-> ***First Strike.*** The drake has advantage on attack rolls against any creature with a lesser initiative count than the drake's initiative count in a combat.
+> ***First Strike.*** The drake has advantage on attack rolls against any creature with a lesser initiative count than the drake’s initiative count in a combat.
 >
-> ***Progressive Initiative.*** The drake's initiative increases by 5 with each subsequent round after the first round of a combat. If the drake uses Time Slip, this trait doesn't function in the next round.
+> ***Progressive Initiative.*** The drake’s initiative increases by 5 with each subsequent round after the first round of a combat. If the drake uses Time Slip, this trait doesn’t function in the next round.
 >
-> ***Recurrence.*** When the drake dies, its corpse disappears, and it magically calls a different version of itself out of the time stream. On the initiative count of the original drake in the next round, a new **temporal drake** appears in the nearest unoccupied space to where the original drake died and immediately acts on that initiative count. The new drake is hostile to the original drake's enemies and lacks this trait. The new drake disappears at the start of its next turn or when it is reduced to 0 hit points, and the original drake's corpse reappears in the space it left or in an unoccupied space nearest to that space if it's occupied.
+> ***Recurrence.*** When the drake dies, its corpse disappears, and it magically calls a different version of itself out of the time stream. On the initiative count of the original drake in the next round, a new temporal drake appears in the nearest unoccupied space to where the original drake died and immediately acts on that initiative count. The new drake is hostile to the original drake’s enemies and lacks this trait. The new drake disappears at the start of its next turn or when it is reduced to 0 hit points, and the original drake’s corpse reappears in the space it left or in an unoccupied space nearest to that space if it’s occupied.
 >
 > ***Temporal Displacement.*** Attack rolls against the drake have disadvantage unless the drake is incapacitated.
 >
-> ***Temporal Slide.*** The drake's movement doesn't provoke opportunity attacks.
+> ***Temporal Slide.*** The drake’s movement doesn’t provoke opportunity attacks.
 >
-> ***Time Slip (1/Round).*** The drake rerolls an attack roll, ability check, or saving throw it makes and chooses which result to keep. After the drake uses this ability, its initiative count on the next round is reduced by 10 (minimum initiative count of 0), and it can't use this ability again until its next turn.
+> ***Time Slip (1/Round).*** The drake rerolls an attack roll, ability check, or saving throw it makes and chooses which result to keep. After the drake uses this ability, its initiative count on the next round is reduced by 10 (minimum initiative count of 0), and it can’t use this ability again until its next turn.
 >
 > ### Actions
 >
 > ***Multiattack.*** The drake makes one Bite attack and two Claw attacks. It can also use Temporal Inversion, if available.
 >
-> ***Bite.*** *Melee Weapon Attack:* +10 to hit, reach 10 ft., one target. *Hit:* 17 (2d10 + 6) piercing damage. A creature that is not a time dragon or temporal drake hit by this attack can't take reactions until the start of its next turn and must make a DC 15 Wisdom saving throw. On a failed save, the creature's initiative count on the next round is reduced by 5 (minimum initiative count of 0).
+> ***Bite.*** *Melee Weapon Attack*: +10 to hit, reach 10 ft., one target. *Hit*: 17 (2d10 + 6) piercing damage. A creature that is not a time dragon or temporal drake hit by this attack can’t take reactions until the start of its next turn and must make a DC 15 Wisdom saving throw. On a failed save, the creature’s initiative count on the next round is reduced by 5 (minimum initiative count of 0).
 >
-> ***Claw.*** *Melee Weapon Attack:* +10 to hit, reach 5 ft., one target. *Hit:* 13 (2d6 + 6) slashing damage.
+> ***Claw.*** *Melee Weapon Attack*: +10 to hit, reach 5 ft., one target. *Hit*: 13 (2d6 + 6) slashing damage.
 >
-> ***Temporal Inversion (Recharge 5-6).*** The drake attempts to magically shunt one creature it can see within 60 feet out of the time stream: the target must make a DC 15 Wisdom saving throw or be shunted out of time for 10 minutes while the drake maintains concentration (as if concentrating on a spell). A creature with a lesser initiative count than the drake's initiative count in a combat has disadvantage on the saving throw. While shunted out of time, the target vanishes for the duration and can't perceive its surroundings, is unable to affect anything other than itself, and can't be affected by anything else. The target can't take any actions on its turn except to attempt to rejoin the time stream. When it does so, it makes a DC 20 Wisdom check as an action. If it succeeds, the effect ends. The effect also ends early if the drake uses this action again. When the effect ends, the target reappears in the space it left or in an unoccupied space nearest to that space if it's occupied. Time dragons and temporal drakes are immune to this effect.
+> ***Temporal Inversion (Recharge 5-6).*** The drake attempts to magically shunt one creature it can see within 60 feet out of the time stream: the target must make a DC 15 Wisdom saving throw or be shunted out of time for 10 minutes while the drake maintains concentration (as if concentrating on a spell). A creature with a lesser initiative count than the drake’s initiative count in a combat has disadvantage on the saving throw. While shunted out of time, the target vanishes for the duration and can’t perceive its surroundings, is unable to affect anything other than itself, and can’t be affected by anything else. The target can’t take any actions on its turn except to attempt to rejoin the time stream. When it does so, it makes a DC 20 Wisdom check as an action. If it succeeds, the effect ends. The effect also ends early if the drake uses this action again. When the effect ends, the target reappears in the space it left or in an unoccupied space nearest to that space if it’s occupied. Time dragons and temporal drakes are immune to this effect
 >
 > ### Reactions
 >
-> ***Saw It Coming.*** The drake takes an action (besides its Multiattack action) or moves up to its speed in reaction to a perceivable circumstance, as if it had taken the Ready action in response to the circumstance as a trigger except that the drake's action or movement occurs before the trigger finishes.
->
+> ***Saw It Coming.*** The drake takes an action (besides its Multiattack action) or moves up to its speed in reaction to a perceivable circumstance, as if it had taken the Ready action in response to the circumstance as a trigger except that the drake’s action or movement occurs before the trigger finishes.
+> 
 > If this action or movement would cause the drake to no longer be a valid target for an attack, spell, or other effect as part of its trigger or would prevent the attack, spell, or other effect from finishing, then the attack, spell, or other effect is wasted with no effect. For example, as a reaction to being targeted by an attack it can perceive, the drake could move out of the range of the attack or use Temporal Inversion to shunt the attacker out of time, causing the attack in either case to be wasted with no effect.
->
+> 
 > Additionally, if the drake hits a creature in the process of casting a spell with an attack as part of this reaction, the creature must make a Constitution saving throw as if to maintain concentration on a spell, with the DC equal to 10 or half the damage dealt, whichever number is higher. On a failed save, the spell fails and has no effect.
+>

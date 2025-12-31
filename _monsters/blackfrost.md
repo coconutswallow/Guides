@@ -2,13 +2,13 @@
 layout: statblock
 title: Blackfrost
 cr: 12
-type: Undead
 size: Medium
-creator: Naoe
+type: Undead
 alignment: Chaotic Evil
 category: 2014 Fair Game
+creator: Naoe
 image: https://staticdelivery.nexusmods.com/mods/952/images/thumbnails/3612/3612-1554443504-460856515.png
-image_credit: "Art source unknown"
+image_credit: Art source unknown
 ---
 
 ## Blackfrost
@@ -34,45 +34,51 @@ Blackfrost doesn’t require air, food, drink, or sleep.
 
 ___
 > ## Blackfrost
-> *Medium undead, chaotic evil*
+> *Medium Undead, Chaotic Evil*
 >
-> **AC** 18 (plate armor) **HP** 170 (20d8 + 80) **Speed** 30 ft. **Initiative** +0 (10)  
+> **AC** 18 (plate armor)
+> **HP** 170 (20d8 + 80)
+> **Speed** 30 ft.
+> **Initiative** +0 (10)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 20 | +5 | +4 | **Dex** | 11 | +0 | +4 | **Con** | 18 | +4 | +4 |
-> | **Int** | 13 | +1 | +4 | **Wis** | 15 | +2 | +4 | **Cha** | 18 | +4 | +4 |
+> | **Str** | 20 | +5 | +5 | **Dex** | 11 | +0 | +4 | **Con** | 18 | +4 | +4 |
+> | **Int** | 13 | +1 | +1 | **Wis** | 15 | +2 | +6 | **Cha** | 18 | +4 | +8 |
 >
-> **Saving Throws** Dex +4,Wis +6 Cha +8  
+> **Saving Throws** Dex +4, Wis +6, Cha +8  
 > **Damage Resistances** Necrotic  
 > **Damage Immunities** Cold, Poison  
-> **Condition Immunities** Exhaustion, Frightened, Poisoned    
+> **Condition Immunities** Exhaustion, Frightened, Poisoned  
 > **Senses** Darkvision 120 ft., Passive Perception 12  
 > **Languages** Abyssal, Common  
-> **CR** 12 (XP 8,400; PB +4)
+> **Challenge** 12 (8,400 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
-> ***Magic Resistance.*** Blackfrost has advantage on saving throws against spells and other magical effects.  
+> ***Magic Resistance.*** Blackfrost has advantage on saving throws against spells and other magical effects.
 >
-> ***Frost Aura.*** Any creature that starts its turn within 30 feet of Blackfrost must succeed on a DC 16 Constitution saving throw or take 7 (2d6) cold damage and have its speed halved until the start of its next turn. On a successful save, the creature takes half damage and suffers no speed reduction.  
+> ***Frost Aura.*** Any creature that starts its turn within 30 feet of Blackfrost must succeed on a DC 16 Constitution saving throw or take 7 (2d6) cold damage and have its speed halved until the start of its next turn. On a successful save, the creature takes half damage and suffers no speed reduction
 >
-> ***Spellcasting.*** Blackfrost is a 15th-level spellcaster. Its spellcasting ability is Charisma (spell save DC 16, +8 to hit with spell attacks). It has the following paladin and sorcerer spells prepared:  
->
-> **1st level (4 slots):** *armor of agathys, command, inflict wounds*  
-> **2nd level (3 slots):** *branding smite, hold person, Snilloc’s snowball swarm*  
-> **3rd level (3 slots):** *blinding smite, dispel magic, sleet storm*  
-> **4th level (2 slots):** *ice storm, staggering smite*  
+> ***Spellcasting.*** Blackfrost is a 15th-level spellcaster. Its spellcasting ability is Charisma (spell save DC 16, +8 to hit with spell attacks). It has the following paladin and sorcerer spells prepared:
+> 
+> * **1st level (4 slots)**: armor of agathys, command, inflict wounds
+> * **2nd level (3 slots)**: branding smite, hold person, Snilloc’s snowball swarm
+> * **3rd level (3 slots)**: blinding smite, dispel magic, sleet storm
+> * **4th level (2 slots)**: ice storm, staggering smite
 >
 > ### Actions
 >
-> ***Multiattack.*** Blackfrost makes three *Blade of the North Wind* attacks and may use *Howl of the North Wind* if available.  
+> ***Multiattack.*** Blackfrost makes three Blade of the North Wind attacks and may use Howl of the North Wind if available.
 >
-> ***Blade of the North Wind.*** *Melee Weapon Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 12 (2d6 + 5) slashing damage plus 7 (2d6) cold damage.  
+> ***Blade of the North Wind.*** *Melee Weapon Attack*: +9 to hit, reach 5 ft., one target. *Hit*: 12 (2d6 + 5) slashing damage plus 7 (2d6) cold damage.
 >
-> ***Howl of the North Wind (Recharge 5–6).*** Blackfrost summons the winds of the north in a 30-foot radius. The winds last until the start of Blackfrost’s next turn and have the following effects:  
-> - All creatures in the area are deafened.  
-> - Unprotected flames (torch-sized or smaller) are extinguished.  
-> - Vapor, gas, and fog that can be dispersed by strong wind are hedged out.  
-> - Ranged weapon attack rolls that pass through the wind have disadvantage.  
-> - The area is difficult terrain for creatures other than Blackfrost.
+> ***Howl of the North Wind (Recharge 5–6).*** Blackfrost summons the winds of the north in a 30-foot radius. The winds last until the start of Blackfrost’s next turn and have the following effects:
+> 
+> * All creatures in the area are deafened.
+> * Unprotected flames (torch-sized or smaller) are extinguished.
+> * Vapor, gas, and fog that can be dispersed by strong wind are hedged out.
+> * Ranged weapon attack rolls that pass through the wind have disadvantage.
+> * The area is difficult terrain for creatures other than Blackfrost.
+>

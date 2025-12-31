@@ -2,8 +2,8 @@
 layout: statblock
 title: Weredragon
 cr: 9
-type: Humanoid
 size: Medium
+type: Humanoid
 alignment: typically matches alignment of corresponding dragon
 category: 2014 Fair Game
 creator: xgrnrgrx
@@ -47,37 +47,42 @@ The *Monster Manual* has rules for characters afflicted with lycanthropy. The fo
 
 ___
 > ## Weredragon
-> *Medium Humanoid (Human, Shapechanger), typically matches alignment of corresponding dragon*
+> *Medium Humanoid, Typically matches alignment of corresponding dragon*
 >
-> **AC** 13 (studded leather) in humanoid form, 14 (natural armor) in hybrid form **HP** 119 (14d8 + 56) **Speed** 30 ft. (fly 60 ft. in hybrid form) **Initiative** +1 (11)  
+> **AC** 13 (studded leather) in humanoid form, 14 (natural armor) in hybrid form
+> **HP** 119 (14d8 + 56)
+> **Speed** 30 ft. (fly 60 ft. in hybrid form)
+> **Initiative** +1 (11)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 20 | +5 | +4 | **Dex** | 12 | +1 | +4 | **Con** | 19 | +4 | +4 |
-> | **Int** | 12 | +1 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 12 | +1 | +4 |
+> | **Str** | 20 | +5 | +5 | **Dex** | 12 | +1 | +1 | **Con** | 19 | +4 | +4 |
+> | **Int** | 12 | +1 | +1 | **Wis** | 14 | +2 | +2 | **Cha** | 12 | +1 | +1 |
 >
 > **Skills** Perception +6, Stealth +5  
 > **Damage Immunities** Damage type corresponding to a kind of dragon (see Draconic Form below); Bludgeoning, Piercing, and Slashing from nonmagical attacks that aren't silvered  
 > **Senses** Blindsight 10 ft. (hybrid form only), Darkvision 60 ft., Passive Perception 16  
 > **Languages** Common, Draconic  
-> **CR** 9 (XP 5,000; PB +4)
+> **Challenge** 9 (5,000 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
 > ***Keen Hearing and Smell.*** The weredragon has advantage on Wisdom (Perception) checks that rely on hearing or smell.
 >
-> ***Draconic Form.*** The weredragon has an associated damage type: acid, cold, fire, force, lightning, poison, psychic, necrotic, radiant, or thunder. The associated damage type is the same damage type of the breath weapon of the kind of dragon corresponding to the weredragon's hybrid form (for example, force damage for an amethyst dragon). The weredragon is immune to this damage type (included in its damage immunities) and this damage type determines the additional damage of the weredragon's bite attack and the damage type of its Werebreath (included in its actions below) in its hybrid form, as well as the physical appearance of its draconic features.
+> ***Draconic Form.*** The weredragon has an associated damage type: acid, cold, fire, force, lightning, poison, psychic, necrotic, radiant, or thunder. The associated damage type is the same damage type of the breath weapon of the kind of dragon corresponding to the weredragon’s hybrid form (for example, force damage for an amethyst dragon). The weredragon is immune to this damage type (included in its damage immunities) and this damage type determines the additional damage of the weredragon’s bite attack and the damage type of its Werebreath (included in its actions below) in its hybrid form, as well as the physical appearance of its draconic features.
 >
-> ***Shapechanger.*** The weredragon can use a bonus action to polymorph into a dragon-humanoid hybrid, or back into its true form, which is humanoid. Its statistics, other than its AC, are the same in each form. Any equipment it is wearing or carrying isn't transformed. It reverts to its true form if it dies.
+> ***Shapechanger.*** The weredragon can use a bonus action to polymorph into a dragon-humanoid hybrid, or back into its true form, which is humanoid. Its statistics, other than its AC, are the same in each form. Any equipment it is wearing or carrying isn’t transformed. It reverts to its true form if it dies
 >
 > ### Actions
 >
 > ***Multiattack (Humanoid or Hybrid Form Only).*** The weredragon makes three attacks: three with its spear (humanoid form) or one with its bite and two with its claws (hybrid form).
 >
-> ***Bite (Hybrid Form Only).*** *Melee Weapon Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 10 (1d10 + 5) piercing damage plus 4 (1d8) damage of the type as determined by the weredragon's Draconic Form. If the target is a humanoid, it must succeed on a DC 16 Constitution saving throw or be cursed with weredragon lycanthropy.
+> ***Bite (Hybrid Form Only).*** *Melee Weapon Attack*: +9 to hit, reach 5 ft., one target. *Hit*: 10 (1d10 + 5) piercing damage plus 4 (1d8) damage of the type as determined by the weredragon’s Draconic Form. If the target is a humanoid, it must succeed on a DC 16 Constitution saving throw or be cursed with weredragon lycanthropy.
 >
-> ***Claw (Hybrid Form Only).*** *Melee Weapon Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 8 (1d6 + 5) slashing damage.
+> ***Claw (Hybrid Form Only).*** *Melee Weapon Attack*: +9 to hit, reach 5 ft., one target. *Hit*: 8 (1d6 + 5) slashing damage.
 >
-> ***Spear (Humanoid Form Only).*** *Melee or Ranged Weapon Attack:* +9 to hit, reach 5 ft. or range 20/60 ft., one target. *Hit:* 8 (1d6 + 5) piercing damage, or 9 (1d8 + 5) piercing damage if used with two hands to make a melee attack.
+> ***Spear (Humanoid Form Only).*** *Melee or Ranged Weapon Attack*: +9 to hit, reach 5 ft. or range 20/60 ft., one target. *Hit*: 8 (1d6 + 5) piercing damage, or 9 (1d8 + 5) piercing damage if used with two hands to make a melee attack.
 >
-> ***Werebreath (Recharge 5-6, Hybrid Form Only).*** The weredragon exhales draconic energy in a 30-foot cone. Each creature in that area must make a DC 16 Dexterity saving throw, taking 28 (8d6) damage of the type as determined by the weredragon's Draconic Form, or half as much damage on a successful one.
+> ***Werebreath (Recharge 5-6, Hybrid Form Only).*** The weredragon exhales draconic energy in a 30-foot cone. Each creature in that area must make a DC 16 Dexterity saving throw, taking 28 (8d6) damage of the type as determined by the weredragon’s Draconic Form, or half as much damage on a successful one.
+>

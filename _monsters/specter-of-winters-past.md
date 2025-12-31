@@ -28,37 +28,43 @@ The Specter of Winters Past would start combat with its Candle Extinguisher on i
 
 ___
 > ## Specter of Winters Past
-> *Medium undead, chaotic neutral*
+> *Medium Undead, Chaotic Neutral*
 >
-> **AC** 17 (natural armor) **HP** 105 (14d8 + 42) **Speed** 0 ft., fly 50 ft. (hover) **Initiative** +4 (14)  
+> **AC** 17 (natural armor)
+> **HP** 105 (14d8 + 42)
+> **Speed** 0 ft., fly 50 ft. (hover)
+> **Initiative** +4 (14)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 18 | +4 | +4 | **Dex** | 19 | +4 | +4 | **Con** | 16 | +3 | +4 |
-> | **Int** | 7 | -2 | +4 | **Wis** | 17 | +3 | +4 | **Cha** | 11 | +0 | +4 |
+> | **Str** | 18 | +4 | +4 | **Dex** | 19 | +4 | +8 | **Con** | 16 | +3 | +3 |
+> | **Int** | 7 | -2 | -2 | **Wis** | 17 | +3 | +7 | **Cha** | 11 | +0 | +0 |
 >
 > **Saving Throws** Dex +8, Wis +7  
 > **Skills** Insight +7, Perception +7, Stealth +8  
-> **Damage Immunities** Poison  
 > **Damage Resistances** acid, cold, fire, lightning, thunder; bludgeoning, piercing, and slashing from nonmagical attacks  
+> **Damage Immunities** Poison  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained  
 > **Senses** Darkvision 120 ft., Passive Perception 17  
 > **Languages** Common  
-> **CR** 10 (PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
-> ***Blinding Candle.*** While the Specter of Winters Past has its Candle Extinguisher removed, a blinding beam of light radiates from its head in a 5-foot radius. Any creature that starts its turn within 5 feet of the Specter and can see the beam must succeed on a DC 15 Constitution saving throw or be blinded until the end of its next turn.
+> ***Blinding Candle.*** While the Specter of Winters Past has its Candle Extinguisher removed, a blinding beam of light radiates from its head in a 5-foot radius. Any creature that starts its turn within 5 feet of the Specter and can see the beam must succeed on a DC 15 Constitution saving throw or be blinded until the end of its next turn
 >
 > ***Incorporeal Movement.*** The Specter of Winters Past can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.
+> 
+> Actions
 >
 > ### Actions
 >
-> ***Multiattack.*** The Specter of Winters Past makes two Candle Extinguisher attacks.  
+> ***Multiattack.*** The Specter of Winters Past makes two Candle Extinguisher attacks.
 >
-> ***Candle Extinguisher.*** *Melee Weapon Attack:* +8 to hit, reach 5 ft., one target. *Hit:* 11 (2d6 + 4) bludgeoning damage plus 13 (3d8) fire damage. The Specter removes the Candle Extinguisher from its head to make this attack.
+> ***Candle Extinguisher.*** *Melee Weapon Attack*: +8 to hit, reach 5 ft., one target. *Hit*: 11 (2d6 + 4) bludgeoning damage plus 13 (3d8) fire damage. The Specter removes the Candle Extinguisher from its head to make this attack.
 >
-> ***Spectral Helpers (1/7 Days).*** The Specter magically summons 2d4 winter spirits to appear within 60 feet of it. These spirits use the statistics of a **specter** and act on their own initiative. They remain for 1 minute, until the Specter dies, or until it dismisses them as a bonus action.
+> ***Spectral Helpers (1/7 Days).*** The Specter magically summons 2d4 winter spirits to appear within 60 feet of it. These spirits use the statistics of a specter and act on their own initiative. They remain for 1 minute, until the Specter dies, or until it dismisses them as a bonus action.
 >
-> ***Memory Twist (Recharge 5–6).*** The Specter magically emits psychic energy in a 60-foot line. Each creature in that line must succeed on a DC 15 Wisdom saving throw or take 22 (5d8) psychic damage and be stunned for 1 minute. A stunned creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.
+> ***Memory Twist (Recharge 5–6).*** The Specter magically emits psychic energy in a 60-foot line. Each creature in that line must succeed on a DC 15 Wisdom saving throw or take 22 (5d8) psychic damage and be **stunned** for 1 minute. A stunned creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.
 >

@@ -2,14 +2,15 @@
 layout: statblock
 title: Young Mercury Dragon
 cr: 8
-type: Dragon
 size: Large
+type: Dragon
 alignment: typically Chaotic Neutral
 category: 2014 Fair Game
 creator: Arashi1822
 ---
 
 ## Young Mercury Dragon
+
 Mercury dragons are whimsical creatures in both a physical sense and a mental one. They delight in being **unpredictable** and value **variety** above all else before moving onto the next thing that catches their attention.
 
 #### The Spice of Life
@@ -25,14 +26,17 @@ One of the favored places for a mercury dragon to reside in is a lair that is ma
 
 ___
 > ## Young Mercury Dragon
-> *Large Dragon, typically Chaotic Neutral*
+> *Large Dragon, Typically Chaotic Neutral*
 >
-> **AC** 18 (natural armor) **HP** 127 (15d10 + 45) **Speed** 40 ft., fly 80 ft. **Initiative** +3 (13)  
+> **AC** 18 (natural armor)
+> **HP** 127 (15d10 + 45)
+> **Speed** 40 ft., fly 80 ft.
+> **Initiative** +3 (13)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 18 | +4 | +3 | **Dex** | 16 | +3 | +3 | **Con** | 17 | +3 | +3 |
-> | **Int** | 12 | +1 | +3 | **Wis** | 13 | +1 | +3 | **Cha** | 15 | +2 | +3 |
+> | **Str** | 18 | +4 | +4 | **Dex** | 16 | +3 | +6 | **Con** | 17 | +3 | +6 |
+> | **Int** | 12 | +1 | +1 | **Wis** | 13 | +1 | +4 | **Cha** | 15 | +2 | +5 |
 >
 > **Saving Throws** Dex +6, Con +6, Wis +4, Cha +5  
 > **Skills** Perception +7, Stealth +6  
@@ -40,18 +44,20 @@ ___
 > **Condition Immunities** Blinded  
 > **Senses** Blindsight 30 ft., Darkvision 120 ft., Passive Perception 17  
 > **Languages** Common, Draconic  
-> **CR** 8 (XP 3,900; PB +3)
+> **Challenge** 8 (3,900 XP)  
+> **Proficiency Bonus** +3
 >
 > ### Actions
 >
 > ***Multiattack.*** The dragon makes three attacks: one with its bite and two with its claws.
 >
-> ***Bite.*** *Melee Weapon Attack:* +7 to hit, reach 10 ft., one target. *Hit:* 15 (2d10 + 4) piercing damage plus 4 (1d8) fire damage.
+> ***Bite.*** *Melee Weapon Attack*: +7 to hit, reach 10 ft., one target. *Hit*: 15 (2d10 + 4) piercing damage plus 4 (1d8) fire damage.
 >
-> ***Claw.*** *Melee Weapon Attack:* +7 to hit, reach 5 ft., one target. *Hit:* 11 (2d6 + 4) slashing damage.
+> ***Claw.*** *Melee Weapon Attack*: +7 to hit, reach 5 ft., one target. *Hit*: 11 (2d6 + 4) slashing damage.
 >
-> ***Brilliant Breath (Recharge 5-6).*** The dragon exhales a scorching beam of light in a 60-foot line that is 5 feet wide. Each creature in that line must make a DC 14 Constitution saving throw, taking 40 (9d8) fire damage on a failed save, or half as much on a successful one. A creature that fails the saving throw additionally is blinded until the end of the dragon's next turn.
+> ***Brilliant Breath (Recharge 5-6).*** The dragon exhales a scorching beam of light in a 60-foot line that is 5 feet wide. Each creature in that line must make a DC 14 Constitution saving throw, taking 40 (9d8) fire damage on a failed save, or half as much on a successful one. A creature that fails the saving throw additionally is blinded until the end of the dragon’s next turn.
 >
 > ### Bonus Actions
 >
-> ***Quicksilver Form.*** The dragon becomes a liquid wave of quicksilver and moves up to 40 feet without provoking opportunity attacks. While in quicksilver form, the dragon can't take any actions, speak, manipulate objects, or fly. It has a climbing speed of 40 feet and can enter a hostile creature's space and can stop there. In addition, it can move through spaces as narrow as 1 inch wide without squeezing. It has advantage on Strength, Dexterity, and Constitution saving throws, and it has resistance to nonmagical damage. The dragon can choose to revert back to its true form at any time on its turn (no action required) and also reverts back to its true form when it dies.
+> ***Quicksilver Form.*** The dragon becomes a liquid wave of quicksilver and moves up to 40 feet without provoking opportunity attacks. While in quicksilver form, the dragon can’t take any actions, speak, manipulate objects, or fly. It has a climbing speed of 40 feet and can enter a hostile creature’s space and can stop there. In addition, it can move through spaces as narrow as 1 inch wide without squeezing. It has advantage on Strength, Dexterity, and Constitution saving throws, and it has resistance to nonmagical damage. The dragon can choose to revert back to its true form at any time on its turn (no action required) and also reverts back to its true form when it dies.
+>

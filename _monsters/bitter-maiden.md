@@ -2,8 +2,8 @@
 layout: statblock
 title: The Bitter Maiden
 cr: 8
-type: Undead
 size: Medium
+type: Undead
 alignment: Chaotic Evil
 category: 2014 Fair Game
 creator: Toria
@@ -37,15 +37,18 @@ When its mask is removed, the bitter maiden can no longer keep up its guise and 
 > **Toria's Advice**. Never actually use one of these to torture your players with loss unless you know the characters enough.
 
 ___
-> ## Bitter Maiden
+> ## The Bitter Maiden
 > *Medium Undead, Chaotic Evil*
-> 
-> **AC** 16 (natural armor) **HP** 120 (16d8 + 48) **Speed** 30 ft. **Initiative** +2 (12)  
+>
+> **AC** 16 (natural armor)
+> **HP** 120 (16d8 + 48)
+> **Speed** 30 ft.
+> **Initiative** +2 (12)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 16 | +3 | +3 | **Dex** | 14 | +2 | +3 | **Con** | 16 | +3 | +3 |
-> | **Int** | 10 | +0 | +3 | **Wis** | 14 | +2 | +3 | **Cha** | 16 | +3 | +3 |
+> | **Str** | 16 | +3 | +3 | **Dex** | 14 | +2 | +2 | **Con** | 16 | +3 | +3 |
+> | **Int** | 10 | +0 | +0 | **Wis** | 14 | +2 | +2 | **Cha** | 16 | +3 | +3 |
 >
 > **Skills** Deception +9, Perception +5  
 > **Damage Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
@@ -53,7 +56,8 @@ ___
 > **Condition Immunities** Poisoned  
 > **Senses** Darkvision 60 ft., Passive Perception 15  
 > **Languages** The languages it knew in life  
-> **CR** 8 (XP 3,900; PB +3)
+> **Challenge** 8 (3,900 XP)  
+> **Proficiency Bonus** +3
 >
 > ### Traits
 >
@@ -65,10 +69,11 @@ ___
 >
 > ### Actions
 >
-> ***Multiattack.*** The maiden uses its **Icy Glare** and makes a **Life Drain** attack.
+> ***Multiattack.*** The maiden uses its Icy Glare and makes a Life Drain attack.
 >
-> ***Icy Glare.*** The maiden targets one creature it can see within 30 feet of it. The target must make a DC 14 Wisdom saving throw. On a failure, the target is **paralyzed** until the end of the maiden's next turn. When the paralysis ends, the target is **frightened** of the maiden for 1 minute. The **frightened** target can repeat the saving throw at the end of each of its turns, with disadvantage if it can see the maiden, ending the **frightened** condition on itself on a success.
+> ***Icy Glare.*** The maiden targets one creature it can see within 30 feet of it. The target must make a DC 14 Wisdom saving throw. On a failure, the target is **paralyzed** until the end of the maiden’s next turn. When the paralysis ends, the target is **frightened** of the maiden for 1 minute. The frightened target can repeat the saving throw at the end of each of its turns, with disadvantage if it can see the maiden, ending the frightened condition on itself on a success.
 >
-> ***Life Drain.*** *Melee Attack Roll:* +6, reach 5 ft., one target. *Hit:* 12 (2d8 + 3) Necrotic damage. The target must succeed on a DC 14 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.
+> ***Life Drain.*** *Melee Attack Roll*: +6, reach 5 ft., one target. *Hit*: 12 (2d8 + 3) Necrotic damage. The target must succeed on a DC 14 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.
 >
-> ***Bitter Hoarfrost (Recharge 5-6).*** The maiden throws out a spray of ice and freezing cold in a 30 foot cone. Each creature in that area must succeed on a DC 14 Constitution saving throw or take 36 (8d8) Cold damage and have disadvantage on all ability checks until the end of the affected creature's turn.
+> ***Bitter Hoarfrost (Recharge 5-6).*** The maiden throws out a spray of ice and freezing cold in a 30 foot cone. Each creature in that area must succeed on a DC 14 Constitution saving throw or take 36 (8d8) Cold damage and have disadvantage on all ability checks until the end of the affected creature’s turn.
+>
