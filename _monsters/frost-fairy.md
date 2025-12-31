@@ -27,14 +27,17 @@ The Fairy can enter into a compact to serve another creature as a familiar, form
 
 ___
 > ## Frost Fairy
-> *Tiny fey, chaotic evil*
+> *Tiny Fey, Chaotic Evil*
 >
-> **AC** 17 (natural armor) **HP** 27 (5d4 + 15) **Speed** 10 ft., fly 60 ft. **Initiative** +4 (14)
+> **AC** 17 (natural armor)
+> **HP** 27 (5d4 + 15)
+> **Speed** 10 ft., fly 60 ft.
+> **Initiative** +4 (14)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 15 | +2 | +4 | **Dex** | 18 | +4 | +6 | **Con** | 16 | +3 | +5 |
-> | **Int** | 14 | +2 | +4 | **Wis** | 8 | -1 | +1 | **Cha** | 18 | +4 | +6 |
+> | **Str** | 15 | +2 | +2 | **Dex** | 18 | +4 | +6 | **Con** | 16 | +3 | +3 |
+> | **Int** | 14 | +2 | +2 | **Wis** | 8 | -1 | -1 | **Cha** | 18 | +4 | +6 |
 >
 > **Saving Throws** Dex +6, Cha +6  
 > **Skills** Acrobatics +6, Deception +6, Intimidation +6  
@@ -43,14 +46,14 @@ ___
 > **Condition Immunities** Paralyzed; Charmed (while in the Feywild)  
 > **Senses** Darkvision 60 ft., Blindsight 30 ft., Passive Perception 9  
 > **Languages** Common, Sylvan  
-> **Challenge** 4 (1,800 XP) **Proficiency Bonus** +2
+> **Challenge** 4 (1,100 XP)  
+> **Proficiency Bonus** +2
 >
 > ### Traits
 >
 > ***Extraplanar Demise.*** If the frost fairy would die on a plane other than the Feywild, its body and equipment disintegrates into a pile of snowflakes as it returns to the Feywild to reform in 1d4 days.
 >
 > ***Innate Spellcasting.*** The frost fairy’s innate spellcasting ability is Charisma (spell save DC 14, +6 to hit with spell attacks). It can innately cast the following spells, requiring only verbal components:
-> 
 > * **At will**: frostbite (cantrip), ray of frost (cantrip)
 > * **3/day**: frost fingers (1st level)
 > * **2/day**: sleet storm (3rd level)
@@ -58,7 +61,7 @@ ___
 >
 > ### Actions
 >
-> ***Ice-Sickle.*** Melee Attack Roll: +4, reach 5 ft., one target. Hit: 3 (1d4 + 2) Slashing damage
+> ***Ice-Sickle.*** ***Melee Attack Roll:*** +4, reach 5 ft., one target. ***Hit:*** 3 (1d4 + 2) Slashing damage
 >
-> ***Snowball.*** Ranged Attack Roll: +6, range 60/120 ft., one target. Hit: 6 (1d4 + 4) Bludgeoning damage plus 7 (2d6) Cold damage (Total 13 damage)
+> ***Snowball.*** ***Ranged Attack Roll:*** +6, range 60/120 ft., one target. ***Hit:*** 6 (1d4 + 4) Bludgeoning damage plus 7 (2d6) Cold damage (Total 13 damage)
 >
