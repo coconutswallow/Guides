@@ -35,28 +35,35 @@ const MonsterParser = (function() {
         let statBlockLines = [];
         let additionalInfoLines = [];
         let dividerCount = 0;
+        let isDoneWithBlock = false;
 
         for (let line of lines) {
             const trimmed = line.trim();
 
-            // Detect the horizontal rule dividers
+            // Detect horizontal rule dividers
             if (trimmed === '___') {
                 dividerCount++;
-                continue; // Don't include the '___' in the parsed content
+                // If we hit a second divider, we have finished the statblock
+                if (dividerCount >= 2) isDoneWithBlock = true;
+                continue; 
             }
 
-            // Everything between the first and second '___' is the Statblock
-            if (dividerCount === 1) {
-                statBlockLines.push(line);
-            } 
-            // Everything after the second '___' is Additional Info
-            else if (dividerCount >= 2) {
+            // Fallback: If we are past the first divider, and the line NO LONGER 
+            // starts with '>', then the blockquoted statblock has ended.
+            if (dividerCount === 1 && !line.startsWith('>') && trimmed !== '') {
+                isDoneWithBlock = true;
+            }
+
+            if (isDoneWithBlock) {
                 additionalInfoLines.push(line);
+            } else if (dividerCount === 1) {
+                // We are inside the statblock area
+                statBlockLines.push(line);
             }
         }
 
         return {
-            // Clean the blockquote markers from the collected lines
+            // Clean the blockquote markers (>) from the collected lines
             statBlock: statBlockLines.join('\n').replace(/^>\s*/gm, ''),
             additionalInfo: additionalInfoLines.join('\n').trim()
         };
