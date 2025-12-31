@@ -128,20 +128,27 @@ const MonsterParser = (function() {
 
     function parseAbilitySection(blockContent, sectionName) {
         const abilities = [];
+        // Find the section (Traits, Actions, etc.)
         const sectionPattern = new RegExp(`### ${sectionName}\\n+([\\s\\S]*?)(?=\\n###|$)`);
         const sectionMatch = blockContent.match(sectionPattern);
         
         if (!sectionMatch) return abilities;
         
         const sectionContent = sectionMatch[1];
-        const abilityPattern = /\*\*\*([^.]+)\.\*\*\*\s*([\s\S]*?)(?=\n\*\*\*|\n###|$)/g;
+        
+        // UPDATED REGEX: 
+        // 1. Captures the name between *** // 2. Allows a period to exist either inside the *** or immediately after it
+        // 3. Captures everything until the next *** or header
+        const abilityPattern = /\*\*\*([^\*]+?)\.?\*\*\*\.?\s*([\s\S]*?)(?=\n\*\*\*|\n###|$)/g;
         
         let match;
         while ((match = abilityPattern.exec(sectionContent)) !== null) {
+            const name = match[1].trim();
             const description = match[2].trim().replace(/^\n+/, '').replace(/\n+$/, '');
-            if (description) {
+            
+            if (name && description) {
                 abilities.push({
-                    name: match[1].trim(),
+                    name: name,
                     description: description
                 });
             }
