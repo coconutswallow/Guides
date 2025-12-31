@@ -2,8 +2,8 @@
 layout: statblock
 title: Mara
 cr: 1
-type: Aberration
 size: Medium
+type: Aberration
 alignment: Chaotic Neutral
 category: 2014 Fair Game
 creator: km.d
@@ -33,33 +33,38 @@ The mara doesn't require air, food, drink, or sleep.
 ___
 > ## Mara
 > *Medium Aberration, Chaotic Neutral*
-> 
-> **AC** 14 **HP** 55 (10d8 + 10) **Speed** 40 ft., fly 40 ft. (hover) **Initiative** +4 (14)  
+>
+> **AC** 14
+> **HP** 55 (10d8 + 10)
+> **Speed** 40 ft., fly 40 ft. (hover)
+> **Initiative** +4 (14)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 18 | +4 | +2 | **Dex** | 18 | +4 | +2 | **Con** | 13 | +1 | +2 |
-> | **Int** | 17 | +3 | +2 | **Wis** | 9 | -1 | +2 | **Cha** | 7 | -2 | +2 |
+> | **Str** | 18 | +4 | +4 | **Dex** | 18 | +4 | +4 | **Con** | 13 | +1 | +1 |
+> | **Int** | 17 | +3 | +3 | **Wis** | 9 | -1 | +1 | **Cha** | 7 | -2 | +0 |
 >
 > **Saving Throws** Wis +1, Cha +0  
 > **Skills** Perception +3, Stealth +8  
 > **Condition Immunities** charmed, exhaustion, frightened, grappled, paralyzed, petrified, poisoned, prone, restrained  
 > **Senses** darkvision 120 ft., Passive Perception 13  
 > **Languages** all, telepathy 120 ft.  
-> **CR** 1 (XP 200; PB +2)
+> **Challenge** 1 (200 XP)  
+> **Proficiency Bonus** +2
 >
 > ### Traits
 >
-> ***Amorphous.*** The mara can move through a space as narrow as 1 inch wide without squeezing.
+> ***Amorphous.*** The mara can move through a space as narrow as 1 inch wide without squeezing
 >
-> ***Detect Life.*** The mara can magically sense the presence of creatures up to 5 miles away that aren't undead or constructs. It knows the general direction they're in but not their exact locations.
+> ***Detect Life.*** The mara can magically sense the presence of creatures up to 5 miles away that aren’t undead or constructs. It knows the general direction they’re in but not their exact locations
 >
-> ***Innate Spellcasting (Psionics).*** The mara's innate spellcasting ability is Intelligence (spell save DC 13). It can innately cast *detect thoughts* at will, requiring no components.
+> ***Innate Spellcasting (Psionics).*** The mara’s innate spellcasting ability is Intelligence (spell save DC 13). It can innately cast detect thoughts at will, requiring no components
 >
-> ***Weight of Secrets.*** An unconscious creature grappled by a mara is paralyzed and automatically fails its saving throw against the mara's *detect thoughts* while paralyzed in this way. A creature is still paralyzed in this way even when it wakes up and for 1 minute after the grapple ends.
+> ***Weight of Secrets.*** An unconscious creature grappled by a mara is paralyzed and automatically fails its saving throw against the mara’s detect thoughts while paralyzed in this way. A creature is still paralyzed in this way even when it wakes up and for 1 minute after the grapple ends.
 >
 > ### Actions
 >
 > ***Multiattack.*** The mara makes two claw attacks.
 >
-> ***Claw.*** *Melee Weapon Attack:* +6 to hit, reach 5 ft., one creature. *Hit:* 6 (1d4 + 4) slashing damage. Instead of dealing damage, the mara can grapple the target (escape DC 14).
+> ***Claw.*** *Melee Weapon Attack*: +6 to hit, reach 5 ft., one creature. *Hit*: 6 (1d4 + 4) slashing damage. Instead of dealing damage, the mara can grapple the target (escape DC 14)
+>
