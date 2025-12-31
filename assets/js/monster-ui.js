@@ -208,6 +208,10 @@ const MonsterUI = (function() {
                         <input type="text" id="damageImmunities" value="${escapeHtml(state.damageImmunities)}" placeholder="e.g., poison">
                     </div>
                     <div class="form-field">
+                    <div class="form-field">
+                        <label for="damageVulnerabilities">Damage Vulnerabilities</label>
+                        <input type="text" id="damageVulnerabilities" value="${escapeHtml(state.damageVulnerabilities)}" placeholder="e.g., fire, bludgeoning">
+                    </div>
                         <label for="conditionImmunities">Condition Immunities</label>
                         <input type="text" id="conditionImmunities" value="${escapeHtml(state.conditionImmunities)}" placeholder="e.g., poisoned">
                     </div>
@@ -517,6 +521,7 @@ const MonsterUI = (function() {
                     ${optionalStat('Skills', state.skills)}
                     ${optionalStat('Damage Resistances', state.damageResistances)}
                     ${optionalStat('Damage Immunities', state.damageImmunities)}
+                    ${optionalStat('Damage Vulnerabilities', state.damageVulnerabilities)}
                     ${optionalStat('Condition Immunities', state.conditionImmunities)}
                     ${optionalStat('Senses', state.senses)}
                     ${optionalStat('Languages', state.languages)}

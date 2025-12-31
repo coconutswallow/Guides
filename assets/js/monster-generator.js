@@ -78,6 +78,7 @@ creator: ${state.creator}`;
         if (state.skills) stats += `> **Skills** ${state.skills}  \n`;
         if (state.damageResistances) stats += `> **Damage Resistances** ${state.damageResistances}  \n`;
         if (state.damageImmunities) stats += `> **Damage Immunities** ${state.damageImmunities}  \n`;
+        if (state.damageVulnerabilities) stats += `> **Damage Vulnerabilities** ${state.damageVulnerabilities}  \n`;
         if (state.conditionImmunities) stats += `> **Condition Immunities** ${state.conditionImmunities}  \n`;
         if (state.senses) stats += `> **Senses** ${state.senses}  \n`;
         if (state.languages) stats += `> **Languages** ${state.languages}  \n`;

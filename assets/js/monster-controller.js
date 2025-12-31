@@ -54,6 +54,7 @@ const MonsterController = (function() {
             // Additional statistics
             skills: '',
             damageResistances: '',
+            damageVulnerabilities: '',
             damageImmunities: '',
             conditionImmunities: '',
             senses: '',
