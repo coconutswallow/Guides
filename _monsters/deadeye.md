@@ -2,13 +2,13 @@
 layout: statblock
 title: Deadeye
 cr: 6
-type: Undead
 size: Medium
+type: Undead
 alignment: Lawful Evil
 category: 2014 Fair Game
+creator: Colt
 image: https://cdna.artstation.com/p/assets/images/images/003/776/294/large/roman-chaliy-roman-chaliy-western1.jpg?1477381632
 image_credit: Art by Roman Chaliy (https://www.artstation.com/artwork/Vb658)
-creator: Colt
 ---
 
 ## Deadeye
@@ -24,13 +24,16 @@ Deadeyes are made from the souls of mortals that have been claimed by devils. A 
 ___
 > ## Deadeye
 > *Medium Undead, Lawful Evil*
-> 
-> **AC** 16 (natural armor) **HP** 82 (11d8 + 33) **Speed** 30 ft. **Initiative** +3 (13)  
+>
+> **AC** 16 (natural armor)
+> **HP** 82 (11d8 + 33)
+> **Speed** 30 ft.
+> **Initiative** +3 (13)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 10 | +0 | +3 | **Dex** | 16 | +3 | +3 | **Con** | 16 | +3 | +3 |
-> | **Int** | 10 | +0 | +3 | **Wis** | 16 | +3 | +3 | **Cha** | 16 | +3 | +3 |
+> | **Str** | 10 | +0 | +0 | **Dex** | 16 | +3 | +6 | **Con** | 16 | +3 | +6 |
+> | **Int** | 10 | +0 | +0 | **Wis** | 16 | +3 | +6 | **Cha** | 16 | +3 | +3 |
 >
 > **Saving Throws** Dex +6, Con +6, Wis +6  
 > **Skills** Deception +6, Insight +6, Perception +6, Sleight of Hand +6, Stealth +6, Survival +6  
@@ -39,7 +42,8 @@ ___
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Paralyzed, Poisoned, Stunned  
 > **Senses** Darkvision 60 ft., Passive Perception 16  
 > **Languages** The languages it knew in life  
-> **CR** 6 (XP 2,300; PB +3)
+> **Challenge** 6 (2,300 XP)  
+> **Proficiency Bonus** +3
 >
 > ### Traits
 >
@@ -47,7 +51,7 @@ ___
 >
 > ***Evasion.*** If the deadeye is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the deadeye instead takes no damage if it succeeds on the saving throw, and only half damage if it fails.
 >
-> ***Gunslinger.*** Being within 5 feet of a hostile creature or attacking at long range doesn't impose disadvantage on the deadeye's ranged attack rolls with a pistol. In addition, the deadeye ignores half cover and three-quarters cover when making ranged attacks with a pistol.
+> ***Gunslinger.*** Being within 5 feet of a hostile creature or attacking at long range doesn’t impose disadvantage on the deadeye’s ranged attack rolls with a pistol. In addition, the deadeye ignores half cover and three-quarters cover when making ranged attacks with a pistol.
 >
 > ***Quickdraw.*** The deadeye adds its Wisdom modifier to its initiative rolls (included in the Initiative score above).
 >
@@ -55,12 +59,13 @@ ___
 >
 > ***Undead Fortitude.*** If damage reduces the deadeye to 0 hit points, it must make a Constitution saving throw with a DC of 5 + the damage taken, unless the damage is radiant or from a critical hit. On a success, the deadeye drops to 1 hit point instead.
 >
-> ***Undead Nature.*** A deadeye doesn't require air, food, drink, or sleep.
+> ***Undead Nature.*** A deadeye doesn’t require air, food, drink, or sleep.
 >
 > ### Actions
 >
 > ***Multiattack.*** The deadeye makes three ranged attacks with its Hellfire Pistol.
 >
-> ***Hellfire Pistol.*** *Ranged Attack Roll:* +6, range 30/90 ft., one target. *Hit:* 8 (1d10 + 3) Piercing damage plus 7 (2d6) Fire damage (Total 15 damage). If this damage kills the deadeye's bounty, its soul is funneled into the River Styx, where it's reborn instantly as a lemure devil.
+> ***Hellfire Pistol.*** *Ranged Attack Roll*: +6, range 30/90 ft., one target. *Hit*: 8 (1d10 + 3) Piercing damage plus 7 (2d6) Fire damage (Total 15 damage). If this damage kills the deadeye’s bounty, its soul is funneled into the River Styx, where it’s reborn instantly as a lemure devil.
 >
 > ***Faceoff (Recharge 6).*** The deadeye makes a ranged attack on up to six different targets it can see within 90 feet of it, making a separate attack roll for each target.
+>

@@ -2,14 +2,15 @@
 layout: statblock
 title: Chaos Hound
 cr: 10
-type: Fiend
 size: Large
+type: Fiend
 alignment: Chaotic Evil
 category: 2014 Fair Game
 creator: Case
 ---
 
 ## Chaos Hound
+
 Putrid fiends that resemble decaying dogs, **chaos hounds** are found throughout the Abyss and other parts of the Lower Planes. On the Material Plane, they are most commonly seen in the service of powerful demons and other evil creatures that use them as trackers and hunters.
 
 ### Crawling Flesh
@@ -24,22 +25,26 @@ A chaos hound may feed on the corpse of a humanoid that it killed that has been 
 ___
 > ## Chaos Hound
 > *Large Fiend, Chaotic Evil*
-> 
-> **AC** 16 (natural armor) **HP** 102 (12d10 + 36) **Speed** 50 ft.  **Initiative** +2 (12)  
-> 
+>
+> **AC** 16 (natural armor)
+> **HP** 102 (12d10 + 36)
+> **Speed** 50 ft.
+> **Initiative** +2 (12)
+>
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 20 | +5 | +4 | **Dex** | 15 | +2 | +4 | **Con** | 17 | +3 | +4 |
-> | **Int** | 8 | -1 | +4 | **Wis** | 16 | +3 | +4 | **Cha** | 14 | +2 | +4 |
+> | **Str** | 20 | +5 | +9 | **Dex** | 15 | +2 | +2 | **Con** | 17 | +3 | +3 |
+> | **Int** | 8 | -1 | -1 | **Wis** | 16 | +3 | +7 | **Cha** | 14 | +2 | +6 |
 >
 > **Saving Throws** Str +9, Wis +7, Cha +6  
 > **Skills** Perception +7, Survival +7  
 > **Damage Resistances** Necrotic; Bludgeoning, Piercing, and Slashing from non-magical weapons  
-> **Damage Immunities** Acid
+> **Damage Immunities** Acid  
 > **Condition Immunities** Poisoned  
 > **Senses** Truesight 30 ft., Darkvision 60 ft., Passive Perception 17  
 > **Languages** Understands Abyssal but can't speak  
-> **CR** 10 (XP 5,900; PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
@@ -49,16 +54,15 @@ ___
 >
 > ***Insubstantial.*** The chaos hound can take the Disengage action as a bonus action on each of its turns.
 >
-> ***Stench.*** The chaos hound gives off the cloying smell of ancient death. Any creature other than a fiend that starts its turn within 10 feet of it must make a DC 15 Constitution saving throw or be poisoned until the start of the creature's next turn. On a successful saving throw, the creature is immune to the stench of all chaos hounds for one hour.
+> ***Stench.*** The chaos hound gives off the cloying smell of ancient death. Any creature other than a fiend that starts its turn within 10 feet of it must make a DC 15 Constitution saving throw or be poisoned until the start of the creature’s next turn. On a successful saving throw, the creature is immune to the stench of all chaos hounds for one hour.
 >
 > ### Actions
 >
 > ***Multiattack.*** The chaos hound can use its Terrifying Howl. It then makes two bite attacks.
 >
-> ***Bite.*** *Melee Attack Roll:* +9, reach 5ft., one target. *Hit:* 18 (3d8 + 5) Piercing damage. If the target is a creature, if must succeed on a DC 15 Dexterity saving throw or take an additional 9 (2d8) acid damage.
+> ***Bite.*** *Melee Attack Roll*: +9, reach 5ft., one target. *Hit*: 18 (3d8 + 5) Piercing damage. If the target is a creature, if must succeed on a DC 15 Dexterity saving throw or take an additional 9 (2d8) acid damage.
 >
-> ***Terrifying Howl.*** The chaos hound unleashes a terrifying cry. Each creature of the chaos hound's choice within 30 ft. must make a DC 14 Wisdom saving throw or be frightened of it for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the chaos hound's Terrifying Howl for the next 24 hours.
+> ***Terrifying Howl.*** The chaos hound unleashes a terrifying cry. Each creature of the chaos hound’s choice within 30 ft. must make a DC 14 Wisdom saving throw or be **frightened** of it for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature’s saving throw is successful or the effect ends for it, the creature is immune to the chaos hound’s Terrifying Howl for the next 24 hours.
 >
 > ***Acid Breath (Recharge 5-6).*** The chaos hound spews forth acid in a 15 foot cone. Each creature in that cone must make a DC 15 Dexterity saving throw, taking 35 (10d6) acid damage or half as much on a successful save.
 >
-

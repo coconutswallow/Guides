@@ -2,13 +2,12 @@
 layout: statblock
 title: Bringer of Misery
 cr: 10
-type: Undead
 size: Medium
+type: Undead
 alignment: Chaotic Evil
 category: 2014 Fair Game
-image: https://i.redd.it/jn72nbc54dnz.jpg
-image-credit: Art by Vincent Lefevre
 creator: Killerspy
+image: https://i.redd.it/jn72nbc54dnz.jpg
 ---
 
 ## Bringer of Misery
@@ -21,22 +20,24 @@ A bringer of misery doesn't require air, food, drink, or sleep.
 ___
 > ## Bringer of Misery
 > *Medium Undead, Chaotic Evil*
-> 
-> **AC** 14 **HP** 112 (15d8 + 45) **Speed** 0 ft., fly 40 ft. (hover)  **Initiative** +4 (14)  
+>
+> **AC** 14
+> **HP** 112 (15d8 + 45)
+> **Speed** 0 ft., fly 40 ft. (hover)
+> **Initiative** +4 (14)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 6 | -2 | +4 | **Dex** | 18 | +4 | +4 | **Con** | 16 | +3 | +4 |
-> | **Int** | 11 | +0 | +4 | **Wis** | 14 | +2 | +4 | **Cha** | 10 | +0 | +4 |
+> | **Str** | 6 | -2 | -2 | **Dex** | 18 | +4 | +8 | **Con** | 16 | +3 | +3 |
+> | **Int** | 11 | +0 | +0 | **Wis** | 14 | +2 | +6 | **Cha** | 10 | +0 | +0 |
 >
 > **Saving Throws** Dex +8, Wis +6  
 > **Skills** Perception +6, Stealth +8  
-> **Resistances** Acid, Fire, Lightning, Thunder; Bludgeoning, Piercing, and Slashing from nonmagical attacks  
-> **Immunities** Cold, Necrotic, Poison  
 > **Condition Immunities** Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained  
 > **Senses** Darkvision 60 ft., Passive Perception 16  
 > **Languages** Common  
-> **CR** 10 (XP 5,900; PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
@@ -48,10 +49,11 @@ ___
 >
 > ***Sunlight Sensitivity.*** While in sunlight, the bringer of misery has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight.
 >
-> ***Undead Nature.*** A bringer of misery doesn't require air, food, drink, or sleep.
+> ***Undead Nature.*** A bringer of misery doesn’t require air, food, drink, or sleep.
 >
 > ### Actions
 >
 > ***Multiattack.*** The bringer of misery makes two Shadow Claw attacks.
 >
-> ***Shadow Claw.*** *Melee Attack Roll:* +8, reach 5 ft., one creature. *Hit:* 22 (4d8 + 4) Necrotic damage. The target must succeed on a DC 15 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.
+> ***Shadow Claw.*** *Melee Attack Roll*: +8, reach 5 ft., one creature. *Hit*: 22 (4d8 + 4) Necrotic damage. The target must succeed on a DC 15 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.
+>

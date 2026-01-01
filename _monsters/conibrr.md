@@ -27,41 +27,46 @@ In the harsh, cold forests of northern Faerûn, occasionally, a coniferous tree 
 
 ___
 > ## Conibrr
-> *Huge plant, neutral evil*
+> *Huge Plant, Neutral Evil*
 >
-> **AC** 16 (natural armor) **HP** 150 (12d12+72) **Speed** 25 ft. **Initiative** -3 (7)    
+> **AC** 16 (natural armor)
+> **HP** 150 (12d12+72)
+> **Speed** 25 ft.
+> **Initiative** -3 (7)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 21 | +5 | +4 | **Dex** | 5 | -3 | +4 | **Con** | 23 | +6 | +4 |
-> | **Int** | 9 | -1 | +4 | **Wis** | 10 | +0 | +4 | **Cha** | 14 | +2 | +4 |
+> | **Str** | 21 | +5 | +5 | **Dex** | 5 | -3 | -3 | **Con** | 23 | +6 | +6 |
+> | **Int** | 9 | -1 | -1 | **Wis** | 10 | +0 | +0 | **Cha** | 14 | +2 | +2 |
 >
-> **Damage Vulnerabilities** fire  
 > **Damage Resistances** acid, bludgeoning, piercing  
 > **Damage Immunities** cold  
+> **Damage Vulnerabilities** Fire  
 > **Condition Immunities** blinded, deafened, exhaustion  
 > **Senses** blindsight 60 ft. (blind beyond this radius), passive Perception 10  
 > **Languages** understands any languages known by those that awakened it but cannot speak, read, write, or hear  
-> **CR** 10 (PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
-> **Acidic Sap.** A creature that touches the conibrr or hits it with a melee attack while within 5 feet of it takes 5 (2d4) acid damage.
-> 
-> **False Appearance.** While the conibrr remains motionless, it is indistinguishable from a normal tree.
+> ***Acidic Sap.*** A creature that touches the conibrr or hits it with a melee attack while within 5 feet of it takes 5 (2d4) acid damage.
 >
-> **Siege Monster.** The conibrr deals double damage to objects and structures.
-> 
+> ***False Appearance.*** While the conibrr remains motionless, it is indistinguishable from a normal tree.
+>
+> ***Siege Monster.*** The conibrr deals double damage to objects and structures.
+>
 > ### Actions
 >
-> ***Multiattack.*** The conibrr makes two **Slam** attacks.
+> ***Multiattack.*** The conibrr makes two Slam attacks.
 >
-> ***Slam.*** *Melee Weapon Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 15 (3d6 + 5) bludgeoning damage.
+> ***Slam.*** *Melee Weapon Attack*: +9 to hit, reach 5 ft., one target. *Hit*: 15 (3d6 + 5) bludgeoning damage.
 >
-> ***Rock.*** *Ranged Weapon Attack:* +9 to hit, range 60/180 ft., one target. *Hit:* 27 (4d10 + 5) bludgeoning damage.
+> ***Rock.*** *Ranged Weapon Attack*: +9 to hit, range 60/180 ft., one target. *Hit*: 27 (4d10 + 5) bludgeoning damage.
 >
 > ***Acid Spray (1/Day).*** The conibrr can only use this action after having taken at least a combined total of 45 slashing or fire damage since it has last been healed. The conibrr shoots acid out of the gashes in its bark. Each creature within 40 feet of it must make a DC 18 Dexterity saving throw, taking 23 (5d6 + 6) acid damage on a failure or half as much on a success.
 >
 > ### Reactions
 >
-> Eject Needles. Upon taking slashing damage, the conibrr shoots out needles. Each creature within 40 feet of it that isn't behind total cover takes 2 (1d4) piercing damage plus 5 (2d4) acid damage.
+> ***Eject Needles.*** Upon taking slashing damage, the conibrr shoots out needles. Each creature within 40 feet of it that isn’t behind total cover takes 2 (1d4) piercing damage plus 5 (2d4) acid damage.
+>

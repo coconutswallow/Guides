@@ -2,8 +2,8 @@
 layout: statblock
 title: Bouncy Ghost
 cr: 10
-type: Undead
 size: Medium
+type: Undead
 alignment: Any Alignment
 category: 2014 Fair Game
 creator: clay
@@ -33,13 +33,16 @@ A Bouncy Ghost is likely to be found in an adventure already possessing another 
 ___
 > ## Bouncy Ghost
 > *Medium Undead, Any Alignment*
-> 
-> **AC** 14 (natural armor) **HP** 104 (16d8 + 32) **Speed** 0 ft., fly 40 ft. (hover) **Initiative** +2 (12)  
+>
+> **AC** 14 (natural armor)
+> **HP** 104 (16d8 + 32)
+> **Speed** 0 ft., fly 40 ft. (hover)
+> **Initiative** +2 (12)
 >
 > |     |     | MOD | SAVE |     |     | MOD | SAVE |     |     | MOD | SAVE |
 > |:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|:--- |:---:|:---:|:----:|
-> | **Str** | 12 | +1 | +4 | **Dex** | 14 | +2 | +4 | **Con** | 14 | +2 | +4 |
-> | **Int** | 16 | +3 | +4 | **Wis** | 12 | +1 | +4 | **Cha** | 18 | +4 | +4 |
+> | **Str** | 12 | +1 | +1 | **Dex** | 14 | +2 | +2 | **Con** | 14 | +2 | +6 |
+> | **Int** | 16 | +3 | +7 | **Wis** | 12 | +1 | +1 | **Cha** | 18 | +4 | +4 |
 >
 > **Saving Throws** Con +6, Int +7  
 > **Skills** Deception +8, Perception +5  
@@ -48,24 +51,26 @@ ___
 > **Condition Immunities** Blinded, Charmed, Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained  
 > **Senses** Blindsight 60 ft., Darkvision 60 ft., Passive Perception 15  
 > **Languages** Common  
-> **CR** 10 (XP 5,900; PB +4)
+> **Challenge** 10 (5,900 XP)  
+> **Proficiency Bonus** +4
 >
 > ### Traits
 >
-> ***Body Rejection.*** When the Bouncy Ghost is possessing a humanoid, the target takes 15 (2d10 + 4) necrotic damage at the end of each of the Bouncy Ghost's turns.
+> ***Body Rejection.*** When the Bouncy Ghost is possessing a humanoid, the target takes 15 (2d10 + 4) necrotic damage at the end of each of the Bouncy Ghost’s turns.
 >
-> ***Bounce Bounce.*** If the Bouncy Ghost isn't possessing a humanoid, it can use a bonus action to move up to its speed toward a hostile creature that it can see.
+> ***Bounce Bounce.*** If the Bouncy Ghost isn’t possessing a humanoid, it can use a bonus action to move up to its speed toward a hostile creature that it can see.
 >
 > ***Incorporeal Movement.*** The ghost can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.
 >
 > ### Actions
 >
-> ***Bounce On Your Face.*** *Melee Attack Roll:* +5, reach 5 ft., one target. *Hit:* 10 (2d8 + 1) Necrotic damage.
+> ***Bounce On Your Face.*** *Melee Attack Roll*: +5, reach 5 ft., one target. *Hit*: 10 (2d8 + 1) Necrotic damage.
 >
-> ***Bouncy New Body.*** One humanoid that the Bouncy Ghost can see within 5 feet of it must succeed on a DC 16 Charisma saving throw or be possessed by the Bouncy Ghost; the Bouncy Ghost then disappears, and the target is incapacitated and loses control of its body. The Bouncy Ghost now controls the body but doesn't deprive the target of awareness. The Bouncy Ghost can't be targeted by any attack, spell, or other effect, except ones that turn undead, and it retains its alignment, skills, Intelligence, Wisdom, Charisma, and immunity to being charmed and frightened. It otherwise uses the possessed target's statistics, but doesn't gain access to the target's knowledge, class features, or proficiencies.
->
-> The possession lasts until the body drops to 0 hit points, the Bouncy Ghost ends it as a bonus action, the Bouncy Ghost swaps bodies, or the Bouncy Ghost is turned or forced out by an effect like the dispel evil and good spell. When the possession ends, the Bouncy Ghost reappears in an unoccupied space within 5 feet of the body. The target is immune to this Bouncy Ghost's Possession for 24 hours after succeeding on the saving throw.
+> ***Bouncy New Body.***  One humanoid that the Bouncy Ghost can see within 5 feet of it must succeed on a DC 16 Charisma saving throw or be possessed by the Bouncy Ghost; the Bouncy Ghost then disappears, and the target is **incapacitated** and loses control of its body. The Bouncy Ghost now controls the body but doesn’t deprive the target of awareness. The Bouncy Ghost can’t be targeted by any attack, spell, or other effect, except ones that turn undead, and it retains its alignment, skills, Intelligence, Wisdom, Charisma, and immunity to being charmed and frightened. It otherwise uses the possessed target’s statistics, but doesn’t gain access to the target’s knowledge, class features, or proficiencies.
+> 
+> The possession lasts until the body drops to 0 hit points, the Bouncy Ghost ends it as a bonus action, the Bouncy Ghost swaps bodies, or the Bouncy Ghost is turned or forced out by an effect like the dispel evil and good spell. When the possession ends, the Bouncy Ghost reappears in an unoccupied space within 5 feet of the body. The target is immune to this Bouncy Ghost’s Possession for 24 hours after succeeding on the saving throw.
 >
 > ### Reactions
 >
 > ***Bounce Around.*** When a humanoid hits the current body the Bouncy Ghost is possessing with a melee weapon attack, the Bouncy Ghost can force it to make a DC 16 Charisma saving throw or be **possessed** instead.
+>
