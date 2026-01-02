@@ -19,9 +19,7 @@ We collect the following information through Discord:
 ## How do we use personal information?
 This information is held and used to maintain the running and security of the Discord server. Emails are collected to give access to the Google Drive for purposes of logging and auditing your character progress and logging access and changes to the Drive.
 
-Discord Usernames are also held for character logging purposes. Emails are held alongside Discord
-
-Usernames for easier searching. We retain this information indefinitely. Emails may also be used for access to additional services such as, but not limited to, Kanka, in the future.
+Discord Usernames are also held for character logging purposes. Emails are held alongside Discord usernames for easier searching. We retain this information indefinitely. Emails may also be used for access to additional services such as, but not limited to, Kanka, in the future.
 
 ## What legal basis do we have for processing your personal data?
 By registering as an Adventurer, you are giving consent for us to obtain, process and store this information.  Please contact a member of the Admin or Player Relations teams to expressly request if you wish to withdraw this consent and have us remove any records of your data. Please note that you will no longer be able to use our service without this consent.
