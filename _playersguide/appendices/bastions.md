@@ -14,7 +14,6 @@ Bastions aren’t gained from levelling up, but instead must be built in downtim
 You must meet the prerequisites of any Special Facility in order to build and benefit from it, and the maximum number of Special Facilities your Bastion can have at any given time depends on your character level.
 
 |Level|	Special Facilities|
-||	|
 |5 - 8|	2|
 |46277|	4|
 |13-16|	5|
