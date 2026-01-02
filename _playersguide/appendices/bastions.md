@@ -13,6 +13,13 @@ Bastions aren’t gained from levelling up, but instead must be built in downtim
 
 You must meet the prerequisites of any Special Facility in order to build and benefit from it, and the maximum number of Special Facilities your Bastion can have at any given time depends on your character level.
 
+|Level|	Special Facilities|
+||	|
+|5 - 8|	2|
+|46277|	4|
+|13-16|	5|
+|17-20|	6|
+
 For any facility or component built as part of a Bastion, you can choose to tear it down and refund 50% of its gold cost. Your Bastion must still contain at least two Basic Facilities (including one Cramped and one Roomy) and two Special Facilities afterward to be useable. You can also replace a Special Facility with another Special Facility you qualify for by expending gold and DTP for the new facility, but the full gold cost of the old facility contributes towards the new one.
 
 You can only build Bastions either a) near Hawthorne or a guild outpost or b) another world location if you are able to claim a parcel of land or stronghold as part of an adventure as determined by the DM.
