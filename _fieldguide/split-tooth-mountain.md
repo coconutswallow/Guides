@@ -7,7 +7,7 @@ background_image: https://cdna.artstation.com/p/assets/images/images/030/025/982
 
 ## Split Tooth Mountain
 
-The Split Tooth Mountain used to be located within Graypeaks Mountains. Irisen, the founder of the Hawthorne Guild has sealed a Titan named  Bohu there. As time passed, her hold on the seal was weakening, although she was positive she could do so for a while. Unbeknownst to her, various factions had slowly begun to discover about this sealed titan, some before than others. Each of these factions was attempting to get to the Titan for their own ends. This served as catalyst for the seal to be broken, and Bohu was unleashed upon Toril. Its body merged with the Split Tooth Mountain, and it rose, walking towards Hellgate Dell so that it could reach an area of powerful magic located north of it and finally bring his other half, still residing on the Far Realm, on the material plane. This would be the end of Toril as we know it.  In an epic battle, the adventurers of the Hawthorne Guild were able to seal it off once more. 
+The Split Tooth Mountain used to be located within Graypeaks Mountains. Irisen, the founder of the Hawthorne Guild has sealed a Titan named  Bohu there. As time passed, her hold on the seal was weakening, although she was positive she could do so for a while. Unbeknownst to her, various factions had slowly begun to discover this sealed titan, some before than others. Each of these factions was attempting to get to the Titan for their own ends. This served as the catalyst for the seal to be broken, and Bohu was unleashed upon Toril. Its body merged with the Split Tooth Mountain, and it rose, walking towards Hellgate Dell so that it could reach an area of powerful magic located north of it and finally bring his other half, still residing on the Far Realm, on the material plane. This would be the end of Toril as we know it.  In an epic battle, the adventurers of the Hawthorne Guild were able to seal it off once more. 
 
 ### The Artifacts
 
@@ -21,8 +21,7 @@ The Dynakinetic Transmutation Matrix was used during the ritual at Bohu's core t
 
 ### Split Tooth Dwellers
 
-With the Titan’s body now present near Hellgate Dell, various groups have decided to re
-main either near Split Tooth Mountain or within the mountain. 
+With the Titan’s body now present near Hellgate Dell, various groups have decided to remain either near Split Tooth Mountain or within the mountain. 
 
 #### Turlang
 
@@ -73,7 +72,7 @@ While in the area affected by Eldritch Veil, when a creature casts a spell of 1s
 At the DM’s discretion, spells and other magical effects can be modified cosmetically to enhance the strange and eldritch atmosphere. Here are some examples:
 
 * *Alarm:* Instead of hearing a mental ping when the alarm is triggered, the caster hears a scream.
-* *Bigby's hand:* The conjured hand appears to a wriggling swarm of tentacles in the shape of a hand.
+* *Bigby's hand:* The conjured hand appears as a wriggling swarm of tentacles in the shape of a hand.
 * *Find the path:* A spirit in the form of a warped aberration of the DM's choice appears and guides the caster to the desired location. The spirit can't be harmed and doesn't speak.
 * *Fog cloud:* The cloud takes the form of an eerie, obscuring starscape.
 * *Gust of wind:* A ghastly moan accompanies the summoned wind.
