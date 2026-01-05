@@ -2,7 +2,7 @@ import { renderMonsterLibrary } from './views/monster-library.js';
 import { renderMonsterDetail } from './views/monster-detail.js';
 
 // --- Supabase Config ---
-// Replace with your actual project URL and Anon Key
+// These keys are safe in the code long as role-level security is implemented
 const SUPABASE_URL = 'https://iepqxczcyvrxcbyeiscc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcHF4Y3pjeXZyeGNieWVpc2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjU2MDEsImV4cCI6MjA3OTk0MTYwMX0.9fK4TppNy7IekO3n4Uwd37dbqMQ7KRhFkex_P_JSeVA';
 export const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
