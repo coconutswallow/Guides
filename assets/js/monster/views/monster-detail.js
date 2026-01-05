@@ -14,19 +14,22 @@ export async function renderMonsterDetail(container, params) {
     container.className = 'page page-wide';
 
     // Calculate Derived Stats
-    const pb = calculatePB(monster.CR);
-    const xp = calculateXP(monster.CR);
+    // UPDATED: monster.cr
+    const pb = calculatePB(monster.cr);
+    const xp = calculateXP(monster.cr);
     
+    // UPDATED: f.type (Postgres converts column 'Type' to 'type')
     const features = {
-        Trait: monster.features.filter(f => f.Type === 'Trait'),
-        Action: monster.features.filter(f => f.Type === 'Action'),
-        Bonus: monster.features.filter(f => f.Type === 'Bonus'),
-        Reaction: monster.features.filter(f => f.Type === 'Reaction'),
-        Legendary: monster.features.filter(f => f.Type === 'Legendary'),
-        Lair: monster.features.filter(f => f.Type === 'Lair'),
+        Trait: monster.features.filter(f => f.type === 'Trait'),
+        Action: monster.features.filter(f => f.type === 'Action'),
+        Bonus: monster.features.filter(f => f.type === 'Bonus'),
+        Reaction: monster.features.filter(f => f.type === 'Reaction'),
+        Legendary: monster.features.filter(f => f.type === 'Legendary'),
+        Lair: monster.features.filter(f => f.type === 'Lair'),
     };
 
-    const abilitiesHTML = renderAbilityTable(monster.Ability_Scores, monster.Saves, pb);
+    // UPDATED: monster.ability_scores, monster.saves
+    const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
     const template = `
         <div class="monster-detail-layout" style="display: grid; grid-template-columns: 60% 40%; gap: 2rem;">
@@ -34,35 +37,35 @@ export async function renderMonsterDetail(container, params) {
             <div class="left-col">
                 <a href="#/monsters" class="btn back-button">← Back to Library</a>
                 
-                ${monster.Image_URL ? `
+                ${monster.image_url ? `
                 <div class="monster-image-container">
-                    <img src="${monster.Image_URL}" alt="${monster.Name}">
-                    ${monster.Image_Credit ? `<p class="image-credit">Art by ${monster.Image_Credit}</p>` : ''}
+                    <img src="${monster.image_url}" alt="${monster.name}">
+                    ${monster.image_credit ? `<p class="image-credit">Art by ${monster.image_credit}</p>` : ''}
                 </div>` : ''}
 
                 <div class="monster-description">
-                    ${marked.parse(monster.Description || '')}
+                    ${marked.parse(monster.description || '')}
                 </div>
             </div>
 
             <div class="right-col">
                 <blockquote class="stat-block">
-                    <h2>${monster.Name}</h2>
-                    <p><em>${monster.Size} ${monster.Species}, ${monster.Alignment}</em></p>
+                    <h2>${monster.name}</h2>
+                    <p><em>${monster.size} ${monster.species}, ${monster.alignment}</em></p>
                     <hr>
                     
                     <div class="stat-grid-container">
                         <div class="stat-cell-ac">
-                            <strong>AC</strong> ${monster.AC} ${monster.Conditional_AC || ''}
+                            <strong>AC</strong> ${monster.ac} ${monster.conditional_ac || ''}
                         </div>
                         <div class="stat-cell-init">
-                            <strong>Initiative</strong> ${formatInitiative(monster.Ability_Scores.DEX, monster.Init_Prof, pb)}
+                            <strong>Initiative</strong> ${formatInitiative(monster.ability_scores.DEX, monster.init_prof, pb)}
                         </div>
                         <div class="stat-cell-hp">
-                            <strong>HP</strong> ${calculateHPString(monster.Hit_Dice_Num, monster.Hit_Dice_Size, monster.HP_Modifier)}
+                            <strong>HP</strong> ${calculateHPString(monster.hit_dice_num, monster.hit_dice_size, monster.hp_modifier)}
                         </div>
                         <div class="stat-cell-speed">
-                            <strong>Speed</strong> ${monster.Speed}
+                            <strong>Speed</strong> ${monster.speed}
                         </div>
                     </div>
 
@@ -70,15 +73,15 @@ export async function renderMonsterDetail(container, params) {
                     ${abilitiesHTML}
                     <hr>
 
-                    ${monster.Saves ? `<p><strong>Saving Throws</strong> ${formatSaves(monster.Saves)}</p>` : ''}
-                    ${monster.Skills ? `<p><strong>Skills</strong> ${monster.Skills}</p>` : ''}
-                    ${monster.Vulnerabilities ? `<p><strong>Vulnerabilities</strong> ${monster.Vulnerabilities}</p>` : ''}
-                    ${monster.Resistances ? `<p><strong>Resistances</strong> ${monster.Resistances}</p>` : ''}
-                    ${monster.Immunities ? `<p><strong>Immunities</strong> ${monster.Immunities}</p>` : ''}
-                    ${monster.Senses ? `<p><strong>Senses</strong> ${monster.Senses}</p>` : ''}
-                    <p><strong>Languages</strong> ${monster.Languages || '—'}</p>
+                    ${monster.saves ? `<p><strong>Saving Throws</strong> ${formatSaves(monster.saves)}</p>` : ''}
+                    ${monster.skills ? `<p><strong>Skills</strong> ${monster.skills}</p>` : ''}
+                    ${monster.vulnerabilities ? `<p><strong>Vulnerabilities</strong> ${monster.vulnerabilities}</p>` : ''}
+                    ${monster.resistances ? `<p><strong>Resistances</strong> ${monster.resistances}</p>` : ''}
+                    ${monster.immunities ? `<p><strong>Immunities</strong> ${monster.immunities}</p>` : ''}
+                    ${monster.senses ? `<p><strong>Senses</strong> ${monster.senses}</p>` : ''}
+                    <p><strong>Languages</strong> ${monster.languages || '—'}</p>
                     <p>
-                        <strong>Challenge</strong> ${formatCR(monster.CR)} (${xp} XP) 
+                        <strong>Challenge</strong> ${formatCR(monster.cr)} (${xp} XP) 
                         <strong>PB</strong> +${pb}
                     </p>
 
@@ -91,18 +94,18 @@ export async function renderMonsterDetail(container, params) {
                     
                     ${features.Legendary.length > 0 ? `
                         <h3>Legendary Actions</h3>
-                        ${monster.Legendary_Header ? marked.parse(monster.Legendary_Header) : ''}
+                        ${monster.legendary_header ? marked.parse(monster.legendary_header) : ''}
                         ${renderFeatureList(features.Legendary)}
                     ` : ''}
 
                     ${features.Lair.length > 0 ? `
                         <h3>Lair Actions</h3>
-                        ${monster.Lair_Header ? marked.parse(monster.Lair_Header) : ''}
+                        ${monster.lair_header ? marked.parse(monster.lair_header) : ''}
                         ${renderFeatureList(features.Lair)}
                     ` : ''}
 
                     <div class="statblock-creator">
-                       Source: ${monster.Usage}
+                       Source: ${monster.usage || 'Unknown'}
                     </div>
                 </blockquote>
             </div>
@@ -133,7 +136,8 @@ function calculatePB(cr) {
 }
 
 function calculateXP(cr) {
-    const table = { "0.125": 25, "0.25": 50, "0.5": 100, "1": 200, "2": 450, "3": 700, "4": 1100, "5": 1800 };
+    // Note: Make sure your keys are strings if using fractional CRs
+    const table = { "0.125": 25, "0.25": 50, "0.5": 100, "1": 200, "2": 450, "3": 700, "4": 1100, "5": 1800, "11": 7200, "12": 8400, "25": 75000 };
     return table[cr] || 0;
 }
 
@@ -164,7 +168,13 @@ function formatInitiative(dexScore, proficiency, pb) {
 function renderAbilityTable(scores, saves, pb) {
     const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
     const getCellData = (attr) => {
-        const score = scores[attr] || 10;
+        // scores is the JSON object. 
+        // Note: While columns are snake_case, JSON keys usually keep their case from insertion. 
+        // If your JSON is { "STR": 10 }, then scores['STR'] works. 
+        // If your JSON is { "str": 10 }, you might need scores[attr] or scores[attr.toLowerCase()].
+        // Assuming Uppercase Keys based on schema:
+        const score = scores && scores[attr] ? scores[attr] : 10;
+        
         const mod = calculateMod(score);
         let saveMod = mod; 
         if (saves && saves[attr] !== undefined) {
@@ -209,7 +219,8 @@ function renderFeatureBucket(list, title) {
 
 function renderFeatureList(list) {
     return list.map(f => {
-        const desc = marked.parseInline(f.Description); 
-        return `<p><strong><em>${f.Name}.</em></strong> ${desc}</p>`;
+        // UPDATED: f.description and f.name
+        const desc = marked.parseInline(f.description); 
+        return `<p><strong><em>${f.name}.</em></strong> ${desc}</p>`;
     }).join('');
 }

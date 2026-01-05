@@ -4,15 +4,14 @@ import { supabase } from './monster-app.js';
  * Fetch all Live monsters for the Library.
  */
 export async function getLiveMonsters() {
-    // REMOVED "Type" from this list because it doesn't exist in the 'monsters' table.
-    // "Species" covers concepts like (Beast, Dragon, Undead, etc.)
+    // UPDATED: Using lowercase column names to match the database.
     const { data, error } = await supabase
         .from('monsters')
         .select(`
-            Row_ID, Name, CR, Size, Species, Usage, Slug, Image_URL, Tags
+            row_id, name, cr, size, species, usage, slug, image_url, tags
         `)
-        .eq('Is_Live', true)
-        .order('Name', { ascending: true });
+        .eq('is_live', true)
+        .order('name', { ascending: true });
 
     if (error) {
         console.error('Error fetching monsters:', error);
@@ -25,12 +24,12 @@ export async function getLiveMonsters() {
  * Fetch full monster details by Slug.
  */
 export async function getMonsterBySlug(slug) {
-    // 1. Get Core Monster Datas
+    // 1. Get Core Monster Data
     const { data: monster, error } = await supabase
         .from('monsters')
         .select('*')
-        .eq('Slug', slug)
-        .eq('Is_Live', true)
+        .eq('slug', slug)
+        .eq('is_live', true)
         .single();
 
     if (error || !monster) return null;
@@ -39,8 +38,8 @@ export async function getMonsterBySlug(slug) {
     const { data: features } = await supabase
         .from('monster_features')
         .select('*')
-        .eq('Parent_Row_ID', monster.Row_ID)
-        .order('Display_Order', { ascending: true });
+        .eq('parent_row_id', monster.row_id)
+        .order('display_order', { ascending: true });
 
     return { ...monster, features: features || [] };
 }
