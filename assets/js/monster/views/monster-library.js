@@ -121,8 +121,17 @@ function renderGrid(monsters) {
     grid.innerHTML = monsters.map(m => `
         <div class="monster-card">
             ${m.image_url ? 
-                `<div class="monster-card-image"><img src="${m.image_url}" alt="${m.name}" loading="lazy"></div>` 
-                : ''}
+                // Image Container (Left side)
+                `<div class="monster-card-image">
+                    <img src="${m.image_url}" alt="${m.name}" loading="lazy">
+                 </div>` 
+                : 
+                // Placeholder if no image (keeps alignment consistent)
+                `<div class="monster-card-image" style="display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;">
+                    <span>No Art</span>
+                 </div>`
+            }
+            
             <div class="monster-card-content">
                 <h3><a href="#/monster/${m.slug}">${m.name}</a></h3>
                 <p class="monster-cr">CR ${formatCR(m.cr)}</p>

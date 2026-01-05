@@ -10,11 +10,22 @@ export async function renderMonsterDetail(container, params) {
         return;
     }
 
-    // Apply Page Wide Class for Split Layout
+    // Apply Page Wide Class
     const parentPage = container.closest('.page');
     if (parentPage) {
         parentPage.classList.add('page-wide');
     }
+
+    // --- LOGIC FOR EMPTY LEFT COLUMN ---
+    // If no image AND no description, we shouldn't use a 2-column grid.
+    const hasLeftContent = monster.image_url || monster.description || monster.additional_info;
+    
+    // Grid Style: 
+    // If content exists: 2 columns (1fr 1fr for better balance). 
+    // If empty: Block layout, centered statblock.
+    const layoutStyle = hasLeftContent 
+        ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;'
+        : 'display: block; max-width: 800px; margin: 0 auto;';
 
     // Calculations
     const pb = calculatePB(monster.cr);
@@ -31,19 +42,19 @@ export async function renderMonsterDetail(container, params) {
 
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
-    // --- HTML TEMPLATE ---
     const template = `
-        <div class="monster-detail-layout" style="display: grid; grid-template-columns: 1fr 450px; gap: 3rem; align-items: start;">
+        <div class="monster-detail-layout" style="${layoutStyle}">
             
+            ${hasLeftContent ? `
             <div class="left-col">
                 <a href="#/monsters" class="btn back-button" style="margin-bottom: 1rem;">← Back to Library</a>
                 
                 <h1>${monster.name}</h1>
 
-                <div class="card">
+                <div class="monster-lore-container">
                     ${monster.image_url ? `
                     <div class="monster-image-container" style="margin-bottom: 1.5rem;">
-                        <img src="${monster.image_url}" alt="${monster.name}" style="width: 100%; border-radius: var(--border-radius); border: 2px solid var(--color-border);">
+                        <img src="${monster.image_url}" alt="${monster.name}" style="width: 100%; border-radius: var(--border-radius); border: 4px solid var(--color-primary);">
                         ${monster.image_credit ? `<p class="image-caption">Art by ${monster.image_credit}</p>` : ''}
                     </div>` : ''}
 
@@ -57,8 +68,13 @@ export async function renderMonsterDetail(container, params) {
                     </div>
                 </div>
             </div>
+            ` : `
+            <div style="margin-bottom: 2rem;">
+                <a href="#/monsters" class="btn back-button">← Back to Library</a>
+            </div>
+            `}
 
-            <div class="right-col" style="padding-top: 3.5rem;"> 
+            <div class="right-col"> 
                 <blockquote class="stat-block">
                     <h2>${monster.name}</h2>
                     <p><em>${monster.size} ${monster.species}, ${monster.alignment}</em></p>
@@ -122,9 +138,11 @@ export async function renderMonsterDetail(container, params) {
         </div>
 
         <style>
+            /* Specific overrides for detail view */
+            .monster-description { background: transparent; padding: 0; border: none; }
+            
             @media (max-width: 1000px) {
                 .monster-detail-layout { grid-template-columns: 1fr !important; }
-                .right-col { padding-top: 0 !important; }
             }
         </style>
     `;
@@ -132,8 +150,7 @@ export async function renderMonsterDetail(container, params) {
     container.innerHTML = template;
 }
 
-// --- Helpers ---
-
+// ... (Helpers remain exactly the same as before) ...
 function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
 function calculatePB(cr) {
