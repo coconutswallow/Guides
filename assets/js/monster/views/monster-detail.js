@@ -40,7 +40,8 @@ export async function renderMonsterDetail(container, params) {
     const pb = calculatePB(monster.cr);
     const xp = calculateXP(monster.cr);
     
-    // Group features (Expanded filter for 'Lair' or 'Lair Action')
+    // Group features 
+    // We filter by multiple variations of strings to be safe (e.g. "Lair" vs "Lair Action")
     const features = {
         Trait: monster.features.filter(f => f.type === 'Trait'),
         Action: monster.features.filter(f => f.type === 'Action'),
@@ -48,6 +49,7 @@ export async function renderMonsterDetail(container, params) {
         Reaction: monster.features.filter(f => f.type === 'Reaction'),
         Legendary: monster.features.filter(f => f.type === 'Legendary' || f.type === 'Legendary Action'),
         Lair: monster.features.filter(f => f.type === 'Lair' || f.type === 'Lair Action'),
+        Regional: monster.features.filter(f => f.type === 'Regional' || f.type === 'Regional Effect'),
     };
 
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
@@ -129,20 +131,27 @@ export async function renderMonsterDetail(container, params) {
 
                     <hr>
 
-                    ${renderFeatureBucket(features.Trait, 'Traits')} ${renderFeatureBucket(features.Action, 'Actions')}
+                    ${renderFeatureBucket(features.Trait, 'Traits')}
+                    ${renderFeatureBucket(features.Action, 'Actions')}
                     ${renderFeatureBucket(features.Bonus, 'Bonus Actions')}
                     ${renderFeatureBucket(features.Reaction, 'Reactions')}
                     
-                    ${features.Legendary.length > 0 ? `
+                    ${(features.Legendary.length > 0 || monster.legendary_header) ? `
                         <h3>Legendary Actions</h3>
                         ${monster.legendary_header ? marked.parse(monster.legendary_header) : ''}
                         ${renderFeatureList(features.Legendary)}
                     ` : ''}
 
-                    ${features.Lair.length > 0 ? `
+                    ${(features.Lair.length > 0 || monster.lair_header) ? `
                         <h3>Lair Actions</h3>
                         ${monster.lair_header ? marked.parse(monster.lair_header) : ''}
                         ${renderFeatureList(features.Lair)}
+                    ` : ''}
+
+                    ${(features.Regional.length > 0 || monster.regional_header) ? `
+                        <h3>Regional Effects</h3>
+                        ${monster.regional_header ? marked.parse(monster.regional_header) : ''}
+                        ${renderFeatureList(features.Regional)}
                     ` : ''}
 
                     <div class="statblock-creator">
@@ -233,7 +242,7 @@ function formatInitiative(dexScore, proficiency, pb) {
 
 /**
  * Generates the HTML for the Ability Score table.
- * Added Headers for Mod and Save as requested.
+ * Includes explicit Headers for Mod and Save.
  */
 function renderAbilityTable(scores, saves, pb) {
     const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
@@ -249,8 +258,6 @@ function renderAbilityTable(scores, saves, pb) {
 
     const data = abilities.reduce((acc, attr) => ({...acc, [attr]: getCellData(attr)}), {});
 
-    // Header logic: We have two rows of 3 attributes.
-    // We add a header row above each data row to label the columns cleanly.
     return `
     <table class="ability-table">
         <thead>
