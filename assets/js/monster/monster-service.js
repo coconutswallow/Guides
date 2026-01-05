@@ -1,6 +1,7 @@
 /**
  * monster-service.js
- * Data Access Layer (DAL)
+ * * Data Access Layer (DAL) for the application.
+ * Handles all direct interactions with the Supabase backend.
  */
 
 import { supabase } from './monster-app.js';
@@ -11,12 +12,14 @@ import { supabase } from './monster-app.js';
  * @returns {Promise<Array>}
  */
 export async function getLiveMonsters() {
+    // We use '!fk_monster_habitats_lookup' to tell Supabase exactly which 
+    // Foreign Key constraint to use for the join, resolving the ambiguity.
     const { data, error } = await supabase
         .from('monsters')
         .select(`
             row_id, name, cr, size, species, usage, slug, image_url, tags,
             monster_habitats (
-                lookup_habitats ( name )
+                lookup_habitats!fk_monster_habitats_lookup ( name )
             )
         `)
         .eq('is_live', true)
@@ -53,7 +56,11 @@ export async function getLiveMonsters() {
 
 /**
  * Fetch full monster details by Slug.
- * (Same as previous implementation)
+ * * Uses Supabase "Foreign Key Joins" to fetch:
+ * 1. Creator Name (from users)
+ * 2. Habitats (from monster_habitats -> lookup_habitats)
+ * @param {string} slug 
+ * @returns {Promise<Object|null>}
  */
 export async function getMonsterBySlug(slug) {
     const { data: monster, error } = await supabase
@@ -62,7 +69,7 @@ export async function getMonsterBySlug(slug) {
             *,
             users ( discord_name ),
             monster_habitats (
-                lookup_habitats ( name )
+                lookup_habitats!fk_monster_habitats_lookup ( name )
             )
         `)
         .eq('slug', slug)
