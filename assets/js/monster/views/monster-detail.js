@@ -171,8 +171,7 @@ export async function renderMonsterDetail(container, params) {
             .ability-table th { color: var(--color-primary); font-size: 0.75em; text-transform: uppercase; border-bottom: 1px solid var(--color-line); padding-bottom: 2px;}
             .ability-table td { padding: 4px 2px; }
             
-            /* CSS Fix for Nested Lists (Traits, Lore, AND Headers like Lair/Regional) */
-            /* Added .stat-block ul/li selectors to target Markdown bullets inside headers */
+            /* CSS Fix for Nested Lists */
             .feature-item ul, 
             .monster-description ul,
             .stat-block ul { 
@@ -204,12 +203,19 @@ export async function renderMonsterDetail(container, params) {
 
 function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
+/**
+ * Calculates Proficiency Bonus based on Challenge Rating.
+ * Updated to support high-level CRs (up to 30).
+ */
 function calculatePB(cr) {
-    if (cr < 5) return 2;
-    if (cr < 9) return 3;
-    if (cr < 13) return 4;
-    if (cr < 17) return 5;
-    return 6;
+    if (cr < 5) return 2;   // CR 0-4
+    if (cr < 9) return 3;   // CR 5-8
+    if (cr < 13) return 4;  // CR 9-12
+    if (cr < 17) return 5;  // CR 13-16
+    if (cr < 21) return 6;  // CR 17-20
+    if (cr < 25) return 7;  // CR 21-24
+    if (cr < 29) return 8;  // CR 25-28
+    return 9;               // CR 29+
 }
 
 function calculateXP(cr) {
