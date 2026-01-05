@@ -41,7 +41,6 @@ export async function renderMonsterDetail(container, params) {
     const xp = calculateXP(monster.cr);
     
     // Group features 
-    // We filter by multiple variations of strings to be safe (e.g. "Lair" vs "Lair Action")
     const features = {
         Trait: monster.features.filter(f => f.type === 'Trait'),
         Action: monster.features.filter(f => f.type === 'Action'),
@@ -54,7 +53,6 @@ export async function renderMonsterDetail(container, params) {
 
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
-    // Normalize property names (Supports both 'resistances' and 'damage_resistances' etc.)
     const vuln = monster.damage_vulnerabilities || monster.vulnerabilities;
     const res = monster.damage_resistances || monster.resistances;
     const imm = monster.damage_immunities || monster.immunities;
@@ -129,8 +127,6 @@ export async function renderMonsterDetail(container, params) {
                         <strong>PB</strong> +${pb}
                     </p>
 
-                    <hr>
-
                     ${renderFeatureBucket(features.Trait, 'Traits')}
                     ${renderFeatureBucket(features.Action, 'Actions')}
                     ${renderFeatureBucket(features.Bonus, 'Bonus Actions')}
@@ -175,16 +171,19 @@ export async function renderMonsterDetail(container, params) {
             .ability-table th { color: var(--color-primary); font-size: 0.75em; text-transform: uppercase; border-bottom: 1px solid var(--color-line); padding-bottom: 2px;}
             .ability-table td { padding: 4px 2px; }
             
-            /* CSS Fix for Nested Lists within Features/Markdown */
+            /* CSS Fix for Nested Lists (Traits, Lore, AND Headers like Lair/Regional) */
+            /* Added .stat-block ul/li selectors to target Markdown bullets inside headers */
             .feature-item ul, 
-            .monster-description ul { 
+            .monster-description ul,
+            .stat-block ul { 
                 margin: 0.5em 0 0.5em 1.5em !important; 
                 padding-left: 1em !important; 
                 list-style: disc outside !important; 
             }
             
             .feature-item li,
-            .monster-description li {
+            .monster-description li,
+            .stat-block li {
                 display: list-item !important;
                 list-style: disc outside !important;
                 margin-bottom: 0.2em;
@@ -240,10 +239,6 @@ function formatInitiative(dexScore, proficiency, pb) {
     return `${formatSign(mod)} (${dexScore})`;
 }
 
-/**
- * Generates the HTML for the Ability Score table.
- * Includes explicit Headers for Mod and Save.
- */
 function renderAbilityTable(scores, saves, pb) {
     const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
     const getCellData = (attr) => {
