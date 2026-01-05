@@ -24,14 +24,13 @@ export async function renderMonsterDetail(container, params) {
         return;
     }
 
-    // Apply Page Wide Class for better reading width
+    // Apply Page Wide Class
     const parentPage = container.closest('.page');
     if (parentPage) {
         parentPage.classList.add('page-wide');
     }
 
     // --- LAYOUT LOGIC ---
-    // Determine if we need a 2-column layout (Left: Lore/Image, Right: Stats)
     const hasLeftContent = monster.image_url || monster.description || monster.additional_info;
     const layoutStyle = hasLeftContent 
         ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;'
@@ -41,19 +40,24 @@ export async function renderMonsterDetail(container, params) {
     const pb = calculatePB(monster.cr);
     const xp = calculateXP(monster.cr);
     
-    // Group features for cleaner rendering
+    // Group features (Expanded filter for 'Lair' or 'Lair Action')
     const features = {
         Trait: monster.features.filter(f => f.type === 'Trait'),
         Action: monster.features.filter(f => f.type === 'Action'),
-        Bonus: monster.features.filter(f => f.type === 'Bonus'),
+        Bonus: monster.features.filter(f => f.type === 'Bonus' || f.type === 'Bonus Action'),
         Reaction: monster.features.filter(f => f.type === 'Reaction'),
-        Legendary: monster.features.filter(f => f.type === 'Legendary'),
-        Lair: monster.features.filter(f => f.type === 'Lair'),
+        Legendary: monster.features.filter(f => f.type === 'Legendary' || f.type === 'Legendary Action'),
+        Lair: monster.features.filter(f => f.type === 'Lair' || f.type === 'Lair Action'),
     };
 
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
-    // --- RENDER ---
+    // Normalize property names (Supports both 'resistances' and 'damage_resistances' etc.)
+    const vuln = monster.damage_vulnerabilities || monster.vulnerabilities;
+    const res = monster.damage_resistances || monster.resistances;
+    const imm = monster.damage_immunities || monster.immunities;
+    const conImm = monster.condition_immunities;
+
     const template = `
         <div class="monster-header" style="margin-bottom: 2rem;">
             <a href="#/monsters" class="btn back-button" style="margin-bottom: 1rem;">← Back to Library</a>
@@ -110,9 +114,12 @@ export async function renderMonsterDetail(container, params) {
 
                     ${monster.saves ? `<p><strong>Saving Throws</strong> ${formatSaves(monster.saves)}</p>` : ''}
                     ${monster.skills ? `<p><strong>Skills</strong> ${monster.skills}</p>` : ''}
-                    ${monster.vulnerabilities ? `<p><strong>Vulnerabilities</strong> ${monster.vulnerabilities}</p>` : ''}
-                    ${monster.resistances ? `<p><strong>Resistances</strong> ${monster.resistances}</p>` : ''}
-                    ${monster.immunities ? `<p><strong>Immunities</strong> ${monster.immunities}</p>` : ''}
+                    
+                    ${vuln ? `<p><strong>Damage Vulnerabilities</strong> ${vuln}</p>` : ''}
+                    ${res ? `<p><strong>Damage Resistances</strong> ${res}</p>` : ''}
+                    ${imm ? `<p><strong>Damage Immunities</strong> ${imm}</p>` : ''}
+                    ${conImm ? `<p><strong>Condition Immunities</strong> ${conImm}</p>` : ''}
+                    
                     ${monster.senses ? `<p><strong>Senses</strong> ${monster.senses}</p>` : ''}
                     <p><strong>Languages</strong> ${monster.languages || '—'}</p>
                     <p>
@@ -122,8 +129,7 @@ export async function renderMonsterDetail(container, params) {
 
                     <hr>
 
-                    ${renderFeatureBucket(features.Trait)}
-                    ${renderFeatureBucket(features.Action, 'Actions')}
+                    ${renderFeatureBucket(features.Trait, 'Traits')} ${renderFeatureBucket(features.Action, 'Actions')}
                     ${renderFeatureBucket(features.Bonus, 'Bonus Actions')}
                     ${renderFeatureBucket(features.Reaction, 'Reactions')}
                     
@@ -141,7 +147,7 @@ export async function renderMonsterDetail(container, params) {
 
                     <div class="statblock-creator">
                        <p style="margin: 0.2em 0;">
-                           <strong>Created by:</strong> ${monster.creator_name} ${monster.creator_notes ? `(${monster.creator_notes})` : ''}
+                           <strong>Created by:</strong> ${monster.creator_name || 'Unknown'} ${monster.creator_notes ? `(${monster.creator_notes})` : ''}
                        </p>
                        <p style="margin: 0.2em 0;">
                            <strong>Usage:</strong> ${monster.usage || 'Unknown'}
@@ -154,6 +160,11 @@ export async function renderMonsterDetail(container, params) {
         <style>
             .monster-description { background: transparent; padding: 0; border: none; }
             .statblock-creator p { font-size: 0.9em; font-style: italic; color: var(--color-primary); }
+            
+            /* Ability Table Styling */
+            .ability-table { width: 100%; text-align: center; border-collapse: collapse; margin-bottom: 0.5em; }
+            .ability-table th { color: var(--color-primary); font-size: 0.75em; text-transform: uppercase; border-bottom: 1px solid var(--color-line); padding-bottom: 2px;}
+            .ability-table td { padding: 4px 2px; }
             
             /* CSS Fix for Nested Lists within Features/Markdown */
             .feature-item ul, 
@@ -181,7 +192,7 @@ export async function renderMonsterDetail(container, params) {
     container.innerHTML = template;
 }
 
-// --- Helper Functions ---
+// --- Helpers ---
 
 function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
@@ -222,7 +233,7 @@ function formatInitiative(dexScore, proficiency, pb) {
 
 /**
  * Generates the HTML for the Ability Score table.
- * Includes Modifiers and Save Modifiers.
+ * Added Headers for Mod and Save as requested.
  */
 function renderAbilityTable(scores, saves, pb) {
     const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
@@ -238,18 +249,27 @@ function renderAbilityTable(scores, saves, pb) {
 
     const data = abilities.reduce((acc, attr) => ({...acc, [attr]: getCellData(attr)}), {});
 
+    // Header logic: We have two rows of 3 attributes.
+    // We add a header row above each data row to label the columns cleanly.
     return `
-    <table>
+    <table class="ability-table">
+        <thead>
+            <tr>
+                <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                <th></th><th>Score</th><th>Mod</th><th>Save</th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
-                <td>STR</td><td>${data.STR.score}</td><td>${data.STR.mod}</td><td>${data.STR.save}</td>
-                <td>DEX</td><td>${data.DEX.score}</td><td>${data.DEX.mod}</td><td>${data.DEX.save}</td>
-                <td>CON</td><td>${data.CON.score}</td><td>${data.CON.mod}</td><td>${data.CON.save}</td>
+                <td><strong>STR</strong></td><td>${data.STR.score}</td><td>${data.STR.mod}</td><td>${data.STR.save}</td>
+                <td><strong>DEX</strong></td><td>${data.DEX.score}</td><td>${data.DEX.mod}</td><td>${data.DEX.save}</td>
+                <td><strong>CON</strong></td><td>${data.CON.score}</td><td>${data.CON.mod}</td><td>${data.CON.save}</td>
             </tr>
             <tr>
-                <td>INT</td><td>${data.INT.score}</td><td>${data.INT.mod}</td><td>${data.INT.save}</td>
-                <td>WIS</td><td>${data.WIS.score}</td><td>${data.WIS.mod}</td><td>${data.WIS.save}</td>
-                <td>CHA</td><td>${data.CHA.score}</td><td>${data.CHA.mod}</td><td>${data.CHA.save}</td>
+                <td><strong>INT</strong></td><td>${data.INT.score}</td><td>${data.INT.mod}</td><td>${data.INT.save}</td>
+                <td><strong>WIS</strong></td><td>${data.WIS.score}</td><td>${data.WIS.mod}</td><td>${data.WIS.save}</td>
+                <td><strong>CHA</strong></td><td>${data.CHA.score}</td><td>${data.CHA.mod}</td><td>${data.CHA.save}</td>
             </tr>
         </tbody>
     </table>`;
