@@ -4,10 +4,12 @@ import { supabase } from './monster-app.js';
  * Fetch all Live monsters for the Library.
  */
 export async function getLiveMonsters() {
+    // REMOVED "Type" from this list because it doesn't exist in the 'monsters' table.
+    // "Species" covers concepts like (Beast, Dragon, Undead, etc.)
     const { data, error } = await supabase
         .from('monsters')
         .select(`
-            Row_ID, Name, CR, Size, Species, Type, Usage, Slug, Image_URL, Tags
+            Row_ID, Name, CR, Size, Species, Usage, Slug, Image_URL, Tags
         `)
         .eq('Is_Live', true)
         .order('Name', { ascending: true });
@@ -23,7 +25,7 @@ export async function getLiveMonsters() {
  * Fetch full monster details by Slug.
  */
 export async function getMonsterBySlug(slug) {
-    // 1. Get Core Monster Data
+    // 1. Get Core Monster Datas
     const { data: monster, error } = await supabase
         .from('monsters')
         .select('*')
