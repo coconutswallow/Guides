@@ -3,7 +3,7 @@
  * * View controller for the main monster list (Library).
  * Handles:
  * 1. Fetching the full list of live monsters.
- * 2. Generating dynamic filter options (Species, Usage) based on the data.
+ * 2. Generating dynamic filter options (Species, Usage, Tags, Habitats).
  * 3. Rendering the filter UI and the monster grid.
  * 4. Client-side filtering logic.
  */
@@ -16,7 +16,6 @@ import { getLiveMonsters } from '../monster-service.js';
  */
 export async function renderMonsterLibrary(container) {
     // 1. View Cleanup
-    // Reset any layout-specific classes (like 'page-wide') from previous views.
     const parentPage = container.closest('.page');
     if (parentPage) {
         parentPage.classList.remove('page-wide');
@@ -26,22 +25,31 @@ export async function renderMonsterLibrary(container) {
     const monsters = await getLiveMonsters();
 
     // 3. Dynamic Filter Generation
-    // Extract unique Species and Usage values from the data to populate dropdowns.
-    // We filter(Boolean) to ensure we don't create options for null/undefined values.
+    // Species & Usage
     const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
     const uniqueUsage = [...new Set(monsters.map(m => m.usage).filter(Boolean))].sort();
+
+    // Tags: Flatten all tag arrays, remove nulls, get unique values
+    const uniqueTags = [...new Set(
+        monsters.flatMap(m => m.tags || [])
+    )].sort();
+
+    // Habitats: Flatten all habitat arrays (prepared in service), remove nulls
+    const uniqueHabitats = [...new Set(
+        monsters.flatMap(m => m.habitats || [])
+    )].sort();
 
     // 4. Render Layout
     const html = `
         <h2>Monster Compendium</h2>
         
         <div class="filter-container">
-            <div class="filter-group">
+            <div class="filter-group" style="flex: 2 0 300px;">
                 <label for="name-search">Name:</label>
                 <input type="text" id="name-search" class="filter-input" placeholder="Search by name...">
             </div>
 
-            <div class="filter-group">
+            <div class="filter-group" style="flex: 2 0 300px;">
                 <label for="usage-filter">Usage:</label>
                 <select id="usage-filter" class="filter-select">
                     <option value="">All Usage</option>
@@ -56,13 +64,29 @@ export async function renderMonsterLibrary(container) {
                     ${uniqueSpecies.map(s => `<option value="${s}">${s}</option>`).join('')}
                 </select>
             </div>
+
+            <div class="filter-group" style="flex: 1 0 150px;">
+                <label for="habitat-filter">Habitat:</label>
+                <select id="habitat-filter" class="filter-select">
+                    <option value="">All Habitats</option>
+                    ${uniqueHabitats.map(h => `<option value="${h}">${h}</option>`).join('')}
+                </select>
+            </div>
+
+            <div class="filter-group" style="flex: 1 0 150px;">
+                <label for="tag-filter">Tag:</label>
+                <select id="tag-filter" class="filter-select">
+                    <option value="">All Tags</option>
+                    ${uniqueTags.map(t => `<option value="${t}">${t}</option>`).join('')}
+                </select>
+            </div>
             
-            <div class="filter-group">
+            <div class="filter-group" style="flex: 0 1 100px;">
                 <label for="cr-min">CR From:</label>
                 <input type="number" id="cr-min" class="filter-input" placeholder="Min" min="0" step="0.125">
             </div>
 
-            <div class="filter-group">
+            <div class="filter-group" style="flex: 0 1 100px;">
                 <label for="cr-max">CR To:</label>
                 <input type="number" id="cr-max" class="filter-input" placeholder="Max" min="0" step="0.125">
             </div>
@@ -98,6 +122,8 @@ export async function renderMonsterLibrary(container) {
         const name = document.getElementById('name-search').value.toLowerCase();
         const usage = document.getElementById('usage-filter').value;
         const species = document.getElementById('species-filter').value;
+        const habitat = document.getElementById('habitat-filter').value; // New
+        const tag = document.getElementById('tag-filter').value;         // New
         const size = document.getElementById('size-filter').value;
         
         const minVal = document.getElementById('cr-min').value;
@@ -112,11 +138,17 @@ export async function renderMonsterLibrary(container) {
             const matchesSpecies = !species || m.species === species;
             const matchesSize = !size || m.size === size;
             
+            // Habitat Check (Array includes)
+            const matchesHabitat = !habitat || (m.habitats && m.habitats.includes(habitat));
+            
+            // Tag Check (Array includes)
+            const matchesTag = !tag || (m.tags && m.tags.includes(tag));
+            
             const crVal = parseFloat(m.cr);
             const matchesMin = isNaN(minCR) || crVal >= minCR;
             const matchesMax = isNaN(maxCR) || crVal <= maxCR;
 
-            return matchesName && matchesUsage && matchesSpecies && matchesSize && matchesMin && matchesMax;
+            return matchesName && matchesUsage && matchesSpecies && matchesSize && matchesHabitat && matchesTag && matchesMin && matchesMax;
         });
 
         renderGrid(filtered);
@@ -124,13 +156,22 @@ export async function renderMonsterLibrary(container) {
 
     // 7. Attach Event Listeners
     if(document.getElementById('name-search')) {
-        const inputs = ['name-search', 'usage-filter', 'species-filter', 'cr-min', 'cr-max', 'size-filter'];
+        const inputs = [
+            'name-search', 'usage-filter', 'species-filter', 
+            'habitat-filter', 'tag-filter', // New inputs
+            'cr-min', 'cr-max', 'size-filter'
+        ];
+        
         inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', handleFilter);
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('input', handleFilter);
         });
 
         document.getElementById('reset-filters').addEventListener('click', () => {
-            inputs.forEach(id => document.getElementById(id).value = '');
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.value = '';
+            });
             handleFilter();
         });
     }
@@ -157,20 +198,17 @@ function renderGrid(monsters) {
     grid.innerHTML = monsters.map(m => `
         <div class="monster-card">
             ${m.image_url ? 
-                // Only render the image container if a URL exists
                 `<div class="monster-card-image">
                     <img src="${m.image_url}" alt="${m.name}" loading="lazy">
                  </div>` 
-                : 
-                // Render nothing if no image
-                ''
+                : ''
             }
             
             <div class="monster-card-content">
                 <h3><a href="#/${m.slug}">${m.name}</a></h3>
                 <p class="monster-cr">CR ${formatCR(m.cr)}</p>
                 <p class="monster-type">${m.size} ${m.species}</p>
-            </div>
+                </div>
         </div>
     `).join('');
 }

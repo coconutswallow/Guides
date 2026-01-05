@@ -8,13 +8,20 @@ import { supabase } from './monster-app.js';
 
 /**
  * Fetch all Live monsters for the Library.
+ * * UPDATED: Now fetches related Habitats via the join table.
  * @returns {Promise<Array>}
  */
 export async function getLiveMonsters() {
+    // We use Supabase syntax to join tables:
+    // monster_habitats ( lookup_habitats ( name ) )
+    // This assumes your foreign keys are set up correctly in the database.
     const { data, error } = await supabase
         .from('monsters')
         .select(`
-            row_id, name, cr, size, species, usage, slug, image_url, tags
+            row_id, name, cr, size, species, usage, slug, image_url, tags,
+            monster_habitats (
+                lookup_habitats ( name )
+            )
         `)
         .eq('is_live', true)
         .order('name', { ascending: true });
@@ -23,7 +30,20 @@ export async function getLiveMonsters() {
         console.error('Error fetching monster library:', error);
         return [];
     }
-    return data;
+
+    // Process the data to flatten the nested Supabase structure
+    // from: monster_habitats: [{ lookup_habitats: { name: 'Forest' } }] 
+    // to:   habitats: ['Forest']
+    return data.map(monster => {
+        const flatHabitats = monster.monster_habitats 
+            ? monster.monster_habitats.map(mh => mh.lookup_habitats?.name).filter(Boolean)
+            : [];
+
+        return {
+            ...monster,
+            habitats: flatHabitats
+        };
+    });
 }
 
 /**
@@ -35,7 +55,6 @@ export async function getLiveMonsters() {
  */
 export async function getMonsterBySlug(slug) {
     // 1. Get Core Monster Data
-    // We fetch the monster first. If this fails, the page is truly 404.
     const { data: monster, error } = await supabase
         .from('monsters')
         .select('*')
@@ -49,10 +68,7 @@ export async function getMonsterBySlug(slug) {
     }
 
     // 2. Get Creator Name (Safe Lookup)
-    // We perform this separately so that if RLS blocks access to the 'users' table,
-    // the monster statblock still loads (just without the name).
     let creatorName = 'Unknown';
-    
     if (monster.creator_id) {
         const { data: userData } = await supabase
             .from('users')
@@ -73,7 +89,6 @@ export async function getMonsterBySlug(slug) {
         .order('display_order', { ascending: true });
 
     // 4. Return Combined Object
-    // We manually inject the 'creator_name' property for the view to use.
     return { 
         ...monster, 
         features: features || [],
