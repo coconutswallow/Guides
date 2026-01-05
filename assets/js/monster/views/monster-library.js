@@ -1,19 +1,11 @@
 /**
  * monster-library.js
  * * View controller for the main monster list (Library).
- * Handles:
- * 1. Fetching the full list of live monsters.
- * 2. Generating dynamic filter options (Species, Usage, Tags, Habitats).
- * 3. Rendering the filter UI and the monster grid.
- * 4. Client-side filtering logic.
+ * * UPDATED: Added Multi-Select Checkbox logic for Tags.
  */
 
 import { getLiveMonsters } from '../monster-service.js';
 
-/**
- * Main render function for the Library View.
- * @param {HTMLElement} container - The DOM element to render content into.
- */
 export async function renderMonsterLibrary(container) {
     // 1. View Cleanup
     const parentPage = container.closest('.page');
@@ -25,21 +17,17 @@ export async function renderMonsterLibrary(container) {
     const monsters = await getLiveMonsters();
 
     // 3. Dynamic Filter Generation
-    // Species & Usage
     const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
     const uniqueUsage = [...new Set(monsters.map(m => m.usage).filter(Boolean))].sort();
+    
+    // Habitats (Single Select)
+    const uniqueHabitats = [...new Set(monsters.flatMap(m => m.habitats || []))].sort();
 
-    // Tags: Flatten all tag arrays, remove nulls, get unique values
-    const uniqueTags = [...new Set(
-        monsters.flatMap(m => m.tags || [])
-    )].sort();
-
-    // Habitats: Flatten all habitat arrays (prepared in service), remove nulls
-    const uniqueHabitats = [...new Set(
-        monsters.flatMap(m => m.habitats || [])
-    )].sort();
+    // Tags (Multi Select) - Flatten and Sort
+    const uniqueTags = [...new Set(monsters.flatMap(m => m.tags || []))].sort();
 
     // 4. Render Layout
+    // We use a scrollable div for tags to allow easy multi-selection
     const html = `
         <h2>Monster Compendium</h2>
         
@@ -73,12 +61,22 @@ export async function renderMonsterLibrary(container) {
                 </select>
             </div>
 
-            <div class="filter-group" style="flex: 1 0 150px;">
-                <label for="tag-filter">Tag:</label>
-                <select id="tag-filter" class="filter-select">
-                    <option value="">All Tags</option>
-                    ${uniqueTags.map(t => `<option value="${t}">${t}</option>`).join('')}
-                </select>
+            <div class="filter-group" style="flex: 1 0 200px; display: flex; flex-direction: column;">
+                <label>Tags (Select multiple):</label>
+                <div id="tag-container" style="
+                    height: 100px; 
+                    overflow-y: auto; 
+                    border: 1px solid var(--color-line, #ccc); 
+                    background: var(--color-bg, #fff); 
+                    padding: 0.5rem; 
+                    border-radius: 4px;
+                ">
+                    ${uniqueTags.length > 0 ? uniqueTags.map(t => `
+                        <label style="display: block; cursor: pointer; margin-bottom: 2px; font-size: 0.9em;">
+                            <input type="checkbox" value="${t}" class="tag-checkbox"> ${t}
+                        </label>
+                    `).join('') : '<span style="color: #888; font-style: italic; font-size: 0.8em;">No tags available</span>'}
+                </div>
             </div>
             
             <div class="filter-group" style="flex: 0 1 100px;">
@@ -118,18 +116,23 @@ export async function renderMonsterLibrary(container) {
 
     // 6. Define Filter Logic
     const handleFilter = () => {
-        // Gather values
+        // Gather standard inputs
         const name = document.getElementById('name-search').value.toLowerCase();
         const usage = document.getElementById('usage-filter').value;
         const species = document.getElementById('species-filter').value;
-        const habitat = document.getElementById('habitat-filter').value; // New
-        const tag = document.getElementById('tag-filter').value;         // New
+        const habitat = document.getElementById('habitat-filter').value;
         const size = document.getElementById('size-filter').value;
         
         const minVal = document.getElementById('cr-min').value;
         const maxVal = document.getElementById('cr-max').value;
         const minCR = minVal === '' ? NaN : parseFloat(minVal);
         const maxCR = maxVal === '' ? NaN : parseFloat(maxVal);
+
+        // Gather Multi-Select Tags
+        // 1. Get all checked boxes
+        const checkedBoxes = document.querySelectorAll('.tag-checkbox:checked');
+        // 2. Map them to an array of strings
+        const selectedTags = Array.from(checkedBoxes).map(cb => cb.value);
 
         // Apply filters
         const filtered = monsters.filter(m => {
@@ -138,17 +141,23 @@ export async function renderMonsterLibrary(container) {
             const matchesSpecies = !species || m.species === species;
             const matchesSize = !size || m.size === size;
             
-            // Habitat Check (Array includes)
+            // Habitat Check (Single Select logic)
             const matchesHabitat = !habitat || (m.habitats && m.habitats.includes(habitat));
             
-            // Tag Check (Array includes)
-            const matchesTag = !tag || (m.tags && m.tags.includes(tag));
-            
+            // Tag Check (Multi-Select Logic)
+            // If no tags selected, match everything.
+            // If tags selected, monster must have ALL selected tags (AND logic).
+            const matchesTags = selectedTags.length === 0 || (
+                m.tags && selectedTags.every(t => m.tags.includes(t))
+            );
+
+            // CR Logic
             const crVal = parseFloat(m.cr);
             const matchesMin = isNaN(minCR) || crVal >= minCR;
             const matchesMax = isNaN(maxCR) || crVal <= maxCR;
 
-            return matchesName && matchesUsage && matchesSpecies && matchesSize && matchesHabitat && matchesTag && matchesMin && matchesMax;
+            return matchesName && matchesUsage && matchesSpecies && matchesSize && 
+                   matchesHabitat && matchesTags && matchesMin && matchesMax;
         });
 
         renderGrid(filtered);
@@ -156,10 +165,10 @@ export async function renderMonsterLibrary(container) {
 
     // 7. Attach Event Listeners
     if(document.getElementById('name-search')) {
+        // Standard inputs
         const inputs = [
             'name-search', 'usage-filter', 'species-filter', 
-            'habitat-filter', 'tag-filter', // New inputs
-            'cr-min', 'cr-max', 'size-filter'
+            'habitat-filter', 'cr-min', 'cr-max', 'size-filter'
         ];
         
         inputs.forEach(id => {
@@ -167,11 +176,21 @@ export async function renderMonsterLibrary(container) {
             if(el) el.addEventListener('input', handleFilter);
         });
 
+        // Add listeners to all checkbox tags
+        document.querySelectorAll('.tag-checkbox').forEach(cb => {
+            cb.addEventListener('change', handleFilter);
+        });
+
+        // Reset Button
         document.getElementById('reset-filters').addEventListener('click', () => {
+            // Reset text/select inputs
             inputs.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.value = '';
             });
+            // Reset checkboxes
+            document.querySelectorAll('.tag-checkbox').forEach(cb => cb.checked = false);
+            
             handleFilter();
         });
     }
@@ -190,7 +209,7 @@ function renderGrid(monsters) {
     countLabel.textContent = `Showing ${monsters.length} monsters`;
     
     if (monsters.length === 0) {
-        grid.innerHTML = '<p>No monsters found.</p>';
+        grid.innerHTML = '<p>No monsters found matching your criteria.</p>';
         return;
     }
 
@@ -208,16 +227,11 @@ function renderGrid(monsters) {
                 <h3><a href="#/${m.slug}">${m.name}</a></h3>
                 <p class="monster-cr">CR ${formatCR(m.cr)}</p>
                 <p class="monster-type">${m.size} ${m.species}</p>
-                </div>
+            </div>
         </div>
     `).join('');
 }
 
-/**
- * Helper to format Challenge Rating (CR) into standard D&D fractions.
- * @param {number} val - The CR value.
- * @returns {string|number} - Formatted string (e.g., "1/4") or the original number.
- */
 function formatCR(val) {
     if (val === 0.125) return '1/8';
     if (val === 0.25) return '1/4';
