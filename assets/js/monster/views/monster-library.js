@@ -26,7 +26,6 @@ export async function renderMonsterLibrary(container) {
     const uniqueHabitats = [...new Set(allMonsters.flatMap(m => m.habitats))].sort();
 
     // 3. Render Layout
-    // We inject the <style> block at the bottom to ensure layout works even if external CSS fails
     const template = `
         <div class="library-header">
             <h1>Monster Library</h1>
@@ -42,8 +41,8 @@ export async function renderMonsterLibrary(container) {
             <div class="filter-group">
                 <label>CR Range</label>
                 <div style="display: flex; gap: 0.5rem;">
-                    <input type="number" id="filter-cr-min" placeholder="Min" step="0.125" min="0" style="width: 70px;">
-                    <input type="number" id="filter-cr-max" placeholder="Max" step="0.125" min="0" style="width: 70px;">
+                    <input type="number" id="filter-cr-min" placeholder="Min" step="0.125" min="0">
+                    <input type="number" id="filter-cr-max" placeholder="Max" step="0.125" min="0">
                 </div>
             </div>
 
@@ -95,151 +94,6 @@ export async function renderMonsterLibrary(container) {
 
         <div id="monster-grid" class="monster-grid">
             </div>
-
-        <style>
-            /* --- INJECTED LAYOUT STYLES --- */
-            
-            /* 1. Header & Page */
-            .library-header {
-                text-align: center;
-                margin-bottom: 2rem;
-            }
-
-            /* 2. Filters Layout */
-            .filter-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 1rem;
-                background: #f8f9fa; /* Light gray background */
-                padding: 1.5rem;
-                border-radius: 8px;
-                margin-bottom: 2rem;
-                align-items: flex-end;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            }
-
-            .filter-group {
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem;
-                flex: 1 1 auto; /* Allow items to grow/shrink properly */
-            }
-
-            .filter-group label {
-                font-size: 0.8rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                color: #555;
-            }
-
-            .filter-group input, 
-            .filter-group select {
-                padding: 0.6rem;
-                border: 1px solid #ced4da;
-                border-radius: 4px;
-                font-size: 0.95rem;
-                background-color: white;
-            }
-
-            /* 3. Grid Layout */
-            .monster-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 2rem;
-                padding-bottom: 3rem;
-            }
-
-            .monster-card {
-                background: white;
-                border: 1px solid #e0e0e0;
-                border-radius: 8px;
-                overflow: hidden;
-                text-decoration: none;
-                color: inherit;
-                display: flex;
-                flex-direction: column;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-                height: 100%;
-            }
-
-            .monster-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-                border-color: #b0b0b0;
-            }
-
-            /* 4. Thumbnail Fixes */
-            .card-image {
-                height: 180px; /* Force consistent height */
-                width: 100%;
-                background-color: #eee;
-                overflow: hidden;
-                position: relative;
-            }
-
-            .card-image img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover; /* Crop image to fill container */
-                object-position: top center;
-            }
-
-            .card-image.placeholder {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #aaa;
-                font-size: 2rem;
-                background: #f0f0f0;
-            }
-            .card-image.placeholder::after {
-                content: '🐉'; /* Simple fallback icon */
-            }
-
-            /* 5. Card Content */
-            .card-content {
-                padding: 1.25rem;
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-            }
-
-            .card-content h3 {
-                margin: 0 0 0.5rem 0;
-                font-size: 1.25rem;
-                color: #333;
-            }
-
-            .card-meta {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 0.75rem;
-                font-size: 0.9rem;
-                color: #666;
-            }
-
-            .cr-badge {
-                background: #e9ecef;
-                padding: 0.25rem 0.6rem;
-                border-radius: 4px;
-                font-weight: bold;
-                color: #495057;
-            }
-
-            .species-text {
-                font-style: italic;
-            }
-
-            .card-tags {
-                margin-top: auto; /* Push to bottom */
-                padding-top: 0.75rem;
-                border-top: 1px solid #eee;
-                font-size: 0.85rem;
-                color: #888;
-            }
-        </style>
     `;
 
     container.innerHTML = template;
@@ -304,7 +158,7 @@ function renderGrid(monsters) {
     const grid = document.getElementById('monster-grid');
     
     if (monsters.length === 0) {
-        grid.innerHTML = '<p class="no-results" style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #666;">No monsters found matching your criteria.</p>';
+        grid.innerHTML = '<p class="no-results">No monsters found matching your criteria.</p>';
         return;
     }
 
@@ -327,10 +181,7 @@ function renderGrid(monsters) {
                     <span class="cr-badge">CR ${crDisplay}</span>
                     <span class="species-text">${m.size} ${m.species}</span>
                 </div>
-                ${m.habitats && m.habitats.length > 0 
-                    ? `<div class="card-tags"><small>🏝️ ${m.habitats[0]}${m.habitats.length > 1 ? ` +${m.habitats.length-1}` : ''}</small></div>` 
-                    : ''
-                }
+                ${m.habitats.length > 0 ? `<div class="card-tags"><small>🏝️ ${m.habitats[0]}${m.habitats.length > 1 ? ` +${m.habitats.length-1}` : ''}</small></div>` : ''}
             </div>
         </a>
         `;

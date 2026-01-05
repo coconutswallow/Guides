@@ -67,7 +67,7 @@ export async function getMonsterBySlug(slug) {
         .from('monsters')
         .select(`
             *,
-            users:created_by ( discord_name ),
+            users ( discord_name ),
             monster_habitats (
                 lookup_habitats!fk_monster_habitats_lookup ( name )
             )
@@ -87,10 +87,6 @@ export async function getMonsterBySlug(slug) {
         .eq('parent_row_id', monster.row_id)
         .order('display_order', { ascending: true });
 
-    // Update this line to match the alias used above (users -> created_by)
-    // If Supabase returns it as "users" still due to the alias, check the console, 
-    // but usually, it returns it under the alias name if you provided one like "creator:created_by".
-    // Here we used "users:created_by", so it will still be attached as "users".
     const creatorName = monster.users?.discord_name || 'Unknown';
     
     // Flatten Habitats for Detail View
