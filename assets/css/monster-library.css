@@ -55,7 +55,7 @@
 .reset-button {
   padding: 0.5em 1.5em;
   background: var(--color-primary);
-  color: #FDF1DC;
+  color: #fdf1dc;
   border: none;
   border-radius: 0px;
   font-family: var(--font-header);
@@ -163,6 +163,6 @@
     align-items: stretch;
   }
   .monster-list {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
   }
 }
