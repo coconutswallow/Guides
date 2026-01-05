@@ -16,27 +16,36 @@ const routes = {
 
 async function router() {
     const app = document.getElementById('app');
+    // Ensure we have a valid path (e.g., "/" or "/ancient-sword-dragon")
     let hash = window.location.hash.slice(1) || '/';
     
     // Auth Clean-up (Spec 1.3)
     if (hash.includes('access_token')) {
-        // In a full implementation, pass this to AuthManager
         window.location.hash = '/';
         return;
     }
 
-    // Basic Pattern Matching for Routes
     let matchedRenderer = null;
     let params = {};
 
-    if (hash.startsWith('/monster/')) {
-        const slug = hash.split('/monster/')[1];
+    // 1. Check for Exact Matches first (Home, Library, etc.)
+    if (routes[hash]) {
+        matchedRenderer = routes[hash];
+    } 
+    // 2. If no exact match, treat it as a Monster Detail view
+    // (We assume the hash is "/{slug}")
+    else if (hash.startsWith('/')) {
+        // Remove the leading slash to get the clean slug
+        const slug = hash.slice(1); 
+        
         if (slug) {
             matchedRenderer = renderMonsterDetail;
             params = { slug };
         }
-    } else {
-        matchedRenderer = routes[hash] || routes['/'];
+    } 
+    // 3. Fallback for weird URLs
+    else {
+        matchedRenderer = routes['/'];
     }
 
     // Render
@@ -44,6 +53,7 @@ async function router() {
     if (matchedRenderer) {
         await matchedRenderer(app, params);
     } else {
+        // Optional: Handle 404 differently if the slug turns out to be invalid in the API
         app.innerHTML = '<h2>404 - Page Not Found</h2>';
     }
 }
