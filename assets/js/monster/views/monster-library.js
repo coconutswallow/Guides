@@ -1,20 +1,37 @@
+/**
+ * monster-library.js
+ * * View controller for the main monster list (Library).
+ * Handles:
+ * 1. Fetching the full list of live monsters.
+ * 2. Generating dynamic filter options (Species, Usage) based on the data.
+ * 3. Rendering the filter UI and the monster grid.
+ * 4. Client-side filtering logic.
+ */
+
 import { getLiveMonsters } from '../monster-service.js';
 
+/**
+ * Main render function for the Library View.
+ * @param {HTMLElement} container - The DOM element to render content into.
+ */
 export async function renderMonsterLibrary(container) {
-    // 1. Clean up layout from previous views
+    // 1. View Cleanup
+    // Reset any layout-specific classes (like 'page-wide') from previous views.
     const parentPage = container.closest('.page');
     if (parentPage) {
         parentPage.classList.remove('page-wide');
     }
 
+    // 2. Data Fetching
     const monsters = await getLiveMonsters();
 
-    // 2. Extract unique Species and Usage for the dropdowns
-    //    We filter(Boolean) to ignore null/undefined values
+    // 3. Dynamic Filter Generation
+    // Extract unique Species and Usage values from the data to populate dropdowns.
+    // We filter(Boolean) to ensure we don't create options for null/undefined values.
     const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
     const uniqueUsage = [...new Set(monsters.map(m => m.usage).filter(Boolean))].sort();
 
-    // 3. Render HTML matching style.css classes
+    // 4. Render Layout
     const html = `
         <h2>Monster Compendium</h2>
         
@@ -72,13 +89,14 @@ export async function renderMonsterLibrary(container) {
 
     container.innerHTML = html;
 
-    // 4. Initial Render
+    // 5. Initial Render of the Grid
     renderGrid(monsters);
 
-    // 5. Filter Logic
+    // 6. Define Filter Logic
     const handleFilter = () => {
+        // Gather values
         const name = document.getElementById('name-search').value.toLowerCase();
-        const usage = document.getElementById('usage-filter').value; // New usage logic
+        const usage = document.getElementById('usage-filter').value;
         const species = document.getElementById('species-filter').value;
         const size = document.getElementById('size-filter').value;
         
@@ -87,9 +105,10 @@ export async function renderMonsterLibrary(container) {
         const minCR = minVal === '' ? NaN : parseFloat(minVal);
         const maxCR = maxVal === '' ? NaN : parseFloat(maxVal);
 
+        // Apply filters
         const filtered = monsters.filter(m => {
             const matchesName = m.name.toLowerCase().includes(name);
-            const matchesUsage = !usage || m.usage === usage; // New usage logic
+            const matchesUsage = !usage || m.usage === usage;
             const matchesSpecies = !species || m.species === species;
             const matchesSize = !size || m.size === size;
             
@@ -103,7 +122,7 @@ export async function renderMonsterLibrary(container) {
         renderGrid(filtered);
     };
 
-    // 6. Attach Event Listeners
+    // 7. Attach Event Listeners
     if(document.getElementById('name-search')) {
         const inputs = ['name-search', 'usage-filter', 'species-filter', 'cr-min', 'cr-max', 'size-filter'];
         inputs.forEach(id => {
@@ -117,6 +136,10 @@ export async function renderMonsterLibrary(container) {
     }
 }
 
+/**
+ * Renders the grid of monster cards.
+ * @param {Array} monsters - The filtered list of monsters to display.
+ */
 function renderGrid(monsters) {
     const grid = document.getElementById('monster-grid');
     const countLabel = document.getElementById('monster-count');
@@ -130,15 +153,16 @@ function renderGrid(monsters) {
         return;
     }
 
+    // Render Cards
     grid.innerHTML = monsters.map(m => `
         <div class="monster-card">
             ${m.image_url ? 
-                // Only render the image div if URL exists
+                // Only render the image container if a URL exists
                 `<div class="monster-card-image">
                     <img src="${m.image_url}" alt="${m.name}" loading="lazy">
                  </div>` 
                 : 
-                // Render nothing (empty string) if no image
+                // Render nothing if no image
                 ''
             }
             
@@ -151,7 +175,11 @@ function renderGrid(monsters) {
     `).join('');
 }
 
-// Keeping the hardcoded helper function per your request
+/**
+ * Helper to format Challenge Rating (CR) into standard D&D fractions.
+ * @param {number} val - The CR value.
+ * @returns {string|number} - Formatted string (e.g., "1/4") or the original number.
+ */
 function formatCR(val) {
     if (val === 0.125) return '1/8';
     if (val === 0.25) return '1/4';

@@ -1,25 +1,48 @@
+/**
+ * monster-app.js
+ * * Main entry point for the Monster Manual application.
+ * Handles:
+ * 1. Supabase Client Initialization
+ * 2. Hash-based Routing (SPA)
+ * 3. View Orchestration
+ */
+
 import { renderMonsterLibrary } from './views/monster-library.js';
 import { renderMonsterDetail } from './views/monster-detail.js';
 
-// --- Supabase Config ---
-// These keys are safe in the code long as role-level security is implemented
+// --- Supabase Configuration ---
+// The SUPABASE_URL and ANON_KEY are exposed to the client.
+// Security is handled via Row Level Security (RLS) policies on the backend,
+// ensuring users can only access public 'live' data.
 const SUPABASE_URL = 'https://iepqxczcyvrxcbyeiscc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcHF4Y3pjeXZyeGNieWVpc2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjU2MDEsImV4cCI6MjA3OTk0MTYwMX0.9fK4TppNy7IekO3n4Uwd37dbqMQ7KRhFkex_P_JSeVA';
+
 export const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// --- Router ---
+// --- Route Definitions ---
+// Maps exact hash paths to their specific render functions.
 const routes = {
     '/': renderMonsterLibrary,
-    '/monsters': renderMonsterLibrary,
-    '/monster/:slug': renderMonsterDetail
+    '/monsters': renderMonsterLibrary
+    // Dynamic routes (like /:slug) are handled logically in the router function
 };
 
+/**
+ * Main Router Function
+ * * Inspects the window.location.hash to determine which view to render.
+ * Logic Hierarchy:
+ * 1. OAuth Redirects: Cleans up URL fragments from Supabase Auth.
+ * 2. Exact Matches: Checks static routes defined in `routes` object.
+ * 3. Dynamic Slugs: Assumes any other "/string" is a monster slug.
+ * 4. Fallback: Redirects to home/library if no match found.
+ */
 async function router() {
     const app = document.getElementById('app');
-    // Ensure we have a valid path (e.g., "/" or "/ancient-sword-dragon")
+    
+    // Normalize hash: remove the '#' symbol. Default to '/' if empty.
     let hash = window.location.hash.slice(1) || '/';
     
-    // Auth Clean-up (Spec 1.3)
+    // Handle Supabase OAuth redirects (clears tokens from URL after login)
     if (hash.includes('access_token')) {
         window.location.hash = '/';
         return;
@@ -28,36 +51,42 @@ async function router() {
     let matchedRenderer = null;
     let params = {};
 
-    // 1. Check for Exact Matches first (Home, Library, etc.)
+    // 1. Check for Exact Route Matches
     if (routes[hash]) {
         matchedRenderer = routes[hash];
     } 
-    // 2. If no exact match, treat it as a Monster Detail view
-    // (We assume the hash is "/{slug}")
+    // 2. Handle Dynamic Monster Slugs (e.g., #/ancient-sword-dragon)
+    // We assume any non-exact match starting with '/' is a monster detail request.
     else if (hash.startsWith('/')) {
-        // Remove the leading slash to get the clean slug
-        const slug = hash.slice(1); 
+        const slug = hash.slice(1); // Extract "ancient-sword-dragon" from "/ancient-sword-dragon"
         
         if (slug) {
             matchedRenderer = renderMonsterDetail;
             params = { slug };
         }
     } 
-    // 3. Fallback for weird URLs
+    // 3. Fallback / Default Route
     else {
         matchedRenderer = routes['/'];
     }
 
-    // Render
+    // Render the View
     app.innerHTML = '<div class="loading">Loading...</div>';
+    
     if (matchedRenderer) {
-        await matchedRenderer(app, params);
+        try {
+            await matchedRenderer(app, params);
+        } catch (error) {
+            console.error("View rendering failed:", error);
+            app.innerHTML = '<div class="error">Sorry, something went wrong loading this page.</div>';
+        }
     } else {
-        // Optional: Handle 404 differently if the slug turns out to be invalid in the API
         app.innerHTML = '<h2>404 - Page Not Found</h2>';
     }
 }
 
-// Initialize
+// --- Initialization ---
+// Listen for hash changes to update view without reloading page
 window.addEventListener('hashchange', router);
+// Handle initial load
 window.addEventListener('load', router);

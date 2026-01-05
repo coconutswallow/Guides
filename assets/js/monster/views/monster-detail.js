@@ -1,5 +1,19 @@
+/**
+ * monster-detail.js
+ * * View controller for the single Monster Detail page (Statblock).
+ * Handles:
+ * 1. Fetching full monster data.
+ * 2. Calculating derived D&D stats.
+ * 3. Rendering the responsive layout.
+ */
+
 import { getMonsterBySlug } from '../monster-service.js';
 
+/**
+ * Main render function for the Detail View.
+ * @param {HTMLElement} container - The DOM element to render into.
+ * @param {Object} params - Route parameters (must include .slug).
+ */
 export async function renderMonsterDetail(container, params) {
     container.innerHTML = '<div class="loading">Summoning monster...</div>';
     
@@ -10,15 +24,15 @@ export async function renderMonsterDetail(container, params) {
         return;
     }
 
-    // Apply Page Wide Class
+    // Apply Page Wide Class for better reading width
     const parentPage = container.closest('.page');
     if (parentPage) {
         parentPage.classList.add('page-wide');
     }
 
     // --- LAYOUT LOGIC ---
+    // Determine if we need a 2-column layout (Left: Lore/Image, Right: Stats)
     const hasLeftContent = monster.image_url || monster.description || monster.additional_info;
-    
     const layoutStyle = hasLeftContent 
         ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;'
         : 'display: block; max-width: 800px; margin: 0 auto;';
@@ -27,6 +41,7 @@ export async function renderMonsterDetail(container, params) {
     const pb = calculatePB(monster.cr);
     const xp = calculateXP(monster.cr);
     
+    // Group features for cleaner rendering
     const features = {
         Trait: monster.features.filter(f => f.type === 'Trait'),
         Action: monster.features.filter(f => f.type === 'Action'),
@@ -38,6 +53,7 @@ export async function renderMonsterDetail(container, params) {
 
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
+    // --- RENDER ---
     const template = `
         <div class="monster-header" style="margin-bottom: 2rem;">
             <a href="#/monsters" class="btn back-button" style="margin-bottom: 1rem;">← Back to Library</a>
@@ -125,7 +141,7 @@ export async function renderMonsterDetail(container, params) {
 
                     <div class="statblock-creator">
                        <p style="margin: 0.2em 0;">
-                           <strong>Created by:</strong> ${monster.creator_id || 'Unknown'} ${monster.creator_notes ? `(${monster.creator_notes})` : ''}
+                           <strong>Created by:</strong> ${monster.creator_name} ${monster.creator_notes ? `(${monster.creator_notes})` : ''}
                        </p>
                        <p style="margin: 0.2em 0;">
                            <strong>Usage:</strong> ${monster.usage || 'Unknown'}
@@ -139,8 +155,7 @@ export async function renderMonsterDetail(container, params) {
             .monster-description { background: transparent; padding: 0; border: none; }
             .statblock-creator p { font-size: 0.9em; font-style: italic; color: var(--color-primary); }
             
-            /* --- CSS FIX FOR BULLETS --- */
-            /* We use !important to force overrides of any global list resets */
+            /* CSS Fix for Nested Lists within Features/Markdown */
             .feature-item ul, 
             .monster-description ul { 
                 margin: 0.5em 0 0.5em 1.5em !important; 
@@ -166,7 +181,7 @@ export async function renderMonsterDetail(container, params) {
     container.innerHTML = template;
 }
 
-// --- Helpers ---
+// --- Helper Functions ---
 
 function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
@@ -205,6 +220,10 @@ function formatInitiative(dexScore, proficiency, pb) {
     return `${formatSign(mod)} (${dexScore})`;
 }
 
+/**
+ * Generates the HTML for the Ability Score table.
+ * Includes Modifiers and Save Modifiers.
+ */
 function renderAbilityTable(scores, saves, pb) {
     const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
     const getCellData = (attr) => {
@@ -253,21 +272,13 @@ function renderFeatureBucket(list, title) {
 
 function renderFeatureList(list) {
     return list.map(f => {
-        // 1. Parse markdown fully (supports <ul>, <table>, etc.)
         let html = marked.parse(f.description);
-
-        // 2. Prepare the Name HTML
         const titleHtml = `<strong><em>${f.name}.</em></strong> `;
-
-        // 3. Inject Name into the first paragraph to maintain D&D styling
         if (html.startsWith('<p>')) {
             html = html.replace('<p>', `<p>${titleHtml}`);
         } else {
-            // Fallback if description starts with a list or other tag
             html = `<p>${titleHtml}</p>` + html;
         }
-
-        // 4. Return as a DIV (not P) to allow nested blocks
         return `<div class="feature-item">${html}</div>`;
     }).join('');
 }
