@@ -8,19 +8,18 @@ import { supabase } from './monster-app.js';
 
 /**
  * Fetch all Live monsters for the Library.
- * * UPDATED: Now fetches related Habitats via the join table.
+ * * UPDATED: Fixed PGRST201 error by explicitly specifying the foreign key
+ * * column (!habitat_id) for the lookup_habitats join.
  * @returns {Promise<Array>}
  */
 export async function getLiveMonsters() {
-    // We use Supabase syntax to join tables:
-    // monster_habitats ( lookup_habitats ( name ) )
-    // This assumes your foreign keys are set up correctly in the database.
+    // We use the syntax 'table!fk_column ( columns )' to resolve ambiguity.
     const { data, error } = await supabase
         .from('monsters')
         .select(`
             row_id, name, cr, size, species, usage, slug, image_url, tags,
             monster_habitats (
-                lookup_habitats ( name )
+                lookup_habitats!habitat_id ( name )
             )
         `)
         .eq('is_live', true)
@@ -32,8 +31,6 @@ export async function getLiveMonsters() {
     }
 
     // Process the data to flatten the nested Supabase structure
-    // from: monster_habitats: [{ lookup_habitats: { name: 'Forest' } }] 
-    // to:   habitats: ['Forest']
     return data.map(monster => {
         const flatHabitats = monster.monster_habitats 
             ? monster.monster_habitats.map(mh => mh.lookup_habitats?.name).filter(Boolean)
