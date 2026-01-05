@@ -16,13 +16,13 @@ export async function renderMonsterDetail(container, params) {
         parentPage.classList.add('page-wide');
     }
 
-    // --- LOGIC FOR EMPTY LEFT COLUMN ---
-    // If no image AND no description, we shouldn't use a 2-column grid.
+    // --- LAYOUT LOGIC ---
+    // We only check for Image or Description now. 
+    // Metadata (Usage/Creator) has moved to the right, so it doesn't count as "Left Content".
     const hasLeftContent = monster.image_url || monster.description || monster.additional_info;
     
-    // Grid Style: 
-    // If content exists: 2 columns (1fr 1fr for better balance). 
-    // If empty: Block layout, centered statblock.
+    // If no left content, use a centered single-column block.
+    // If left content exists, use the 2-column grid.
     const layoutStyle = hasLeftContent 
         ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;'
         : 'display: block; max-width: 800px; margin: 0 auto;';
@@ -43,14 +43,15 @@ export async function renderMonsterDetail(container, params) {
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
     const template = `
+        <div class="monster-header" style="margin-bottom: 2rem;">
+            <a href="#/monsters" class="btn back-button" style="margin-bottom: 1rem;">← Back to Library</a>
+            <h1>${monster.name}</h1>
+        </div>
+
         <div class="monster-detail-layout" style="${layoutStyle}">
             
             ${hasLeftContent ? `
             <div class="left-col">
-                <a href="#/monsters" class="btn back-button" style="margin-bottom: 1rem;">← Back to Library</a>
-                
-                <h1>${monster.name}</h1>
-
                 <div class="monster-lore-container">
                     ${monster.image_url ? `
                     <div class="monster-image-container" style="margin-bottom: 1.5rem;">
@@ -68,11 +69,7 @@ export async function renderMonsterDetail(container, params) {
                     </div>
                 </div>
             </div>
-            ` : `
-            <div style="margin-bottom: 2rem;">
-                <a href="#/monsters" class="btn back-button">← Back to Library</a>
-            </div>
-            `}
+            ` : ''}
 
             <div class="right-col"> 
                 <blockquote class="stat-block">
@@ -131,15 +128,20 @@ export async function renderMonsterDetail(container, params) {
                     ` : ''}
 
                     <div class="statblock-creator">
-                       Source: ${monster.usage || 'Unknown'}
+                       <p style="margin: 0.2em 0;">
+                           <strong>Created by:</strong> ${monster.creator_id || 'Unknown'} ${monster.creator_notes ? `(${monster.creator_notes})` : ''}
+                       </p>
+                       <p style="margin: 0.2em 0;">
+                           <strong>Usage:</strong> ${monster.usage || 'Unknown'}
+                       </p>
                     </div>
                 </blockquote>
             </div>
         </div>
 
         <style>
-            /* Specific overrides for detail view */
             .monster-description { background: transparent; padding: 0; border: none; }
+            .statblock-creator p { font-size: 0.9em; font-style: italic; color: var(--color-primary); }
             
             @media (max-width: 1000px) {
                 .monster-detail-layout { grid-template-columns: 1fr !important; }
@@ -150,7 +152,8 @@ export async function renderMonsterDetail(container, params) {
     container.innerHTML = template;
 }
 
-// ... (Helpers remain exactly the same as before) ...
+// --- Helpers ---
+
 function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
 function calculatePB(cr) {
@@ -169,9 +172,9 @@ function calculateXP(cr) {
 function formatSign(val) { return val >= 0 ? `+${val}` : val; }
 
 function formatCR(val) {
-    if (val == 0.125) return '1/8';
-    if (val == 0.25) return '1/4';
-    if (val == 0.5) return '1/2';
+    if (val === 0.125) return '1/8';
+    if (val === 0.25) return '1/4';
+    if (val === 0.5) return '1/2';
     return val;
 }
 

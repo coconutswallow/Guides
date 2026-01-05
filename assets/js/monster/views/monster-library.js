@@ -9,8 +9,10 @@ export async function renderMonsterLibrary(container) {
 
     const monsters = await getLiveMonsters();
 
-    // 2. Extract unique Species for the dropdown
+    // 2. Extract unique Species and Usage for the dropdowns
+    //    We filter(Boolean) to ignore null/undefined values
     const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
+    const uniqueUsage = [...new Set(monsters.map(m => m.usage).filter(Boolean))].sort();
 
     // 3. Render HTML matching style.css classes
     const html = `
@@ -20,6 +22,14 @@ export async function renderMonsterLibrary(container) {
             <div class="filter-group">
                 <label for="name-search">Name:</label>
                 <input type="text" id="name-search" class="filter-input" placeholder="Search by name...">
+            </div>
+
+            <div class="filter-group">
+                <label for="usage-filter">Usage:</label>
+                <select id="usage-filter" class="filter-select">
+                    <option value="">All Usage</option>
+                    ${uniqueUsage.map(u => `<option value="${u}">${u}</option>`).join('')}
+                </select>
             </div>
 
             <div class="filter-group">
@@ -68,7 +78,8 @@ export async function renderMonsterLibrary(container) {
     // 5. Filter Logic
     const handleFilter = () => {
         const name = document.getElementById('name-search').value.toLowerCase();
-        const species = document.getElementById('species-filter').value; // New
+        const usage = document.getElementById('usage-filter').value; // New usage logic
+        const species = document.getElementById('species-filter').value;
         const size = document.getElementById('size-filter').value;
         
         const minVal = document.getElementById('cr-min').value;
@@ -78,31 +89,32 @@ export async function renderMonsterLibrary(container) {
 
         const filtered = monsters.filter(m => {
             const matchesName = m.name.toLowerCase().includes(name);
-            const matchesSpecies = !species || m.species === species; // New
+            const matchesUsage = !usage || m.usage === usage; // New usage logic
+            const matchesSpecies = !species || m.species === species;
             const matchesSize = !size || m.size === size;
             
             const crVal = parseFloat(m.cr);
-            // Treat empty input as "no limit"
             const matchesMin = isNaN(minCR) || crVal >= minCR;
             const matchesMax = isNaN(maxCR) || crVal <= maxCR;
 
-            return matchesName && matchesSpecies && matchesSize && matchesMin && matchesMax;
+            return matchesName && matchesUsage && matchesSpecies && matchesSize && matchesMin && matchesMax;
         });
 
         renderGrid(filtered);
     };
 
     // 6. Attach Event Listeners
-    const inputs = ['name-search', 'species-filter', 'cr-min', 'cr-max', 'size-filter'];
-    inputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', handleFilter);
-    });
+    if(document.getElementById('name-search')) {
+        const inputs = ['name-search', 'usage-filter', 'species-filter', 'cr-min', 'cr-max', 'size-filter'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', handleFilter);
+        });
 
-    // Reset Button
-    document.getElementById('reset-filters').addEventListener('click', () => {
-        inputs.forEach(id => document.getElementById(id).value = '');
-        handleFilter();
-    });
+        document.getElementById('reset-filters').addEventListener('click', () => {
+            inputs.forEach(id => document.getElementById(id).value = '');
+            handleFilter();
+        });
+    }
 }
 
 function renderGrid(monsters) {
@@ -121,15 +133,13 @@ function renderGrid(monsters) {
     grid.innerHTML = monsters.map(m => `
         <div class="monster-card">
             ${m.image_url ? 
-                // Image Container (Left side)
+                // Only render the image div if URL exists
                 `<div class="monster-card-image">
                     <img src="${m.image_url}" alt="${m.name}" loading="lazy">
                  </div>` 
                 : 
-                // Placeholder if no image (keeps alignment consistent)
-                `<div class="monster-card-image" style="display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;">
-                    <span>No Art</span>
-                 </div>`
+                // Render nothing (empty string) if no image
+                ''
             }
             
             <div class="monster-card-content">
@@ -141,6 +151,7 @@ function renderGrid(monsters) {
     `).join('');
 }
 
+// Keeping the hardcoded helper function per your request
 function formatCR(val) {
     if (val === 0.125) return '1/8';
     if (val === 0.25) return '1/4';
