@@ -10,15 +10,18 @@ export async function renderMonsterDetail(container, params) {
         return;
     }
 
-    // Apply Page Wide Class
-    container.className = 'page page-wide';
+    // --- LAYOUT FIX ---
+    // The app lives inside <div class="page"> provided by Jekyll.
+    // We need to make THAT container wide for the split layout.
+    const parentPage = container.closest('.page');
+    if (parentPage) {
+        parentPage.classList.add('page-wide');
+    }
 
     // Calculate Derived Stats
-    // UPDATED: monster.cr
     const pb = calculatePB(monster.cr);
     const xp = calculateXP(monster.cr);
     
-    // UPDATED: f.type (Postgres converts column 'Type' to 'type')
     const features = {
         Trait: monster.features.filter(f => f.type === 'Trait'),
         Action: monster.features.filter(f => f.type === 'Action'),
@@ -28,7 +31,6 @@ export async function renderMonsterDetail(container, params) {
         Lair: monster.features.filter(f => f.type === 'Lair'),
     };
 
-    // UPDATED: monster.ability_scores, monster.saves
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
     const template = `
@@ -121,11 +123,8 @@ export async function renderMonsterDetail(container, params) {
     container.innerHTML = template;
 }
 
-// --- Helpers ---
-
-function calculateMod(score) {
-    return Math.floor((score - 10) / 2);
-}
+// --- Helpers (Same as before) ---
+function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
 function calculatePB(cr) {
     if (cr < 5) return 2;
@@ -136,14 +135,11 @@ function calculatePB(cr) {
 }
 
 function calculateXP(cr) {
-    // Note: Make sure your keys are strings if using fractional CRs
     const table = { "0.125": 25, "0.25": 50, "0.5": 100, "1": 200, "2": 450, "3": 700, "4": 1100, "5": 1800, "11": 7200, "12": 8400, "25": 75000 };
     return table[cr] || 0;
 }
 
-function formatSign(val) {
-    return val >= 0 ? `+${val}` : val;
-}
+function formatSign(val) { return val >= 0 ? `+${val}` : val; }
 
 function formatCR(val) {
     if (val == 0.125) return '1/8';
@@ -168,13 +164,7 @@ function formatInitiative(dexScore, proficiency, pb) {
 function renderAbilityTable(scores, saves, pb) {
     const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
     const getCellData = (attr) => {
-        // scores is the JSON object. 
-        // Note: While columns are snake_case, JSON keys usually keep their case from insertion. 
-        // If your JSON is { "STR": 10 }, then scores['STR'] works. 
-        // If your JSON is { "str": 10 }, you might need scores[attr] or scores[attr.toLowerCase()].
-        // Assuming Uppercase Keys based on schema:
         const score = scores && scores[attr] ? scores[attr] : 10;
-        
         const mod = calculateMod(score);
         let saveMod = mod; 
         if (saves && saves[attr] !== undefined) {
@@ -219,7 +209,6 @@ function renderFeatureBucket(list, title) {
 
 function renderFeatureList(list) {
     return list.map(f => {
-        // UPDATED: f.description and f.name
         const desc = marked.parseInline(f.description); 
         return `<p><strong><em>${f.name}.</em></strong> ${desc}</p>`;
     }).join('');

@@ -1,9 +1,17 @@
 import { getLiveMonsters } from '../monster-service.js';
 
 export async function renderMonsterLibrary(container) {
+    // CLEANUP: Remove 'page-wide' if coming back from detail view
+    // We target the parent .page provided by default.html
+    const parentPage = container.closest('.page');
+    if (parentPage) {
+        parentPage.classList.remove('page-wide');
+    }
+
     const monsters = await getLiveMonsters();
     
     // HTML Template for Filters
+    // Note: We removed "container.className = 'page'" to avoid double padding.
     const html = `
         <h2>Monster Compendium</h2>
         <div class="filter-container">
@@ -34,7 +42,6 @@ export async function renderMonsterLibrary(container) {
         <div id="monster-grid" class="monster-list"></div>
     `;
 
-    container.className = 'page'; // Standard width
     container.innerHTML = html;
 
     // Initial Render
@@ -48,12 +55,9 @@ export async function renderMonsterLibrary(container) {
         const size = document.getElementById('size-filter').value;
 
         const filtered = monsters.filter(m => {
-            // UPDATED: m.name instead of m.Name
             const matchesName = m.name.toLowerCase().includes(name);
-            // UPDATED: m.size instead of m.Size
             const matchesSize = !size || m.size === size;
             
-            // UPDATED: m.cr instead of m.CR
             const crVal = parseFloat(m.cr);
             const matchesMin = isNaN(minCR) || crVal >= minCR;
             const matchesMax = isNaN(maxCR) || crVal <= maxCR;
@@ -65,13 +69,17 @@ export async function renderMonsterLibrary(container) {
     };
 
     // Attach Listeners
-    ['name-search', 'cr-min', 'cr-max', 'size-filter'].forEach(id => {
-        document.getElementById(id).addEventListener('input', handleFilter);
-    });
+    if(document.getElementById('name-search')) {
+        ['name-search', 'cr-min', 'cr-max', 'size-filter'].forEach(id => {
+            document.getElementById(id).addEventListener('input', handleFilter);
+        });
+    }
 }
 
 function renderGrid(monsters) {
     const grid = document.getElementById('monster-grid');
+    if (!grid) return;
+    
     if (monsters.length === 0) {
         grid.innerHTML = '<p>No monsters found.</p>';
         return;
@@ -80,7 +88,6 @@ function renderGrid(monsters) {
     grid.innerHTML = monsters.map(m => `
         <div class="monster-card">
             ${m.image_url ? 
-                // UPDATED: m.image_url and m.name
                 `<div class="monster-card-image"><img src="${m.image_url}" alt="${m.name}" loading="lazy"></div>` 
                 : ''}
             <div class="monster-card-content">
