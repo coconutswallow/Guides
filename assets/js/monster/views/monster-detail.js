@@ -32,6 +32,7 @@ export async function renderMonsterDetail(container, params) {
 
     // --- LAYOUT LOGIC ---
     const hasLeftContent = monster.image_url || monster.description || monster.additional_info;
+    
     const layoutStyle = hasLeftContent 
         ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;'
         : 'display: block; max-width: 800px; margin: 0 auto;';
@@ -40,7 +41,6 @@ export async function renderMonsterDetail(container, params) {
     const pb = calculatePB(monster.cr);
     const xp = calculateXP(monster.cr);
     
-    // Group features 
     const features = {
         Trait: monster.features.filter(f => f.type === 'Trait'),
         Action: monster.features.filter(f => f.type === 'Action'),
@@ -57,6 +57,11 @@ export async function renderMonsterDetail(container, params) {
     const res = monster.damage_resistances || monster.resistances;
     const imm = monster.damage_immunities || monster.immunities;
     const conImm = monster.condition_immunities;
+
+    // Helper to format alignment string (e.g. "Typically Neutral" vs "Neutral")
+    const alignmentText = monster.alignment_prefix 
+        ? `${monster.alignment_prefix} ${monster.alignment}` 
+        : monster.alignment;
 
     const template = `
         <div class="monster-header" style="margin-bottom: 2rem;">
@@ -90,7 +95,7 @@ export async function renderMonsterDetail(container, params) {
             <div class="right-col"> 
                 <blockquote class="stat-block">
                     <h2>${monster.name}</h2>
-                    <p><em>${monster.size} ${monster.species}, ${monster.alignment}</em></p>
+                    <p><em>${monster.size} ${monster.species}, ${alignmentText}</em></p>
                     <hr>
                     
                     <div class="stat-grid-container">
@@ -203,10 +208,6 @@ export async function renderMonsterDetail(container, params) {
 
 function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
-/**
- * Calculates Proficiency Bonus based on Challenge Rating.
- * Updated to support high-level CRs (up to 30).
- */
 function calculatePB(cr) {
     if (cr < 5) return 2;   // CR 0-4
     if (cr < 9) return 3;   // CR 5-8
