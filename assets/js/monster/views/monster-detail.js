@@ -17,12 +17,8 @@ export async function renderMonsterDetail(container, params) {
     }
 
     // --- LAYOUT LOGIC ---
-    // We only check for Image or Description now. 
-    // Metadata (Usage/Creator) has moved to the right, so it doesn't count as "Left Content".
     const hasLeftContent = monster.image_url || monster.description || monster.additional_info;
     
-    // If no left content, use a centered single-column block.
-    // If left content exists, use the 2-column grid.
     const layoutStyle = hasLeftContent 
         ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;'
         : 'display: block; max-width: 800px; margin: 0 auto;';
@@ -142,6 +138,9 @@ export async function renderMonsterDetail(container, params) {
         <style>
             .monster-description { background: transparent; padding: 0; border: none; }
             .statblock-creator p { font-size: 0.9em; font-style: italic; color: var(--color-primary); }
+            /* Ensure lists inside features look correct */
+            .feature-item ul { margin-left: 1.5em; list-style-type: disc; }
+            .feature-item p { display: inline-block; } /* Helps keep title inline if possible, though block is safer */
             
             @media (max-width: 1000px) {
                 .monster-detail-layout { grid-template-columns: 1fr !important; }
@@ -237,9 +236,24 @@ function renderFeatureBucket(list, title) {
     `;
 }
 
+// UPDATED: Now supports lists inside feature descriptions
 function renderFeatureList(list) {
     return list.map(f => {
-        const desc = marked.parseInline(f.description); 
-        return `<p><strong><em>${f.name}.</em></strong> ${desc}</p>`;
+        // 1. Parse markdown fully (supports <ul>, <table>, etc.)
+        let html = marked.parse(f.description);
+
+        // 2. Prepare the Name HTML
+        const titleHtml = `<strong><em>${f.name}.</em></strong> `;
+
+        // 3. Inject Name into the first paragraph to maintain D&D styling
+        if (html.startsWith('<p>')) {
+            html = html.replace('<p>', `<p>${titleHtml}`);
+        } else {
+            // Fallback if description starts with a list or other tag
+            html = `<p>${titleHtml}</p>` + html;
+        }
+
+        // 4. Return as a DIV (not P) to allow nested blocks
+        return `<div class="feature-item">${html}</div>`;
     }).join('');
 }
