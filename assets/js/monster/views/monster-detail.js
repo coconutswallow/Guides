@@ -65,7 +65,7 @@ export async function renderMonsterDetail(container, params) {
 
     const template = `
         <div class="monster-header" style="margin-bottom: 2rem;">
-            <a href="#/monsters" class="btn back-button" style="margin-bottom: 1rem;">← Back to Library</a>
+            <a href="#/" class="btn back-button" style="margin-bottom: 1rem;">← Back to Monster Compendium</a>
             <h1>${monster.name}</h1>
         </div>
 
