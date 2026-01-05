@@ -10,15 +10,13 @@ export async function renderMonsterDetail(container, params) {
         return;
     }
 
-    // --- LAYOUT FIX ---
-    // The app lives inside <div class="page"> provided by Jekyll.
-    // We need to make THAT container wide for the split layout.
+    // Apply Page Wide Class for Split Layout
     const parentPage = container.closest('.page');
     if (parentPage) {
         parentPage.classList.add('page-wide');
     }
 
-    // Calculate Derived Stats
+    // Calculations
     const pb = calculatePB(monster.cr);
     const xp = calculateXP(monster.cr);
     
@@ -33,24 +31,34 @@ export async function renderMonsterDetail(container, params) {
 
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
 
+    // --- HTML TEMPLATE ---
     const template = `
-        <div class="monster-detail-layout" style="display: grid; grid-template-columns: 60% 40%; gap: 2rem;">
+        <div class="monster-detail-layout" style="display: grid; grid-template-columns: 1fr 450px; gap: 3rem; align-items: start;">
             
             <div class="left-col">
-                <a href="#/monsters" class="btn back-button">← Back to Library</a>
+                <a href="#/monsters" class="btn back-button" style="margin-bottom: 1rem;">← Back to Library</a>
                 
-                ${monster.image_url ? `
-                <div class="monster-image-container">
-                    <img src="${monster.image_url}" alt="${monster.name}">
-                    ${monster.image_credit ? `<p class="image-credit">Art by ${monster.image_credit}</p>` : ''}
-                </div>` : ''}
+                <h1>${monster.name}</h1>
 
-                <div class="monster-description">
-                    ${marked.parse(monster.description || '')}
+                <div class="card">
+                    ${monster.image_url ? `
+                    <div class="monster-image-container" style="margin-bottom: 1.5rem;">
+                        <img src="${monster.image_url}" alt="${monster.name}" style="width: 100%; border-radius: var(--border-radius); border: 2px solid var(--color-border);">
+                        ${monster.image_credit ? `<p class="image-caption">Art by ${monster.image_credit}</p>` : ''}
+                    </div>` : ''}
+
+                    <div class="monster-description">
+                        ${marked.parse(monster.description || '')}
+                        
+                        ${monster.additional_info ? `
+                            <hr>
+                            ${marked.parse(monster.additional_info)}
+                        ` : ''}
+                    </div>
                 </div>
             </div>
 
-            <div class="right-col">
+            <div class="right-col" style="padding-top: 3.5rem;"> 
                 <blockquote class="stat-block">
                     <h2>${monster.name}</h2>
                     <p><em>${monster.size} ${monster.species}, ${monster.alignment}</em></p>
@@ -114,8 +122,9 @@ export async function renderMonsterDetail(container, params) {
         </div>
 
         <style>
-            @media (max-width: 900px) {
+            @media (max-width: 1000px) {
                 .monster-detail-layout { grid-template-columns: 1fr !important; }
+                .right-col { padding-top: 0 !important; }
             }
         </style>
     `;
@@ -123,7 +132,8 @@ export async function renderMonsterDetail(container, params) {
     container.innerHTML = template;
 }
 
-// --- Helpers (Same as before) ---
+// --- Helpers ---
+
 function calculateMod(score) { return Math.floor((score - 10) / 2); }
 
 function calculatePB(cr) {
@@ -135,7 +145,7 @@ function calculatePB(cr) {
 }
 
 function calculateXP(cr) {
-    const table = { "0.125": 25, "0.25": 50, "0.5": 100, "1": 200, "2": 450, "3": 700, "4": 1100, "5": 1800, "11": 7200, "12": 8400, "25": 75000 };
+    const table = { "0.125": 25, "0.25": 50, "0.5": 100, "1": 200, "2": 450, "3": 700, "4": 1100, "5": 1800, "6": 2300, "7": 2900, "8": 3900, "9": 5000, "10": 5900, "11": 7200, "12": 8400, "13": 10000, "14": 11500, "15": 13000, "16": 15000, "17": 18000, "18": 20000, "19": 22000, "20": 25000, "21": 33000, "22": 41000, "23": 50000, "24": 62000, "25": 75000, "26": 90000, "27": 105000, "28": 120000, "29": 135000, "30": 155000 };
     return table[cr] || 0;
 }
 
