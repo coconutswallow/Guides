@@ -28,47 +28,55 @@ export async function getLiveMonsters() {
 
 /**
  * Fetch full monster details by Slug.
- * * Uses Supabase "Foreign Key Joins" to fetch the Creator Name from the 'users' table.
+ * * Uses a "Two-Step" lookup to ensure the monster loads even if 
+ * * the user/creator lookup fails due to RLS permissions.
  * @param {string} slug 
  * @returns {Promise<Object|null>}
  */
 export async function getMonsterBySlug(slug) {
-    // 1. Get Core Data + Joined Creator Name
-    // Supabase automatically detects the foreign key between 'monsters.creator_id' 
-    // and 'users.id'. We ask it to embed the 'users' table and return only 'discord_name'.
+    // 1. Get Core Monster Data
+    // We fetch the monster first. If this fails, the page is truly 404.
     const { data: monster, error } = await supabase
         .from('monsters')
-        .select(`
-            *,
-            users (
-                discord_name
-            )
-        `)
+        .select('*')
         .eq('slug', slug)
         .eq('is_live', true)
         .single();
 
     if (error || !monster) {
-        if (error) console.error(`Error fetching monster for slug "${slug}":`, error);
+        if (error) console.error(`Error fetching monster core for slug "${slug}":`, error);
         return null;
     }
 
-    // 2. Get Related Features
+    // 2. Get Creator Name (Safe Lookup)
+    // We perform this separately so that if RLS blocks access to the 'users' table,
+    // the monster statblock still loads (just without the name).
+    let creatorName = 'Unknown';
+    
+    if (monster.creator_id) {
+        const { data: userData } = await supabase
+            .from('users')
+            .select('discord_name')
+            .eq('id', monster.creator_id)
+            .single();
+            
+        if (userData) {
+            creatorName = userData.discord_name;
+        }
+    }
+
+    // 3. Get Related Features
     const { data: features } = await supabase
         .from('monster_features')
         .select('*')
         .eq('parent_row_id', monster.row_id)
         .order('display_order', { ascending: true });
 
-    // 3. Data Formatting
-    // Supabase returns the join as an object: monster.users = { discord_name: "..." }
-    // We flatten this to a simple string for the view.
-    // If the join fails or user is missing, we default to 'Unknown'.
-    const creatorName = monster.users?.discord_name || 'Unknown';
-
+    // 4. Return Combined Object
+    // We manually inject the 'creator_name' property for the view to use.
     return { 
         ...monster, 
         features: features || [],
-        creator_name: creatorName
+        creator_name: creatorName 
     };
 }
