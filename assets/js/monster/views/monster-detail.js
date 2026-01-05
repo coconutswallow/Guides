@@ -138,10 +138,25 @@ export async function renderMonsterDetail(container, params) {
         <style>
             .monster-description { background: transparent; padding: 0; border: none; }
             .statblock-creator p { font-size: 0.9em; font-style: italic; color: var(--color-primary); }
-            /* Ensure lists inside features look correct */
-            .feature-item ul { margin-left: 1.5em; list-style-type: disc; }
-            .feature-item p { display: inline-block; } /* Helps keep title inline if possible, though block is safer */
             
+            /* --- CSS FIX FOR BULLETS --- */
+            /* We use !important to force overrides of any global list resets */
+            .feature-item ul, 
+            .monster-description ul { 
+                margin: 0.5em 0 0.5em 1.5em !important; 
+                padding-left: 1em !important; 
+                list-style: disc outside !important; 
+            }
+            
+            .feature-item li,
+            .monster-description li {
+                display: list-item !important;
+                list-style: disc outside !important;
+                margin-bottom: 0.2em;
+            }
+            
+            .feature-item p { display: inline-block; margin-bottom: 0.5em; }
+
             @media (max-width: 1000px) {
                 .monster-detail-layout { grid-template-columns: 1fr !important; }
             }
@@ -236,7 +251,6 @@ function renderFeatureBucket(list, title) {
     `;
 }
 
-// UPDATED: Now supports lists inside feature descriptions
 function renderFeatureList(list) {
     return list.map(f => {
         // 1. Parse markdown fully (supports <ul>, <table>, etc.)
