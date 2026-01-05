@@ -49,7 +49,7 @@ Depending on how deep one ventures inside the Split Tooth Mountain, the environm
 
 Regions of the affected area are overcome with strange, twisted growths. The colors of the landscape are overly saturated.  The landscape is painted with unusual and vivid colors, the grass turns to blue, the tree stumps are dark red. The plants in the area have begun to warp, some have grown eyes, tentacles, mouth, teeth, and some even ooze strange mucus that is poisonous. Anyone touching the mucus with their bare skin must make a DC 13 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
-The landscape is utterly alien, the usual terrain, trees and plants have melted with one another, from those ooze a strange mucus. Anyone touching the mucus with their bare skin must make a DC 15 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
+The landscape is utterly alien, the usual terrain, trees and plants have melted with one another, from those ooze a strange mucus. Anyone touching the mucus with their bare skin must make a DC 13 Constitution saving throw or be poisoned for 1d4 hours. The creature is paralyzed while poisoned in this way. Aberrations are immune to this effect.
 
 ![Bone Spire]( {{ '/assets/images/bonespire.jpg' | relative_url }} )
 <span class="image-caption"><a href="https://cdnb.artstation.com/p/assets/images/images/021/394/125/4k/logan-feliciano-bonespire-002s.jpg?1571510286">Bone Spire by logan-feliciano</a></span>
