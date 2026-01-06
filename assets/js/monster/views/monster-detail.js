@@ -196,7 +196,11 @@ export async function renderMonsterDetail(container, params) {
                 margin-bottom: 0.2em;
             }
             
+            /* Base paragraph style for features */
             .feature-item p { display: inline-block; margin-bottom: 0.5em; }
+
+            /* FIX: Reset paragraphs inside list items to block to fix bullet alignment */
+            .feature-item li p { display: block; margin-bottom: 0; }
 
             @media (max-width: 1000px) {
                 .monster-detail-layout { grid-template-columns: 1fr !important; }
