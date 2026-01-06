@@ -625,7 +625,7 @@ tbody tr:hover {
    ============================================ */
 .page {
   flex: 1;
-  max-width: 1200px;
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
   padding: var(--spacing-md);
@@ -673,7 +673,7 @@ tbody tr:hover {
 .header-content {
   position: relative;
   z-index: 2;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
   display: grid;
@@ -1019,7 +1019,7 @@ tbody tr:hover {
 }
 
 .footer-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
   text-align: center;
@@ -1473,7 +1473,7 @@ img + .image-caption {
    This gives the main text back the space it lost to the sidebar.
 */
 .doc-container.has-toc {
-  max-width: 1500px; /* Increased from 1200px */
+  max-width: 100%;
 }
 
 /* --- Breadcrumb Navigation --- */
