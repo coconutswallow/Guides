@@ -79,9 +79,7 @@ navigation:
   # =========================================================
 
   - title: "Monster Compendium"
-    sections:
-      - title: "Monster Compendium"
-        url: /monsters/
+    url: /monsters/
 
   - title: "Adventure Locations"
     collection: fieldguide
