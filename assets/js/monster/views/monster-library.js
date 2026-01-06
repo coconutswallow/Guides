@@ -1,7 +1,7 @@
 /**
  * monster-library.js
  * * View controller for the main monster list (Library).
- * * UPDATED: Responsive Flexbox (Wraps on mobile, single line on desktop).
+ * * UPDATED: Adjusted flex weights to widen Usage and shrink CR fields.
  */
 
 import { getLiveMonsters } from '../monster-service.js';
@@ -38,7 +38,7 @@ export async function renderMonsterLibrary(container) {
                 <input type="text" id="name-search" class="filter-input" placeholder="Search...">
             </div>
 
-            <div class="filter-group" style="flex: 2 1 140px;">
+            <div class="filter-group" style="flex: 3 1 160px;">
                 <label for="usage-filter">Usage:</label>
                 <select id="usage-filter" class="filter-select">
                     <option value="">All Usage</option>
@@ -54,12 +54,12 @@ export async function renderMonsterLibrary(container) {
                 </select>
             </div>
             
-            <div class="filter-group" style="flex: 1 1 70px;">
+            <div class="filter-group" style="flex: 0.5 1 55px;">
                 <label for="cr-min">Min CR:</label>
                 <input type="number" id="cr-min" class="filter-input" placeholder="0" min="0" step="0.125">
             </div>
 
-            <div class="filter-group" style="flex: 1 1 70px;">
+            <div class="filter-group" style="flex: 0.5 1 55px;">
                 <label for="cr-max">Max CR:</label>
                 <input type="number" id="cr-max" class="filter-input" placeholder="30" min="0" step="0.125">
             </div>
