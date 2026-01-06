@@ -1,7 +1,7 @@
 /**
  * monster-library.js
  * * View controller for the main monster list (Library).
- * * UPDATED: Filters optimized for a single-line layout.
+ * * UPDATED: Added introductory text below the title.
  */
 
 import { getLiveMonsters } from '../monster-service.js';
@@ -25,6 +25,11 @@ export async function renderMonsterLibrary(container) {
     // 4. Render Layout
     const html = `
         <h2>Monster Compendium</h2>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <p>The monsters in this compendium have been created by various members of the community of the Hawthorne Dungeons & Dragons Guild. The credits are listed on the footer of the monster stat block.</p>
+            <p><em>(A tool to create and submit your own monsters is coming soon!)</em></p>
+        </div>
         
         <div class="filter-container" style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 10px; align-items: flex-end; width: 100%;">
             
