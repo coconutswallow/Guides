@@ -171,7 +171,21 @@ export async function renderMonsterDetail(container, params) {
         </div>
 
         <style>
-            .monster-description { background: transparent; padding: 0; border: none; }
+            .monster-description { 
+                background: transparent; 
+                padding: 0; 
+                border: none; 
+                /* FIX: Prevent text overflow */
+                overflow-wrap: break-word; 
+                word-wrap: break-word;
+                max-width: 100%;
+            }
+
+            .monster-description img {
+                max-width: 100%;
+                height: auto;
+            }
+
             .statblock-creator p { font-size: 0.9em; font-style: italic; color: var(--color-primary); }
             
             /* Ability Table Styling */
@@ -202,8 +216,23 @@ export async function renderMonsterDetail(container, params) {
             /* FIX: Reset paragraphs inside list items to block to fix bullet alignment */
             .feature-item li p { display: block; margin-bottom: 0; }
 
+            /* MOBILE FIX: Switch to Flexbox column layout on small screens */
             @media (max-width: 1000px) {
-                .monster-detail-layout { grid-template-columns: 1fr !important; }
+                .monster-detail-layout { 
+                    display: flex !important; 
+                    flex-direction: column !important;
+                    gap: 2rem !important;
+                }
+                
+                .left-col, .right-col {
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    min-width: 0; /* Allows text wrapping in flex children */
+                }
+
+                .monster-image-container {
+                    max-width: 100%;
+                }
             }
         </style>
     `;
