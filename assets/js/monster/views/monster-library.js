@@ -172,6 +172,7 @@ function renderGrid(monsters) {
     `).join('');
 }
 
+// Quick Calc of CR (Note there is a lookup table, but this is faster)
 function formatCR(val) {
     if (val === 0.125) return '1/8';
     if (val === 0.25) return '1/4';
