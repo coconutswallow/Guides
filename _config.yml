@@ -1,8 +1,8 @@
 # Site settings
 title: "Hawthorne Guild"
 description: "Comprehensive guide for the Hawthorne D&D Guild"
-baseurl: "/Guides" 
-url: "https://coconutswallow.github.io" 
+baseurl: "/Guides"
+url: "https://coconutswallow.github.io"
 
 # Collections for different guide sections
 collections:
@@ -33,41 +33,40 @@ collections:
   resources:
     output: true
     permalink: /resources/:path/
-    
 
 # ========================================================
 # Navigation structure - defines order and hierarchy
 #
-# You only need to set this for top-level navigation, only. The sub-navigation is generated automatically based on what's in the folders 
+# You only need to set this for top-level navigation, only. The sub-navigation is generated automatically based on what's in the folders
 # (new files get added to the side-nav menu dynamically).
 # ========================================================
 navigation:
   - title: "Home"
     url: "/"
-    
+
   - title: "Rules & Roles"
     collection: rules
-      
+
   - title: "Player's Guide"
     collection: playersguide
     sections:
       - title: "Appendices"
         folder: "playersguide/appendices"
 
-# =========================================================
-#
-#  - title: "Arcana"
-#    collection: arcana
-# =========================================================
+  # =========================================================
+  #
+  #  - title: "Arcana"
+  #    collection: arcana
+  # =========================================================
 
   - title: "Arcana"
     url: "https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view"
 
-# =========================================================
-# DM's Guide Section - currently commented out to use PDF instead         
-#  - title: "DM's Guide"
-#    collection: dms_guide
-# =========================================================
+  # =========================================================
+  # DM's Guide Section - currently commented out to use PDF instead
+  #  - title: "DM's Guide"
+  #    collection: dms_guide
+  # =========================================================
 
   - title: "DM's Guide"
     url: "https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing"
@@ -82,16 +81,10 @@ navigation:
   - title: "Monster Compendium"
     sections:
       - title: "Monster Compendium"
-        url: /monster-compendium/
-      - title: "Submit A Monster"
-        url: /monster-compendium/monsters-submit/
-      - title: "Statblock Builder"
-        url: /monster-compendium/generator/
-
+        url: /monsters/
 
   - title: "Adventure Locations"
     collection: fieldguide
-  
 
   - title: "FAQ"
     url: /faq.html
@@ -99,7 +92,7 @@ navigation:
   - title: "Resources"
     collection: resources
 
-  # ========================================================  
+  # ========================================================
   # Separator will be added with CSS/HTML
   # Not used, ut just an example of how we can add external links to the menu if needed
   # ========================================================
