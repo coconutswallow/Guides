@@ -1,7 +1,7 @@
 /**
  * monster-library.js
  * * View controller for the main monster list (Library).
- * * UPDATED: Hiding Tag and Habitat filters as requested.
+ * * UPDATED: Filters optimized for a single-line layout.
  */
 
 import { getLiveMonsters } from '../monster-service.js';
@@ -20,19 +20,20 @@ export async function renderMonsterLibrary(container) {
     const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
     const uniqueUsage = [...new Set(monsters.map(m => m.usage).filter(Boolean))].sort();
     
-    // Note: Habitats/Tags data is fetched but currently unused in the UI.
+    // Note: Habitats/Tags data is fetched but currently unused/hidden.
 
     // 4. Render Layout
     const html = `
         <h2>Monster Compendium</h2>
         
-        <div class="filter-container">
-            <div class="filter-group" style="flex: 2 0 300px;">
+        <div class="filter-container" style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 10px; align-items: flex-end; width: 100%;">
+            
+            <div class="filter-group" style="flex: 3; min-width: 150px;">
                 <label for="name-search">Name:</label>
-                <input type="text" id="name-search" class="filter-input" placeholder="Search by name...">
+                <input type="text" id="name-search" class="filter-input" placeholder="Search...">
             </div>
 
-            <div class="filter-group" style="flex: 2 0 300px;">
+            <div class="filter-group" style="flex: 2; min-width: 120px;">
                 <label for="usage-filter">Usage:</label>
                 <select id="usage-filter" class="filter-select">
                     <option value="">All Usage</option>
@@ -40,7 +41,7 @@ export async function renderMonsterLibrary(container) {
                 </select>
             </div>
 
-            <div class="filter-group">
+            <div class="filter-group" style="flex: 2; min-width: 120px;">
                 <label for="species-filter">Species:</label>
                 <select id="species-filter" class="filter-select">
                     <option value="">All Species</option>
@@ -48,30 +49,30 @@ export async function renderMonsterLibrary(container) {
                 </select>
             </div>
             
-            <div class="filter-group" style="flex: 0 1 100px;">
-                <label for="cr-min">CR From:</label>
-                <input type="number" id="cr-min" class="filter-input" placeholder="Min" min="0" step="0.125">
+            <div class="filter-group" style="flex: 1; min-width: 60px;">
+                <label for="cr-min">Min CR:</label>
+                <input type="number" id="cr-min" class="filter-input" placeholder="0" min="0" step="0.125">
             </div>
 
-            <div class="filter-group" style="flex: 0 1 100px;">
-                <label for="cr-max">CR To:</label>
-                <input type="number" id="cr-max" class="filter-input" placeholder="Max" min="0" step="0.125">
+            <div class="filter-group" style="flex: 1; min-width: 60px;">
+                <label for="cr-max">Max CR:</label>
+                <input type="number" id="cr-max" class="filter-input" placeholder="30" min="0" step="0.125">
             </div>
 
-            <div class="filter-group">
+            <div class="filter-group" style="flex: 1.5; min-width: 90px;">
                 <label for="size-filter">Size:</label>
                 <select id="size-filter" class="filter-select">
-                    <option value="">All Sizes</option>
+                    <option value="">All</option>
                     <option value="Tiny">Tiny</option>
                     <option value="Small">Small</option>
-                    <option value="Medium">Medium</option>
+                    <option value="Medium">Med</option>
                     <option value="Large">Large</option>
                     <option value="Huge">Huge</option>
-                    <option value="Gargantuan">Gargantuan</option>
+                    <option value="Gargantuan">Garg</option>
                 </select>
             </div>
 
-            <button id="reset-filters" class="reset-button">Reset</button>
+            <button id="reset-filters" class="reset-button" style="flex: 0 0 auto; height: 38px; margin-bottom: 2px;">Reset</button>
         </div>
 
         <div id="monster-count" class="monster-count"></div>
