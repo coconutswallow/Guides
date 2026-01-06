@@ -63,6 +63,9 @@ export async function renderMonsterDetail(container, params) {
         ? `${monster.alignment_prefix} ${monster.alignment}` 
         : monster.alignment;
 
+    // Check if saves actually exist (prevents displaying empty "Saving Throws" label)
+    const hasSaves = monster.saves && Object.keys(monster.saves).length > 0;
+
     const template = `
         <div class="monster-header" style="margin-bottom: 2rem;">
             <a href="#/" class="btn back-button" style="margin-bottom: 1rem;">← Back to Monster Compendium</a>
@@ -117,7 +120,7 @@ export async function renderMonsterDetail(container, params) {
                     ${abilitiesHTML}
                     <hr>
 
-                    ${monster.saves ? `<p><strong>Saving Throws</strong> ${formatSaves(monster.saves)}</p>` : ''}
+                    ${hasSaves ? `<p><strong>Saving Throws</strong> ${formatSaves(monster.saves)}</p>` : ''}
                     ${monster.skills ? `<p><strong>Skills</strong> ${monster.skills}</p>` : ''}
                     
                     ${vuln ? `<p><strong>Damage Vulnerabilities</strong> ${vuln}</p>` : ''}
