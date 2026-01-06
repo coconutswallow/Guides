@@ -1,7 +1,7 @@
 /**
  * monster-library.js
  * * View controller for the main monster list (Library).
- * * UPDATED: Added introductory text below the title.
+ * * UPDATED: Responsive Flexbox (Wraps on mobile, single line on desktop).
  */
 
 import { getLiveMonsters } from '../monster-service.js';
@@ -31,14 +31,14 @@ export async function renderMonsterLibrary(container) {
             <p><em>(A tool to create and submit your own monsters is coming soon!)</em></p>
         </div>
         
-        <div class="filter-container" style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 10px; align-items: flex-end; width: 100%;">
+        <div class="filter-container" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; align-items: flex-end; width: 100%;">
             
-            <div class="filter-group" style="flex: 3; min-width: 150px;">
+            <div class="filter-group" style="flex: 4 1 200px;">
                 <label for="name-search">Name:</label>
                 <input type="text" id="name-search" class="filter-input" placeholder="Search...">
             </div>
 
-            <div class="filter-group" style="flex: 2; min-width: 120px;">
+            <div class="filter-group" style="flex: 2 1 140px;">
                 <label for="usage-filter">Usage:</label>
                 <select id="usage-filter" class="filter-select">
                     <option value="">All Usage</option>
@@ -46,7 +46,7 @@ export async function renderMonsterLibrary(container) {
                 </select>
             </div>
 
-            <div class="filter-group" style="flex: 2; min-width: 120px;">
+            <div class="filter-group" style="flex: 2 1 140px;">
                 <label for="species-filter">Species:</label>
                 <select id="species-filter" class="filter-select">
                     <option value="">All Species</option>
@@ -54,17 +54,17 @@ export async function renderMonsterLibrary(container) {
                 </select>
             </div>
             
-            <div class="filter-group" style="flex: 1; min-width: 60px;">
+            <div class="filter-group" style="flex: 1 1 70px;">
                 <label for="cr-min">Min CR:</label>
                 <input type="number" id="cr-min" class="filter-input" placeholder="0" min="0" step="0.125">
             </div>
 
-            <div class="filter-group" style="flex: 1; min-width: 60px;">
+            <div class="filter-group" style="flex: 1 1 70px;">
                 <label for="cr-max">Max CR:</label>
                 <input type="number" id="cr-max" class="filter-input" placeholder="30" min="0" step="0.125">
             </div>
 
-            <div class="filter-group" style="flex: 1.5; min-width: 90px;">
+            <div class="filter-group" style="flex: 1.5 1 100px;">
                 <label for="size-filter">Size:</label>
                 <select id="size-filter" class="filter-select">
                     <option value="">All</option>
