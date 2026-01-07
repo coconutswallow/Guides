@@ -4,7 +4,7 @@
  */
 
 // ADJUSTED PATH: Go up one level (..) to find the config file
-import { supabase } from '../supabase-config.js';
+import { supabase } from '../supabaseClient.js';
 
 export async function getMonsters() {
     let { data, error } = await supabase

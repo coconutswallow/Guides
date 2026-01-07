@@ -5,7 +5,7 @@
  */
 
 // ADJUSTED PATH: Go up one level (..) to find the config file
-import { supabase } from '../supabase-config.js'; 
+import { supabase } from '../supabaseClient.js'; 
 import { renderMonsterList } from './views/monster-list.js';
 import { renderMonsterDetail } from './views/monster-detail.js';
 
