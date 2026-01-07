@@ -44,12 +44,13 @@ extra_css:
             {% for event in group.items %}
               
               {% comment %} 
-                LOGIC: A 'full entry' is any link that is NOT a Discord link.
+                LOGIC: Detect full entry. If a link exists and does NOT contain "discord.com".
               {% endcomment %}
-              {% assign is_discord = event.link | contains: "discord.com" %}
               {% assign is_full_entry = false %}
-              {% if event.link and is_discord == false %}
-                {% assign is_full_entry = true %}
+              {% if event.link %}
+                {% unless event.link contains "discord.com" %}
+                   {% assign is_full_entry = true %}
+                {% endunless %}
               {% endif %}
 
               <div class="timeline-item">

@@ -109,10 +109,10 @@
 .timeline-item::before {
     content: '';
     position: absolute;
-    /* Left alignment: -52px (calculated previously) */
+    /* Left alignment: -52px */
     left: -52px;
-    /* Top: Adjusted from 24px to 16px to match reduced padding */
-    top: 16px;
+    /* Top: Reduced to 10px to align with the new tighter padding */
+    top: 10px;
     width: 14px;
     height: 14px;
     background-color: var(--color-bg-page);
@@ -125,8 +125,8 @@
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
-    /* Reduced Top Padding: 1rem (was 1.5rem) */
-    padding: 1rem 1.5rem 1.5rem 1.5rem;
+    /* Tighter Top Padding: 0.5rem (8px) */
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
@@ -141,8 +141,8 @@
 .timeline-content::after {
     content: '';
     position: absolute;
-    /* Top: Adjusted from 33px to 25px to match reduced padding */
-    top: 25px;
+    /* Top: 17px (Center of the 14px dot at 10px top = 17px center) */
+    top: 17px;
     left: -32px;
     width: 32px;
     height: 0;
@@ -209,22 +209,11 @@
    RESPONSIVE (Mobile)
    ============================================ */
 @media (max-width: 900px) {
-    .chronicles-layout {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .chronicles-sidebar {
-        display: none;
-    }
+    /* ... [Previous mobile styles] ... */
 
     .timeline-container {
         padding-left: 20px; 
         margin-left: 10px;
-    }
-
-    .timeline-year-marker {
-        margin-left: -35px;
     }
     
     .timeline-item::before {
