@@ -29,7 +29,7 @@ extra_css:
 
   <div class="chronicles-content">
     <div class="timeline-container">
-      
+
       {% for group in grouped_events %}
         {% assign label = group.items[0].display_tag | default: group.name %}
         
@@ -44,7 +44,7 @@ extra_css:
             {% for event in group.items %}
               <div class="timeline-item">
                 
-                <div class="timeline-content {% if event.link %}type-major{% endif %}">
+                <div class="timeline-content {% if event.link and event.full_entry %}type-major{% endif %}">
                   
                   {% if event.title %}
                     <h3 class="timeline-title">
@@ -60,7 +60,7 @@ extra_css:
                     {{ event.content | markdownify }}
                   </div>
 
-                  {% if event.link %}
+                  {% if event.link and event.full_entry %}
                     <div class="timeline-footer">
                       <a href="{{ event.link | relative_url }}" class="read-more">Read Full Entry &rarr;</a>
                     </div>
@@ -93,7 +93,6 @@ document.addEventListener("DOMContentLoaded", function() {
             if (entry.isIntersecting) {
                 navLinks.forEach(link => link.classList.remove('active'));
                 const id = entry.target.getAttribute('id');
-                // Escape characters for selector validity if ID has spaces
                 const safeId = CSS.escape(id); 
                 const activeLink = document.querySelector(`.year-nav a[href="#${id}"]`);
 
