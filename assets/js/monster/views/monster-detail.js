@@ -358,12 +358,18 @@ function renderFeatureBucket(list, title) {
 function renderFeatureList(list) {
     return list.map(f => {
         let html = marked.parse(f.description);
+        
+        // Enforce Bold + Italics styling
         const titleHtml = `<strong><em>${f.name}.</em></strong> `;
+        
+        // Inject the title into the first paragraph of the description
+        // This creates the "Run-in" header style (e.g. "***Ambush.*** The monster...")
         if (html.startsWith('<p>')) {
             html = html.replace('<p>', `<p>${titleHtml}`);
         } else {
             html = `<p>${titleHtml}</p>` + html;
         }
+        
         return `<div class="feature-item">${html}</div>`;
     }).join('');
 }
