@@ -5,9 +5,10 @@
 import { supabase } from '../supabaseClient.js';
 
 export async function getMonsters() {
+    // FIX: Added 'size', 'usage', and 'creator_discord_id' to the select list
     let { data, error } = await supabase
         .from('monsters')
-        .select('name, slug, species, cr, image_url, row_id')
+        .select('name, slug, species, cr, image_url, row_id, size, usage, alignment, creator_discord_id')
         .eq('is_live', true)
         .order('name');
     
@@ -20,7 +21,7 @@ export async function getMonsters() {
 
 export async function getMonsterBySlug(slug) {
     // 1. Fetch Monster
-    // PRO TIP: We explicitly cast IDs to text to prevent JavaScript rounding errors with large Discord IDs
+    // Casting creator_discord_id to text prevents BigInt rounding errors
     let { data: monster, error } = await supabase
         .from('monsters')
         .select('*, creator_discord_id::text') 
@@ -42,13 +43,12 @@ export async function getMonsterBySlug(slug) {
 
     monster.features = features || [];
 
-    // 3. FIX: Fetch Creator Name
-    // If the monster has a creator ID, we look up their display name
+    // 3. Fetch Creator Name
     if (monster.creator_discord_id) {
         const { data: user } = await supabase
             .from('discord_users')
             .select('display_name')
-            .eq('discord_id', monster.creator_discord_id) // Matches the ID
+            .eq('discord_id', monster.creator_discord_id)
             .single();
 
         if (user) {
