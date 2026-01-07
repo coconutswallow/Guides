@@ -67,17 +67,19 @@ export async function getMonsterBySlug(slug) {
         return null;
     }
 
-    // 2. Get Creator Name (Safe Lookup)
+    // 2. Get Creator Name (Safe Lookup via Discord ID)
     let creatorName = 'Unknown';
-    if (monster.creator_id) {
+    
+    // UPDATED: Check for the new creator_discord_id field
+    if (monster.creator_discord_id) {
         const { data: userData } = await supabase
-            .from('users')
-            .select('discord_name')
-            .eq('id', monster.creator_id)
+            .from('discord_users')          // UPDATED: New table
+            .select('display_name')         // UPDATED: Fetch display_name
+            .eq('discord_id', monster.creator_discord_id) // UPDATED: Join on discord_id
             .single();
             
         if (userData) {
-            creatorName = userData.discord_name;
+            creatorName = userData.display_name;
         }
     }
 
@@ -92,6 +94,6 @@ export async function getMonsterBySlug(slug) {
     return { 
         ...monster, 
         features: features || [],
-        creator_name: creatorName 
+        creator_name: creatorName // Maps to existing prop used in Detail View
     };
 }
