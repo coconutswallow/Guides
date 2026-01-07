@@ -1,3 +1,6 @@
+# Purpose: FAQ Data for the Website 
+# Location: _data/faqs.yml
+
   - question: What is the Hawthorne Guild?
     category: General
     answer: |-

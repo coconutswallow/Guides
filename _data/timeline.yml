@@ -1,75 +1,74 @@
-# _data/timeline.yml
-# Note for events with big detailed link (vs. discord session logs), add "full_entry: true"
+# Purpose: Timeline of major events in the Hawthorne Guild 
+# Location: _data/timeline.yml
 
 - year: 1491 DR (2017)
   display_tag: "1491"
   title: "Founding Day"
-  full_entry: true
   link: https://hawthorneguild.github.io/Guides/playersguide/about-hawthorne/
-  content: >-
+  content: |-
     The Hawthorne Guild is founded on the 5th of Eleasis by Irisen Rhuvali, drow sorcerer and former adventurer.
 
 - year: 1491 DR (2017)
   display_tag: "1491"
   title: "Construction of Lerwick"
   link: https://discord.com/channels/308324031478890497/355776899932487680/355777069227048968
-  content: >-
+  content: |-
     The town of Lerwick is slowly built out of initially an encampment of tents known as the Tent City, with the Hawthorne Guild Hall as one of the first structures built. Over time, the town grows, with the creation of the Guild Tavern, the Silverstrings Inn, the All-Faiths Temple, the Lerwick Hospital, the Copper and Iron Districts, and town walls.
 
 - year: 1491 DR (2017)
   display_tag: "1491"
   title: "The Fallen Cloaks"
   link: https://discord.com/channels/308324031478890497/343418646300852225/346455629541539840
-  content: >-
+  content: |-
     Adventurers of the guild come into conflict with the brigands known as the Fallen Cloaks, led by Rigard Windhowler. In retaliation, Rigard Windhowler attacks Lerwick and burns down a significant part of the town. Attempts at negotiation are made but fail, with conflict between Lerwick and the Fallen Cloaks continuing, including burning of the farmlands around Lerwick.
 
 - year: 1491 DR (2017)
   display_tag: "1491"
   title: "The Collector"
   link: https://discord.com/channels/308324031478890497/343418646300852225/344643731099484167
-  content: >-
+  content: |-
      The mysterious entity known as the Collector makes their presence known and is seemingly tied to the dungeon known as Tomb of the Scarlet Prince. The Collector openly attacks guild members and seems to collect corpses, often appearing where a concentration of bodies can be found.
 
 - year: 1491 DR (2017)
   display_tag: "1491"
   title: "Tyrant's Keep"
   link: https://discord.com/channels/308324031478890497/343418646300852225/376218265422397440
-  content: >-
+  content: |-
      The Baneite structure known as Tyrant's Keep is built in Lerwick by the Black Fists of Bane, and kobolds of Lerwick establish a warrens beneath the keep. Over time, the tensions around Tyrant's Keep explode as the individual known as Tarim takes control of the structure. Tarim captures and tortures inhabitants of Lerwick. A group led by the kobold Tasuk'suva along with the town guard and the Lerwick Roses (then known as the Azure Roses) assault Tyrant's Keep. Many individuals die, with all of the keep's defenders falling. Tarim is captured, but is later assassinated in his cell.
 
 - year: 1491 DR (2017)
   display_tag: "1491"
   title: "The Devil You Know"
   link: https://discord.com/channels/308324031478890497/343418646300852225/380912254356422666
-  content: >-
+  content: |-
      Adventurers of the guild aid the green dragon Gelinavaar in reclaiming the dragon's lair in the Southwood from the known necromancer Julian Druge. Julian Druge is defeated and captured, with the guild forming an uneasy understanding with the green dragon Gelinavaar. Julian later escapes and the guild formally establishes diplomatic relations with the self-styled Warden of the Southwood, Gelinavaar.
 
 - year: 1491 DR (2017)
   display_tag: "1491"
   title: "The Scales of Justice"
   link: https://discord.com/channels/308324031478890497/387369306490404885/387369986739404800
-  content: >-
+  content: |-
       The organization known as the Scales of Justice forms, focusing on community projects and efforts across the town.
 
 - year: 1492 DR (2018)
   display_tag: "1492"
   title: "Jadehold"
   link: https://discord.com/channels/308324031478890497/343418646300852225/397437330056806401
-  content: >-
+  content: |-
       The necromancer Julian Druge slew and reanimated the adventurer Keinen Fionnlagh. A group of adventurers assaulted the necromancer's keep in the Southwood, confronting and defeating him and recovering Keinen's body. The green dragon Gelinavaar and the kobolds under him took control of the ruined keep and renamed it as "Jadehold," cementing the green dragon's control over the Southwood.
 
 - year: 1492 DR (2018)
   display_tag: "1492"
   title: "Mulmaster Yard"
   link: https://discord.com/channels/308324031478890497/399057737708732437/399195178767876117
-  content: >-
+  content: |-
       Mulmaster Yard is constructed in Lerwick to house the Order of the Knight's Watchmen, in keeping the peace among the guild.
 
 - year: 1492 DR (2018)
   display_tag: "1492"
   title: "Fallen Cloak Alliance"
   link: https://discord.com/channels/308324031478890497/343418646300852225/432738585314066432
-  content: >-
+  content: |-
       Attempts at negotiating with the Fallen Cloaks continued, with a group of adventurers traveling to the Fallen Cloak stronghold to discuss terms. During the meeting, the Collector arrived and interrupted the proceedings, with guild adventurers taking Rigard Windhowler and the Fallen Cloaks council back to Lerwick. Later, an undead horde assaulted the Fallen Cloak stronghold, led by the mysterious individual known as the Crimson King. Guild adventurers helped the surviving Fallen Cloaks escape and fought back against the undead horde. 
       
       In the aftermath, the conflict between the Fallen Cloaks and Lerwick has ended, with the former brigands now allies.
@@ -78,14 +77,14 @@
   display_tag: "1492"
   title: "Lerwick Grows"
   link: https://discord.com/channels/308324031478890497/398978873229836289/398980870700269568
-  content: >-
+  content: |-
       The town of Lerwick continues to grow, with the creation of town sewers, the establishment of MAGIC as an organization of cooperating magic users, the creation of Tearmann Orphanage, the opening of Hawthorne University, and more.
 
 - year: 1492 DR (2018)
   display_tag: "1492"
   title: "The Death Curse of Chult"
   link: https://discord.com/channels/308324031478890497/343418646300852225/400583962486898688
-  content: >-
+  content: |-
       An expedition to Port Nyanzaru in Chult by the guild is arranged by the adventurer Jonathan Stane. After helping to uncover a disguised rakshasa, the guild establishes relations with the merchant princes Ekene-Afa and Wakanga O'tamu, granting the guild access to Port Nyanzaru via Teleportation Circle. The Thundering Lizard Inn is used by guild adventurers for residence before eventually being acquired as a guild outpost. The guild learns of a mysterious death curse plaguing Chult and determines it originates from somewhere in the heart of Chult itself. Groups of guild adventurers begin preliminary expeditions into the jungles of Chult, but the Death Curse over Chult mysteriously ends after a time. 
       
       (NOTE: This was an initial run of the *Tomb of Annihilation* campaign that did not complete)
@@ -94,5 +93,5 @@
   display_tag: "1492"
   title: "Gnoll/11"
   link: https://discord.com/channels/308324031478890497/399057737708732437/412531287698440192
-  content: >-
+  content: |-
       The gnolls Mongrel and Gnarl seek to break out Rendhowl, a gnoll of Mongrel's pack that had been imprisoned after committing assault. The pair travel across the town, stealing a massive supply of explosives from Arx, goblin archaelologist and grenadier. The pair escape into the sewers, with Councilwoman Tasuk'suva tailing them and managing to stop Gnarl. Mongrel enters Mulmaster Yard from the sewers with the aim of freeing Rendhowl and fights his way to the common room, where he explodes the bombs. All individuals in the area perish except for the adventurer Tenzin, who is shielded by the dragonborn paladin Ghehadur at the cost of his life. In the wake of the devastating incident, security across Mulmaster Yard and the guild as a whole is increased.
