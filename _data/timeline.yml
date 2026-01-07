@@ -1,20 +1,30 @@
 # _data/timeline.yml
 
-- year: 1499
-  display_tag: "1499 ToA"
+- year: 1491 DR (2017)
+  display_tag: "1491"
+  title: "Founding Day"
+  link: https://discord.com/channels/308324031478890497/343396359505707009/343493848426872832
   content: >-
-    The party wandered around Port Nyanzaru, eventually finding a guide before leaving into the jungle.
-  
-- year: 1500
-  display_tag: "1500 ToA"
-  title: "The Fall of Camp Righteous"
-  link: "/chronicles/camp-righteous" # Example link to a full page
-  content: >-
-    A detailed account of the T-Rex attack and the subsequent defense.
+    The Hawthorne Guild is founded on the 5th of Eleasis by Irisen Rhuvali, drow sorcerer and former adventurer.
 
-- year: 1501
-  display_tag: "1501 AE"
+- year: 1491 DR (2017)
+  display_tag: "1491
+  title: "Construction of Lerwick"
+  link: https://discord.com/channels/308324031478890497/355776899932487680/355777069227048968
   content: >-
-    They headed to Vorn, where they took an amulet from a goblin chief.
-    
-    Confident with the Shield Guardian's aid, they went to kill the Hag of Mbala.
+    The town of Lerwick is slowly built out of initially an encampment of tents known as the Tent City, with the Hawthorne Guild Hall as one of the first structures built. Over time, the town grows, with the creation of the Guild Tavern, the Silverstrings Inn, the All-Faiths Temple, the Lerwick Hospital, the Copper and Iron Districts, and town walls.
+
+- year: 1491 DR (2017)
+  display_tag: "1491
+  title: "The Fallen Cloaks"
+  link: https://discord.com/channels/308324031478890497/343418646300852225/346455629541539840
+  content: >-
+    Adventurers of the guild come into conflict with the brigands known as the Fallen Cloaks, led by Rigard Windhowler. In retaliation, Rigard Windhowler attacks Lerwick and burns down a significant part of the town. Attempts at negotiation are made but fail, with conflict between Lerwick and the Fallen Cloaks continuing, including burning of the farmlands around Lerwick.
+
+- year: 1491 DR (2017)
+  display_tag: "1491
+  title: "The Collector"
+  link: https://discord.com/channels/308324031478890497/343418646300852225/344643731099484167
+  content: >-
+     The mysterious entity known as the Collector makes their presence known and is seemingly tied to the dungeon known as Tomb of the Scarlet Prince. The Collector openly attacks guild members and seems to collect corpses, often appearing where a concentration of bodies can be found.
+
