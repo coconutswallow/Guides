@@ -4,6 +4,8 @@
 * Wait for the browser to finish parsing the HTML document before running the script.
  * This ensures that all the heading elements we want to select are available (in the DOM).
  * 'DOMContentLoaded' is a reliable event for this, as it doesn't wait for images or CSS.
+ * 
+ * Location: \assets\js\heading-links.js
  */
 document.addEventListener('DOMContentLoaded', function() {
   

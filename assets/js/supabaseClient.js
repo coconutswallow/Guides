@@ -1,6 +1,8 @@
 /**
  * supabase-config.js
  * Single source of truth for the Supabase client.
+ * 
+ * Location: \assets\js\supabaseClient.js
  */
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 

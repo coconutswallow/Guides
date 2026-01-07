@@ -5,6 +5,9 @@
  * It wraps the entire script in a function that runs immediately.
  * This is a standard practice to prevent variables from "leaking"
  * into the global scope (i.e., it keeps our variables private).
+ * 
+ * Location: \assets\js\sidebar.js
+
  */
 (function() {
     /**

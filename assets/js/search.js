@@ -3,6 +3,9 @@
  * It's a common JavaScript pattern that wraps the entire script in a function
  * and then immediately calls it. This prevents variables from "leaking" into
  * the global scope (i.e., it keeps our variables private to this script).
+ * 
+ * Location: \assets\js\search.js
+ 
  */
 (function() {
   
