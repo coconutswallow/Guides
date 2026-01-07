@@ -14,13 +14,12 @@ extra_css:
 
   <aside class="chronicles-sidebar">
     <div class="sticky-wrapper">
-      <h4 class="nav-header">Eras</h4>
+      <h4 class="nav-header">Years</h4>
       <nav class="year-nav">
         <ul>
           {% for group in grouped_events %}
-            {% assign label = group.items[0].display_tag | default: group.name %}
             <li>
-              <a href="#year-{{ group.name }}">{{ label }}</a>
+              <a href="#year-{{ group.name }}">{{ group.name }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -30,8 +29,7 @@ extra_css:
 
   <div class="chronicles-content">
     <div class="timeline-container">
-      <div class="timeline-start-marker"></div>
-
+      
       {% for group in grouped_events %}
         {% assign label = group.items[0].display_tag | default: group.name %}
         
@@ -84,10 +82,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const navLinks = document.querySelectorAll('.year-nav a');
     const sections = document.querySelectorAll('.timeline-year-group');
 
-    // CONFIGURATION
-    // rootMargin: Defines the "active zone" of the screen. 
-    // "-10% 0px -80% 0px" means: "Activate the section when it is near the top of the screen"
-    // (It ignores the bottom 80% of the screen so strictly only the top item highlights)
     const observerOptions = {
         root: null,
         rootMargin: '-10% 0px -80% 0px', 
@@ -97,25 +91,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // 1. Remove 'active' class from all links
                 navLinks.forEach(link => link.classList.remove('active'));
-
-                // 2. Find the link corresponding to the visible section
-                const id = entry.target.getAttribute('id'); // e.g., "year-1499"
+                const id = entry.target.getAttribute('id');
+                // Escape characters for selector validity if ID has spaces
+                const safeId = CSS.escape(id); 
                 const activeLink = document.querySelector(`.year-nav a[href="#${id}"]`);
 
-                // 3. Add 'active' class
                 if (activeLink) {
                     activeLink.classList.add('active');
-                    
-                    // Optional: Scroll the sidebar if the list is very long 
-                    // activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
                 }
             }
         });
     }, observerOptions);
 
-    // Start observing all timeline sections
     sections.forEach(section => {
         observer.observe(section);
     });
