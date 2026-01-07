@@ -2,14 +2,14 @@
  * monster-service.js
  * Service to interact with Supabase for Monster data.
  */
-import { supabase } from '../supabaseClient.js';
+
+// ADJUSTED PATH: Go up one level (..) to find the config file
+import { supabase } from '../supabase-config.js';
 
 export async function getMonsters() {
-    // Note: Ensure your DB actually has a 'type' column. 
-    // Your CSV shows 'species', so you might need to select 'species' instead of 'type'.
     let { data, error } = await supabase
         .from('monsters')
-        .select('name, slug, species, cr, image_url, row_id') 
+        .select('name, slug, species, cr, image_url, row_id')
         .eq('is_live', true)
         .order('name');
     
@@ -21,28 +21,34 @@ export async function getMonsters() {
 }
 
 export async function getMonsterBySlug(slug) {
-    let { data, error } = await supabase
+    // 1. Fetch the Monster Core Data
+    let { data: monster, error } = await supabase
         .from('monsters')
-        .select(`
-            *,
-            features:monster_features (*)
-        `)
+        .select('*')
         .eq('slug', slug)
         .eq('is_live', true)
         .single();
 
-    if (error) {
+    if (error || !monster) {
         console.error('Error fetching monster:', error);
         return null;
     }
 
-    // Safeguard: Ensure features is an array if the join returns null
-    if (data) {
-        data.features = data.features || [];
-        
-        // Optional: Sort features by display_order if you have that column
-        data.features.sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+    // 2. Manually Fetch Features
+    // This looks up features where parent_row_id matches the monster's row_id.
+    // This bypasses the need for a strict Foreign Key relation in the DB.
+    const { data: features, error: featureError } = await supabase
+        .from('monster_features')
+        .select('*')
+        .eq('parent_row_id', monster.row_id)
+        .order('display_order', { ascending: true });
+
+    if (featureError) {
+        console.warn('Error fetching features:', featureError);
+        monster.features = [];
+    } else {
+        monster.features = features || [];
     }
 
-    return data;
+    return monster;
 }
