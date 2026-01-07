@@ -165,7 +165,7 @@ function renderGrid(monsters) {
             }
             
             <div class="monster-card-content">
-                <h3><a href="#/monster/${m.slug}">${m.name}</a></h3>
+                <h3><a href="#/${m.slug}">${m.name}</a></h3>
                 <p class="monster-cr">CR ${formatCR(m.cr)}</p>
                 <p class="monster-type">${m.size} ${m.species}</p>
             </div>
