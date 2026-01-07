@@ -42,9 +42,19 @@ extra_css:
           
           <div class="timeline-events-stack">
             {% for event in group.items %}
+              
+              {% comment %} 
+                LOGIC: A 'full entry' is any link that is NOT a Discord link.
+              {% endcomment %}
+              {% assign is_discord = event.link | contains: "discord.com" %}
+              {% assign is_full_entry = false %}
+              {% if event.link and is_discord == false %}
+                {% assign is_full_entry = true %}
+              {% endif %}
+
               <div class="timeline-item">
                 
-                <div class="timeline-content {% if event.link and event.full_entry %}type-major{% endif %}">
+                <div class="timeline-content {% if is_full_entry %}type-major{% endif %}">
                   
                   {% if event.title %}
                     <h3 class="timeline-title">
@@ -60,7 +70,7 @@ extra_css:
                     {{ event.content | markdownify }}
                   </div>
 
-                  {% if event.link and event.full_entry %}
+                  {% if is_full_entry %}
                     <div class="timeline-footer">
                       <a href="{{ event.link | relative_url }}" class="read-more">Read Full Entry &rarr;</a>
                     </div>
