@@ -218,16 +218,14 @@ export async function renderMonsterDetail(container, params) {
             /* Base paragraph style for features */
             .feature-item p { display: inline-block; margin-bottom: 0.5em; }
 
-            /* FIX: Reset paragraphs inside list items to block to fix bullet alignment */
             .feature-item li p { display: block; margin-bottom: 0; }
 
             /* MOBILE FIX: Switch to Flexbox column layout on small screens */
             @media (max-width: 1000px) {
-                /* --- ADD THIS NEW RULE --- */
+                
                 .monster-header {
-                    margin-top: 2rem; 
+                    margin-top: 4rem; 
                 }
-                /* ------------------------- */
 
                 .monster-detail-layout { 
                     display: flex !important; 
