@@ -1,4 +1,5 @@
 # _data/timeline.yml
+# Note for events with big detailed link (vs. discord session logs), add "full_entry: true"
 
 - year: 1491 DR (2017)
   display_tag: "1491"
@@ -49,10 +50,26 @@
   content: >-
       The organization known as the Scales of Justice forms, focusing on community projects and efforts across the town.
 
-
 - year: 1492 DR (2018)
-  display_tag: "1491"
+  display_tag: "1492"
   title: "Jadehold"
   link: https://discord.com/channels/308324031478890497/343418646300852225/397437330056806401
   content: >-
       The necromancer Julian Druge slew and reanimated the adventurer Keinen Fionnlagh. A group of adventurers assaulted the necromancer's keep in the Southwood, confronting and defeating him and recovering Keinen's body. The green dragon Gelinavaar and the kobolds under him took control of the ruined keep and renamed it as "Jadehold," cementing the green dragon's control over the Southwood.
+
+- year: 1492 DR (2018)
+  display_tag: "1492"
+  title: "Mulmaster Yard"
+  link: https://discord.com/channels/308324031478890497/399057737708732437/399195178767876117
+  content: >-
+      Mulmaster Yard is constructed in Lerwick to house the Order of the Knight's Watchmen, in keeping the peace among the guild.
+
+- year: 1492 DR (2018)
+  display_tag: "1492"
+  title: "Fallen Cloak Alliance"
+  link: https://discord.com/channels/308324031478890497/343418646300852225/432738585314066432
+  content: >-
+      Attempts at negotiating with the Fallen Cloaks continued, with a group of adventurers traveling to the Fallen Cloak stronghold to discuss terms. During the meeting, the Collector arrived and interrupted the proceedings, with guild adventurers taking Rigard Windhowler and the Fallen Cloaks council back to Lerwick. Later, an undead horde assaulted the Fallen Cloak stronghold, led by the mysterious individual known as the Crimson King. Guild adventurers helped the surviving Fallen Cloaks escape and fought back against the undead horde. 
+      
+      In the aftermath, the conflict between the Fallen Cloaks and Lerwick has ended, with the former brigands now allies.
+  
