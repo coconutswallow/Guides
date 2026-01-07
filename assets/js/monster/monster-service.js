@@ -1,158 +1,61 @@
 /**
- * monster-library.js
- * Location: \assets\js\monster\views\monster-library.js
+ * monster-service.js
+ * Service to interact with Supabase for Monster data.
+ * Location: \assets\js\monster\monster-service.js
  */
-import { getMonsters } from '../monster-service.js';
+import { supabase } from '../supabaseClient.js';
 
-export async function renderMonsterLibrary(container) {
-    const parentPage = container.closest('.page');
-    if (parentPage) parentPage.classList.remove('page-wide');
-
-    const monsters = await getMonsters();
-
-    // Generate dynamic filters
-    const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
-    const uniqueUsage = [...new Set(monsters.map(m => m.usage).filter(Boolean))].sort();
+export async function getMonsters() {
+    let { data, error } = await supabase
+        .from('monsters')
+        .select('name, slug, species, cr, image_url, row_id, size, usage, alignment, creator_discord_id')
+        .eq('is_live', true)
+        .order('name');
     
-    const html = `
-        <h2>Monster Compendium</h2>
-        <div style="margin-bottom: 1.5rem;">
-            <p>The monsters in this compendium have been created by various members of the community of the Hawthorne Dungeons & Dragons Guild.</p>
-        </div>
-        
-        <div class="filter-container" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; align-items: flex-end; width: 100%;">
-            
-            <div class="filter-group" style="flex: 4 1 200px;">
-                <label for="name-search">Name:</label>
-                <input type="text" id="name-search" class="filter-input" placeholder="Search...">
-            </div>
-
-            <div class="filter-group" style="flex: 3 1 160px;">
-                <label for="usage-filter">Usage:</label>
-                <select id="usage-filter" class="filter-select">
-                    <option value="">All Usage</option>
-                    ${uniqueUsage.map(u => `<option value="${u}">${u}</option>`).join('')}
-                </select>
-            </div>
-
-            <div class="filter-group" style="flex: 2 1 140px;">
-                <label for="species-filter">Species:</label>
-                <select id="species-filter" class="filter-select">
-                    <option value="">All Species</option>
-                    ${uniqueSpecies.map(s => `<option value="${s}">${s}</option>`).join('')}
-                </select>
-            </div>
-            
-            <div class="filter-group" style="flex: 0.5 1 55px;">
-                <label for="cr-min">Min CR:</label>
-                <input type="number" id="cr-min" class="filter-input" placeholder="0" min="0" step="0.125">
-            </div>
-
-            <div class="filter-group" style="flex: 0.5 1 55px;">
-                <label for="cr-max">Max CR:</label>
-                <input type="number" id="cr-max" class="filter-input" placeholder="30" min="0" step="0.125">
-            </div>
-
-            <div class="filter-group" style="flex: 1.5 1 100px;">
-                <label for="size-filter">Size:</label>
-                <select id="size-filter" class="filter-select">
-                    <option value="">All Sizes</option>
-                    <option value="Tiny">Tiny</option>
-                    <option value="Small">Small</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Large">Large</option>
-                    <option value="Huge">Huge</option>
-                    <option value="Gargantuan">Gargantuan</option>
-                </select>
-            </div>
-
-            <button id="reset-filters" class="reset-button" style="flex: 0 0 auto; height: 38px; margin-bottom: 2px;">Reset</button>
-        </div>
-
-        <div id="monster-count" class="monster-count"></div>
-        <div id="monster-grid" class="monster-list"></div>
-    `;
-
-    container.innerHTML = html;
-    renderGrid(monsters);
-
-    // --- Filter Logic ---
-    const handleFilter = () => {
-        const name = document.getElementById('name-search').value.toLowerCase();
-        const usage = document.getElementById('usage-filter').value;
-        const species = document.getElementById('species-filter').value;
-        const size = document.getElementById('size-filter').value;
-        
-        const minVal = document.getElementById('cr-min').value;
-        const maxVal = document.getElementById('cr-max').value;
-        const minCR = minVal === '' ? NaN : parseFloat(minVal);
-        const maxCR = maxVal === '' ? NaN : parseFloat(maxVal);
-
-        const filtered = monsters.filter(m => {
-            const matchesName = m.name.toLowerCase().includes(name);
-            const matchesUsage = !usage || m.usage === usage;
-            const matchesSpecies = !species || m.species === species;
-            const matchesSize = !size || m.size === size;
-            
-            const crVal = parseFloat(m.cr);
-            const matchesMin = isNaN(minCR) || crVal >= minCR;
-            const matchesMax = isNaN(maxCR) || crVal <= maxCR;
-
-            return matchesName && matchesUsage && matchesSpecies && matchesSize && matchesMin && matchesMax;
-        });
-
-        renderGrid(filtered);
-    };
-
-    if(document.getElementById('name-search')) {
-        const inputs = ['name-search', 'usage-filter', 'species-filter', 'cr-min', 'cr-max', 'size-filter'];
-        inputs.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.addEventListener('input', handleFilter);
-        });
-
-        document.getElementById('reset-filters').addEventListener('click', () => {
-            inputs.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.value = '';
-            });
-            handleFilter();
-        });
+    if (error) {
+        console.error('Error fetching monsters:', error);
+        return [];
     }
+    return data;
 }
 
-function renderGrid(monsters) {
-    const grid = document.getElementById('monster-grid');
-    const countLabel = document.getElementById('monster-count');
-    if (!grid) return;
+export async function getMonsterBySlug(slug) {
+    // 1. Fetch Monster
+    let { data: monster, error } = await supabase
+        .from('monsters')
+        .select('*, creator_discord_id::text') 
+        .eq('slug', slug)
+        .eq('is_live', true)
+        .single();
 
-    countLabel.textContent = `Showing ${monsters.length} monsters`;
-    
-    if (monsters.length === 0) {
-        grid.innerHTML = '<p>No monsters found matching your criteria.</p>';
-        return;
+    if (error || !monster) {
+        console.error('Error fetching monster:', error);
+        return null;
     }
 
-    grid.innerHTML = monsters.map(m => `
-        <div class="monster-card">
-            ${m.image_url ? 
-                `<div class="monster-card-image">
-                    <img src="${m.image_url}" alt="${m.name}" loading="lazy">
-                 </div>` 
-                : ''
-            }
-            <div class="monster-card-content">
-                <h3><a href="#/monster/${m.slug}">${m.name}</a></h3>
-                <p class="monster-cr">CR ${formatCR(m.cr)}</p>
-                <p class="monster-type">${m.size || 'Unknown'} ${m.species || 'Unknown'}</p>
-            </div>
-        </div>
-    `).join('');
-}
+    // 2. Fetch Features
+    const { data: features } = await supabase
+        .from('monster_features')
+        .select('*')
+        .eq('parent_row_id', monster.row_id)
+        .order('display_order', { ascending: true });
 
-function formatCR(val) {
-    if (val === 0.125) return '1/8';
-    if (val === 0.25) return '1/4';
-    if (val === 0.5) return '1/2';
-    return val;
+    monster.features = features || [];
+
+    // 3. Fetch Creator Name
+    if (monster.creator_discord_id) {
+        const { data: user } = await supabase
+            .from('discord_users')
+            .select('display_name')
+            .eq('discord_id', monster.creator_discord_id)
+            .single();
+
+        if (user) {
+            monster.creator_name = user.display_name;
+        } else {
+            monster.creator_name = "Unknown";
+        }
+    }
+
+    return monster;
 }
