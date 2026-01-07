@@ -223,6 +223,12 @@ export async function renderMonsterDetail(container, params) {
 
             /* MOBILE FIX: Switch to Flexbox column layout on small screens */
             @media (max-width: 1000px) {
+                /* --- ADD THIS NEW RULE --- */
+                .monster-header {
+                    margin-top: 2rem; 
+                }
+                /* ------------------------- */
+
                 .monster-detail-layout { 
                     display: flex !important; 
                     flex-direction: column !important;
