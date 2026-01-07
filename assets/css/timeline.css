@@ -204,24 +204,97 @@
     border-left-color: var(--color-primary);
     padding-left: 15px;
 }
-
 /* ============================================
    RESPONSIVE (Mobile)
    ============================================ */
 @media (max-width: 900px) {
-    /* ... [Previous mobile styles] ... */
+    
+    /* 1. Break the Grid Layout */
+    .chronicles-layout {
+        display: block; /* Stacks the sidebar on top of content */
+        gap: 0;
+    }
 
+    /* 2. Turn Sidebar into a Sticky Top Bar */
+    .chronicles-sidebar {
+        position: sticky;
+        top: 0; /* Adjust this if you have a fixed site header (e.g. 60px) */
+        z-index: 100;
+        width: 100%;
+        background-color: var(--color-bg-page); /* Crucial: hides content scrolling behind it */
+        border-bottom: 1px solid var(--color-border);
+        padding: 10px 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 3. Layout the Years Horizontally */
+    .sticky-wrapper {
+        position: static; /* Remove desktop sticky logic */
+        max-height: auto;
+        border-right: none;
+        padding-right: 0;
+        overflow-y: hidden;
+        overflow-x: auto; /* Allow horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+    }
+
+    /* Hide the "YEARS" header to save vertical space */
+    .nav-header {
+        display: none;
+    }
+
+    /* Flex the list to be a horizontal row */
+    .year-nav ul {
+        display: flex;
+        flex-direction: row;
+        padding: 0 15px; /* Add breathing room on sides */
+        gap: 10px;
+    }
+
+    .year-nav li {
+        margin-bottom: 0;
+        flex-shrink: 0; /* Prevent years from squishing */
+    }
+
+    /* Style the links as "Pills/Tabs" */
+    .year-nav a {
+        background-color: var(--color-bg-medium);
+        border: 1px solid var(--color-border);
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+
+    /* Active state for horizontal layout */
+    .year-nav a.active {
+        background-color: var(--color-primary);
+        color: var(--color-bg-light);
+        border-color: var(--color-primary);
+        padding-left: 16px; /* Override desktop shift */
+    }
+
+    /* 4. Fix Timeline Content Width */
     .timeline-container {
-        padding-left: 20px; 
-        margin-left: 10px;
+        padding-left: 40px; 
+        margin-left: 0; /* Remove any grid margin */
+        border-left-width: 3px; /* Slightly thinner line for mobile */
     }
     
+    /* Adjust dots and lines for new padding */
     .timeline-item::before {
-        left: -32px;
+        left: -49px; /* Re-align dot with new border thickness/padding */
+        width: 12px;
+        height: 12px;
     }
 
     .timeline-content::after {
-        left: -12px;
-        width: 12px;
+        left: -20px; /* Shorten the connector dashed line */
+        width: 20px;
+    }
+    
+    /* Ensure content text doesn't hit the edges */
+    .timeline-content {
+        padding: 1rem;
     }
 }
