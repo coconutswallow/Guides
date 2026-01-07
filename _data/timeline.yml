@@ -1,0 +1,20 @@
+# _data/timeline.yml
+
+- year: 1499
+  display_tag: "1499 ToA"
+  content: >-
+    The party wandered around Port Nyanzaru, eventually finding a guide before leaving into the jungle.
+  
+- year: 1500
+  display_tag: "1500 ToA"
+  title: "The Fall of Camp Righteous"
+  link: "/chronicles/camp-righteous" # Example link to a full page
+  content: >-
+    A detailed account of the T-Rex attack and the subsequent defense.
+
+- year: 1501
+  display_tag: "1501 AE"
+  content: >-
+    They headed to Vorn, where they took an amulet from a goblin chief.
+    
+    Confident with the Shield Guardian's aid, they went to kill the Hag of Mbala.

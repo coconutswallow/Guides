@@ -3,11 +3,12 @@
    Site-wide styles for all pages
    
    Other CSS files:
-    - assets/css/search.css    : Search results and input
-    - assets/css/home.css      : Homepage layout
-    - assets/css/statblock.css : Monster stat blocks
-    - assets/css/monster-library.css : Monster library and filters
-    - assets/css/faq.css       : FAQ page
+    - assets/css/search.css           : Search results and input
+    - assets/css/home.css             : Homepage layout
+    - assets/css/statblock.css        : Monster stat blocks
+    - assets/css/monster-library.css  : Monster library and filters
+    - assets/css/faq.css              : FAQ page
+    - assets/css/timeline.css         : Timeline page
    ============================================ */
 
 /* ============================================
@@ -2055,134 +2056,3 @@ img + .image-caption {
     page-break-inside: avoid;
   }
 }
-
-/* ============================================
-   23. TIMELINES (Perfect Centering & Collapsible)
-   ============================================ */
-
-.timeline-container {
-    position: relative;
-    max-width: 850px;
-    margin: 3em auto;
-    padding: 40px 0 2em 60px;
-}
-
-/* Thicker 6px Line */
-.timeline-container::after {
-    content: '';
-    position: absolute;
-    width: 6px; 
-    background-color: var(--color-primary);
-    top: 0;
-    bottom: 0;
-    left: 30px; 
-    transform: translateX(-50%);
-    z-index: 1;
-}
-
-/* Diamond Starting Marker */
-.timeline-start-marker {
-    position: absolute;
-    top: 0;
-    left: 30px;
-    width: 16px;
-    height: 16px;
-    background-color: var(--color-primary);
-    transform: translateX(-50%) rotate(45deg);
-    z-index: 2;
-    border: 2px solid var(--color-bg-light);
-}
-
-.timeline-year-group { margin-bottom: 1.5em; position: relative; }
-.timeline-year-group summary { list-style: none; outline: none; cursor: pointer; }
-.timeline-year-group summary::-webkit-details-marker { display: none; }
-
-.timeline-year-marker {
-    font-family: var(--font-header);
-    background-color: var(--color-primary);
-    color: white;
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 20px;
-    font-weight: bold;
-    z-index: 5;
-    position: relative;
-    margin-left: -45px; 
-    border-radius: 4px;
-}
-
-/* --- THE NODES (Visual Fixes) --- */
-
-.timeline-item {
-    position: relative;
-    width: 100%;
-    min-height: 60px; /* Ensures enough space for centering */
-    margin: 10px 0;
-    padding-left: 30px;
-    display: flex;
-    align-items: center; /* Vertically aligns the content with the dot */
-}
-
-/* Outer Ring */
-.timeline-item::after {
-    content: '';
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    background-color: var(--color-bg-light);
-    border: 3px solid var(--color-primary);
-    border-radius: 50%;
-    z-index: 3;
-    left: -30px; 
-    top: 50%; /* Center anchor */
-    transform: translate(-50%, -50%); /* Perfect X and Y centering */
-    box-sizing: border-box;
-}
-
-/* Inner Dot (Now Bigger & Perfectly Centered) */
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    width: 16px; /* Increased size */
-    height: 16px;
-    background-color: var(--color-primary);
-    border-radius: 50%;
-    z-index: 4;
-    left: -30px;
-    top: 50%; /* Center anchor */
-    transform: translate(-50%, -50%); /* Perfect X and Y centering */
-}
-
-/* --- THE CARDS --- */
-
-.timeline-content {
-    width: 100%;
-    padding: 15px 25px;
-    background-color: var(--color-bg-light);
-    border: 1px solid var(--color-border);
-    position: relative;
-    outline: 1px solid var(--color-secondary);
-    outline-offset: -10px;
-}
-
-.timeline-title {
-    margin-top: 0 !important; /* Removes the gap above the title */
-    margin-bottom: 8px;       /* Keeps a small gap below the title */
-}
-
-/* Horizontal Connector */
-.timeline-content::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -30px;
-    width: 30px;
-    height: 3px; /* Slightly thicker to match 6px line */
-    background-color: var(--color-primary);
-    transform: translateY(-50%);
-    z-index: 2;
-}
-
-.timeline-title { font-family: var(--font-header); margin: 0 0 5px 0; }
-.timeline-title a { color: var(--color-primary); text-decoration: none; }
-.timeline-excerpt { font-size: 0.95rem; margin: 0; color: var(--color-text); }

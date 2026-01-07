@@ -1,0 +1,244 @@
+/* ============================================
+   TIMELINE LAYOUT (Grid System)
+   ============================================ */
+
+/* The Main Wrapper */
+.chronicles-layout {
+    display: grid;
+    /* Sidebar is 200px, Content takes the rest */
+    grid-template-columns: 200px 1fr; 
+    gap: 3rem;
+    position: relative;
+}
+
+/* Left Sidebar (Sticky) */
+.chronicles-sidebar {
+    /* Implicitly relative */
+}
+
+.sticky-wrapper {
+    position: sticky;
+    /* 85px (header height) + 20px padding */
+    top: 105px; 
+    padding-right: 20px;
+    border-right: 2px solid var(--color-border);
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+/* Navigation Links */
+.nav-header {
+    font-family: var(--font-header);
+    color: var(--color-primary);
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.year-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.year-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.year-nav a {
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    display: block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.year-nav a:hover {
+    color: var(--color-primary);
+    background-color: var(--color-bg-medium);
+    border-left-color: var(--color-secondary);
+}
+
+/* ============================================
+   TIMELINE VISUALS (The Line & Cards)
+   ============================================ */
+
+.timeline-container {
+    position: relative;
+    padding: 0 0 2em 40px; /* Left padding for the line */
+    border-left: 4px solid var(--color-border); /* The main vertical line */
+}
+
+/* The Diamond Top Marker */
+.timeline-start-marker {
+    position: absolute;
+    top: -8px;
+    left: -10px; /* Centers it on the 4px border */
+    width: 16px;
+    height: 16px;
+    background-color: var(--color-primary);
+    transform: rotate(45deg);
+    border: 2px solid var(--color-bg-page);
+    z-index: 2;
+}
+
+/* Year Headers (1499, 1500) */
+.timeline-year-group {
+    position: relative;
+    margin-bottom: 3rem;
+    /* Scroll margin ensures header isn't hidden behind fixed navbar when clicked */
+    scroll-margin-top: 120px; 
+}
+
+.timeline-year-marker {
+    font-family: var(--font-header);
+    background-color: var(--color-primary);
+    color: var(--color-bg-light);
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-left: -60px; /* Pulls it left over the line */
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    z-index: 5;
+}
+
+.event-count {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-left: 8px;
+    font-weight: normal;
+}
+
+/* The Cards */
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+/* The Dot on the Line */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -49px; /* Adjust to hit center of line */
+    top: 24px;
+    width: 14px;
+    height: 14px;
+    background-color: var(--color-bg-page);
+    border: 3px solid var(--color-primary);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.timeline-content {
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.timeline-content:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Connector Line (Card to Dot) */
+.timeline-content::after {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: -14px; /* Sticks out to the left */
+    width: 14px;
+    height: 0;
+    border-top: 2px dashed var(--color-border);
+}
+
+/* Typography inside Card */
+.timeline-title {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: var(--color-primary);
+}
+
+.timeline-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.timeline-title a:hover {
+    text-decoration: underline;
+}
+
+.timeline-body p:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-footer {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--color-border);
+}
+
+.read-more {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+}
+
+/* Special Styling for Major Linked Events */
+.timeline-content.type-major {
+    border-left: 5px solid var(--color-primary);
+    background-color: var(--color-bg-light); 
+}
+/* Optional: slight tint for major events in light mode only */
+:root:not([data-theme="dark"]) .timeline-content.type-major {
+     background-color: rgba(88, 24, 13, 0.03); 
+}
+
+/* --- Active State for Sidebar Links --- */
+.year-nav a.active {
+    color: var(--color-primary);        /* Gold/Brand Color */
+    font-weight: bold;
+    background-color: var(--color-bg-medium); /* Light styling background */
+    border-left-color: var(--color-primary);  /* Gold left border */
+    padding-left: 15px; /* Slight bump to the right for emphasis */
+}
+
+/* ============================================
+   RESPONSIVE (Mobile)
+   ============================================ */
+@media (max-width: 900px) {
+    .chronicles-layout {
+        grid-template-columns: 1fr; /* Stack vertically */
+        gap: 1rem;
+    }
+
+    .chronicles-sidebar {
+        display: none; /* Hide sidebar on mobile to save space */
+        /* Alternatively, you can style it as a horizontal scroll bar here */
+    }
+
+    .timeline-container {
+        padding-left: 20px;
+        margin-left: 10px;
+    }
+
+    .timeline-year-marker {
+        margin-left: -35px; /* Adjust for smaller padding */
+    }
+    
+    .timeline-item::before {
+        left: -29px;
+    }
+}
