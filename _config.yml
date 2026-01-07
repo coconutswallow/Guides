@@ -24,9 +24,6 @@ collections:
   faq:
     output: true
     permalink: /faq/:path/
-  monsters:
-    output: true
-    permalink: /monster-compendium/:title/
   help:
     output: true
     permalink: /help/:path/

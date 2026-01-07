@@ -5,9 +5,10 @@
  * 1. Fetching full monster data.
  * 2. Calculating derived D&D stats.
  * 3. Rendering the responsive layout.
+ * 
+ * Location: \assets\js\monster\views\monster-detail.js
  */
 
-// FIX: Import from the service in the parent folder
 import { getMonsterBySlug } from '../monster-service.js';
 
 /**
