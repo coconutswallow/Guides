@@ -5,8 +5,7 @@
  * Location: \assets\js\monster\views\monster-library.js
  */
 
-// FIX 1: Correct path (up one level) and function name (matches monster-service.js)
-import { getMonsters } from '../monster-service.js';
+import { getMonsters } from '../../monster/monster-service.js';
 
 export async function renderMonsterLibrary(container) {
     // 1. View Cleanup
