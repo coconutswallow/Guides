@@ -65,11 +65,9 @@
 
 .timeline-container {
     position: relative;
-    padding: 0 0 2em 40px; /* Left padding for the line */
-    border-left: 4px solid var(--color-border); /* The main vertical line */
+    padding: 0 0 2em 40px; 
+    border-left: 4px solid var(--color-border); 
 }
-
-/* Diamond Marker Removed */
 
 /* Year Headers */
 .timeline-year-group {
@@ -87,7 +85,7 @@
     padding: 8px 16px;
     font-weight: bold;
     border-radius: 4px;
-    margin-left: -60px; /* Pulls it left over the line */
+    margin-left: -60px; 
     margin-bottom: 1.5rem;
     box-shadow: var(--shadow-sm);
     position: relative;
@@ -111,9 +109,10 @@
 .timeline-item::before {
     content: '';
     position: absolute;
-    /* Calculated: -40px (padding) - 2px (half border) - 10px (radius) = -52px */
+    /* Left alignment: -52px (calculated previously) */
     left: -52px;
-    top: 24px;
+    /* Top: Adjusted from 24px to 16px to match reduced padding */
+    top: 16px;
     width: 14px;
     height: 14px;
     background-color: var(--color-bg-page);
@@ -126,7 +125,8 @@
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
-    padding: 1.5rem;
+    /* Reduced Top Padding: 1rem (was 1.5rem) */
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
@@ -141,9 +141,8 @@
 .timeline-content::after {
     content: '';
     position: absolute;
-    /* Vertically aligned to center of dot (24px top + 10px radius = 34px center) */
-    top: 33px;
-    /* Starts at -32px (Right edge of dot) and spans 32px to reach card edge */
+    /* Top: Adjusted from 33px to 25px to match reduced padding */
+    top: 25px;
     left: -32px;
     width: 32px;
     height: 0;
@@ -181,6 +180,11 @@
     font-weight: bold;
     text-transform: uppercase;
     color: var(--color-secondary);
+    text-decoration: none;
+}
+
+.read-more:hover {
+    text-decoration: underline;
 }
 
 /* Special Styling for Major Linked Events */
@@ -215,7 +219,7 @@
     }
 
     .timeline-container {
-        padding-left: 20px; /* Reduced padding */
+        padding-left: 20px; 
         margin-left: 10px;
     }
 
@@ -223,14 +227,10 @@
         margin-left: -35px;
     }
     
-    /* Mobile Dot Position */
-    /* Calculated: -20px (padding) - 2px (half border) - 10px (radius) = -32px */
     .timeline-item::before {
         left: -32px;
     }
 
-    /* Mobile Connector Line */
-    /* Spans the gap from Dot Right Edge (-12px) to Card (0px) */
     .timeline-content::after {
         left: -12px;
         width: 12px;
