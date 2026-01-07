@@ -284,11 +284,22 @@ function calculateHPString(num, size, mod) {
     return `${avg} (${num}d${size}${modStr})`;
 }
 
+/**
+ * Calculates Fixed Initiative Score.
+ * Formula: 10 + Dex Mod + Proficiency (if applicable)
+ */
 function formatInitiative(dexScore, proficiency, pb) {
-    let mod = calculateMod(dexScore);
-    if (proficiency === 'Proficient') mod += pb;
-    if (proficiency === 'Expert') mod += (pb * 2);
-    return `${formatSign(mod)} (${dexScore})`;
+    const dexMod = calculateMod(dexScore);
+    let init = 10 + dexMod;
+
+    if (proficiency === 'Proficient') {
+        init += pb;
+    } else if (proficiency === 'Expert') {
+        init += (pb * 2);
+    }
+    
+    // Returns a flat number (e.g. 14) instead of a signed modifier (e.g. +4)
+    return init;
 }
 
 function renderAbilityTable(scores, saves, pb) {
