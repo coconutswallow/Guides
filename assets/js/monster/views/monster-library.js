@@ -1,10 +1,12 @@
 /**
  * monster-library.js
- * * View controller for the main monster list (Library).
- * * UPDATED: Adjusted flex weights to widen Usage and shrink CR fields.
+ * View controller for the main monster list (Library).
+ * Includes filtering, sorting, and dynamic grid rendering.
+ * Location: \assets\js\monster\views\monster-library.js
  */
 
-import { getLiveMonsters } from '../monster-service.js';
+// FIX 1: Correct path (up one level) and function name (matches monster-service.js)
+import { getMonsters } from '../monster-service.js';
 
 export async function renderMonsterLibrary(container) {
     // 1. View Cleanup
@@ -14,7 +16,7 @@ export async function renderMonsterLibrary(container) {
     }
 
     // 2. Data Fetching
-    const monsters = await getLiveMonsters();
+    const monsters = await getMonsters();
 
     // 3. Dynamic Filter Generation
     const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
@@ -164,7 +166,7 @@ function renderGrid(monsters) {
             }
             
             <div class="monster-card-content">
-                <h3><a href="#/${m.slug}">${m.name}</a></h3>
+                <h3><a href="#/monster/${m.slug}">${m.name}</a></h3>
                 <p class="monster-cr">CR ${formatCR(m.cr)}</p>
                 <p class="monster-type">${m.size} ${m.species}</p>
             </div>

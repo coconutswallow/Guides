@@ -1,23 +1,28 @@
 /**
  * monster-app.js
  * Entry point for the application.
- * Handles routing and initialization.
+ * Location: \assets\js\monster\monster-app.js
  */
 
-// ADJUSTED PATH: Go up one level (..) to find the config file
+// Import the client config (Go up one level)
 import { supabase } from '../supabaseClient.js'; 
-import { renderMonsterList } from './views/monster-list.js';
+
+// Import Views (Look in current folder's 'views' subfolder)
+import { renderMonsterLibrary } from './views/monster-library.js'; 
 import { renderMonsterDetail } from './views/monster-detail.js';
 
-// --- Router ---
+// --- Router Configuration ---
 
 const routes = {
-    '/': renderMonsterList,
+    '/': renderMonsterLibrary,
     '/monster/:slug': renderMonsterDetail
 };
 
+/**
+ * Parses the current URL hash to find the matching route and parameters.
+ */
 function getRouteInfo() {
-    const hash = window.location.hash.slice(1) || '/'; // Default to '/'
+    const hash = window.location.hash.slice(1) || '/';
     
     // 1. Exact Match
     if (routes[hash]) {
@@ -50,25 +55,22 @@ function getRouteInfo() {
         }
     }
 
-    return { handler: renderMonsterList, params: {} }; // Fallback
+    // Fallback: Default to library
+    return { handler: renderMonsterLibrary, params: {} };
 }
 
+/**
+ * Main router handler
+ */
 async function handleRoute() {
     const app = document.getElementById('app');
     const { handler, params } = getRouteInfo();
 
-    // Clear and render
+    // Clear current content
     app.innerHTML = '';
     
-    // Update active nav state
-    updateNavbar();
-
+    // Render the new view
     await handler(app, params);
-}
-
-function updateNavbar() {
-    // Simple logic to highlight active link if needed
-    // Currently just ensures basic state
 }
 
 // --- Initialization ---
@@ -77,13 +79,15 @@ function init() {
     window.addEventListener('hashchange', handleRoute);
     window.addEventListener('load', handleRoute);
     
-    // Handle internal links to prevent full reloads
+    // Internal link delegation
     document.body.addEventListener('click', e => {
-        if (e.target.matches('[data-link]')) {
+        const link = e.target.closest('[data-link]');
+        if (link) {
             e.preventDefault();
-            window.location.hash = e.target.getAttribute('href');
+            window.location.hash = link.getAttribute('href'); 
         }
     });
 }
 
+// Start
 init();

@@ -1,15 +1,19 @@
 /**
  * monster-service.js
  * Service to interact with Supabase for Monster data.
+ * Location: \assets\js\monster\monster-service.js
  */
 
-// ADJUSTED PATH: Go up one level (..) to find the config file
+// Import the client config (Go up one level)
 import { supabase } from '../supabaseClient.js';
 
+/**
+ * Fetches the list of all live monsters for the library view.
+ */
 export async function getMonsters() {
     let { data, error } = await supabase
         .from('monsters')
-        .select('name, slug, species, cr, image_url, row_id')
+        .select('name, slug, species, cr, image_url, row_id, usage, size, alignment')
         .eq('is_live', true)
         .order('name');
     
@@ -20,6 +24,9 @@ export async function getMonsters() {
     return data;
 }
 
+/**
+ * Fetches a single monster by slug, including its features.
+ */
 export async function getMonsterBySlug(slug) {
     // 1. Fetch the Monster Core Data
     let { data: monster, error } = await supabase
@@ -35,8 +42,7 @@ export async function getMonsterBySlug(slug) {
     }
 
     // 2. Manually Fetch Features
-    // This looks up features where parent_row_id matches the monster's row_id.
-    // This bypasses the need for a strict Foreign Key relation in the DB.
+    // We query the features table separately using parent_row_id.
     const { data: features, error: featureError } = await supabase
         .from('monster_features')
         .select('*')

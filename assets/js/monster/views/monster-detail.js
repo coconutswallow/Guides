@@ -7,6 +7,7 @@
  * 3. Rendering the responsive layout.
  */
 
+// FIX: Import from the service in the parent folder
 import { getMonsterBySlug } from '../monster-service.js';
 
 /**
@@ -41,14 +42,17 @@ export async function renderMonsterDetail(container, params) {
     const pb = calculatePB(monster.cr);
     const xp = calculateXP(monster.cr);
     
+    // SAFEGUARD: Ensure we have an array before filtering
+    const featureList = monster.features || [];
+
     const features = {
-        Trait: monster.features.filter(f => f.type === 'Trait'),
-        Action: monster.features.filter(f => f.type === 'Action'),
-        Bonus: monster.features.filter(f => f.type === 'Bonus' || f.type === 'Bonus Action'),
-        Reaction: monster.features.filter(f => f.type === 'Reaction'),
-        Legendary: monster.features.filter(f => f.type === 'Legendary' || f.type === 'Legendary Action'),
-        Lair: monster.features.filter(f => f.type === 'Lair' || f.type === 'Lair Action'),
-        Regional: monster.features.filter(f => f.type === 'Regional' || f.type === 'Regional Effect'),
+        Trait: featureList.filter(f => f.type === 'Trait'),
+        Action: featureList.filter(f => f.type === 'Action'),
+        Bonus: featureList.filter(f => f.type === 'Bonus' || f.type === 'Bonus Action'),
+        Reaction: featureList.filter(f => f.type === 'Reaction'),
+        Legendary: featureList.filter(f => f.type === 'Legendary' || f.type === 'Legendary Action'),
+        Lair: featureList.filter(f => f.type === 'Lair' || f.type === 'Lair Action'),
+        Regional: featureList.filter(f => f.type === 'Regional' || f.type === 'Regional Effect'),
     };
 
     const abilitiesHTML = renderAbilityTable(monster.ability_scores, monster.saves, pb);
