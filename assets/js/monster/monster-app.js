@@ -15,7 +15,7 @@ import { renderMonsterDetail } from './views/monster-detail.js';
 
 const routes = {
     '/': renderMonsterLibrary,
-    '/monster/:slug': renderMonsterDetail
+    '/:slug': renderMonsterDetai
 };
 
 /**
