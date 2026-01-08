@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faerûn Interactive Map</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        /* Make the map full screen */
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; }
+        #map { height: 100vh; width: 100vw; background: #242424; }
+
+        /* Optional: Custom Popup Styles to look more "Fantasy" */
+        .leaflet-popup-content-wrapper {
+            background: #fdf6e3; /* Parchment color */
+            border: 1px solid #5c4033;
+            border-radius: 4px;
+            font-family: 'Georgia', serif;
+        }
+        .leaflet-popup-tip {
+            background: #fdf6e3;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script type="module">
+        // Import your configured client
+        // Ensure this path matches where you saved the file in your Jekyll folder
+        import { supabase } from './assets/js/supabaseClient.js';
+
+        // --- CONFIGURATION ---
+        const mapWidth = 4096;
+        const mapHeight = 2918;
+        const mapUrl = '/assets/images/faerun-map.png'; // REPLACE with your actual image path
+
+        // --- INITIALIZE MAP ---
+        const map = L.map('map', {
+            crs: L.CRS.Simple, // Coordinate system for flat images
+            minZoom: -2,       // Allows zooming out to see the whole world
+            maxZoom: 3,        // Allows zooming in deep (Digital Zoom)
+            zoomSnap: 0.5,     // Smoother zoom steps
+            scrollWheelZoom: true
+        });
+
+        // Set the map bounds (0,0 is bottom-left)
+        const bounds = [[0, 0], [mapHeight, mapWidth]];
+        
+        // Add the image overlay
+        L.imageOverlay(mapUrl, bounds).addTo(map);
+
+        // Center map and restrict dragging
+        map.fitBounds(bounds);
+        map.setMaxBounds(bounds);
+
+        // --- FETCH PINS FROM SUPABASE ---
+        async function loadPins() {
+            // Assumes you have a table named 'locations' with columns: name, x, y, link_url, description
+            const { data: locations, error } = await supabase
+                .from('locations')
+                .select('*');
+
+            if (error) {
+                console.error('Error fetching pins:', error);
+                return;
+            }
+
+            if (locations) {
+                locations.forEach(loc => {
+                    // Leaflet expects [Y, X] (Lat, Long)
+                    const xy = [loc.y, loc.x];
+
+                    // Create Marker
+                    const marker = L.marker(xy).addTo(map);
+
+                    // Create Popup Content
+                    const popupContent = `
+                        <div style="min-width: 150px;">
+                            <h3 style="margin: 0 0 5px 0;">${loc.name}</h3>
+                            <p style="margin: 0 0 10px 0; font-size: 0.9em;">${loc.description || ''}</p>
+                            ${loc.link_url ? `<a href="${loc.link_url}" target="_blank">Read Lore</a>` : ''}
+                        </div>
+                    `;
+
+                    marker.bindPopup(popupContent);
+                });
+            }
+        }
+
+        // Run the fetch function
+        loadPins();
+
+        // --- DEVELOPER TOOL (Click to find Coordinates) ---
+        // Uncomment the lines below to enable "Click for Coords" mode
+        /*
+        const popup = L.popup();
+        map.on('click', (e) => {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("X: " + e.latlng.lng.toFixed(0) + "<br>Y: " + e.latlng.lat.toFixed(0))
+                .openOn(map);
+            console.log(`X: ${e.latlng.lng.toFixed(0)}, Y: ${e.latlng.lat.toFixed(0)}`);
+        });
+        */
+
+    </script>
+</body>
+</html>
