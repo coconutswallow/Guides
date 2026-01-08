@@ -1,114 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faerûn Interactive Map</title>
+---
+layout: default
+title: Faerûn Interactive Map
+---
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
-    <style>
-        /* Make the map full screen */
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; }
-        #map { height: 100vh; width: 100vw; background: #242424; }
+<style>
+    /* Custom Map Styles */
+    #map-container {
+        position: relative;
+        width: 100%;
+        height: 80vh; /* Takes up 80% of the viewport height */
+        border: 2px solid var(--color-border); /* Matches your site theme */
+        box-shadow: var(--shadow-lg);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
 
-        /* Optional: Custom Popup Styles to look more "Fantasy" */
-        .leaflet-popup-content-wrapper {
-            background: #fdf6e3; /* Parchment color */
-            border: 1px solid #5c4033;
-            border-radius: 4px;
-            font-family: 'Georgia', serif;
+    #map {
+        height: 100%;
+        width: 100%;
+        background: #1a1a1a; /* Dark background while loading */
+        z-index: 1;
+    }
+
+    /* Customize Leaflet Popup to match your 'Fantasy' theme */
+    .leaflet-popup-content-wrapper {
+        background: var(--color-bg-card); /* Uses your theme variable */
+        border: 1px solid var(--color-primary);
+        border-radius: 4px;
+        font-family: var(--font-header);
+    }
+    
+    .leaflet-popup-content h3 {
+        color: var(--color-primary);
+        margin-bottom: 5px;
+        border-bottom: 1px solid var(--color-border);
+    }
+    
+    .leaflet-popup-content a {
+        color: var(--color-secondary);
+        font-weight: bold;
+    }
+
+    /* Fix for Leaflet z-index fighting with your header */
+    .leaflet-top, .leaflet-bottom {
+        z-index: 400; /* Lower than your site-header (z-index: 100) */
+    }
+</style>
+
+<div class="doc-container">
+    <div class="doc-title">
+        <h1>Faerûn Interactive Map</h1>
+    </div>
+    
+    <p>Explore the locations of the Forgotten Realms. Click on a pin to view more lore.</p>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script type="module">
+    // Import your Supabase client
+    import { supabase } from './assets/js/supabaseClient.js';
+
+    // Configuration for 4096x2918 Map
+    const mapWidth = 4096;
+    const mapHeight = 2918;
+    const mapUrl = '/Guides/assets/images/faerun-map.png'; // Ensure this image exists!
+
+    // Initialize Map
+    const map = L.map('map', {
+        crs: L.CRS.Simple,
+        minZoom: -2,       
+        maxZoom: 3,        
+        zoomSnap: 0.5,
+        scrollWheelZoom: true,
+        attributionControl: false // Removes the generic "Leaflet" text
+    });
+
+    // Set Bounds
+    const bounds = [[0, 0], [mapHeight, mapWidth]];
+    L.imageOverlay(mapUrl, bounds).addTo(map);
+    map.fitBounds(bounds);
+    map.setMaxBounds(bounds);
+
+    // --- FETCH PINS FUNCTION ---
+    async function loadPins() {
+        const { data: locations, error } = await supabase
+            .from('locations')
+            .select('*');
+
+        if (error) {
+            console.error('Error loading map pins:', error);
+            return;
         }
-        .leaflet-popup-tip {
-            background: #fdf6e3;
+
+        if (locations) {
+            locations.forEach(loc => {
+                // Leaflet Simple CRS uses [Y, X]
+                const xy = [loc.y, loc.x];
+
+                const marker = L.marker(xy).addTo(map);
+
+                const popupContent = `
+                    <div style="min-width: 150px;">
+                        <h3>${loc.name}</h3>
+                        <p>${loc.description || ''}</p>
+                        ${loc.link_url ? `<a href="${loc.link_url}">Read Lore &raquo;</a>` : ''}
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent);
+            });
         }
-    </style>
-</head>
-<body>
+    }
 
-    <div id="map"></div>
+    loadPins();
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script type="module">
-        // Import your configured client
-        // Ensure this path matches where you saved the file in your Jekyll folder
-        import { supabase } from './assets/js/supabaseClient.js';
-
-        // --- CONFIGURATION ---
-        const mapWidth = 4096;
-        const mapHeight = 2918;
-        const mapUrl = '/assets/images/faerun-map.png'; // REPLACE with your actual image path
-
-        // --- INITIALIZE MAP ---
-        const map = L.map('map', {
-            crs: L.CRS.Simple, // Coordinate system for flat images
-            minZoom: -2,       // Allows zooming out to see the whole world
-            maxZoom: 3,        // Allows zooming in deep (Digital Zoom)
-            zoomSnap: 0.5,     // Smoother zoom steps
-            scrollWheelZoom: true
-        });
-
-        // Set the map bounds (0,0 is bottom-left)
-        const bounds = [[0, 0], [mapHeight, mapWidth]];
-        
-        // Add the image overlay
-        L.imageOverlay(mapUrl, bounds).addTo(map);
-
-        // Center map and restrict dragging
-        map.fitBounds(bounds);
-        map.setMaxBounds(bounds);
-
-        // --- FETCH PINS FROM SUPABASE ---
-        async function loadPins() {
-            // Assumes you have a table named 'locations' with columns: name, x, y, link_url, description
-            const { data: locations, error } = await supabase
-                .from('locations')
-                .select('*');
-
-            if (error) {
-                console.error('Error fetching pins:', error);
-                return;
-            }
-
-            if (locations) {
-                locations.forEach(loc => {
-                    // Leaflet expects [Y, X] (Lat, Long)
-                    const xy = [loc.y, loc.x];
-
-                    // Create Marker
-                    const marker = L.marker(xy).addTo(map);
-
-                    // Create Popup Content
-                    const popupContent = `
-                        <div style="min-width: 150px;">
-                            <h3 style="margin: 0 0 5px 0;">${loc.name}</h3>
-                            <p style="margin: 0 0 10px 0; font-size: 0.9em;">${loc.description || ''}</p>
-                            ${loc.link_url ? `<a href="${loc.link_url}" target="_blank">Read Lore</a>` : ''}
-                        </div>
-                    `;
-
-                    marker.bindPopup(popupContent);
-                });
-            }
-        }
-
-        // Run the fetch function
-        loadPins();
-
-        // --- DEVELOPER TOOL (Click to find Coordinates) ---
-        // Uncomment the lines below to enable "Click for Coords" mode
-        /*
-        const popup = L.popup();
-        map.on('click', (e) => {
-            popup
-                .setLatLng(e.latlng)
-                .setContent("X: " + e.latlng.lng.toFixed(0) + "<br>Y: " + e.latlng.lat.toFixed(0))
-                .openOn(map);
-            console.log(`X: ${e.latlng.lng.toFixed(0)}, Y: ${e.latlng.lat.toFixed(0)}`);
-        });
-        */
-
-    </script>
-</body>
-</html>
+    // --- DEVELOPER TOOL: UNCOMMENT TO FIND COORDINATES ---
+    /*
+    const popup = L.popup();
+    map.on('click', (e) => {
+        popup
+            .setLatLng(e.latlng)
+            .setContent("X: " + e.latlng.lng.toFixed(0) + "<br>Y: " + e.latlng.lat.toFixed(0))
+            .openOn(map);
+        console.log(`INSERT INTO locations (name, x, y) VALUES ('New Place', ${e.latlng.lng.toFixed(0)}, ${e.latlng.lat.toFixed(0)});`);
+    });
+    */
+</script>
