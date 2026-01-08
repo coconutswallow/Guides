@@ -59,22 +59,14 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     // Custom "Home" Icon (Gold Star / House style)
     const homeIcon = L.divIcon({
         className: 'custom-div-icon',
-        html: `<div style="
-            background-color: #d4af37;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: white;
-        ">🏠</div>`,
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-        popupAnchor: [0, -15]
+        html: `<div style="display: flex; align-items: center; justify-content: center;">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="black" stroke="white" stroke-width="2" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+               </div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -16]
     });
 
     // --- 3. INITIALIZE MAP ---
