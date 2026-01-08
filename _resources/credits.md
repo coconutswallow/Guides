@@ -18,8 +18,11 @@ order: 80
 - [The Contract - Art by Exphrasis](https://www.deviantart.com/exphrasis/art/The-Contract-624868109)
 - [Magic the Gathering - OmenPath Arc concept art - Art by Leon Tukker](https://www.artstation.com/artwork/XgWyKD)
 
+### Background and Embedded Images
+Additional image credits are credited within specific pages as well.
+
 ---
+## Site Credits
 
-Additional image credits at the end of applicable pages.
-
+This site was developed primarily by **@CoconutSwallow** with support from **@Lina304** (content migration) and **@_forseti** (Quality Assurance).  Content was primarily migrated from PDF versions documents created by Hawthorne Staff.
 
