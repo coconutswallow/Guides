@@ -38,20 +38,46 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
 
-    // 1. CONFIGURATION
+    // --- 1. CONFIGURATION ---
     const mapWidth = 4096;
     const mapHeight = 2918;
-    
-    // FIX 2: Use Liquid 'relative_url' for the image too
-    const mapUrl = "{{ '/assets/images/faerun-map.png' | relative_url }}"; 
+    const mapUrl = "{{ '/assets/images/faerun-map.png' | relative_url }}";
     
     // --- ZOOM SETTINGS ---
-    // Change these numbers to focus on Hawthorne!
     // Format: [Y-Coordinate, X-Coordinate]
     const initialCenter = [1848, 1339]; 
     const initialZoom = 1; 
 
-    // 2. INITIALIZE MAP
+    // FILTER SETTINGS: 'all' or 'home_only'
+    const filterMode = 'home_only'; 
+
+    // --- 2. DEFINE ICONS ---
+    
+    // Default blue pin
+    const defaultIcon = new L.Icon.Default();
+
+    // Custom "Home" Icon (Gold Star / House style)
+    const homeIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="
+            background-color: #d4af37;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        ">🏠</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -15]
+    });
+
+    // --- 3. INITIALIZE MAP ---
     const map = L.map('embed-map', {
         crs: L.CRS.Simple,
         minZoom: -2,       
@@ -65,39 +91,120 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     L.imageOverlay(mapUrl, bounds).addTo(map);
     map.setMaxBounds(bounds);
 
-    // 3. FETCH PINS (Read Only)
+    // --- 4. FETCH & RENDER PINS ---
     async function loadPins() {
-        // Simple error handling
         try {
+            // We fetch all locations, then filter in memory for flexibility
             const { data: locations, error } = await supabase.from('locations').select('*');
+            
             if (error) console.error("Supabase Error:", error);
-            if (locations) locations.forEach(addMarkerToMap);
+            
+            if (locations) {
+                locations.forEach(loc => {
+                    // FILTER LOGIC
+                    if (filterMode === 'home_only' && !loc.is_home) {
+                        return; // Skip this pin
+                    }
+                    addMarkerToMap(loc);
+                });
+            }
         } catch (err) {
             console.error("Map Load Error:", err);
         }
     }
 
     function addMarkerToMap(loc) {
-        const marker = L.marker([loc.y, loc.x]).addTo(map);
+        // Choose Icon based on DB column
+        const iconToUse = loc.is_home ? homeIcon : defaultIcon;
         
+        // Add Marker
+        const marker = L.marker([loc.y, loc.x], { icon: iconToUse }).addTo(map);
+        
+        // Popup Content
         const popupContent = `
             <div style="min-width: 150px; font-family: var(--font-body, sans-serif); color: #333;">
-                <h3 style="margin-top:0; border-bottom: 1px solid #ccc; color: var(--color-primary, #58180D);">${loc.name}</h3>
+                <h3 style="margin-top:0; border-bottom: 1px solid #ccc; color: var(--color-primary, #58180D);">
+                    ${loc.is_home ? '🏠 ' : ''}${loc.name}
+                </h3>
                 <p style="margin: 10px 0;">${loc.description || ''}</p>
                 ${loc.link_url ? `<a href="${loc.link_url}" target="_blank" style="color: var(--color-secondary, #822000);">Read Lore &raquo;</a>` : ''}
             </div>
         `;
         
         marker.bindPopup(popupContent);
+        
+        // Optional: Open the Home popup automatically on load
+        if (loc.is_home) {
+            marker.openPopup();
+        }
     }
 
     loadPins();
-
 </script>
-<span class="image-caption">Interactive Map of Faerûn. Scroll to zoom.</span>
+<span class="image-caption">Interactive Map of Faerûn showing the location of Hawthorne.</span>
 
-See Also:  [Hawthorne Location Map with Roads](/Guides/assets/images/hawthorne-sword-coast.jpg)
-<span class="image-caption">Map of Sword Coast by Wizards of the Coast, Hawthorne location added by @salah_ad_din</span>
+<p>
+    See Also: 
+    <a href="#" onclick="document.getElementById('map-modal').style.display='flex'; return false;">
+        Hawthorne Location Map with Roads (View Image)
+    </a>
+</p>
+
+<div id="map-modal" class="modal-overlay" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-btn" onclick="document.getElementById('map-modal').style.display='none'">&times;</span>
+        
+        <img src="{{ '/assets/images/hawthorne-sword-coast.jpg' | relative_url }}" alt="Sword Coast Map" style="width: 100%; height: auto; border: 2px solid var(--color-border);">
+        
+        <span class="image-caption">Map of Sword Coast by Wizards of the Coast, Hawthorne location added by @salah_ad_din</span>
+    </div>
+</div>
+
+<style>
+    /* Dark background overlay */
+    .modal-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 10000; /* Sit on top of everything including header */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.85); /* Black w/ opacity */
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        backdrop-filter: blur(5px);
+    }
+
+    /* The image container box */
+    .modal-content {
+        background-color: var(--color-bg-light);
+        padding: 15px;
+        border-radius: 4px;
+        max-width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    /* The Close Button (X) */
+    .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        color: var(--color-text-secondary);
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .close-btn:hover {
+        color: var(--color-primary);
+    }
+</style>
 
 
 ## Hawthorne Guild Rules
