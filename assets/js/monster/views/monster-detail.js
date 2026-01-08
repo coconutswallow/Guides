@@ -128,7 +128,6 @@ export async function renderMonsterDetail(container, params) {
                     ${abilitiesHTML}
                     <hr>
 
-                    ${hasSaves ? `<p><strong>Saving Throws</strong> ${formatSaves(monster.saves)}</p>` : ''}
                     ${monster.skills ? `<p><strong>Skills</strong> ${monster.skills}</p>` : ''}
                     
                     ${vuln ? `<p><strong>Damage Vulnerabilities</strong> ${vuln}</p>` : ''}
