@@ -67,12 +67,9 @@ Red tides are rare but dangerous patches of infected water. A creature caught in
 
 As blinding sickness is a natural disease, any effect that removes a disease or otherwise ameliorates a disease's effects apply to the target.
 
-![Red Tide]({{ '/assets/images/red_tide.jpg' | relative_url }} )
-<span class="image-caption"><a href="https://www.deviantart.com/sitwithmenthedark/art/Red-Tide-1020824483">Red Tide by SitwithMeNtheDark</a></span>
-
 ## Sultan Rezzo the Marvelous
 
-Sultan Rezzo is a noble marid (see [ *Sultan Rezzo's Statblock* ]({{ '/monster-compendium/sultan-rezzo/' | relative_url }}) ) who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water. Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
+Sultan Rezzo is a noble marid (see [ *Sultan Rezzo's Statblock* ]({{ '/monsters/#/sultan-rezzo-the-marvelous' | relative_url }}) ) who reigns in a magnificent palace in the Elemental Plane of Water. He occasionally gives quests to Hawthorne Guild members. As long as the Hawthorne Guild remains in good standing with the Sultan, the guild will have freedom of access to the portal leading to an area near his palace in the Elemental Plane of Water. Sultan Rezzo is a kind and benevolent Marid as long as he is given the respect he considers himself to deserve. Otherwise, his fury can be as violent as the ocean when a storm causes waves to crash and sink ships and anyone inside it. He is the benevolent ruler of his palace, he gives his slaves many liberties and treats them fairly well. He is more interested in having slaves for the sake of ownership than actually making them do anything they wouldn't want to. However, it seems pretty clear that his slaves are quite happy with their lives and are staying in the palace of their own will. Among those slaves, his two favorites are Brooke the Swift, a water genasi, and Aukai the Wanderer, a sea elf. They often serve as his messengers and emissaries.
 
 ### Sultan Rezzo's Palace
 Sultan Rezzo's palace is a grandiose building covered in coral and algae. It is filled with wonders and sensory delights that goes beyond one's wildest dreams. This opulent palace floats in a deep part of the Plane of Water and contains many luxurious chambers and rooms filled with air for his guests or slaves.
@@ -84,7 +81,7 @@ Rezzo is a Marid who sees himself as a superior being and expects to be treated 
 Rezzo has a great sense of self-importance, and considers himself, as well as other Marids, above all other kinds of genies. He tolerates djinn, dislikes dao, and despises efreet. Bribery and flattery are the best means for a humanoid to earn Rezzo's favor. In an adventuring group, whoever praises him the most will be seen by Rezzo as the most intelligent or worthy of the group and assume they are the leader. Rezzo loves to tell stories about himself or legends he knows, and although he will not directly lie about the events he recounts, he will greatly embellish them. He hates being interrupted while telling his stories, and will only offer a single warning before unleashing his wrath should this great offense be done to him.
 
 >
-> [ **Sultan Rezzo's Statblock** ]({{ '/monster-compendium/sultan-rezzo/' | relative_url }})
+> [ **Sultan Rezzo's Statblock** ]({{ '/monsters/#/sultan-rezzo-the-marvelous' | relative_url }})
 >
 
 ***Personality Trait.*** There's nothing I like more than finding a new skillful slave.
