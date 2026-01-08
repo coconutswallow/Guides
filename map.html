@@ -6,12 +6,11 @@ title: Faerûn Interactive Map
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
 <style>
-    /* Custom Map Styles */
     #map-container {
         position: relative;
         width: 100%;
-        height: 80vh; /* Takes up 80% of the viewport height */
-        border: 2px solid var(--color-border); /* Matches your site theme */
+        height: 80vh;
+        border: 2px solid var(--color-border);
         box-shadow: var(--shadow-lg);
         border-radius: var(--border-radius);
         overflow: hidden;
@@ -20,13 +19,39 @@ title: Faerûn Interactive Map
     #map {
         height: 100%;
         width: 100%;
-        background: #1a1a1a; /* Dark background while loading */
+        background: #1a1a1a;
         z-index: 1;
     }
 
-    /* Customize Leaflet Popup to match your 'Fantasy' theme */
+    /* Style the Form inside the Popup */
+    .pin-form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 200px;
+    }
+    .pin-form input, .pin-form textarea {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: var(--font-body);
+    }
+    .pin-form button {
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-top: 5px;
+    }
+    .pin-form button:hover {
+        background: var(--color-secondary);
+    }
+
     .leaflet-popup-content-wrapper {
-        background: var(--color-bg-card); /* Uses your theme variable */
+        background: var(--color-bg-card);
         border: 1px solid var(--color-primary);
         border-radius: 4px;
         font-family: var(--font-header);
@@ -43,10 +68,7 @@ title: Faerûn Interactive Map
         font-weight: bold;
     }
 
-    /* Fix for Leaflet z-index fighting with your header */
-    .leaflet-top, .leaflet-bottom {
-        z-index: 400; /* Lower than your site-header (z-index: 100) */
-    }
+    .leaflet-top, .leaflet-bottom { z-index: 400; }
 </style>
 
 <div class="doc-container">
@@ -54,7 +76,7 @@ title: Faerûn Interactive Map
         <h1>Faerûn Interactive Map</h1>
     </div>
     
-    <p>Explore the locations of the Forgotten Realms. Click on a pin to view more lore.</p>
+    <p>Explore the locations of the Forgotten Realms. <strong>Click anywhere on the map to add a new pin.</strong></p>
 
     <div id="map-container">
         <div id="map"></div>
@@ -64,72 +86,113 @@ title: Faerûn Interactive Map
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script type="module">
-    // Import your Supabase client
     import { supabase } from './assets/js/supabaseClient.js';
 
-    // Configuration for 4096x2918 Map
+    // --- CONFIGURATION ---
     const mapWidth = 4096;
     const mapHeight = 2918;
-    const mapUrl = '/Guides/assets/images/faerun-map.png'; // Ensure this image exists!
+    const mapUrl = '/assets/images/faerun-map.jpg'; 
 
-    // Initialize Map
+    // --- INITIALIZE MAP ---
     const map = L.map('map', {
         crs: L.CRS.Simple,
         minZoom: -2,       
         maxZoom: 3,        
         zoomSnap: 0.5,
         scrollWheelZoom: true,
-        attributionControl: false // Removes the generic "Leaflet" text
+        attributionControl: false
     });
 
-    // Set Bounds
     const bounds = [[0, 0], [mapHeight, mapWidth]];
     L.imageOverlay(mapUrl, bounds).addTo(map);
     map.fitBounds(bounds);
     map.setMaxBounds(bounds);
 
-    // --- FETCH PINS FUNCTION ---
+    // --- 1. FETCH & DISPLAY PINS ---
     async function loadPins() {
         const { data: locations, error } = await supabase
             .from('locations')
             .select('*');
 
-        if (error) {
-            console.error('Error loading map pins:', error);
-            return;
-        }
+        if (error) console.error('Error fetching pins:', error);
 
         if (locations) {
-            locations.forEach(loc => {
-                // Leaflet Simple CRS uses [Y, X]
-                const xy = [loc.y, loc.x];
-
-                const marker = L.marker(xy).addTo(map);
-
-                const popupContent = `
-                    <div style="min-width: 150px;">
-                        <h3>${loc.name}</h3>
-                        <p>${loc.description || ''}</p>
-                        ${loc.link_url ? `<a href="${loc.link_url}">Read Lore &raquo;</a>` : ''}
-                    </div>
-                `;
-
-                marker.bindPopup(popupContent);
-            });
+            locations.forEach(addMarkerToMap);
         }
     }
 
+    // Helper to add a single marker to the map
+    function addMarkerToMap(loc) {
+        // Leaflet expects [Y, X]
+        const xy = [loc.y, loc.x];
+        const marker = L.marker(xy).addTo(map);
+
+        const popupContent = `
+            <div style="min-width: 150px;">
+                <h3>${loc.name}</h3>
+                <p>${loc.description || ''}</p>
+                ${loc.link_url ? `<a href="${loc.link_url}" target="_blank">Read Lore &raquo;</a>` : ''}
+            </div>
+        `;
+        marker.bindPopup(popupContent);
+    }
+
+    // --- 2. HANDLE MAP CLICK (ADD NEW PIN) ---
+    map.on('click', function(e) {
+        const x = e.latlng.lng.toFixed(0);
+        const y = e.latlng.lat.toFixed(0);
+
+        // Create a temporary popup with a form
+        const formHtml = `
+            <div class="pin-form">
+                <strong>Add New Location</strong>
+                <input type="text" id="new-name" placeholder="Location Name" required />
+                <textarea id="new-desc" placeholder="Description (optional)"></textarea>
+                <input type="text" id="new-link" placeholder="Wiki Link (optional)" />
+                <button onclick="window.savePin(${x}, ${y})">Save Pin</button>
+            </div>
+        `;
+
+        L.popup()
+            .setLatLng(e.latlng)
+            .setContent(formHtml)
+            .openOn(map);
+    });
+
+    // --- 3. SAVE PIN FUNCTION ---
+    // We attach this to the window object so the HTML button in the popup can find it
+    window.savePin = async function(x, y) {
+        const name = document.getElementById('new-name').value;
+        const desc = document.getElementById('new-desc').value;
+        const link = document.getElementById('new-link').value;
+
+        if (!name) {
+            alert("Please enter a name.");
+            return;
+        }
+
+        // 1. Insert into Supabase
+        const { data, error } = await supabase
+            .from('locations')
+            .insert([
+                { name: name, x: x, y: y, description: desc, link_url: link }
+            ])
+            .select(); // Return the inserted data so we can use it
+
+        if (error) {
+            alert("Error saving pin: " + error.message);
+            console.error(error);
+        } else {
+            // 2. Add the new marker to the map immediately
+            const newLocation = data[0];
+            addMarkerToMap(newLocation);
+            
+            // 3. Close the open popup
+            map.closePopup();
+        }
+    }
+
+    // Initial Load
     loadPins();
 
-    // --- DEVELOPER TOOL: UNCOMMENT TO FIND COORDINATES ---
-    /*
-    const popup = L.popup();
-    map.on('click', (e) => {
-        popup
-            .setLatLng(e.latlng)
-            .setContent("X: " + e.latlng.lng.toFixed(0) + "<br>Y: " + e.latlng.lat.toFixed(0))
-            .openOn(map);
-        console.log(`INSERT INTO locations (name, x, y) VALUES ('New Place', ${e.latlng.lng.toFixed(0)}, ${e.latlng.lat.toFixed(0)});`);
-    });
-    */
 </script>
