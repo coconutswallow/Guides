@@ -138,9 +138,9 @@ export async function renderMonsterDetail(container, params) {
                     
                     ${monster.senses ? `<p><strong>Senses</strong> ${monster.senses}</p>` : ''}
                     <p><strong>Languages</strong> ${monster.languages || '—'}</p>
+                    
                     <p>
-                        <strong>Challenge</strong> ${formatCR(monster.cr)} (${xp} XP) 
-                        <strong>PB</strong> +${pb}
+                        <strong>CR</strong> ${formatCR(monster.cr)} (${xp} XP; <strong>PB</strong> +${pb})
                     </p>
 
                     ${renderFeatureBucket(features.Trait, 'Traits')}
