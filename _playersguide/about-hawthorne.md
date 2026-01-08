@@ -30,15 +30,12 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 
 ### Hawthorne Location on Faerun's Sword Coast
 
-### Hawthorne Location on Faerûn
-
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <div id="embed-map" style="width: 100%; height: 600px; border: 2px solid var(--color-border); border-radius: 4px; z-index: 1;"></div>
 
 <script type="module">
-    // FIX 1: Use Liquid 'relative_url' to ensure the import path is always correct
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
 
     // 1. CONFIGURATION
@@ -51,8 +48,8 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     // --- ZOOM SETTINGS ---
     // Change these numbers to focus on Hawthorne!
     // Format: [Y-Coordinate, X-Coordinate]
-    const initialCenter = [1500, 2000]; 
-    const initialZoom = 0; 
+    const initialCenter = [1339, 1848]; 
+    const initialZoom = 1; 
 
     // 2. INITIALIZE MAP
     const map = L.map('embed-map', {
@@ -95,10 +92,14 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     }
 
     loadPins();
-    
-    // map.on('click', (e) => console.log(`Coords: [${e.latlng.lat.toFixed(0)}, ${e.latlng.lng.toFixed(0)}]`));
+
 </script>
 <span class="image-caption">Interactive Map of Faerûn. Scroll to zoom.</span>
+
+See Also:  [Hawthorne Location Map with Roads](/Guides/assets/images/hawthorne-sword-coast.jpg)
+<span class="image-caption">Map of Sword Coast by Wizards of the Coast, Hawthorne location added by @salah_ad_din</span>
+
+
 ## Hawthorne Guild Rules
 
 <div class="image-text-wrapper">
