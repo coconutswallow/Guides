@@ -165,8 +165,12 @@
   - question: What is the DMXP and GP?
     category: DM
     answer: |-
-      ![DMXP](assets/images/DMXPGP.png)  The table can be found in the [DM's Guide](https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing)
+      ![DMXP](assets/images/DMXPGP.png)  
+      
+      The table can be found in the [DM's Guide](https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing)
   - question: Can I spectate Games
     category: Playing Games
     answer: |-
-      Most games on the server are open to spectators, if they aren't the DM will list it in multiple places (including the lobby header.)  Typically, spectators observe the following courtesies for the DM and the game: - mute your discord input, so you're prevented from accidentally interrupting the game with a sudden loud noise or something falling on your push to talk setup. - change your discord nickname to include a **z** at the beginning, so you appear last in the lobby, allowing the DM to at-a-glance know you're a spectator and not to confuse you for a player while running a challenge or initiative
+      Most games on the server are open to spectators, if they aren't the DM will list it in multiple places (including the lobby header.)  Typically, spectators observe the following courtesies for the DM and the game: 
+      - mute your discord input, so you're prevented from accidentally interrupting the game with a sudden loud noise or something falling on your push to talk setup. 
+      - change your discord nickname to include a **z** at the beginning, so you appear last in the lobby, allowing the DM to at-a-glance know you're a spectator and not to confuse you for a player while running a challenge or initiative

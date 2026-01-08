@@ -7,53 +7,51 @@ exclude_from_search: true
 
 **Monster Compendium Engineering Notes**
 
-The monster compendium is - and will most likely be the most complex part of the site; but once built the objective is that it's 90% automated and require minimum tech maintenance.
+The monster compendium has been re-engineered from a static markdown generator to a dynamic Single Page Application (SPA) powered by Supabase. This transition allows for real-time data fetching, dynamic stat calculation, and a more robust filtering system.
 
 ## Functional Design
 
-- monsters are created using a markdown format similar to homebrewery 2024 statblock format (with additional meta data used for indexing)
-- once monsters are dropped into `_monster` folder, it will automatically get indexed, and show up in the monster compendium page and formatted
-- to ensure the markdown file is compiled in the right format that is machine (and human) readable, DMs **must** use the Markdown Building tool to create the markdown file. 
+- **Database Driven:** Monsters are no longer stored as static flat files. They are queried dynamically from the Supabase `monsters` table.
+- **Dynamic Calculation:** Derived statistics (such as Proficiency Bonus, XP, and Ability Modifiers) are calculated on the fly by the client based on the monster's Challenge Rating (CR) and Ability Scores.
+- **SPA Architecture:** The compendium operates as a lightweight SPA using hash-based routing to switch between the Library view and the Monster Detail view without reloading the page.
 
-A sample template of the markdown format can be found here <a href="{{ 'tools/monster-template.md' | relative_url }}">Sample Monster Markdown</a>
+### Workflow
 
-### Intended Workflow
-
-1. DM uses the Markdown Building Tool to create their homebrew monster
-2. They download the markdown file
-3. They make a request in `#dm-request` and attach the file
-4. If needed,  the tool can load the same markdown for editing
-5. Once approved, admin moves the final file to the `_monsters` folder and it render in a few minutes
+1. **Storage:** Monster data, features, and creator information are stored in the relational database.
+2. **Access:** The frontend queries the database via `monster-service.js`.
+3. **Rendering:**
+    * The **Library** fetches a summary list for the grid view.
+    * The **Detail View** fetches the full monster record + related features (`monster_features` table) to build the stat block.
+4. **Submission:** *A tool to create and submit user-generated monsters directly to the database is currently in development.*
 
 ## Engineering Notes
 
-### Key folders & files
+The architecture separates data fetching, routing, and view rendering into distinct ES6 modules.
 
-* `/_monsters` Where all the monster markdown are stored
-* `/monster-compendium/` 
-	* `index.html` This page does both the index page (where you search and filter for the monster) and renders the statblocks visually
-	* `generator.html` This is the Markdown Generator Tool
-	* `monster-submit.html` Basically outlines the intended workflow described above
-- `/assets/css/`
-	- `statblock.css`
-	- `generator.css`
-- `/assets/js/` Javascripts - see table
+### Key Folders & Files
 
-| script                | description                                                                                                 |
-| :-------------------- | :---------------------------------------------------------------------------------------------------------- |
-| monster-controller.js | This is the main controller that calls the functions in the other files. Got to big to debug so broke it up |
-| monster-ui.js         | Controls the UI including the form behavior and the preview                                                 |
-| monster-parser.js     | Handles the parsing for loading markdowns                                                                   |
-| monster-validator.js  | Handles the validation of the markdown before saving                                                        |
-| monster-validator.js  | Handles the validation of the markdown before saving                                                        |
-| monster-generator.js  | Handles the saving of the markdown in the right format                                                      |
+* `/assets/js/monster/`
+    * `monster-app.js`: The application entry point and Router. Handles URL hash changes to toggle between views.
+    * `monster-service.js`: The Data Layer. Handles all asynchronous calls to the Supabase client.
+* `/assets/js/monster/views/`
+    * `monster-library.js`: View Controller for the main list. Handles filtering (Species, Usage, CR, Size) and grid rendering.
+    * `monster-detail.js`: View Controller for the single monster page. Handles the responsive layout, D&D stat math, and Markdown parsing for descriptions.
 
+### Script Reference
 
-### Note
+| Script | Description |
+| :--- | :--- |
+| `monster-app.js` | **Router:** Listens for window hash changes (e.g., `#/:slug`) and initializes the appropriate view handler. |
+| `monster-service.js` | **Service:** Exports `getMonsters()` and `getMonsterBySlug()`. Joins data from `monsters`, `monster_features`, and `discord_users`. |
+| `monster-library.js` | **View:** Renders the searchable grid. Contains logic for client-side filtering of the monster dataset. |
+| `monster-detail.js` | **View:** Renders the full statblock. Calculates derived stats (e.g., `calculatePB`, `calculateXP`) and injects HTML into the container. |
 
-The monsters converted originally won't work with the Generator (won't load correctly).  They will still render,  but we'd have to fix the markdown with consistent formatting to load with the generator.
+### Dependencies
 
+* **Supabase Client:** Used for backend database interaction.
+* **Marked.js:** Used to parse markdown content within monster descriptions and feature text (Traits, Actions, etc.).
 
+### Styling Notes
 
-
-
+* **Scoped Styles:** `monster-detail.js` injects view-specific CSS styles dynamically to handle complex statblock layouts and mobile responsiveness (e.g., switching from grid to flex-column on small screens).
+* **Layout:** The view supports a "Page Wide" class toggle to maximize screen real estate when viewing large stat blocks.
