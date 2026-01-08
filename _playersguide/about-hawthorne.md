@@ -30,9 +30,66 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 
 ### Hawthorne Location on Faerun's Sword Coast
 
-![Hawthorne Location](/Guides/assets/images/hawthorne-sword-coast.jpg)
-<span class="image-caption">Map of Sword Coast by Wizards of the Coast, Hawthorne location added by @salah_ad_din</span>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+<div id="embed-map" style="width: 100%; height: 600px; border: 2px solid var(--color-border); border-radius: 4px; z-index: 1;"></div>
+
+<script type="module">
+    import { supabase } from '/assets/js/supabaseClient.js';
+
+    // 1. CONFIGURATION
+    const mapWidth = 4096;
+    const mapHeight = 2918;
+    const mapUrl = '/Guides/assets/images/faerun-map.png'; 
+    
+    // --- ZOOM SETTINGS ---
+    // Change these numbers to focus on Hawthorne!
+    // Format: [Y-Coordinate, X-Coordinate]
+    const initialCenter = [1500, 2000]; 
+    const initialZoom = 0; // Higher number = more zoomed in
+
+    // 2. INITIALIZE MAP
+    const map = L.map('embed-map', {
+        crs: L.CRS.Simple,
+        minZoom: -2,       
+        maxZoom: 3,
+        zoomSnap: 0.5,
+        scrollWheelZoom: false, // Disables scroll zooming to prevent page scroll blocking
+        attributionControl: false
+    }).setView(initialCenter, initialZoom);
+
+    const bounds = [[0, 0], [mapHeight, mapWidth]];
+    L.imageOverlay(mapUrl, bounds).addTo(map);
+    map.setMaxBounds(bounds);
+
+    // 3. FETCH PINS (Read Only)
+    async function loadPins() {
+        const { data: locations } = await supabase.from('locations').select('*');
+        if (locations) locations.forEach(addMarkerToMap);
+    }
+
+    function addMarkerToMap(loc) {
+        const marker = L.marker([loc.y, loc.x]).addTo(map);
+        
+        // Simple Read-Only Popup
+        const popupContent = `
+            <div style="min-width: 150px; font-family: var(--font-body, sans-serif); color: #333;">
+                <h3 style="margin-top:0; border-bottom: 1px solid #ccc; color: var(--color-primary, #58180D);">${loc.name}</h3>
+                <p style="margin: 10px 0;">${loc.description || ''}</p>
+                ${loc.link_url ? `<a href="${loc.link_url}" target="_blank" style="color: var(--color-secondary, #822000);">Read Lore &raquo;</a>` : ''}
+            </div>
+        `;
+        
+        marker.bindPopup(popupContent);
+    }
+
+    loadPins();
+    
+    // TEMPORARY: Uncomment this line to click the map and see coordinates in the console
+    map.on('click', (e) => console.log(`Coords: [${e.latlng.lat.toFixed(0)}, ${e.latlng.lng.toFixed(0)}]`));
+</script>
+<span class="image-caption">Interactive Map of Faerûn. Scroll to zoom.</span>
 
 ### Map of Hawthorne
 

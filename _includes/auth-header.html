@@ -1,16 +1,15 @@
 <div id="auth-component" class="auth-wrapper">
     
-    <span id="auth-loading" class="auth-loading-text">...</span>
+    <span id="auth-loading" class="auth-loading-text">Loading...</span>
 
     <button id="login-btn" class="auth-btn auth-btn-discord" style="display:none;">
-        <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36" fill="white">
-            <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+        <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36">
+            <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
         </svg>
         Login with Discord
     </button>
 
     <div id="user-profile" class="auth-profile" style="display:none;">
-        
         <img id="user-avatar" src="" alt="User" class="auth-avatar" onerror="this.style.display='none'">
         
         <div class="auth-user-info">
@@ -29,36 +28,21 @@
 </div>
 
 <style>
-    /* --- CONFIGURATION --- */
-    :root {
-        --auth-height: 44px; /* Locked height for both states */
-    }
-
     .auth-wrapper { 
         display: flex; 
         align-items: center; 
-        
-        /* Spacing around the entire widget */
-        margin: 24px 0; 
-        
-        font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 14px; 
-
-        /* Discord Colors */
-        --dsc-blurple: #5865F2;
-        --dsc-blurple-hover: #4752C4;
-        --dsc-bg-panel: #2B2D31; 
-        --dsc-bg-hover: #3F4147;
-        --dsc-text-main: #F2F3F5;
-        --dsc-text-muted: #949BA4;
+        gap: 15px;
+        /* Matches your site header font */
+        font-family: var(--font-header, sans-serif); 
+        font-size: 0.9em; 
     }
 
     .auth-loading-text { 
-        color: #888; 
+        color: var(--color-text-secondary, #888); 
         font-style: italic; 
     }
     
-    /* --- SHARED BUTTON STYLES --- */
+    /* --- BUTTONS --- */
     .auth-btn { 
         border: none; 
         cursor: pointer; 
@@ -67,54 +51,45 @@
         justify-content: center; 
         transition: all 0.2s ease; 
         font-family: inherit;
-        
-        /* LOCK HEIGHT */
-        height: var(--auth-height);
-        box-sizing: border-box;
+        text-transform: uppercase;
+        font-weight: 600;
+        border-radius: 4px;
     }
 
-    /* --- LOGIN BUTTON --- */
+    /* Login Button - Keeps Discord Brand Color */
     .auth-btn-discord { 
-        background-color: var(--dsc-blurple); 
+        background-color: #5865F2; /* Official Discord Blurple */
         color: white; 
-        border-radius: 4px; 
-        
-        /* Padding and Minimum Width for visual weight */
-        padding: 0 24px; 
-        min-width: 200px;
-        
-        font-weight: 600; 
-        font-size: 15px;
-        gap: 10px; /* Space between logo and text */
+        padding: 0.6em 1.2em;
+        gap: 10px;
+        box-shadow: var(--shadow-sm);
     }
+    
     .auth-btn-discord:hover { 
-        background-color: var(--dsc-blurple-hover); 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transform: translateY(-1px);
+        background-color: #4752C4; 
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
     }
+    
     .discord-logo {
-        margin-bottom: 2px; /* Visual optical adjustment */
+        fill: white; /* Ensure logo stays white */
     }
 
     /* --- PROFILE CARD --- */
+    /* Updated to match your 'Card' theme instead of Dark Discord Grey */
     .auth-profile { 
         display: flex; 
         align-items: center; 
-        gap: 10px; 
+        gap: 12px; 
         
-        background-color: var(--dsc-bg-panel); 
-        color: var(--dsc-text-main);
+        /* THEME INTEGRATION: Uses your site's card background */
+        background-color: var(--color-bg-light, #FDF1DC); 
+        border: 2px solid var(--color-border, #D4C4B0);
+        color: var(--color-text, #2c2c2c);
         
-        /* LOCK HEIGHT */
-        height: var(--auth-height);
-        box-sizing: border-box;
-        
-        padding: 0 8px 0 6px; 
-        border-radius: 4px; 
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        border: 1px solid rgba(255,255,255,0.05);
-        
-        min-width: 200px; /* Matches login button width */
+        padding: 6px 12px; 
+        border-radius: var(--border-radius, 4px); 
+        box-shadow: var(--shadow-sm);
     }
 
     .auth-avatar { 
@@ -122,41 +97,38 @@
         height: 32px; 
         border-radius: 50%; 
         object-fit: cover; 
-        background-color: var(--dsc-bg-hover); 
+        border: 2px solid var(--color-primary, #58180D);
     }
 
     .auth-user-info { 
         display: flex; 
         flex-direction: column; 
-        justify-content: center; 
-        flex-grow: 1; /* Pushes logout button to the right */
         line-height: 1.2;
     }
 
     .auth-name { 
-        font-weight: 600; 
-        font-size: 14px;
-        color: var(--dsc-text-main);
+        font-weight: 700; 
+        font-size: 0.9em;
+        color: var(--color-primary, #58180D);
     }
     
     .auth-role-badge { 
-        font-size: 11px; 
-        color: var(--dsc-text-muted);
-        font-weight: 400; 
+        font-size: 0.8em; 
+        color: var(--color-text-secondary, #5a5a5a);
     }
 
-    /* --- LOGOUT BUTTON --- */
+    /* Logout Button */
     .auth-btn-logout { 
         background: transparent; 
-        color: var(--dsc-text-muted); 
-        width: 32px; /* Square touch target */
-        height: 32px; /* Matches avatar size visually */
+        color: var(--color-text-secondary, #5a5a5a); 
+        padding: 4px;
+        margin-left: 8px;
         border-radius: 4px;
-        padding: 0;
     }
+    
     .auth-btn-logout:hover { 
-        color: var(--dsc-text-main); 
-        background-color: var(--dsc-bg-hover);
+        color: var(--palette-alert-danger-action, #c00); 
+        background-color: rgba(0,0,0,0.05);
     }
 </style>
 
