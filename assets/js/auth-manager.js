@@ -1,98 +1,56 @@
 /**
- * auth-manager.js
- * * PURPOSE:
- * Bridges your existing 'supabaseClient.js' with the UI.
- * Handles Login, Logout, and Profile fetching.
- * * USAGE:
- * Must be loaded with type="module" in your HTML:
- * <script type="module" src="assets/js/auth-manager.js"></script>
+ * assets/js/auth-manager.js
+ * Imports the shared Supabase client and manages auth.
  */
 
-// 1. Import the pre-configured client from your existing file
-//    (Make sure the path matches where you saved supabaseClient.js)
-import { supabase } from './supabaseClient.js'; 
+// 1. Import from your modular configuration file
+//    Note: './' works because both files are in the same directory
+import { supabase } from './supabaseClient.js';
 
 class AuthManager {
     constructor() {
-        // Use the client you already created
-        this.db = supabase;
-        this.user = null;         
-        this.userProfile = null;
-
-        console.log("AuthManager: Initialized with existing Supabase client.");
+        this.client = supabase;
+        this.user = null;
     }
 
-    /**
-     * Initializes the auth listener.
-     * @param {Function} onStateChange - Callback (user, profile) => { ... }
-     */
-    init(onStateChange) {
-        // Check active session immediately
-        this.db.auth.getSession().then(({ data }) => {
-            this.handleSession(data.session, onStateChange);
+    init(uiCallback) {
+        // 1. Check Session
+        this.client.auth.getSession().then(({ data }) => {
+            this.updateState(data.session, uiCallback);
         });
 
-        // Listen for future changes (sign in, sign out)
-        this.db.auth.onAuthStateChange((event, session) => {
-            this.handleSession(session, onStateChange);
+        // 2. Listen for Changes
+        this.client.auth.onAuthStateChange((event, session) => {
+            this.updateState(session, uiCallback);
         });
     }
 
-    async handleSession(session, callback) {
+    updateState(session, callback) {
         this.user = session ? session.user : null;
-        this.userProfile = null; 
-
-        // Clean URL junk (#access_token=...) automatically
-        if (session && window.location.hash && window.location.hash.includes('access_token')) {
+        
+        // Clean URL fragments if needed
+        if (this.user && window.location.hash && window.location.hash.includes('access_token')) {
             window.history.replaceState(null, null, window.location.pathname + window.location.search);
         }
 
-        // If logged in, fetch custom 'discord_users' profile
-        if (this.user) {
-            await this.fetchUserProfile();
-        }
-
-        if (callback) callback(this.user, this.userProfile);
-    }
-
-    async fetchUserProfile() {
-        try {
-            const discordIdentity = this.user.identities?.find(id => id.provider === 'discord');
-            
-            if (!discordIdentity) {
-                console.warn("User logged in, but not via Discord.");
-                return;
-            }
-
-            const discordId = discordIdentity.id_in_provider;
-
-            const { data, error } = await this.db
-                .from('discord_users')
-                .select('*')
-                .eq('discord_id', discordId)
-                .single();
-
-            if (!error) {
-                this.userProfile = data;
-            }
-        } catch (err) {
-            console.error("Profile fetch error:", err);
-        }
+        // Send user data back to the UI (auth-header.html)
+        // We pass 'null' for the profile for now to keep it simple
+        if (callback) callback(this.user, null);
     }
 
     async login() {
-        const redirectUrl = window.location.origin + window.location.pathname;
-        await this.db.auth.signInWithOAuth({
+        await this.client.auth.signInWithOAuth({
             provider: 'discord',
-            options: { redirectTo: redirectUrl }
+            options: { redirectTo: window.location.href }
         });
     }
 
     async logout() {
-        await this.db.auth.signOut();
+        await this.client.auth.signOut();
         window.location.reload();
     }
 }
 
-// 2. Attach to window so non-module scripts (like auth-header.html) can see it
+// 3. EXPOSE TO WINDOW
+// This allows the onclick="window.authManager.login()" in your HTML to work.
 window.authManager = new AuthManager();
