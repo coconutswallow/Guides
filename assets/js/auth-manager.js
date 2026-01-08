@@ -39,9 +39,13 @@ class AuthManager {
     }
 
     async login() {
+        const cleanUrl = window.location.origin + window.location.pathname;
+
         await this.client.auth.signInWithOAuth({
             provider: 'discord',
-            options: { redirectTo: window.location.href }
+            options: { 
+                redirectTo: cleanUrl  // <--- CHANGED FROM window.location.href
+            }
         });
     }
 
