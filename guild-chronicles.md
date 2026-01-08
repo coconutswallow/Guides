@@ -6,6 +6,7 @@ toc: false
 extra_css:
   - /assets/css/timeline.css
 ---
+{% include auth-header.html %}
 
 {% assign timeline = site.data.timeline | sort: "year" %}
 {% assign grouped_events = timeline | group_by: "year" %}
