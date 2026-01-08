@@ -138,7 +138,7 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 <p>
     See Also: 
     <a href="#" onclick="document.getElementById('map-modal').style.display='flex'; return false;">
-        Hawthorne Location Map with Roads (View Image)
+        Hawthorne Location Map with Connecting Roads (View Image)
     </a>
 </p>
 
