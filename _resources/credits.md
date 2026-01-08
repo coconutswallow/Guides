@@ -24,5 +24,7 @@ Additional image credits are credited within specific pages as well.
 ---
 ## Site Credits
 
-This site was developed primarily by **@CoconutSwallow** with support from **@Lina304** (content migration) and **@_forseti** (Quality Assurance).  Content was primarily migrated from PDF versions documents created by Hawthorne Staff.
+This site was developed primarily by **@CoconutSwallow** with support from **@Lina304** (content migration) and **@_forseti** (Quality Assurance).  
+
+Content was primarily migrated from PDF versions documents created by Hawthorne Staff.
 

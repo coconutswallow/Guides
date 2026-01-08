@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: "Rules Contents"
+title: "Contents"
 order: 1
 background_image: 
 ---
