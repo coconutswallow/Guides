@@ -48,7 +48,7 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     // --- ZOOM SETTINGS ---
     // Change these numbers to focus on Hawthorne!
     // Format: [Y-Coordinate, X-Coordinate]
-    const initialCenter = [1339, 1848]; 
+    const initialCenter = [1848, 1339]; 
     const initialZoom = 1; 
 
     // 2. INITIALIZE MAP
