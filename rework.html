@@ -6,25 +6,103 @@ extra_css:
 ---
 
 <style>
-    /* Page Specific Styles */
+    /* --- AUTH COMPONENT STYLES (From auth-header.html) --- */
+    .auth-wrapper { 
+        display: flex; 
+        align-items: center; 
+        gap: 15px;
+        font-family: var(--font-header, sans-serif); 
+        font-size: 0.9em;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--color-border);
+        justify-content: flex-end; /* Align to right */
+    }
+
+    .auth-loading-text { 
+        color: var(--color-text-secondary, #888); 
+        font-style: italic; 
+    }
+    
+    .auth-btn { 
+        border: none; 
+        cursor: pointer; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        transition: all 0.2s ease; 
+        font-family: inherit;
+        text-transform: uppercase;
+        font-weight: 600;
+        border-radius: 4px;
+    }
+
+    .auth-btn-discord { 
+        background-color: #5865F2; 
+        color: white; 
+        padding: 0.6em 1.2em;
+        gap: 10px;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .auth-btn-discord:hover { 
+        background-color: #4752C4; 
+        transform: translateY(-2px);
+    }
+    
+    .discord-logo { fill: white; }
+
+    .auth-profile { 
+        display: flex; 
+        align-items: center; 
+        gap: 12px; 
+        background-color: var(--color-bg-light, #FDF1DC); 
+        border: 2px solid var(--color-border, #D4C4B0);
+        color: var(--color-text, #2c2c2c);
+        padding: 6px 12px; 
+        border-radius: var(--border-radius, 4px); 
+        box-shadow: var(--shadow-sm);
+    }
+
+    .auth-avatar { 
+        width: 32px; 
+        height: 32px; 
+        border-radius: 50%; 
+        object-fit: cover; 
+        border: 2px solid var(--color-primary, #58180D);
+    }
+
+    .auth-user-info { 
+        display: flex; 
+        flex-direction: column; 
+        line-height: 1.2; 
+    }
+
+    .auth-name { font-weight: 700; font-size: 0.9em; color: var(--color-primary, #58180D); }
+    .auth-role-badge { font-size: 0.8em; color: var(--color-text-secondary, #5a5a5a); }
+
+    .auth-btn-logout { 
+        background: transparent; 
+        color: var(--color-text-secondary, #5a5a5a); 
+        padding: 4px;
+        margin-left: 8px;
+        border-radius: 4px;
+    }
+    .auth-btn-logout:hover { color: #c00; background-color: rgba(0,0,0,0.05); }
+
+    /* --- RESPEC TOOL STYLES --- */
     .respec-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
-        margin-top: 2rem;
+        margin-top: 1rem;
     }
 
     @media (max-width: 1000px) {
-        .respec-container {
-            grid-template-columns: 1fr;
-        }
+        .respec-container { grid-template-columns: 1fr; }
     }
 
-    .char-column {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+    .char-column { display: flex; flex-direction: column; gap: 1.5rem; }
 
     .column-header {
         text-align: center;
@@ -36,17 +114,8 @@ extra_css:
     }
 
     /* Unified Origin Block Styles */
-    .origin-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
+    .origin-grid { display: flex; flex-direction: column; gap: 1rem; }
+    .input-group { display: flex; flex-direction: column; gap: 0.25rem; }
     
     .input-label {
         font-size: 0.9em;
@@ -101,62 +170,29 @@ extra_css:
         background: var(--color-bg-medium);
     }
 
-    /* Final Stats Table (Highlight) */
-    .final-stats-table th {
-        background: var(--color-secondary);
-    }
-    .final-stats-table td {
-        font-weight: bold;
-        font-size: 1.1em;
-        background: var(--color-bg-page);
-    }
+    .final-stats-table th { background: var(--color-secondary); }
+    .final-stats-table td { font-weight: bold; font-size: 1.1em; background: var(--color-bg-page); }
 
-    /* Attribute Inputs inside table */
     .attr-input-cell {
-        width: 100%;
-        max-width: 60px;
-        text-align: center;
-        padding: 4px;
-        border: 1px solid var(--color-border);
-        font-weight: bold;
+        width: 100%; max-width: 60px; text-align: center; padding: 4px;
+        border: 1px solid var(--color-border); font-weight: bold;
     }
 
-    /* Mod Dropdowns inside table */
     .mod-select-cell {
-        width: 100%;
-        text-align: center;
-        padding: 4px;
-        border: 1px solid var(--color-border);
-        background: var(--color-bg-page);
-        color: var(--color-text);
-        cursor: pointer;
+        width: 100%; text-align: center; padding: 4px;
+        border: 1px solid var(--color-border); background: var(--color-bg-page);
+        color: var(--color-text); cursor: pointer;
     }
 
     .points-display {
-        text-align: center;
-        font-weight: bold;
-        padding: 0.5rem;
-        margin-top: 0.5rem;
-        background: var(--color-bg-page);
-        border: 1px dashed var(--color-border);
-        border-radius: 4px;
+        text-align: center; font-weight: bold; padding: 0.5rem; margin-top: 0.5rem;
+        background: var(--color-bg-page); border: 1px dashed var(--color-border); border-radius: 4px;
     }
     
-    .points-display.error {
-        color: #e74c3c;
-        border-color: #e74c3c;
-        background: #fadbd8;
-    }
+    .points-display.error { color: #e74c3c; border-color: #e74c3c; background: #fadbd8; }
 
-    .block-warning {
-        font-size: 0.8em;
-        color: #e74c3c;
-        font-style: italic;
-        display: none;
-    }
-    .block-warning.active {
-        display: inline;
-    }
+    .block-warning { font-size: 0.8em; color: #e74c3c; font-style: italic; display: none; }
+    .block-warning.active { display: inline; }
 
     /* Class Section */
     .class-row {
@@ -171,7 +207,7 @@ extra_css:
         border-radius: 4px;
     }
 
-    .class-select, .level-input {
+    .class-select {
         padding: 8px;
         border: 1px solid var(--color-border);
         background: var(--color-bg-page);
@@ -179,40 +215,77 @@ extra_css:
         border-radius: 4px;
     }
 
-    .remove-class-btn {
-        background: #e74c3c;
-        color: white;
-        border: none;
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
-        cursor: pointer;
+    /* New Level Input Wrapper */
+    .level-wrapper {
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 5px;
+    }
+
+    .level-label {
+        font-weight: bold;
+        font-size: 0.9em;
+        color: var(--color-primary);
+    }
+
+    .level-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-page);
+        color: var(--color-text);
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .remove-class-btn {
+        background: #e74c3c; color: white; border: none; width: 32px; height: 32px;
+        border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
 
     /* Feat Cards */
     .feat-card {
-        background: var(--color-bg-medium);
-        border: 2px solid var(--color-border);
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background: var(--color-bg-medium); border: 2px solid var(--color-border);
+        padding: 1rem; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .feat-header {
-        font-weight: bold;
-        color: var(--color-primary);
-        border-bottom: 2px solid var(--color-border);
-        padding-bottom: 0.25rem;
-        margin-bottom: 0.5rem;
+        font-weight: bold; color: var(--color-primary); border-bottom: 2px solid var(--color-border);
+        padding-bottom: 0.25rem; margin-bottom: 0.5rem;
     }
 </style>
 
 <div class="page">
+    
+    <div id="auth-component" class="auth-wrapper">
+        <span id="auth-loading" class="auth-loading-text">Loading...</span>
+
+        <button id="login-btn" class="auth-btn auth-btn-discord" style="display:none;">
+            <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36">
+                <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+            </svg>
+            Login with Discord
+        </button>
+
+        <div id="user-profile" class="auth-profile" style="display:none;">
+            <img id="user-avatar" src="" alt="User" class="auth-avatar" onerror="this.style.display='none'">
+            <div class="auth-user-info">
+                <span id="user-name" class="auth-name">Adventurer</span>
+                <span id="user-role-badge" class="auth-role-badge">Member</span>
+            </div>
+            <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+
     <h1>Character Rework Tool</h1>
+    <p>Use this tool to compare your original character build against a new specialization.</p>
 
     <div class="respec-container">
         
@@ -220,15 +293,14 @@ extra_css:
             <h2 class="column-header">Original Character</h2>
 
             <div class="card">
-                <h3 class="card-title">Final Attributes</h3>
-                <div id="final-stats-container-original">
-                    </div>
-            </div>
-
-            <div class="card">
                 <h3 class="card-title">Character Origin</h3>
                 <div class="origin-grid">
                     
+                    <div class="input-group">
+                        <label class="input-label">Character Name</label>
+                        <input type="text" class="text-input" placeholder="Name">
+                    </div>
+
                     <div class="input-group">
                         <label class="input-label">Base Attributes (27 Point Buy)</label>
                         <div id="attrs-container-original">
@@ -281,15 +353,14 @@ extra_css:
             <h2 class="column-header">New Character</h2>
 
             <div class="card">
-                <h3 class="card-title">Final Attributes</h3>
-                <div id="final-stats-container-new">
-                    </div>
-            </div>
-
-            <div class="card">
                 <h3 class="card-title">Character Origin</h3>
                 <div class="origin-grid">
                     
+                    <div class="input-group">
+                        <label class="input-label">Character Name</label>
+                        <input type="text" class="text-input" placeholder="Name">
+                    </div>
+
                     <div class="input-group">
                         <label class="input-label">Base Attributes (27 Point Buy)</label>
                         <div id="attrs-container-new">
@@ -341,12 +412,79 @@ extra_css:
 
     <div class="card" style="margin-top: 2rem;">
         <h3 class="card-title">Rework Details</h3>
+        
+        <div class="input-group" style="margin-bottom: 1rem;">
+            <label class="input-label">Rework Costs</label>
+            <input type="text" class="text-input" placeholder="e.g. 500gp for retraining, 2 weeks downtime">
+        </div>
+
         <div class="input-group">
-            <label class="input-label">Rework Type, Costs, & Notes</label>
-            <textarea class="notes-area" style="min-height: 150px;" placeholder="Rework Type, Costs, etc."></textarea>
+            <label class="input-label">Notes</label>
+            <textarea class="notes-area" style="min-height: 150px;" placeholder="Character concept notes, equipment changes, DM approval status, etc..."></textarea>
         </div>
     </div>
 </div>
+
+<script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
+
+<script>
+    (function() {
+        const getEl = (id) => document.getElementById(id);
+        
+        const ui = {
+            loading: getEl('auth-loading'),
+            loginBtn: getEl('login-btn'),
+            profile: getEl('user-profile'),
+            avatar: getEl('user-avatar'),
+            name: getEl('user-name'),
+            roleBadge: getEl('user-role-badge'),
+            logoutBtn: getEl('logout-btn')
+        };
+    
+        const updateAuthUI = (user, profile) => {
+            ui.loading.style.display = 'none';
+    
+            if (user) {
+                ui.loginBtn.style.display = 'none';
+                ui.profile.style.display = 'flex';
+                
+                ui.name.textContent = (profile && profile.username) ? profile.username : (user.user_metadata.full_name || 'User');
+                
+                if (user.user_metadata.avatar_url) {
+                    ui.avatar.src = user.user_metadata.avatar_url;
+                    ui.avatar.style.display = 'block';
+                }
+    
+                if (profile && profile.role) {
+                    ui.roleBadge.textContent = profile.role;
+                } else {
+                    ui.roleBadge.textContent = "Member";
+                }
+                ui.roleBadge.style.display = 'inline-block';
+    
+            } else {
+                ui.loginBtn.style.display = 'inline-flex';
+                ui.profile.style.display = 'none';
+            }
+        };
+    
+        const initAuth = () => {
+            if (window.authManager) {
+                ui.loginBtn.onclick = () => window.authManager.login();
+                ui.logoutBtn.onclick = () => window.authManager.logout();
+                window.authManager.init(updateAuthUI);
+            } else {
+                setTimeout(initAuth, 100);
+            }
+        };
+    
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAuth);
+        } else {
+            initAuth();
+        }
+    })();
+</script>
 
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
@@ -388,6 +526,7 @@ extra_css:
         const row = document.createElement('div');
         row.className = 'class-row';
 
+        // 1. Class Select
         const select = document.createElement('select');
         select.className = 'class-select';
         
@@ -403,14 +542,25 @@ extra_css:
             select.appendChild(opt);
         });
 
+        // 2. Level Input with Label Wrapper
+        const lvlWrapper = document.createElement('div');
+        lvlWrapper.className = 'level-wrapper';
+
+        const lvlLabel = document.createElement('span');
+        lvlLabel.className = 'level-label';
+        lvlLabel.innerText = "Lvl:";
+
         const lvlInput = document.createElement('input');
         lvlInput.type = 'number';
         lvlInput.className = 'level-input';
-        lvlInput.placeholder = "Lvl";
         lvlInput.min = 1;
         lvlInput.max = 20;
         lvlInput.value = 1;
 
+        lvlWrapper.appendChild(lvlLabel);
+        lvlWrapper.appendChild(lvlInput);
+
+        // 3. Remove Button
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'remove-class-btn';
@@ -425,7 +575,7 @@ extra_css:
         lvlInput.addEventListener('input', () => generateFeatCards(colId));
 
         row.appendChild(select);
-        row.appendChild(lvlInput);
+        row.appendChild(lvlWrapper); // Add Wrapper instead of raw input
         row.appendChild(removeBtn);
         container.appendChild(row);
         
@@ -435,13 +585,11 @@ extra_css:
     // --- 3. RENDERING & CALCULATIONS ---
 
     function createStatTableHTML(type, colId, contextId) {
-        // Generates a table with Dropdowns (0, +1, +2)
         let html = `<table class="stat-table" data-block-id="${contextId}"><thead><tr>`;
         ATTRIBUTES.forEach(attr => html += `<th>${attr}</th>`);
         html += `</tr></thead><tbody><tr>`;
         
         ATTRIBUTES.forEach(attr => {
-            // Identifier class: 'mod-select-{type}' to easily grab them later
             html += `<td>
                 <select class="mod-select-cell mod-select-${type}" data-col="${colId}" data-attr="${attr}" data-context="${contextId}">
                     <option value="0">0</option>
@@ -464,7 +612,8 @@ extra_css:
         const originContainer = document.getElementById(`origin-mod-container-${colId}`);
         if(originContainer) originContainer.innerHTML = createStatTableHTML('origin', colId, `origin-${colId}`);
         
-        // Final Stats (ReadOnly)
+        // Final Stats (Logic preserved, but HTML container is commented out in DOM)
+        // If you uncomment the HTML later, this logic will automatically work.
         const finalContainer = document.getElementById(`final-stats-container-${colId}`);
         if(finalContainer) {
             let html = `<table class="stat-table final-stats-table"><thead><tr>`;
@@ -556,7 +705,6 @@ extra_css:
         const header = document.createElement('div');
         header.className = 'feat-header';
         
-        // Header with warning span
         header.innerHTML = `${className} - Level ${level} ASI/Feat <span class="block-warning" id="warn-${contextId}">Max 3 total!</span>`;
 
         const inputsDiv = document.createElement('div');
@@ -571,7 +719,6 @@ extra_css:
         card.appendChild(header);
         card.appendChild(inputsDiv);
         
-        // Insert Dropdown Table
         const tableContainer = document.createElement('div');
         tableContainer.innerHTML = createStatTableHTML('feat', colId, contextId);
         card.appendChild(tableContainer);
@@ -582,7 +729,6 @@ extra_css:
     // --- 4. LOGIC: POINTS, VALIDATION, TOTALS ---
 
     function attachModListeners(colId) {
-        // Attaches listeners to ALL dropdowns in the column (Race, Origin, Feats)
         const selects = document.querySelectorAll(`select[data-col="${colId}"]`);
         selects.forEach(sel => {
             sel.onchange = () => {
@@ -593,16 +739,12 @@ extra_css:
     }
 
     function validateBlock(contextId) {
-        // Sums modifiers for a specific block (Race, Origin, or specific Feat)
-        // If sum > 3, show warning
         if(!contextId) return;
 
         const inputs = document.querySelectorAll(`select[data-context="${contextId}"]`);
         let sum = 0;
         inputs.forEach(input => sum += parseInt(input.value) || 0);
 
-        // Find warning element. 
-        // For Race/Origin, it's inside the label with ID
         let warningEl;
         
         if(contextId.startsWith('race')) {
