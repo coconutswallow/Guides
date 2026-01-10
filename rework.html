@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Character Respec Tool
+title: Character Rework Tool
 extra_css:
   - "{{ '/assets/css/style.css' | relative_url }}"
 ---
@@ -53,6 +53,8 @@ extra_css:
         font-weight: bold;
         color: var(--color-text-secondary);
         text-transform: uppercase;
+        display: flex;
+        justify-content: space-between;
     }
 
     .text-input {
@@ -62,6 +64,18 @@ extra_css:
         border-radius: 4px;
         background: var(--color-bg-page);
         color: var(--color-text);
+    }
+    
+    .notes-area {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        background: var(--color-bg-page);
+        color: var(--color-text);
+        resize: vertical;
+        min-height: 100px;
+        font-family: var(--font-body);
     }
 
     /* Tables */
@@ -87,6 +101,16 @@ extra_css:
         background: var(--color-bg-medium);
     }
 
+    /* Final Stats Table (Highlight) */
+    .final-stats-table th {
+        background: var(--color-secondary);
+    }
+    .final-stats-table td {
+        font-weight: bold;
+        font-size: 1.1em;
+        background: var(--color-bg-page);
+    }
+
     /* Attribute Inputs inside table */
     .attr-input-cell {
         width: 100%;
@@ -97,13 +121,15 @@ extra_css:
         font-weight: bold;
     }
 
-    /* Mod Inputs inside table */
-    .mod-input-cell {
+    /* Mod Dropdowns inside table */
+    .mod-select-cell {
         width: 100%;
-        max-width: 50px;
         text-align: center;
         padding: 4px;
         border: 1px solid var(--color-border);
+        background: var(--color-bg-page);
+        color: var(--color-text);
+        cursor: pointer;
     }
 
     .points-display {
@@ -120,6 +146,16 @@ extra_css:
         color: #e74c3c;
         border-color: #e74c3c;
         background: #fadbd8;
+    }
+
+    .block-warning {
+        font-size: 0.8em;
+        color: #e74c3c;
+        font-style: italic;
+        display: none;
+    }
+    .block-warning.active {
+        display: inline;
     }
 
     /* Class Section */
@@ -176,13 +212,19 @@ extra_css:
 </style>
 
 <div class="page">
-    <h1>Character Respec Tool</h1>
+    <h1>Character Rework Tool</h1>
     <p>Use this tool to compare your original character build against a new specialization.</p>
 
     <div class="respec-container">
         
         <div class="char-column" id="col-original">
             <h2 class="column-header">Original Character</h2>
+
+            <div class="card">
+                <h3 class="card-title">Final Attributes</h3>
+                <div id="final-stats-container-original">
+                    </div>
+            </div>
 
             <div class="card">
                 <h3 class="card-title">Character Origin</h3>
@@ -200,23 +242,12 @@ extra_css:
                         <div class="points-display" id="points-original">Points Remaining: 27</div>
                     </div>
 
-                    <div class="input-group">
-                        <label class="input-label">Racial Bonuses</label>
-                        <table class="stat-table">
-                            <thead>
-                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="input-group" id="block-race-original">
+                        <label class="input-label">
+                            Racial Bonuses 
+                            <span class="block-warning">Max 3 total!</span>
+                        </label>
+                        <div id="race-mod-container-original"></div>
                     </div>
 
                     <div class="input-group">
@@ -224,26 +255,14 @@ extra_css:
                         <input type="text" class="text-input" placeholder="e.g. Acolyte">
                     </div>
 
-                    <div class="input-group">
-                        <label class="input-label">Origin Feat</label>
+                    <div class="input-group" id="block-origin-original">
+                        <label class="input-label">
+                            Origin Feat
+                            <span class="block-warning">Max 3 total!</span>
+                        </label>
                         <input type="text" class="text-input" placeholder="e.g. Magic Initiate">
                         
-                        <table class="stat-table">
-                            <thead>
-                                <tr><th colspan="6" style="background: var(--color-bg-medium); color: var(--color-text); border:none; text-align:left; font-size:0.9em; padding-left:0;">Feat Modifiers:</th></tr>
-                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div id="origin-mod-container-original"></div>
                     </div>
 
                 </div>
@@ -256,11 +275,22 @@ extra_css:
             </div>
 
             <div id="feats-container-original"></div>
+
+            <div class="card">
+                <h3 class="card-title">Notes</h3>
+                <textarea class="notes-area" placeholder="Character concept notes, equipment, etc..."></textarea>
+            </div>
         </div>
 
 
         <div class="char-column" id="col-new">
             <h2 class="column-header">New Character</h2>
+
+            <div class="card">
+                <h3 class="card-title">Final Attributes</h3>
+                <div id="final-stats-container-new">
+                    </div>
+            </div>
 
             <div class="card">
                 <h3 class="card-title">Character Origin</h3>
@@ -278,23 +308,12 @@ extra_css:
                         <div class="points-display" id="points-new">Points Remaining: 27</div>
                     </div>
 
-                    <div class="input-group">
-                        <label class="input-label">Racial Bonuses</label>
-                        <table class="stat-table">
-                            <thead>
-                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="input-group" id="block-race-new">
+                        <label class="input-label">
+                            Racial Bonuses
+                            <span class="block-warning">Max 3 total!</span>
+                        </label>
+                        <div id="race-mod-container-new"></div>
                     </div>
 
                     <div class="input-group">
@@ -302,26 +321,14 @@ extra_css:
                         <input type="text" class="text-input" placeholder="e.g. Acolyte">
                     </div>
 
-                    <div class="input-group">
-                        <label class="input-label">Origin Feat</label>
+                    <div class="input-group" id="block-origin-new">
+                        <label class="input-label">
+                            Origin Feat
+                            <span class="block-warning">Max 3 total!</span>
+                        </label>
                         <input type="text" class="text-input" placeholder="e.g. Magic Initiate">
                         
-                        <table class="stat-table">
-                            <thead>
-                                <tr><th colspan="6" style="background: var(--color-bg-medium); color: var(--color-text); border:none; text-align:left; font-size:0.9em; padding-left:0;">Feat Modifiers:</th></tr>
-                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                    <td><input type="number" class="mod-input-cell" value="0"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div id="origin-mod-container-new"></div>
                     </div>
 
                 </div>
@@ -334,6 +341,11 @@ extra_css:
             </div>
 
             <div id="feats-container-new"></div>
+
+             <div class="card">
+                <h3 class="card-title">Notes</h3>
+                <textarea class="notes-area" placeholder="Character concept notes, equipment, etc..."></textarea>
+            </div>
         </div>
 
     </div>
@@ -349,7 +361,6 @@ extra_css:
         8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
     };
     
-    // Default Data
     const CLASS_ASI_DATA = [
       { "class": "Barbarian", "ASI": [4, 8, 12, 16, 19] },
       { "class": "Bard", "ASI": [4, 8, 12, 16, 19] },
@@ -380,7 +391,6 @@ extra_css:
         const row = document.createElement('div');
         row.className = 'class-row';
 
-        // Select Dropdown
         const select = document.createElement('select');
         select.className = 'class-select';
         
@@ -396,7 +406,6 @@ extra_css:
             select.appendChild(opt);
         });
 
-        // Level Input
         const lvlInput = document.createElement('input');
         lvlInput.type = 'number';
         lvlInput.className = 'level-input';
@@ -405,7 +414,6 @@ extra_css:
         lvlInput.max = 20;
         lvlInput.value = 1;
 
-        // Remove Button
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'remove-class-btn';
@@ -427,21 +435,209 @@ extra_css:
         generateFeatCards(colId);
     }
 
-    window.calculatePoints = function(colId) {
+    // --- 3. RENDERING & CALCULATIONS ---
+
+    function createStatTableHTML(type, colId, contextId) {
+        // Generates a table with Dropdowns (0, +1, +2)
+        // contextId allows unique identification for summing (e.g., 'race', 'origin', 'feat-X')
+        
+        let html = `<table class="stat-table" data-block-id="${contextId}"><thead><tr>`;
+        ATTRIBUTES.forEach(attr => html += `<th>${attr}</th>`);
+        html += `</tr></thead><tbody><tr>`;
+        
+        ATTRIBUTES.forEach(attr => {
+            // Identifier class: 'mod-select-{type}' to easily grab them later
+            html += `<td>
+                <select class="mod-select-cell mod-select-${type}" data-col="${colId}" data-attr="${attr}" data-context="${contextId}">
+                    <option value="0">0</option>
+                    <option value="1">+1</option>
+                    <option value="2">+2</option>
+                </select>
+            </td>`;
+        });
+        
+        html += `</tr></tbody></table>`;
+        return html;
+    }
+
+    function renderStaticTables(colId) {
+        // Race
+        const raceContainer = document.getElementById(`race-mod-container-${colId}`);
+        if(raceContainer) raceContainer.innerHTML = createStatTableHTML('race', colId, `race-${colId}`);
+
+        // Origin
+        const originContainer = document.getElementById(`origin-mod-container-${colId}`);
+        if(originContainer) originContainer.innerHTML = createStatTableHTML('origin', colId, `origin-${colId}`);
+        
+        // Final Stats (ReadOnly)
+        const finalContainer = document.getElementById(`final-stats-container-${colId}`);
+        if(finalContainer) {
+            let html = `<table class="stat-table final-stats-table"><thead><tr>`;
+            ATTRIBUTES.forEach(attr => html += `<th>${attr}</th>`);
+            html += `</tr></thead><tbody><tr>`;
+            ATTRIBUTES.forEach(attr => {
+                html += `<td id="final-${colId}-${attr}">10</td>`;
+            });
+            html += `</tr></tbody></table>`;
+            finalContainer.innerHTML = html;
+        }
+        
+        attachModListeners(colId);
+    }
+
+    function renderBaseAttributes(colId) {
+        const container = document.getElementById(`attrs-container-${colId}`);
+        if (!container) return;
+        
+        const table = document.createElement('table');
+        table.className = 'stat-table';
+
+        let thead = "<thead><tr>";
+        ATTRIBUTES.forEach(attr => thead += `<th>${attr}</th>`);
+        thead += "</tr></thead>";
+
+        let tbody = "<tbody><tr>";
+        ATTRIBUTES.forEach(attr => {
+            tbody += `<td><input type="number" class="attr-input-cell" id="attr-${colId}-${attr}" value="10" min="8" max="15"></td>`;
+        });
+        tbody += "</tr></tbody>";
+
+        table.innerHTML = thead + tbody;
+        container.innerHTML = '';
+        container.appendChild(table);
+
+        // Listeners
+        ATTRIBUTES.forEach(attr => {
+            const input = document.getElementById(`attr-${colId}-${attr}`);
+            input.addEventListener('input', () => {
+                calculatePointBuy(colId);
+                calculateFinalStats(colId);
+            });
+        });
+
+        calculatePointBuy(colId);
+    }
+
+    function generateFeatCards(colId) {
+        const classContainer = document.getElementById(`classes-container-${colId}`);
+        const featContainer = document.getElementById(`feats-container-${colId}`);
+        if(!featContainer || !classContainer) return;
+        
+        // Save current values if possible? (Skipping for simplicity, simpler to regenerate)
+        featContainer.innerHTML = '';
+
+        const rows = classContainer.getElementsByClassName('class-row');
+        
+        Array.from(rows).forEach((row, index) => {
+            const select = row.querySelector('.class-select');
+            const levelInput = row.querySelector('.level-input');
+            
+            const className = select.value;
+            const level = parseInt(levelInput.value) || 0;
+
+            if (!className || level < 1) return;
+
+            const classData = CLASS_ASI_DATA.find(c => c.class === className);
+            
+            if (classData && classData.ASI) {
+                const achievedASIs = classData.ASI.filter(asiLevel => asiLevel <= level);
+
+                achievedASIs.forEach((asiLevel, asiIndex) => {
+                    const uniqueId = `feat-${colId}-${className}-${index}-${asiLevel}`;
+                    const card = createFeatCard(className, asiLevel, colId, uniqueId);
+                    featContainer.appendChild(card);
+                });
+            }
+        });
+
+        attachModListeners(colId);
+        calculateFinalStats(colId); // Recalc totals with new feats
+    }
+
+    function createFeatCard(className, level, colId, contextId) {
+        const card = document.createElement('div');
+        card.className = 'feat-card';
+        card.id = `card-${contextId}`;
+
+        const header = document.createElement('div');
+        header.className = 'feat-header';
+        
+        // Header with warning span
+        header.innerHTML = `${className} - Level ${level} ASI/Feat <span class="block-warning" id="warn-${contextId}">Max 3 total!</span>`;
+
+        const inputsDiv = document.createElement('div');
+        inputsDiv.className = 'input-group';
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'text-input';
+        nameInput.placeholder = "Feat Name (or +2 ASI)";
+
+        inputsDiv.appendChild(nameInput);
+        card.appendChild(header);
+        card.appendChild(inputsDiv);
+        
+        // Insert Dropdown Table
+        const tableContainer = document.createElement('div');
+        tableContainer.innerHTML = createStatTableHTML('feat', colId, contextId);
+        card.appendChild(tableContainer);
+
+        return card;
+    }
+
+    // --- 4. LOGIC: POINTS, VALIDATION, TOTALS ---
+
+    function attachModListeners(colId) {
+        // Attaches listeners to ALL dropdowns in the column (Race, Origin, Feats)
+        const selects = document.querySelectorAll(`select[data-col="${colId}"]`);
+        selects.forEach(sel => {
+            // Remove old listeners to avoid dupes (simple way is to overwrite onchange if assigning prop, but addEventListener stacks. 
+            // Since we regenerate HTML often, simple addEventListener is fine for new elements.)
+            sel.onchange = () => {
+                validateBlock(sel.dataset.context);
+                calculateFinalStats(colId);
+            };
+        });
+    }
+
+    function validateBlock(contextId) {
+        // Sums modifiers for a specific block (Race, Origin, or specific Feat)
+        // If sum > 3, show warning
+        if(!contextId) return;
+
+        const inputs = document.querySelectorAll(`select[data-context="${contextId}"]`);
+        let sum = 0;
+        inputs.forEach(input => sum += parseInt(input.value) || 0);
+
+        // Find warning element. 
+        // For Race/Origin, it's inside the label with ID
+        let warningEl;
+        
+        if(contextId.startsWith('race')) {
+            warningEl = document.querySelector(`#block-race-${contextId.split('-')[1]} .block-warning`);
+        } else if(contextId.startsWith('origin')) {
+            warningEl = document.querySelector(`#block-origin-${contextId.split('-')[1]} .block-warning`);
+        } else {
+            // Feat
+            warningEl = document.getElementById(`warn-${contextId}`);
+        }
+
+        if(warningEl) {
+            if(sum > 3) warningEl.classList.add('active');
+            else warningEl.classList.remove('active');
+        }
+    }
+
+    function calculatePointBuy(colId) {
         let spent = 0;
         let valid = true;
 
         ATTRIBUTES.forEach(attr => {
             const input = document.getElementById(`attr-${colId}-${attr}`);
             if(!input) return;
-
             const val = parseInt(input.value);
-            
             if (val < 8 || val > 15) valid = false;
-            
-            if (POINT_COSTS[val] !== undefined) {
-                spent += POINT_COSTS[val];
-            }
+            if (POINT_COSTS[val] !== undefined) spent += POINT_COSTS[val];
         });
 
         const remaining = POINT_BUY_TOTAL - spent;
@@ -457,113 +653,26 @@ extra_css:
         }
     }
 
-
-    // --- 3. RENDERING ---
-
-    function renderAttributeTable(colId) {
-        const container = document.getElementById(`attrs-container-${colId}`);
-        if (!container) return;
-        
-        const table = document.createElement('table');
-        table.className = 'stat-table';
-
-        // Header Row
-        let thead = "<thead><tr>";
-        ATTRIBUTES.forEach(attr => thead += `<th>${attr}</th>`);
-        thead += "</tr></thead>";
-
-        // Input Row
-        let tbody = "<tbody><tr>";
+    function calculateFinalStats(colId) {
         ATTRIBUTES.forEach(attr => {
-            // Note: We embed the input ID directly so calculatePoints can find it
-            tbody += `<td><input type="number" class="attr-input-cell" id="attr-${colId}-${attr}" value="10" min="8" max="15"></td>`;
-        });
-        tbody += "</tr></tbody>";
+            let total = 0;
 
-        table.innerHTML = thead + tbody;
-        container.innerHTML = '';
-        container.appendChild(table);
+            // 1. Base
+            const baseInput = document.getElementById(`attr-${colId}-${attr}`);
+            if(baseInput) total += parseInt(baseInput.value) || 0;
 
-        // Attach listeners after creating elements
-        ATTRIBUTES.forEach(attr => {
-            const input = document.getElementById(`attr-${colId}-${attr}`);
-            input.addEventListener('input', () => window.calculatePoints(colId));
-        });
+            // 2. All Dropdowns for this attribute in this column
+            const mods = document.querySelectorAll(`select[data-col="${colId}"][data-attr="${attr}"]`);
+            mods.forEach(mod => total += parseInt(mod.value) || 0);
 
-        window.calculatePoints(colId);
-    }
-
-    function generateFeatCards(colId) {
-        const classContainer = document.getElementById(`classes-container-${colId}`);
-        const featContainer = document.getElementById(`feats-container-${colId}`);
-        if(!featContainer || !classContainer) return;
-        
-        featContainer.innerHTML = '';
-
-        const rows = classContainer.getElementsByClassName('class-row');
-        
-        Array.from(rows).forEach(row => {
-            const select = row.querySelector('.class-select');
-            const levelInput = row.querySelector('.level-input');
-            
-            const className = select.value;
-            const level = parseInt(levelInput.value) || 0;
-
-            if (!className || level < 1) return;
-
-            const classData = CLASS_ASI_DATA.find(c => c.class === className);
-            
-            if (classData && classData.ASI) {
-                const achievedASIs = classData.ASI.filter(asiLevel => asiLevel <= level);
-
-                achievedASIs.forEach(asiLevel => {
-                    const card = createFeatCard(className, asiLevel);
-                    featContainer.appendChild(card);
-                });
-            }
+            // 3. Update Display
+            const finalCell = document.getElementById(`final-${colId}-${attr}`);
+            if(finalCell) finalCell.innerText = total;
         });
     }
 
-    function createFeatCard(className, level) {
-        const card = document.createElement('div');
-        card.className = 'feat-card';
 
-        const header = document.createElement('div');
-        header.className = 'feat-header';
-        header.innerText = `${className} - Level ${level} ASI/Feat`;
-
-        const inputsDiv = document.createElement('div');
-        inputsDiv.className = 'input-group';
-
-        const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.className = 'text-input';
-        nameInput.placeholder = "Feat Name (or +2 ASI)";
-
-        // Table
-        const table = document.createElement('table');
-        table.className = 'stat-table';
-        
-        let theadHTML = "<thead><tr>";
-        ATTRIBUTES.forEach(a => theadHTML += `<th>${a}</th>`);
-        theadHTML += "</tr></thead>";
-        
-        let tbodyHTML = "<tbody><tr>";
-        ATTRIBUTES.forEach(a => tbodyHTML += `<td><input type="number" class="mod-input-cell" value="0" min="0" max="2"></td>`);
-        tbodyHTML += "</tr></tbody>";
-
-        table.innerHTML = theadHTML + tbodyHTML;
-
-        inputsDiv.appendChild(nameInput);
-        card.appendChild(header);
-        card.appendChild(inputsDiv);
-        card.appendChild(table);
-
-        return card;
-    }
-
-
-    // --- 4. INIT ---
+    // --- 5. INIT ---
 
     async function initSupabase() {
         try {
@@ -575,8 +684,6 @@ extra_css:
 
             if (data && data.length > 0) {
                 availableClasses = data.map(item => item.value || item.name);
-                
-                // Refresh existing dropdowns
                 document.querySelectorAll('.class-select').forEach(select => {
                     const currentVal = select.value;
                     select.innerHTML = '<option value="">- Select Class -</option>';
@@ -596,9 +703,10 @@ extra_css:
 
     function startApp() {
         ['original', 'new'].forEach(col => {
-            renderAttributeTable(col);
-            // Default to one open class row
+            renderStaticTables(col);
+            renderBaseAttributes(col);
             window.addClassRow(col); 
+            calculateFinalStats(col);
         });
         initSupabase();
     }
