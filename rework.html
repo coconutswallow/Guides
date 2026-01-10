@@ -14,7 +14,7 @@ extra_css:
         margin-top: 2rem;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
         .respec-container {
             grid-template-columns: 1fr;
         }
@@ -35,42 +35,91 @@ extra_css:
         font-family: var(--font-header);
     }
 
-    /* Attribute Inputs */
-    .attr-row {
+    /* Unified Origin Block Styles */
+    .origin-grid {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0;
-        border-bottom: 1px dashed var(--color-border);
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
     }
     
-    .attr-input {
-        width: 70px;
-        padding: 8px;
-        text-align: center;
-        border: 2px solid var(--color-border);
-        background: var(--color-bg-page);
-        color: var(--color-text);
+    .input-label {
+        font-size: 0.9em;
         font-weight: bold;
-        font-size: 1.1em;
-        border-radius: 4px;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
     }
 
-    .points-remaining {
-        text-align: center;
-        font-weight: bold;
-        margin-top: 1rem;
-        padding: 1rem;
-        background: var(--color-bg-medium);
+    .text-input {
+        width: 100%;
+        padding: 8px;
         border: 1px solid var(--color-border);
         border-radius: 4px;
-        font-size: 1.2em;
+        background: var(--color-bg-page);
+        color: var(--color-text);
     }
 
-    .points-remaining.error {
+    /* Tables */
+    .stat-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+        font-size: 0.9em;
+    }
+
+    .stat-table th {
+        background: var(--color-primary);
+        color: white;
+        padding: 6px;
+        text-align: center;
+        border: 1px solid var(--color-primary);
+    }
+
+    .stat-table td {
+        padding: 6px;
+        text-align: center;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-medium);
+    }
+
+    /* Attribute Inputs inside table */
+    .attr-input-cell {
+        width: 100%;
+        max-width: 60px;
+        text-align: center;
+        padding: 4px;
+        border: 1px solid var(--color-border);
+        font-weight: bold;
+    }
+
+    /* Mod Inputs inside table */
+    .mod-input-cell {
+        width: 100%;
+        max-width: 50px;
+        text-align: center;
+        padding: 4px;
+        border: 1px solid var(--color-border);
+    }
+
+    .points-display {
+        text-align: center;
+        font-weight: bold;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        background: var(--color-bg-page);
+        border: 1px dashed var(--color-border);
+        border-radius: 4px;
+    }
+    
+    .points-display.error {
         color: #e74c3c;
-        background: #fadbd8;
         border-color: #e74c3c;
+        background: #fadbd8;
     }
 
     /* Class Section */
@@ -87,7 +136,7 @@ extra_css:
     }
 
     .class-select, .level-input {
-        padding: 10px;
+        padding: 8px;
         border: 1px solid var(--color-border);
         background: var(--color-bg-page);
         color: var(--color-text);
@@ -98,18 +147,13 @@ extra_css:
         background: #e74c3c;
         color: white;
         border: none;
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 4px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2em;
-    }
-
-    .remove-class-btn:hover {
-        background: #c0392b;
     }
 
     /* Feat Cards */
@@ -125,59 +169,15 @@ extra_css:
     .feat-header {
         font-weight: bold;
         color: var(--color-primary);
-        margin-bottom: 0.75rem;
         border-bottom: 2px solid var(--color-border);
         padding-bottom: 0.25rem;
-        font-family: var(--font-header);
-        font-size: 1.1em;
-    }
-
-    .feat-inputs {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .feat-input-text {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid var(--color-border);
-        border-radius: 4px;
-    }
-
-    .mod-table {
-        font-size: 0.9em;
-        margin: 0.5rem 0 0 0;
-        width: 100%;
-        background: transparent;
-        border: none;
-    }
-    
-    .mod-table th {
-        background: var(--color-primary);
-        color: white;
-        text-align: center;
-        padding: 4px;
-    }
-
-    .mod-table td {
-        padding: 4px;
-        text-align: center;
-        border: none;
-    }
-
-    .mod-input {
-        width: 100%;
-        text-align: center;
-        padding: 4px;
-        border: 1px solid var(--color-border);
+        margin-bottom: 0.5rem;
     }
 </style>
 
 <div class="page">
     <h1>Character Respec Tool</h1>
-    <p>Use this tool to compare your original character build against a new specialization. Adjust attributes using the 27-point buy system and plan your feats based on class progression.</p>
+    <p>Use this tool to compare your original character build against a new specialization.</p>
 
     <div class="respec-container">
         
@@ -185,30 +185,68 @@ extra_css:
             <h2 class="column-header">Original Character</h2>
 
             <div class="card">
-                <h3 class="card-title">Base Attributes</h3>
-                <div id="attrs-original">Loading inputs...</div>
-                <div class="points-remaining" id="points-original">Points Remaining: 27</div>
-            </div>
+                <h3 class="card-title">Character Origin</h3>
+                <div class="origin-grid">
+                    
+                    <div class="input-group">
+                        <label class="input-label">Race</label>
+                        <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
+                    </div>
 
-            <div class="card">
-                <h3 class="card-title">Origin Details</h3>
-                <div class="feat-inputs">
-                    <input type="text" class="feat-input-text" placeholder="Background Name">
-                    <input type="text" class="feat-input-text" placeholder="Origin Feat Name">
+                    <div class="input-group">
+                        <label class="input-label">Base Attributes (27 Point Buy)</label>
+                        <div id="attrs-container-original">
+                            </div>
+                        <div class="points-display" id="points-original">Points Remaining: 27</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Racial Bonuses</label>
+                        <table class="stat-table">
+                            <thead>
+                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Background Name</label>
+                        <input type="text" class="text-input" placeholder="e.g. Acolyte">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Origin Feat</label>
+                        <input type="text" class="text-input" placeholder="e.g. Magic Initiate">
+                        
+                        <table class="stat-table">
+                            <thead>
+                                <tr><th colspan="6" style="background: var(--color-bg-medium); color: var(--color-text); border:none; text-align:left; font-size:0.9em; padding-left:0;">Feat Modifiers:</th></tr>
+                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
-                <table class="mod-table">
-                    <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
             <div class="card">
@@ -217,8 +255,7 @@ extra_css:
                 <button type="button" class="button button-secondary" style="margin-top: 10px;" onclick="window.addClassRow('original')">+ Add Class</button>
             </div>
 
-            <div id="feats-container-original">
-                </div>
+            <div id="feats-container-original"></div>
         </div>
 
 
@@ -226,30 +263,68 @@ extra_css:
             <h2 class="column-header">New Character</h2>
 
             <div class="card">
-                <h3 class="card-title">Base Attributes</h3>
-                <div id="attrs-new">Loading inputs...</div>
-                <div class="points-remaining" id="points-new">Points Remaining: 27</div>
-            </div>
+                <h3 class="card-title">Character Origin</h3>
+                <div class="origin-grid">
+                    
+                    <div class="input-group">
+                        <label class="input-label">Race</label>
+                        <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
+                    </div>
 
-             <div class="card">
-                <h3 class="card-title">Origin Details</h3>
-                <div class="feat-inputs">
-                    <input type="text" class="feat-input-text" placeholder="Background Name">
-                    <input type="text" class="feat-input-text" placeholder="Origin Feat Name">
+                    <div class="input-group">
+                        <label class="input-label">Base Attributes (27 Point Buy)</label>
+                        <div id="attrs-container-new">
+                            </div>
+                        <div class="points-display" id="points-new">Points Remaining: 27</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Racial Bonuses</label>
+                        <table class="stat-table">
+                            <thead>
+                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Background Name</label>
+                        <input type="text" class="text-input" placeholder="e.g. Acolyte">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Origin Feat</label>
+                        <input type="text" class="text-input" placeholder="e.g. Magic Initiate">
+                        
+                        <table class="stat-table">
+                            <thead>
+                                <tr><th colspan="6" style="background: var(--color-bg-medium); color: var(--color-text); border:none; text-align:left; font-size:0.9em; padding-left:0;">Feat Modifiers:</th></tr>
+                                <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                    <td><input type="number" class="mod-input-cell" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
-                <table class="mod-table">
-                    <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
             <div class="card">
@@ -258,15 +333,13 @@ extra_css:
                 <button type="button" class="button button-secondary" style="margin-top: 10px;" onclick="window.addClassRow('new')">+ Add Class</button>
             </div>
 
-            <div id="feats-container-new">
-                </div>
+            <div id="feats-container-new"></div>
         </div>
 
     </div>
 </div>
 
 <script type="module">
-    // Correctly import Supabase using Liquid for relative pathing
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
 
     // --- 1. DATA CONSTANTS ---
@@ -276,7 +349,7 @@ extra_css:
         8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
     };
     
-    // Default Data (Fallback if DB fails)
+    // Default Data
     const CLASS_ASI_DATA = [
       { "class": "Barbarian", "ASI": [4, 8, 12, 16, 19] },
       { "class": "Bard", "ASI": [4, 8, 12, 16, 19] },
@@ -295,15 +368,12 @@ extra_css:
       { "class": "Artificer", "ASI": [4, 8, 12, 16, 19] }
     ];
 
-    // Initialize with default values immediately
     let availableClasses = CLASS_ASI_DATA.map(c => c.class);
 
 
-    // --- 2. GLOBAL FUNCTIONS (Attached to window) ---
+    // --- 2. GLOBAL FUNCTIONS ---
     
-    // Function: Add a new Class Row
     window.addClassRow = function(colId) {
-        console.log("Adding class row for:", colId);
         const container = document.getElementById(`classes-container-${colId}`);
         if(!container) return;
 
@@ -314,13 +384,11 @@ extra_css:
         const select = document.createElement('select');
         select.className = 'class-select';
         
-        // Default Option
         const defOpt = document.createElement('option');
         defOpt.text = "- Select Class -";
         defOpt.value = "";
         select.appendChild(defOpt);
 
-        // Populate Options
         availableClasses.forEach(cls => {
             const opt = document.createElement('option');
             opt.value = cls;
@@ -339,7 +407,7 @@ extra_css:
 
         // Remove Button
         const removeBtn = document.createElement('button');
-        removeBtn.type = 'button'; // Prevent form submit
+        removeBtn.type = 'button';
         removeBtn.className = 'remove-class-btn';
         removeBtn.innerHTML = "&times;";
         removeBtn.onclick = function() {
@@ -347,7 +415,6 @@ extra_css:
             generateFeatCards(colId);
         };
 
-        // Event Listeners
         select.addEventListener('change', () => generateFeatCards(colId));
         lvlInput.addEventListener('change', () => generateFeatCards(colId));
         lvlInput.addEventListener('input', () => generateFeatCards(colId));
@@ -357,11 +424,9 @@ extra_css:
         row.appendChild(removeBtn);
         container.appendChild(row);
         
-        // Trigger feat calc
         generateFeatCards(colId);
     }
 
-    // Function: Calculate Points
     window.calculatePoints = function(colId) {
         let spent = 0;
         let valid = true;
@@ -393,40 +458,38 @@ extra_css:
     }
 
 
-    // --- 3. HELPER FUNCTIONS ---
+    // --- 3. RENDERING ---
 
-    function renderAttributes(colId) {
-        const container = document.getElementById(`attrs-${colId}`);
+    function renderAttributeTable(colId) {
+        const container = document.getElementById(`attrs-container-${colId}`);
         if (!container) return;
-        container.innerHTML = ''; // Clear "Loading..."
         
-        ATTRIBUTES.forEach(attr => {
-            const row = document.createElement('div');
-            row.className = 'attr-row';
-            
-            // Label
-            const label = document.createElement('strong');
-            label.innerText = attr;
-            
-            // Input
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.className = 'attr-input';
-            input.id = `attr-${colId}-${attr}`;
-            input.value = 10; // Prefill 10
-            input.min = 8;
-            input.max = 15;
-            
-            // Use window function wrapper for events
-            input.addEventListener('change', () => window.calculatePoints(colId));
-            input.addEventListener('input', () => window.calculatePoints(colId));
+        const table = document.createElement('table');
+        table.className = 'stat-table';
 
-            row.appendChild(label);
-            row.appendChild(input);
-            container.appendChild(row);
+        // Header Row
+        let thead = "<thead><tr>";
+        ATTRIBUTES.forEach(attr => thead += `<th>${attr}</th>`);
+        thead += "</tr></thead>";
+
+        // Input Row
+        let tbody = "<tbody><tr>";
+        ATTRIBUTES.forEach(attr => {
+            // Note: We embed the input ID directly so calculatePoints can find it
+            tbody += `<td><input type="number" class="attr-input-cell" id="attr-${colId}-${attr}" value="10" min="8" max="15"></td>`;
         });
-        
-        // Initial calc
+        tbody += "</tr></tbody>";
+
+        table.innerHTML = thead + tbody;
+        container.innerHTML = '';
+        container.appendChild(table);
+
+        // Attach listeners after creating elements
+        ATTRIBUTES.forEach(attr => {
+            const input = document.getElementById(`attr-${colId}-${attr}`);
+            input.addEventListener('input', () => window.calculatePoints(colId));
+        });
+
         window.calculatePoints(colId);
     }
 
@@ -435,7 +498,7 @@ extra_css:
         const featContainer = document.getElementById(`feats-container-${colId}`);
         if(!featContainer || !classContainer) return;
         
-        featContainer.innerHTML = ''; // Clear existing
+        featContainer.innerHTML = '';
 
         const rows = classContainer.getElementsByClassName('class-row');
         
@@ -448,7 +511,6 @@ extra_css:
 
             if (!className || level < 1) return;
 
-            // Find logic
             const classData = CLASS_ASI_DATA.find(c => c.class === className);
             
             if (classData && classData.ASI) {
@@ -471,23 +533,23 @@ extra_css:
         header.innerText = `${className} - Level ${level} ASI/Feat`;
 
         const inputsDiv = document.createElement('div');
-        inputsDiv.className = 'feat-inputs';
+        inputsDiv.className = 'input-group';
 
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
-        nameInput.className = 'feat-input-text';
+        nameInput.className = 'text-input';
         nameInput.placeholder = "Feat Name (or +2 ASI)";
 
-        // Table logic (simplified)
+        // Table
         const table = document.createElement('table');
-        table.className = 'mod-table';
+        table.className = 'stat-table';
         
         let theadHTML = "<thead><tr>";
         ATTRIBUTES.forEach(a => theadHTML += `<th>${a}</th>`);
         theadHTML += "</tr></thead>";
         
         let tbodyHTML = "<tbody><tr>";
-        ATTRIBUTES.forEach(a => tbodyHTML += `<td><input type="number" class="mod-input" value="0" min="0" max="2"></td>`);
+        ATTRIBUTES.forEach(a => tbodyHTML += `<td><input type="number" class="mod-input-cell" value="0" min="0" max="2"></td>`);
         tbodyHTML += "</tr></tbody>";
 
         table.innerHTML = theadHTML + tbodyHTML;
@@ -501,29 +563,22 @@ extra_css:
     }
 
 
-    // --- 4. INITIALIZATION ---
+    // --- 4. INIT ---
 
     async function initSupabase() {
         try {
-            console.log("Attempting to fetch classes from Supabase...");
             const { data, error } = await supabase
                 .from('lookups')
                 .select('*')
                 .eq('type', 'character')
                 .order('value', { ascending: true });
 
-            if (error) throw error;
-            
             if (data && data.length > 0) {
-                console.log("Supabase classes loaded:", data.length);
-                // Update global list
                 availableClasses = data.map(item => item.value || item.name);
                 
-                // Refresh existing dropdowns in the UI if any exist
-                // (Though at init there are likely 0, or just the defaults)
+                // Refresh existing dropdowns
                 document.querySelectorAll('.class-select').forEach(select => {
                     const currentVal = select.value;
-                    // Clear and re-populate
                     select.innerHTML = '<option value="">- Select Class -</option>';
                     availableClasses.forEach(cls => {
                         const opt = document.createElement('option');
@@ -531,32 +586,23 @@ extra_css:
                         opt.text = cls;
                         select.appendChild(opt);
                     });
-                    select.value = currentVal; // Restore selection
+                    select.value = currentVal;
                 });
             }
-
         } catch (err) {
-            console.warn("Supabase fetch failed (using defaults):", err);
+            console.warn("Supabase fetch failed, using defaults");
         }
     }
 
-    // Main Start Sequence
     function startApp() {
-        console.log("Starting App...");
-        
-        // 1. Render UI immediately with Default Data
         ['original', 'new'].forEach(col => {
-            renderAttributes(col);
-            // Don't add a class row by default, let user click add
-            // But if you want one empty row:
-            // window.addClassRow(col); 
+            renderAttributeTable(col);
+            // Default to one open class row
+            window.addClassRow(col); 
         });
-
-        // 2. Try to fetch better data in background
         initSupabase();
     }
 
-    // Run when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', startApp);
     } else {
