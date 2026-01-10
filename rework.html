@@ -4,6 +4,11 @@ title: Character Rework Tool
 ---
 
 <style>
+    /* --- HIDE DEFAULT HEADER LOGIN BUTTON (We moved it to the control bar) --- */
+    #auth-component #login-btn {
+        display: none !important;
+    }
+
     /* --- LAYOUT STYLES --- */
     .respec-container {
         display: grid;
@@ -49,7 +54,7 @@ title: Character Rework Tool
     .tab-btn.active {
         background: var(--color-bg-page);
         color: var(--color-primary);
-        border-bottom: 2px solid var(--color-bg-page); /* Cover the line */
+        border-bottom: 2px solid var(--color-bg-page);
         margin-bottom: -2px;
     }
 
@@ -71,6 +76,7 @@ title: Character Rework Tool
         border: 1px solid var(--color-border);
         border-radius: 4px;
         white-space: pre-wrap;
+        margin-bottom: 1rem;
     }
 
     /* --- CONTROLS --- */
@@ -84,13 +90,14 @@ title: Character Rework Tool
         border-radius: 4px;
         margin: 1rem 0;
         align-items: center;
-        justify-content: flex-start; /* LEFT ALIGNED */
+        justify-content: flex-start; /* Left Aligned */
     }
 
     .control-group {
         display: flex;
         gap: 10px;
         align-items: center;
+        flex-wrap: wrap;
     }
 
     .manual-id-input {
@@ -116,6 +123,9 @@ title: Character Rework Tool
         color: white;
         text-transform: uppercase;
         font-size: 0.9em;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .btn-save { background-color: #27ae60; }
@@ -123,6 +133,17 @@ title: Character Rework Tool
     
     .btn-load { background-color: var(--color-primary); }
     .btn-load:hover { background-color: #3a1009; }
+
+    .btn-discord { background-color: #5865F2; }
+    .btn-discord:hover { background-color: #4752C4; }
+
+    .or-text {
+        font-weight: bold;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+        font-size: 0.8em;
+        margin: 0 5px;
+    }
 
     /* --- FORM ELEMENTS --- */
     .origin-grid { display: flex; flex-direction: column; gap: 1rem; }
@@ -302,7 +323,7 @@ title: Character Rework Tool
 <div class="page">
 
     <h1>Character Rework Tool</h1>
-    <p>Login via the Discord to save/load rework-logs for your convenience.</p>
+    <p>Login to Discord to save/load reworks.</p>
 
     {% include auth-header.html %}
 
@@ -314,9 +335,19 @@ title: Character Rework Tool
     <div id="tab-input" class="tab-content active">
         
         <div class="control-bar" id="controls-area">
+            
             <div id="logged-out-controls" class="control-group" style="display:none;">
                 <label style="font-weight:bold;">Discord ID:</label>
                 <input type="text" id="manual-discord-id" class="manual-id-input" placeholder="Enter Discord ID manually...">
+                
+                <span class="or-text">OR</span>
+                
+                <button id="custom-login-btn" class="action-btn btn-discord" onclick="window.authManager.login()">
+                    <svg width="20" height="20" viewBox="0 0 127.14 96.36" style="fill:white;">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                    </svg>
+                    Login
+                </button>
             </div>
 
             <div id="logged-in-controls" class="control-group" style="display:none;">
@@ -436,19 +467,20 @@ title: Character Rework Tool
             <h3 class="card-title">Rework Details</h3>
             <div class="input-group" style="margin-bottom: 1rem;">
                 <label class="input-label">Rework Costs</label>
-                <input type="text" id="rework-cost" class="text-input" placeholder="Gold and DTP (and/or rework token)">
+                <input type="text" id="rework-cost" class="text-input" placeholder="Gold and DTP costs (and/or rework token)">
             </div>
             <div class="input-group">
                 <label class="input-label">Notes</label>
-                <textarea id="rework-notes" class="notes-area" style="min-height: 150px;" placeholder="Summarize Character Changes"></textarea>
+                <textarea id="rework-notes" class="notes-area" style="min-height: 150px;" placeholder="Summarize character changes, reason, and other notes for auditors"></textarea>
             </div>
         </div>
     </div>
 
     <div id="tab-output" class="tab-content">
         <h2 class="column-header">Rework Request Form</h2>
-        <p>Placeholder Text</p>
+        <p>Copy the text below and paste it into the Discord ticket.</p>
         <textarea id="output-text" class="output-area" readonly></textarea>
+        <button class="action-btn btn-load" onclick="window.copyOutput()" style="width: 100%; text-align:center; justify-content: center;">Copy to Clipboard</button>
     </div>
 
 </div>
@@ -496,7 +528,6 @@ title: Character Rework Tool
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         
-        // Find button by text roughly or index, simple approach:
         const btnIndex = tabName === 'input' ? 0 : 1;
         document.querySelectorAll('.tab-btn')[btnIndex].classList.add('active');
         document.getElementById(`tab-${tabName}`).classList.add('active');
@@ -504,6 +535,12 @@ title: Character Rework Tool
         if (tabName === 'output') {
             generateOutput();
         }
+    }
+
+    window.copyOutput = function() {
+        const text = document.getElementById('output-text');
+        text.select();
+        navigator.clipboard.writeText(text.value).then(() => alert("Copied!"));
     }
 
     // --- MARKDOWN GENERATION ---
@@ -514,33 +551,27 @@ title: Character Rework Tool
         const cost = document.getElementById('rework-cost').value || "N/A";
         const notes = document.getElementById('rework-notes').value || "N/A";
 
-        // Helper to format stats: 08 / 12 / 14...
         const fmtStats = (attrs) => ATTRIBUTES.map(a => (attrs[a] || "10").toString().padStart(2, '0')).join(" / ");
 
-        // Helper to sum mods (Racial + Origin tables)
         const getFlatBonuses = (raceMods, origMods) => {
             let bonuses = [];
             ATTRIBUTES.forEach(a => {
                 const rVal = parseInt(raceMods[a] || 0);
                 const oVal = parseInt(origMods[a] || 0);
-                const total = rVal + oVal; // Usually not summed in UI but logically yes
-                // Actually the prompt separates them by comma. 
-                // Let's just list non-zeros.
                 if (rVal > 0) bonuses.push(`+${rVal} ${a}`);
                 if (oVal > 0) bonuses.push(`+${oVal} ${a}`);
             });
             return bonuses.length > 0 ? bonuses.join(", ") : "None";
         };
 
-        // Helper: Classes string (Version comes from first row usually)
         const getClassInfo = (classes) => {
             if(!classes || classes.length === 0) return { ver: "Unknown", str: "None", lvl: 0 };
-            const ver = classes[0].version || "2024"; // Assume first row dictates version
+            const ver = classes[0].version || "2024";
             const totalLvl = classes.reduce((sum, c) => sum + (parseInt(c.level)||0), 0);
             const str = classes.map(c => {
                 let s = c.class;
                 if(c.subclass && c.subclass !== "None") s = `${c.subclass} ${s}`;
-                return s; // The format implies level isn't listed per class in the summary line "Class: Clockwork Sorcerer", just total level above.
+                return s;
             }).join(" / ");
             return { ver, str, lvl: totalLvl };
         };
@@ -548,51 +579,22 @@ title: Character Rework Tool
         const oldClass = getClassInfo(oldChar.classes);
         const newClass = getClassInfo(newChar.classes);
 
-        // Helper: Feats list
-        const getFeatList = (origFeatName, feats, classes) => {
-            let list = [];
-            // Origin Feat
-            if(origFeatName) list.push(`${origFeatName} (Background)`);
-            
-            // Class Feats
-            // We need to map cards back to the class row? 
-            // The scraping just gets a flat list of cards. 
-            // The prompt example: "Infernal Constitution (+1 Con)(Sorcerer 4)"
-            // Our feat cards have: Name, Mods. We don't explicitly store "Source Class" in the card data attribute currently,
-            // but the header text has it! "Barbarian - Level 4 ASI/Feat"
-            // Let's re-scrape the header text for the source.
-            
-            // Since scrapeColumn only gets values, let's look at the DOM for headers if needed, 
-            // OR just iterate the data we have. scrapeColumn returns `feats: [{name, mods}]`. 
-            // We lose the "Source" info in the simple scrape object.
-            // FIX: Let's read the DOM directly here or enhance scrape. 
-            // For now, let's just list the name and mods. The exact source (Sorcerer 4) is hard to reconstruct purely from the scraped JSON object without extra fields.
-            // I will enhance the scrape slightly for the output generation or just grab from DOM.
-            // Let's grab from DOM for the output generation phase.
-        };
-
-        // DOM-based Feat Extractor for better formatting
         const extractFeats = (colId) => {
             let list = [];
-            // Origin
             const origName = document.getElementById(`orig-feat-${colId}`).value;
             if(origName) list.push(`${origName} (Background)`);
 
-            // Cards
             const cards = document.querySelectorAll(`#feats-container-${colId} .feat-card`);
             cards.forEach(card => {
-                const header = card.querySelector('.feat-header').innerText.split(" ASI/Feat")[0]; // "Barbarian - Level 4"
+                const header = card.querySelector('.feat-header').innerText.split(" ASI/Feat")[0];
                 const name = card.querySelector('.text-input').value;
                 if(!name) return;
-
-                // Mods
                 let mods = [];
                 card.querySelectorAll('select').forEach(s => {
                     const v = parseInt(s.value);
                     if(v > 0) mods.push(`+${v} ${s.dataset.attr}`);
                 });
                 const modStr = mods.length > 0 ? ` (${mods.join(", ")})` : "";
-                
                 list.push(`${name}${modStr} (${header})`);
             });
             return list.length ? list.join(", ") : "None";
@@ -602,14 +604,11 @@ title: Character Rework Tool
         const newFeats = extractFeats('new');
 
         const requestorName = window.currentUser && window.currentUser.user_metadata ? window.currentUser.user_metadata.full_name : (window.currentUser ? "User" : "Anonymous");
-        // Use manually entered ID if not logged in
         const requestorID = window.getCurrentDiscordID() || "UnknownID"; 
-        // Formatting the requestor line: @ID as OldName (Level)
-        const reqLine = `**Requestor:** @${requestorID} as ${oldChar.name} (${oldClass.lvl})`;
-
+        
         const text = `__***Character Change Request***__
 
-${reqLine}
+**Requestor:** @${requestorID} as ${oldChar.name} (${oldClass.lvl})
 
 **Old Character**
 Name: ${oldChar.name}
@@ -671,7 +670,11 @@ Story Checkpoint Rework Total Cost: ${cost}`;
 
     // --- CORE SAVE/LOAD ---
     window.getCurrentDiscordID = function() {
-        if (window.currentUser) return window.currentUser.id; 
+        if (window.currentUser) {
+            // Try to find the user's Discord username/tag from metadata if available
+            // Supabase Discord provider usually puts this in custom_claims or name
+            return window.currentUser.user_metadata.full_name || window.currentUser.user_metadata.name || "User";
+        } 
         const manualInput = document.getElementById('manual-discord-id');
         return manualInput ? manualInput.value.trim() : null;
     }
@@ -752,7 +755,7 @@ Story Checkpoint Rework Total Cost: ${cost}`;
             });
         });
 
-        const feats = []; // We scrape data values for saving
+        const feats = []; 
         document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
             const name = c.querySelector('.text-input').value;
             const mods = {}; c.querySelectorAll('select').forEach(s => mods[s.dataset.attr] = s.value);
@@ -845,15 +848,12 @@ Story Checkpoint Rework Total Cost: ${cost}`;
         const h = document.createElement('div'); h.className = 'feat-header';
         h.innerHTML = `${cls} - Level ${lvl} ASI/Feat <span class="block-warning" id="warn-${id}">Max 3 total!</span>`;
         const inp = document.createElement('input'); inp.className = 'text-input'; inp.placeholder = 'Feat Name';
-        div.append(h, inp, createStatTableHTML('feat', colId, id)); // createStatTableHTML creates a div wrapper now? No, careful with append
-        // Need to wrap table or it returns raw HTML string
+        div.append(h, inp, createStatTableHTML('feat', colId, id)); 
         const tDiv = document.createElement('div'); tDiv.innerHTML = createStatTableHTML('feat', colId, id);
         div.append(tDiv);
         return div;
     }
 
-    // --- HELPERS RE-IMPLEMENTATION ---
-    // (Needs to be duplicated because module scope isn't global unless attached to window, keeping structure clean)
     function createStatTableHTML(type, colId, ctx) {
         let h = `<table class="stat-table" data-block-id="${ctx}"><thead><tr>`;
         ATTRIBUTES.forEach(a => h+=`<th>${a}</th>`); h+=`</tr></thead><tbody><tr>`;
@@ -880,7 +880,6 @@ Story Checkpoint Rework Total Cost: ${cost}`;
                 d.ASI.filter(l=>l<=lv).forEach(l => {
                     const card = createFeatCard(cl, l, colId, `feat-${colId}-${idx}`);
                     c.appendChild(card);
-                    // Restore
                     if(window[`tempFeats_${colId}`] && window[`tempFeats_${colId}`][idx]) {
                         const s = window[`tempFeats_${colId}`][idx];
                         card.querySelector('.text-input').value = s.name||"";
@@ -890,6 +889,9 @@ Story Checkpoint Rework Total Cost: ${cost}`;
                 });
             }
         });
+        
+        attachModListeners(colId);
+        window.calculateFinalStats(colId);
     }
 
     window.calculatePointBuy = function(colId) {
@@ -901,23 +903,49 @@ Story Checkpoint Rework Total Cost: ${cost}`;
         document.getElementById(`points-${colId}`).innerText = `Points Remaining: ${27-s}`;
     }
 
-    // Init
-    async function init() {
-        const { data } = await supabase.from('lookups').select('data').eq('type','character').single();
-        if(data) characterData = data.data;
-        ['original','new'].forEach(c => {
+    window.calculateFinalStats = function(colId) {
+        // Disabled per request, logic ready
+    }
+
+    function attachModListeners(colId) {
+        document.querySelectorAll(`select[data-col="${colId}"]`).forEach(sel => {
+            sel.onchange = () => { validateBlock(sel.dataset.context); window.calculateFinalStats(colId); };
+        });
+    }
+
+    function validateBlock(ctxId) {
+        if(!ctxId) return;
+        const inputs = document.querySelectorAll(`select[data-context="${ctxId}"]`);
+        let sum = 0; inputs.forEach(i => sum += parseInt(i.value)||0);
+        let warnEl;
+        if(ctxId.startsWith('race')) warnEl = document.querySelector(`#block-race-${ctxId.split('-')[1]} .block-warning`);
+        else if(ctxId.startsWith('origin')) warnEl = document.querySelector(`#block-origin-${ctxId.split('-')[1]} .block-warning`);
+        else warnEl = document.getElementById(`warn-${ctxId}`);
+        if(warnEl) {
+            if(sum > 3) warnEl.classList.add('active'); else warnEl.classList.remove('active');
+        }
+    }
+
+    async function initSupabase() {
+        try {
+            const { data, error } = await supabase.from('lookups').select('data').eq('type', 'character').single();
+            if(error) throw error;
+            if(data && data.data) characterData = data.data;
+        } catch(e) { console.warn("DB Init Error", e); }
+    }
+
+    async function startApp() {
+        await initSupabase();
+        ['original', 'new'].forEach(c => {
             document.getElementById(`race-mod-container-${c}`).innerHTML = createStatTableHTML('race', c, `race-${c}`);
             document.getElementById(`origin-mod-container-${c}`).innerHTML = createStatTableHTML('origin', c, `origin-${c}`);
-            window.renderBaseAttributes(c); // Ensure this exists or inline it
+            window.renderBaseAttributes(c); 
             window.addClassRow(c);
         });
     }
     
-    // Missing renderBaseAttributes fix
     window.renderBaseAttributes = function(colId) {
         const c = document.getElementById(`attrs-container-${colId}`);
-        c.innerHTML = createStatTableHTML('base', colId, `base-${colId}`).replace(/select/g, 'input type="number" class="attr-input-cell" value="10" min="8" max="15" id').replace(/data-context="base-[^"]+"/,'');
-        // The regex replace above is a quick hack, better to build properly:
         let h = `<table class="stat-table"><thead><tr>`;
         ATTRIBUTES.forEach(a => h+=`<th>${a}</th>`); h+=`</tr></thead><tbody><tr>`;
         ATTRIBUTES.forEach(a => h+=`<td><input type="number" class="attr-input-cell" id="attr-${colId}-${a}" value="10" min="8" max="15" oninput="window.calculatePointBuy('${colId}')"></td>`);
@@ -926,6 +954,6 @@ Story Checkpoint Rework Total Cost: ${cost}`;
         window.calculatePointBuy(colId);
     }
 
-    init();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startApp); else startApp();
 
 </script>
