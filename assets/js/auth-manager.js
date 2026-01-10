@@ -3,14 +3,14 @@
  */
 import { supabase } from './supabaseClient.js';
 
-// REPLACE THIS with your copied Server ID
+// Server ID
 const REQUIRED_GUILD_ID = '308324031478890497'; 
 
 class AuthManager {
     constructor() {
         this.client = supabase;
         this.user = null;
-        this.isProcessing = false; // FIX 1: Add a lock flag
+        this.isProcessing = false; // Add a lock flag
     }
 
     init(uiCallback) {
@@ -26,7 +26,7 @@ class AuthManager {
 
         // 2. Listen for Changes (Login/Logout)
         this.client.auth.onAuthStateChange((event, session) => {
-            // FIX 2: Ignore 'INITIAL_SESSION' event to prevent double-firing on load
+            // Ignore 'INITIAL_SESSION' event to prevent double-firing on load
             if (event !== 'INITIAL_SESSION') {
                 this.handleSessionUpdate(session, uiCallback);
             }
@@ -34,7 +34,7 @@ class AuthManager {
     }
 
     async handleSessionUpdate(session, callback) {
-        // FIX 3: Prevent running multiple checks at the same time
+        // Prevent running multiple checks at the same time
         if (this.isProcessing) return;
         this.isProcessing = true;
 
@@ -75,7 +75,7 @@ class AuthManager {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
-            // FIX 4: Handle Rate Limits (429) gracefully
+            // Handle Rate Limits (429) gracefully
             if (response.status === 429) {
                 console.warn("Rate limited by Discord. Retrying allowed for safety.");
                 // We assume true temporarily to avoid kicking them out just because of a rate limit
@@ -85,14 +85,11 @@ class AuthManager {
 
             const guilds = await response.json();
             
-            // FIX 5: Safety check - Ensure 'guilds' is actually an array before using .some()
+            // Safety check - Ensure 'guilds' is actually an array before using .some()
             if (!Array.isArray(guilds)) {
                 console.error("Discord returned unexpected data:", guilds);
                 return false; 
             }
-
-            // DEBUG: See your servers
-            // console.log("Servers found:", guilds); 
 
             return guilds.some(g => g.id === REQUIRED_GUILD_ID);
 
@@ -113,7 +110,7 @@ class AuthManager {
     }
 
     async syncUserToDB(user, member) {
-        console.log("--- SYNCING VIA SECURE FUNCTION ---");
+        // console.log("--- SYNCING VIA SECURE FUNCTION ---");
         
         try {
             // We call the RPC function we just created

@@ -59,3 +59,24 @@ export async function getMonsterBySlug(slug) {
 
     return monster;
 }
+
+// Ensure this function is OUTSIDE the braces of the functions above
+export async function getMonsterLookups() {
+    let { data, error } = await supabase
+        .from('lookups')
+        .select('data')
+        .eq('type', 'monster')
+        .single();
+    
+    if (error || !data) {
+        console.error('Error fetching lookups:', error);
+        return null;
+    }
+
+    // Handle case where data might be returned as a JSON string or an object
+    if (typeof data.data === 'string') {
+        return JSON.parse(data.data);
+    }
+    
+    return data.data;
+}

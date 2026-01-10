@@ -5,7 +5,7 @@
  * Location: \assets\js\monster\views\monster-library.js
  */
 
-import { getMonsters } from '../../monster/monster-service.js';
+import { getMonsters, getMonsterLookups } from '../../monster/monster-service.js';
 
 export async function renderMonsterLibrary(container) {
     // 1. View Cleanup
@@ -14,14 +14,17 @@ export async function renderMonsterLibrary(container) {
         parentPage.classList.remove('page-wide');
     }
 
-    // 2. Data Fetching
-    const monsters = await getMonsters();
+    // 2. Data Fetching (Parallel fetch for speed)
+    const [monsters, lookups] = await Promise.all([
+        getMonsters(),
+        getMonsterLookups()
+    ]);
 
-    // 3. Dynamic Filter Generation
-    const uniqueSpecies = [...new Set(monsters.map(m => m.species).filter(Boolean))].sort();
-    const uniqueUsage = [...new Set(monsters.map(m => m.usage).filter(Boolean))].sort();
-    
-    // Note: Habitats/Tags data is fetched but currently unused/hidden.
+    // 3. Prepare Dropdown Options
+    // Maps the database lookup objects to simple arrays or keeps them if the structure matches
+    const speciesOptions = lookups?.species || [];
+    const usageOptions = lookups?.usages || [];
+    const sizeOptions = lookups?.sizes || [];
 
     // 4. Render Layout
     const html = `
@@ -43,7 +46,7 @@ export async function renderMonsterLibrary(container) {
                 <label for="usage-filter">Usage:</label>
                 <select id="usage-filter" class="filter-select">
                     <option value="">All Usage</option>
-                    ${uniqueUsage.map(u => `<option value="${u}">${u}</option>`).join('')}
+                    ${usageOptions.map(u => `<option value="${u.value}">${u.value}</option>`).join('')}
                 </select>
             </div>
 
@@ -51,7 +54,7 @@ export async function renderMonsterLibrary(container) {
                 <label for="species-filter">Species:</label>
                 <select id="species-filter" class="filter-select">
                     <option value="">All Species</option>
-                    ${uniqueSpecies.map(s => `<option value="${s}">${s}</option>`).join('')}
+                    ${speciesOptions.map(s => `<option value="${s.value}">${s.value}</option>`).join('')}
                 </select>
             </div>
             
@@ -69,12 +72,7 @@ export async function renderMonsterLibrary(container) {
                 <label for="size-filter">Size:</label>
                 <select id="size-filter" class="filter-select">
                     <option value="">All</option>
-                    <option value="Tiny">Tiny</option>
-                    <option value="Small">Small</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Large">Large</option>
-                    <option value="Huge">Huge</option>
-                    <option value="Gargantuan">Gargantuan</option>
+                    ${sizeOptions.map(sz => `<option value="${sz.value}">${sz.value}</option>`).join('')}
                 </select>
             </div>
 
@@ -173,7 +171,7 @@ function renderGrid(monsters) {
     `).join('');
 }
 
-// Quick Calc of CR (Note there is a lookup table, but this is faster)
+// Helper to format Challenge Rating
 function formatCR(val) {
     if (val === 0.125) return '1/8';
     if (val === 0.25) return '1/4';
