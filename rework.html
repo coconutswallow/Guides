@@ -332,7 +332,7 @@ title: Character Rework Tool
     <h1>Character Rework Tool</h1>
     
     {% include auth-header.html %}
-    <p>Login with Discord to save/upload work-in-progress reworks</p>
+    <p id="login-instruction-text">Login with Discord to save/upload work-in-progress reworks</p>
 
     <br>
 
@@ -516,10 +516,12 @@ title: Character Rework Tool
         if (user) {
             loggedOutGroup.style.display = 'none';
             loggedInGroup.style.display = 'flex';
+            if(instructionText) instructionText.style.display = 'none';
             if(window.fetchReworks) window.fetchReworks();
         } else {
             loggedOutGroup.style.display = 'flex';
             loggedInGroup.style.display = 'none';
+            if(instructionText) instructionText.style.display = 'block';
         }
     }
 
@@ -584,14 +586,20 @@ title: Character Rework Tool
 
         const getClassInfo = (classes) => {
             if(!classes || classes.length === 0) return { ver: "Unknown", str: "None", lvl: 0 };
+            
             const ver = classes[0].version || "2024";
+            
+            // 1. Calculate TOTAL Level across all classes
             const totalLvl = classes.reduce((sum, c) => sum + (parseInt(c.level)||0), 0);
+            
+            // 2. Format the string: Class Subclass (ClassLevel)
             const str = classes.map(c => {
                 let s = c.class;
-                if(c.subclass && c.subclass !== "None") s += ` ${c.subclass}`; // Class then Subclass
-                s += ` (${c.level})`; // Level in brackets
+                if(c.subclass && c.subclass !== "None") s += ` ${c.subclass}`;
+                s += ` (${c.level})`; // Puts the specific class level in brackets
                 return s;
             }).join(" / ");
+            
             return { ver, str, lvl: totalLvl };
         };
 
