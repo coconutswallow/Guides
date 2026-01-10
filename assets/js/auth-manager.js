@@ -100,7 +100,7 @@ class AuthManager {
             const { data, error } = await this.client
                 .from('discord_users') 
                 .select('roles, display_name')
-                .eq('uuid', userId)
+                .eq('user_id', userId)
                 .single();
 
             if (error) {
