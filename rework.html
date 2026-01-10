@@ -31,13 +31,37 @@ title: Character Rework Tool
     .origin-grid { display: flex; flex-direction: column; gap: 1rem; }
     .input-group { display: flex; flex-direction: column; gap: 0.25rem; }
     
+    /* Header Row for Labels + Copy Buttons */
+    .field-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
     .input-label {
         font-size: 0.9em;
         font-weight: bold;
         color: var(--color-text-secondary);
         text-transform: uppercase;
-        display: flex;
-        justify-content: space-between;
+    }
+
+    /* Copy Button Styles */
+    .copy-link {
+        background: none;
+        border: none;
+        padding: 0;
+        color: var(--color-secondary);
+        font-size: 0.8em;
+        text-decoration: underline;
+        cursor: pointer;
+        font-family: var(--font-body);
+    }
+    .copy-link:hover { color: var(--color-primary); }
+    
+    /* Spacer for alignment in Original Column */
+    .copy-spacer {
+        font-size: 0.8em;
+        visibility: hidden;
     }
 
     .text-input {
@@ -72,21 +96,23 @@ title: Character Rework Tool
         border-radius: 4px;
         margin: 1rem 0;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center; /* Centered */
+        min-height: 70px;
     }
 
     .control-group {
         display: flex;
         gap: 10px;
         align-items: center;
-        flex-grow: 1;
+        width: 100%;
+        justify-content: center;
     }
 
     .manual-id-input {
         padding: 8px;
         border: 1px solid var(--color-border);
         border-radius: 4px;
-        min-width: 200px;
+        min-width: 250px;
     }
 
     .load-select {
@@ -95,20 +121,26 @@ title: Character Rework Tool
         border-radius: 4px;
         min-width: 250px;
         flex-grow: 1;
+        max-width: 400px;
     }
 
     .action-btn {
-        padding: 8px 16px;
+        padding: 8px 20px;
         border: none;
         border-radius: 4px;
         font-weight: bold;
         cursor: pointer;
         color: white;
+        text-transform: uppercase;
+        font-size: 0.9em;
     }
 
     .btn-save { background-color: #27ae60; }
     .btn-save:hover { background-color: #219150; }
     
+    .btn-load { background-color: var(--color-primary); }
+    .btn-load:hover { background-color: #3a1009; }
+
     .btn-refresh { background-color: var(--color-secondary); }
 
     /* --- TABLES & GRIDS --- */
@@ -247,23 +279,23 @@ title: Character Rework Tool
 <div class="page">
 
     <h1>Character Rework Tool</h1>
-    <p>Use this tool to compare your original character build against a new specialization.</p>
+    <p>Login to save/load reworks.   Note this page is not optimized for mobile.</p>
 
     {% include auth-header.html %}
 
     <div class="control-bar" id="controls-area">
         
-        <div id="manual-auth-group" class="control-group" style="display:none;">
+        <div id="logged-out-controls" class="control-group" style="display:none;">
             <label style="font-weight:bold;">Discord ID:</label>
             <input type="text" id="manual-discord-id" class="manual-id-input" placeholder="Enter Discord ID manually...">
-            <button class="action-btn btn-refresh" onclick="window.fetchReworks()">Load List</button>
-        </div>
+            </div>
 
-        <div class="control-group" style="justify-content: flex-end; width: 100%;">
+        <div id="logged-in-controls" class="control-group" style="display:none;">
+            <button class="action-btn btn-save" onclick="window.saveRework()">Save</button>
+            <button class="action-btn btn-load" onclick="window.loadSelectedRework()">Load</button>
             <select id="load-rework-select" class="load-select">
                 <option value="">-- Load Saved Rework --</option>
             </select>
-            <button class="action-btn btn-save" onclick="window.saveRework()">Save Rework</button>
         </div>
     </div>
 
@@ -280,37 +312,51 @@ title: Character Rework Tool
                 <div class="origin-grid">
                     
                     <div class="input-group">
-                        <label class="input-label">Character Name</label>
+                        <div class="field-header-row">
+                            <label class="input-label">Character Name</label>
+                            <span class="copy-spacer">Copy from Original</span>
+                        </div>
                         <input type="text" class="text-input" id="name-original" placeholder="Name">
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Base Attributes (27 Point Buy)</label>
+                        <div class="field-header-row">
+                            <label class="input-label">Base Attributes (27 Point Buy)</label>
+                            <span class="copy-spacer">Copy from Original</span>
+                        </div>
                         <div id="attrs-container-original"></div>
                         <div class="points-display" id="points-original">Points Remaining: 27</div>
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">(Race: Version, Race, and subrace (if applicable) )</label>
+                        <div class="field-header-row">
+                            <label class="input-label">(Race: Version, Race, and subrace)</label>
+                            <span class="copy-spacer">Copy from Original</span>
+                        </div>
                         <input type="text" class="text-input" id="race-original" placeholder="e.g. Human, Elf...">
                     </div>
 
                     <div class="input-group" id="block-race-original">
-                        <label class="input-label">
-                            Racial Bonuses <span class="block-warning">Max 3 total!</span>
-                        </label>
+                        <div class="field-header-row">
+                            <label class="input-label">Racial Bonuses <span class="block-warning">Max 3 total!</span></label>
+                            <span class="copy-spacer">Copy from Original</span>
+                        </div>
                         <div id="race-mod-container-original"></div>
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Origin (Background)</label>
+                        <div class="field-header-row">
+                            <label class="input-label">Origin (Background)</label>
+                            <span class="copy-spacer">Copy from Original</span>
+                        </div>
                         <input type="text" class="text-input" id="bg-original" placeholder="e.g. Acolyte">
                     </div>
 
                     <div class="input-group" id="block-origin-original">
-                        <label class="input-label">
-                            Origin Feat <span class="block-warning">Max 3 total!</span>
-                        </label>
+                        <div class="field-header-row">
+                            <label class="input-label">Origin Feat <span class="block-warning">Max 3 total!</span></label>
+                            <span class="copy-spacer">Copy from Original</span>
+                        </div>
                         <input type="text" class="text-input" id="orig-feat-original" placeholder="e.g. Magic Initiate">
                         <div id="origin-mod-container-original"></div>
                     </div>
@@ -336,37 +382,51 @@ title: Character Rework Tool
                 <div class="origin-grid">
                     
                     <div class="input-group">
-                        <label class="input-label">Character Name</label>
+                        <div class="field-header-row">
+                            <label class="input-label">Character Name</label>
+                            <button type="button" class="copy-link" onclick="window.copyValue('name-original', 'name-new')">Copy from Original</button>
+                        </div>
                         <input type="text" class="text-input" id="name-new" placeholder="Name">
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Base Attributes (27 Point Buy)</label>
+                        <div class="field-header-row">
+                            <label class="input-label">Base Attributes (27 Point Buy)</label>
+                            <button type="button" class="copy-link" onclick="window.copyAttributes()">Copy from Original</button>
+                        </div>
                         <div id="attrs-container-new"></div>
                         <div class="points-display" id="points-new">Points Remaining: 27</div>
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">(Race: Version, Race, and subrace (if applicable) )</label>
+                        <div class="field-header-row">
+                            <label class="input-label">(Race: Version, Race, and subrace)</label>
+                            <button type="button" class="copy-link" onclick="window.copyValue('race-original', 'race-new')">Copy from Original</button>
+                        </div>
                         <input type="text" class="text-input" id="race-new" placeholder="e.g. Human, Elf...">
                     </div>
 
                     <div class="input-group" id="block-race-new">
-                        <label class="input-label">
-                            Racial Bonuses <span class="block-warning">Max 3 total!</span>
-                        </label>
+                        <div class="field-header-row">
+                            <label class="input-label">Racial Bonuses <span class="block-warning">Max 3 total!</span></label>
+                            <button type="button" class="copy-link" onclick="window.copyMods('race')">Copy from Original</button>
+                        </div>
                         <div id="race-mod-container-new"></div>
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Origin (Background)</label>
+                        <div class="field-header-row">
+                            <label class="input-label">Origin (Background)</label>
+                            <button type="button" class="copy-link" onclick="window.copyValue('bg-original', 'bg-new')">Copy from Original</button>
+                        </div>
                         <input type="text" class="text-input" id="bg-new" placeholder="e.g. Acolyte">
                     </div>
 
                     <div class="input-group" id="block-origin-new">
-                        <label class="input-label">
-                            Origin Feat <span class="block-warning">Max 3 total!</span>
-                        </label>
+                        <div class="field-header-row">
+                            <label class="input-label">Origin Feat <span class="block-warning">Max 3 total!</span></label>
+                            <button type="button" class="copy-link" onclick="window.copyOriginAll()">Copy from Original</button>
+                        </div>
                         <input type="text" class="text-input" id="orig-feat-new" placeholder="e.g. Magic Initiate">
                         <div id="origin-mod-container-new"></div>
                     </div>
@@ -390,12 +450,12 @@ title: Character Rework Tool
         
         <div class="input-group" style="margin-bottom: 1rem;">
             <label class="input-label">Rework Costs</label>
-            <input type="text" id="rework-cost" class="text-input" placeholder="e.g. 500gp for retraining, 2 weeks downtime">
+            <input type="text" id="rework-cost" class="text-input" placeholder="GP and DTP (or and/or rework token)">
         </div>
 
         <div class="input-group">
             <label class="input-label">Notes</label>
-            <textarea id="rework-notes" class="notes-area" style="min-height: 150px;" placeholder="Character concept notes, equipment changes, DM approval status, etc..."></textarea>
+            <textarea id="rework-notes" class="notes-area" style="min-height: 150px;" placeholder="Summarize character changes"></textarea>
         </div>
     </div>
 </div>
@@ -405,40 +465,24 @@ title: Character Rework Tool
 <script>
     window.currentUser = null;
 
-    // Hook into the auth initialization to handle UI states for the save bar
     function onAuthChange(user, profile) {
         window.currentUser = user;
-        const manualGroup = document.getElementById('manual-auth-group');
+        const loggedOutGroup = document.getElementById('logged-out-controls');
+        const loggedInGroup = document.getElementById('logged-in-controls');
         
         if (user) {
-            manualGroup.style.display = 'none';
-            // Auto-fetch saved reworks for this user
+            loggedOutGroup.style.display = 'none';
+            loggedInGroup.style.display = 'flex';
             if(window.fetchReworks) window.fetchReworks();
         } else {
-            manualGroup.style.display = 'flex';
+            loggedOutGroup.style.display = 'flex';
+            loggedInGroup.style.display = 'none';
         }
     }
 
-    // Polling until AuthManager is ready (it is loaded as module)
     const checkAuth = setInterval(() => {
         if (window.authManager) {
             clearInterval(checkAuth);
-            // We intercept the original callback to add our logic
-            const originalInit = window.authManager.init.bind(window.authManager);
-            
-            // Define custom callback that updates Header UI AND our local state
-            const compositeCallback = (user, profile) => {
-                // Update Header (copy-paste logic from auth-header if needed, 
-                // but usually auth-header handles itself via its own script. 
-                // We just need to know the state.)
-                
-                // Trigger our local UI update
-                onAuthChange(user, profile);
-            };
-
-            // Re-init with our composite callback isn't easy because auth-header
-            // already called init. Instead, we listen for state changes if possible,
-            // or just piggyback on the session check.
             window.authManager.client.auth.getSession().then(({ data }) => {
                 onAuthChange(data.session?.user, null);
             });
@@ -457,20 +501,55 @@ title: Character Rework Tool
 
     // --- 2. CORE FUNCTIONS ---
 
+    // === COPY FUNCTIONALITY ===
+    
+    window.copyValue = function(sourceId, targetId) {
+        const src = document.getElementById(sourceId);
+        const tgt = document.getElementById(targetId);
+        if(src && tgt) tgt.value = src.value;
+    }
+
+    window.copyAttributes = function() {
+        ATTRIBUTES.forEach(attr => {
+            const val = document.getElementById(`attr-original-${attr}`).value;
+            document.getElementById(`attr-new-${attr}`).value = val;
+        });
+        window.calculatePointBuy('new');
+        window.calculateFinalStats('new');
+    }
+
+    window.copyMods = function(type) {
+        // type = 'race' or 'origin'
+        ATTRIBUTES.forEach(attr => {
+            // Find src select
+            const src = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${attr}"]`);
+            const tgt = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${attr}"]`);
+            if(src && tgt) {
+                tgt.value = src.value;
+                // Trigger change event to update warnings/calcs
+                tgt.dispatchEvent(new Event('change'));
+            }
+        });
+        window.calculateFinalStats('new');
+    }
+
+    window.copyOriginAll = function() {
+        window.copyValue('orig-feat-original', 'orig-feat-new');
+        window.copyMods('origin');
+    }
+
+
     // === SAVE / LOAD LOGIC ===
 
     window.getCurrentDiscordID = function() {
-        if (window.currentUser) return window.currentUser.id; // Or metadata username/id
+        if (window.currentUser) return window.currentUser.id; 
         const manualInput = document.getElementById('manual-discord-id');
         return manualInput ? manualInput.value.trim() : null;
     }
 
     window.fetchReworks = async function() {
         const discordId = window.getCurrentDiscordID();
-        if (!discordId) {
-            alert("Please login or enter a Discord ID manually.");
-            return;
-        }
+        if (!discordId) return;
 
         const select = document.getElementById('load-rework-select');
         select.innerHTML = '<option>Loading...</option>';
@@ -484,7 +563,7 @@ title: Character Rework Tool
 
             if (error) throw error;
 
-            select.innerHTML = '<option value="">-- Load Saved Rework --</option>';
+            select.innerHTML = '<option value="">-- Select Rework to Load --</option>';
             data.forEach(row => {
                 const date = new Date(row.updated_at).toLocaleDateString();
                 const name = row.character_name || "Unnamed";
@@ -499,10 +578,12 @@ title: Character Rework Tool
         }
     }
 
-    // Load selected row
-    document.getElementById('load-rework-select').addEventListener('change', async (e) => {
-        const id = e.target.value;
-        if (!id) return;
+    window.loadSelectedRework = async function() {
+        const id = document.getElementById('load-rework-select').value;
+        if (!id) {
+            alert("Please select a rework from the dropdown first.");
+            return;
+        }
 
         try {
             const { data, error } = await supabase
@@ -518,19 +599,14 @@ title: Character Rework Tool
             console.error("Error loading rework:", err);
             alert("Failed to load rework data.");
         }
-    });
+    }
 
     function loadReworkData(data) {
         document.getElementById('current-rework-id').value = data.id;
-        
-        // Load Columns
         populateColumn('original', data.old_character);
         populateColumn('new', data.new_character);
-
-        // Load Details
         document.getElementById('rework-cost').value = data.cost || "";
         document.getElementById('rework-notes').value = data.notes || "";
-        
         alert("Rework loaded successfully!");
     }
 
@@ -547,7 +623,6 @@ title: Character Rework Tool
         const notes = document.getElementById('rework-notes').value;
         const currentId = document.getElementById('current-rework-id').value;
 
-        // Payload
         const payload = {
             discord_id: discordId,
             character_name: oldChar.name || "Unnamed",
@@ -561,11 +636,9 @@ title: Character Rework Tool
         try {
             let result;
             if (currentId) {
-                // Update
                 result = await supabase.from('rework').update(payload).eq('id', currentId);
             } else {
-                // Insert
-                result = await supabase.from('rework').insert([payload]).select(); // select to get ID back
+                result = await supabase.from('rework').insert([payload]).select();
             }
 
             if (result.error) throw result.error;
@@ -575,7 +648,7 @@ title: Character Rework Tool
             }
 
             alert("Rework saved successfully!");
-            window.fetchReworks(); // Refresh list
+            window.fetchReworks(); 
         } catch (err) {
             console.error("Save error:", err);
             alert("Error saving rework.");
@@ -587,23 +660,19 @@ title: Character Rework Tool
     function scrapeColumn(colId) {
         const getVal = (id) => document.getElementById(id)?.value || "";
         
-        // Attributes
         const attrs = {};
         ATTRIBUTES.forEach(a => attrs[a] = getVal(`attr-${colId}-${a}`));
 
-        // Race Mods
         const raceMods = {};
         document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(sel => {
             raceMods[sel.dataset.attr] = sel.value;
         });
 
-        // Origin Mods
         const originMods = {};
         document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(sel => {
             originMods[sel.dataset.attr] = sel.value;
         });
 
-        // Classes
         const classes = [];
         const classBlocks = document.querySelectorAll(`#classes-container-${colId} .class-block`);
         classBlocks.forEach(block => {
@@ -615,8 +684,6 @@ title: Character Rework Tool
             });
         });
 
-        // Feats (Names & Mods)
-        // Note: Feat cards are dynamic. We scrape them by ID order essentially.
         const feats = [];
         const featCards = document.querySelectorAll(`#feats-container-${colId} .feat-card`);
         featCards.forEach(card => {
@@ -643,18 +710,15 @@ title: Character Rework Tool
         if (!data) return;
         const setVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
 
-        // Basics
         setVal(`name-${colId}`, data.name);
         setVal(`race-${colId}`, data.race);
         setVal(`bg-${colId}`, data.bg);
         setVal(`orig-feat-${colId}`, data.origin_feat);
 
-        // Attributes
         if(data.attributes) {
             ATTRIBUTES.forEach(a => setVal(`attr-${colId}-${a}`, data.attributes[a]));
         }
 
-        // Mods (Race/Origin)
         const setMods = (type, modData) => {
             if(!modData) return;
             document.querySelectorAll(`.mod-select-${type}[data-col="${colId}"]`).forEach(sel => {
@@ -664,30 +728,18 @@ title: Character Rework Tool
         setMods('race', data.race_mods);
         setMods('origin', data.origin_mods);
 
-        // Classes (Rebuild rows)
         const classContainer = document.getElementById(`classes-container-${colId}`);
-        classContainer.innerHTML = ''; // Clear
+        classContainer.innerHTML = '';
         if (data.classes) {
             data.classes.forEach(cData => {
-                // Add row via global func
                 window.addClassRow(colId, cData); 
             });
         }
 
-        // Feats
-        // Tricky: Feats are auto-generated by addClassRow logic. 
-        // We need to wait for DOM updates or apply values after generation.
-        // Since addClassRow is synchronous in DOM creation but uses event listeners, 
-        // we modified addClassRow to accept initial data.
-        
-        // However, feats are generated by `generateFeatCards`.
-        // We can attach the saved feat data to the DOM or store it temporarily to apply after gen.
-        // For simplicity, we'll store it in a global temp buffer and apply it inside generateFeatCards
         window[`tempFeats_${colId}`] = data.feats;
         
-        // Trigger calc to refresh views
         window.calculatePointBuy(colId);
-        window.generateFeatCards(colId); // Will use tempFeats to fill inputs
+        window.generateFeatCards(colId); 
         window.calculateFinalStats(colId);
     }
 
@@ -704,18 +756,15 @@ title: Character Rework Tool
         const rowTop = document.createElement('div');
         rowTop.className = 'class-row';
 
-        // 1. Version
         const verSelect = document.createElement('select');
         verSelect.className = 'version-select';
         verSelect.innerHTML = `<option value="">Ver</option><option value="2014">2014</option><option value="2024">2024</option>`;
         
-        // 2. Class
         const classSelect = document.createElement('select');
         classSelect.className = 'class-select';
         classSelect.innerHTML = `<option value="">- Class -</option>`;
         classSelect.disabled = true;
 
-        // 3. Subclass
         const subSelect = document.createElement('select');
         subSelect.className = 'subclass-select';
         subSelect.innerHTML = `<option value="">- Subclass -</option>`;
@@ -725,7 +774,6 @@ title: Character Rework Tool
         rowTop.appendChild(classSelect);
         rowTop.appendChild(subSelect);
 
-        // Level
         const rowBottom = document.createElement('div');
         rowBottom.className = 'class-row-bottom';
         const lvlWrapper = document.createElement('div');
@@ -757,7 +805,6 @@ title: Character Rework Tool
         block.appendChild(rowBottom);
         container.appendChild(block);
 
-        // LOGIC
         const updateClasses = (selectedClass = null) => {
             const ver = parseInt(verSelect.value);
             classSelect.innerHTML = `<option value="">- Class -</option>`;
@@ -804,7 +851,6 @@ title: Character Rework Tool
         lvlInput.addEventListener('change', () => generateFeatCards(colId));
         lvlInput.addEventListener('input', () => generateFeatCards(colId));
 
-        // APPLY INITIAL DATA
         if (initialData) {
             verSelect.value = initialData.version;
             updateClasses(initialData.class);
@@ -815,8 +861,6 @@ title: Character Rework Tool
         generateFeatCards(colId);
     }
 
-    // --- RENDER HELPERS ---
-    
     function createStatTableHTML(type, colId, contextId) {
         let html = `<table class="stat-table" data-block-id="${contextId}"><thead><tr>`;
         ATTRIBUTES.forEach(attr => html += `<th>${attr}</th>`);
@@ -877,7 +921,6 @@ title: Character Rework Tool
                     const card = createFeatCard(cls, lvl, colId, uniqueId);
                     featContainer.appendChild(card);
                     
-                    // RESTORE DATA IF EXISTS
                     if (window[`tempFeats_${colId}`] && window[`tempFeats_${colId}`][cardIndex]) {
                         const saved = window[`tempFeats_${colId}`][cardIndex];
                         card.querySelector('.text-input').value = saved.name || "";
@@ -892,10 +935,6 @@ title: Character Rework Tool
             }
         });
         
-        // Clean up temp data after one pass? No, keep it just in case user refreshes structure
-        // actually better to clear it to avoid offsets on massive changes
-        // window[`tempFeats_${colId}`] = null; 
-
         attachModListeners(colId);
         window.calculateFinalStats(colId);
     }
@@ -923,8 +962,6 @@ title: Character Rework Tool
         card.appendChild(tableC);
         return card;
     }
-
-    // --- CALCULATION LOGIC ---
 
     function attachModListeners(colId) {
         document.querySelectorAll(`select[data-col="${colId}"]`).forEach(sel => {
@@ -959,10 +996,8 @@ title: Character Rework Tool
     }
 
     window.calculateFinalStats = function(colId) {
-        // Disabled for now per user request, but logic remains valid for future enabling
+        // Disabled per request, but logic ready
     }
-
-    // --- INIT ---
 
     async function initSupabase() {
         try {
