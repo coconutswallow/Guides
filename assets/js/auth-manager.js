@@ -82,9 +82,51 @@ class AuthManager {
             // If we are here, we are skipping the expensive checks
             // console.log("✅ Using cached session (skipping Discord sync)");
         }
+        // 2. NEW: Always fetch the latest permissions from YOUR DB
+        // We do this regardless of whether we just synced or not.
+        const profile = await this.fetchLocalProfile(session.user.id);
         
-        this.finalizeLogin(session, callback);
+        if (profile && profile.roles) {
+            this.userRoles = profile.roles; // Save roles to memory
+        }
+        
+        this.finalizeLogin(session, profile, callback);
         this.isProcessing = false; // Release lock
+    }
+    async fetchLocalProfile(userId) {
+        try {
+            // Adjust 'discord_users' to match your actual table name
+            // Adjust 'uuid' to match your primary key column name
+            const { data, error } = await this.client
+                .from('discord_users') 
+                .select('roles, display_name')
+                .eq('uuid', userId)
+                .single();
+
+            if (error) {
+                console.warn("Could not fetch local profile:", error.message);
+                return null;
+            }
+            return data;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // --- NEW HELPER: Check Permissions ---
+    /**
+     * Checks if the user has ANY of the required roles.
+     * @param {string|string[]} allowedRoles - Single role or array of roles (e.g. ['DM', 'Trial DM'])
+     * @returns {boolean}
+     */
+    hasRole(allowedRoles) {
+        if (!this.user || !this.userRoles || this.userRoles.length === 0) return false;
+
+        // Convert string to array if needed
+        const required = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+
+        // Check if user has at least one of the required roles
+        return required.some(reqRole => this.userRoles.includes(reqRole));
     }
 
     async checkGuildMembership(token) {
@@ -144,13 +186,16 @@ class AuthManager {
         }
     }
 
-    finalizeLogin(session, callback) {
+    finalizeLogin(session, profile, callback) {
         this.user = session.user;
+        
         // Clean URL
         if (this.user && window.location.hash && window.location.hash.includes('access_token')) {
             window.history.replaceState(null, null, window.location.pathname + window.location.search);
         }
-        if (callback) callback(this.user, null);
+
+        // Pass 'profile' to the callback so the UI can see roles
+        if (callback) callback(this.user, profile);
     }
 
     async login() {
