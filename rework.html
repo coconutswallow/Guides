@@ -588,7 +588,8 @@ title: Character Rework Tool
             const totalLvl = classes.reduce((sum, c) => sum + (parseInt(c.level)||0), 0);
             const str = classes.map(c => {
                 let s = c.class;
-                if(c.subclass && c.subclass !== "None") s = `${c.subclass} ${s}`;
+                if(c.subclass && c.subclass !== "None") s += ` ${c.subclass}`; // Class then Subclass
+                s += ` (${c.level})`; // Level in brackets
                 return s;
             }).join(" / ");
             return { ver, str, lvl: totalLvl };
