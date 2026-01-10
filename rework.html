@@ -1,115 +1,10 @@
 ---
 layout: default
 title: Character Rework Tool
-extra_css:
-  - "{{ '/assets/css/style.css' | relative_url }}"
 ---
 
 <style>
-    /* --- AUTH COMPONENT STYLES (From auth-header.html) --- */
-    .auth-wrapper { 
-        display: flex; 
-        align-items: center; 
-        gap: 15px;
-        font-family: var(--font-header, sans-serif); 
-        font-size: 0.9em; 
-        margin: 1.5rem 0 2rem 0; /* Spacing relative to title */
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--color-border);
-        justify-content: center;
-    }
 
-    .auth-loading-text { 
-        color: var(--color-text-secondary, #888); 
-        font-style: italic; 
-    }
-    
-    /* --- BUTTONS --- */
-    .auth-btn { 
-        border: none; 
-        cursor: pointer; 
-        display: inline-flex; 
-        align-items: center; 
-        justify-content: center; 
-        transition: all 0.2s ease; 
-        font-family: inherit;
-        text-transform: uppercase;
-        font-weight: 600;
-        border-radius: 4px;
-    }
-
-    /* Login Button - Keeps Discord Brand Color */
-    .auth-btn-discord { 
-        background-color: #5865F2; /* Official Discord Blurple */
-        color: white; 
-        padding: 0.6em 1.2em;
-        gap: 10px;
-        box-shadow: var(--shadow-sm);
-    }
-    
-    .auth-btn-discord:hover { 
-        background-color: #4752C4; 
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
-    
-    .discord-logo {
-        fill: white; /* Ensure logo stays white */
-    }
-
-    /* --- PROFILE CARD --- */
-    .auth-profile { 
-        display: flex; 
-        align-items: center; 
-        gap: 12px; 
-        background-color: var(--color-bg-light, #FDF1DC); 
-        border: 2px solid var(--color-border, #D4C4B0);
-        color: var(--color-text, #2c2c2c);
-        padding: 6px 12px; 
-        border-radius: var(--border-radius, 4px); 
-        box-shadow: var(--shadow-sm);
-    }
-
-    .auth-avatar { 
-        width: 32px; 
-        height: 32px; 
-        border-radius: 50%; 
-        object-fit: cover; 
-        border: 2px solid var(--color-primary, #58180D);
-    }
-
-    .auth-user-info { 
-        display: flex; 
-        flex-direction: column; 
-        line-height: 1.2;
-    }
-
-    .auth-name { 
-        font-weight: 700; 
-        font-size: 0.9em;
-        color: var(--color-primary, #58180D);
-    }
-    
-    .auth-role-badge { 
-        font-size: 0.8em; 
-        color: var(--color-text-secondary, #5a5a5a);
-    }
-
-    /* Logout Button */
-    .auth-btn-logout { 
-        background: transparent; 
-        color: var(--color-text-secondary, #5a5a5a); 
-        padding: 4px;
-        margin-left: 8px;
-        border-radius: 4px;
-    }
-    
-    .auth-btn-logout:hover { 
-        color: var(--palette-alert-danger-action, #c00); 
-        background-color: rgba(0,0,0,0.05);
-    }
-
-    /* --- RESPEC TOOL SPECIFIC STYLES --- */
     .respec-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -304,33 +199,9 @@ extra_css:
 <div class="page">
 
     <h1>Character Rework Tool</h1>
-    /* <p>Use this tool to compare your original character build against a new specialization.</p> */
+    <p>Note: This tool is not optimized for mobile.  Please use this on desktop.</p>
 
-    <div id="auth-component" class="auth-wrapper">
-        <span id="auth-loading" class="auth-loading-text">Loading...</span>
-
-        <button id="login-btn" class="auth-btn auth-btn-discord" style="display:none;">
-            <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36">
-                <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-            </svg>
-            Login with Discord
-        </button>
-
-        <div id="user-profile" class="auth-profile" style="display:none;">
-            <img id="user-avatar" src="" alt="User" class="auth-avatar" onerror="this.style.display='none'">
-            <div class="auth-user-info">
-                <span id="user-name" class="auth-name">Adventurer</span>
-                <span id="user-role-badge" class="auth-role-badge">Member</span>
-            </div>
-            <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-            </button>
-        </div>
-    </div>
+    {% include auth-header.html %}
 
 
     <div class="respec-container">
@@ -461,66 +332,17 @@ extra_css:
         
         <div class="input-group" style="margin-bottom: 1rem;">
             <label class="input-label">Rework Costs</label>
-            <input type="text" class="text-input" placeholder="e.g. 500gp for retraining, 2 weeks downtime">
+            <input type="text" class="text-input" placeholder="Rework type, Gold and DTP (or rework token)">
         </div>
 
         <div class="input-group">
             <label class="input-label">Notes</label>
-            <textarea class="notes-area" style="min-height: 150px;" placeholder="Character concept notes, equipment changes, DM approval status, etc..."></textarea>
+            <textarea class="notes-area" style="min-height: 150px;" placeholder="Summarize character rework changes"></textarea>
         </div>
     </div>
 </div>
 
 <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
-
-<script>
-    (function() {
-        const getEl = (id) => document.getElementById(id);
-        const ui = {
-            loading: getEl('auth-loading'),
-            loginBtn: getEl('login-btn'),
-            profile: getEl('user-profile'),
-            avatar: getEl('user-avatar'),
-            name: getEl('user-name'),
-            roleBadge: getEl('user-role-badge'),
-            logoutBtn: getEl('logout-btn')
-        };
-    
-        const updateAuthUI = (user, profile) => {
-            ui.loading.style.display = 'none';
-            if (user) {
-                ui.loginBtn.style.display = 'none';
-                ui.profile.style.display = 'flex';
-                ui.name.textContent = (profile && profile.username) ? profile.username : (user.user_metadata.full_name || 'User');
-                if (user.user_metadata.avatar_url) {
-                    ui.avatar.src = user.user_metadata.avatar_url;
-                    ui.avatar.style.display = 'block';
-                }
-                ui.roleBadge.textContent = (profile && profile.role) ? profile.role : "Member";
-                ui.roleBadge.style.display = 'inline-block';
-            } else {
-                ui.loginBtn.style.display = 'inline-flex';
-                ui.profile.style.display = 'none';
-            }
-        };
-    
-        const initAuth = () => {
-            if (window.authManager) {
-                ui.loginBtn.onclick = () => window.authManager.login();
-                ui.logoutBtn.onclick = () => window.authManager.logout();
-                window.authManager.init(updateAuthUI);
-            } else {
-                setTimeout(initAuth, 100);
-            }
-        };
-    
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initAuth);
-        } else {
-            initAuth();
-        }
-    })();
-</script>
 
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
@@ -933,35 +755,36 @@ extra_css:
 
     async function initSupabase() {
         try {
-            console.log("Fetching character data...");
+            console.log("Fetching character data from Supabase...");
             const { data, error } = await supabase
                 .from('lookups')
-                .select('data') // JSONB column
+                .select('data') // Retrieve the 'data' column (JSONB)
                 .eq('type', 'character')
-                .single();
+                .single(); // Expecting one row with all data
 
             if (error) throw error;
 
             if (data && data.data) {
-                // Assign global data from DB
+                // Assign to global variable
                 characterData = data.data; 
-                console.log("Character data loaded:", characterData.length + " entries");
+                console.log("Character data loaded successfully.");
             }
         } catch (err) {
-            console.warn("Supabase fetch failed:", err);
+            console.warn("Supabase fetch failed (check console). Using empty data.", err);
         }
     }
 
-    function startApp() {
+    async function startApp() {
+        // 1. Fetch data first
+        await initSupabase();
+
+        // 2. Then render UI
         ['original', 'new'].forEach(col => {
             renderStaticTables(col);
             renderBaseAttributes(col);
             window.addClassRow(col); 
             calculateFinalStats(col);
         });
-        
-        // Async fetch
-        initSupabase();
     }
 
     if (document.readyState === 'loading') {
