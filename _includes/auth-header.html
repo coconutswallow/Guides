@@ -106,6 +106,12 @@
     const updateAuthUI = (user, profile) => {
         ui.loading.style.display = 'none';
 
+        // --- 0. PARENT PAGE HOOK (NEW) ---
+        // If the parent page has defined a handler, pass the data to it
+        if (typeof window.handlePageAuth === 'function') {
+            window.handlePageAuth(user, profile);
+        }
+
         // --- 1. CONTENT REVEAL LOGIC ---
         // This is where we use the settings passed from the parent page
         if (window.PAGE_AUTH_CONFIG) {
