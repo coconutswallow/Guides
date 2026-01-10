@@ -2,7 +2,7 @@
 layout: default
 title: Character Respec Tool
 extra_css:
-  - /assets/css/style.css
+  - "{{ '/assets/css/style.css' | relative_url }}"
 ---
 
 <style>
@@ -40,31 +40,37 @@ extra_css:
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.25rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed var(--color-border);
     }
     
     .attr-input {
-        width: 60px;
-        padding: 5px;
+        width: 70px;
+        padding: 8px;
         text-align: center;
-        border: 1px solid var(--color-border);
+        border: 2px solid var(--color-border);
         background: var(--color-bg-page);
         color: var(--color-text);
         font-weight: bold;
+        font-size: 1.1em;
+        border-radius: 4px;
     }
 
     .points-remaining {
         text-align: center;
         font-weight: bold;
         margin-top: 1rem;
-        padding: 0.5rem;
+        padding: 1rem;
         background: var(--color-bg-medium);
+        border: 1px solid var(--color-border);
         border-radius: 4px;
+        font-size: 1.2em;
     }
 
     .points-remaining.error {
-        color: var(--palette-alert-danger-action);
-        background: var(--palette-alert-danger-bg-light);
+        color: #e74c3c;
+        background: #fadbd8;
+        border-color: #e74c3c;
     }
 
     /* Class Section */
@@ -72,74 +78,100 @@ extra_css:
         display: grid;
         grid-template-columns: 2fr 1fr auto;
         gap: 0.5rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
         align-items: center;
+        padding: 10px;
+        background: var(--color-bg-medium);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
     }
 
     .class-select, .level-input {
-        padding: 8px;
+        padding: 10px;
         border: 1px solid var(--color-border);
         background: var(--color-bg-page);
         color: var(--color-text);
+        border-radius: 4px;
     }
 
     .remove-class-btn {
-        background: var(--palette-alert-danger-action);
+        background: #e74c3c;
         color: white;
         border: none;
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
         border-radius: 4px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 1.2em;
+    }
+
+    .remove-class-btn:hover {
+        background: #c0392b;
     }
 
     /* Feat Cards */
     .feat-card {
         background: var(--color-bg-medium);
-        border: 1px solid var(--color-border);
+        border: 2px solid var(--color-border);
         padding: 1rem;
         margin-bottom: 1rem;
         border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .feat-header {
         font-weight: bold;
-        color: var(--color-secondary);
-        margin-bottom: 0.5rem;
-        border-bottom: 1px solid var(--color-border);
+        color: var(--color-primary);
+        margin-bottom: 0.75rem;
+        border-bottom: 2px solid var(--color-border);
+        padding-bottom: 0.25rem;
         font-family: var(--font-header);
+        font-size: 1.1em;
     }
 
     .feat-inputs {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 
     .feat-input-text {
         width: 100%;
-        padding: 6px;
+        padding: 8px;
         border: 1px solid var(--color-border);
+        border-radius: 4px;
     }
 
     .mod-table {
-        font-size: 0.8em;
+        font-size: 0.9em;
         margin: 0.5rem 0 0 0;
         width: 100%;
+        background: transparent;
+        border: none;
     }
     
-    .mod-table th, .mod-table td {
+    .mod-table th {
+        background: var(--color-primary);
+        color: white;
+        text-align: center;
+        padding: 4px;
+    }
+
+    .mod-table td {
         padding: 4px;
         text-align: center;
+        border: none;
     }
 
     .mod-input {
-        width: 40px;
+        width: 100%;
         text-align: center;
+        padding: 4px;
+        border: 1px solid var(--color-border);
     }
 </style>
 
@@ -154,8 +186,7 @@ extra_css:
 
             <div class="card">
                 <h3 class="card-title">Base Attributes</h3>
-                <div id="attrs-original">
-                    </div>
+                <div id="attrs-original">Loading inputs...</div>
                 <div class="points-remaining" id="points-original">Points Remaining: 27</div>
             </div>
 
@@ -183,7 +214,7 @@ extra_css:
             <div class="card">
                 <h3 class="card-title">Classes</h3>
                 <div id="classes-container-original"></div>
-                <button class="button button-secondary" style="margin-top: 10px;" onclick="addClassRow('original')">+ Add Class</button>
+                <button type="button" class="button button-secondary" style="margin-top: 10px;" onclick="window.addClassRow('original')">+ Add Class</button>
             </div>
 
             <div id="feats-container-original">
@@ -196,8 +227,7 @@ extra_css:
 
             <div class="card">
                 <h3 class="card-title">Base Attributes</h3>
-                <div id="attrs-new">
-                    </div>
+                <div id="attrs-new">Loading inputs...</div>
                 <div class="points-remaining" id="points-new">Points Remaining: 27</div>
             </div>
 
@@ -225,7 +255,7 @@ extra_css:
             <div class="card">
                 <h3 class="card-title">Classes</h3>
                 <div id="classes-container-new"></div>
-                <button class="button button-secondary" style="margin-top: 10px;" onclick="addClassRow('new')">+ Add Class</button>
+                <button type="button" class="button button-secondary" style="margin-top: 10px;" onclick="window.addClassRow('new')">+ Add Class</button>
             </div>
 
             <div id="feats-container-new">
@@ -236,16 +266,17 @@ extra_css:
 </div>
 
 <script type="module">
-    import { supabase } from '/assets/js/supabaseClient.js';
+    // Correctly import Supabase using Liquid for relative pathing
+    import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
 
-    // 1. Configuration & Data
+    // --- 1. DATA CONSTANTS ---
     const ATTRIBUTES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
     const POINT_BUY_TOTAL = 27;
     const POINT_COSTS = {
         8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
     };
     
-    // JSON from Prompt
+    // Default Data (Fallback if DB fails)
     const CLASS_ASI_DATA = [
       { "class": "Barbarian", "ASI": [4, 8, 12, 16, 19] },
       { "class": "Bard", "ASI": [4, 8, 12, 16, 19] },
@@ -264,79 +295,81 @@ extra_css:
       { "class": "Artificer", "ASI": [4, 8, 12, 16, 19] }
     ];
 
-    let availableClasses = [];
+    // Initialize with default values immediately
+    let availableClasses = CLASS_ASI_DATA.map(c => c.class);
 
-    // 2. Initialization
-    async function init() {
-        // Fetch classes from Supabase
-        try {
-            const { data, error } = await supabase
-                .from('lookups')
-                .select('*')
-                .eq('type', 'character')
-                .order('value', { ascending: true }); // Assuming 'value' holds the class name
 
-            if (error) throw error;
-            
-            // Map Supabase data to a simple array of strings. 
-            // Adjust 'item.value' if your column is named 'name' or something else
-            availableClasses = data.map(item => item.value || item.name);
-            
-            // Fallback if DB is empty or connection fails, use the JSON keys
-            if (availableClasses.length === 0) {
-                availableClasses = CLASS_ASI_DATA.map(c => c.class);
-            }
+    // --- 2. GLOBAL FUNCTIONS (Attached to window) ---
+    
+    // Function: Add a new Class Row
+    window.addClassRow = function(colId) {
+        console.log("Adding class row for:", colId);
+        const container = document.getElementById(`classes-container-${colId}`);
+        if(!container) return;
 
-        } catch (err) {
-            console.error("Error fetching classes:", err);
-            availableClasses = CLASS_ASI_DATA.map(c => c.class); // Fallback
-        }
+        const row = document.createElement('div');
+        row.className = 'class-row';
 
-        // Initialize UI for both columns
-        ['original', 'new'].forEach(col => {
-            renderAttributes(col);
-            addClassRow(col); // Add first class row by default
-            calculatePoints(col);
-        });
-    }
-
-    // 3. Attribute Logic
-    function renderAttributes(colId) {
-        const container = document.getElementById(`attrs-${colId}`);
-        container.innerHTML = '';
+        // Select Dropdown
+        const select = document.createElement('select');
+        select.className = 'class-select';
         
-        ATTRIBUTES.forEach(attr => {
-            const row = document.createElement('div');
-            row.className = 'attr-row';
-            
-            // Label
-            const label = document.createElement('strong');
-            label.innerText = attr;
-            
-            // Input
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.className = 'attr-input';
-            input.id = `attr-${colId}-${attr}`;
-            input.value = 10; // Prefill 10
-            input.min = 8;
-            input.max = 15;
-            
-            input.addEventListener('change', () => calculatePoints(colId));
-            input.addEventListener('input', () => calculatePoints(colId));
+        // Default Option
+        const defOpt = document.createElement('option');
+        defOpt.text = "- Select Class -";
+        defOpt.value = "";
+        select.appendChild(defOpt);
 
-            row.appendChild(label);
-            row.appendChild(input);
-            container.appendChild(row);
+        // Populate Options
+        availableClasses.forEach(cls => {
+            const opt = document.createElement('option');
+            opt.value = cls;
+            opt.text = cls;
+            select.appendChild(opt);
         });
+
+        // Level Input
+        const lvlInput = document.createElement('input');
+        lvlInput.type = 'number';
+        lvlInput.className = 'level-input';
+        lvlInput.placeholder = "Lvl";
+        lvlInput.min = 1;
+        lvlInput.max = 20;
+        lvlInput.value = 1;
+
+        // Remove Button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button'; // Prevent form submit
+        removeBtn.className = 'remove-class-btn';
+        removeBtn.innerHTML = "&times;";
+        removeBtn.onclick = function() {
+            container.removeChild(row);
+            generateFeatCards(colId);
+        };
+
+        // Event Listeners
+        select.addEventListener('change', () => generateFeatCards(colId));
+        lvlInput.addEventListener('change', () => generateFeatCards(colId));
+        lvlInput.addEventListener('input', () => generateFeatCards(colId));
+
+        row.appendChild(select);
+        row.appendChild(lvlInput);
+        row.appendChild(removeBtn);
+        container.appendChild(row);
+        
+        // Trigger feat calc
+        generateFeatCards(colId);
     }
 
-    function calculatePoints(colId) {
+    // Function: Calculate Points
+    window.calculatePoints = function(colId) {
         let spent = 0;
         let valid = true;
 
         ATTRIBUTES.forEach(attr => {
             const input = document.getElementById(`attr-${colId}-${attr}`);
+            if(!input) return;
+
             const val = parseInt(input.value);
             
             if (val < 8 || val > 15) valid = false;
@@ -359,68 +392,50 @@ extra_css:
         }
     }
 
-    // 4. Class Logic
-    window.addClassRow = function(colId) {
-        const container = document.getElementById(`classes-container-${colId}`);
-        const row = document.createElement('div');
-        row.className = 'class-row';
 
-        // Select Dropdown
-        const select = document.createElement('select');
-        select.className = 'class-select';
+    // --- 3. HELPER FUNCTIONS ---
+
+    function renderAttributes(colId) {
+        const container = document.getElementById(`attrs-${colId}`);
+        if (!container) return;
+        container.innerHTML = ''; // Clear "Loading..."
         
-        // Default Option
-        const defOpt = document.createElement('option');
-        defOpt.text = "- Select Class -";
-        defOpt.value = "";
-        select.appendChild(defOpt);
+        ATTRIBUTES.forEach(attr => {
+            const row = document.createElement('div');
+            row.className = 'attr-row';
+            
+            // Label
+            const label = document.createElement('strong');
+            label.innerText = attr;
+            
+            // Input
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'attr-input';
+            input.id = `attr-${colId}-${attr}`;
+            input.value = 10; // Prefill 10
+            input.min = 8;
+            input.max = 15;
+            
+            // Use window function wrapper for events
+            input.addEventListener('change', () => window.calculatePoints(colId));
+            input.addEventListener('input', () => window.calculatePoints(colId));
 
-        availableClasses.forEach(cls => {
-            const opt = document.createElement('option');
-            opt.value = cls;
-            opt.text = cls;
-            select.appendChild(opt);
+            row.appendChild(label);
+            row.appendChild(input);
+            container.appendChild(row);
         });
-
-        // Level Input
-        const lvlInput = document.createElement('input');
-        lvlInput.type = 'number';
-        lvlInput.className = 'level-input';
-        lvlInput.placeholder = "Lvl";
-        lvlInput.min = 1;
-        lvlInput.max = 20;
-        lvlInput.value = 1;
-
-        // Remove Button
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'remove-class-btn';
-        removeBtn.innerHTML = "&times;";
-        removeBtn.onclick = function() {
-            container.removeChild(row);
-            generateFeatCards(colId); // Recalculate feats on remove
-        };
-
-        // Event Listeners for Updates
-        select.addEventListener('change', () => generateFeatCards(colId));
-        lvlInput.addEventListener('change', () => generateFeatCards(colId));
-        lvlInput.addEventListener('input', () => generateFeatCards(colId));
-
-        row.appendChild(select);
-        row.appendChild(lvlInput);
-        row.appendChild(removeBtn);
-        container.appendChild(row);
         
-        // Calculate immediately (though likely empty)
-        generateFeatCards(colId);
+        // Initial calc
+        window.calculatePoints(colId);
     }
 
-    // 5. Feat/ASI Generator
     function generateFeatCards(colId) {
         const classContainer = document.getElementById(`classes-container-${colId}`);
         const featContainer = document.getElementById(`feats-container-${colId}`);
+        if(!featContainer || !classContainer) return;
         
-        // Clear existing generated feats
-        featContainer.innerHTML = '';
+        featContainer.innerHTML = ''; // Clear existing
 
         const rows = classContainer.getElementsByClassName('class-row');
         
@@ -433,11 +448,10 @@ extra_css:
 
             if (!className || level < 1) return;
 
-            // Find logic from JSON
+            // Find logic
             const classData = CLASS_ASI_DATA.find(c => c.class === className);
             
             if (classData && classData.ASI) {
-                // Filter ASIs achieved at this level
                 const achievedASIs = classData.ASI.filter(asiLevel => asiLevel <= level);
 
                 achievedASIs.forEach(asiLevel => {
@@ -464,37 +478,19 @@ extra_css:
         nameInput.className = 'feat-input-text';
         nameInput.placeholder = "Feat Name (or +2 ASI)";
 
-        // Modifier Table (0, +1, +2)
+        // Table logic (simplified)
         const table = document.createElement('table');
         table.className = 'mod-table';
         
-        // Header
-        const thead = document.createElement('thead');
-        const trHead = document.createElement('tr');
-        ATTRIBUTES.forEach(attr => {
-            const th = document.createElement('th');
-            th.innerText = attr;
-            trHead.appendChild(th);
-        });
-        thead.appendChild(trHead);
+        let theadHTML = "<thead><tr>";
+        ATTRIBUTES.forEach(a => theadHTML += `<th>${a}</th>`);
+        theadHTML += "</tr></thead>";
+        
+        let tbodyHTML = "<tbody><tr>";
+        ATTRIBUTES.forEach(a => tbodyHTML += `<td><input type="number" class="mod-input" value="0" min="0" max="2"></td>`);
+        tbodyHTML += "</tr></tbody>";
 
-        // Body
-        const tbody = document.createElement('tbody');
-        const trBody = document.createElement('tr');
-        ATTRIBUTES.forEach(attr => {
-            const td = document.createElement('td');
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.className = 'mod-input';
-            input.min = 0;
-            input.max = 2;
-            input.value = 0;
-            td.appendChild(input);
-            trBody.appendChild(td);
-        });
-        tbody.appendChild(trBody);
-        table.appendChild(thead);
-        table.appendChild(tbody);
+        table.innerHTML = theadHTML + tbodyHTML;
 
         inputsDiv.appendChild(nameInput);
         card.appendChild(header);
@@ -504,7 +500,67 @@ extra_css:
         return card;
     }
 
-    // Run Init
-    document.addEventListener('DOMContentLoaded', init);
+
+    // --- 4. INITIALIZATION ---
+
+    async function initSupabase() {
+        try {
+            console.log("Attempting to fetch classes from Supabase...");
+            const { data, error } = await supabase
+                .from('lookups')
+                .select('*')
+                .eq('type', 'character')
+                .order('value', { ascending: true });
+
+            if (error) throw error;
+            
+            if (data && data.length > 0) {
+                console.log("Supabase classes loaded:", data.length);
+                // Update global list
+                availableClasses = data.map(item => item.value || item.name);
+                
+                // Refresh existing dropdowns in the UI if any exist
+                // (Though at init there are likely 0, or just the defaults)
+                document.querySelectorAll('.class-select').forEach(select => {
+                    const currentVal = select.value;
+                    // Clear and re-populate
+                    select.innerHTML = '<option value="">- Select Class -</option>';
+                    availableClasses.forEach(cls => {
+                        const opt = document.createElement('option');
+                        opt.value = cls;
+                        opt.text = cls;
+                        select.appendChild(opt);
+                    });
+                    select.value = currentVal; // Restore selection
+                });
+            }
+
+        } catch (err) {
+            console.warn("Supabase fetch failed (using defaults):", err);
+        }
+    }
+
+    // Main Start Sequence
+    function startApp() {
+        console.log("Starting App...");
+        
+        // 1. Render UI immediately with Default Data
+        ['original', 'new'].forEach(col => {
+            renderAttributes(col);
+            // Don't add a class row by default, let user click add
+            // But if you want one empty row:
+            // window.addClassRow(col); 
+        });
+
+        // 2. Try to fetch better data in background
+        initSupabase();
+    }
+
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startApp);
+    } else {
+        startApp();
+    }
 
 </script>
