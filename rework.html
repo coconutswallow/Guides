@@ -6,17 +6,17 @@ extra_css:
 ---
 
 <style>
-    /* --- AUTH COMPONENT STYLES (From auth-header.html) --- */
+    /* --- AUTH COMPONENT STYLES --- */
     .auth-wrapper { 
         display: flex; 
         align-items: center; 
         gap: 15px;
         font-family: var(--font-header, sans-serif); 
         font-size: 0.9em;
-        margin-bottom: 2rem;
+        margin: 1rem 0 2rem 0; /* Adjusted margins */
         padding-bottom: 1rem;
         border-bottom: 1px solid var(--color-border);
-        justify-content: flex-end; /* Align to right */
+        justify-content: center; /* Center align under title */
     }
 
     .auth-loading-text { 
@@ -197,29 +197,49 @@ extra_css:
     /* Class Section */
     .class-row {
         display: grid;
-        grid-template-columns: 2fr 1fr auto;
+        grid-template-columns: 80px 1fr 1fr; /* Version | Class | Subclass */
         gap: 0.5rem;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         align-items: center;
         padding: 10px;
         background: var(--color-bg-medium);
         border: 1px solid var(--color-border);
         border-radius: 4px;
     }
+    
+    /* Second row of the Class Block grid for Level and Remove button */
+    .class-row-bottom {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
 
-    .class-select {
+    /* Container for the whole class block */
+    .class-block {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background: var(--color-bg-medium);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        margin-bottom: 0.75rem;
+    }
+
+    .class-select, .version-select, .subclass-select {
         padding: 8px;
         border: 1px solid var(--color-border);
         background: var(--color-bg-page);
         color: var(--color-text);
         border-radius: 4px;
+        width: 100%;
     }
 
-    /* New Level Input Wrapper */
     .level-wrapper {
         display: flex;
         align-items: center;
         gap: 5px;
+        width: 100px;
     }
 
     .level-label {
@@ -241,6 +261,13 @@ extra_css:
     .remove-class-btn {
         background: #e74c3c; color: white; border: none; width: 32px; height: 32px;
         border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        align-self: flex-end;
+    }
+    
+    .remove-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
 
     /* Feat Cards */
@@ -256,7 +283,10 @@ extra_css:
 </style>
 
 <div class="page">
-    
+
+    <h1>Character Rework Tool</h1>
+    <p>Use this tool to compare your original character build against a new specialization.</p>
+
     <div id="auth-component" class="auth-wrapper">
         <span id="auth-loading" class="auth-loading-text">Loading...</span>
 
@@ -284,9 +314,6 @@ extra_css:
     </div>
 
 
-    <h1>Character Rework Tool</h1>
-    <p>Use this tool to compare your original character build against a new specialization.</p>
-
     <div class="respec-container">
         
         <div class="char-column" id="col-original">
@@ -309,7 +336,7 @@ extra_css:
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Race</label>
+                        <label class="input-label">(Race: Version, Race, and subrace (if applicable) )</label>
                         <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
                     </div>
 
@@ -369,7 +396,7 @@ extra_css:
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Race</label>
+                        <label class="input-label">(Race: Version, Race, and subrace (if applicable) )</label>
                         <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
                     </div>
 
@@ -415,12 +442,12 @@ extra_css:
         
         <div class="input-group" style="margin-bottom: 1rem;">
             <label class="input-label">Rework Costs</label>
-            <input type="text" class="text-input" placeholder="e.g. 500gp for retraining, 2 weeks downtime">
+            <input type="text" class="text-input" placeholder="Rework Type, DTP and Cost">
         </div>
 
         <div class="input-group">
             <label class="input-label">Notes</label>
-            <textarea class="notes-area" style="min-height: 150px;" placeholder="Character concept notes, equipment changes, DM approval status, etc..."></textarea>
+            <textarea class="notes-area" style="min-height: 150px;" placeholder="Summary of character changes"></textarea>
         </div>
     </div>
 </div>
@@ -430,7 +457,6 @@ extra_css:
 <script>
     (function() {
         const getEl = (id) => document.getElementById(id);
-        
         const ui = {
             loading: getEl('auth-loading'),
             loginBtn: getEl('login-btn'),
@@ -443,25 +469,16 @@ extra_css:
     
         const updateAuthUI = (user, profile) => {
             ui.loading.style.display = 'none';
-    
             if (user) {
                 ui.loginBtn.style.display = 'none';
                 ui.profile.style.display = 'flex';
-                
                 ui.name.textContent = (profile && profile.username) ? profile.username : (user.user_metadata.full_name || 'User');
-                
                 if (user.user_metadata.avatar_url) {
                     ui.avatar.src = user.user_metadata.avatar_url;
                     ui.avatar.style.display = 'block';
                 }
-    
-                if (profile && profile.role) {
-                    ui.roleBadge.textContent = profile.role;
-                } else {
-                    ui.roleBadge.textContent = "Member";
-                }
+                ui.roleBadge.textContent = (profile && profile.role) ? profile.role : "Member";
                 ui.roleBadge.style.display = 'inline-block';
-    
             } else {
                 ui.loginBtn.style.display = 'inline-flex';
                 ui.profile.style.display = 'none';
@@ -496,25 +513,9 @@ extra_css:
         8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
     };
     
-    const CLASS_ASI_DATA = [
-      { "class": "Barbarian", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Bard", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Blood Hunter", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Cleric", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Druid", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Fighter", "ASI": [4, 6, 8, 12, 14, 16, 19] },
-      { "class": "Monk", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Mystic", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Paladin", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Ranger", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Rogue", "ASI": [4, 8, 10, 12, 16, 19] },
-      { "class": "Sorcerer", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Warlock", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Wizard", "ASI": [4, 8, 12, 16, 19] },
-      { "class": "Artificer", "ASI": [4, 8, 12, 16, 19] }
-    ];
-
-    let availableClasses = CLASS_ASI_DATA.map(c => c.class);
+    // EMBEDDED DATA FROM CSV (Fallback)
+    // Structure: {version, class, subclass, ASI[]}
+    const FULL_CHARACTER_DATA = [{"version": 2014, "class": "Artificer (ERLW/TCE)", "subclass": "Alchemist (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Artificer (ERLW/TCE)", "subclass": "Armorer (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Artificer (ERLW/TCE)", "subclass": "Artillerist (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Artificer (ERLW/TCE)", "subclass": "Battlesmith (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Ancestral Guardian (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Battlerager (SCAG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Battlerager (HTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Beast (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Berserker (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Storm Herald XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Giant (BGG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Totem Warrior (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Wild Magic (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Barbarian (PHB 2014)", "subclass": "Zealot (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Creation (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Eloquence (MOT)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Glamour (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Lore (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Road (HWCS)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Satire (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Spirits (VRGR)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Swords (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Valor (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Bard (PHB 2014)", "subclass": "Whispers (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Blood Hunter (DDB)", "subclass": "Ghostslayer", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Blood Hunter (DDB)", "subclass": "Lycan", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Blood Hunter (DDB)", "subclass": "Mutant", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Blood Hunter (DDB)", "subclass": "Profane Soul", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Arcana (SCAG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Community (HWCS)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Death (DMG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Forge (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Grave (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Knowledge (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Life (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Light (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Nature (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Night (HWCS)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Order (GGR)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Peace (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Protection (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Tempest (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Twilight (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "Trickery (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Cleric (PHB 2014)", "subclass": "War (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Dragons (GSB2)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Dreams (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Land (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Moon (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Shepherd (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Stars (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Spores (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Twilight (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Warden (HWT)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Druid (PHB 2014)", "subclass": "Wildfire (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Arcane Archer (XGTE)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Battle Master (PHB 2014)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Cavalier (XGTE)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Champion (PHB 2014)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Echo Knight (EGW)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Eldritch Knight (PHB 2014)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Psi Warrior (TCE)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Purple Dragon Knight (SCAG)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Purple Dragon Knight (HTA)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Rune Knight (TCE)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Samurai (XGTE)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Scofflaw (HWCS)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Fighter (PHB 2014)", "subclass": "Sharpshooter (UA) ", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Ascendant Dragon (FTD)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Astral Self (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Drunken Master (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Four Elements (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Four Elements (Spiketail.Drake)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Kensei (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Long Death (SCAG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Mercy (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Open Hand (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Serenity (HTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Shadow (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Monk (PHB 2014)", "subclass": "Sun Soul (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Mystic (UA)", "subclass": "Avatar", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Mystic (UA)", "subclass": "Awakened", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Mystic (UA)", "subclass": "Immortal", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Mystic (UA)", "subclass": "Nomad", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Mystic (UA)", "subclass": "Soul Knife", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Mystic (UA)", "subclass": "Wu Jen", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Ancients (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Conquest (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Crown (SCAG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Devotion (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Glory (MOT, TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Oathbreaker (DMG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Redemption (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Treachery (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Vengeance (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Paladin (PHB 2014)", "subclass": "Watchers (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Ranger (PHB 2014)", "subclass": null, "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Beast Master / Beast Conclave (PHB 2014 or UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Drakewarden (FTD)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Fey Wanderer (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Gloom Stalker (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Horizon Walker (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Hunter / Hunter Conclave (PHB 2014 or UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Monster Slayer (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Primeval Guardian (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Revised Ranger (UA)", "subclass": "Swarmkeeper (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Arcane Trickster (PHB 2014)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Assassin (PHB 2014)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Inquisitive (XGTE)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Mastermind (XGTE)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Phantom (TCE)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Scout (XGTE)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Soulknife (TCE)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Swashbuckler (XGTE)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Rogue (PHB 2014)", "subclass": "Thief (PHB 2014)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Aberrant Mind (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Clockwork Soul (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Divine Soul (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Draconic (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Lunar (DSotDQ)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Phoenix (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Sea (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Shadow (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Stone (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Storm (SCAG & XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Sorcerer (PHB 2014)", "subclass": "Wild Magic (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Archfey (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Celestial (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Fathomless (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Fiend (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Genie (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Great Old One (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Hexblade (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Predator (HWT)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Raven Queen (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Seeker (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Undead (VRGR)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Warlock (PHB 2014)", "subclass": "Undying (SCAG)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Abjuration (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Artificer (HTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Bladesinging (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Chronurgy (EGW)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Conjuration (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Divination (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Enchantment (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Evocation (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Graviturgy (EGW)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Illusion (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Invention (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Leyline (HWT)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Necromancy (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Scribes (TCE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Theurgy (UA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "Transmutation (PHB 2014)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2014, "class": "Wizard (PHB 2014)", "subclass": "War Magic (XGTE)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Artificer (EFOTA)", "subclass": "Alchemist (EFOTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Artificer (EFOTA)", "subclass": "Armorer (EFOTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Artificer (EFOTA)", "subclass": "Artillerist (EFOTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Artificer (EFOTA)", "subclass": "Battlesmith (EFOTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Artificer (EFOTA)", "subclass": "Cartographer (EFOTA)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Barbarian (PHB 2024)", "subclass": "Berserker (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Barbarian (PHB 2024)", "subclass": "Wild Heart (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Barbarian (PHB 2024)", "subclass": "World Tree (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Barbarian (PHB 2024)", "subclass": "Zealot (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Bard (PHB 2024)", "subclass": "Dance (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Bard (PHB 2024)", "subclass": "Glamour (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Bard (PHB 2024)", "subclass": "Lore (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Bard (PHB 2024)", "subclass": "Moon (FRHOF)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Bard (PHB 2024)", "subclass": "Road (HWCS 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Bard (PHB 2024)", "subclass": "Valor (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Cleric (PHB 2024)", "subclass": "Community (HWCS 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Cleric (PHB 2024)", "subclass": "Life (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Cleric (PHB 2024)", "subclass": "Light (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Cleric (PHB 2024)", "subclass": "Knowledge (FRHOF)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Cleric (PHB 2024)", "subclass": "Night (HWCS 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Cleric (PHB 2024)", "subclass": "Trickery (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Cleric (PHB 2024)", "subclass": "War (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Druid (PHB 2024)", "subclass": "Land (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Druid (PHB 2024)", "subclass": "Moon (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Druid (PHB 2024)", "subclass": "Sea (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Druid (PHB 2024)", "subclass": "Stars (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Fighter (PHB 2024)", "subclass": "Banneret (FRHOF)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2024, "class": "Fighter (PHB 2024)", "subclass": "Battle Master (PHB 2024)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2024, "class": "Fighter (PHB 2024)", "subclass": "Champion (PHB 2024)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2024, "class": "Fighter (PHB 2024)", "subclass": "Eldritch Knight (PHB 2024)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2024, "class": "Fighter (PHB 2024)", "subclass": "Psi Warrior (PHB 2024)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2024, "class": "Fighter (PHB 2024)", "subclass": "Scofflaw (HWCS 2024)", "ASI": [4, 6, 8, 12, 14, 16, 19]}, {"version": 2024, "class": "Monk (PHB 2024)", "subclass": "Mercy (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Monk (PHB 2024)", "subclass": "Shadow (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Monk (PHB 2024)", "subclass": "Elements (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Monk (PHB 2024)", "subclass": "Open Hand (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Paladin (PHB 2024)", "subclass": "Ancients (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Paladin (PHB 2024)", "subclass": "Devotion (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Paladin (PHB 2024)", "subclass": "Glory (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Paladin (PHB 2024)", "subclass": "Noble Genies (FRHOF)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Paladin (PHB 2024)", "subclass": "Vengeance (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Ranger (PHB 2024)", "subclass": "Beast Master (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Ranger (PHB 2024)", "subclass": "Fey Wanderer (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Ranger (PHB 2024)", "subclass": "Gloom Stalker (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Ranger (PHB 2024)", "subclass": "Hunter (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Ranger (PHB 2024)", "subclass": "Winter Walker (FRHOF)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Rogue (PHB 2024)", "subclass": "Arachnoid Stalker (VSS:PP)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2024, "class": "Rogue (PHB 2024)", "subclass": "Arcane Trickster (PHB 2024)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2024, "class": "Rogue (PHB 2024)", "subclass": "Assassin (PHB 2024)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2024, "class": "Rogue (PHB 2024)", "subclass": "Scion of the Three (FRHOF)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2024, "class": "Rogue (PHB 2024)", "subclass": "Soulknife (PHB 2024)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2024, "class": "Rogue (PHB 2024)", "subclass": "Thief (PHB 2024)", "ASI": [4, 6, 8, 10, 12, 16, 19]}, {"version": 2024, "class": "Sorcerer (PHB 2024)", "subclass": "Aberrant (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Sorcerer (PHB 2024)", "subclass": "Clockwork (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Sorcerer (PHB 2024)", "subclass": "Draconic (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Sorcerer (PHB 2024)", "subclass": "Spellfire (FRHOF)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Sorcerer (PHB 2024)", "subclass": "Wild Magic (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Warlock (PHB 2024)", "subclass": "Archfey (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Warlock (PHB 2024)", "subclass": "Celestial (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Warlock (PHB 2024)", "subclass": "Fiend (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Warlock (PHB 2024)", "subclass": "Great Old One (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Wizard (PHB 2024)", "subclass": "Abjurer (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Wizard (PHB 2024)", "subclass": "Bladesinger (FRHOF)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Wizard (PHB 2024)", "subclass": "Diviner (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Wizard (PHB 2024)", "subclass": "Evoker (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}, {"version": 2024, "class": "Wizard (PHB 2024)", "subclass": "Illusionist (PHB 2024)", "ASI": [4, 8, 12, 16, 19]}];
 
 
     // --- 2. GLOBAL FUNCTIONS ---
@@ -523,62 +524,157 @@ extra_css:
         const container = document.getElementById(`classes-container-${colId}`);
         if(!container) return;
 
-        const row = document.createElement('div');
-        row.className = 'class-row';
+        const block = document.createElement('div');
+        block.className = 'class-block';
 
-        // 1. Class Select
-        const select = document.createElement('select');
-        select.className = 'class-select';
+        // --- ROW 1: SELECTS ---
+        const rowTop = document.createElement('div');
+        rowTop.className = 'class-row';
+
+        // 1. Version Select
+        const verSelect = document.createElement('select');
+        verSelect.className = 'version-select';
+        verSelect.innerHTML = `<option value="">Ver</option>
+                               <option value="2014">2014</option>
+                               <option value="2024">2024</option>`;
         
-        const defOpt = document.createElement('option');
-        defOpt.text = "- Select Class -";
-        defOpt.value = "";
-        select.appendChild(defOpt);
+        // 2. Class Select (initially disabled)
+        const classSelect = document.createElement('select');
+        classSelect.className = 'class-select';
+        classSelect.innerHTML = `<option value="">- Class -</option>`;
+        classSelect.disabled = true;
 
-        availableClasses.forEach(cls => {
-            const opt = document.createElement('option');
-            opt.value = cls;
-            opt.text = cls;
-            select.appendChild(opt);
-        });
+        // 3. Subclass Select (initially disabled)
+        const subSelect = document.createElement('select');
+        subSelect.className = 'subclass-select';
+        subSelect.innerHTML = `<option value="">- Subclass -</option>`;
+        subSelect.disabled = true;
 
-        // 2. Level Input with Label Wrapper
+        rowTop.appendChild(verSelect);
+        rowTop.appendChild(classSelect);
+        rowTop.appendChild(subSelect);
+
+        // --- ROW 2: LEVEL & REMOVE ---
+        const rowBottom = document.createElement('div');
+        rowBottom.className = 'class-row-bottom';
+
+        // Level Input
         const lvlWrapper = document.createElement('div');
         lvlWrapper.className = 'level-wrapper';
-
         const lvlLabel = document.createElement('span');
         lvlLabel.className = 'level-label';
         lvlLabel.innerText = "Lvl:";
-
         const lvlInput = document.createElement('input');
         lvlInput.type = 'number';
         lvlInput.className = 'level-input';
         lvlInput.min = 1;
         lvlInput.max = 20;
         lvlInput.value = 1;
-
         lvlWrapper.appendChild(lvlLabel);
         lvlWrapper.appendChild(lvlInput);
 
-        // 3. Remove Button
+        // Remove Button
+        const removeWrapper = document.createElement('div');
+        removeWrapper.className = 'remove-wrapper';
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'remove-class-btn';
         removeBtn.innerHTML = "&times;";
         removeBtn.onclick = function() {
-            container.removeChild(row);
+            container.removeChild(block);
             generateFeatCards(colId);
         };
+        removeWrapper.appendChild(removeBtn);
 
-        select.addEventListener('change', () => generateFeatCards(colId));
+        rowBottom.appendChild(lvlWrapper);
+        rowBottom.appendChild(removeWrapper);
+
+        block.appendChild(rowTop);
+        block.appendChild(rowBottom);
+        container.appendChild(block);
+
+        // --- EVENTS ---
+        
+        // Version Change: Populate Classes
+        verSelect.addEventListener('change', () => {
+            const ver = parseInt(verSelect.value);
+            
+            // Reset Class & Subclass
+            classSelect.innerHTML = `<option value="">- Class -</option>`;
+            subSelect.innerHTML = `<option value="">- Subclass -</option>`;
+            subSelect.disabled = true;
+            
+            if (!ver) {
+                classSelect.disabled = true;
+                return;
+            }
+
+            classSelect.disabled = false;
+
+            // Filter classes by version
+            const classes = [...new Set(
+                FULL_CHARACTER_DATA
+                    .filter(item => item.version === ver)
+                    .map(item => item.class)
+            )].sort();
+
+            classes.forEach(cls => {
+                const opt = document.createElement('option');
+                opt.value = cls;
+                opt.text = cls;
+                classSelect.appendChild(opt);
+            });
+            
+            generateFeatCards(colId);
+        });
+
+        // Class Change: Populate Subclasses
+        classSelect.addEventListener('change', () => {
+            const ver = parseInt(verSelect.value);
+            const cls = classSelect.value;
+            
+            // Reset Subclass
+            subSelect.innerHTML = `<option value="">- Subclass -</option>`;
+            
+            if (!cls) {
+                subSelect.disabled = true;
+                generateFeatCards(colId);
+                return;
+            }
+
+            subSelect.disabled = false;
+
+            // Filter subclasses by version + class
+            const subclasses = [...new Set(
+                FULL_CHARACTER_DATA
+                    .filter(item => item.version === ver && item.class === cls && item.subclass)
+                    .map(item => item.subclass)
+            )].sort();
+
+            if (subclasses.length > 0) {
+                 subclasses.forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.text = sub;
+                    subSelect.appendChild(opt);
+                });
+            } else {
+                 // Handle classes with no subclass in data (if any)
+                 const opt = document.createElement('option');
+                 opt.value = "None";
+                 opt.text = "None";
+                 subSelect.appendChild(opt);
+                 subSelect.value = "None"; // Auto-select
+            }
+           
+            generateFeatCards(colId);
+        });
+
+        subSelect.addEventListener('change', () => generateFeatCards(colId));
         lvlInput.addEventListener('change', () => generateFeatCards(colId));
         lvlInput.addEventListener('input', () => generateFeatCards(colId));
-
-        row.appendChild(select);
-        row.appendChild(lvlWrapper); // Add Wrapper instead of raw input
-        row.appendChild(removeBtn);
-        container.appendChild(row);
         
+        // Initial Trigger (empty)
         generateFeatCards(colId);
     }
 
@@ -604,16 +700,12 @@ extra_css:
     }
 
     function renderStaticTables(colId) {
-        // Race
         const raceContainer = document.getElementById(`race-mod-container-${colId}`);
         if(raceContainer) raceContainer.innerHTML = createStatTableHTML('race', colId, `race-${colId}`);
 
-        // Origin
         const originContainer = document.getElementById(`origin-mod-container-${colId}`);
         if(originContainer) originContainer.innerHTML = createStatTableHTML('origin', colId, `origin-${colId}`);
         
-        // Final Stats (Logic preserved, but HTML container is commented out in DOM)
-        // If you uncomment the HTML later, this logic will automatically work.
         const finalContainer = document.getElementById(`final-stats-container-${colId}`);
         if(finalContainer) {
             let html = `<table class="stat-table final-stats-table"><thead><tr>`;
@@ -650,7 +742,6 @@ extra_css:
         container.innerHTML = '';
         container.appendChild(table);
 
-        // Listeners
         ATTRIBUTES.forEach(attr => {
             const input = document.getElementById(`attr-${colId}-${attr}`);
             input.addEventListener('input', () => {
@@ -669,25 +760,40 @@ extra_css:
         
         featContainer.innerHTML = '';
 
-        const rows = classContainer.getElementsByClassName('class-row');
+        const blocks = classContainer.getElementsByClassName('class-block');
         
-        Array.from(rows).forEach((row, index) => {
-            const select = row.querySelector('.class-select');
-            const levelInput = row.querySelector('.level-input');
+        Array.from(blocks).forEach((block, index) => {
+            const verSelect = block.querySelector('.version-select');
+            const classSelect = block.querySelector('.class-select');
+            const subSelect = block.querySelector('.subclass-select');
+            const levelInput = block.querySelector('.level-input');
             
-            const className = select.value;
+            const ver = parseInt(verSelect.value);
+            const cls = classSelect.value;
+            const sub = subSelect.value;
             const level = parseInt(levelInput.value) || 0;
 
-            if (!className || level < 1) return;
+            if (!ver || !cls || level < 1) return;
 
-            const classData = CLASS_ASI_DATA.find(c => c.class === className);
-            
-            if (classData && classData.ASI) {
-                const achievedASIs = classData.ASI.filter(asiLevel => asiLevel <= level);
+            // Find matching data entry
+            // 1. Try specific subclass match
+            let dataEntry = FULL_CHARACTER_DATA.find(item => 
+                item.version === ver && item.class === cls && item.subclass === sub
+            );
 
-                achievedASIs.forEach((asiLevel, asiIndex) => {
-                    const uniqueId = `feat-${colId}-${className}-${index}-${asiLevel}`;
-                    const card = createFeatCard(className, asiLevel, colId, uniqueId);
+            // 2. Fallback: Try class match where subclass is null/undefined in data (e.g. Ranger base)
+            if (!dataEntry) {
+                 dataEntry = FULL_CHARACTER_DATA.find(item => 
+                    item.version === ver && item.class === cls && !item.subclass
+                );
+            }
+
+            if (dataEntry && dataEntry.ASI) {
+                const achievedASIs = dataEntry.ASI.filter(asiLevel => asiLevel <= level);
+
+                achievedASIs.forEach((asiLevel) => {
+                    const uniqueId = `feat-${colId}-${cls}-${index}-${asiLevel}`;
+                    const card = createFeatCard(cls, asiLevel, colId, uniqueId);
                     featContainer.appendChild(card);
                 });
             }
@@ -810,28 +916,16 @@ extra_css:
 
     async function initSupabase() {
         try {
-            const { data, error } = await supabase
-                .from('lookups')
-                .select('*')
-                .eq('type', 'character')
-                .order('value', { ascending: true });
-
-            if (data && data.length > 0) {
-                availableClasses = data.map(item => item.value || item.name);
-                document.querySelectorAll('.class-select').forEach(select => {
-                    const currentVal = select.value;
-                    select.innerHTML = '<option value="">- Select Class -</option>';
-                    availableClasses.forEach(cls => {
-                        const opt = document.createElement('option');
-                        opt.value = cls;
-                        opt.text = cls;
-                        select.appendChild(opt);
-                    });
-                    select.value = currentVal;
-                });
-            }
+            // If you want to use Supabase, un-comment the fetching logic. 
+            // For now, we use FULL_CHARACTER_DATA as the primary source 
+            // since it contains all the needed fields (version, subclass, etc.)
+            
+            // const { data, error } = await supabase...
+            // If using DB, you'd need to parse the JSONB column similarly.
+            
+            console.log("Using embedded character data.");
         } catch (err) {
-            console.warn("Supabase fetch failed, using defaults");
+            console.warn("Supabase init error:", err);
         }
     }
 
