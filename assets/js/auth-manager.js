@@ -82,24 +82,28 @@ class AuthManager {
         }
     }
 
-    // NEW: Upserts data into 'discord_users'
     async syncUserToDB(authUser, memberData) {
         try {
-            // Prepare data based on your CSV structure
-            // NOTE: Ensure these column names match your DB exactly
+            // Mapping Discord data to YOUR existing database columns
             const updates = {
-                id: authUser.id,                  // Supabase UUID
+                // 1. MATCHING KEY: The Discord ID
                 discord_id: authUser.user_metadata.provider_id,
-                username: authUser.user_metadata.full_name,
-                avatar_url: authUser.user_metadata.avatar_url,
-                discord_roles: memberData.roles,  // Array of Role IDs
-                server_nick: memberData.nick || authUser.user_metadata.full_name,
-                last_seen: new Date().toISOString()
+
+                // 2. DISPLAY NAME
+                // Logic: Use their specific Server Nickname if they have one, 
+                // otherwise fall back to their Discord Global Name.
+                display_name: memberData.nick || authUser.user_metadata.full_name,
+
+                // 3. ROLES
+                // Your CSV shows this column is named 'roles' (lowercase)
+                roles: memberData.roles
             };
 
+            // 4. UPSERT
+            // We use 'discord_id' as the conflict key because 'id' does not exist in your CSV.
             const { error } = await this.client
                 .from('discord_users')
-                .upsert(updates, { onConflict: 'id' });
+                .upsert(updates, { onConflict: 'discord_id' });
 
             if (error) throw error;
             console.log('User synced to DB');
