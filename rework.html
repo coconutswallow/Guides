@@ -1,0 +1,510 @@
+---
+layout: default
+title: Character Respec Tool
+extra_css:
+  - /assets/css/style.css
+---
+
+<style>
+    /* Page Specific Styles */
+    .respec-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 900px) {
+        .respec-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .char-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .column-header {
+        text-align: center;
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        color: var(--color-primary);
+        font-family: var(--font-header);
+    }
+
+    /* Attribute Inputs */
+    .attr-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.25rem 0;
+    }
+    
+    .attr-input {
+        width: 60px;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-page);
+        color: var(--color-text);
+        font-weight: bold;
+    }
+
+    .points-remaining {
+        text-align: center;
+        font-weight: bold;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        background: var(--color-bg-medium);
+        border-radius: 4px;
+    }
+
+    .points-remaining.error {
+        color: var(--palette-alert-danger-action);
+        background: var(--palette-alert-danger-bg-light);
+    }
+
+    /* Class Section */
+    .class-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr auto;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        align-items: center;
+    }
+
+    .class-select, .level-input {
+        padding: 8px;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-page);
+        color: var(--color-text);
+    }
+
+    .remove-class-btn {
+        background: var(--palette-alert-danger-action);
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Feat Cards */
+    .feat-card {
+        background: var(--color-bg-medium);
+        border: 1px solid var(--color-border);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+    }
+
+    .feat-header {
+        font-weight: bold;
+        color: var(--color-secondary);
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: var(--font-header);
+    }
+
+    .feat-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .feat-input-text {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid var(--color-border);
+    }
+
+    .mod-table {
+        font-size: 0.8em;
+        margin: 0.5rem 0 0 0;
+        width: 100%;
+    }
+    
+    .mod-table th, .mod-table td {
+        padding: 4px;
+        text-align: center;
+    }
+
+    .mod-input {
+        width: 40px;
+        text-align: center;
+    }
+</style>
+
+<div class="page">
+    <h1>Character Respec Tool</h1>
+    <p>Use this tool to compare your original character build against a new specialization. Adjust attributes using the 27-point buy system and plan your feats based on class progression.</p>
+
+    <div class="respec-container">
+        
+        <div class="char-column" id="col-original">
+            <h2 class="column-header">Original Character</h2>
+
+            <div class="card">
+                <h3 class="card-title">Base Attributes</h3>
+                <div id="attrs-original">
+                    </div>
+                <div class="points-remaining" id="points-original">Points Remaining: 27</div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Origin Details</h3>
+                <div class="feat-inputs">
+                    <input type="text" class="feat-input-text" placeholder="Background Name">
+                    <input type="text" class="feat-input-text" placeholder="Origin Feat Name">
+                </div>
+                <table class="mod-table">
+                    <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Classes</h3>
+                <div id="classes-container-original"></div>
+                <button class="button button-secondary" style="margin-top: 10px;" onclick="addClassRow('original')">+ Add Class</button>
+            </div>
+
+            <div id="feats-container-original">
+                </div>
+        </div>
+
+
+        <div class="char-column" id="col-new">
+            <h2 class="column-header">New Character</h2>
+
+            <div class="card">
+                <h3 class="card-title">Base Attributes</h3>
+                <div id="attrs-new">
+                    </div>
+                <div class="points-remaining" id="points-new">Points Remaining: 27</div>
+            </div>
+
+             <div class="card">
+                <h3 class="card-title">Origin Details</h3>
+                <div class="feat-inputs">
+                    <input type="text" class="feat-input-text" placeholder="Background Name">
+                    <input type="text" class="feat-input-text" placeholder="Origin Feat Name">
+                </div>
+                <table class="mod-table">
+                    <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                            <td><input type="number" class="mod-input" value="0" min="0" max="2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Classes</h3>
+                <div id="classes-container-new"></div>
+                <button class="button button-secondary" style="margin-top: 10px;" onclick="addClassRow('new')">+ Add Class</button>
+            </div>
+
+            <div id="feats-container-new">
+                </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+    import { supabase } from '/assets/js/supabaseClient.js';
+
+    // 1. Configuration & Data
+    const ATTRIBUTES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+    const POINT_BUY_TOTAL = 27;
+    const POINT_COSTS = {
+        8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
+    };
+    
+    // JSON from Prompt
+    const CLASS_ASI_DATA = [
+      { "class": "Barbarian", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Bard", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Blood Hunter", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Cleric", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Druid", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Fighter", "ASI": [4, 6, 8, 12, 14, 16, 19] },
+      { "class": "Monk", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Mystic", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Paladin", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Ranger", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Rogue", "ASI": [4, 8, 10, 12, 16, 19] },
+      { "class": "Sorcerer", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Warlock", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Wizard", "ASI": [4, 8, 12, 16, 19] },
+      { "class": "Artificer", "ASI": [4, 8, 12, 16, 19] }
+    ];
+
+    let availableClasses = [];
+
+    // 2. Initialization
+    async function init() {
+        // Fetch classes from Supabase
+        try {
+            const { data, error } = await supabase
+                .from('lookups')
+                .select('*')
+                .eq('type', 'character')
+                .order('value', { ascending: true }); // Assuming 'value' holds the class name
+
+            if (error) throw error;
+            
+            // Map Supabase data to a simple array of strings. 
+            // Adjust 'item.value' if your column is named 'name' or something else
+            availableClasses = data.map(item => item.value || item.name);
+            
+            // Fallback if DB is empty or connection fails, use the JSON keys
+            if (availableClasses.length === 0) {
+                availableClasses = CLASS_ASI_DATA.map(c => c.class);
+            }
+
+        } catch (err) {
+            console.error("Error fetching classes:", err);
+            availableClasses = CLASS_ASI_DATA.map(c => c.class); // Fallback
+        }
+
+        // Initialize UI for both columns
+        ['original', 'new'].forEach(col => {
+            renderAttributes(col);
+            addClassRow(col); // Add first class row by default
+            calculatePoints(col);
+        });
+    }
+
+    // 3. Attribute Logic
+    function renderAttributes(colId) {
+        const container = document.getElementById(`attrs-${colId}`);
+        container.innerHTML = '';
+        
+        ATTRIBUTES.forEach(attr => {
+            const row = document.createElement('div');
+            row.className = 'attr-row';
+            
+            // Label
+            const label = document.createElement('strong');
+            label.innerText = attr;
+            
+            // Input
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'attr-input';
+            input.id = `attr-${colId}-${attr}`;
+            input.value = 10; // Prefill 10
+            input.min = 8;
+            input.max = 15;
+            
+            input.addEventListener('change', () => calculatePoints(colId));
+            input.addEventListener('input', () => calculatePoints(colId));
+
+            row.appendChild(label);
+            row.appendChild(input);
+            container.appendChild(row);
+        });
+    }
+
+    function calculatePoints(colId) {
+        let spent = 0;
+        let valid = true;
+
+        ATTRIBUTES.forEach(attr => {
+            const input = document.getElementById(`attr-${colId}-${attr}`);
+            const val = parseInt(input.value);
+            
+            if (val < 8 || val > 15) valid = false;
+            
+            if (POINT_COSTS[val] !== undefined) {
+                spent += POINT_COSTS[val];
+            }
+        });
+
+        const remaining = POINT_BUY_TOTAL - spent;
+        const display = document.getElementById(`points-${colId}`);
+        
+        display.innerText = `Points Remaining: ${remaining}`;
+        
+        if (remaining < 0 || !valid) {
+            display.classList.add('error');
+            if (!valid) display.innerText += " (Attributes must be 8-15)";
+        } else {
+            display.classList.remove('error');
+        }
+    }
+
+    // 4. Class Logic
+    window.addClassRow = function(colId) {
+        const container = document.getElementById(`classes-container-${colId}`);
+        const row = document.createElement('div');
+        row.className = 'class-row';
+
+        // Select Dropdown
+        const select = document.createElement('select');
+        select.className = 'class-select';
+        
+        // Default Option
+        const defOpt = document.createElement('option');
+        defOpt.text = "- Select Class -";
+        defOpt.value = "";
+        select.appendChild(defOpt);
+
+        availableClasses.forEach(cls => {
+            const opt = document.createElement('option');
+            opt.value = cls;
+            opt.text = cls;
+            select.appendChild(opt);
+        });
+
+        // Level Input
+        const lvlInput = document.createElement('input');
+        lvlInput.type = 'number';
+        lvlInput.className = 'level-input';
+        lvlInput.placeholder = "Lvl";
+        lvlInput.min = 1;
+        lvlInput.max = 20;
+        lvlInput.value = 1;
+
+        // Remove Button
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-class-btn';
+        removeBtn.innerHTML = "&times;";
+        removeBtn.onclick = function() {
+            container.removeChild(row);
+            generateFeatCards(colId); // Recalculate feats on remove
+        };
+
+        // Event Listeners for Updates
+        select.addEventListener('change', () => generateFeatCards(colId));
+        lvlInput.addEventListener('change', () => generateFeatCards(colId));
+        lvlInput.addEventListener('input', () => generateFeatCards(colId));
+
+        row.appendChild(select);
+        row.appendChild(lvlInput);
+        row.appendChild(removeBtn);
+        container.appendChild(row);
+        
+        // Calculate immediately (though likely empty)
+        generateFeatCards(colId);
+    }
+
+    // 5. Feat/ASI Generator
+    function generateFeatCards(colId) {
+        const classContainer = document.getElementById(`classes-container-${colId}`);
+        const featContainer = document.getElementById(`feats-container-${colId}`);
+        
+        // Clear existing generated feats
+        featContainer.innerHTML = '';
+
+        const rows = classContainer.getElementsByClassName('class-row');
+        
+        Array.from(rows).forEach(row => {
+            const select = row.querySelector('.class-select');
+            const levelInput = row.querySelector('.level-input');
+            
+            const className = select.value;
+            const level = parseInt(levelInput.value) || 0;
+
+            if (!className || level < 1) return;
+
+            // Find logic from JSON
+            const classData = CLASS_ASI_DATA.find(c => c.class === className);
+            
+            if (classData && classData.ASI) {
+                // Filter ASIs achieved at this level
+                const achievedASIs = classData.ASI.filter(asiLevel => asiLevel <= level);
+
+                achievedASIs.forEach(asiLevel => {
+                    const card = createFeatCard(className, asiLevel);
+                    featContainer.appendChild(card);
+                });
+            }
+        });
+    }
+
+    function createFeatCard(className, level) {
+        const card = document.createElement('div');
+        card.className = 'feat-card';
+
+        const header = document.createElement('div');
+        header.className = 'feat-header';
+        header.innerText = `${className} - Level ${level} ASI/Feat`;
+
+        const inputsDiv = document.createElement('div');
+        inputsDiv.className = 'feat-inputs';
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'feat-input-text';
+        nameInput.placeholder = "Feat Name (or +2 ASI)";
+
+        // Modifier Table (0, +1, +2)
+        const table = document.createElement('table');
+        table.className = 'mod-table';
+        
+        // Header
+        const thead = document.createElement('thead');
+        const trHead = document.createElement('tr');
+        ATTRIBUTES.forEach(attr => {
+            const th = document.createElement('th');
+            th.innerText = attr;
+            trHead.appendChild(th);
+        });
+        thead.appendChild(trHead);
+
+        // Body
+        const tbody = document.createElement('tbody');
+        const trBody = document.createElement('tr');
+        ATTRIBUTES.forEach(attr => {
+            const td = document.createElement('td');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'mod-input';
+            input.min = 0;
+            input.max = 2;
+            input.value = 0;
+            td.appendChild(input);
+            trBody.appendChild(td);
+        });
+        tbody.appendChild(trBody);
+        table.appendChild(thead);
+        table.appendChild(tbody);
+
+        inputsDiv.appendChild(nameInput);
+        card.appendChild(header);
+        card.appendChild(inputsDiv);
+        card.appendChild(table);
+
+        return card;
+    }
+
+    // Run Init
+    document.addEventListener('DOMContentLoaded', init);
+
+</script>

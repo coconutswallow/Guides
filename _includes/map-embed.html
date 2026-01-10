@@ -1,0 +1,69 @@
+<div id="embed-map-container" style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden; border: 2px solid var(--color-border);">
+    <div id="embed-map" style="height: 100%; width: 100%; background: #1a1a1a;"></div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script type="module">
+    import { supabase } from './assets/js/supabaseClient.js';
+
+    // --- CONFIG ---
+    const mapWidth = 4096;
+    const mapHeight = 2918;
+    const mapUrl = '/Guides/assets/images/faerun-map.png'; 
+
+    // --- INITIALIZE MAP ---
+    // Note: We use 'embed-map' ID so it doesn't conflict if you have a main map on the same page
+    const map = L.map('embed-map', {
+        crs: L.CRS.Simple,
+        minZoom: -2,       
+        maxZoom: 3,        
+        zoomSnap: 0.5,
+        scrollWheelZoom: false, // Disabled scrolling so it doesn't trap the user's mouse while reading
+        attributionControl: false
+    });
+
+    const bounds = [[0, 0], [mapHeight, mapWidth]];
+    L.imageOverlay(mapUrl, bounds).addTo(map);
+    map.fitBounds(bounds);
+    map.setMaxBounds(bounds);
+
+    // --- FETCH PINS (Read Only) ---
+    async function loadPins() {
+        const { data: locations } = await supabase.from('locations').select('*');
+        if (locations) locations.forEach(addMarkerToMap);
+    }
+
+    function addMarkerToMap(loc) {
+        const marker = L.marker([loc.y, loc.x]).addTo(map);
+        
+        // Simple Popup - No "Edit" buttons
+        const popupContent = `
+            <div style="min-width: 150px; font-family: var(--font-body, sans-serif); color: #333;">
+                <h3 style="margin-top:0; border-bottom: 1px solid #ccc; color: var(--color-primary, #58180D);">${loc.name}</h3>
+                <p>${loc.description || ''}</p>
+                ${loc.link_url ? `<a href="${loc.link_url}" target="_blank" style="color: var(--color-secondary, #822000);">Read Lore &raquo;</a>` : ''}
+            </div>
+        `;
+        
+        // Custom popup styling to ensure readability on dark mode sites
+        marker.bindPopup(popupContent, {
+            className: 'readonly-popup'
+        });
+    }
+
+    // Load the pins
+    loadPins();
+</script>
+
+<style>
+    /* Ensure popups are readable even if the embedding page is dark mode */
+    .readonly-popup .leaflet-popup-content-wrapper {
+        background: #ffffff;
+        color: #333333;
+    }
+    .readonly-popup .leaflet-popup-tip {
+        background: #ffffff;
+    }
+</style>
