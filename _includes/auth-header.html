@@ -108,6 +108,7 @@
 
         // --- 0. PARENT PAGE HOOK (NEW) ---
         // If the parent page has defined a handler, pass the data to it
+        
         if (typeof window.handlePageAuth === 'function') {
             window.handlePageAuth(user, profile);
         }
