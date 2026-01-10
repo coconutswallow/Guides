@@ -231,15 +231,15 @@ extra_css:
                 <div class="origin-grid">
                     
                     <div class="input-group">
-                        <label class="input-label">Race</label>
-                        <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
-                    </div>
-
-                    <div class="input-group">
                         <label class="input-label">Base Attributes (27 Point Buy)</label>
                         <div id="attrs-container-original">
                             </div>
                         <div class="points-display" id="points-original">Points Remaining: 27</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Race</label>
+                        <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
                     </div>
 
                     <div class="input-group" id="block-race-original">
@@ -251,7 +251,7 @@ extra_css:
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Background Name</label>
+                        <label class="input-label">Origin (Background)</label>
                         <input type="text" class="text-input" placeholder="e.g. Acolyte">
                     </div>
 
@@ -292,15 +292,15 @@ extra_css:
                 <div class="origin-grid">
                     
                     <div class="input-group">
-                        <label class="input-label">Race</label>
-                        <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
-                    </div>
-
-                    <div class="input-group">
                         <label class="input-label">Base Attributes (27 Point Buy)</label>
                         <div id="attrs-container-new">
                             </div>
                         <div class="points-display" id="points-new">Points Remaining: 27</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Race</label>
+                        <input type="text" class="text-input" placeholder="e.g. Human, Elf...">
                     </div>
 
                     <div class="input-group" id="block-race-new">
@@ -312,7 +312,7 @@ extra_css:
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label">Background Name</label>
+                        <label class="input-label">Origin (Background)</label>
                         <input type="text" class="text-input" placeholder="e.g. Acolyte">
                     </div>
 
@@ -437,8 +437,6 @@ extra_css:
 
     function createStatTableHTML(type, colId, contextId) {
         // Generates a table with Dropdowns (0, +1, +2)
-        // contextId allows unique identification for summing (e.g., 'race', 'origin', 'feat-X')
-        
         let html = `<table class="stat-table" data-block-id="${contextId}"><thead><tr>`;
         ATTRIBUTES.forEach(attr => html += `<th>${attr}</th>`);
         html += `</tr></thead><tbody><tr>`;
@@ -521,7 +519,6 @@ extra_css:
         const featContainer = document.getElementById(`feats-container-${colId}`);
         if(!featContainer || !classContainer) return;
         
-        // Save current values if possible? (Skipping for simplicity, simpler to regenerate)
         featContainer.innerHTML = '';
 
         const rows = classContainer.getElementsByClassName('class-row');
@@ -549,7 +546,7 @@ extra_css:
         });
 
         attachModListeners(colId);
-        calculateFinalStats(colId); // Recalc totals with new feats
+        calculateFinalStats(colId); 
     }
 
     function createFeatCard(className, level, colId, contextId) {
@@ -589,8 +586,6 @@ extra_css:
         // Attaches listeners to ALL dropdowns in the column (Race, Origin, Feats)
         const selects = document.querySelectorAll(`select[data-col="${colId}"]`);
         selects.forEach(sel => {
-            // Remove old listeners to avoid dupes (simple way is to overwrite onchange if assigning prop, but addEventListener stacks. 
-            // Since we regenerate HTML often, simple addEventListener is fine for new elements.)
             sel.onchange = () => {
                 validateBlock(sel.dataset.context);
                 calculateFinalStats(colId);
