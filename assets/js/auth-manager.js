@@ -113,18 +113,25 @@ class AuthManager {
     }
 
     async syncUserToDB(user, member) {
+        console.log("--- SYNCING VIA SECURE FUNCTION ---");
+        
         try {
-            const updates = {
-                user_id: user.id,
-                discord_id: user.user_metadata.provider_id,
-                display_name: member.nick || user.user_metadata.full_name,
-                roles: member.roles
-            };
-            
-            await this.client.from('discord_users')
-                .upsert(updates, { onConflict: 'discord_id' });
-                
-        } catch (e) { console.error("Sync failed:", e); }
+            // We call the RPC function we just created
+            const { error } = await this.client.rpc('link_discord_account', {
+                arg_discord_id: user.user_metadata.provider_id,
+                arg_display_name: member.nick || user.user_metadata.full_name,
+                arg_roles: member.roles
+            });
+
+            if (error) {
+                console.error("❌ SYNC FAILED:", error.message);
+            } else {
+                console.log("✅ ACCOUNT LINKED! UUID saved to database.");
+            }
+
+        } catch (e) {
+            console.error("❌ CRITICAL ERROR:", e);
+        }
     }
 
     finalizeLogin(session, callback) {
