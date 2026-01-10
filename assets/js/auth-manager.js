@@ -59,9 +59,26 @@ class AuthManager {
             const response = await fetch('https://discord.com/api/users/@me/guilds', {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            if (!response.ok) return false;
+
+            if (!response.ok) {
+                console.error("Discord API Error:", response.statusText);
+                return false;
+            }
+
             const guilds = await response.json();
-            return guilds.some(guild => guild.id === 'REQUIRED_GUILD_ID');
+            
+            // --- DEBUGGING LOGS ---
+            console.log("--- DEBUGGING ---");
+            console.log("My Required ID:", REQUIRED_GUILD_ID);
+            console.log("Discord returned these servers:", guilds.map(g => `${g.name} (${g.id})`));
+            
+            const found = guilds.some(guild => guild.id === REQUIRED_GUILD_ID);
+            console.log("Match found?", found);
+            console.log("-----------------");
+            // ----------------------
+
+            return found;
+
         } catch (error) {
             console.error('Membership check failed:', error);
             return false;
