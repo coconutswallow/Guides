@@ -386,11 +386,11 @@ title: Character Rework Tool
                             <div class="points-display" id="points-original">Points Remaining: 27</div>
                         </div>
                         <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">(Race: Version, Race, and subrace)</label><span class="copy-spacer">Copy from Original</span></div>
+                            <div class="field-header-row"><label class="input-label">(Race/Species: Version, Race/Species, and sub-race/species)</label><span class="copy-spacer">Copy from Original</span></div>
                             <input type="text" class="text-input" id="race-original" placeholder="e.g. Human, Elf...">
                         </div>
                         <div class="input-group" id="block-race-original">
-                            <div class="field-header-row"><label class="input-label">Racial Bonuses <span class="block-warning">Max 3!</span></label><span class="copy-spacer">Copy from Original</span></div>
+                            <div class="field-header-row"><label class="input-label">Racial/Species Bonuses <span class="block-warning">Max 3!</span></label><span class="copy-spacer">Copy from Original</span></div>
                             <div id="race-mod-container-original"></div>
                         </div>
                         <div class="input-group">
@@ -436,14 +436,14 @@ title: Character Rework Tool
                         </div>
                         <div class="input-group">
                             <div class="field-header-row">
-                                <label class="input-label">(Race: Version, Race, and subrace)</label>
+                                <label class="input-label">(Race/Species: Version, Race/Species, and sub-race/species)</label>
                                 <button type="button" class="copy-link" onclick="window.copyValue('race-original', 'race-new')">Copy from Original</button>
                             </div>
                             <input type="text" class="text-input" id="race-new" placeholder="e.g. Human, Elf...">
                         </div>
                         <div class="input-group" id="block-race-new">
                             <div class="field-header-row">
-                                <label class="input-label">Racial Bonuses <span class="block-warning">Max 3!</span></label>
+                                <label class="input-label">Racial/Species Bonuses <span class="block-warning">Max 3!</span></label>
                                 <button type="button" class="copy-link" onclick="window.copyMods('race')">Copy from Original</button>
                             </div>
                             <div id="race-mod-container-new"></div>
@@ -546,7 +546,7 @@ title: Character Rework Tool
     // --- TAB LOGIC ---
     window.switchTab = function(tabName) {
         if (tabName === 'output') {
-            if (!validateFeats()) return; 
+            if (!validateForm()) return; // Stop if validation fails
         }
 
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -560,33 +560,52 @@ title: Character Rework Tool
             generateOutput();
         }
     }
-    function validateFeats() {
-        // Select all text inputs specifically inside feat cards
-        const inputs = document.querySelectorAll('.feat-card .text-input');
-        
-        for(const input of inputs) {
-            if(!input.value.trim()) {
-                alert("Feat names cannot be blank! Please check your entries.");
-                
-                // Visual cues
-                input.focus();
-                input.style.borderColor = "#e74c3c"; // Highlight red
-                
-                // Remove highlight when user starts typing
-                input.addEventListener('input', function(){ 
-                    this.style.borderColor = ''; 
-                }, {once: true});
-                
-                return false; // Stop the tab switch
+    function validateForm() {
+        const showError = (el, msg) => {
+            alert(msg);
+            el.focus();
+            el.style.borderColor = "#e74c3c"; // Red border
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.addEventListener('input', function(){ this.style.borderColor = ''; }, {once: true});
+            return false;
+        };
+
+        // 1. Define Static Required Fields
+        const requiredFields = [
+            { id: 'name-original', name: 'Original Character Name' },
+            { id: 'race-original', name: 'Original Race/Species' },
+            { id: 'bg-original', name: 'Original Background' },
+            { id: 'orig-feat-original', name: 'Original Origin Feat' },
+            
+            { id: 'name-new', name: 'New Character Name' },
+            { id: 'race-new', name: 'New Race/Species' },
+            { id: 'bg-new', name: 'New Background' },
+            { id: 'orig-feat-new', name: 'New Origin Feat' },
+            
+            { id: 'rework-cost', name: 'Rework Cost' },
+            { id: 'rework-notes', name: 'Rework Notes' }
+        ];
+
+        // 2. Check Static Fields
+        for (const field of requiredFields) {
+            const el = document.getElementById(field.id);
+            if (!el || !el.value.trim()) {
+                return showError(el, `${field.name} cannot be blank.`);
             }
         }
-        return true; // Allow the tab switch
-    }
 
-    window.copyOutput = function() {
-        const text = document.getElementById('output-text');
-        text.select();
-        navigator.clipboard.writeText(text.value).then(() => alert("Copied!"));
+        // 3. Check Dynamic Class Feats
+        // Select all inputs inside feat cards
+        const featInputs = document.querySelectorAll('.feat-card .text-input');
+        for(const input of featInputs) {
+            if(!input.value.trim()) {
+                // Find the header text to tell user which feat is missing
+                const cardHeader = input.closest('.feat-card').querySelector('.feat-header').innerText.split(' Max')[0];
+                return showError(input, `Feat name for "${cardHeader}" cannot be blank.`);
+            }
+        }
+
+        return true; // All checks passed
     }
 
     // --- MARKDOWN GENERATION ---
