@@ -32,20 +32,16 @@ class AuthManager {
         const discordToken = session.provider_token;
 
         if (discordToken) {
-            // 1. Check if they are in the server
+            // 1. Check Membership
             const isMember = await this.checkGuildMembership(discordToken);
-            
             if (!isMember) {
-                console.warn('User not in required Discord server.');
-                alert('Access Denied: You must be a member of our Discord server.');
+                alert('Access Denied: You must be a member of the Discord server.');
                 await this.logout();
                 return;
             }
 
-            // 2. Fetch detailed profile (Roles & Nickname)
+            // 2. Sync to DB (if we have permissions)
             const memberData = await this.fetchGuildMember(discordToken);
-            
-            // 3. Sync to Supabase Table "discord_users"
             if (memberData) {
                 await this.syncUserToDB(session.user, memberData);
             }
@@ -129,7 +125,43 @@ class AuthManager {
             console.error('Error syncing user to DB:', error);
         }
     }
+    // CHECK 1: Are they in the server?
+    async checkGuildMembership(token) {
+        try {
+            const response = await fetch('https://discord.com/api/users/@me/guilds', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const guilds = await response.json();
+            console.log("Servers found:", guilds); // DEBUGGING
+            return guilds.some(g => g.id === REQUIRED_GUILD_ID);
+        } catch (e) { console.error(e); return false; }
+    }
 
+    // CHECK 2: Get their roles
+    async fetchGuildMember(token) {
+        try {
+            const response = await fetch(`https://discord.com/api/users/@me/guilds/${REQUIRED_GUILD_ID}/member`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return await response.json();
+        } catch (e) { return null; }
+    }
+
+    // CHECK 3: Save to Database
+    async syncUserToDB(user, member) {
+        try {
+            const updates = {
+                user_id: user.id, // Links to Auth
+                discord_id: user.user_metadata.provider_id,
+                display_name: member.nick || user.user_metadata.full_name,
+                roles: member.roles // Stores as JSONB
+            };
+            
+            await this.client.from('discord_users')
+                .upsert(updates, { onConflict: 'discord_id' });
+                
+        } catch (e) { console.error("Sync failed:", e); }
+    }
     finalizeLogin(session, callback) {
         this.user = session.user;
         // Clean URL

@@ -332,7 +332,7 @@ title: Character Rework Tool
     <h1>Character Rework Tool</h1>
     
     {% include auth-header.html %}
-    <p id="login-instruction-text">Login with Discord to save/upload work-in-progress reworks</p>
+    <p id="instruction-text" class="auth-instruction">Please log in to Save/Load WIP Reworks.</p>
 
     <br>
 
@@ -509,6 +509,7 @@ title: Character Rework Tool
     window.currentUser = null;
 
     function onAuthChange(user, profile) {
+        const instructionText = document.getElementById('instruction-text');
         window.currentUser = user;
         const loggedOutGroup = document.getElementById('logged-out-controls');
         const loggedInGroup = document.getElementById('logged-in-controls');
@@ -516,12 +517,12 @@ title: Character Rework Tool
         if (user) {
             loggedOutGroup.style.display = 'none';
             loggedInGroup.style.display = 'flex';
-            if(instructionText) instructionText.style.display = 'none';
+            if (instructionText) instructionText.style.display = 'none';
             if(window.fetchReworks) window.fetchReworks();
         } else {
             loggedOutGroup.style.display = 'flex';
             loggedInGroup.style.display = 'none';
-            if(instructionText) instructionText.style.display = 'block';
+            if (instructionText) instructionText.style.display = 'block';
         }
     }
 
