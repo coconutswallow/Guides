@@ -545,6 +545,10 @@ title: Character Rework Tool
 
     // --- TAB LOGIC ---
     window.switchTab = function(tabName) {
+        if (tabName === 'output') {
+            if (!validateFeats()) return; 
+        }
+
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         
@@ -555,6 +559,28 @@ title: Character Rework Tool
         if (tabName === 'output') {
             generateOutput();
         }
+    }
+    function validateFeats() {
+        // Select all text inputs specifically inside feat cards
+        const inputs = document.querySelectorAll('.feat-card .text-input');
+        
+        for(const input of inputs) {
+            if(!input.value.trim()) {
+                alert("Feat names cannot be blank! Please check your entries.");
+                
+                // Visual cues
+                input.focus();
+                input.style.borderColor = "#e74c3c"; // Highlight red
+                
+                // Remove highlight when user starts typing
+                input.addEventListener('input', function(){ 
+                    this.style.borderColor = ''; 
+                }, {once: true});
+                
+                return false; // Stop the tab switch
+            }
+        }
+        return true; // Allow the tab switch
     }
 
     window.copyOutput = function() {
