@@ -5,6 +5,8 @@ import { supabase } from './supabaseClient.js';
 
 // Server ID
 const REQUIRED_GUILD_ID = '308324031478890497'; 
+// How often to re-verify Discord status (e.g., 10 minutes)
+const SYNC_COOLDOWN = 1000 * 60 * 10; 
 
 class AuthManager {
     constructor() {
@@ -46,8 +48,19 @@ class AuthManager {
         }
 
         const discordToken = session.provider_token;
+        const userId = session.user.id;
+        
+        // --- NEW LOGIC: Check Cooldown ---
+        const syncKey = `auth_last_sync_${userId}`;
+        const lastSyncTime = localStorage.getItem(syncKey);
+        const now = Date.now();
+        
+        // We sync if there is no record, OR if the cooldown has passed
+        const shouldSync = !lastSyncTime || (now - parseInt(lastSyncTime) > SYNC_COOLDOWN);
 
-        if (discordToken) {
+        if (discordToken && shouldSync) {
+            console.log("🔄 Verifying Discord Membership & Syncing...");
+
             // Check Membership
             const isMember = await this.checkGuildMembership(discordToken);
             
@@ -62,7 +75,12 @@ class AuthManager {
             const memberData = await this.fetchGuildMember(discordToken);
             if (memberData) {
                 await this.syncUserToDB(session.user, memberData);
+                // Update the timestamp so we don't do this again for 10 mins
+                localStorage.setItem(syncKey, now.toString());
             }
+        } else {
+            // If we are here, we are skipping the expensive checks
+            // console.log("✅ Using cached session (skipping Discord sync)");
         }
         
         this.finalizeLogin(session, callback);
@@ -78,14 +96,12 @@ class AuthManager {
             // Handle Rate Limits (429) gracefully
             if (response.status === 429) {
                 console.warn("Rate limited by Discord. Retrying allowed for safety.");
-                // We assume true temporarily to avoid kicking them out just because of a rate limit
-                // Ideally you would wait and retry, but this prevents the crash.
                 return true; 
             }
 
             const guilds = await response.json();
             
-            // Safety check - Ensure 'guilds' is actually an array before using .some()
+            // Safety check
             if (!Array.isArray(guilds)) {
                 console.error("Discord returned unexpected data:", guilds);
                 return false; 
@@ -110,10 +126,7 @@ class AuthManager {
     }
 
     async syncUserToDB(user, member) {
-        // console.log("--- SYNCING VIA SECURE FUNCTION ---");
-        
         try {
-            // We call the RPC function we just created
             const { error } = await this.client.rpc('link_discord_account', {
                 arg_discord_id: user.user_metadata.provider_id,
                 arg_display_name: member.nick || user.user_metadata.full_name,
@@ -152,6 +165,10 @@ class AuthManager {
     }
 
     async logout() {
+        // Clear the sync timestamp so next login forces a fresh check
+        if (this.user) {
+            localStorage.removeItem(`auth_last_sync_${this.user.id}`);
+        }
         await this.client.auth.signOut();
         window.location.reload();
     }
