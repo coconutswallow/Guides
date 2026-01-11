@@ -69,7 +69,9 @@ title: Character Rework Tool
                         <div class="input-group">
                             <label class="input-label">Base Attributes (27 Point Buy)</label>
                             <div id="attrs-container-original"></div>
-                            <div class="points-display" id="points-original">Points Remaining: 27</div>
+                            <div id="points-original" style="font-size: 0.85em; text-align: right; margin-top: 4px; font-weight: bold; color: #2ecc71;">
+                                27 / 27 Pts
+                            </div>
                         </div>
                         <div class="input-group">
                             <label class="input-label">Race/Species</label>
@@ -117,7 +119,9 @@ title: Character Rework Tool
                                     type="button" class="copy-link" onclick="window.copyAttributes()">Copy</button>
                             </div>
                             <div id="attrs-container-new"></div>
-                            <div class="points-display" id="points-new">Points Remaining: 27</div>
+                            <div id="points-new" style="font-size: 0.85em; text-align: right; margin-top: 4px; font-weight: bold; color: #2ecc71;">
+                                27 / 27 Pts
+                            </div>
                         </div>
                         <div class="input-group">
                             <div class="field-header-row"><label class="input-label">Race/Species</label><button
@@ -588,15 +592,63 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
     };
 
     window.renderBaseAttributes = function (colId) {
-        const c = document.getElementById(`attrs-container-${colId}`);
-        c.innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><input type="number" class="attr-input-cell" id="attr-${colId}-${a}" value="10" min="8" max="15" oninput="window.calculatePointBuy('${colId}')"></td>`).join('')}</tr></tbody></table>`;
+        const container = document.getElementById(`attrs-container-${colId}`);
+        
+        // Helper to generate options 8-15 with cost in text
+        const generateOptions = (selectedValue) => {
+            let optionsHtml = '';
+            for (let i = 8; i <= 15; i++) {
+                const cost = POINT_COSTS[i];
+                const isSelected = i === selectedValue ? 'selected' : '';
+                optionsHtml += `<option value="${i}" ${isSelected}>${i} (${cost})</option>`;
+            }
+            return optionsHtml;
+        };
+
+        container.innerHTML = `
+        <table class="stat-table">
+            <thead>
+                <tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+                <tr>
+                    ${ATTRIBUTES.map(a => `
+                        <td>
+                            <select id="attr-${colId}-${a}" class="text-input" 
+                                style="width: 100%; padding: 4px; text-align: center;" 
+                                onchange="window.calculatePointBuy('${colId}')">
+                                ${generateOptions(10)}
+                            </select>
+                        </td>
+                    `).join('')}
+                </tr>
+            </tbody>
+        </table>`;
+        
+        // Run calculation immediately
         window.calculatePointBuy(colId);
     };
 
     window.calculatePointBuy = function (colId) {
-        let spent = 0; ATTRIBUTES.forEach(a => spent += POINT_COSTS[document.getElementById(`attr-${colId}-${a}`).value] || 0);
-        const rem = 27 - spent; const d = document.getElementById(`points-${colId}`);
-        d.innerText = `Points Remaining: ${rem}`; d.style.color = rem < 0 ? '#e74c3c' : '#2ecc71';
+        let spent = 0;
+        ATTRIBUTES.forEach(a => {
+            // We use .value just like before, but now it comes from a select
+            const val = parseInt(document.getElementById(`attr-${colId}-${a}`).value);
+            spent += POINT_COSTS[val] || 0;
+        });
+
+        const remaining = 27 - spent;
+        const display = document.getElementById(`points-${colId}`);
+        
+        display.innerText = `${remaining} / 27 Pts`;
+
+        if (remaining < 0) {
+            display.style.color = '#e74c3c'; // Red
+        } else if (remaining === 0) {
+            display.style.color = '#2ecc71'; // Green
+        } else {
+            display.style.color = '#f39c12'; // Orange
+        }
     };
 
     // UTILITIES
