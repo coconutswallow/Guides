@@ -42,7 +42,7 @@ title: Character Rework Tool
 
             <div id="auth-error-msg" class="control-group" style="display:none; color: #e74c3c; font-weight: bold; align-items: center;">
                 <svg style="width:20px; height:20px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                <span>Authorization Failed: "Staff" role required to Save/Load.</span>
+                <span>Authorization Failed: "Adventurer" role required to Save/Load.</span>
             </div>
         </div>
 
@@ -187,7 +187,7 @@ title: Character Rework Tool
     window.currentUser = null;
     
     // Configuration: The role required to see the Save/Load buttons
-    const REQUIRED_ROLE = "Staff"; 
+    const REQUIRED_ROLE = "Adventurer"; 
 
     // This function is called by auth-header.html when auth state changes
     window.handlePageAuth = function(user, profile) {
