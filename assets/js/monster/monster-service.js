@@ -45,7 +45,7 @@ export async function getMonsterBySlug(slug) {
     // 3. Fetch Creator Name
     if (monster.creator_discord_id) {
         const { data: user } = await supabase
-            .from('discord_users')
+            .from('member_directory')
             .select('display_name')
             .eq('discord_id', monster.creator_discord_id)
             .single();
