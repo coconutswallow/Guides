@@ -43,8 +43,14 @@ title: Character Rework Tool
                 </select>
             </div>
 
-            <div id="auth-error-msg" class="control-group" style="display:none; color: #e74c3c;">
-                <span>"Super Access" role required to Save/Load.</span>
+            <div id="auth-error-msg" class="control-group" style="display:none; align-items: center; gap: 10px;">
+                <span style="color: #e74c3c;">"Adventurer" role required to Save/Load.</span>
+                
+                <button class="button" 
+                        style="background-color: #666; font-size: 0.8em; padding: 4px 10px;" 
+                        onclick="window.authManager.logout()">
+                    Log Out
+                </button>
             </div>
         </div>
 
