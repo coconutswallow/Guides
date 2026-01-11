@@ -293,6 +293,7 @@ title: Character Rework Tool
             feats.push({ 
                 name: c.querySelector('.text-input').value, 
                 mods: mods, 
+                // Using 'source' to match generateOutput's expectations
                 source: c.querySelector('.card-title').innerText.split(' - ')[0],
                 lvl: c.querySelector('.card-title').innerText.match(/Lvl (\d+)/)?.[1] || ""
             });
@@ -323,9 +324,10 @@ title: Character Rework Tool
             }
             c.feats.forEach(f => {
                 let m = []; ATTRIBUTES.forEach(a => { if(f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
+                
                 // Match the feat to its source class to get the subclass for output
-                const sourceClassData = c.classes.find(cl => cl.class === f.sourceClass);
-                const cleanClassName = clean(f.sourceClass);
+                const sourceClassData = c.classes.find(cl => cl.class === f.source);
+                const cleanClassName = clean(f.source);
                 const cleanSubName = sourceClassData ? clean(sourceClassData.subclass) : "";
                 const subPart = (cleanSubName && cleanSubName !== 'None') ? ` ${cleanSubName}` : "";
                 
