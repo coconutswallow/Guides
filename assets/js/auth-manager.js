@@ -7,6 +7,8 @@ const MAX_SESSION_AGE = 24 * 60 * 60 * 1000;
 /**
  * Manages Supabase authentication state and handles synchronization 
  * between the local session and the Discord database records.
+ * 
+ * Documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/17
  */
 class AuthManager {
     constructor() {
