@@ -44,7 +44,7 @@ title: Character Rework Tool
             </div>
 
             <div id="auth-error-msg" class="control-group" style="display:none; align-items: center; gap: 10px;">
-                <span style="color: #e74c3c;">"Adventurer" role required to Save/Load.</span>
+                <span style="color: #e74c3c;">"Super Access" role required to Save/Load.</span>
                 
                 <button class="button" 
                         style="background-color: #666; font-size: 0.8em; padding: 4px 10px;" 
@@ -209,7 +209,7 @@ title: Character Rework Tool
         if (instructionText) instructionText.style.display = 'none';
 
         const roles = profile?.roles || [];
-        const hasAccess = roles.includes('Adventurer');
+        const hasAccess = roles.includes('Super Access');
 
         if (hasAccess) {
             // SUCCESS: Show controls and fetch data
