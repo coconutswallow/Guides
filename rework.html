@@ -43,8 +43,8 @@ title: Character Rework Tool
                 </select>
             </div>
 
-            <div id="auth-error-msg" class="control-group" style="display:none; color: #e74c3c;">
-                <span>"Adventurer" role required to Save/Load.</span>
+            <div id="auth-error-msg" class="control-group" style="display:none; align-items: center; gap: 10px;">
+                <span style="color: #e74c3c; font-weight: bold;"></span>
             </div>
         </div>
 
@@ -174,22 +174,27 @@ title: Character Rework Tool
 </div>
 
 <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
-<script>
+
+<script type="module">
+    // Import the guard
+    import { checkAccess } from "{{ '/assets/js/auth-guard.js' | relative_url }}";
+
     // Visibility toggle for Auth instructions
-    // Visibility toggle for Auth instructions
-    window.handlePageAuth = function (user, profile) {
+    // Made ASYNC to handle database checks
+    window.handlePageAuth = async function (user) {
         window.currentUser = user;
 
         const instructionText = document.getElementById('instruction-text');
         const loggedOutGroup = document.getElementById('logged-out-controls');
         const loggedInGroup = document.getElementById('logged-in-controls');
-        // We no longer need the auth-error-msg div
+        const authErrorGroup = document.getElementById('auth-error-msg');
 
         // 1. Reset UI
         if (loggedOutGroup) loggedOutGroup.style.display = 'none';
         if (loggedInGroup) loggedInGroup.style.display = 'none';
+        if (authErrorGroup) authErrorGroup.style.display = 'none';
         
-        // Reset Header Status (requires the update to auth-header.html)
+        // Reset Header Status
         if (window.setAuthStatus) window.setAuthStatus('normal');
 
         // 2. Handle Logged Out
@@ -202,23 +207,24 @@ title: Character Rework Tool
         // 3. Handle Logged In
         if (instructionText) instructionText.style.display = 'none';
 
-        const roles = profile?.roles || [];
-        const hasAccess = roles.includes('Adventurer');
+        // 4. CHECK PERMISSIONS using AuthGuard
+        // rework.html requires 'Adventurer'
+        const hasAccess = await checkAccess(user.id, 'Adventurer');
 
         if (hasAccess) {
             // SUCCESS: Show controls and fetch data
             if (loggedInGroup) loggedInGroup.style.display = 'flex';
             if (window.fetchReworks) window.fetchReworks();
         } else {
-            // FAILURE: Do NOT hide the header. 
-            // Instead, signal the header to look "Restricted"
+            // FAILURE: Show error message
+            if (authErrorGroup) {
+                authErrorGroup.style.display = 'flex';
+                authErrorGroup.querySelector('span').innerText = 
+                    "Access Denied: You need the 'Adventurer' role to Save/Load.";
+            }
             if (window.setAuthStatus) window.setAuthStatus('denied');
-            
-            // Optional: You can alert the user once if you prefer
-            // alert("Access Denied: 'Adventurer' role required.");
         }
     };
-
 </script>
 
 <script type="module">
