@@ -1,6 +1,8 @@
 import { supabase } from './supabaseClient.js';
 
-const REQUIRED_GUILD_ID = '308324031478890497'; 
+const REQUIRED_GUILD_ID = '308324031478890497';
+// 24 Hours in milliseconds
+const MAX_SESSION_AGE = 24 * 60 * 60 * 1000; 
 
 class AuthManager {
     constructor() {
@@ -8,56 +10,80 @@ class AuthManager {
         this.user = null;
     }
 
-    // 1. INIT: Start listening for session changes
     init(onUserReady) {
         this.client.auth.getSession().then(({ data }) => {
             this.handleSession(data.session, onUserReady);
         });
 
         this.client.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_OUT') {
-                this.handleSession(session, onUserReady);
-            }
+            this.handleSession(session, onUserReady);
         });
     }
 
-    // 2. SESSION HANDLER: The Gatekeeper
     async handleSession(session, callback) {
         if (!session) {
             this.user = null;
-            if (callback) callback(null); // Logged Out
+            if (callback) callback(null);
             return;
         }
 
-        // --- THE SYNC BARRIER ---
-        // We do not release the user to the page until we verify/sync them.
-        try {
-            await this.syncDiscordToDB(session);
-            // If sync succeeds, the DB is fresh. We are ready.
+        // 1. Check the DB for 'last_seen'
+        const isFresh = await this.checkSessionFreshness(session.user.id);
+
+        if (isFresh) {
+            // DB is fresh (sync happened < 24h ago). We are good.
             this.user = session.user;
             if (callback) callback(this.user);
-        } catch (error) {
-            console.error("Auth Error:", error.message);
-            // If sync fails (e.g., they left the Discord server), 
-            // we force them out so they can't access ANY page.
-            await this.logout(); 
+        } else {
+            // DB is stale. We must Sync.
+            console.log("Auth: Session stale or missing. Syncing...");
+            try {
+                await this.syncDiscordToDB(session);
+                this.user = session.user;
+                if (callback) callback(this.user);
+            } catch (error) {
+                console.error("Auth: Sync failed.", error);
+                await this.logout();
+            }
         }
     }
 
-    // 3. SYNC: The Background Worker
+    /**
+     * Returns TRUE if last_seen is < 24 hours ago.
+     * Returns FALSE if data is missing or old.
+     */
+    async checkSessionFreshness(userId) {
+        try {
+            const { data, error } = await this.client
+                .from('discord_users')
+                .select('last_seen')
+                .eq('user_id', userId)
+                .single();
+
+            if (error || !data || !data.last_seen) return false;
+
+            const lastSeenDate = new Date(data.last_seen);
+            const now = new Date();
+            const ageInMs = now - lastSeenDate;
+
+            return ageInMs < MAX_SESSION_AGE;
+        } catch (e) {
+            return false; // Fail safe: assume stale
+        }
+    }
+
     async syncDiscordToDB(session) {
         const token = session.provider_token;
         if (!token) throw new Error("No token found");
 
-        // A. Verify Membership
         const isMember = await this.checkGuildMembership(token);
         if (!isMember) throw new Error("User not in required Discord Guild");
 
-        // B. Fetch Latest Roles from Discord
         const member = await this.fetchGuildMember(token);
         if (!member) throw new Error("Could not fetch Discord member data");
 
-        // C. Update Database (Wait for this to finish!)
+        // The RPC function typically handles updating 'last_seen' to NOW()
+        // Ensure your Postgres function 'link_discord_account' does this!
         const { error } = await this.client.rpc('link_discord_account', {
             arg_discord_id: session.user.user_metadata.provider_id,
             arg_display_name: member.nick || session.user.user_metadata.full_name,
@@ -67,7 +93,7 @@ class AuthManager {
         if (error) throw error;
     }
 
-    // --- UTILITIES ---
+    // ... (rest of methods: login, logout, etc. remain the same) ...
     async login() {
         const cleanUrl = window.location.origin + window.location.pathname;
         await this.client.auth.signInWithOAuth({
@@ -77,15 +103,13 @@ class AuthManager {
     }
 
     async logout() {
-        window.localStorage.clear(); // Safety clear
-        window.sessionStorage.clear();
         await this.client.auth.signOut();
         window.location.reload();
     }
-
-    // --- API CALLS ---
+    
     async checkGuildMembership(token) {
-        try {
+        // ... (same as before)
+         try {
             const r = await fetch('https://discord.com/api/users/@me/guilds', {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -96,6 +120,7 @@ class AuthManager {
     }
 
     async fetchGuildMember(token) {
+        // ... (same as before)
         try {
             const r = await fetch(`https://discord.com/api/users/@me/guilds/${REQUIRED_GUILD_ID}/member`, {
                 headers: { Authorization: `Bearer ${token}` }
