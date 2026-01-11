@@ -242,12 +242,20 @@ class AuthManager {
     }
 
     async logout() {
-        // Clear the sync timestamp so next login forces a fresh check
-        if (this.user) {
-            localStorage.removeItem(`auth_last_sync_${this.user.id}`);
+        try {
+            // Clear the sync timestamp so next login forces a fresh check
+            if (this.user) {
+                localStorage.removeItem(`auth_last_sync_${this.user.id}`);
+            }
+            // Attempt to sign out on the server
+            await this.client.auth.signOut();
+        } catch (e) {
+            console.warn("Server sign-out failed, forcing local logout:", e);
+        } finally {
+            // ALWAYS reload, even if the server errors out
+            // This ensures the user is never "stuck"
+            window.location.reload();
         }
-        await this.client.auth.signOut();
-        window.location.reload();
     }
 }
 

@@ -181,5 +181,22 @@
     } else {
         initAuth();
     }
+    window.setAuthStatus = (status) => {
+        const profile = document.getElementById('user-profile');
+        const nameDisplay = document.getElementById('user-name');
+        
+        if (!profile || !nameDisplay) return;
+
+        if (status === 'denied') {
+            // Visual cues for Access Denied
+            profile.style.borderColor = '#e74c3c';
+            profile.style.backgroundColor = '#fdedec';
+            nameDisplay.innerHTML += ' <span style="color:#c0392b; font-size:0.8em;">(Restricted)</span>';
+        } else {
+            // Reset to default
+            profile.style.borderColor = 'var(--color-border, #D4C4B0)';
+            profile.style.backgroundColor = 'var(--color-bg-light, #FDF1DC)';
+        }
+    };
 })();
 </script>

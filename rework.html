@@ -176,37 +176,46 @@ title: Character Rework Tool
 <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
 <script>
     // Visibility toggle for Auth instructions
+    // Visibility toggle for Auth instructions
     window.handlePageAuth = function (user, profile) {
         window.currentUser = user;
 
         const instructionText = document.getElementById('instruction-text');
         const loggedOutGroup = document.getElementById('logged-out-controls');
         const loggedInGroup = document.getElementById('logged-in-controls');
-        const authErrorGroup = document.getElementById('auth-error-msg');
+        // We no longer need the auth-error-msg div
 
-        // Reset everything first (important)
+        // 1. Reset UI
         if (loggedOutGroup) loggedOutGroup.style.display = 'none';
         if (loggedInGroup) loggedInGroup.style.display = 'none';
-        if (authErrorGroup) authErrorGroup.style.display = 'none';
+        
+        // Reset Header Status (requires the update to auth-header.html)
+        if (window.setAuthStatus) window.setAuthStatus('normal');
 
+        // 2. Handle Logged Out
         if (!user) {
-            // Logged out state
             if (instructionText) instructionText.style.display = 'block';
             if (loggedOutGroup) loggedOutGroup.style.display = 'flex';
             return;
         }
 
-        // Logged in
+        // 3. Handle Logged In
         if (instructionText) instructionText.style.display = 'none';
 
         const roles = profile?.roles || [];
         const hasAccess = roles.includes('Adventurer');
 
         if (hasAccess) {
+            // SUCCESS: Show controls and fetch data
             if (loggedInGroup) loggedInGroup.style.display = 'flex';
             if (window.fetchReworks) window.fetchReworks();
         } else {
-            if (authErrorGroup) authErrorGroup.style.display = 'flex';
+            // FAILURE: Do NOT hide the header. 
+            // Instead, signal the header to look "Restricted"
+            if (window.setAuthStatus) window.setAuthStatus('denied');
+            
+            // Optional: You can alert the user once if you prefer
+            // alert("Access Denied: 'Adventurer' role required.");
         }
     };
 
