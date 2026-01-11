@@ -7,7 +7,7 @@ title: Character Rework Tool
 
 <div class="page">
     <h1>Character Rework Tool</h1>
-    
+
     {% include auth-header.html %}
     <p id="instruction-text" class="auth-instruction">Please log in to Save/Load WIP Reworks.</p>
 
@@ -19,22 +19,25 @@ title: Character Rework Tool
     </div>
 
     <div id="tab-input" class="tab-content active">
-        
+
         <div class="control-bar" id="controls-area">
             <div id="logged-out-controls" class="control-group" style="display:none; align-items:center; gap: 10px;">
-               <button id="custom-login-btn" class="auth-btn auth-btn-discord" onclick="window.authManager.login()">
-    <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true">
-        <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-    </svg>
-    Login
-</button>
-               <span style="font-size:0.9em; margin-left:10px;"> or type your Discord ID if you do not want to login (save/load feature disabled): </span>
-               <input type="text" id="manual-discord-id" class="text-input" style="width: 150px;" placeholder="Discord ID">
+                <button id="custom-login-btn" class="auth-btn auth-btn-discord" onclick="window.authManager.login()">
+                    <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true">
+                        <path fill="currentColor"
+                            d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z" />
+                    </svg>
+                    Login
+                </button>
+                <span style="font-size:0.9em; margin-left:10px;"> or type your Discord ID if you do not want to login
+                    (save/load feature disabled): </span>
+                <input type="text" id="manual-discord-id" class="text-input" style="width: 150px;"
+                    placeholder="Discord ID">
             </div>
 
             <div id="logged-in-controls" class="control-group" style="display:none;">
-                <button class="action-btn btn-save" onclick="window.saveRework()">Save</button>
-                <button class="action-btn btn-load" onclick="window.loadSelectedRework()">Load</button>
+                <button class="button action-btn btn-save" onclick="window.saveRework()">Save</button>
+                <button class="button action-btn btn-load" onclick="window.loadSelectedRework()">Load</button>
                 <select id="load-rework-select" class="load-select">
                     <option value="">-- Load Saved Rework --</option>
                 </select>
@@ -77,7 +80,8 @@ title: Character Rework Tool
                         <div class="input-group">
                             <label class="input-label">Origin Feat</label>
                             <input type="text" class="text-input" id="orig-feat-original" placeholder="Feat Name">
-                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label" style="font-size:0.8em">Origin Feat Modifiers</label></div>
+                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                    style="font-size:0.8em">Origin Feat Modifiers</label></div>
                             <div id="origin-mod-container-original"></div>
                         </div>
                     </div>
@@ -85,7 +89,8 @@ title: Character Rework Tool
                 <div class="card">
                     <h3 class="card-title">Classes</h3>
                     <div id="classes-container-original"></div>
-                    <button type="button" class="button button-secondary" onclick="window.addClassRow('original')">+ Add Class</button>
+                    <button type="button" class="button button-secondary" onclick="window.addClassRow('original')">+ Add
+                        Class</button>
                 </div>
                 <div id="feats-container-original"></div>
             </div>
@@ -96,30 +101,45 @@ title: Character Rework Tool
                     <h3 class="card-title">Character Origin</h3>
                     <div class="origin-grid">
                         <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Character Name</label><button type="button" class="copy-link" onclick="window.copyValue('name-original', 'name-new')">Copy</button></div>
+                            <div class="field-header-row"><label class="input-label">Character Name</label><button
+                                    type="button" class="copy-link"
+                                    onclick="window.copyValue('name-original', 'name-new')">Copy</button></div>
                             <input type="text" class="text-input" id="name-new" placeholder="Name">
                         </div>
                         <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Base Attributes</label><button type="button" class="copy-link" onclick="window.copyAttributes()">Copy</button></div>
+                            <div class="field-header-row"><label class="input-label">Base Attributes</label><button
+                                    type="button" class="copy-link" onclick="window.copyAttributes()">Copy</button>
+                            </div>
                             <div id="attrs-container-new"></div>
                             <div class="points-display" id="points-new">Points Remaining: 27</div>
                         </div>
                         <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Race/Species</label><button type="button" class="copy-link" onclick="window.copyValue('race-original', 'race-new')">Copy</button></div>
+                            <div class="field-header-row"><label class="input-label">Race/Species</label><button
+                                    type="button" class="copy-link"
+                                    onclick="window.copyValue('race-original', 'race-new')">Copy</button></div>
                             <input type="text" class="text-input" id="race-new" placeholder="Race/Species Details">
                         </div>
                         <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Racial Bonuses</label><button type="button" class="copy-link" onclick="window.copyMods('race')">Copy</button></div>
+                            <div class="field-header-row"><label class="input-label">Racial Bonuses</label><button
+                                    type="button" class="copy-link" onclick="window.copyMods('race')">Copy</button>
+                            </div>
                             <div id="race-mod-container-new"></div>
                         </div>
                         <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Origin (Background)</label><button type="button" class="copy-link" onclick="window.copyValue('bg-original', 'bg-new')">Copy</button></div>
+                            <div class="field-header-row"><label class="input-label">Origin (Background)</label><button
+                                    type="button" class="copy-link"
+                                    onclick="window.copyValue('bg-original', 'bg-new')">Copy</button></div>
                             <input type="text" class="text-input" id="bg-new" placeholder="e.g. Acolyte">
                         </div>
                         <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Origin Feat</label><button type="button" class="copy-link" onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy</button></div>
+                            <div class="field-header-row"><label class="input-label">Origin Feat</label><button
+                                    type="button" class="copy-link"
+                                    onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy</button>
+                            </div>
                             <input type="text" class="text-input" id="orig-feat-new" placeholder="Feat Name">
-                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label" style="font-size:0.8em">Origin Feat Modifiers</label><button type="button" class="copy-link" onclick="window.copyMods('origin')">Copy</button></div>
+                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                    style="font-size:0.8em">Origin Feat Modifiers</label><button type="button"
+                                    class="copy-link" onclick="window.copyMods('origin')">Copy</button></div>
                             <div id="origin-mod-container-new"></div>
                         </div>
                     </div>
@@ -127,7 +147,8 @@ title: Character Rework Tool
                 <div class="card">
                     <h3 class="card-title">Classes</h3>
                     <div id="classes-container-new"></div>
-                    <button type="button" class="button button-secondary" onclick="window.addClassRow('new')">+ Add Class</button>
+                    <button type="button" class="button button-secondary" onclick="window.addClassRow('new')">+ Add
+                        Class</button>
                 </div>
                 <div id="feats-container-new"></div>
             </div>
@@ -136,54 +157,58 @@ title: Character Rework Tool
         <div class="card" style="margin-top: 2rem;">
             <h3 class="card-title">Rework Details</h3>
             <input type="text" id="rework-cost" class="text-input" placeholder="GP/DTP Costs">
-            <textarea id="rework-notes" class="notes-area" style="min-height:100px;" placeholder="Notes for auditors"></textarea>
+            <textarea id="rework-notes" class="notes-area" style="min-height:100px;"
+                placeholder="Notes for auditors"></textarea>
         </div>
     </div>
 
     <div id="tab-output" class="tab-content">
         <h2 class="column-header">Rework Request Form</h2>
         <textarea id="output-text" class="output-area" readonly></textarea>
-        <button class="action-btn btn-save" onclick="window.copyOutput()" style="width:100%; margin-bottom: 15px;">Copy to Clipboard</button>
-        <p style="text-align: center; font-size: 0.9em; color: var(--text-muted);">Please copy this statblock to <a href="https://discord.com/channels/308324031478890497/1094052066898518057" target="_blank" style="color: var(--primary-color); font-weight: bold;">#Character-Rework-Log</a></p>
+        <button class="button action-btn btn-save" onclick="window.copyOutput()"
+            style="width:100%; margin-bottom: 15px;">Copy to Clipboard</button>
+        <p style="text-align: center; font-size: 0.9em; color: var(--text-muted);">Please copy this statblock to <a
+                href="https://discord.com/channels/308324031478890497/1094052066898518057" target="_blank"
+                style="color: var(--primary-color); font-weight: bold;">#Character-Rework-Log</a></p>
     </div>
 </div>
 
 <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
 <script>
     // Visibility toggle for Auth instructions
-    window.handlePageAuth = function(user, profile) {
-		window.currentUser = user;
+    window.handlePageAuth = function (user, profile) {
+        window.currentUser = user;
 
-		const instructionText = document.getElementById('instruction-text');
-		const loggedOutGroup = document.getElementById('logged-out-controls');
-		const loggedInGroup = document.getElementById('logged-in-controls');
-		const authErrorGroup = document.getElementById('auth-error-msg');
+        const instructionText = document.getElementById('instruction-text');
+        const loggedOutGroup = document.getElementById('logged-out-controls');
+        const loggedInGroup = document.getElementById('logged-in-controls');
+        const authErrorGroup = document.getElementById('auth-error-msg');
 
-		// Reset everything first (important)
-		if (loggedOutGroup) loggedOutGroup.style.display = 'none';
-		if (loggedInGroup) loggedInGroup.style.display = 'none';
-		if (authErrorGroup) authErrorGroup.style.display = 'none';
+        // Reset everything first (important)
+        if (loggedOutGroup) loggedOutGroup.style.display = 'none';
+        if (loggedInGroup) loggedInGroup.style.display = 'none';
+        if (authErrorGroup) authErrorGroup.style.display = 'none';
 
-		if (!user) {
-			// Logged out state
-			if (instructionText) instructionText.style.display = 'block';
-			if (loggedOutGroup) loggedOutGroup.style.display = 'flex';
-			return;
-		}
+        if (!user) {
+            // Logged out state
+            if (instructionText) instructionText.style.display = 'block';
+            if (loggedOutGroup) loggedOutGroup.style.display = 'flex';
+            return;
+        }
 
-		// Logged in
-		if (instructionText) instructionText.style.display = 'none';
+        // Logged in
+        if (instructionText) instructionText.style.display = 'none';
 
-		const roles = profile?.roles || [];
-		const hasAccess = roles.includes('Adventurer');
+        const roles = profile?.roles || [];
+        const hasAccess = roles.includes('Adventurer');
 
-		if (hasAccess) {
-			if (loggedInGroup) loggedInGroup.style.display = 'flex';
-			if (window.fetchReworks) window.fetchReworks();
-		} else {
-			if (authErrorGroup) authErrorGroup.style.display = 'flex';
-		}
-	};
+        if (hasAccess) {
+            if (loggedInGroup) loggedInGroup.style.display = 'flex';
+            if (window.fetchReworks) window.fetchReworks();
+        } else {
+            if (authErrorGroup) authErrorGroup.style.display = 'flex';
+        }
+    };
 
 </script>
 
@@ -195,7 +220,7 @@ title: Character Rework Tool
     let characterData = [];
 
     // DATABASE CORE FUNCTIONS
-    window.fetchReworks = async function() {
+    window.fetchReworks = async function () {
         if (!window.currentUser) return;
         const select = document.getElementById('load-rework-select');
         try {
@@ -214,25 +239,25 @@ title: Character Rework Tool
         } catch (err) { console.error("Fetch Error:", err); }
     };
 
-    window.saveRework = async function() {
+    window.saveRework = async function () {
         if (!window.currentUser) return alert("Please log in to save.");
         const oldChar = window.scrapeColumn('original');
         const newChar = window.scrapeColumn('new');
         const currentId = document.getElementById('current-rework-id').value;
-        
-        const payload = { 
+
+        const payload = {
             user_id: window.currentUser.id,
             discord_id: window.getCurrentDiscordID(),
-            character_name: oldChar.name || "Unnamed", 
-            old_character: oldChar, 
-            new_character: newChar, 
-            cost: document.getElementById('rework-cost').value, 
-            notes: document.getElementById('rework-notes').value, 
-            updated_at: new Date().toISOString() 
+            character_name: oldChar.name || "Unnamed",
+            old_character: oldChar,
+            new_character: newChar,
+            cost: document.getElementById('rework-cost').value,
+            notes: document.getElementById('rework-notes').value,
+            updated_at: new Date().toISOString()
         };
 
         try {
-            const { data, error } = currentId 
+            const { data, error } = currentId
                 ? await supabase.from('rework').update(payload).eq('id', currentId).select()
                 : await supabase.from('rework').insert([payload]).select();
             if (error) throw error;
@@ -242,17 +267,17 @@ title: Character Rework Tool
         } catch (e) { alert("Save failed: " + e.message); }
     };
 
-    window.loadSelectedRework = async function() {
+    window.loadSelectedRework = async function () {
         const id = document.getElementById('load-rework-select').value;
         if (!id) return alert("Select a rework first.");
         try {
             const { data, error } = await supabase.from('rework').select('*').eq('id', id).single();
             if (error) throw error;
-            
+
             document.getElementById('current-rework-id').value = data.id;
             document.getElementById('rework-cost').value = data.cost || "";
             document.getElementById('rework-notes').value = data.notes || "";
-            
+
             populateColumn('original', data.old_character);
             populateColumn('new', data.new_character);
             alert("Rework Loaded!");
@@ -260,23 +285,23 @@ title: Character Rework Tool
     };
 
     function populateColumn(colId, data) {
-        if(!data) return;
-        const setV = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ""; };
-        
+        if (!data) return;
+        const setV = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ""; };
+
         setV(`name-${colId}`, data.name);
         setV(`race-${colId}`, data.race);
         setV(`bg-${colId}`, data.bg);
         setV(`orig-feat-${colId}`, data.origin_feat);
-        
+
         ATTRIBUTES.forEach(a => setV(`attr-${colId}-${a}`, data.attributes?.[a] || "10"));
-        
+
         document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => s.value = data.race_mods?.[s.dataset.attr] || "0");
         document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => s.value = data.origin_mods?.[s.dataset.attr] || "0");
 
         const container = document.getElementById(`classes-container-${colId}`);
         container.innerHTML = "";
         data.classes?.forEach(c => window.addClassRow(colId, c));
-        
+
         window.generateFeatCards(colId, data.feats);
         window.calculatePointBuy(colId);
     }
@@ -285,12 +310,12 @@ title: Character Rework Tool
     window.scrapeColumn = (colId) => {
         const getV = (id) => document.getElementById(id)?.value || "";
         const attrs = {}; ATTRIBUTES.forEach(a => attrs[a] = getV(`attr-${colId}-${a}`));
-        
-        const rMods = {}; 
+
+        const rMods = {};
         document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => rMods[s.dataset.attr] = s.value);
-        const oMods = {}; 
+        const oMods = {};
         document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => oMods[s.dataset.attr] = s.value);
-        
+
         const classes = [];
         document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
             classes.push({
@@ -303,11 +328,11 @@ title: Character Rework Tool
 
         const feats = [];
         document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
-            const mods = {}; 
+            const mods = {};
             c.querySelectorAll('select').forEach(s => mods[s.dataset.attr] = s.value);
-            feats.push({ 
-                name: c.querySelector('.text-input').value, 
-                mods: mods, 
+            feats.push({
+                name: c.querySelector('.text-input').value,
+                mods: mods,
                 // Using 'source' to match generateOutput's expectations
                 source: c.querySelector('.card-title').innerText.split(' - ')[0],
                 lvl: c.querySelector('.card-title').innerText.match(/Lvl (\d+)/)?.[1] || ""
@@ -328,30 +353,30 @@ title: Character Rework Tool
 
             const bonusLine = [];
             ATTRIBUTES.forEach(a => {
-                const total = (parseInt(c.race_mods[a])||0) + (parseInt(c.origin_mods[a])||0);
-                if(total > 0) bonusLine.push(`+${total} ${a}`);
+                const total = (parseInt(c.race_mods[a]) || 0) + (parseInt(c.origin_mods[a]) || 0);
+                if (total > 0) bonusLine.push(`+${total} ${a}`);
             });
 
             const featChoices = [];
-            if(c.origin_feat) {
-                let m = []; ATTRIBUTES.forEach(a => { if(c.origin_mods[a] != "0") m.push(`+${c.origin_mods[a]} ${a}`); });
+            if (c.origin_feat) {
+                let m = []; ATTRIBUTES.forEach(a => { if (c.origin_mods[a] != "0") m.push(`+${c.origin_mods[a]} ${a}`); });
                 featChoices.push(`${c.origin_feat}${m.length ? ' ' + m.join(", ") : ""} (Background)`);
             }
             c.feats.forEach(f => {
-                let m = []; ATTRIBUTES.forEach(a => { if(f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
-                
+                let m = []; ATTRIBUTES.forEach(a => { if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
+
                 // Match the feat to its source class to get the subclass for output
                 const sourceClassData = c.classes.find(cl => cl.class === f.source);
                 const cleanClassName = clean(f.source);
                 const cleanSubName = sourceClassData ? clean(sourceClassData.subclass) : "";
                 const subPart = (cleanSubName && cleanSubName !== 'None') ? ` ${cleanSubName}` : "";
-                
+
                 featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${cleanClassName}${subPart} (${f.lvl}))`);
             });
 
             return `Name: ${c.name}
 Version: ${c.classes[0]?.version || '2024'}
-Level: ${c.classes.reduce((a,b) => a + (parseInt(b.level)||0), 0)}
+Level: ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}
 Class: ${classLine}
 Race/Species: ${c.race}
 Starting Stats: (excluding Racial/Background Bonuses)
@@ -367,7 +392,7 @@ Background: ${c.bg}`;
         const finalOutput = `\`\`\`
 __***Character Change Request***__
 
-**Requestor:** @${window.getCurrentDiscordID()} as ${oldC.name} (${oldC.classes.reduce((a,b)=>a+(parseInt(b.level)||0),0)})
+**Requestor:** @${window.getCurrentDiscordID()} as ${oldC.name} (${oldC.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)})
 
 **Old Character**
 ${buildB(oldC)}
@@ -384,7 +409,7 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
     };
 
     // UI RENDERERS
-    window.addClassRow = function(colId, init = null) {
+    window.addClassRow = function (colId, init = null) {
         const container = document.getElementById(`classes-container-${colId}`);
         const block = document.createElement('div');
         block.className = 'class-block';
@@ -401,12 +426,12 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
         container.appendChild(block);
 
         const vS = block.querySelector('.version-select'), cS = block.querySelector('.class-select'), sS = block.querySelector('.subclass-select'), lI = block.querySelector('.level-input');
-        
+
         const updC = (val) => {
             cS.innerHTML = '<option value="">Class</option>'; cS.disabled = !vS.value;
             [...new Set(characterData.filter(i => i.version == vS.value).map(i => i.class))].forEach(c => {
                 const opt = document.createElement('option'); opt.value = c; opt.innerText = c;
-                if(c === val) opt.selected = true;
+                if (c === val) opt.selected = true;
                 cS.appendChild(opt);
             });
         };
@@ -414,7 +439,7 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
             sS.innerHTML = '<option value="">Subclass</option>'; sS.disabled = !cS.value;
             characterData.filter(i => i.version == vS.value && i.class == cS.value).forEach(s => {
                 const opt = document.createElement('option'); opt.value = s.subclass; opt.innerText = s.subclass || 'None';
-                if(s.subclass === val) opt.selected = true;
+                if (s.subclass === val) opt.selected = true;
                 sS.appendChild(opt);
             });
         };
@@ -423,10 +448,10 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
         cS.onchange = () => { updS(); window.generateFeatCards(colId); };
         lI.oninput = () => window.generateFeatCards(colId);
 
-        if(init) { vS.value = init.version; updC(init.class); updS(init.subclass); lI.value = init.level; }
+        if (init) { vS.value = init.version; updC(init.class); updS(init.subclass); lI.value = init.level; }
     };
 
-    window.generateFeatCards = function(colId, saved = null) {
+    window.generateFeatCards = function (colId, saved = null) {
         const container = document.getElementById(`feats-container-${colId}`);
         container.innerHTML = ''; let idx = 0;
         document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
@@ -434,9 +459,9 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
             if (!cl) return;
             for (let i = 4; i <= lv; i += 4) {
                 const card = document.createElement('div'); card.className = 'card feat-card';
-                card.innerHTML = `<h3 class="card-title">${cl} - Lvl ${i} ASI/Feat</h3><input type="text" class="text-input" placeholder="Feat Name"><table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a=>`<td><select data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
+                card.innerHTML = `<h3 class="card-title">${cl} - Lvl ${i} ASI/Feat</h3><input type="text" class="text-input" placeholder="Feat Name"><table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><select data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
                 container.appendChild(card);
-                if(saved && saved[idx]) {
+                if (saved && saved[idx]) {
                     card.querySelector('.text-input').value = saved[idx].name || "";
                     ATTRIBUTES.forEach(a => card.querySelector(`select[data-attr="${a}"]`).value = saved[idx].mods?.[a] || "0");
                 }
@@ -445,13 +470,13 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
         });
     };
 
-    window.renderBaseAttributes = function(colId) {
+    window.renderBaseAttributes = function (colId) {
         const c = document.getElementById(`attrs-container-${colId}`);
-        c.innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a=>`<td><input type="number" class="attr-input-cell" id="attr-${colId}-${a}" value="10" min="8" max="15" oninput="window.calculatePointBuy('${colId}')"></td>`).join('')}</tr></tbody></table>`;
+        c.innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><input type="number" class="attr-input-cell" id="attr-${colId}-${a}" value="10" min="8" max="15" oninput="window.calculatePointBuy('${colId}')"></td>`).join('')}</tr></tbody></table>`;
         window.calculatePointBuy(colId);
     };
 
-    window.calculatePointBuy = function(colId) {
+    window.calculatePointBuy = function (colId) {
         let spent = 0; ATTRIBUTES.forEach(a => spent += POINT_COSTS[document.getElementById(`attr-${colId}-${a}`).value] || 0);
         const rem = 27 - spent; const d = document.getElementById(`points-${colId}`);
         d.innerText = `Points Remaining: ${rem}`; d.style.color = rem < 0 ? '#e74c3c' : '#2ecc71';
@@ -461,13 +486,13 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
     window.getCurrentDiscordID = () => window.currentUser?.user_metadata.full_name || document.getElementById('manual-discord-id').value;
     window.copyValue = (s, t) => { document.getElementById(t).value = document.getElementById(s).value; };
     window.copyAttributes = () => { ATTRIBUTES.forEach(a => document.getElementById(`attr-new-${a}`).value = document.getElementById(`attr-original-${a}`).value); window.calculatePointBuy('new'); };
-    window.copyMods = (type) => { ATTRIBUTES.forEach(a => { const s = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${a}"]`), t = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${a}"]`); if(s && t) t.value = s.value; }); };
-    
+    window.copyMods = (type) => { ATTRIBUTES.forEach(a => { const s = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${a}"]`), t = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${a}"]`); if (s && t) t.value = s.value; }); };
+
     window.switchTab = (t) => {
         document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
         document.querySelector(`[onclick*="'${t}'"]`)?.classList.add('active');
         document.getElementById(`tab-${t}`).classList.add('active');
-        if(t === 'output') window.generateOutput();
+        if (t === 'output') window.generateOutput();
     };
 
     window.copyOutput = () => { const el = document.getElementById('output-text'); el.select(); document.execCommand('copy'); alert("Copied to Clipboard!"); };
@@ -478,12 +503,12 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
             characterData = data?.data || [];
             ['original', 'new'].forEach(col => {
                 window.renderBaseAttributes(col);
-                document.getElementById(`race-mod-container-${col}`).innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a=>`<td><select class="mod-select-race" data-col="${col}" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
-                document.getElementById(`origin-mod-container-${col}`).innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a=>`<td><select class="mod-select-origin" data-col="${col}" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
+                document.getElementById(`race-mod-container-${col}`).innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><select class="mod-select-race" data-col="${col}" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
+                document.getElementById(`origin-mod-container-${col}`).innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><select class="mod-select-origin" data-col="${col}" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
                 window.addClassRow(col);
             });
-        } catch(e) { console.error("App Init Error:", e); }
+        } catch (e) { console.error("App Init Error:", e); }
     }
-    
+
     startApp();
 </script>
