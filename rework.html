@@ -146,6 +146,7 @@ title: Character Rework Tool
 <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
 
 <script>
+    // AUTH VISIBILITY HANDLER
     window.handlePageAuth = function(user, profile) {
         window.currentUser = user;
         const instructionText = document.getElementById('instruction-text');
@@ -178,7 +179,7 @@ title: Character Rework Tool
     const POINT_COSTS = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 };
     let characterData = [];
 
-    // DATABASE SYNC
+    // DATABASE LOAD/SAVE
     window.fetchReworks = async function() {
         if (!window.currentUser) return;
         const select = document.getElementById('load-rework-select');
@@ -224,7 +225,55 @@ title: Character Rework Tool
         } catch (e) { alert("Save failed."); }
     };
 
-    // LOGIC & STATBLOCK GENERATION
+    window.loadSelectedRework = async function() {
+        const id = document.getElementById('load-rework-select').value;
+        if (!id) return alert("Please select a rework to load.");
+        try {
+            const { data, error } = await supabase.from('rework').select('*').eq('id', id).single();
+            if (error) throw error;
+            
+            document.getElementById('current-rework-id').value = data.id;
+            document.getElementById('rework-cost').value = data.cost || "";
+            document.getElementById('rework-notes').value = data.notes || "";
+            
+            populateColumn('original', data.old_character);
+            populateColumn('new', data.new_character);
+            alert("Rework loaded!");
+        } catch (err) { alert("Load failed."); }
+    };
+
+    function populateColumn(colId, data) {
+        if(!data) return;
+        const setVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
+        
+        setVal(`name-${colId}`, data.name);
+        setVal(`race-${colId}`, data.race);
+        setVal(`bg-${colId}`, data.bg);
+        setVal(`orig-feat-${colId}`, data.origin_feat);
+        
+        if(data.attributes) {
+            ATTRIBUTES.forEach(a => setVal(`attr-${colId}-${a}`, data.attributes[a]));
+        }
+        
+        // Populate Mods
+        document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => {
+            s.value = data.race_mods?.[s.dataset.attr] || "0";
+        });
+        document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => {
+            s.value = data.origin_mods?.[s.dataset.attr] || "0";
+        });
+
+        // Rebuild Classes
+        const container = document.getElementById(`classes-container-${colId}`);
+        container.innerHTML = "";
+        if(data.classes) data.classes.forEach(c => window.addClassRow(colId, c));
+
+        // Feats need a delay or manual trigger because cards depend on classes
+        window.generateFeatCards(colId, data.feats);
+        window.calculatePointBuy(colId);
+    }
+
+    // FORM SCRAPING & STATBLOCK GENERATION
     window.scrapeColumn = (colId) => {
         const getVal = (id) => document.getElementById(id)?.value || "";
         const attrs = {}; ATTRIBUTES.forEach(a => attrs[a] = getVal(`attr-${colId}-${a}`));
@@ -244,15 +293,12 @@ title: Character Rework Tool
 
         const feats = [];
         document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
-            const mods = [];
-            c.querySelectorAll('select').forEach(s => { if(s.value != "0") mods.push(`+${s.value} ${s.dataset.attr}`); });
-            const title = c.querySelector('.card-title').innerText.split(' - ')[0];
-            // Regex to clean bracketed text from Class name in feat source
-            const cleanTitle = title.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+            const mods = {};
+            c.querySelectorAll('select').forEach(s => { mods[s.dataset.attr] = s.value; });
             feats.push({ 
                 name: c.querySelector('.text-input').value, 
-                mods: mods.join(", "), 
-                source: cleanTitle + " " + c.querySelector('.card-title').innerText.split('Lvl ')[1]
+                mods: mods, 
+                source: c.querySelector('.card-title').innerText.split(' - ')[0] 
             });
         });
 
@@ -266,8 +312,6 @@ title: Character Rework Tool
 
         const buildBlock = (c) => {
             const totalLvl = c.classes.reduce((acc, curr) => acc + (parseInt(curr.level) || 0), 0);
-            
-            // Format class string and strip bracketed version/source info
             const classStr = c.classes.map(cl => {
                 const cleanCl = cl.class.replace(/\s*\(.*?\)\s*/g, ' ').trim();
                 const cleanSub = (cl.subclass || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
@@ -287,7 +331,10 @@ title: Character Rework Tool
                 let oMods = []; ATTRIBUTES.forEach(a => { if(c.origin_mods[a] != "0") oMods.push(`+${c.origin_mods[a]} ${a}`); });
                 featChoices.push(`${c.origin_feat}${oMods.length ? ' ' + oMods.join(", ") : ""} (Background)`);
             }
-            c.feats.forEach(f => featChoices.push(`${f.name} ${f.mods} (${f.source})`));
+            c.feats.forEach(f => {
+                let fMods = []; ATTRIBUTES.forEach(a => { if(f.mods[a] != "0") fMods.push(`+${f.mods[a]} ${a}`); });
+                featChoices.push(`${f.name}${fMods.length ? ' ' + fMods.join(", ") : ""} (${f.source})`);
+            });
 
             return `Name: ${c.name}\nVersion: ${c.classes[0]?.version || '2024'}\nLevel: ${totalLvl}\nClass: ${classStr}\nRace/Species: ${c.race}\nStarting Stats: (excluding Racial/Background Bonuses)\nStr / Dex / Con / Int / Wis / Cha\n${statStr}\nRacial/Background stat bonuses: ${bonuses.join(', ') || 'None'}\nASI/Feat/Origin Feat choices: ${featChoices.join(', ')}\nBackground: ${c.bg}`;
         };
@@ -312,7 +359,74 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
         document.getElementById('output-text').value = finalOutput;
     };
 
-    // UI RENDERERS
+    // UI RENDERERS & BUILDERS
+    window.addClassRow = function(colId, initialData = null) {
+        const container = document.getElementById(`classes-container-${colId}`);
+        const block = document.createElement('div');
+        block.className = 'class-block';
+        block.innerHTML = `<div class="class-row"><select class="version-select"><option value="">Ver</option><option value="2014">2014</option><option value="2024">2024</option></select><select class="class-select" disabled><option value="">Class</option></select><select class="subclass-select" disabled><option value="">Subclass</option></select></div><div class="class-row-bottom"><div class="level-wrapper">Lvl:<input type="number" class="level-input" value="1" min="1" max="20"></div><button type="button" class="remove-class-btn" onclick="this.closest('.class-block').remove(); window.generateFeatCards('${colId}')">&times;</button></div>`;
+        container.appendChild(block);
+        
+        const vSel = block.querySelector('.version-select'), cSel = block.querySelector('.class-select'), sSel = block.querySelector('.subclass-select'), lInp = block.querySelector('.level-input');
+        
+        const updateClasses = (val) => {
+            cSel.innerHTML = '<option value="">Class</option>'; cSel.disabled = !vSel.value;
+            [...new Set(characterData.filter(i => i.version == vSel.value).map(i => i.class))].forEach(c => {
+                const opt = document.createElement('option'); opt.value = c; opt.innerText = c;
+                if(c === val) opt.selected = true;
+                cSel.appendChild(opt);
+            });
+        };
+
+        const updateSubs = (val) => {
+            sSel.innerHTML = '<option value="">Subclass</option>'; sSel.disabled = !cSel.value;
+            characterData.filter(i => i.version == vSel.value && i.class == cSel.value).forEach(s => {
+                const opt = document.createElement('option'); opt.value = s.subclass; opt.innerText = s.subclass || 'None';
+                if(s.subclass === val) opt.selected = true;
+                sSel.appendChild(opt);
+            });
+        };
+
+        vSel.onchange = () => { updateClasses(); window.generateFeatCards(colId); };
+        cSel.onchange = () => { updateSubs(); window.generateFeatCards(colId); };
+        lInp.oninput = () => window.generateFeatCards(colId);
+
+        if(initialData) {
+            vSel.value = initialData.version;
+            updateClasses(initialData.class);
+            updateSubs(initialData.subclass);
+            lInp.value = initialData.level;
+        }
+    };
+
+    window.generateFeatCards = function(colId, savedFeats = null) {
+        const container = document.getElementById(`feats-container-${colId}`);
+        container.innerHTML = '';
+        let featIdx = 0;
+        document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach((b, blockIdx) => {
+            const cl = b.querySelector('.class-select').value, lv = parseInt(b.querySelector('.level-input').value) || 0;
+            if (!cl) return;
+            
+            // Note: Simplistic ASI logic (every 4 levels) - adjust if your lookups table has specific levels
+            for (let i = 4; i <= lv; i += 4) {
+                const card = document.createElement('div');
+                card.className = 'card feat-card';
+                card.innerHTML = `<h3 class="card-title">${cl} - Lvl ${i} ASI/Feat</h3><input type="text" class="text-input" placeholder="Feat Name">${createStatTableHTML('feat', colId, `feat-${colId}-${blockIdx}-${i}`)}`;
+                container.appendChild(card);
+                
+                if(savedFeats && savedFeats[featIdx]) {
+                    const sf = savedFeats[featIdx];
+                    card.querySelector('.text-input').value = sf.name || "";
+                    ATTRIBUTES.forEach(a => {
+                        const sel = card.querySelector(`select[data-attr="${a}"]`);
+                        if(sel) sel.value = sf.mods?.[a] || "0";
+                    });
+                }
+                featIdx++;
+            }
+        });
+    };
+
     window.renderBaseAttributes = function(colId) {
         const container = document.getElementById(`attrs-container-${colId}`);
         let h = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>`;
@@ -330,40 +444,27 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
         display.style.color = remaining < 0 ? '#e74c3c' : '#2ecc71';
     };
 
-    window.addClassRow = function(colId) {
-        const container = document.getElementById(`classes-container-${colId}`);
-        const block = document.createElement('div');
-        block.className = 'class-block';
-        block.innerHTML = `<div class="class-row"><select class="version-select"><option value="">Ver</option><option value="2014">2014</option><option value="2024">2024</option></select><select class="class-select" disabled><option value="">Class</option></select><select class="subclass-select" disabled><option value="">Subclass</option></select></div><div class="class-row-bottom"><div class="level-wrapper">Lvl:<input type="number" class="level-input" value="1" min="1" max="20"></div><button type="button" class="remove-class-btn" onclick="this.closest('.class-block').remove(); window.generateFeatCards('${colId}')">&times;</button></div>`;
-        container.appendChild(block);
-        const vSel = block.querySelector('.version-select'), cSel = block.querySelector('.class-select'), sSel = block.querySelector('.subclass-select'), lInp = block.querySelector('.level-input');
-        vSel.onchange = () => {
-            cSel.innerHTML = '<option value="">Class</option>'; cSel.disabled = !vSel.value;
-            [...new Set(characterData.filter(i => i.version == vSel.value).map(i => i.class))].forEach(c => cSel.innerHTML += `<option value="${c}">${c}</option>`);
-            window.generateFeatCards(colId);
-        };
-        cSel.onchange = () => {
-            sSel.innerHTML = '<option value="">Subclass</option>'; sSel.disabled = !cSel.value;
-            characterData.filter(i => i.version == vSel.value && i.class == cSel.value).forEach(s => sSel.innerHTML += `<option value="${s.subclass}">${s.subclass || 'None'}</option>`);
-            window.generateFeatCards(colId);
-        };
-        lInp.oninput = () => window.generateFeatCards(colId);
+    function createStatTableHTML(type, colId, ctx) {
+        let h = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>`;
+        ATTRIBUTES.forEach(a => h += `<td><select class="mod-select-${type}" data-col="${colId}" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`);
+        return h + `</tr></tbody></table>`;
+    }
+
+    // UTILITIES
+    window.getCurrentDiscordID = () => window.currentUser?.user_metadata.full_name || document.getElementById('manual-discord-id').value;
+    window.copyValue = (src, tgt) => document.getElementById(tgt).value = document.getElementById(src).value;
+    window.copyAttributes = () => { ATTRIBUTES.forEach(a => document.getElementById(`attr-new-${a}`).value = document.getElementById(`attr-original-${a}`).value); window.calculatePointBuy('new'); };
+    window.copyMods = (type) => { ATTRIBUTES.forEach(a => { const s = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${a}"]`), t = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${a}"]`); if(s && t) t.value = s.value; }); };
+    
+    window.switchTab = (t) => {
+        document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
+        const btn = document.querySelector(`[onclick*="'${t}'"]`);
+        if(btn) btn.classList.add('active');
+        document.getElementById(`tab-${t}`).classList.add('active');
+        if(t === 'output') window.generateOutput();
     };
 
-    window.generateFeatCards = function(colId) {
-        const container = document.getElementById(`feats-container-${colId}`);
-        container.innerHTML = '';
-        document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach((b, idx) => {
-            const cl = b.querySelector('.class-select').value, lv = parseInt(b.querySelector('.level-input').value) || 0;
-            if (!cl) return;
-            for (let i = 4; i <= lv; i += 4) {
-                const card = document.createElement('div');
-                card.className = 'card feat-card';
-                card.innerHTML = `<h3 class="card-title">${cl} - Lvl ${i} ASI/Feat</h3><input type="text" class="text-input" placeholder="Feat Name">${createStatTableHTML('feat', colId, `feat-${colId}-${idx}-${i}`)}`;
-                container.appendChild(card);
-            }
-        });
-    };
+    window.copyOutput = () => { const el = document.getElementById('output-text'); el.select(); document.execCommand('copy'); alert("Copied!"); };
 
     async function startApp() {
         try {
@@ -377,26 +478,6 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
             });
         } catch(e) { console.error(e); }
     }
-
-    function createStatTableHTML(type, colId, ctx) {
-        let h = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>`;
-        ATTRIBUTES.forEach(a => h += `<td><select class="mod-select-${type}" data-col="${colId}" data-attr="${a}" onchange="window.validateBlock('${ctx}')"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`);
-        return h + `</tr></tbody></table>`;
-    }
-
-    window.getCurrentDiscordID = () => window.currentUser?.user_metadata.full_name || document.getElementById('manual-discord-id').value;
-    window.copyValue = (src, tgt) => document.getElementById(tgt).value = document.getElementById(src).value;
-    window.copyAttributes = () => { ATTRIBUTES.forEach(a => document.getElementById(`attr-new-${a}`).value = document.getElementById(`attr-original-${a}`).value); window.calculatePointBuy('new'); };
-    window.copyMods = (type) => { ATTRIBUTES.forEach(a => { const s = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${a}"]`), t = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${a}"]`); if(s && t) t.value = s.value; }); };
-    
-    window.switchTab = (t) => {
-        document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelector(`[onclick*="'${t}'"]`).classList.add('active');
-        document.getElementById(`tab-${t}`).classList.add('active');
-        if(t === 'output') window.generateOutput();
-    };
-
-    window.copyOutput = () => { const el = document.getElementById('output-text'); el.select(); document.execCommand('copy'); alert("Copied!"); };
 
     startApp();
 </script>
