@@ -178,7 +178,7 @@ title: Character Rework Tool
     const POINT_COSTS = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 };
     let characterData = [];
 
-    // DATA FETCHING & SYNC
+    // DATABASE SYNC
     window.fetchReworks = async function() {
         if (!window.currentUser) return;
         const select = document.getElementById('load-rework-select');
@@ -224,26 +224,95 @@ title: Character Rework Tool
         } catch (e) { alert("Save failed."); }
     };
 
-    // UI LOGIC (RECOPIED FOR COMPLETENESS)
-    async function startApp() {
-        try {
-            const { data } = await supabase.from('lookups').select('data').eq('type', 'character').single();
-            characterData = data?.data || [];
-            ['original', 'new'].forEach(col => {
-                window.renderBaseAttributes(col);
-                document.getElementById(`race-mod-container-${col}`).innerHTML = createStatTableHTML('race', col, `race-${col}`);
-                document.getElementById(`origin-mod-container-${col}`).innerHTML = createStatTableHTML('origin', col, `origin-${col}`);
-                window.addClassRow(col);
+    // LOGIC & STATBLOCK GENERATION
+    window.scrapeColumn = (colId) => {
+        const getVal = (id) => document.getElementById(id)?.value || "";
+        const attrs = {}; ATTRIBUTES.forEach(a => attrs[a] = getVal(`attr-${colId}-${a}`));
+        
+        const rMods = {}; document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => rMods[s.dataset.attr] = s.value);
+        const oMods = {}; document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => oMods[s.dataset.attr] = s.value);
+        
+        const classes = [];
+        document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
+            classes.push({
+                version: b.querySelector('.version-select').value,
+                class: b.querySelector('.class-select').value,
+                subclass: b.querySelector('.subclass-select').value,
+                level: b.querySelector('.level-input').value
             });
-        } catch(e) { console.error(e); }
-    }
+        });
 
-    function createStatTableHTML(type, colId, ctx) {
-        let h = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>`;
-        ATTRIBUTES.forEach(a => h += `<td><select class="mod-select-${type}" data-col="${colId}" data-attr="${a}" onchange="window.validateBlock('${ctx}')"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`);
-        return h + `</tr></tbody></table>`;
-    }
+        const feats = [];
+        document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
+            const mods = [];
+            c.querySelectorAll('select').forEach(s => { if(s.value != "0") mods.push(`+${s.value} ${s.dataset.attr}`); });
+            const title = c.querySelector('.card-title').innerText.split(' - ')[0];
+            // Regex to clean bracketed text from Class name in feat source
+            const cleanTitle = title.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+            feats.push({ 
+                name: c.querySelector('.text-input').value, 
+                mods: mods.join(", "), 
+                source: cleanTitle + " " + c.querySelector('.card-title').innerText.split('Lvl ')[1]
+            });
+        });
 
+        return { name: getVal(`name-${colId}`), race: getVal(`race-${colId}`), bg: getVal(`bg-${colId}`), origin_feat: getVal(`orig-feat-${colId}`), attributes: attrs, race_mods: rMods, origin_mods: oMods, classes, feats };
+    };
+
+    window.generateOutput = () => {
+        const discordId = window.getCurrentDiscordID();
+        const oldC = window.scrapeColumn('original');
+        const newC = window.scrapeColumn('new');
+
+        const buildBlock = (c) => {
+            const totalLvl = c.classes.reduce((acc, curr) => acc + (parseInt(curr.level) || 0), 0);
+            
+            // Format class string and strip bracketed version/source info
+            const classStr = c.classes.map(cl => {
+                const cleanCl = cl.class.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+                const cleanSub = (cl.subclass || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
+                return `${cleanCl}${cleanSub && cleanSub !== 'None' ? ' ' + cleanSub : ''} (${cl.level})`;
+            }).join(' / ');
+
+            const statStr = ATTRIBUTES.map(a => c.attributes[a]).join(' / ');
+            
+            let bonuses = [];
+            ATTRIBUTES.forEach(a => {
+                const total = (parseInt(c.race_mods[a]) || 0) + (parseInt(c.origin_mods[a]) || 0);
+                if(total > 0) bonuses.push(`+${total} ${a}`);
+            });
+
+            let featChoices = [];
+            if(c.origin_feat) {
+                let oMods = []; ATTRIBUTES.forEach(a => { if(c.origin_mods[a] != "0") oMods.push(`+${c.origin_mods[a]} ${a}`); });
+                featChoices.push(`${c.origin_feat}${oMods.length ? ' ' + oMods.join(", ") : ""} (Background)`);
+            }
+            c.feats.forEach(f => featChoices.push(`${f.name} ${f.mods} (${f.source})`));
+
+            return `Name: ${c.name}\nVersion: ${c.classes[0]?.version || '2024'}\nLevel: ${totalLvl}\nClass: ${classStr}\nRace/Species: ${c.race}\nStarting Stats: (excluding Racial/Background Bonuses)\nStr / Dex / Con / Int / Wis / Cha\n${statStr}\nRacial/Background stat bonuses: ${bonuses.join(', ') || 'None'}\nASI/Feat/Origin Feat choices: ${featChoices.join(', ')}\nBackground: ${c.bg}`;
+        };
+
+        const finalOutput = `\`\`\`
+__***Character Change Request***__
+
+**Requestor:** @${discordId} as ${oldC.name} (${oldC.classes.reduce((a,b)=>a+(parseInt(b.level)||0),0)})
+
+**Old Character**
+${buildBlock(oldC)}
+
+**New Character**
+${buildBlock(newC)}
+
+**Notes**
+Cost: ${document.getElementById('rework-cost').value || 'None'}
+Notes: ${document.getElementById('rework-notes').value || 'None'}
+\`\`\`
+<@&474659626193780751> <@&554463237924716545>`;
+
+        document.getElementById('output-text').value = finalOutput;
+    };
+
+    // UI RENDERERS
     window.renderBaseAttributes = function(colId) {
         const container = document.getElementById(`attrs-container-${colId}`);
         let h = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>`;
@@ -254,9 +323,7 @@ title: Character Rework Tool
 
     window.calculatePointBuy = function(colId) {
         let spent = 0;
-        ATTRIBUTES.forEach(a => {
-            spent += POINT_COSTS[document.getElementById(`attr-${colId}-${a}`).value] || 0;
-        });
+        ATTRIBUTES.forEach(a => { spent += POINT_COSTS[document.getElementById(`attr-${colId}-${a}`).value] || 0; });
         const remaining = 27 - spent;
         const display = document.getElementById(`points-${colId}`);
         display.innerText = `Points Remaining: ${remaining}`;
@@ -298,28 +365,35 @@ title: Character Rework Tool
         });
     };
 
+    async function startApp() {
+        try {
+            const { data } = await supabase.from('lookups').select('data').eq('type', 'character').single();
+            characterData = data?.data || [];
+            ['original', 'new'].forEach(col => {
+                window.renderBaseAttributes(col);
+                document.getElementById(`race-mod-container-${col}`).innerHTML = createStatTableHTML('race', col, `race-${col}`);
+                document.getElementById(`origin-mod-container-${col}`).innerHTML = createStatTableHTML('origin', col, `origin-${col}`);
+                window.addClassRow(col);
+            });
+        } catch(e) { console.error(e); }
+    }
+
+    function createStatTableHTML(type, colId, ctx) {
+        let h = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody><tr>`;
+        ATTRIBUTES.forEach(a => h += `<td><select class="mod-select-${type}" data-col="${colId}" data-attr="${a}" onchange="window.validateBlock('${ctx}')"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`);
+        return h + `</tr></tbody></table>`;
+    }
+
     window.getCurrentDiscordID = () => window.currentUser?.user_metadata.full_name || document.getElementById('manual-discord-id').value;
     window.copyValue = (src, tgt) => document.getElementById(tgt).value = document.getElementById(src).value;
     window.copyAttributes = () => { ATTRIBUTES.forEach(a => document.getElementById(`attr-new-${a}`).value = document.getElementById(`attr-original-${a}`).value); window.calculatePointBuy('new'); };
     window.copyMods = (type) => { ATTRIBUTES.forEach(a => { const s = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${a}"]`), t = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${a}"]`); if(s && t) t.value = s.value; }); };
     
-    window.scrapeColumn = (colId) => {
-        const attrs = {}; ATTRIBUTES.forEach(a => attrs[a] = document.getElementById(`attr-${colId}-${a}`).value);
-        const rMods = {}; document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => rMods[s.dataset.attr] = s.value);
-        const oMods = {}; document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => oMods[s.dataset.attr] = s.value);
-        return { name: document.getElementById(`name-${colId}`).value, attributes: attrs, race: document.getElementById(`race-${colId}`).value, race_mods: rMods, bg: document.getElementById(`bg-${colId}`).value, origin_feat: document.getElementById(`orig-feat-${colId}`).value, origin_mods: oMods };
-    };
-
     window.switchTab = (t) => {
         document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelector(`[onclick="window.switchTab('${t}')"]`).classList.add('active');
+        document.querySelector(`[onclick*="'${t}'"]`).classList.add('active');
         document.getElementById(`tab-${t}`).classList.add('active');
         if(t === 'output') window.generateOutput();
-    };
-
-    window.generateOutput = () => {
-        const id = window.getCurrentDiscordID();
-        document.getElementById('output-text').value = `Character Change Request for @${id}... (Formatted Markdown Output Generates Here)`;
     };
 
     window.copyOutput = () => { const el = document.getElementById('output-text'); el.select(); document.execCommand('copy'); alert("Copied!"); };
