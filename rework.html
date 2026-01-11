@@ -147,26 +147,34 @@ title: Character Rework Tool
 <script>
     // Logic for UI visibility based on Auth roles
     window.handlePageAuth = function(user, profile) {
-        window.currentUser = user;
-        const REQUIRED_ROLE = "Adventurer";
-        const loggedOutGroup = document.getElementById('logged-out-controls');
-        const loggedInGroup = document.getElementById('logged-in-controls');
-        const authErrorGroup = document.getElementById('auth-error-msg');
+    window.currentUser = user;
+    const REQUIRED_ROLE = "Adventurer";
+    const instructionText = document.getElementById('instruction-text'); // Targeted here
+    const loggedOutGroup = document.getElementById('logged-out-controls');
+    const loggedInGroup = document.getElementById('logged-in-controls');
+    const authErrorGroup = document.getElementById('auth-error-msg');
+    
+    // Reset displays
+    if (instructionText) instructionText.style.display = 'block'; 
+    loggedOutGroup.style.display = 'none';
+    loggedInGroup.style.display = 'none';
+    authErrorGroup.style.display = 'none';
+
+    if (user) {
+        // HIDE the login instruction immediately if user exists
+        if (instructionText) instructionText.style.display = 'none'; 
         
-        if (user) {
-            const hasAccess = (profile?.roles || []).includes(REQUIRED_ROLE);
-            loggedOutGroup.style.display = 'none';
-            if (hasAccess) {
-                loggedInGroup.style.display = 'flex';
-                if(window.fetchReworks) window.fetchReworks();
-            } else {
-                authErrorGroup.style.display = 'flex';
-            }
+        const hasAccess = (profile?.roles || []).includes(REQUIRED_ROLE);
+        if (hasAccess) {
+            loggedInGroup.style.display = 'flex';
+            if(window.fetchReworks) window.fetchReworks();
         } else {
-            loggedOutGroup.style.display = 'flex';
-            loggedInGroup.style.display = 'none';
+            authErrorGroup.style.display = 'flex';
         }
-    };
+    } else {
+        loggedOutGroup.style.display = 'flex';
+    }
+};
 </script>
 
 <script type="module">
@@ -393,20 +401,28 @@ Notes: ${notes}
 
     // --- DATABASE / SAVE / LOAD ---
     window.fetchReworks = async function() {
-        const discordId = window.getCurrentDiscordID();
-        if (!discordId) return;
-        const select = document.getElementById('load-rework-select');
-        try {
-            const { data, error } = await supabase.from('rework').select('id, character_name, updated_at').eq('discord_id', discordId).order('updated_at', { ascending: false });
-            if (error) throw error;
-            select.innerHTML = '<option value="">-- Load Saved Rework --</option>';
-            data.forEach(row => {
-                const opt = document.createElement('option');
-                opt.value = row.id; opt.innerText = `${row.character_name || "Unnamed"} (${new Date(row.updated_at).toLocaleDateString()})`;
-                select.appendChild(opt);
-            });
-        } catch (err) { console.error(err); }
-    }
+    // Fetch based on the authenticated UUID, not the Discord Name
+    if (!window.currentUser) return;
+    const select = document.getElementById('load-rework-select');
+    
+    try {
+        const { data, error } = await supabase
+            .from('rework')
+            .select('id, character_name, updated_at')
+            .eq('user_id', window.currentUser.id) // Use UUID
+            .order('updated_at', { ascending: false });
+
+        if (error) throw error;
+        
+        select.innerHTML = '<option value="">-- Load Saved Rework --</option>';
+        data.forEach(row => {
+            const opt = document.createElement('option');
+            opt.value = row.id;
+            opt.innerText = `${row.character_name || "Unnamed"} (${new Date(row.updated_at).toLocaleDateString()})`;
+            select.appendChild(opt);
+        });
+    } catch (err) { console.error("Fetch Error:", err); }
+};
 
     window.loadSelectedRework = async function() {
         const id = document.getElementById('load-rework-select').value;
@@ -441,28 +457,45 @@ Notes: ${notes}
     }
 
     window.saveRework = async function() {
-        const discordId = window.getCurrentDiscordID();
-        if (!discordId) return alert("Discord ID required.");
-        const oldChar = scrapeColumn('original');
-        const newChar = scrapeColumn('new');
-        const currentId = document.getElementById('current-rework-id').value;
-        const payload = { 
-            discord_id: discordId, character_name: oldChar.name || "Unnamed", 
-            old_character: oldChar, new_character: newChar, 
-            cost: document.getElementById('rework-cost').value, 
-            notes: document.getElementById('rework-notes').value, 
-            updated_at: new Date().toISOString() 
-        };
-        try {
-            const { data, error } = currentId 
-                ? await supabase.from('rework').update(payload).eq('id', currentId)
-                : await supabase.from('rework').insert([payload]).select();
-            if (error) throw error;
-            if (!currentId && data) document.getElementById('current-rework-id').value = data[0].id;
-            alert("Saved!");
-            window.fetchReworks();
-        } catch (e) { alert("Save failed."); }
+    if (!window.currentUser) return alert("Discord ID required.");
+    
+    const oldChar = scrapeColumn('original');
+    const newChar = scrapeColumn('new');
+    const currentId = document.getElementById('current-rework-id').value;
+    
+    const payload = { 
+        user_id: window.currentUser.id, // Primary Key for security
+        discord_id: window.getCurrentDiscordID(), // Still save name for admin view
+        character_name: oldChar.name || "Unnamed", 
+        old_character: oldChar, 
+        new_character: newChar, 
+        cost: document.getElementById('rework-cost').value, 
+        notes: document.getElementById('rework-notes').value, 
+        updated_at: new Date().toISOString() 
+    };
+
+    try {
+        let result;
+        if (currentId) {
+            result = await supabase.from('rework').update(payload).eq('id', currentId);
+        } else {
+            result = await supabase.from('rework').insert([payload]).select();
+        }
+
+        if (result.error) throw result.error;
+        
+        // If it's a new record, store the ID so further saves "Update" instead of "Insert"
+        if (!currentId && result.data) {
+            document.getElementById('current-rework-id').value = result.data[0].id;
+        }
+        
+        alert("Saved!");
+        window.fetchReworks();
+    } catch (e) { 
+        console.error(e);
+        alert("Save failed."); 
     }
+};
 
     // --- UI GENERATORS ---
     window.addClassRow = function(colId, initialData = null) {
