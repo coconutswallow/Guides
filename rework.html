@@ -303,12 +303,10 @@ title: Character Rework Tool
 
     window.generateOutput = () => {
         const buildB = (c) => {
-            // ONLY remove brackets for the output statblock
-            const cleanStr = (s) => (s || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
-            
+            const clean = (s) => (s || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
             const classLine = c.classes.map(cl => {
-                const name = cleanStr(cl.class);
-                const sub = cleanStr(cl.subclass);
+                const name = clean(cl.class);
+                const sub = clean(cl.subclass);
                 return `${name}${sub && sub !== 'None' ? ' ' + sub : ''} (${cl.level})`;
             }).join(' / ');
 
@@ -325,7 +323,13 @@ title: Character Rework Tool
             }
             c.feats.forEach(f => {
                 let m = []; ATTRIBUTES.forEach(a => { if(f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
-                featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${cleanStr(f.source)} (${f.lvl}))`);
+                // Match the feat to its source class to get the subclass for output
+                const sourceClassData = c.classes.find(cl => cl.class === f.sourceClass);
+                const cleanClassName = clean(f.sourceClass);
+                const cleanSubName = sourceClassData ? clean(sourceClassData.subclass) : "";
+                const subPart = (cleanSubName && cleanSubName !== 'None') ? ` ${cleanSubName}` : "";
+                
+                featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${cleanClassName}${subPart} (${f.lvl}))`);
             });
 
             return `Name: ${c.name}
@@ -343,7 +347,6 @@ Background: ${c.bg}`;
 
         const oldC = window.scrapeColumn('original');
         const newC = window.scrapeColumn('new');
-        
         const finalOutput = `\`\`\`
 __***Character Change Request***__
 
@@ -360,7 +363,6 @@ Cost: ${document.getElementById('rework-cost').value || 'None'}
 Notes: ${document.getElementById('rework-notes').value || 'None'}
 \`\`\`
 <@&474659626193780751> <@&554463237924716545>`;
-
         document.getElementById('output-text').value = finalOutput;
     };
 
