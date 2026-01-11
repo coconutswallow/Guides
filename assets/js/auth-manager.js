@@ -4,12 +4,22 @@ const REQUIRED_GUILD_ID = '308324031478890497';
 // 24 Hours in milliseconds
 const MAX_SESSION_AGE = 24 * 60 * 60 * 1000; 
 
+/**
+ * Manages Supabase authentication state and handles synchronization 
+ * between the local session and the Discord database records.
+ */
 class AuthManager {
     constructor() {
         this.client = supabase;
         this.user = null;
     }
 
+    /**
+     * Initializes the auth listener.
+     * Checks for an existing session immediately, then listens for changes.
+     * * @param {Function} onUserReady - Callback function executed when the user state is resolved. 
+     * Receives the `user` object or `null`.
+     */
     init(onUserReady) {
         this.client.auth.getSession().then(({ data }) => {
             this.handleSession(data.session, onUserReady);
@@ -20,6 +30,12 @@ class AuthManager {
         });
     }
 
+    /**
+     * Internal handler to validate session freshness.
+     * If the session is stale (db 'last_seen' > 24h), it triggers a sync.
+     * * @param {Object|null} session - The Supabase session object.
+     * @param {Function} callback - The UI update callback.
+     */
     async handleSession(session, callback) {
         if (!session) {
             this.user = null;
@@ -49,8 +65,9 @@ class AuthManager {
     }
 
     /**
-     * Returns TRUE if last_seen is < 24 hours ago.
-     * Returns FALSE if data is missing or old.
+     * Verifies if the user's data in the `discord_users` table is recent.
+     * * @param {string} userId - The Supabase User UUID.
+     * @returns {Promise<boolean>} TRUE if last_seen is < 24 hours ago, FALSE otherwise.
      */
     async checkSessionFreshness(userId) {
         try {
@@ -72,6 +89,12 @@ class AuthManager {
         }
     }
 
+    /**
+     * Synchronizes Discord profile data (Roles, Nickname) to the Supabase DB.
+     * Required if the local database record is stale or missing.
+     * * @param {Object} session - The active Supabase session containing the provider token.
+     * @throws {Error} If token is missing, user is not in the guild, or RPC fails.
+     */
     async syncDiscordToDB(session) {
         const token = session.provider_token;
         if (!token) throw new Error("No token found");
@@ -93,7 +116,10 @@ class AuthManager {
         if (error) throw error;
     }
 
-    // ... (rest of methods: login, logout, etc. remain the same) ...
+    /**
+     * Triggers the OAuth sign-in flow with Discord.
+     * Redirects the user back to the current page origin.
+     */
     async login() {
         const cleanUrl = window.location.origin + window.location.pathname;
         await this.client.auth.signInWithOAuth({
@@ -102,13 +128,20 @@ class AuthManager {
         });
     }
 
+    /**
+     * Signs the user out of Supabase and reloads the page.
+     */
     async logout() {
         await this.client.auth.signOut();
         window.location.reload();
     }
     
+    /**
+     * Checks Discord API to see if the user is a member of the required Guild.
+     * * @param {string} token - The Discord Provider Access Token.
+     * @returns {Promise<boolean>}
+     */
     async checkGuildMembership(token) {
-        // ... (same as before)
          try {
             const r = await fetch('https://discord.com/api/users/@me/guilds', {
                 headers: { Authorization: `Bearer ${token}` }
@@ -119,8 +152,12 @@ class AuthManager {
         } catch(e) { return false; }
     }
 
+    /**
+     * Fetches the specific member details (roles, nickname) from the Discord Guild.
+     * * @param {string} token - The Discord Provider Access Token.
+     * @returns {Promise<Object|null>} The Discord Member object or null on failure.
+     */
     async fetchGuildMember(token) {
-        // ... (same as before)
         try {
             const r = await fetch(`https://discord.com/api/users/@me/guilds/${REQUIRED_GUILD_ID}/member`, {
                 headers: { Authorization: `Bearer ${token}` }

@@ -1,6 +1,6 @@
 <div id="auth-component" class="auth-wrapper">
 
-    <span id="auth-loading" class="auth-loading-text">Loading...</span>
+    <span id="auth-loading" class="auth-loading-text" role="status">Loading...</span>
 
     <button id="login-btn" class="auth-btn auth-btn-discord" style="display:none;">
         <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true">
@@ -10,11 +10,14 @@
     </button>
 
     <div id="user-profile" class="auth-profile" style="display:none;">
-        <img id="user-avatar" src="" alt="User" class="auth-avatar" onerror="this.style.display='none'">
+        <img id="user-avatar" src="" alt="User Avatar" class="auth-avatar" 
+             onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTgxODBEIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINGE0IDQgMCAwIDAtNCA0djIiPjwvcGF0aD48Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiPjwvY2lyY2xlPjwvc3ZnPg==';">
+        
         <div class="auth-user-info">
             <span id="user-name" class="auth-name">Adventurer</span>
         </div>
-        <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out">
+        
+        <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out" aria-label="Sign Out">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -26,6 +29,16 @@
 </div>
 
 <style>
+/* THEMING:
+   This component inherits variables from the global scope.
+   Expected variables:
+   --font-header: Main font family
+   --color-text-secondary: Muted text color
+   --color-bg-light: Light background for profile pill
+   --color-border: Border color for profile pill
+   --color-primary: Primary accent color (used for borders/text)
+*/
+
 .auth-wrapper {
     display: flex;
     align-items: center;
@@ -52,7 +65,7 @@
     border-radius: 4px;
     padding: 0.6em 1.2em;
     text-decoration: none;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.1)); /* Added fallback */
 }
 
 .auth-btn-discord {
@@ -94,7 +107,7 @@
     color: var(--color-text, #2c2c2c);
     padding: 6px 12px;
     border-radius: 4px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.1));
 }
 
 .auth-avatar {
@@ -103,6 +116,7 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--color-primary, #58180D);
+    background-color: white; /* Ensures transparent SVGs look okay */
 }
 
 .auth-user-info {
@@ -131,17 +145,21 @@
         logoutBtn: getEl('logout-btn')
     };
 
-    // Updated: Only accepts 'user'. 
-    // We trust Discord (user_metadata) for the name and avatar.
+    /**
+     * Updates the DOM based on the user state.
+     * @param {Object|null} user - The Supabase user object or null.
+     */
     const updateAuthUI = (user) => {
+        if(!ui.loading) return; // Safety check if DOM is missing
+        
         ui.loading.style.display = 'none';
 
         if (!user) {
-            // Logged out
+            // Logged out state
             ui.loginBtn.style.display = 'inline-flex';
             ui.profile.style.display = 'none';
         } else {
-            // Logged in
+            // Logged in state
             ui.loginBtn.style.display = 'none';
             ui.profile.style.display = 'flex';
 
@@ -154,16 +172,25 @@
             }
         }
 
-        // Pass 'user' to the page-specific logic.
-        // The page will now handle all permission checks (e.g. AuthGuard).
+        // Hook for page-specific logic (e.g. AuthGuard)
         if (typeof window.handlePageAuth === 'function') {
             window.handlePageAuth(user);
         }
     };
 
+    // Polling configuration
+    let pollCount = 0;
+    const MAX_POLLS = 50; // 50 * 100ms = 5 seconds max wait time
+
     const initAuth = () => {
         // Wait for authManager to load from the other script
         if (!window.authManager) {
+            pollCount++;
+            if (pollCount > MAX_POLLS) {
+                console.warn("Auth: Failed to load authManager within 5 seconds.");
+                if(ui.loading) ui.loading.textContent = "Auth Error";
+                return;
+            }
             setTimeout(initAuth, 100);
             return;
         }
