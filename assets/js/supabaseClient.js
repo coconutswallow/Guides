@@ -3,7 +3,7 @@
  * Reusable asset for the Supabase connection
  *
  * Note the Supabase key is the anon key ("publishable" key, safe for public view) as long as role-level security is applied in conjuction.
- * 
+ * (i.e. no need for secret keys in client-side code - this key is designed to be public)
  * Location: \assets\js\supabaseClient.js
  */
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
