@@ -143,29 +143,35 @@
     const updateAuthUI = (user, profile) => {
         ui.loading.style.display = 'none';
 
+        // 1. Update Header UI
         if (!user) {
             // Logged out
             ui.loginBtn.style.display = 'inline-flex';
             ui.profile.style.display = 'none';
-            return;
+        } else {
+            // Logged in
+            ui.loginBtn.style.display = 'none';
+            ui.profile.style.display = 'flex';
+
+            ui.name.textContent =
+                profile?.display_name ||
+                user.user_metadata?.full_name ||
+                'User';
+
+            if (user.user_metadata?.avatar_url) {
+                ui.avatar.src = user.user_metadata.avatar_url;
+                ui.avatar.style.display = 'block';
+            }
+
+            const roles = profile?.roles || [];
+            ui.roleBadge.textContent = roles[0] || 'Member';
         }
 
-        // Logged in
-        ui.loginBtn.style.display = 'none';
-        ui.profile.style.display = 'flex';
-
-        ui.name.textContent =
-            profile?.display_name ||
-            user.user_metadata?.full_name ||
-            'User';
-
-        if (user.user_metadata?.avatar_url) {
-            ui.avatar.src = user.user_metadata.avatar_url;
-            ui.avatar.style.display = 'block';
+        // 2. Trigger Page-Specific Logic (The Fix)
+        // This ensures rework.html knows the user state and can show/hide controls
+        if (typeof window.handlePageAuth === 'function') {
+            window.handlePageAuth(user, profile);
         }
-
-        const roles = profile?.roles || [];
-        ui.roleBadge.textContent = roles[0] || 'Member';
     };
 
     const initAuth = () => {
