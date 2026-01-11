@@ -409,6 +409,31 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
     };
 
     // UI RENDERERS
+    // Helper to capture current feat card state
+    window.saveFeatState = function (colId) {
+        const feats = [];
+        document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
+            const mods = {};
+            c.querySelectorAll('select').forEach(s => mods[s.dataset.attr] = s.value);
+            feats.push({
+                name: c.querySelector('.text-input').value,
+                mods: mods
+            });
+        });
+        return feats;
+    };
+
+    window.removeClassRow = function (btn) {
+        const block = btn.closest('.class-block');
+        const container = block.parentElement;
+        // Determine colId from the container's ID (e.g., "classes-container-original")
+        const colId = container.id.replace('classes-container-', '');
+
+        const savedFeats = window.saveFeatState(colId);
+        block.remove();
+        window.generateFeatCards(colId, savedFeats);
+    };
+
     window.addClassRow = function (colId, init = null) {
         const container = document.getElementById(`classes-container-${colId}`);
         const block = document.createElement('div');
@@ -421,7 +446,7 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
             </div>
             <div class="class-row-bottom">
                 <div class="level-wrapper">Lvl:<input type="number" class="level-input" value="1" min="1" max="20"></div>
-                <button type="button" class="remove-class-btn" onclick="this.closest('.class-block').remove(); window.generateFeatCards('${colId}')">&times;</button>
+                <button type="button" class="remove-class-btn" onclick="window.removeClassRow(this)">&times;</button>
             </div>`;
         container.appendChild(block);
 
@@ -444,9 +469,15 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
             });
         };
 
-        vS.onchange = () => { updC(); window.generateFeatCards(colId); };
-        cS.onchange = () => { updS(); window.generateFeatCards(colId); };
-        lI.oninput = () => window.generateFeatCards(colId);
+        // When updating any field, first save the current feat state, then regenerate
+        const updateAndRegen = () => {
+            const savedState = window.saveFeatState(colId);
+            window.generateFeatCards(colId, savedState);
+        };
+
+        vS.onchange = () => { updC(); updateAndRegen(); };
+        cS.onchange = () => { updS(); updateAndRegen(); };
+        lI.oninput = () => updateAndRegen();
 
         if (init) { vS.value = init.version; updC(init.class); updS(init.subclass); lI.value = init.level; }
     };
