@@ -15,11 +15,10 @@
         <img id="user-avatar" src="" alt="User" class="auth-avatar" onerror="this.style.display='none'">
         <div class="auth-user-info">
             <span id="user-name" class="auth-name">Adventurer</span>
-            <span id="user-role-badge" class="auth-role-badge">Member</span>
         </div>
         <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -120,10 +119,6 @@
     color: var(--color-primary, #58180D);
 }
 
-.auth-role-badge {
-    font-size: 0.8em;
-    color: var(--color-text-secondary, #5a5a5a);
-}
 </style>
 
 <script>
@@ -136,7 +131,6 @@
         profile: getEl('user-profile'),
         avatar: getEl('user-avatar'),
         name: getEl('user-name'),
-        roleBadge: getEl('user-role-badge'),
         logoutBtn: getEl('logout-btn')
     };
 
@@ -162,9 +156,6 @@
                 ui.avatar.src = user.user_metadata.avatar_url;
                 ui.avatar.style.display = 'block';
             }
-
-            const roles = profile?.roles || [];
-            ui.roleBadge.textContent = roles[0] || 'Member';
         }
 
         // 2. Trigger Page-Specific Logic (The Fix)
