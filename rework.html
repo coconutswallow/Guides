@@ -35,12 +35,18 @@ title: Character Rework Tool
                     placeholder="Discord ID">
             </div>
 
-            <div id="logged-in-controls" class="control-group" style="display:none;">
-                <button class="button action-btn btn-save" onclick="window.saveRework()">Save</button>
-                <button class="button action-btn btn-load" onclick="window.loadSelectedRework()">Load</button>
-                <select id="load-rework-select" class="load-select">
-                    <option value="">-- Load Saved Rework --</option>
-                </select>
+            <div id="logged-in-controls" class="control-group" style="display:none; flex-direction: column; align-items: flex-start;">
+                <div style="display: flex; gap: 10px; width: 100%; align-items: center;">
+                    <button class="button action-btn btn-save" onclick="window.saveRework()">Save</button>
+                    <button class="button action-btn btn-load" onclick="window.loadSelectedRework()">Load</button>
+                    <button class="button action-btn btn-delete" onclick="window.deleteRework()" style="background-color: #c0392b; color: #fff;">Delete</button>
+                    <select id="load-rework-select" class="load-select" style="flex-grow: 1;">
+                        <option value="">-- Load Saved Rework --</option>
+                    </select>
+                </div>
+                <p style="font-size: 0.85em; color: var(--text-muted, #666); margin: 8px 0 0 0; font-style: italic;">
+                    *Saved reworks are WIP only and are automatically deleted after 3 months. The <a href="https://discord.com/channels/308324031478890497/1094052066898518057" target="_blank">#Character-Rework-Log</a> on Discord is the only master record.
+                </p>
             </div>
 
             <div id="auth-error-msg" class="control-group" style="display:none; align-items: center; gap: 10px;">
@@ -282,6 +288,27 @@ title: Character Rework Tool
         } catch (e) { alert("Save failed: " + e.message); }
     };
 
+    window.deleteRework = async function() {
+        const id = document.getElementById('load-rework-select').value;
+        if (!id) return alert("Please select a rework from the dropdown to delete.");
+        
+        if (!confirm("Are you sure you want to delete this rework? This cannot be undone.")) return;
+
+        try {
+            const { error } = await supabase.from('rework').delete().eq('id', id);
+            if (error) throw error;
+            
+            alert("Rework deleted.");
+            // If the deleted rework was the one currently on screen, clear the ID tracker
+            if (document.getElementById('current-rework-id').value === id) {
+                 document.getElementById('current-rework-id').value = "";
+            }
+            window.fetchReworks(); 
+        } catch (e) {
+            alert("Delete failed: " + e.message);
+        }
+    };
+
     window.loadSelectedRework = async function () {
         const id = document.getElementById('load-rework-select').value;
         if (!id) return alert("Select a rework first.");
@@ -499,20 +526,64 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
 
     window.generateFeatCards = function (colId, saved = null) {
         const container = document.getElementById(`feats-container-${colId}`);
-        container.innerHTML = ''; let idx = 0;
+        container.innerHTML = ''; 
+        let idx = 0;
+
         document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
-            const cl = b.querySelector('.class-select').value, lv = parseInt(b.querySelector('.level-input').value) || 0;
-            if (!cl) return;
-            for (let i = 4; i <= lv; i += 4) {
-                const card = document.createElement('div'); card.className = 'card feat-card';
-                card.innerHTML = `<h3 class="card-title">${cl} - Lvl ${i} ASI/Feat</h3><input type="text" class="text-input" placeholder="Feat Name"><table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><select data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
+            const ver = b.querySelector('.version-select').value;
+            const cls = b.querySelector('.class-select').value;
+            const sub = b.querySelector('.subclass-select').value;
+            const lvl = parseInt(b.querySelector('.level-input').value) || 0;
+
+            if (!cls || !ver) return;
+
+            // 1. Find the matching data object to get the correct ASI array
+            // If subclass is selected, try to match it exactly. 
+            // If not, just find the first entry for that Class+Version (usually ASIs are consistent across subclasses).
+            let dataRow = characterData.find(row => 
+                row.version == ver && 
+                row.class === cls && 
+                row.subclass === sub
+            );
+            
+            if (!dataRow) {
+                dataRow = characterData.find(row => row.version == ver && row.class === cls);
+            }
+
+            // 2. Use the ASI array from data, or default to standard 4,8,12,16,19 if missing
+            const asiLevels = dataRow?.ASI || [4, 8, 12, 16, 19];
+
+            // 3. Generate a card for every ASI level reached
+            asiLevels.forEach(milestone => {
+                if (milestone > lvl) return; // Skip if we haven't reached this level yet
+
+                const card = document.createElement('div'); 
+                card.className = 'card feat-card';
+                card.innerHTML = `
+                    <h3 class="card-title">${cls} - Lvl ${milestone} ASI/Feat</h3>
+                    <input type="text" class="text-input" placeholder="Feat Name">
+                    <table class="stat-table">
+                        <thead>
+                            <tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr>
+                        </thead>
+                        <tbody>
+                            <tr>${ATTRIBUTES.map(a => `<td><select data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}
+                            </tr>
+                        </tbody>
+                    </table>`;
+                
                 container.appendChild(card);
+
+                // Restore saved data if it exists for this index
                 if (saved && saved[idx]) {
                     card.querySelector('.text-input').value = saved[idx].name || "";
-                    ATTRIBUTES.forEach(a => card.querySelector(`select[data-attr="${a}"]`).value = saved[idx].mods?.[a] || "0");
+                    ATTRIBUTES.forEach(a => {
+                        const sel = card.querySelector(`select[data-attr="${a}"]`);
+                        if (sel) sel.value = saved[idx].mods?.[a] || "0";
+                    });
                 }
                 idx++;
-            }
+            });
         });
     };
 
