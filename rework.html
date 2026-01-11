@@ -9,7 +9,10 @@ title: Character Rework Tool
     <h1>Character Rework Tool</h1>
     
     {% include auth-header.html %}
-    
+    <p id="instruction-text" class="auth-instruction">Please log in to Save/Load WIP Reworks.</p>
+
+    <br>
+
     <div class="tab-nav">
         <button class="tab-btn active" onclick="window.switchTab('input')">Input</button>
         <button class="tab-btn" onclick="window.switchTab('output')">Output</button>
@@ -18,15 +21,15 @@ title: Character Rework Tool
     <div id="tab-input" class="tab-content active">
         
         <div class="control-bar" id="controls-area">
-            <div id="logged-out-controls" class="control-group" style="display:none; align-items:center; gap: 10px;">
+            <div id="logged-out-controls" class="control-group" style="display:flex; align-items:center; gap: 10px;">
                <button id="custom-login-btn" class="auth-btn auth-btn-discord" onclick="window.authManager.login()">
                     Login to Save
-               </button>
+                </button>
                <span style="font-size:0.9em; margin-left:10px;"> Or enter Discord ID manually: </span>
                <input type="text" id="manual-discord-id" class="text-input" style="width: 150px;" placeholder="Username">
             </div>
 
-            <div id="logged-in-controls" class="control-group" style="display:none;">
+            <div id="logged-in-controls" class="control-group" style="display:none; gap: 10px;">
                 <button class="action-btn btn-save" onclick="window.saveRework()">Save</button>
                 <button class="action-btn btn-load" onclick="window.loadSelectedRework()">Load</button>
                 <select id="load-rework-select" class="load-select">
@@ -34,8 +37,8 @@ title: Character Rework Tool
                 </select>
             </div>
 
-            <div id="auth-error-msg" class="control-group" style="display:none; color: #e74c3c; font-weight: bold;">
-                <span>"Adventurer" role required to Save/Load.</span>
+            <div id="auth-error-msg" class="control-group auth-error" style="display:none;">
+                <span>Only 'Adventurer' role can Save/Load on this page.</span>
             </div>
         </div>
 
@@ -69,7 +72,7 @@ title: Character Rework Tool
                             <input type="text" class="text-input" id="bg-original" placeholder="e.g. Acolyte">
                         </div>
                         <div class="input-group" id="block-origin-original">
-                            <label class="input-label">Origin Feat Modifiers</label>
+                            <label class="input-label">Origin Feat</label>
                             <input type="text" class="text-input" id="orig-feat-original" placeholder="e.g. Magic Initiate">
                             <div id="origin-mod-container-original" style="margin-top:10px;"></div>
                         </div>
@@ -103,18 +106,49 @@ title: Character Rework Tool
                             <div id="attrs-container-new"></div>
                             <div class="points-display" id="points-new">Points Remaining: 27</div>
                         </div>
-                        <div id="race-mod-container-new"></div>
-                        <div id="classes-container-new"></div>
-                        <div id="feats-container-new"></div>
+                        <div class="input-group">
+                            <div class="field-header-row">
+                                <label class="input-label">Race/Species</label>
+                                <button type="button" class="copy-link" onclick="window.copyValue('race-original', 'race-new')">Copy</button>
+                            </div>
+                            <input type="text" class="text-input" id="race-new" placeholder="e.g. Human, Elf...">
+                        </div>
+                        <div class="input-group" id="block-race-new">
+                            <div class="field-header-row">
+                                <label class="input-label">Racial Bonuses</label>
+                                <button type="button" class="copy-link" onclick="window.copyMods('race')">Copy</button>
+                            </div>
+                            <div id="race-mod-container-new"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="field-header-row">
+                                <label class="input-label">Origin (Background)</label>
+                                <button type="button" class="copy-link" onclick="window.copyValue('bg-original', 'bg-new')">Copy</button>
+                            </div>
+                            <input type="text" class="text-input" id="bg-new" placeholder="e.g. Acolyte">
+                        </div>
+                        <div class="input-group" id="block-origin-new">
+                            <div class="field-header-row">
+                                <label class="input-label">Origin Feat</label>
+                                <button type="button" class="copy-link" onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy</button>
+                            </div>
+                            <input type="text" class="text-input" id="orig-feat-new" placeholder="e.g. Magic Initiate">
+                            <div id="origin-mod-container-new" style="margin-top:10px;"></div>
+                        </div>
                     </div>
                 </div>
-                <button type="button" class="button button-secondary" onclick="window.addClassRow('new')">+ Add Class</button>
+                <div class="card">
+                    <h3 class="card-title">Classes</h3>
+                    <div id="classes-container-new"></div>
+                    <button type="button" class="button button-secondary" onclick="window.addClassRow('new')">+ Add Class</button>
+                </div>
+                <div id="feats-container-new"></div>
             </div>
         </div>
 
         <div class="card" style="margin-top: 2rem;">
             <h3 class="card-title">Rework Details</h3>
-            <input type="text" id="rework-cost" class="text-input" placeholder="GP/DTP Costs">
+            <input type="text" id="rework-cost" class="text-input" placeholder="GP/DTP costs">
             <textarea id="rework-notes" class="notes-area" placeholder="Notes for auditors"></textarea>
         </div>
     </div>
@@ -126,47 +160,51 @@ title: Character Rework Tool
     </div>
 </div>
 
-<script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
-
 <script>
-    // 1. AUTH LOGIC: Switches the visibility of controls, but leaves the tool visible
+    // AUTH VISIBILITY HANDLER
     window.handlePageAuth = function(user, profile) {
         window.currentUser = user;
-        const REQUIRED_ROLE = "Adventurer";
-
+        const REQUIRED_ROLES = ["Adventurer"]; 
+        const instructionText = document.getElementById('instruction-text');
         const loggedOutGroup = document.getElementById('logged-out-controls');
         const loggedInGroup = document.getElementById('logged-in-controls');
         const authErrorGroup = document.getElementById('auth-error-msg');
-        const manualInput = document.getElementById('manual-discord-id');
-
-        // Reset
-        loggedOutGroup.style.display = 'none';
-        loggedInGroup.style.display = 'none';
-        authErrorGroup.style.display = 'none';
-
+        
         if (user) {
             const userRoles = (profile && profile.roles) ? profile.roles : [];
-            if (userRoles.includes(REQUIRED_ROLE)) {
-                loggedInGroup.style.display = 'flex';
+            const hasAccess = REQUIRED_ROLES.some(role => userRoles.includes(role));
+            if (instructionText) instructionText.style.display = 'none';
+            if (hasAccess) {
+                if(loggedInGroup) loggedInGroup.style.display = 'flex';
+                if(loggedOutGroup) loggedOutGroup.style.display = 'none';
                 if(window.fetchReworks) window.fetchReworks();
             } else {
-                authErrorGroup.style.display = 'flex';
+                if(authErrorGroup) authErrorGroup.style.display = 'flex';
+                if(loggedOutGroup) loggedOutGroup.style.display = 'none';
             }
         } else {
-            loggedOutGroup.style.display = 'flex';
+            if(loggedOutGroup) loggedOutGroup.style.display = 'flex';
+            if(loggedInGroup) loggedInGroup.style.display = 'none';
+            if(instructionText) instructionText.style.display = 'block';
         }
-    };
-
-    // 2. DISCORD ID LOGIC: Uses profile ID or Manual Input
-    window.getCurrentDiscordID = function() {
-        if (window.currentUser && window.authManager?.profile?.discord_id) {
-            return window.authManager.profile.discord_id;
-        } 
-        return document.getElementById('manual-discord-id')?.value.trim();
     };
 </script>
 
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
-    // ... paste all your original logic here (ATTRIBUTES, POINT_COSTS, scrapeColumn, etc) ...
+
+    // Restore original constants and UI generation logic
+    const ATTRIBUTES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+    const POINT_COSTS = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 };
+
+    // Function to get current Discord ID (Priority: Auth > Manual Input)
+    window.getCurrentDiscordID = function() {
+        if (window.currentUser) {
+            return window.currentUser.user_metadata.full_name || window.currentUser.user_metadata.name || "User";
+        } 
+        return document.getElementById('manual-discord-id').value.trim();
+    };
+
+    // Restoring Original UI Generation (Classes, Attributes, Points)
+    // ... (Your original addClassRow, calculatePointBuy, and generateOutput functions go here) ...
 </script>
