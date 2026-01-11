@@ -9,10 +9,7 @@ title: Character Rework Tool
     <h1>Character Rework Tool</h1>
     
     {% include auth-header.html %}
-    <p id="instruction-text" class="auth-instruction">Please log in to Save/Load WIP Reworks.</p>
-
-    <br>
-
+    
     <div class="tab-nav">
         <button class="tab-btn active" onclick="window.switchTab('input')">Input</button>
         <button class="tab-btn" onclick="window.switchTab('output')">Output</button>
@@ -21,128 +18,155 @@ title: Character Rework Tool
     <div id="tab-input" class="tab-content active">
         
         <div class="control-bar" id="controls-area">
-            
             <div id="logged-out-controls" class="control-group" style="display:none; align-items:center; gap: 10px;">
                <button id="custom-login-btn" class="auth-btn auth-btn-discord" onclick="window.authManager.login()">
-                    <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
                     Login to Save
-                </button>
+               </button>
+               <span style="font-size:0.9em; margin-left:10px;"> Or enter Discord ID manually: </span>
+               <input type="text" id="manual-discord-id" class="text-input" style="width: 150px;" placeholder="Username">
             </div>
 
-            <div id="logged-in-controls" class="control-group" style="display:none; gap: 10px;">
-                <button class="btn btn-secondary" onclick="window.saveRework()">Save Rework</button>
-                <select id="rework-select" class="rework-dropdown">
+            <div id="logged-in-controls" class="control-group" style="display:none;">
+                <button class="action-btn btn-save" onclick="window.saveRework()">Save</button>
+                <button class="action-btn btn-load" onclick="window.loadSelectedRework()">Load</button>
+                <select id="load-rework-select" class="load-select">
                     <option value="">-- Load Saved Rework --</option>
                 </select>
-                <button class="btn btn-secondary" onclick="window.loadRework()">Load</button>
             </div>
 
-            <div id="auth-error-msg" class="control-group auth-error" style="display:none;">
-                <span>Only 'Adventurer' role can Save/Load on this page.</span>
+            <div id="auth-error-msg" class="control-group" style="display:none; color: #e74c3c; font-weight: bold;">
+                <span>"Adventurer" role required to Save/Load.</span>
+            </div>
+        </div>
+
+        <input type="hidden" id="current-rework-id" value="">
+
+        <div class="respec-container">
+            <div class="char-column" id="col-original">
+                <h2 class="column-header">Original Character</h2>
+                <div class="card">
+                    <h3 class="card-title">Character Origin</h3>
+                    <div class="origin-grid">
+                        <div class="input-group">
+                            <label class="input-label">Character Name</label>
+                            <input type="text" class="text-input" id="name-original" placeholder="Name">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Base Attributes (27 Point Buy)</label>
+                            <div id="attrs-container-original"></div>
+                            <div class="points-display" id="points-original">Points Remaining: 27</div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Race/Species</label>
+                            <input type="text" class="text-input" id="race-original" placeholder="e.g. Human, Elf...">
+                        </div>
+                        <div class="input-group" id="block-race-original">
+                            <label class="input-label">Racial Bonuses</label>
+                            <div id="race-mod-container-original"></div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Origin (Background)</label>
+                            <input type="text" class="text-input" id="bg-original" placeholder="e.g. Acolyte">
+                        </div>
+                        <div class="input-group" id="block-origin-original">
+                            <label class="input-label">Origin Feat Modifiers</label>
+                            <input type="text" class="text-input" id="orig-feat-original" placeholder="e.g. Magic Initiate">
+                            <div id="origin-mod-container-original" style="margin-top:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Classes</h3>
+                    <div id="classes-container-original"></div>
+                    <button type="button" class="button button-secondary" onclick="window.addClassRow('original')">+ Add Class</button>
+                </div>
+                <div id="feats-container-original"></div>
             </div>
 
+            <div class="char-column" id="col-new">
+                <h2 class="column-header">New Character</h2>
+                <div class="card">
+                    <h3 class="card-title">Character Origin</h3>
+                    <div class="origin-grid">
+                        <div class="input-group">
+                            <div class="field-header-row">
+                                <label class="input-label">Character Name</label>
+                                <button type="button" class="copy-link" onclick="window.copyValue('name-original', 'name-new')">Copy</button>
+                            </div>
+                            <input type="text" class="text-input" id="name-new" placeholder="Name">
+                        </div>
+                        <div class="input-group">
+                            <div class="field-header-row">
+                                <label class="input-label">Base Attributes</label>
+                                <button type="button" class="copy-link" onclick="window.copyAttributes()">Copy</button>
+                            </div>
+                            <div id="attrs-container-new"></div>
+                            <div class="points-display" id="points-new">Points Remaining: 27</div>
+                        </div>
+                        <div id="race-mod-container-new"></div>
+                        <div id="classes-container-new"></div>
+                        <div id="feats-container-new"></div>
+                    </div>
+                </div>
+                <button type="button" class="button button-secondary" onclick="window.addClassRow('new')">+ Add Class</button>
+            </div>
         </div>
+
+        <div class="card" style="margin-top: 2rem;">
+            <h3 class="card-title">Rework Details</h3>
+            <input type="text" id="rework-cost" class="text-input" placeholder="GP/DTP Costs">
+            <textarea id="rework-notes" class="notes-area" placeholder="Notes for auditors"></textarea>
         </div>
+    </div>
+
+    <div id="tab-output" class="tab-content">
+        <h2 class="column-header">Rework Request Form</h2>
+        <textarea id="output-text" class="output-area" readonly></textarea>
+        <button class="action-btn" onclick="window.copyOutput()">Copy to Clipboard</button>
+    </div>
 </div>
 
-<script>
-    window.currentUser = null;
-    
-    // Configuration: Updated to only check for "Adventurer"
-    const REQUIRED_ROLES = ["Adventurer"]; 
+<script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
 
+<script>
+    // 1. AUTH LOGIC: Switches the visibility of controls, but leaves the tool visible
     window.handlePageAuth = function(user, profile) {
         window.currentUser = user;
+        const REQUIRED_ROLE = "Adventurer";
 
-        const instructionText = document.getElementById('instruction-text');
         const loggedOutGroup = document.getElementById('logged-out-controls');
         const loggedInGroup = document.getElementById('logged-in-controls');
         const authErrorGroup = document.getElementById('auth-error-msg');
-        
-        // Hide UI elements by default
-        if(loggedOutGroup) loggedOutGroup.style.display = 'none';
-        if(loggedInGroup) loggedInGroup.style.display = 'none';
-        if(authErrorGroup) authErrorGroup.style.display = 'none';
+        const manualInput = document.getElementById('manual-discord-id');
+
+        // Reset
+        loggedOutGroup.style.display = 'none';
+        loggedInGroup.style.display = 'none';
+        authErrorGroup.style.display = 'none';
 
         if (user) {
             const userRoles = (profile && profile.roles) ? profile.roles : [];
-            
-            // Check if user has the specific "Adventurer" role
-            const hasAccess = REQUIRED_ROLES.some(role => userRoles.includes(role));
-
-            if (instructionText) instructionText.style.display = 'none';
-
-            if (hasAccess) {
-                if(loggedInGroup) loggedInGroup.style.display = 'flex';
-                // Trigger reload of saved data from Supabase
+            if (userRoles.includes(REQUIRED_ROLE)) {
+                loggedInGroup.style.display = 'flex';
                 if(window.fetchReworks) window.fetchReworks();
             } else {
-                if(authErrorGroup) authErrorGroup.style.display = 'flex';
+                authErrorGroup.style.display = 'flex';
             }
         } else {
-            if(loggedOutGroup) loggedOutGroup.style.display = 'flex';
-            if(instructionText) instructionText.style.display = 'block';
+            loggedOutGroup.style.display = 'flex';
         }
+    };
+
+    // 2. DISCORD ID LOGIC: Uses profile ID or Manual Input
+    window.getCurrentDiscordID = function() {
+        if (window.currentUser && window.authManager?.profile?.discord_id) {
+            return window.authManager.profile.discord_id;
+        } 
+        return document.getElementById('manual-discord-id')?.value.trim();
     };
 </script>
 
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
-
-    // FETCHING SAVED DATA
-    window.fetchReworks = async function() {
-        if (!window.currentUser) return;
-        
-        try {
-            const { data, error } = await supabase
-                .from('rework')
-                .select('id, character_name')
-                .eq('user_id', window.currentUser.id); // Securely filter by UUID
-
-            if (error) throw error;
-
-            const select = document.getElementById('rework-select');
-            select.innerHTML = '<option value="">-- Load Saved Rework --</option>';
-            
-            data.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.id;
-                opt.textContent = item.character_name || `Unnamed (${item.id})`;
-                select.appendChild(opt);
-            });
-        } catch (e) {
-            console.error("Error loading reworks:", e);
-        }
-    };
-
-    // SAVING DATA
-    window.saveRework = async function() {
-        if (!window.currentUser) return alert("Please log in first.");
-        
-        const charName = document.getElementById('char-name').value;
-        if (!charName) return alert("Please enter a character name.");
-
-        // (Placeholder for your form scraping logic)
-        const reworkData = {
-            attributes: {}, // get values from inputs
-            classes: []     // get values from inputs
-        };
-
-        try {
-            const { error } = await supabase
-                .from('rework')
-                .upsert({
-                    user_id: window.currentUser.id, // Primary Key for security
-                    character_name: charName,
-                    data: reworkData,
-                    updated_at: new Date()
-                });
-
-            if (error) throw error;
-            alert("Rework successfully saved!");
-            window.fetchReworks();
-        } catch (e) {
-            alert("Save failed: " + e.message);
-        }
-    };
+    // ... paste all your original logic here (ATTRIBUTES, POINT_COSTS, scrapeColumn, etc) ...
 </script>
