@@ -18,7 +18,11 @@
         </div>
         <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+<<<<<<< HEAD
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+=======
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+>>>>>>> 84eb711d2e3e421b3ebe1519c17191b8f7d2333e
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -81,6 +85,7 @@
     margin-left: 8px;
     box-shadow: none;
 }
+<<<<<<< HEAD
 
 .auth-btn-logout:hover {
     color: var(--palette-alert-danger-action, #c00);
@@ -119,6 +124,50 @@
     color: var(--color-primary, #58180D);
 }
 
+=======
+
+.auth-btn-logout:hover {
+    color: var(--palette-alert-danger-action, #c00);
+    background-color: rgba(0,0,0,0.05);
+}
+
+.auth-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--color-bg-light, #FDF1DC);
+    border: 2px solid var(--color-border, #D4C4B0);
+    color: var(--color-text, #2c2c2c);
+    padding: 6px 12px;
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm);
+}
+
+.auth-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-primary, #58180D);
+}
+
+.auth-user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.auth-name {
+    font-weight: 700;
+    font-size: 0.9em;
+    color: var(--color-primary, #58180D);
+}
+
+.auth-role-badge {
+    font-size: 0.8em;
+    color: var(--color-text-secondary, #5a5a5a);
+}
+>>>>>>> 84eb711d2e3e421b3ebe1519c17191b8f7d2333e
 </style>
 
 <script>
@@ -158,6 +207,13 @@
             }
         }
 
+<<<<<<< HEAD
+=======
+            const roles = profile?.roles || [];
+            ui.roleBadge.textContent = roles[0] || 'Member';
+        }
+
+>>>>>>> 84eb711d2e3e421b3ebe1519c17191b8f7d2333e
         // 2. Trigger Page-Specific Logic (The Fix)
         // This ensures rework.html knows the user state and can show/hide controls
         if (typeof window.handlePageAuth === 'function') {
