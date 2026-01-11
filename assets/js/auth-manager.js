@@ -1,5 +1,17 @@
 /**
- * assets/js/auth-manager.js
+ * Discord Authorization Module
+ * This uses Supabase's built in OAuth function to faciliate login via Discord to allow us to use Discord ID to manage access and provide security to certain features\
+ * Benefits: 
+ *		Don't need to build our own oAuth or login function
+ * 		OAuth is connected to Supabase' role-level-security (RLS).  This means that we can set policies that users can only edit table records that match their user ID
+ *		We can pull Hawthorne Guild membership and roles.  This means that we can limit access to website features only if they are a member of the Hawthorne Guild and 
+ *			have some features that are locked to DM only, Staff only, etc.
+ *		
+ *		This module is used in combination with supabaseClient.js (reusable connection code to the Supabase instance) and auth-header.html (an include file that basically 
+ *		allows you to drop the discord login function into a webpage
+ *
+ * File Location:  assets/js/auth-manager.js
+ *
  */
 import { supabase } from './supabaseClient.js';
 
@@ -33,6 +45,26 @@ class AuthManager {
                 this.handleSessionUpdate(session, uiCallback);
             }
         });
+    }
+	/**
+     * Fetches the public member list.
+     * Uses the 'member_directory' view which hides sensitive roles/notes.
+     */
+    async fetchMemberDirectory() {
+        try {
+            const { data, error } = await this.client
+                .from('member_directory') // Query the VIEW, not the table
+                .select('*');             // The view already limits columns
+
+            if (error) {
+                console.error("Error fetching directory:", error.message);
+                return [];
+            }
+            return data;
+        } catch (e) {
+            console.error("Directory fetch failed:", e);
+            return [];
+        }
     }
 
     async handleSessionUpdate(session, callback) {

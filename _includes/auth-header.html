@@ -2,10 +2,9 @@
     
     <span id="auth-loading" class="auth-loading-text">Loading...</span>
 
-    <div id="auth-admin-controls" style="display:none; gap: 10px;">
-        <a href="/admin" id="btn-admin" class="auth-btn auth-btn-discord" style="display:none;">Admin</a>
-        <a href="/dm-tools" id="btn-dm" class="auth-btn auth-btn-discord" style="display:none;">DM Tools</a>
-    </div>
+    <a href="/admin" id="btn-staff-tools" class="auth-btn auth-btn-discord" style="display:none;">
+        Staff Tools
+    </a>
 
     <button id="login-btn" class="auth-btn auth-btn-discord" style="display:none;">
         <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36">
@@ -38,38 +37,25 @@
     }
     .auth-loading-text { color: var(--color-text-secondary, #888); font-style: italic; }
     
-    /* Buttons */
     .auth-btn { 
         border: none; cursor: pointer; display: inline-flex; 
         align-items: center; justify-content: center; 
         transition: all 0.2s ease; font-family: inherit;
         text-transform: uppercase; font-weight: 600;
         border-radius: 4px; padding: 0.6em 1.2em; 
-        text-decoration: none; /* Important for <a> tags */
+        text-decoration: none; 
         box-shadow: var(--shadow-sm);
     }
-    .auth-btn-discord { 
-        background-color: #5865F2; 
-        color: white; 
-        gap: 10px;
-    }
-    .auth-btn-discord:hover { 
-        background-color: #4752C4; 
-        transform: translateY(-2px);
-    }
+    .auth-btn-discord { background-color: #5865F2; color: white; gap: 10px; }
+    .auth-btn-discord:hover { background-color: #4752C4; transform: translateY(-2px); }
     .discord-logo { fill: white; }
     
-    /* Logout */
     .auth-btn-logout { 
         background: transparent; color: var(--color-text-secondary, #5a5a5a); 
         padding: 4px; margin-left: 8px; box-shadow: none;
     }
-    .auth-btn-logout:hover { 
-        color: var(--palette-alert-danger-action, #c00); 
-        background-color: rgba(0,0,0,0.05);
-    }
+    .auth-btn-logout:hover { color: var(--palette-alert-danger-action, #c00); background-color: rgba(0,0,0,0.05); }
 
-    /* Profile Card */
     .auth-profile { 
         display: flex; align-items: center; gap: 12px; 
         background-color: var(--color-bg-light, #FDF1DC); 
@@ -77,10 +63,7 @@
         color: var(--color-text, #2c2c2c);
         padding: 6px 12px; border-radius: 4px; box-shadow: var(--shadow-sm);
     }
-    .auth-avatar { 
-        width: 32px; height: 32px; border-radius: 50%; 
-        object-fit: cover; border: 2px solid var(--color-primary, #58180D);
-    }
+    .auth-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary, #58180D); }
     .auth-user-info { display: flex; flex-direction: column; line-height: 1.2; }
     .auth-name { font-weight: 700; font-size: 0.9em; color: var(--color-primary, #58180D); }
     .auth-role-badge { font-size: 0.8em; color: var(--color-text-secondary, #5a5a5a); }
@@ -89,7 +72,6 @@
 <script>
 (function() {
     const getEl = (id) => document.getElementById(id);
-    
     const ui = {
         loading: getEl('auth-loading'),
         loginBtn: getEl('login-btn'),
@@ -98,57 +80,38 @@
         name: getEl('user-name'),
         roleBadge: getEl('user-role-badge'),
         logoutBtn: getEl('logout-btn'),
-        adminControls: getEl('auth-admin-controls'),
-        btnAdmin: getEl('btn-admin'),
-        btnDM: getEl('btn-dm')
+        btnStaff: getEl('btn-staff-tools')
     };
 
     const updateAuthUI = (user, profile) => {
         ui.loading.style.display = 'none';
 
-        // --- 0. PARENT PAGE HOOK (NEW) ---
-        // If the parent page has defined a handler, pass the data to it
-        
         if (typeof window.handlePageAuth === 'function') {
             window.handlePageAuth(user, profile);
         }
 
-        // --- 1. CONTENT REVEAL LOGIC ---
-        // This is where we use the settings passed from the parent page
         if (window.PAGE_AUTH_CONFIG) {
             const { allowedRoles, contentId } = window.PAGE_AUTH_CONFIG;
             const contentEl = document.getElementById(contentId);
-
             if (contentEl) {
                 let isAuthorized = false;
-
                 if (user) {
                     const userRoles = (profile && profile.roles) ? profile.roles : [];
-
-                    // Check: Are specific roles required?
                     if (allowedRoles && allowedRoles.length > 0) {
                         isAuthorized = allowedRoles.some(r => userRoles.includes(r));
                     } else {
-                        // NO roles specified = "Members Only"
                         isAuthorized = true;
                     }
                 }
-
-                if (isAuthorized) {
-                    contentEl.style.display = 'block'; 
-                } else {
-                    contentEl.style.display = 'none';
-                }
+                contentEl.style.display = isAuthorized ? 'block' : 'none'; 
             }
         }
 
-        // --- 2. STANDARD HEADER UI ---
         if (user) {
             ui.loginBtn.style.display = 'none';
             ui.profile.style.display = 'flex';
             
             ui.name.textContent = (profile && profile.display_name) ? profile.display_name : (user.user_metadata.full_name || 'User');
-            
             if (user.user_metadata.avatar_url) {
                 ui.avatar.src = user.user_metadata.avatar_url;
                 ui.avatar.style.display = 'block';
@@ -157,21 +120,19 @@
             const roles = (profile && profile.roles) ? profile.roles : [];
             ui.roleBadge.textContent = roles.length > 0 ? roles[0] : "Member";
 
-            // Show Admin/DM Buttons if applicable
-            if (ui.adminControls) {
-                ui.adminControls.style.display = 'flex'; 
-                
-                const isStaff = roles.includes('Staff') || roles.includes('Admin');
-                const isDM = roles.includes('DM') || roles.includes('Trial DM');
-
-                if (ui.btnAdmin) ui.btnAdmin.style.display = isStaff ? 'inline-flex' : 'none';
-                if (ui.btnDM) ui.btnDM.style.display = (isStaff || isDM) ? 'inline-flex' : 'none';
+            // CHECK FOR STAFF ROLES
+            // If user has ANY of these, show the single Staff Button
+            const staffRoles = ['Admin', 'Staff', 'DM', 'Trial DM'];
+            const isStaff = roles.some(r => staffRoles.includes(r));
+            
+            if (ui.btnStaff) {
+                ui.btnStaff.style.display = isStaff ? 'inline-flex' : 'none';
             }
 
         } else {
             ui.loginBtn.style.display = 'inline-flex';
             ui.profile.style.display = 'none';
-            if (ui.adminControls) ui.adminControls.style.display = 'none';
+            if (ui.btnStaff) ui.btnStaff.style.display = 'none';
         }
     };
 
