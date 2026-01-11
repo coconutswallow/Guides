@@ -242,20 +242,43 @@ class AuthManager {
     }
 
     async logout() {
-        try {
-            // Clear the sync timestamp so next login forces a fresh check
-            if (this.user) {
-                localStorage.removeItem(`auth_last_sync_${this.user.id}`);
+        console.log("🚪 Initiating Safe Logout...");
+
+        // 1. MANUAL CLEANUP (The "Defensive" Step)
+        // We do this because simply calling signOut() is asynchronous. 
+        // If we reload the page too fast, the library might not have finished 
+        // deleting the token, causing a "Zombie Session" on reload.
+        
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            
+            // "sb-" is the default prefix Supabase uses for tokens
+            // "auth_last_sync" is our own custom flag
+            if (key.startsWith('sb-') || key.startsWith('auth_last_sync')) {
+                keysToRemove.push(key);
             }
-            // Attempt to sign out on the server
+        }
+        
+        // Remove only our app's keys, protecting other apps on coconutswallow.github.io
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+        sessionStorage.clear(); // Session storage is tab-specific, so it's safe to nuke.
+
+        // 2. SERVER NOTIFICATION
+        // We still try to tell Supabase we are leaving, but we don't wait 
+        // around for it if it hangs.
+        try {
             await this.client.auth.signOut();
         } catch (e) {
-            console.warn("Server sign-out failed, forcing local logout:", e);
-        } finally {
-            // ALWAYS reload, even if the server errors out
-            // This ensures the user is never "stuck"
-            window.location.reload();
+            // If this fails (e.g. network down), it doesn't matter because
+            // we already deleted the tokens locally in Step 1.
+            console.warn("Supabase server sign-out failed (ignoring):", e);
         }
+
+        // 3. HARD RELOAD
+        // Now that storage is clean, a reload guarantees the app 
+        // starts from a blank slate.
+        window.location.reload();
     }
 }
 
