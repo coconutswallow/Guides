@@ -1,3 +1,15 @@
+<style>
+/* Markdown Widget Component
+ * --------------------------
+ * This widget adds a simple markdown editor with live preview capabilities that can be embedded in any form.
+ *
+ * Usage:  Drop this into the code where you want the markdown editor to appear.
+ * - {% include markdown-widget.html id="summary" name="short_summary" height="150px" %}
+ *
+ * Note: in VSCode it will show this widget has errors, it's fine once processed by jekyll.
+ */
+</style>
+
 {% assign editor_id = include.id | default: "markdown-editor" %}
 {% assign input_name = include.name | default: "markdown_content" %}
 {% assign widget_width = include.width | default: "100%" %}
