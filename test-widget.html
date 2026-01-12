@@ -1,0 +1,48 @@
+---
+layout: default
+title: Widget Test Page
+---
+
+<div class="page-container" style="max-width: 800px; margin: 0 auto;">
+    
+    <h1>Markdown Widget Test</h1>
+    <p>This page demonstrates the reusable Markdown widget.</p>
+
+    <form id="demo-form">
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Post Title</label>
+            <input type="text" id="post_title" placeholder="Enter a title..." style="width: 100%; padding: 10px; font-size: 1rem;">
+        </div>
+
+        {% include markdown-widget.html id="my-unique-editor" name="body_content" %}
+
+        <button type="submit" class="button" style="margin-top: 20px;">Submit to Console</button>
+    </form>
+    <div id="result-area" style="margin-top: 30px; padding: 15px; background: #eee; border: 1px dashed #999; display: none; color: #333;">
+        <h3>Form Data Captured:</h3>
+        <pre id="output-log" style="white-space: pre-wrap;"></pre>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('demo-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Capture the data
+        var title = document.getElementById('post_title').value;
+        
+        // GRAB THE MARKDOWN: We access it by the ID we passed to the include ("my-unique-editor")
+        var markdown = document.getElementById('my-unique-editor').value; 
+
+        // Display it on screen
+        var output = document.getElementById('output-log');
+        var resultArea = document.getElementById('result-area');
+        
+        output.textContent = "Title: " + title + "\n\nMarkdown Content:\n" + markdown;
+        resultArea.style.display = 'block';
+        
+        alert("Captured! Check the gray box at the bottom.");
+    });
+</script>
