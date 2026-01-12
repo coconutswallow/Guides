@@ -4,8 +4,18 @@
 {% assign widget_height = include.height | default: "350px" %}
 
 <div id="widget-{{ editor_id }}" class="md-widget-container" style="width: {{ widget_width }};">
-    
+
     <script>
+        /* Markdown Widget Component
+        * --------------------------
+        * This widget adds a simple markdown editor with live preview capabilities that can be embedded in any form.
+        *
+        * Usage:  Drop this into the code where you want the markdown editor to appear.
+        * - {% include markdown-widget.html id="summary" name="short_summary" height="150px" %}
+        *
+        * Note: in VSCode it will show this widget has errors, it's fine once processed by jekyll.
+        */
+
         if (typeof marked === 'undefined' && !window.markedLoading) {
             window.markedLoading = true;
             var script = document.createElement('script');
