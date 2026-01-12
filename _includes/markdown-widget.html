@@ -1,3 +1,20 @@
+{% comment %}
+/*
+* Markdown Widget Component
+* --------------------------
+* A reusable markdown editor with live preview, tabs, and formatting tools.
+*
+* Usage:
+* {% include markdown-widget.html id="my_editor" name="content" width="100%" height="400px" %}
+*
+* Parameters:
+* - id (required for multiple widgets): Unique ID for JS logic. Default: "markdown-editor"
+* - name (required for forms): Input name for the POST data. Default: "markdown_content"
+* - width: CSS width. Default: "100%"
+* - height: CSS min-height. Default: "350px"
+*/
+{% endcomment %}
+
 {% assign editor_id = include.id | default: "markdown-editor" %}
 {% assign input_name = include.name | default: "markdown_content" %}
 {% assign widget_width = include.width | default: "100%" %}
@@ -6,16 +23,6 @@
 <div id="widget-{{ editor_id }}" class="md-widget-container" style="width: {{ widget_width }};">
 
     <script>
-        /* Markdown Widget Component
-        * --------------------------
-        * This widget adds a simple markdown editor with live preview capabilities that can be embedded in any form.
-        *
-        * Usage:  Drop this into the code where you want the markdown editor to appear.
-        * - {% include markdown-widget.html id="summary" name="short_summary" height="150px" %}
-        *
-        * Note: in VSCode it will show this widget has errors, it's fine once processed by jekyll.
-        */
-
         if (typeof marked === 'undefined' && !window.markedLoading) {
             window.markedLoading = true;
             var script = document.createElement('script');
@@ -62,7 +69,6 @@
             background: var(--color-bg-light); 
             margin-bottom: var(--spacing-md);
             overflow: hidden;
-            /* Width is handled inline by Liquid */
         }
         .md-header {
             background: var(--color-bg-medium);
@@ -94,12 +100,10 @@
             resize: vertical; outline: none; font-family: 'Courier New', monospace; 
             font-size: 14px; line-height: 1.6; background: var(--color-bg-page); 
             color: var(--color-text); display: block;
-            /* Height is handled inline by Liquid */
         }
         .md-preview-box { 
             padding: 20px; background: var(--color-bg-light); 
             color: var(--color-text); overflow-y: auto;
-            /* Height is handled inline by Liquid */
         }
         .md-preview-box img { max-width: 100%; }
         
@@ -109,11 +113,14 @@
         }
     </style>
 
-    <script>
+    <script data-widget-id="{{ editor_id }}">
     (function() {
-        var container = document.getElementById('widget-{{ editor_id }}');
-        var textarea = document.getElementById('{{ editor_id }}');
-        var preview = document.getElementById('{{ editor_id }}-preview');
+        var scriptTag = document.currentScript;
+        var id = scriptTag.getAttribute('data-widget-id');
+        
+        var container = document.getElementById('widget-' + id);
+        var textarea = document.getElementById(id);
+        var preview = document.getElementById(id + '-preview');
         var toolsPanel = container.querySelector('.md-tools');
         
         container.addEventListener('click', function(e) {
@@ -162,7 +169,6 @@
             var before = textarea.value.substring(0, start);
             var after = textarea.value.substring(end);
             
-            // Auto-newline if strictly needed (prev char is not newline and not start of file)
             if (start > 0 && before.slice(-1) !== '\n') {
                 text = "\n" + text;
             }
@@ -181,10 +187,8 @@
             textarea.focus();
 
             if (text.length > 0) {
-                // Highlighted text: jump to end
                 textarea.selectionStart = textarea.selectionEnd = start + startTag.length + text.length + endTag.length;
             } else {
-                // Empty: place cursor in middle
                 textarea.selectionStart = textarea.selectionEnd = start + startTag.length;
             }
         }
