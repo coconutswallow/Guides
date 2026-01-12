@@ -1,7 +1,7 @@
 {% assign editor_id = include.id | default: "markdown-editor" %}
 {% assign input_name = include.name | default: "markdown_content" %}
 
-<div class="md-widget-container">
+<div id="widget-{{ editor_id }}" class="md-widget-container">
     <script>
         if (typeof marked === 'undefined' && !window.markedLoading) {
             window.markedLoading = true;
@@ -11,113 +11,174 @@
         }
     </script>
 
-    <div class="md-toolbar">
-        <span class="md-label">Markdown Editor</span>
+    <div class="md-header">
+        <div class="md-tabs">
+            <button type="button" class="md-tab active" data-tab="write">Write</button>
+            <button type="button" class="md-tab" data-tab="preview">Preview</button>
+        </div>
+        
         <div class="md-tools">
-            <small style="color: var(--color-text-secondary); font-size: 0.8em;">Supports **bold**, *italics*, and [links]</small>
+            <button type="button" data-cmd="header" data-val="# ">H1</button>
+            <button type="button" data-cmd="header" data-val="## ">H2</button>
+            <button type="button" data-cmd="header" data-val="### ">H3</button>
+            <span class="md-sep">|</span>
+            <button type="button" data-cmd="wrap" data-val="**"><strong>B</strong></button>
+            <button type="button" data-cmd="wrap" data-val="*"><em>I</em></button>
+            <button type="button" data-cmd="wrap" data-val="<u>" data-val-end="</u>"><u>U</u></button>
+            <span class="md-sep">|</span>
+            <button type="button" data-cmd="header" data-val="- ">• List</button>
+            <button type="button" data-cmd="link">🔗 Link</button>
         </div>
     </div>
 
-    <div class="md-editor-wrapper">
-        <div class="md-column">
-            <textarea 
-                id="{{ editor_id }}" 
-                name="{{ input_name }}" 
-                class="md-textarea"
-                placeholder="Type your content here..."></textarea>
-        </div>
-        <div class="md-column preview-col">
-            <div id="{{ editor_id }}-preview" class="md-preview-box">
-                <em style="color: var(--color-text-secondary)">Preview will appear here...</em>
-            </div>
-        </div>
+    <div class="md-body">
+        <textarea 
+            id="{{ editor_id }}" 
+            name="{{ input_name }}" 
+            class="md-textarea" 
+            placeholder="Type your markdown here..."></textarea>
+        
+        <div id="{{ editor_id }}-preview" class="md-preview-box" style="display: none;"></div>
     </div>
 
     <style>
-        /* Container */
         .md-widget-container { 
             border: 2px solid var(--color-border); 
             border-radius: var(--border-radius); 
-            overflow: hidden; 
+            background: var(--color-bg-light); 
             margin-bottom: var(--spacing-md);
+            overflow: hidden;
+        }
+        .md-header {
+            background: var(--color-bg-medium);
+            border-bottom: 2px solid var(--color-border);
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+        }
+        .md-tabs { display: flex; }
+        .md-tab {
+            background: transparent; border: none; padding: 12px 20px;
+            cursor: pointer; font-weight: bold; color: var(--color-text-secondary);
+            border-bottom: 3px solid transparent; font-family: var(--font-header);
+        }
+        .md-tab:hover { color: var(--color-primary); background: rgba(0,0,0,0.05); }
+        .md-tab.active { 
+            border-bottom-color: var(--color-primary); color: var(--color-primary); 
             background: var(--color-bg-light);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
         }
-
-        /* Toolbar */
-        .md-toolbar { 
-            background: var(--color-bg-medium); 
-            padding: 10px 15px; 
-            border-bottom: 2px solid var(--color-border); 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .md-tools { display: flex; gap: 5px; padding: 5px; align-items: center; }
+        .md-tools button {
+            background: var(--color-bg-page); border: 1px solid var(--color-border);
+            border-radius: 4px; padding: 4px 8px; cursor: pointer;
+            color: var(--color-text); min-width: 28px;
         }
-
-        .md-label {
-            font-family: var(--font-header);
-            font-weight: 700;
-            color: var(--color-primary);
-            text-transform: uppercase;
-            font-size: 0.9em;
-            letter-spacing: 0.5px;
-        }
-
-        /* Layout */
-        .md-editor-wrapper { display: flex; min-height: 350px; }
-        .md-column { flex: 1; display: flex; flex-direction: column; }
-
-        /* Input Area */
+        .md-tools button:hover { background: var(--color-secondary); color: white; border-color: var(--color-secondary); }
+        .md-sep { color: var(--color-border); margin: 0 4px; }
         .md-textarea { 
-            flex: 1; border: none; padding: 15px; resize: none; outline: none; 
-            font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.6;
-            background: var(--color-bg-page); color: var(--color-text);
+            width: 100%; min-height: 350px; border: none; padding: 15px; 
+            resize: vertical; outline: none; font-family: 'Courier New', monospace; 
+            font-size: 14px; line-height: 1.6; background: var(--color-bg-page); 
+            color: var(--color-text); display: block;
         }
-        .md-textarea::placeholder { color: var(--color-text-secondary); }
-
-        /* Preview Area */
-        .preview-col { border-left: 2px solid var(--color-border); background: var(--color-bg-light); }
-        .md-preview-box { flex: 1; padding: 15px; overflow-y: auto; color: var(--color-text); font-family: var(--font-body); }
-        .md-preview-box img { max-width: 100%; border-radius: var(--border-radius); }
+        .md-preview-box { 
+            min-height: 350px; padding: 20px; background: var(--color-bg-light); 
+            color: var(--color-text); overflow-y: auto;
+        }
+        .md-preview-box img { max-width: 100%; }
         
-        /* Typography fixes for preview */
-        .md-preview-box h1, .md-preview-box h2 { margin-top: 0.5em; font-size: 1.5em; }
-        .md-preview-box ul, .md-preview-box ol { padding-left: 1.5em; margin-bottom: 1em; }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            .md-editor-wrapper { flex-direction: column; height: 600px; }
-            .preview-col { border-left: none; border-top: 2px solid var(--color-border); }
+        @media (max-width: 600px) {
+            .md-header { flex-direction: column; align-items: stretch; }
+            .md-tools { border-top: 1px solid var(--color-border); padding: 10px 5px; justify-content: center; }
         }
     </style>
 
     <script>
-        // Self-executing function to isolate scope (prevents variable conflicts)
-        (function() {
-            var textarea = document.getElementById('{{ editor_id }}');
-            var preview = document.getElementById('{{ editor_id }}-preview');
+    (function() {
+        // Scoped variables for this specific widget instance
+        var container = document.getElementById('widget-{{ editor_id }}');
+        var textarea = document.getElementById('{{ editor_id }}');
+        var preview = document.getElementById('{{ editor_id }}-preview');
+        var toolsPanel = container.querySelector('.md-tools');
+        
+        // --- Event Delegation for Buttons ---
+        container.addEventListener('click', function(e) {
+            var btn = e.target.closest('button');
+            if (!btn) return;
+
+            // Handle Tabs
+            if (btn.hasAttribute('data-tab')) {
+                switchTab(btn.dataset.tab);
+            }
+
+            // Handle Formatting Tools
+            if (btn.hasAttribute('data-cmd')) {
+                var cmd = btn.dataset.cmd;
+                var val = btn.dataset.val;
+                var valEnd = btn.dataset.valEnd || val; // Default end tag same as start
+
+                if (cmd === 'header') insertAtCursor(val);
+                if (cmd === 'wrap') wrapSelection(val, valEnd);
+                if (cmd === 'link') insertLink();
+            }
+        });
+
+        // --- Logic Functions ---
+        
+        function switchTab(mode) {
+            var tabs = container.querySelectorAll('.md-tab');
             
-            function updatePreview() {
-                // Wait for marked to load if it hasn't yet
-                if (typeof marked === 'undefined') {
-                    setTimeout(updatePreview, 100);
-                    return;
+            if (mode === 'write') {
+                textarea.style.display = 'block';
+                preview.style.display = 'none';
+                toolsPanel.style.display = 'flex';
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                // Render Preview
+                if (typeof marked !== 'undefined') {
+                    var raw = textarea.value.trim();
+                    preview.innerHTML = raw ? marked.parse(raw) : '<em>Nothing to preview.</em>';
                 }
-
-                if (!textarea.value.trim()) {
-                    preview.innerHTML = '<em style="color: var(--color-text-secondary)">Preview will appear here...</em>';
-                    return;
-                }
-                
-                // Convert markdown to HTML
-                preview.innerHTML = marked.parse(textarea.value);
+                textarea.style.display = 'none';
+                preview.style.display = 'block';
+                toolsPanel.style.display = 'none';
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
             }
+        }
 
-            // Attach event listener safely using JS, not inline HTML
-            if (textarea) {
-                textarea.addEventListener('input', updatePreview);
-            }
-        })();
+        function insertAtCursor(text) {
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+            var before = textarea.value.substring(0, start);
+            var after = textarea.value.substring(end);
+            
+            textarea.value = before + text + after;
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+        }
+
+        function wrapSelection(startTag, endTag) {
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+            var text = textarea.value.substring(start, end);
+            
+            textarea.value = textarea.value.substring(0, start) + startTag + text + endTag + textarea.value.substring(end);
+            textarea.focus();
+        }
+
+        function insertLink() {
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+            var text = textarea.value.substring(start, end) || "link text";
+            
+            var snippet = "[" + text + "](url)";
+            textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(end);
+            
+            textarea.focus();
+            // Select the "url" part for easy typing
+            var urlStart = start + 1 + text.length + 2; 
+            textarea.setSelectionRange(urlStart, urlStart + 3);
+        }
+    })();
     </script>
 </div>
