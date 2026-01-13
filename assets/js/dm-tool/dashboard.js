@@ -2,11 +2,8 @@
  * assets/js/dm-tool/dashboard.js
  */
 
-// FIX: Go up one level to /assets/js/
 import { supabase } from '../supabaseClient.js';
 import '../auth-manager.js'; 
-
-// FIX: Stay in current folder
 import { fetchSessionList, createSession, deleteSession } from './data-manager.js';
 
 let currentUser = null;
@@ -63,7 +60,7 @@ async function loadSessions() {
     const emptyState = document.getElementById('empty-state');
     const table = document.getElementById('session-table');
 
-    if (!listBody) return; // Guard clause
+    if (!listBody) return; 
 
     // Reset UI
     listBody.innerHTML = '';
@@ -83,17 +80,55 @@ async function loadSessions() {
 
     // Render Rows
     table.classList.remove('hidden');
+    
     sessions.forEach(session => {
         const row = document.createElement('tr');
         
         // Format Date
         const dateObj = new Date(session.session_date || session.updated_at);
-        const dateStr = dateObj.toLocaleDateString();
+        const dateStr = dateObj.toLocaleDateString(undefined, {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+
+        // Safe Title
+        const safeTitle = session.title ? escapeHtml(session.title) : 'Untitled Session';
+
+        // --- FIX STARTS HERE ---
+        // We inject the actual cells (td) into the row
+        row.innerHTML = `
+            <td>
+                <a href="session.html?id=${session.id}" style="font-weight:600; color: #2c3e50; text-decoration: none;">
+                    ${safeTitle}
+                </a>
+            </td>
+            <td>${dateStr}</td>
+            <td style="text-align:right;">
+                <button class="btn-edit" data-id="${session.id}" style="margin-right:8px; cursor:pointer;">Edit</button>
+                <button class="btn-delete" data-id="${session.id}" style="color:red; cursor:pointer;">Delete</button>
+            </td>
+        `;
+        // --- FIX ENDS HERE ---
 
         listBody.appendChild(row);
     });
 
-    // Attach Delete Listeners
+    // Attach Listeners to the new buttons
+    attachRowListeners();
+}
+
+/**
+ * Helper to attach listeners to dynamic elements
+ */
+function attachRowListeners() {
+    // Edit Buttons
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            window.location.href = `session.html?id=${id}`;
+        });
+    });
+
+    // Delete Buttons
     document.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', handleDelete);
     });
@@ -124,4 +159,14 @@ async function handleDelete(e) {
     } else {
         alert("Failed to delete session.");
     }
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
