@@ -1,3 +1,25 @@
+{% comment %}
+=============================================================================
+ FRONT MATTER DOCUMENTATION
+ Copy and paste these variables to the top of your markdown files to control page behavior.
+=============================================================================
+
+layout: default        # The layout file to use (usually "default" or "doc")
+title: "Page Title"    # The title shown in the browser tab and page header
+order: 1               # (Integer) Controls the sort order in the sidebar menu (1, 2, 3...)
+
+# --- Navigation & Display Options ---
+hide_from_nav: true    # If true, removes this page from the sidebar menu but keeps it published
+toc: true              # If true, enables the Table of Contents and adjusts page width
+body_class: "my-class" # Adds a custom CSS class to the <body> tag for specific styling
+
+# --- Visual Customization ---
+background_image: "/assets/images/bg.jpg"  # Overrides the default background image for this specific page
+extra_css:                                 # specific CSS files to load just for this page
+  - "/assets/css/special-styles.css"
+
+=============================================================================
+{% endcomment %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,9 +114,11 @@
                                     {% endfor %}
                                     
                                     {% unless is_in_section_folder %}
-                                        {% comment %} --- FIX 2 --- {% endcomment %}
-                                        <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize_words }}</a>
+                                        {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                                        {% unless page.hide_from_nav %}
+                                            <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize_words }}</a>
                                         {% endunless %}
+                                    {% endunless %}
                                 {% endfor %}
                                 
                                 {% for section in nav_item.sections %}
@@ -114,7 +138,10 @@
                                                 
                                                 {% assign folder_pages = site[collection_name] | where_exp: "page", "page.path contains folder_check" | sort: "order" %}
                                                 {% for page in folder_pages %}
-                                                    <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize_words }}</a>
+                                                    {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                                                    {% unless page.hide_from_nav %}
+                                                        <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize_words }}</a>
+                                                    {% endunless %}
                                                 {% endfor %}
                                             </div>
                                         </div>
@@ -127,12 +154,18 @@
                                     {% if collection_docs.size > 0 %}
                                         {% assign sorted_docs = collection_docs | sort: "order" %}
                                         {% for doc in sorted_docs %}
-                                            <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+                                            {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                                            {% unless doc.hide_from_nav %}
+                                                <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+                                            {% endunless %}
                                         {% endfor %}
                                     {% else %}
                                         {% assign sorted_items = collection_items | sort: "order" %}
                                         {% for item in sorted_items %}
-                                            <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                                            {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                                            {% unless item.hide_from_nav %}
+                                                <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                                            {% endunless %}
                                         {% endfor %}
                                     {% endif %}
                                 {% endif %}

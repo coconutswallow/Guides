@@ -2,6 +2,7 @@
 layout: doc
 title: "Contents"
 order: 1
+hide_from_nav: true 
 background_image: 
 ---
 
