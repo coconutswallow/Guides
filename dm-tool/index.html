@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DM Session Logs | Dashboard</title>
     
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     
     <style>
-        /* Auth Header Styling (Matches your existing tools) */
+        /* Auth Header Styling */
         .auth-container {
             display: flex;
             justify-content: flex-end;
@@ -76,7 +76,8 @@
     <div class="container">
         
         <div class="auth-container">
-            <div id="login-section" class=""> <button id="login-btn" class="btn btn-primary">Login with Discord</button>
+            <div id="login-section" class=""> 
+                <button id="login-btn" class="btn btn-primary">Login with Discord</button>
             </div>
 
             <div id="user-section" class="user-profile hidden">
@@ -108,7 +109,8 @@
                         <th style="width: 45%;">Session Name</th>
                         <th style="width: 15%;">Date</th>
                         <th style="width: 15%;">Status</th>
-                        <th style="width: 15%;">APL</th> <th style="width: 10%; text-align:right;">Actions</th>
+                        <th style="width: 15%;">APL</th> 
+                        <th style="width: 10%; text-align:right;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="session-list-body">
@@ -126,10 +128,10 @@
 
     </div>
 
-    <script type="module" src="assets/js/supabaseClient.js"></script>
-    <script type="module" src="assets/js/auth-manager.js"></script>
+    <script type="module" src="../assets/js/supabaseClient.js"></script>
+    <script type="module" src="../assets/js/auth-manager.js"></script>
 
-    <script type="module" src="assets/js/dm-tool/dashboard.js"></script>
+    <script type="module" src="../assets/js/dm-tool/dashboard.js"></script>
 
 </body>
 </html>
