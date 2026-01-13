@@ -55,7 +55,7 @@ export async function fetchSessionList(userId) {
     try {
         const { data, error } = await supabase
             .from('session_logs')
-            .select('id, title, session_date, status, is_template, updated_at')
+            .select('id, title, session_date, is_template, updated_at')
             .eq('user_id', userId)
             .order('session_date', { ascending: false, nullsFirst: false });
 
@@ -87,7 +87,6 @@ export async function createSession(userId, title, isTemplate = false) {
                 title: title,
                 is_template: isTemplate,
                 session_date: new Date().toISOString().split('T')[0], // Default to today YYYY-MM-DD
-                status: 'planning',
                 form_data: { 
                     hours: 3, // Default duration
                     players: [] // Empty roster

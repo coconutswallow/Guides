@@ -90,21 +90,6 @@ async function loadSessions() {
         const dateObj = new Date(session.session_date || session.updated_at);
         const dateStr = dateObj.toLocaleDateString();
 
-        // Status Class
-        const statusClass = session.status ? `status-${session.status.toLowerCase()}` : 'status-planning';
-
-        row.innerHTML = `
-            <td>
-                <strong><a href="session.html?id=${session.id}">${session.title}</a></strong>
-                ${session.is_template ? '<span style="font-size:0.8em; color:#666; margin-left:5px;">(Template)</span>' : ''}
-            </td>
-            <td>${dateStr}</td>
-            <td><span class="status-badge ${statusClass}">${session.status || 'Planning'}</span></td>
-            <td style="text-align: right;">
-                <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${session.id}">Delete</button>
-            </td>
-        `;
-
         listBody.appendChild(row);
     });
 
