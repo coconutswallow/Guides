@@ -1,52 +1,69 @@
 /**
- * dashboard.js
- * Handles the logic for the index.html landing page.
- * - Fetches list of sessions
- * - Handles "New Session" creation
- * - Handles Delete actions
+ * assets/js/dm-tool/dashboard.js
  */
 
-import { supabase } from './supabaseClient.js';
-import { fetchSessionList, createSession, deleteSession } from './dm-tool/data-manager.js';
-import { setupAuthListener } from './auth-manager.js'; // Assuming you have a listener setup
+// FIX: Go up one level to /assets/js/
+import { supabase } from '../supabaseClient.js';
+import '../auth-manager.js'; 
 
-// State
+// FIX: Stay in current folder
+import { fetchSessionList, createSession, deleteSession } from './data-manager.js';
+
 let currentUser = null;
 
-/**
- * Initialize Dashboard
- */
-async function init() {
-    try {
-        // 1. Get User
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-            // auth-check.js should have redirected, but just in case
-            window.location.href = 'login.html';
-            return;
-        }
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Check Auth State
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
         currentUser = user;
-
-        // 2. Setup UI Events
-        document.getElementById('btn-new-session').addEventListener('click', handleNewSession);
-        
-        // 3. Load Data
-        await loadSessions();
-
-    } catch (err) {
-        console.error("Dashboard Init Error:", err);
-        alert("Failed to initialize dashboard.");
+        showDashboard();
+    } else {
+        showLanding();
     }
+
+    // 2. Setup Listeners
+    const btnNew = document.getElementById('btn-new-session');
+    if (btnNew) btnNew.addEventListener('click', handleNewSession);
+
+    const btnFirst = document.getElementById('btn-create-first');
+    if (btnFirst) btnFirst.addEventListener('click', handleNewSession);
+    
+    // Auth State Listener
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN') {
+            currentUser = session.user;
+            showDashboard();
+        } else if (event === 'SIGNED_OUT') {
+            currentUser = null;
+            showLanding();
+        }
+    });
+});
+
+function showLanding() {
+    const dash = document.getElementById('dashboard-content');
+    const landing = document.getElementById('public-landing');
+    if(dash) dash.classList.add('hidden');
+    if(landing) landing.classList.remove('hidden');
 }
 
-/**
- * Loads and Renders the Session List
- */
+async function showDashboard() {
+    const dash = document.getElementById('dashboard-content');
+    const landing = document.getElementById('public-landing');
+    if(landing) landing.classList.add('hidden');
+    if(dash) dash.classList.remove('hidden');
+    
+    await loadSessions();
+}
+
 async function loadSessions() {
     const listBody = document.getElementById('session-list-body');
     const loadingState = document.getElementById('loading-state');
     const emptyState = document.getElementById('empty-state');
     const table = document.getElementById('session-table');
+
+    if (!listBody) return; // Guard clause
 
     // Reset UI
     listBody.innerHTML = '';
@@ -59,7 +76,7 @@ async function loadSessions() {
 
     loadingState.classList.add('hidden');
 
-    if (sessions.length === 0) {
+    if (!sessions || sessions.length === 0) {
         emptyState.classList.remove('hidden');
         return;
     }
@@ -97,9 +114,6 @@ async function loadSessions() {
     });
 }
 
-/**
- * Handle Creating a New Session
- */
 async function handleNewSession() {
     const name = prompt("Enter a name for the new session:", "New Session");
     if (!name) return;
@@ -107,28 +121,22 @@ async function handleNewSession() {
     try {
         const newSession = await createSession(currentUser.id, name);
         if (newSession) {
-            // Redirect to the Editor
             window.location.href = `session.html?id=${newSession.id}`;
         }
     } catch (err) {
-        alert("Error creating session. Check console.");
+        console.error(err);
+        alert("Error creating session.");
     }
 }
 
-/**
- * Handle Deleting a Session
- */
 async function handleDelete(e) {
     const id = e.target.dataset.id;
     if (!confirm("Are you sure you want to delete this session log? This cannot be undone.")) return;
 
     const success = await deleteSession(id);
     if (success) {
-        await loadSessions(); // Refresh list
+        await loadSessions(); 
     } else {
         alert("Failed to delete session.");
     }
 }
-
-// Start
-document.addEventListener('DOMContentLoaded', init);

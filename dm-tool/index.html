@@ -1,3 +1,6 @@
+---
+layout: null
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,34 +11,23 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     
     <style>
-        /* Auth Header Styling */
-        .auth-container {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 1rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #ccc;
-        }
-
+        /* Dashboard Specific Styles */
         .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* Ensure the included auth header aligns correctly */
+        #auth-header {
+            display: flex;
+            justify-content: flex-end; /* Pushes content to the right */
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1rem;
         }
 
         .session-table {
@@ -75,17 +67,7 @@
 
     <div class="container">
         
-        <div class="auth-container">
-            <div id="login-section" class=""> 
-                <button id="login-btn" class="btn btn-primary">Login with Discord</button>
-            </div>
-
-            <div id="user-section" class="user-profile hidden">
-                <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
-                <span id="user-name" style="font-weight:500;">Loading...</span>
-                <button id="logout-btn" class="btn btn-sm btn-secondary">Logout</button>
-            </div>
-        </div>
+        {% include auth-header.html %}
 
         <div id="dashboard-content" class="hidden">
             <div class="dashboard-header">
@@ -109,7 +91,6 @@
                         <th style="width: 45%;">Session Name</th>
                         <th style="width: 15%;">Date</th>
                         <th style="width: 15%;">Status</th>
-                        <th style="width: 15%;">APL</th> 
                         <th style="width: 10%; text-align:right;">Actions</th>
                     </tr>
                 </thead>
@@ -125,12 +106,11 @@
                 Please login with Discord to access your logs.
             </p>
         </div>
-
     </div>
 
     <script type="module" src="../assets/js/supabaseClient.js"></script>
     <script type="module" src="../assets/js/auth-manager.js"></script>
-
+    
     <script type="module" src="../assets/js/dm-tool/dashboard.js"></script>
 
 </body>
