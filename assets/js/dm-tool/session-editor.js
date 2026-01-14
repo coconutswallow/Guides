@@ -275,35 +275,8 @@ function getPlayerRosterData() {
 }
 
 // ==========================================
-// 5. Template & Saving Logic
+// 5. Template & Saving Logic (UPDATED)
 // ==========================================
-
-async function initTemplateDropdown() {
-    const select = document.getElementById('template-select');
-    if(!select) return;
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return; 
-
-    try {
-        const { data, error } = await supabase
-            .from('session_logs')
-            .select('id, title')
-            .eq('user_id', user.id)
-            .eq('is_template', true);
-            
-        if (data) {
-            data.forEach(tmpl => {
-                const opt = document.createElement('option');
-                opt.value = tmpl.id;
-                opt.text = tmpl.title;
-                select.appendChild(opt);
-            });
-        }
-    } catch (err) {
-        console.error("Error fetching templates", err);
-    }
-}
 
 function initTemplateLogic() {
     const modal = document.getElementById('modal-save-template');
@@ -312,10 +285,12 @@ function initTemplateLogic() {
     const btnLoad = document.getElementById('btn-load-template');
     const btnSaveGame = document.getElementById('btn-save-game');
 
+    // Open Modal
     if(btnOpen) {
         btnOpen.addEventListener('click', () => modal.showModal());
     }
 
+    // CONFIRM SAVE TEMPLATE
     if(btnConfirm) {
         btnConfirm.addEventListener('click', async () => {
             const tmplName = document.getElementById('inp-template-name').value;
@@ -324,22 +299,35 @@ function initTemplateLogic() {
             const { data: { user } } = await supabase.auth.getUser();
             if(!user) return alert("Please login");
 
-            const formData = getFormData();
+            // 1. Get All Data
+            const fullData = getFormData();
+
+            // 2. Filter Data for Template (Remove specific fields)
+            const templateData = prepareTemplateData(fullData);
             
             try {
-                await saveAsTemplate(user.id, tmplName, formData);
+                // Save with the filtered data
+                await saveAsTemplate(user.id, tmplName, templateData);
+                
                 alert("Template Saved!");
                 modal.close();
+                
+                // Add to dropdown immediately
                 const select = document.getElementById('template-select');
                 const opt = document.createElement('option');
                 opt.text = tmplName; 
+                // We don't have the new ID easily without a fetch return, 
+                // but usually you'd reload the dropdown or return data from saveAsTemplate
+                // For now, this gives visual feedback.
                 select.appendChild(opt);
             } catch (e) {
+                console.error(e);
                 alert("Error saving template");
             }
         });
     }
 
+    // LOAD TEMPLATE
     if(btnLoad) {
         btnLoad.addEventListener('click', async () => {
             const tmplId = document.getElementById('template-select').value;
@@ -353,27 +341,75 @@ function initTemplateLogic() {
         });
     }
     
+    // SAVE GAME (Top Button)
     if(btnSaveGame) {
         btnSaveGame.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const sessionId = urlParams.get('id');
 
+            // 1. Get Full Data (No filtering)
             const formData = getFormData();
+            
+            // 2. Extract Metadata for SQL Columns (title, date)
             const title = document.getElementById('header-game-name').value || "Untitled Session";
             const dateInput = document.getElementById('inp-start-datetime');
+            // Ensure we save NULL to SQL if date is empty, otherwise ISO string
             const date = dateInput && dateInput.value ? new Date(dateInput.value).toISOString().split('T')[0] : null;
 
             if (sessionId) {
+                // Save Full Session
                 await saveSession(sessionId, formData, { title, date });
+                
+                // Visual Feedback
                 const btn = document.getElementById('btn-save-game');
                 const originalText = btn.innerText;
                 btn.innerText = "Saved!";
-                setTimeout(() => btn.innerText = originalText, 1500);
+                btn.classList.add('button-success'); // Optional: Add a success style class
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('button-success');
+                }, 1500);
             } else {
-                alert("Session ID missing.");
+                alert("Session ID missing. Please create a session from the dashboard first.");
             }
         });
     }
+}
+
+/**
+ * Helper to strip specific data for Templates
+ * Rules:
+ * - Keep Timezone, Skip Date/Time
+ * - Skip Listing/Lobby URLs
+ * - Skip Player Table
+ * - Skip DM Table
+ */
+function prepareTemplateData(originalData) {
+    // Deep copy to avoid modifying the actual form data on screen
+    const data = JSON.parse(JSON.stringify(originalData));
+
+    if (data.header) {
+        // Reset Date/Time but keep Timezone
+        data.header.game_datetime = null; 
+        // Note: data.header.timezone is PRESERVED
+
+        // Clear URLs
+        data.header.listing_url = "";
+        data.header.lobby_url = "";
+    }
+
+    // Clear Roster and DM
+    data.players = []; 
+    data.dm = {
+        character_name: "",
+        level: "",
+        games_count: "0"
+    };
+    
+    // Ensure sessions array is empty for a template
+    data.sessions = [];
+
+    return data;
 }
 
 // ==========================================
@@ -387,39 +423,52 @@ function getFormData() {
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
 
+    // Construct JSON based on Design Doc
     return {
         header: {
-            game_datetime: val('inp-unix-time'),
+            // -- Logistics --
+            game_datetime: val('inp-unix-time'), // UNIX timestamp
             timezone: val('inp-timezone'),
+            intended_duration: val('inp-duration-text'),
+            
+            // -- Game Details --
             game_description: val('inp-description'), 
-            game_type: val('inp-format'),
+            game_version: val('inp-version'),
+            game_type: val('inp-format'), // Format
+            apps_type: val('inp-apps-type'),
+            platform: val('inp-platform'),
+            event_tags: selectedEvents, 
+            
+            // -- Requirements --
             tier: val('inp-tier'),
             apl: val('inp-apl'),
             party_size: val('inp-party-size'),
-            platform: val('inp-platform'),
-            intended_duration: val('inp-duration-text'),
+
+            // -- Tone & Difficulty --
             tone: val('inp-tone'),
-            encounter_difficulty: val('inp-diff-encounter'),
-            game_version: val('inp-version'),
-            apps_type: val('inp-apps-type'),
-            event_tags: selectedEvents, 
             focus: val('inp-focus'),
+            encounter_difficulty: val('inp-diff-encounter'),
             threat_level: val('inp-diff-threat'),
             char_loss: val('inp-diff-loss'),
+            
+            // -- Text Blocks --
             house_rules: val('inp-houserules'),
             notes: val('inp-notes'),
             warnings: val('inp-warnings'),
             how_to_apply: val('inp-apply'),
+            
+            // -- Links --
             listing_url: val('inp-listing-url'),
             lobby_url: val('inp-lobby-url')
         },
+        // Setup Phase Data (Master Roster)
         players: getPlayerRosterData(),
         dm: {
-            // discord_id removed
             character_name: val('inp-dm-char-name'),
             level: val('inp-dm-level'),
             games_count: val('inp-dm-games-count')
         },
+        // Future Session Logs
         sessions: [] 
     };
 }
