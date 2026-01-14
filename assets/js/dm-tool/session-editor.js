@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initHoursLogic();
     initDateTimeConverter();
     initTemplateLogic();
-    initPlayerRoster(); // New Roster Logic
+    initPlayerRoster(); 
     
     // Load dropdowns
     await initDynamicDropdowns(); 
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // 2. Data Loading & Saving Logic
 // ==========================================
 
-// ** FIXED: Added missing function to load data **
 async function loadSessionData(sessionId) {
     try {
         const session = await loadSession(sessionId);
@@ -238,11 +237,11 @@ function addPlayerRow(data = {}) {
     gamesOptions += `<option value="10+" ${selectedTenPlus}>10+</option>`;
 
     tr.innerHTML = `
-        <td><input type="text" class="inp-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}"></td>
-        <td><input type="text" class="inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
-        <td><input type="number" class="inp-level" placeholder="Lvl" value="${data.level || ''}" style="width: 60px;"></td>
+        <td><input type="text" class="inp-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}" style="width: 100%; padding: 0.8rem;"></td>
+        <td><input type="text" class="inp-char-name" placeholder="Character Name" value="${data.character_name || ''}" style="width: 100%; padding: 0.8rem;"></td>
+        <td><input type="number" class="inp-level" placeholder="Lvl" value="${data.level || ''}" style="width: 100%; padding: 0.8rem;"></td>
         <td>
-            <select class="inp-games-count">
+            <select class="inp-games-count" style="width: 100%; padding: 0.8rem;">
                 ${gamesOptions}
             </select>
         </td>
@@ -413,8 +412,13 @@ function getFormData() {
             listing_url: val('inp-listing-url'),
             lobby_url: val('inp-lobby-url')
         },
-        // Capture Player Roster
         players: getPlayerRosterData(),
+        dm: {
+            discord_id: val('inp-dm-discord-id'),
+            character_name: val('inp-dm-char-name'),
+            level: val('inp-dm-level'),
+            games_count: val('inp-dm-games-count')
+        },
         sessions: [] 
     };
 }
@@ -479,6 +483,19 @@ function populateForm(session) {
                 addPlayerRow(player);
             });
         }
+    }
+
+    // 3. Populate DM Details
+    if (session.form_data.dm) {
+        const d = session.form_data.dm;
+        const setVal = (id, val) => { 
+            const el = document.getElementById(id); 
+            if(el) el.value = val || ""; 
+        };
+        setVal('inp-dm-discord-id', d.discord_id);
+        setVal('inp-dm-char-name', d.character_name);
+        setVal('inp-dm-level', d.level);
+        setVal('inp-dm-games-count', d.games_count);
     }
 }
 

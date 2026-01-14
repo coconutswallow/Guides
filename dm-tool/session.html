@@ -32,7 +32,7 @@ extra_css:
 <div class="editor-container">
     <nav class="editor-sidebar" id="sidebar-nav">
         <div class="nav-item active" data-target="view-ad-listing">Game Ad & Listing</div>
-        <div class="nav-item" data-target="view-pc-setup">PC / DMPC Setup</div>
+        <div class="nav-item" data-target="view-player-setup">Player & DM Setup</div>
         <div class="nav-divider"></div>
         <div id="dynamic-session-nav">
             <div class="nav-item" data-target="view-session-1">Session 1</div>
@@ -202,7 +202,8 @@ extra_css:
                         <input type="text" id="inp-lobby-url" placeholder="Link to the Voice/Text channel">
                     </div>
 
-                </div> </div>
+                </div> 
+            </div>
 
             <div id="ad-output" class="subtab-content hidden-section">
                 <h3>Game Listing</h3>
@@ -215,12 +216,14 @@ extra_css:
             </div>
         </div>
 
-        <div id="view-pc-setup" class="view-section hidden-section">
-            <h2>PC / DMPC Setup</h2>
+        <div id="view-player-setup" class="view-section hidden-section">
+            <h2>Player & DM Setup</h2>
+            
             <div class="card">
-                <p>Enter the details for the PCs and DMPCs participating in this session.</p>
-                <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
-                <table class="roster-table" style="margin-top:1rem; width:100%; border-collapse: collapse;">
+                <h3 class="card-title">Player Roster</h3>
+                <p>Enter the details for the players participating in this session.</p>
+                <button id="btn-add-player" class="button btn-sm" style="margin-bottom: 1rem;">+ Add Player</button>
+                <table class="roster-table" style="width:100%; border-collapse: separate; border-spacing: 0 10px;">
                     <thead>
                         <tr>
                             <th style="width: 25%;">Discord ID</th>
@@ -233,6 +236,41 @@ extra_css:
                     <tbody id="roster-body">
                     </tbody>
                 </table>
+            </div>
+
+            <div class="card" style="margin-top: 2rem;">
+                <h3 class="card-title">Dungeon Master Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>DM Discord ID</label>
+                        <input type="text" id="inp-dm-discord-id" placeholder="Discord ID" style="padding: 0.8rem;">
+                    </div>
+                    <div class="form-group">
+                        <label>DM Character Name</label>
+                        <input type="text" id="inp-dm-char-name" placeholder="Character Name" style="padding: 0.8rem;">
+                    </div>
+                    <div class="form-group">
+                        <label>DM PC Level</label>
+                        <input type="number" id="inp-dm-level" placeholder="Level" style="padding: 0.8rem;">
+                    </div>
+                    <div class="form-group">
+                        <label>Games DMed</label>
+                        <select id="inp-dm-games-count" style="padding: 0.8rem;">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="10+">10+</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
 
