@@ -5,6 +5,7 @@
         readonly 
         spellcheck="false"
         placeholder="Output will appear here..."
+        style="height: {{ include.height | default: '500px' }};"
     ></textarea>
 
     <div class="output-actions" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
