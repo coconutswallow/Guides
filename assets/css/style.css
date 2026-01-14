@@ -37,6 +37,7 @@
    20. PDF RENDERING
    21. RESPONSIVE DESIGN
    22. PRINT STYLES
+   23. HELP ICON
    ============================================ */
 
 
@@ -2055,4 +2056,194 @@ img + .image-caption {
   table, figure, img {
     page-break-inside: avoid;
   }
+}
+
+/* ==========================================
+   23. HELP ICON / TOOLTIP COMPONENT
+   ========================================== */
+
+.help-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+}
+
+.help-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-secondary);
+    cursor: help;
+    transition: color 0.2s ease;
+}
+
+.help-icon:hover {
+    color: var(--color-primary);
+}
+
+.help-tooltip {
+    position: absolute;
+    background: var(--color-bg-light);
+    color: var(--color-text);
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    white-space: normal;
+    max-width: 250px;
+    width: max-content;
+    border: 2px solid var(--color-border);
+    
+    /* Shadow for depth */
+    box-shadow: var(--shadow-lg);
+    
+    /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    
+    /* Prevent text selection */
+    user-select: none;
+    pointer-events: none;
+    
+    /* Default position: top */
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* Arrow pointing down (for top tooltip) */
+.help-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--color-border);
+}
+
+.help-tooltip::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-top-color: var(--color-bg-light);
+    z-index: 1;
+}
+
+/* Show tooltip on hover */
+.help-icon-wrapper:hover .help-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Position variants */
+.help-icon-wrapper[data-position="bottom"] .help-tooltip {
+    bottom: auto;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+}
+
+.help-icon-wrapper[data-position="bottom"] .help-tooltip::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: var(--color-border);
+}
+
+.help-icon-wrapper[data-position="bottom"] .help-tooltip::before {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: var(--color-bg-light);
+}
+
+.help-icon-wrapper[data-position="left"] .help-tooltip {
+    bottom: auto;
+    top: 50%;
+    left: auto;
+    right: calc(100% + 8px);
+    transform: translateY(-50%);
+}
+
+.help-icon-wrapper[data-position="left"] .help-tooltip::after {
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-left-color: var(--color-border);
+}
+
+.help-icon-wrapper[data-position="left"] .help-tooltip::before {
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-left-color: var(--color-bg-light);
+    margin-left: -1px;
+}
+
+.help-icon-wrapper[data-position="right"] .help-tooltip {
+    bottom: auto;
+    top: 50%;
+    left: calc(100% + 8px);
+    transform: translateY(-50%);
+}
+
+.help-icon-wrapper[data-position="right"] .help-tooltip::after {
+    top: 50%;
+    right: 100%;
+    left: auto;
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-right-color: var(--color-border);
+}
+
+.help-icon-wrapper[data-position="right"] .help-tooltip::before {
+    top: 50%;
+    right: 100%;
+    left: auto;
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-right-color: var(--color-bg-light);
+    margin-right: -1px;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .help-tooltip {
+    background: var(--color-bg-medium);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .help-tooltip::before {
+    border-top-color: var(--color-bg-medium);
+}
+
+[data-theme="dark"] .help-icon-wrapper[data-position="bottom"] .help-tooltip::before {
+    border-top-color: transparent;
+    border-bottom-color: var(--color-bg-medium);
+}
+
+[data-theme="dark"] .help-icon-wrapper[data-position="left"] .help-tooltip::before {
+    border-top-color: transparent;
+    border-left-color: var(--color-bg-medium);
+}
+
+[data-theme="dark"] .help-icon-wrapper[data-position="right"] .help-tooltip::before {
+    border-top-color: transparent;
+    border-right-color: var(--color-bg-medium);
+}
+
+/* Responsive: Mobile tooltips always appear above/below */
+@media (max-width: 768px) {
+    .help-tooltip {
+        max-width: 200px;
+        font-size: 0.8rem;
+    }
 }

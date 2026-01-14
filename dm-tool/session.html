@@ -54,154 +54,154 @@ background_image: https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c487
             <div id="view-ad-listing" class="view-section">
                 
                 <div class="content-tabs">
-                    <div class="content-tab active" data-subtab="ad-input">Input Form</div>
-                    <div class="content-tab" data-subtab="ad-output">Output (Markdown)</div>
+                    <div class="content-tab active" data-subtab="ad-input">Input</div>
+                    <div class="content-tab" data-subtab="ad-output">Output</div>
                 </div>
 
-                <div class="form-grid">
-    
-    <div class="form-row-full" style="background: var(--color-bg-medium); padding: 1rem; border-radius: 6px; border: 1px solid var(--color-border); align-items: center;">
-        <strong style="color:var(--color-primary); margin-right: 1rem;">TEMPLATE:</strong>
-        <select id="template-select" style="flex:1; max-width:300px; padding: 0.5rem;">
-            <option value="">Select a saved template...</option>
-        </select>
-        <button class="button button-secondary" id="btn-load-template" style="padding:0.4rem 1rem;">Load</button>
-        <button class="button button-secondary" id="btn-open-save-template" style="padding:0.4rem 1rem;">Save Current as Template</button>
-    </div>
-
-    <h3 class="form-section-title">Logistics</h3>
-
-    <div class="form-row-full">
-        <div class="form-group flex-grow">
-            <label>Start Date & Time</label>
-            <input type="datetime-local" id="inp-start-datetime">
-            <input type="hidden" id="inp-unix-time">
-        </div>
+                <div id="ad-input" class="subtab-content">
+                    <div class="form-grid">
         
-        <div class="form-group" style="width: 250px;">
-            <label>Timezone</label>
-            <select id="inp-timezone"></select>
-        </div>
-    </div>
+                        <div class="form-row-full" style="background: var(--color-bg-medium); padding: 1rem; border-radius: 6px; border: 1px solid var(--color-border); align-items: center;">
+                            <strong style="color:var(--color-primary); margin-right: 1rem;">TEMPLATE:</strong>
+                            <select id="template-select" style="flex:1; max-width:300px; padding: 0.5rem;">
+                                <option value="">Select a saved template...</option>
+                            </select>
+                            <button class="button button-secondary" id="btn-load-template" style="padding:0.4rem 1rem;">Load</button>
+                            <button class="button button-secondary" id="btn-open-save-template" style="padding:0.4rem 1rem;">Save Current as Template</button>
+                        </div>
 
-    <div class="form-row-full">
-        <div class="form-group">
-            <label>Intended Duration</label>
-            <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 Hours">
-        </div>
-    </div>
+                        <h3 class="form-section-title">Logistics</h3>
 
-    <div class="form-group" style="grid-column: 1 / -1;">
-        <label>Game Description</label>
-        {% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}
-    </div>
+                        <div class="form-row-full">
+                            <div class="form-group flex-grow">
+                                <label>Start Date & Time</label>
+                                <input type="datetime-local" id="inp-start-datetime">
+                                <input type="hidden" id="inp-unix-time">
+                            </div>
+                            
+                            <div class="form-group" style="width: 250px;">
+                                <label>Timezone</label>
+                                <select id="inp-timezone"></select>
+                            </div>
+                        </div>
 
-    <h3 class="form-section-title">Game Settings</h3>
+                        <div class="form-row-full">
+                            <div class="form-group">
+                                <label>Intended Duration</label>
+                                <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 Hours">
+                            </div>
+                        </div>
 
-    <div class="form-group">
-        <label>Game Format</label>
-        <select id="inp-format">
-            <option value="">Loading...</option>
-        </select>
-    </div>
-    
-    <div class="form-group">
-        <label>Game Version</label>
-        <select id="inp-version">
-            <option value="">Loading...</option>
-        </select>
-    </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Game Description</label>
+                            {% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}
+                        </div>
 
-    <div class="form-group">
-        <label>Applications Type</label>
-        <select id="inp-apps-type">
-            <option value="">Loading...</option>
-        </select>
-    </div>
-    
-    <div class="form-group">
-        <label>Platform</label>
-        <input type="text" id="inp-platform" placeholder="e.g. Roll20, FoundryVTT">
-    </div>
+                        <h3 class="form-section-title">Game Settings</h3>
 
-        <div class="form-group">
-            <label>Event Tag</label>
-            <select id="inp-event">
-                <option value="">None</option>
-                <option value="gameday">Game Day</option>
-                <option value="charity">Charity Event</option>
-            </select>
-        </div>
+                        <div class="form-group">
+                            <label>Game Format</label>
+                            <select id="inp-format">
+                                <option value="">Loading...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Game Version</label>
+                            <select id="inp-version">
+                                <option value="">Loading...</option>
+                            </select>
+                        </div>
 
-        <h3 class="form-section-title">Player Requirements</h3>
+                        <div class="form-group">
+                            <label>Applications Type</label>
+                            <select id="inp-apps-type">
+                                <option value="">Loading...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Platform</label>
+                            <input type="text" id="inp-platform" placeholder="e.g. Roll20, FoundryVTT">
+                        </div>
 
-        <div class="form-group">
-            <label>Intended Tier</label>
-            <input type="text" id="inp-tier" placeholder="e.g. Tier 2">
-        </div>
-        
-        <div class="form-group">
-            <label>Intended APL</label>
-            <input type="text" id="inp-apl" placeholder="e.g. 8">
-        </div>
+                        <div class="form-group">
+                            <label>Event Tag</label>
+                            <select id="inp-event">
+                                <option value="">None</option>
+                                <option value="gameday">Game Day</option>
+                                <option value="charity">Charity Event</option>
+                            </select>
+                        </div>
 
-        <div class="form-group">
-            <label>Party Size</label>
-            <input type="text" id="inp-party-size" value="5">
-        </div>
+                        <h3 class="form-section-title">Player Requirements</h3>
 
-        <h3 class="form-section-title">Tone & Difficulty</h3>
+                        <div class="form-group">
+                            <label>Intended Tier</label>
+                            <input type="text" id="inp-tier" placeholder="e.g. Tier 2">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Intended APL</label>
+                            <input type="text" id="inp-apl" placeholder="e.g. 8">
+                        </div>
 
-        <div class="form-group">
-            <label>Tone</label>
-            <input type="text" id="inp-tone" placeholder="e.g. Serious, Dark">
-        </div>
+                        <div class="form-group">
+                            <label>Party Size</label>
+                            <input type="text" id="inp-party-size" value="5">
+                        </div>
 
-        <div class="form-group">
-            <label>Focus</label>
-            <input type="text" id="inp-focus" placeholder="e.g. 70% Combat, 30% Role-play">
-        </div>
-        
-        <div class="form-group">
-            <label>Encounter Difficulty</label>
-            <input type="text" id="inp-diff-encounter" placeholder="Medium / Hard / Deadly">
-        </div>
+                        <h3 class="form-section-title">Tone & Difficulty</h3>
 
-        <div class="form-group">
-            <label>Enemy Threat Level</label>
-            <input type="text" id="inp-diff-threat" placeholder="e.g. Deadly">
-        </div>
-        
-        <div class="form-group">
-            <label>Chance of Char. Loss</label>
-            <input type="text" id="inp-diff-loss" placeholder="Low / Medium / High">
-        </div>
+                        <div class="form-group">
+                            <label>Tone</label>
+                            <input type="text" id="inp-tone" placeholder="e.g. Serious, Dark">
+                        </div>
 
-        <h3 class="form-section-title">Details & Rules</h3>
-        
-        <div class="form-group" style="grid-column: 1 / -1;">
-            <label>House Rules</label>
-            {% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}
-        </div>
+                        <div class="form-group">
+                            <label>Focus</label>
+                            <input type="text" id="inp-focus" placeholder="e.g. 70% Combat, 30% Role-play">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Encounter Difficulty</label>
+                            <input type="text" id="inp-diff-encounter" placeholder="Medium / Hard / Deadly">
+                        </div>
 
-        <div class="form-group" style="grid-column: 1 / -1;">
-            <label>DM Notes</label>
-            {% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}
-        </div>
+                        <div class="form-group">
+                            <label>Enemy Threat Level</label>
+                            <input type="text" id="inp-diff-threat" placeholder="e.g. Deadly">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Chance of Char. Loss</label>
+                            <input type="text" id="inp-diff-loss" placeholder="Low / Medium / High">
+                        </div>
 
-        <div class="form-group" style="grid-column: 1 / -1;">
-            <label>Content Warnings</label>
-            {% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}
-        </div>
-        
-        <div class="form-group" style="grid-column: 1 / -1;">
-            <label>How to Apply</label>
-            {% include markdown-widget.html id="inp-apply" name="how_to_apply" height="100px" %}
-        </div>
+                        <h3 class="form-section-title">Details & Rules</h3>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>House Rules</label>
+                            {% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}
+                        </div>
 
-    </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>DM Notes</label>
+                            {% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}
+                        </div>
 
-                <div id="ad-output" class="subtab-content hidden-section">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Content Warnings</label>
+                            {% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>How to Apply</label>
+                            {% include markdown-widget.html id="inp-apply" name="how_to_apply" height="100px" %}
+                        </div>
+
+                    </div>
+                </div> <div id="ad-output" class="subtab-content hidden-section">
                     <h3>Game Listing</h3>
                     <p>Copy and paste this into the #game-listings channel.</p>
                     <div class="output-block" id="out-listing">
