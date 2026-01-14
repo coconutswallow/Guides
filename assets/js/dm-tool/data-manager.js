@@ -56,12 +56,17 @@ export async function fetchActiveEvents() {
    2. DASHBOARD OPERATIONS
    ========================================= */
 
+/* =========================================
+   2. DASHBOARD OPERATIONS
+   ========================================= */
+
 export async function fetchSessionList(userId) {
     try {
         const { data, error } = await supabase
             .from('session_logs')
             .select('id, title, session_date, is_template, updated_at')
             .eq('user_id', userId)
+            .eq('is_template', false) // Added filter to show only active sessions
             .order('session_date', { ascending: false, nullsFirst: false });
 
         if (error) throw error;

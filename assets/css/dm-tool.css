@@ -424,3 +424,31 @@ dialog::backdrop {
     max-width: 100%; /* Prevent overflow on mobile */
 }
 
+/* ============================
+   9. Dark Mode & Table Fixes
+   ============================ */
+
+/* Fix Session Link Color */
+.session-link {
+    font-weight: 600;
+    color: var(--color-text); /* Uses theme variable (Dark in light mode, Light in dark mode) */
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.session-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Fix "Edit" Button in Dark Mode */
+/* The global style sets text to dark-on-dark for secondary buttons in dark mode. We override it here. */
+[data-theme="dark"] .button-secondary {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .button-secondary:hover {
+    background: var(--color-primary);
+    color: var(--color-btn-text); /* Text becomes light on hover */
+}

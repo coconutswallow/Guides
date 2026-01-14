@@ -101,10 +101,10 @@ async function loadSessions() {
         // Safe Title
         const safeTitle = session.title ? escapeHtml(session.title) : 'Untitled Session';
 
-         // We inject the actual cells (td) into the row
+         // REMOVED inline color style from the <a> tag below
         row.innerHTML = `
             <td>
-                <a href="session.html?id=${session.id}" style="font-weight:600; color: #2c3e50; text-decoration: none;">
+                <a href="session.html?id=${session.id}" class="session-link">
                     ${safeTitle}
                 </a>
             </td>
