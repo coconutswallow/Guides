@@ -184,52 +184,58 @@ function initHoursLogic() {
 /**
  * Core Logic: Creates Sidebar links AND Session Views (DOM)
  * Handles creating new tabs or removing old ones based on hours.
+ * PREVENTS DUPLICATES by checking IDs.
  */
 function updateSessionNavAndViews(count, totalHours) {
     const navContainer = document.getElementById('dynamic-session-nav');
     const viewContainer = document.getElementById('session-views-container');
     if(!navContainer || !viewContainer) return;
 
-    // 1. Determine current number of sessions
-    const currentSessions = viewContainer.children.length;
-
-    // 2. Add Sessions if needed
-    if (count > currentSessions) {
-        for (let i = currentSessions + 1; i <= count; i++) {
-            // Sidebar Link
-            const div = document.createElement('div');
-            div.className = 'nav-item';
-            div.dataset.target = `view-session-${i}`;
-            div.textContent = `Session ${i}`;
-            div.id = `nav-link-session-${i}`;
-            navContainer.appendChild(div);
-
-            // View DOM (Clone Template)
-            const tmpl = document.getElementById('tpl-session-view');
-            const clone = tmpl.content.cloneNode(true);
-            const viewDiv = clone.querySelector('.session-view');
-            
-            viewDiv.id = `view-session-${i}`;
-            viewDiv.dataset.sessionIndex = i;
-            viewDiv.querySelector('.lbl-session-num').textContent = i;
-            
-            // Default Data logic
-            const gameName = document.getElementById('header-game-name').value || "Game";
-            viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
-            
-            // Distribute Hours (Simple default)
-            const hoursPerSession = distributeHours(totalHours, count);
-            viewDiv.querySelector('.inp-session-hours').value = hoursPerSession;
-
-            viewContainer.appendChild(viewDiv);
-
-            // Initialize Listeners for this new specific view
-            initSessionViewLogic(viewDiv, i);
+    // 1. Loop desired count
+    for (let i = 1; i <= count; i++) {
+        // Prevent duplicate creation
+        if (document.getElementById(`view-session-${i}`)) {
+            continue; 
         }
-    } 
-    // 3. Remove Sessions if needed (Truncate from end)
-    else if (count < currentSessions) {
-        for (let i = currentSessions; i > count; i--) {
+
+        // Sidebar Link
+        const div = document.createElement('div');
+        div.className = 'nav-item';
+        div.dataset.target = `view-session-${i}`;
+        div.textContent = `Session ${i}`;
+        div.id = `nav-link-session-${i}`;
+        navContainer.appendChild(div);
+
+        // View DOM (Clone Template)
+        const tmpl = document.getElementById('tpl-session-view');
+        const clone = tmpl.content.cloneNode(true);
+        const viewDiv = clone.querySelector('.session-view');
+        
+        viewDiv.id = `view-session-${i}`;
+        viewDiv.dataset.sessionIndex = i;
+        viewDiv.querySelector('.lbl-session-num').textContent = i;
+        
+        // Default Data logic
+        const gameName = document.getElementById('header-game-name').value || "Game";
+        viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
+        
+        // Distribute Hours (Simple default)
+        const hoursPerSession = distributeHours(totalHours, count);
+        viewDiv.querySelector('.inp-session-hours').value = hoursPerSession;
+
+        viewContainer.appendChild(viewDiv);
+
+        // Initialize Listeners for this new specific view
+        initSessionViewLogic(viewDiv, i);
+    }
+
+    // 2. Remove Excess Sessions (if user reduces hours)
+    // We check current DOM count vs desired count by querying the actual existing elements
+    const currentViews = viewContainer.querySelectorAll('.session-view');
+    const currentCount = currentViews.length;
+
+    if (currentCount > count) {
+        for (let i = currentCount; i > count; i--) {
             const nav = document.getElementById(`nav-link-session-${i}`);
             const view = document.getElementById(`view-session-${i}`);
             if(nav) nav.remove();
@@ -309,9 +315,9 @@ function syncSessionPlayers(viewElement, sessionIndex) {
         } else {
             const g = parseInt(currentGames) || 0;
             // Cap at 10, then use "10+" as the next step
-            if (g >= 9) nextGames = "10"; // Or should it be 10+? Logic says "stop at 10+"
-            // If they had 9, next is 10. If they had 10, next is 10+? 
-            // Simplified:
+            if (g >= 9) nextGames = "10"; 
+            
+            // Simplified increment logic
             nextGames = (g + 1).toString();
             if (g >= 10) nextGames = "10+";
         }
@@ -855,8 +861,7 @@ ${data.game_description || 'N/A'}
 **Focus:** ${data.focus || 'N/A'}
 **Difficulty:** ${data.encounter_difficulty || 'N/A'}
 - **Encounter Difficulty:** ${data.encounter_difficulty || 'N/A'}
-- **Chance of Character Loss:** ${data.char_loss || 'N/A'}
-- **Enemy Threat Level:** ${data.threat_level || 'N/A'}
+- **Chance of Character Loss:** ${data.char_loss || 'N/A'}\r\n- **Enemy Threat Level:** ${data.threat_level || 'N/A'}
 - **Environment Hazard Level:** N/A
 
 **Lobby:** ${data.lobby_url || 'N/A'}

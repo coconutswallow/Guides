@@ -55,8 +55,7 @@ extra_css:
         <div class="nav-item" data-target="view-player-setup">Player & DM Setup</div>
         <div class="nav-divider"></div>
         <div id="dynamic-session-nav">
-            <div class="nav-item" data-target="view-session-1">Session 1</div>
-        </div>
+            </div>
     </nav>
 
     <main class="editor-main">
@@ -138,7 +137,7 @@ extra_css:
                     <div class="form-group">
                         <label>Event(s) (Hold Ctrl/Cmd to select multiple)</label>
                         <select id="inp-event" multiple>
-                            </select>
+                        </select>
                     </div>
 
                     <h3 class="form-section-title">Player Requirements</h3>
@@ -208,7 +207,6 @@ extra_css:
                     </div>
 
                     <div class="form-group" style="grid-column: 1 / -1;">
-                         
                         <label>Game Listing URL</label>
                         <input type="text" id="inp-listing-url" placeholder="Link to the Game Listing">
                     </div>
@@ -240,9 +238,12 @@ extra_css:
             <h2>Player & DM Setup</h2>
             
             <div class="card">
-                <h3 class="card-title">Player Roster</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 class="card-title" style="margin:0;">Player Roster</h3>
+                    <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
+                </div>
                 <p>Enter the details for the players participating in this session.</p>
-                <button id="btn-add-player" class="button btn-sm" style="margin-bottom: 1rem;">+ Add Player</button>
+                
                 <table class="roster-table" style="width:100%; border-collapse: separate; border-spacing: 0 10px;">
                     <thead>
                         <tr>
@@ -318,14 +319,18 @@ extra_css:
                             <input type="datetime-local" class="inp-session-date">
                             <input type="hidden" class="inp-session-unix">
                         </div>
-                        </div>
+                    </div>
 
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-                            <label>Player Logs</label>
-                            <button class="button button-secondary btn-sm btn-sync-players" title="Reset table based on previous session">
-                                ↻ Sync Roster
-                            </button>
+                    <div class="form-group" style="grid-column: 1 / -1; background: var(--color-bg-light); padding: 1rem; border: 1px solid var(--color-border); border-radius: 4px;">
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+                            <label style="margin:0;">Player Logs</label>
+                            <div>
+                                <button class="button button-secondary btn-sm btn-sync-players" title="Copy from previous session">
+                                    ↻ Sync Roster
+                                </button>
+                                <button class="button btn-sm btn-add-session-player">+ Add Player</button>
+                            </div>
                         </div>
                         
                         <div style="overflow-x: auto;">
@@ -346,7 +351,6 @@ extra_css:
                                     </tbody>
                             </table>
                         </div>
-                        <button class="button btn-sm btn-add-session-player" style="margin-top:0.5rem;">+ Add Player</button>
                     </div>
 
                     <div class="form-group" style="grid-column: 1 / -1;">
