@@ -218,15 +218,16 @@ extra_css:
         <div id="view-pc-setup" class="view-section hidden-section">
             <h2>PC / DMPC Setup</h2>
             <div class="card">
-                <p>Player roster and DMPC configuration will go here.</p>
+                <p>Enter the details for the PCs and DMPCs participating in this session.</p>
                 <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
-                <table class="roster-table" style="margin-top:1rem;">
+                <table class="roster-table" style="margin-top:1rem; width:100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th>Character Name</th>
-                            <th>Discord ID</th>
-                            <th>Level</th>
-                            <th>Actions</th>
+                            <th style="width: 25%;">Discord ID</th>
+                            <th style="width: 30%;">Character Name</th>
+                            <th style="width: 15%;">Level</th>
+                            <th style="width: 20%;">Games on Server</th>
+                            <th style="width: 10%;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="roster-body">

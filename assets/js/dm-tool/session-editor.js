@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initHoursLogic();
     initDateTimeConverter();
     initTemplateLogic();
+    initPlayerRoster(); // New Roster Logic
     
     // Load dropdowns
     await initDynamicDropdowns(); 
@@ -29,8 +30,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ==========================================
-// 2. Logic (Tabs, Hours, Timezone)
+// 2. Data Loading & Saving Logic
 // ==========================================
+
+// ** FIXED: Added missing function to load data **
+async function loadSessionData(sessionId) {
+    try {
+        const session = await loadSession(sessionId);
+        if (session) {
+            populateForm(session);
+        } else {
+            console.error("Session not found");
+        }
+    } catch (error) {
+        console.error("Error loading session data:", error);
+    }
+}
 
 async function initDynamicDropdowns() {
     const rules = await fetchGameRules();
@@ -67,6 +82,10 @@ async function initEventsDropdown() {
         select.appendChild(el);
     });
 }
+
+// ==========================================
+// 3. UI Logic (Tabs, Hours, Timezone)
+// ==========================================
 
 function initTabs() {
     document.querySelectorAll('#sidebar-nav .nav-item').forEach(item => {
@@ -189,7 +208,74 @@ function initTimezone() {
 }
 
 // ==========================================
-// 3. Template & Data Logic
+// 4. Player Roster Logic (PC/DMPC)
+// ==========================================
+
+function initPlayerRoster() {
+    const btnAdd = document.getElementById('btn-add-player');
+    if(btnAdd) {
+        btnAdd.addEventListener('click', () => {
+            addPlayerRow();
+        });
+    }
+}
+
+function addPlayerRow(data = {}) {
+    const tbody = document.getElementById('roster-body');
+    if(!tbody) return;
+
+    const tr = document.createElement('tr');
+    tr.className = 'player-row';
+
+    // Games Dropdown Generator
+    let gamesOptions = '';
+    for(let i=0; i<=10; i++) {
+        const val = i.toString();
+        const selected = (data.games_count === val) ? 'selected' : '';
+        gamesOptions += `<option value="${val}" ${selected}>${val}</option>`;
+    }
+    const selectedTenPlus = (data.games_count === '10+') ? 'selected' : '';
+    gamesOptions += `<option value="10+" ${selectedTenPlus}>10+</option>`;
+
+    tr.innerHTML = `
+        <td><input type="text" class="inp-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}"></td>
+        <td><input type="text" class="inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
+        <td><input type="number" class="inp-level" placeholder="Lvl" value="${data.level || ''}" style="width: 60px;"></td>
+        <td>
+            <select class="inp-games-count">
+                ${gamesOptions}
+            </select>
+        </td>
+        <td style="text-align:center;">
+            <button class="button button-danger btn-sm btn-delete-row" title="Remove Player">&times;</button>
+        </td>
+    `;
+
+    // Delete Event
+    tr.querySelector('.btn-delete-row').addEventListener('click', () => {
+        tr.remove();
+    });
+
+    tbody.appendChild(tr);
+}
+
+function getPlayerRosterData() {
+    const rows = document.querySelectorAll('#roster-body .player-row');
+    const players = [];
+
+    rows.forEach(row => {
+        players.push({
+            discord_id: row.querySelector('.inp-discord-id').value,
+            character_name: row.querySelector('.inp-char-name').value,
+            level: row.querySelector('.inp-level').value,
+            games_count: row.querySelector('.inp-games-count').value
+        });
+    });
+    return players;
+}
+
+// ==========================================
+// 5. Template & Saving Logic
 // ==========================================
 
 async function initTemplateDropdown() {
@@ -291,7 +377,7 @@ function initTemplateLogic() {
 }
 
 // ==========================================
-// Updated Functions for session-editor.js
+// 6. Form Handling (Get/Populate)
 // ==========================================
 
 function getFormData() {
@@ -324,10 +410,11 @@ function getFormData() {
             notes: val('inp-notes'),
             warnings: val('inp-warnings'),
             how_to_apply: val('inp-apply'),
-            // New Fields
             listing_url: val('inp-listing-url'),
             lobby_url: val('inp-lobby-url')
         },
+        // Capture Player Roster
+        players: getPlayerRosterData(),
         sessions: [] 
     };
 }
@@ -338,49 +425,61 @@ function populateForm(session) {
         if(titleEl) titleEl.value = session.title;
     }
     
-    if (!session.form_data || !session.form_data.header) return;
+    if (!session.form_data) return;
 
-    const h = session.form_data.header;
-    const setVal = (id, val) => { 
-        const el = document.getElementById(id); 
-        if(el) el.value = val || ""; 
-    };
-    
-    setVal('inp-unix-time', h.game_datetime);
-    setVal('inp-timezone', h.timezone);
-    setVal('inp-format', h.game_type);
-    setVal('inp-tier', h.tier);
-    setVal('inp-apl', h.apl);
-    setVal('inp-party-size', h.party_size);
-    setVal('inp-duration-text', h.intended_duration);
-    setVal('inp-platform', h.platform);
-    setVal('inp-tone', h.tone);
-    setVal('inp-diff-encounter', h.encounter_difficulty);
-    setVal('inp-description', h.game_description);
-    setVal('inp-version', h.game_version);
-    setVal('inp-apps-type', h.apps_type);
-    
-    // New Fields Population
-    setVal('inp-listing-url', h.listing_url);
-    setVal('inp-lobby-url', h.lobby_url);
+    // 1. Populate Header Fields
+    if (session.form_data.header) {
+        const h = session.form_data.header;
+        const setVal = (id, val) => { 
+            const el = document.getElementById(id); 
+            if(el) el.value = val || ""; 
+        };
+        
+        setVal('inp-unix-time', h.game_datetime);
+        setVal('inp-timezone', h.timezone);
+        setVal('inp-format', h.game_type);
+        setVal('inp-tier', h.tier);
+        setVal('inp-apl', h.apl);
+        setVal('inp-party-size', h.party_size);
+        setVal('inp-duration-text', h.intended_duration);
+        setVal('inp-platform', h.platform);
+        setVal('inp-tone', h.tone);
+        setVal('inp-diff-encounter', h.encounter_difficulty);
+        setVal('inp-description', h.game_description);
+        setVal('inp-version', h.game_version);
+        setVal('inp-apps-type', h.apps_type);
+        setVal('inp-listing-url', h.listing_url);
+        setVal('inp-lobby-url', h.lobby_url);
 
-    // Handle Multi-Select Population
-    const eventSelect = document.getElementById('inp-event');
-    if (eventSelect && Array.isArray(h.event_tags)) {
-        Array.from(eventSelect.options).forEach(opt => {
-            opt.selected = h.event_tags.includes(opt.value);
-        });
-    } else if (eventSelect && h.event_tag) {
-        eventSelect.value = h.event_tag;
+        // Handle Multi-Select
+        const eventSelect = document.getElementById('inp-event');
+        if (eventSelect && Array.isArray(h.event_tags)) {
+            Array.from(eventSelect.options).forEach(opt => {
+                opt.selected = h.event_tags.includes(opt.value);
+            });
+        } else if (eventSelect && h.event_tag) {
+            eventSelect.value = h.event_tag;
+        }
+
+        setVal('inp-focus', h.focus);
+        setVal('inp-diff-threat', h.threat_level);
+        setVal('inp-diff-loss', h.char_loss);
+        setVal('inp-houserules', h.house_rules);
+        setVal('inp-notes', h.notes);
+        setVal('inp-warnings', h.warnings);
+        setVal('inp-apply', h.how_to_apply);
     }
 
-    setVal('inp-focus', h.focus);
-    setVal('inp-diff-threat', h.threat_level);
-    setVal('inp-diff-loss', h.char_loss);
-    setVal('inp-houserules', h.house_rules);
-    setVal('inp-notes', h.notes);
-    setVal('inp-warnings', h.warnings);
-    setVal('inp-apply', h.how_to_apply);
+    // 2. Populate Player Roster
+    const tbody = document.getElementById('roster-body');
+    if (tbody) {
+        tbody.innerHTML = ''; // Clear existing rows
+        if (session.form_data.players && Array.isArray(session.form_data.players)) {
+            session.form_data.players.forEach(player => {
+                addPlayerRow(player);
+            });
+        }
+    }
 }
 
 function generateOutput() {
@@ -394,7 +493,6 @@ function generateOutput() {
     }
 
     // --- GAME LISTING ---
-    // Wrapped in ``` code blocks
     const listingText = `\`\`\`
 **Start Time:** ${timeString}
 
@@ -433,8 +531,6 @@ ${data.how_to_apply || 'Post your application below.'}
     if(outListing) outListing.value = listingText;
 
     // --- GAME AD ---
-    // Updated format wrapped in ``` code blocks
-    
     const adText = `\`\`\`
 > **Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
