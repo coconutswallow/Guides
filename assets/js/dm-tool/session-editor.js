@@ -73,7 +73,7 @@ async function initDynamicDropdowns() {
     // Note: Matches the JSON structure you provided
     if(rules.options["Game Version"]) fillSelect('inp-version', rules.options["Game Version"]);
     if(rules.options["Application Types"]) fillSelect('inp-apps-type', rules.options["Application Types"]);
-    if(rules.options["Game_Format"]) fillSelect('inp-format', rules.options["Game_Format"]);
+    if(rules.options["Game Format"]) fillSelect('inp-format', rules.options["Game Format"]);
     
     console.log("Dropdown initialization complete");
 }
