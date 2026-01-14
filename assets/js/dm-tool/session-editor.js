@@ -587,7 +587,8 @@ function generateOutput() {
 **Start Time:** ${timeString}
 
 **Name:** ${name}
-**Description:** ${data.game_description || 'N/A'}
+**Description:**
+${data.game_description || 'N/A'}
 
 **Version:** ${data.game_version || 'N/A'}
 **Format:** ${data.game_type || 'N/A'}
@@ -607,11 +608,14 @@ function generateOutput() {
 **Platform:** ${data.platform || 'N/A'}
 **Duration:** ${data.intended_duration || 'N/A'}
 
-**House Rules:** ${data.house_rules || 'N/A'}
+**House Rules:**
+${data.house_rules || 'N/A'}
 
-**Notes:** ${data.notes || 'N/A'}
+**Notes:**
+${data.notes || 'N/A'}
 
-**Content Warnings:** ${data.warnings || 'N/A'}
+**Content Warnings:**
+${data.warnings || 'N/A'}
 
 **How to Apply:**
 ${data.how_to_apply || 'Post your application below.'}
