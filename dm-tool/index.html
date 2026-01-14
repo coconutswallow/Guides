@@ -24,9 +24,9 @@ title: DM Session Logs | Dashboard
 
     /* Small Button Override for Tables */
     .btn-sm {
-        padding: 0.4em 0.8em !important;
-        font-size: 0.85em !important;
-        margin-left: 0.5rem;
+        padding: 0.4em 0.6em !important;
+        font-size: 0.75em !important;
+        margin-left: 5px;
     }
 
     /* Danger Button Variant (Red Outline) */
@@ -41,7 +41,37 @@ title: DM Session Logs | Dashboard
         border-color: var(--palette-alert-danger-action) !important;
     }
 
-    .hidden { display: none !important; }
+    /* Modal Overlay - Darkens the background */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    /* Modal Box */
+    .modal-content {
+        background: #fff; /* or var(--color-bg-light) if defined */
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 400px;
+        width: 90%;
+        border: 1px solid var(--color-border);
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
 
     .hidden { display: none !important; }
 </style>
@@ -82,6 +112,17 @@ title: DM Session Logs | Dashboard
             Log your sessions, calculate rewards automatically, and generate Discord-ready text blocks.
             Please login with Discord to access your logs.
         </p>
+    </div>
+
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">Delete Session?</h3>
+            <p>Are you sure you want to delete this session? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="btn-cancel-delete" class="button button-secondary">Cancel</button>
+                <button id="btn-confirm-delete" class="button btn-danger-outline">Delete</button>
+            </div>
+        </div>
     </div>
 </div>
 

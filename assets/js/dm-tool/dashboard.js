@@ -7,6 +7,7 @@ import '../auth-manager.js';
 import { fetchSessionList, createSession, deleteSession } from './data-manager.js';
 
 let currentUser = null;
+let deleteTargetId = null; // Stores the ID of the session to delete
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Check Auth State
@@ -36,6 +37,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             showLanding();
         }
     });
+
+    // Modal Listeners
+    const btnCancel = document.getElementById('btn-cancel-delete');
+    const btnConfirm = document.getElementById('btn-confirm-delete');
+
+    if (btnCancel) btnCancel.addEventListener('click', closeDeleteModal);
+    if (btnConfirm) btnConfirm.addEventListener('click', executeDelete);
 });
 
 function showLanding() {
@@ -101,7 +109,7 @@ async function loadSessions() {
                 </a>
             </td>
             <td>${dateStr}</td>
-            <td style="text-align:right;">
+            <td style="text-align:right; white-space: nowrap;">
                 <button class="button button-secondary btn-sm btn-edit" data-id="${session.id}">Edit</button>
                 <button class="button button-secondary btn-sm btn-danger-outline btn-delete" data-id="${session.id}">Delete</button>
             </td>
@@ -148,15 +156,14 @@ async function handleNewSession() {
 }
 
 async function handleDelete(e) {
-    const id = e.target.dataset.id;
-    if (!confirm("Are you sure you want to delete this session log? This cannot be undone.")) return;
+    function handleDelete(e) {
+    // Store the ID globally so executeDelete knows what to remove
+    deleteTargetId = e.target.dataset.id;
 
-    const success = await deleteSession(id);
-    if (success) {
-        await loadSessions(); 
-    } else {
-        alert("Failed to delete session.");
-    }
+    // Show the modal
+    const modal = document.getElementById('delete-modal');
+    if (modal) modal.classList.remove('hidden');
+}
 }
 
 function escapeHtml(text) {
@@ -167,4 +174,34 @@ function escapeHtml(text) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
+
+async function executeDelete() {
+    if (!deleteTargetId) return;
+
+    // Visual feedback (optional: disable button to prevent double clicks)
+    const btnConfirm = document.getElementById('btn-confirm-delete');
+    const originalText = btnConfirm.innerText;
+    btnConfirm.innerText = "Deleting...";
+    btnConfirm.disabled = true;
+
+    const success = await deleteSession(deleteTargetId);
+
+    // Reset button state
+    btnConfirm.innerText = originalText;
+    btnConfirm.disabled = false;
+
+    if (success) {
+        closeDeleteModal();
+        await loadSessions(); // Refresh the list
+    } else {
+        alert("Failed to delete session.");
+        closeDeleteModal();
+    }
+}
+
+function closeDeleteModal() {
+    deleteTargetId = null;
+    const modal = document.getElementById('delete-modal');
+    if (modal) modal.classList.add('hidden');
 }
