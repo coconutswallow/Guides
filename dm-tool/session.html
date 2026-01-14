@@ -6,6 +6,26 @@ extra_css:
   - /assets/css/dm-tool.css
 ---
 
+<style>
+    /* Specific styling for table inputs to match the main form 
+       and support Dark Mode variables automatically.
+    */
+    .table-input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        font-family: inherit;
+        background: var(--color-bg-light);
+        color: var(--color-text);
+    }
+    .table-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px var(--shadow-color-light);
+    }
+</style>
+
 <header class="editor-header">
     <div class="header-inputs">
         <div class="header-game-title-wrapper">
@@ -240,22 +260,21 @@ extra_css:
 
             <div class="card" style="margin-top: 2rem;">
                 <h3 class="card-title">Dungeon Master Details</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>DM Discord ID</label>
-                        <input type="text" id="inp-dm-discord-id" placeholder="Discord ID" style="padding: 0.8rem;">
-                    </div>
-                    <div class="form-group">
+                <div class="form-row-full" style="align-items: flex-end; gap: 1rem;">
+                    
+                    <div class="form-group flex-grow">
                         <label>DM Character Name</label>
-                        <input type="text" id="inp-dm-char-name" placeholder="Character Name" style="padding: 0.8rem;">
+                        <input type="text" id="inp-dm-char-name" placeholder="Character Name">
                     </div>
-                    <div class="form-group">
+                    
+                    <div class="form-group" style="width: 100px;">
                         <label>DM PC Level</label>
-                        <input type="number" id="inp-dm-level" placeholder="Level" style="padding: 0.8rem;">
+                        <input type="number" id="inp-dm-level" placeholder="Lvl">
                     </div>
-                    <div class="form-group">
+                    
+                    <div class="form-group" style="width: 120px;">
                         <label>Games DMed</label>
-                        <select id="inp-dm-games-count" style="padding: 0.8rem;">
+                        <select id="inp-dm-games-count">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -270,6 +289,7 @@ extra_css:
                             <option value="10+">10+</option>
                         </select>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -236,12 +236,13 @@ function addPlayerRow(data = {}) {
     const selectedTenPlus = (data.games_count === '10+') ? 'selected' : '';
     gamesOptions += `<option value="10+" ${selectedTenPlus}>10+</option>`;
 
+    // NOTE: Using 'table-input' class to ensure Dark Mode compatibility via CSS
     tr.innerHTML = `
-        <td><input type="text" class="inp-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}" style="width: 100%; padding: 0.8rem;"></td>
-        <td><input type="text" class="inp-char-name" placeholder="Character Name" value="${data.character_name || ''}" style="width: 100%; padding: 0.8rem;"></td>
-        <td><input type="number" class="inp-level" placeholder="Lvl" value="${data.level || ''}" style="width: 100%; padding: 0.8rem;"></td>
+        <td><input type="text" class="table-input inp-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}"></td>
+        <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
+        <td><input type="number" class="table-input inp-level" placeholder="Lvl" value="${data.level || ''}"></td>
         <td>
-            <select class="inp-games-count" style="width: 100%; padding: 0.8rem;">
+            <select class="table-input inp-games-count">
                 ${gamesOptions}
             </select>
         </td>
@@ -414,7 +415,7 @@ function getFormData() {
         },
         players: getPlayerRosterData(),
         dm: {
-            discord_id: val('inp-dm-discord-id'),
+            // discord_id removed
             character_name: val('inp-dm-char-name'),
             level: val('inp-dm-level'),
             games_count: val('inp-dm-games-count')
@@ -492,7 +493,7 @@ function populateForm(session) {
             const el = document.getElementById(id); 
             if(el) el.value = val || ""; 
         };
-        setVal('inp-dm-discord-id', d.discord_id);
+        // discord_id removed
         setVal('inp-dm-char-name', d.character_name);
         setVal('inp-dm-level', d.level);
         setVal('inp-dm-games-count', d.games_count);
