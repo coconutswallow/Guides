@@ -7,7 +7,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevent body scroll, force flex container */
+    /* REMOVED: overflow: hidden; -> This was killing the index page scroll */
 }
 
 body {
@@ -19,7 +19,9 @@ body {
 /* Fix for Editor Layout */
 .editor-container {
     display: flex;
-    flex: 1;
+    /* Force the editor to fill the viewport minus the header height. 
+       Adjust 85px if your header height changes. */
+    height: calc(100vh - 85px); 
     overflow: hidden; 
     min-height: 0; 
 }
@@ -27,9 +29,10 @@ body {
 /* Fix for Dashboard Layout (Ensures scrolling works on index page) */
 .dashboard-container {
     flex: 1;
-    overflow-y: auto;
+    /* Changed to auto/visible to let the body scroll naturally */
+    overflow-y: visible;
     padding-bottom: 2rem;
-    height: 100%;
+    height: auto; 
     width: 100%;
 }
 
@@ -72,7 +75,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 1rem 0;
-    overflow-y: auto;
+    overflow-y: auto; /* Internal scroll for sidebar */
     flex-shrink: 0;
 }
 
@@ -112,7 +115,7 @@ body {
 .editor-main {
     flex: 1;
     background: var(--color-bg-page);
-    overflow-y: auto; /* Scroll handled here */
+    overflow-y: auto; /* Internal scroll for content */
     padding: 2rem;
     position: relative;
     height: 100%;
@@ -128,6 +131,9 @@ body {
     box-shadow: var(--shadow-md);
     z-index: 10;
     flex-shrink: 0;
+    /* Ensure header has a fixed height for our calc() to work */
+    height: 85px; 
+    box-sizing: border-box;
 }
 
 .header-inputs {

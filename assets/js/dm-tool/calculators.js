@@ -39,6 +39,31 @@ export function calculateRewards(charLevel, sessionApl, hours, rules) {
 }
 
 /**
+ * Calculates the number of log sessions based on hours played.
+ * Standard logic: usually 1 session, but some leagues split 4hr+ games.
+ * For now, we return 1 unless specified otherwise, or use a 4-hour block rule.
+ * @param {number} hours 
+ * @returns {number}
+ */
+export function calculateSessionCount(hours) {
+    const h = parseFloat(hours) || 0;
+    if (h <= 0) return 0;
+    // Example logic: 1 session count per 4 hours started, or just default to 1
+    // Given the UI allows manual override, we'll implement a simple ceiling of 4-hour blocks
+    return Math.ceil(h / 4);
+}
+
+/**
+ * Converts a datetime-local string to a Unix timestamp (seconds).
+ * @param {string} dateStr 
+ * @returns {number}
+ */
+export function toUnixTimestamp(dateStr) {
+    if (!dateStr) return 0;
+    return Math.floor(new Date(dateStr).getTime() / 1000);
+}
+
+/**
  * Helper to determine Tier from Level (Standard 5e)
  */
 function getTier(level) {
