@@ -25,10 +25,11 @@ export async function fetchGameRules() {
     if (cachedRules) return cachedRules;
 
     try {
+        // FIXED: Changed 'dm_rules' to 'dm-tool' to match your database record
         const { data, error } = await supabase
             .from('lookups')
             .select('data')
-            .eq('type', 'dm_rules')
+            .eq('type', 'dm-tool')
             .single();
 
         if (error) throw error;
@@ -88,8 +89,12 @@ export async function createSession(userId, title, isTemplate = false) {
                 is_template: isTemplate,
                 session_date: new Date().toISOString().split('T')[0], // Default to today YYYY-MM-DD
                 form_data: { 
-                    hours: 3, // Default duration
-                    players: [] // Empty roster
+                    // FIXED: Initialize with 'header' so session-editor.js doesn't crash on load
+                    header: {
+                        intended_duration: "3-4 Hours",
+                        party_size: "5"
+                    },
+                    sessions: [] 
                 } 
             }])
             .select()
