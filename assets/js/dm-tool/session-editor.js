@@ -35,17 +35,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ==========================================
 
 async function initDynamicDropdowns() {
+    console.log("Initializing dynamic dropdowns...");
     const rules = await fetchGameRules();
+    
+    console.log("Fetched rules:", rules);
 
     if (!rules || !rules.options) {
-        console.error("Could not load dropdown options from DB.");
+        console.error("Could not load dropdown options from DB. Rules:", rules);
         return;
     }
+
+    console.log("Available options:", rules.options);
 
     // Helper to fill a select element
     const fillSelect = (id, options) => {
         const select = document.getElementById(id);
-        if (!select) return;
+        if (!select) {
+            console.warn(`Select element not found: ${id}`);
+            return;
+        }
 
         // Clear "Loading..."
         select.innerHTML = '<option value="">Select...</option>';
@@ -56,6 +64,8 @@ async function initDynamicDropdowns() {
             el.textContent = opt;
             select.appendChild(el);
         });
+        
+        console.log(`Populated ${id} with ${options.length} options`);
     };
 
     // Map DB keys to HTML IDs
@@ -64,6 +74,8 @@ async function initDynamicDropdowns() {
     if(rules.options["Game Version"]) fillSelect('inp-version', rules.options["Game Version"]);
     if(rules.options["Application Types"]) fillSelect('inp-apps-type', rules.options["Application Types"]);
     if(rules.options["Game_Format"]) fillSelect('inp-format', rules.options["Game_Format"]);
+    
+    console.log("Dropdown initialization complete");
 }
 
 function initTabs() {
