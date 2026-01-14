@@ -93,8 +93,7 @@ async function loadSessions() {
         // Safe Title
         const safeTitle = session.title ? escapeHtml(session.title) : 'Untitled Session';
 
-        // --- FIX STARTS HERE ---
-        // We inject the actual cells (td) into the row
+         // We inject the actual cells (td) into the row
         row.innerHTML = `
             <td>
                 <a href="session.html?id=${session.id}" style="font-weight:600; color: #2c3e50; text-decoration: none;">
@@ -103,12 +102,11 @@ async function loadSessions() {
             </td>
             <td>${dateStr}</td>
             <td style="text-align:right;">
-                <button class="btn-edit" data-id="${session.id}" style="margin-right:8px; cursor:pointer;">Edit</button>
-                <button class="btn-delete" data-id="${session.id}" style="color:red; cursor:pointer;">Delete</button>
+                <button class="button button-secondary btn-sm btn-edit" data-id="${session.id}">Edit</button>
+                <button class="button button-secondary btn-sm btn-danger-outline btn-delete" data-id="${session.id}">Delete</button>
             </td>
         `;
-        // --- FIX ENDS HERE ---
-
+ 
         listBody.appendChild(row);
     });
 
