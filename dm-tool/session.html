@@ -10,24 +10,29 @@ title: DM Tool | Session Editor
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DM Tool | Session Editor</title>
     
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     
     <style>
         /* ============================
            Layout & Scroll Fixes 
            ============================ */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent body scroll, force flex container */
+        }
+
         body {
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            overflow: hidden; 
+            background: var(--color-bg-page);
         }
 
         .editor-container {
             display: flex;
             flex: 1;
             overflow: hidden; 
-            margin-top: 0;
             min-height: 0; /* CRITICAL FIX: Allows flex child to scroll */
         }
 
@@ -80,11 +85,10 @@ title: DM Tool | Session Editor
             overflow-y: auto; /* Scroll handled here */
             padding: 2rem;
             position: relative;
+            height: 100%;
         }
 
-        /* ============================
-           Header Bar Styling 
-           ============================ */
+        /* Header Styling */
         .editor-header {
             display: flex;
             align-items: center;
@@ -109,7 +113,6 @@ title: DM Tool | Session Editor
             max-width: 500px;
         }
 
-        /* Game Title Input */
         #header-game-name {
             font-family: var(--font-header);
             font-size: 1.4rem;
@@ -128,12 +131,6 @@ title: DM Tool | Session Editor
             border-bottom-color: var(--color-secondary);
         }
 
-        #header-game-name::placeholder {
-            color: var(--color-text-secondary);
-            opacity: 0.5;
-        }
-
-        /* Stats (Hours/Sessions) */
         .stat-badge {
             display: flex;
             flex-direction: column;
@@ -169,9 +166,7 @@ title: DM Tool | Session Editor
             font-weight: bold;
         }
 
-        /* ============================
-           Tabs & Forms 
-           ============================ */
+        /* Tabs & Forms */
         .content-tabs {
             display: flex;
             gap: 5px;
@@ -212,7 +207,6 @@ title: DM Tool | Session Editor
             margin-bottom: 2rem;
         }
 
-        /* Full Width Rows */
         .form-row-full {
             grid-column: 1 / -1;
             display: flex;
@@ -249,12 +243,6 @@ title: DM Tool | Session Editor
             color: var(--color-text);
         }
         
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px var(--shadow-color-light);
-        }
-
         .form-section-title {
             grid-column: 1 / -1;
             font-size: 1.1rem;
@@ -266,9 +254,7 @@ title: DM Tool | Session Editor
             text-transform: uppercase;
         }
 
-        /* ============================
-           Utility 
-           ============================ */
+        /* Utility */
         .output-block {
             background: #282c34;
             color: #abb2bf;
@@ -296,7 +282,7 @@ title: DM Tool | Session Editor
         
         .hidden-section { display: none; }
 
-        /* Modal for Template Save */
+        /* Modal */
         dialog {
             border: 2px solid var(--color-primary);
             border-radius: 8px;
@@ -360,13 +346,12 @@ title: DM Tool | Session Editor
                     <div class="form-grid">
                         
                         <div class="form-row-full" style="background: var(--color-bg-medium); padding: 1rem; border-radius: 6px; border: 1px solid var(--color-border); align-items: center;">
-                            <strong style="color:var(--color-primary); margin-right: 1rem;">TEMPLATE ACTIONS:</strong>
+                            <strong style="color:var(--color-primary); margin-right: 1rem;">TEMPLATE:</strong>
                             <select id="template-select" style="flex:1; max-width:300px; padding: 0.5rem;">
-                                <option value="">Select Template...</option>
-                                <option value="load_new">-- Load New --</option>
-                            </select>
+                                <option value="">Select a saved template...</option>
+                                </select>
                             <button class="button button-secondary" id="btn-load-template" style="padding:0.4rem 1rem;">Load</button>
-                            <button class="button button-secondary" id="btn-open-save-template" style="padding:0.4rem 1rem;">Save Template</button>
+                            <button class="button button-secondary" id="btn-open-save-template" style="padding:0.4rem 1rem;">Save Current as Template</button>
                         </div>
 
                         <h3 class="form-section-title">Logistics</h3>
@@ -568,8 +553,7 @@ title: DM Tool | Session Editor
         </div>
     </dialog>
 
-    <script type="module" src="assets/js/supabaseClient.js"></script>
-    <script type="module" src="assets/js/dm-tool/session-editor.js"></script>
+    <script type="module" src="../assets/js/dm-tool/session-editor.js"></script>
 
 </body>
 </html>

@@ -1,7 +1,9 @@
 // assets/js/dm-tool/session-editor.js
 
-import { supabase } from '../supabaseClient.js'; // If needed for auth check
-import { saveSession, saveAsTemplate, loadSession } from './data-manager.js';
+// Relative path is correct because this file is in /assets/js/dm-tool/
+// and supabaseClient.js is in /assets/js/
+import { supabase } from '../supabaseClient.js'; 
+import { saveSession, saveAsTemplate, loadSession, fetchSessionList } from './data-manager.js';
 import { calculateSessionCount, toUnixTimestamp } from './calculators.js';
 
 // ==========================================
@@ -15,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initHoursLogic();
     initDateTimeConverter();
     initTemplateLogic();
+    await initTemplateDropdown(); // Populate the dropdown
     
     // Check if we are editing an existing session (via URL param)
     const urlParams = new URLSearchParams(window.location.search);
@@ -26,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ==========================================
-// 2. Logic Moved from Inline Script
+// 2. Logic (Tabs, Hours, Timezone)
 // ==========================================
 
 function initTabs() {
@@ -53,6 +56,11 @@ function initTabs() {
             const parent = tab.closest('.view-section');
             parent.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
             document.getElementById(targetId).classList.remove('hidden-section');
+            
+            // Re-generate markdown if output tab is selected
+            if(targetId === 'ad-output') {
+                generateOutput();
+            }
         });
     });
 }
@@ -61,7 +69,6 @@ function initHoursLogic() {
     const hoursInput = document.getElementById('header-hours');
     const sessionDisplay = document.getElementById('header-session-count');
 
-    // Use the imported calculator logic
     const updateDisplay = () => {
         const count = calculateSessionCount(hoursInput.value);
         sessionDisplay.textContent = count;
@@ -85,12 +92,12 @@ function updateSessionNav(count) {
         div.addEventListener('click', () => {
             document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
             div.classList.add('active');
-            
-            // Hide all sections
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
             
-            // Show target (or create it if missing - logic for creation can be added here)
             let targetSection = document.getElementById(`view-session-${i}`);
+            // If section doesn't exist yet, we just show Session 1 for now or handle dynamic creation
+            if(!targetSection) targetSection = document.getElementById('view-session-1');
+            
             if(targetSection) targetSection.classList.remove('hidden-section');
         });
         
@@ -117,6 +124,10 @@ function initTimezone() {
     ];
     
     if(!commonTimezones.includes(userTz)) commonTimezones.push(userTz);
+    
+    // Clear existing
+    tzSelect.innerHTML = '';
+    
     commonTimezones.sort().forEach(tz => {
         const opt = document.createElement('option');
         opt.value = tz;
@@ -127,8 +138,37 @@ function initTimezone() {
 }
 
 // ==========================================
-// 3. Data Handling (Save/Load)
+// 3. Template & Data Logic
 // ==========================================
+
+async function initTemplateDropdown() {
+    const select = document.getElementById('template-select');
+    
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return; // Not logged in
+
+    // Fetch templates (Using the existing fetchSessionList but filtering in memory or ideally a new DB call)
+    // For now, we reuse fetchSessionList and filtering for is_template=true
+    try {
+        const { data, error } = await supabase
+            .from('session_logs')
+            .select('id, title')
+            .eq('user_id', user.id)
+            .eq('is_template', true);
+            
+        if (data) {
+            data.forEach(tmpl => {
+                const opt = document.createElement('option');
+                opt.value = tmpl.id;
+                opt.text = tmpl.title;
+                select.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error("Error fetching templates", err);
+    }
+}
 
 function initTemplateLogic() {
     const modal = document.getElementById('modal-save-template');
@@ -141,24 +181,58 @@ function initTemplateLogic() {
         const tmplName = document.getElementById('inp-template-name').value;
         if(!tmplName) return alert("Enter a name");
 
-        // Get User ID (Assuming auth-manager stores it in local storage or global)
-        const user = await supabase.auth.getUser();
-        if(!user.data.user) return alert("Please login");
+        const { data: { user } } = await supabase.auth.getUser();
+        if(!user) return alert("Please login");
 
         const formData = getFormData();
         
         try {
-            await saveAsTemplate(user.data.user.id, tmplName, formData);
+            await saveAsTemplate(user.id, tmplName, formData);
             alert("Template Saved!");
             modal.close();
+            // Refresh dropdown
+            const select = document.getElementById('template-select');
+            const opt = document.createElement('option');
+            opt.text = tmplName; 
+            select.appendChild(opt);
         } catch (e) {
             alert("Error saving template");
+        }
+    });
+
+    // Load Button Logic
+    document.getElementById('btn-load-template').addEventListener('click', async () => {
+        const tmplId = document.getElementById('template-select').value;
+        if(!tmplId) return;
+        
+        const session = await loadSession(tmplId);
+        if(session) {
+            populateForm(session);
+            alert("Template Loaded!");
+        }
+    });
+    
+    // Save Game Button Logic
+    document.getElementById('btn-save-game').addEventListener('click', async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('id');
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const formData = getFormData();
+        const title = document.getElementById('header-game-name').value || "Untitled Session";
+        const date = document.getElementById('inp-start-datetime').value ? new Date(document.getElementById('inp-start-datetime').value).toISOString().split('T')[0] : null;
+
+        if (sessionId) {
+            await saveSession(sessionId, formData, { title, date });
+            alert("Session Updated");
+        } else {
+            // Logic for creating new session would go here (usually redirecting to ?id=NEW_ID)
+            alert("This functionality requires a 'Create' logic separate from Update.");
         }
     });
 }
 
 function getFormData() {
-    // Scrapes the DOM to build the JSON object
     return {
         header: {
             game_datetime: document.getElementById('inp-unix-time').value,
@@ -170,24 +244,60 @@ function getFormData() {
             party_size: document.getElementById('inp-party-size').value,
             platform: document.getElementById('inp-platform').value,
             intended_duration: document.getElementById('inp-duration-text').value,
-            // ... add the rest of your fields here
+            // Add other fields as necessary
+            tone: document.getElementById('inp-tone').value,
+            encounter_difficulty: document.getElementById('inp-diff-encounter').value,
         },
         sessions: [] 
     };
 }
 
+function populateForm(session) {
+    if(session.title) document.getElementById('header-game-name').value = session.title;
+    
+    const h = session.form_data.header;
+    if(h) {
+        // Safe set helper
+        const setVal = (id, val) => { 
+            const el = document.getElementById(id); 
+            if(el) el.value = val || ""; 
+        };
+        
+        setVal('inp-format', h.game_type);
+        setVal('inp-tier', h.tier);
+        setVal('inp-apl', h.apl);
+        setVal('inp-party-size', h.party_size);
+        setVal('inp-duration-text', h.intended_duration);
+        setVal('inp-platform', h.platform);
+        setVal('inp-tone', h.tone);
+        setVal('inp-diff-encounter', h.encounter_difficulty);
+        setVal('inp-description', h.game_description);
+        
+        // Handle Date specially if needed, but templates usually don't have dates
+    }
+}
+
 async function loadSessionData(sessionId) {
     const session = await loadSession(sessionId);
     if(!session) return;
-
-    // Populate the form fields from session.form_data
-    // Example:
-    document.getElementById('header-game-name').value = session.title;
-    const data = session.form_data.header;
-    
-    if(data) {
-        document.getElementById('inp-format').value = data.game_type || "";
-        document.getElementById('inp-tier').value = data.tier || "";
-        // ... populate rest of fields
-    }
+    populateForm(session);
 }
+
+function generateOutput() {
+    // Simple generator for the output tab based on inputs
+    const data = getFormData().header;
+    const listingText = `**${document.getElementById('header-game-name').value}**\n` +
+                        `**Time:** ${document.getElementById('inp-start-datetime').value || "TBD"}\n` +
+                        `**Format:** ${data.game_type}\n` +
+                        `**Tier:** ${data.tier}\n` +
+                        `\n${data.game_description}`;
+    
+    document.getElementById('listing-content').innerText = listingText;
+}
+
+// Global copy function
+window.copyToClipboard = (id) => {
+    const el = document.getElementById(id);
+    navigator.clipboard.writeText(el.innerText);
+    alert("Copied!");
+};
