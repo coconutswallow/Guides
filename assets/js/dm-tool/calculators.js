@@ -40,17 +40,24 @@ export function calculateRewards(charLevel, sessionApl, hours, rules) {
 
 /**
  * Calculates the number of log sessions based on hours played.
- * Standard logic: usually 1 session, but some leagues split 4hr+ games.
- * For now, we return 1 unless specified otherwise, or use a 4-hour block rule.
+ * Rule: 
+ * - Session 1: 0 to 5.5 hours
+ * - Session 2: 6 to 8.5 hours
+ * - Session 3: 9 to 11.5 hours
+ * Formula: Increments at every complete 3-hour mark (6, 9, 12, etc).
  * @param {number} hours 
  * @returns {number}
  */
 export function calculateSessionCount(hours) {
     const h = parseFloat(hours) || 0;
     if (h <= 0) return 0;
-    // Example logic: 1 session count per 4 hours started, or just default to 1
-    // Given the UI allows manual override, we'll implement a simple ceiling of 4-hour blocks
-    return Math.ceil(h / 4);
+    
+    // Logic: 
+    // < 6.0 hours = 1 (floor(1.something) = 1)
+    // 6.0 - 8.9 hours = 2 (floor(2.something) = 2)
+    // 9.0 - 11.9 hours = 3 (floor(3.something) = 3)
+    // We use Math.max(1, ...) to ensure 0-2.9 hours counts as at least 1 session.
+    return Math.max(1, Math.floor(h / 3));
 }
 
 /**
