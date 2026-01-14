@@ -17,7 +17,7 @@ extra_css:
       <h4 class="nav-header">Years</h4>
       
       <button id="global-toggle" class="global-toggle-btn">
-        <span class="icon">−</span> Collapse All
+        <span class="icon">−</span> Hide Details
       </button>
       
       <nav class="year-nav">
