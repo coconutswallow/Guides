@@ -46,6 +46,15 @@ async function loadSessionData(sessionId) {
     }
 }
 
+import { 
+    saveSession, 
+    saveAsTemplate, 
+    loadSession, 
+    fetchGameRules, 
+    fetchActiveEvents,
+    fetchTemplates // <--- Add this
+} from './data-manager.js';
+
 async function initDynamicDropdowns() {
     const rules = await fetchGameRules();
     if (!rules || !rules.options) return;
@@ -79,6 +88,27 @@ async function initEventsDropdown() {
         el.value = evt.name; 
         el.textContent = evt.name;
         select.appendChild(el);
+    });
+}
+
+async function initTemplateDropdown() {
+    const select = document.getElementById('template-select');
+    if (!select) return;
+
+    // 1. Get current user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return; // Not logged in, can't load templates
+
+    // 2. Fetch templates
+    const templates = await fetchTemplates(user.id);
+
+    // 3. Populate Dropdown
+    select.innerHTML = '<option value="">Select a saved template...</option>';
+    templates.forEach(tmpl => {
+        const opt = document.createElement('option');
+        opt.value = tmpl.id; // The ID is needed to load it later
+        opt.textContent = tmpl.title;
+        select.appendChild(opt);
     });
 }
 

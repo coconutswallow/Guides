@@ -77,6 +77,27 @@ export async function fetchSessionList(userId) {
     }
 }
 
+/**
+ * Fetches saved templates for the dropdown.
+ * Selects title and id where is_template = true.
+ */
+export async function fetchTemplates(userId) {
+    try {
+        const { data, error } = await supabase
+            .from('session_logs')
+            .select('id, title')
+            .eq('user_id', userId)
+            .eq('is_template', true)
+            .order('title', { ascending: true });
+
+        if (error) throw error;
+        return data || [];
+    } catch (err) {
+        console.error('Error fetching templates:', err);
+        return [];
+    }
+}
+
 /* =========================================
    3. CRUD OPERATIONS
    ========================================= */
