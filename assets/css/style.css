@@ -247,7 +247,7 @@
   --statblock-header-text: var(--color-bg-light);
   
   /* Typography */
-  --font-header: 'Cinzel', 'Georgia', serif;
+  --font-header: 'Almendra', serif;
   --font-body: 'Source Sans 3', 'Crimson Text', 'Georgia', serif;
   
   /* Spacing */
@@ -424,13 +424,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 2em;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 h2 {
-  font-size: 2em;
+  font-size: 1.75em;
   text-transform: underline;
   margin-top: 1.5em;
 }
