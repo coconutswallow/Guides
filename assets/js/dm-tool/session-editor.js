@@ -1,7 +1,14 @@
 // assets/js/dm-tool/session-editor.js
 
 import { supabase } from '../supabaseClient.js'; 
-import { saveSession, saveAsTemplate, loadSession, fetchGameRules, fetchActiveEvents } from './data-manager.js';
+import { 
+    saveSession, 
+    saveAsTemplate, 
+    loadSession, 
+    fetchGameRules, 
+    fetchActiveEvents,
+    fetchTemplates // <--- Added here correctly
+} from './data-manager.js';
 import { calculateSessionCount, toUnixTimestamp } from './calculators.js';
 
 // ==========================================
@@ -45,15 +52,6 @@ async function loadSessionData(sessionId) {
         console.error("Error loading session data:", error);
     }
 }
-
-import { 
-    saveSession, 
-    saveAsTemplate, 
-    loadSession, 
-    fetchGameRules, 
-    fetchActiveEvents,
-    fetchTemplates // <--- Add this
-} from './data-manager.js';
 
 async function initDynamicDropdowns() {
     const rules = await fetchGameRules();
@@ -266,7 +264,6 @@ function addPlayerRow(data = {}) {
     const selectedTenPlus = (data.games_count === '10+') ? 'selected' : '';
     gamesOptions += `<option value="10+" ${selectedTenPlus}>10+</option>`;
 
-    // NOTE: Using 'table-input' class to ensure Dark Mode compatibility via CSS
     tr.innerHTML = `
         <td><input type="text" class="table-input inp-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}"></td>
         <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
@@ -305,7 +302,7 @@ function getPlayerRosterData() {
 }
 
 // ==========================================
-// 5. Template & Saving Logic (UPDATED)
+// 5. Template & Saving Logic
 // ==========================================
 
 function initTemplateLogic() {
@@ -346,9 +343,6 @@ function initTemplateLogic() {
                 const select = document.getElementById('template-select');
                 const opt = document.createElement('option');
                 opt.text = tmplName; 
-                // We don't have the new ID easily without a fetch return, 
-                // but usually you'd reload the dropdown or return data from saveAsTemplate
-                // For now, this gives visual feedback.
                 select.appendChild(opt);
             } catch (e) {
                 console.error(e);
@@ -394,7 +388,7 @@ function initTemplateLogic() {
                 const btn = document.getElementById('btn-save-game');
                 const originalText = btn.innerText;
                 btn.innerText = "Saved!";
-                btn.classList.add('button-success'); // Optional: Add a success style class
+                btn.classList.add('button-success'); 
                 setTimeout(() => {
                     btn.innerText = originalText;
                     btn.classList.remove('button-success');
@@ -572,7 +566,6 @@ function populateForm(session) {
             const el = document.getElementById(id); 
             if(el) el.value = val || ""; 
         };
-        // discord_id removed
         setVal('inp-dm-char-name', d.character_name);
         setVal('inp-dm-level', d.level);
         setVal('inp-dm-games-count', d.games_count);
@@ -631,7 +624,7 @@ ${data.how_to_apply || 'Post your application below.'}
     const adText = `\`\`\`
 > **Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
-/ **Tier and APL:** ${data.tier || 'N/A'} , APL ${data.apl || 'N/A'}
+**Tier and APL:** ${data.tier || 'N/A'} , APL ${data.apl || 'N/A'}
 **Start Time and Duration:** ${timeString} (${data.intended_duration || 'N/A'})
 **Listing:** ${data.listing_url || 'N/A'}
 **Description:**
