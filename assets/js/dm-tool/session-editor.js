@@ -118,21 +118,36 @@ function initTimezone() {
     const tzSelect = document.getElementById('inp-timezone');
     const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     
-    const commonTimezones = [
-        "UTC", "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles", 
-        "Europe/London", "Europe/Paris", "Asia/Tokyo", "Australia/Sydney"
-    ];
-    
-    if(!commonTimezones.includes(userTz)) commonTimezones.push(userTz);
-    
-    // Clear existing
+    // Clear existing options
     tzSelect.innerHTML = '';
     
-    commonTimezones.sort().forEach(tz => {
+    // 1. Get all supported timezones from the browser
+    // This requires a modern browser (Chrome 109+, Safari 15.4+, Firefox 93+)
+    let timezones = [];
+    if (Intl.supportedValuesOf) {
+        timezones = Intl.supportedValuesOf('timeZone');
+    } else {
+        // Fallback for very old browsers
+        timezones = ["UTC", "America/New_York", "America/Los_Angeles", "Europe/London"];
+    }
+
+    // 2. Ensure user's current timezone is in the list
+    if (!timezones.includes(userTz)) {
+        timezones.push(userTz);
+    }
+    
+    // 3. Sort alphabetically
+    timezones.sort();
+
+    // 4. Create Options
+    timezones.forEach(tz => {
         const opt = document.createElement('option');
         opt.value = tz;
-        opt.text = tz;
+        opt.textContent = tz.replace(/_/g, " "); // Make it prettier (e.g., "New_York" -> "New York")
+        
+        // Pre-select the user's current timezone
         if(tz === userTz) opt.selected = true;
+        
         tzSelect.appendChild(opt);
     });
 }

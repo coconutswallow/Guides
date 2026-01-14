@@ -1,27 +1,38 @@
 /* assets/css/dm-tool.css */
 
+/* assets/css/dm-tool.css */
+
 /* ============================
    1. Global Layout & Scroll Fixes 
    ============================ */
+:root {
+    /* Adjust this value to match your website's navigation bar height */
+    --header-height-buffer: 60px; 
+    --editor-header-height: 85px;
+}
+
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    /* REMOVED: overflow: hidden; -> This was killing the index page scroll */
+    box-sizing: border-box;
 }
 
 body {
     display: flex;
     flex-direction: column;
     background: var(--color-bg-page);
+    /* Push the entire page down to reveal the top */
+    padding-top: var(--header-height-buffer);
 }
 
 /* Fix for Editor Layout */
 .editor-container {
     display: flex;
-    /* Force the editor to fill the viewport minus the header height. 
-       Adjust 85px if your header height changes. */
-    height: calc(100vh - 85px); 
+    /* Calculate available height: 
+       100% Viewport - (The Editor's own header) - (The padding we added for the site Nav) 
+    */
+    height: calc(100vh - var(--editor-header-height) - var(--header-height-buffer)); 
     overflow: hidden; 
     min-height: 0; 
 }
@@ -29,13 +40,11 @@ body {
 /* Fix for Dashboard Layout (Ensures scrolling works on index page) */
 .dashboard-container {
     flex: 1;
-    /* Changed to auto/visible to let the body scroll naturally */
     overflow-y: visible;
     padding-bottom: 2rem;
     height: auto; 
     width: 100%;
 }
-
 /* ============================
    2. Dashboard Specifics (index.html)
    ============================ */
