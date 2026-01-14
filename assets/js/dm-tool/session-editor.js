@@ -5,6 +5,7 @@
 import { supabase } from '../supabaseClient.js'; 
 import { saveSession, saveAsTemplate, loadSession, fetchSessionList } from './data-manager.js';
 import { calculateSessionCount, toUnixTimestamp } from './calculators.js';
+import { saveSession, saveAsTemplate, loadSession, fetchSessionList, fetchGameRules } from './data-manager.js';
 
 // ==========================================
 // 1. Initialization
@@ -17,12 +18,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     initHoursLogic();
     initDateTimeConverter();
     initTemplateLogic();
-    await initTemplateDropdown(); // Populate the dropdown
-    
-    // Check if we are editing an existing session (via URL param)
+    await initDynamicDropdowns(); // <--- NEW: Fetch DB options
+    await initTemplateDropdown(); 
+
+    // Check if we are editing an existing session
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
-    
+
     if (sessionId) {
         await loadSessionData(sessionId);
     }
@@ -31,6 +33,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ==========================================
 // 2. Logic (Tabs, Hours, Timezone)
 // ==========================================
+
+async function initDynamicDropdowns() {
+    const rules = await fetchGameRules();
+
+    if (!rules || !rules.options) {
+        console.error("Could not load dropdown options from DB.");
+        return;
+    }
+
+    // Helper to fill a select element
+    const fillSelect = (id, options) => {
+        const select = document.getElementById(id);
+        if (!select) return;
+
+        // Clear "Loading..."
+        select.innerHTML = '<option value="">Select...</option>';
+
+        options.forEach(opt => {
+            const el = document.createElement('option');
+            el.value = opt;
+            el.textContent = opt;
+            select.appendChild(el);
+        });
+    };
+
+    // Map DB keys to HTML IDs
+    // JSON Key -> HTML ID
+    fillSelect('inp-version', rules.options["Game Version"]);
+    fillSelect('inp-apps-type', rules.options["Application Types"]);
+    fillSelect('inp-format', rules.options["Game_Format"]);
+}
 
 function initTabs() {
     // Sidebar Navigation
@@ -107,11 +140,20 @@ function updateSessionNav(count) {
 
 function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
+    const tzSelect = document.getElementById('inp-timezone');
     const unixInput = document.getElementById('inp-unix-time');
 
-    dateInput.addEventListener('change', () => {
-        unixInput.value = toUnixTimestamp(dateInput.value);
-    });
+    const updateUnix = () => {
+        const dateVal = dateInput.value;
+        const tzVal = tzSelect.value;
+        // Pass both values to the calculator
+        unixInput.value = toUnixTimestamp(dateVal, tzVal);
+    };
+
+    // Listen to changes on BOTH inputs
+    dateInput.addEventListener('change', updateUnix);
+    dateInput.addEventListener('input', updateUnix); // 'input' catches typing/scrolling quickly
+    tzSelect.addEventListener('change', updateUnix);
 }
 
 function initTimezone() {
@@ -299,15 +341,30 @@ async function loadSessionData(sessionId) {
 }
 
 function generateOutput() {
-    // Simple generator for the output tab based on inputs
     const data = getFormData().header;
+    const unixTime = document.getElementById('inp-unix-time').value;
+    
+    // DISCORD TIMESTAMP LOGIC:
+    // We wrap the raw number in <t:NUMBER:F>
+    // :F gives "Full Date + Short Time" (e.g. "Tuesday, January 13, 2026 9:00 PM")
+    // :R gives "Relative" (e.g. "in 5 days")
+    // We can combine them for maximum clarity.
+    
+    let timeString = "TBD";
+    if (unixTime && unixTime > 0) {
+        timeString = `<t:${unixTime}:F> (<t:${unixTime}:R>)`;
+    }
+
     const listingText = `**${document.getElementById('header-game-name').value}**\n` +
-                        `**Time:** ${document.getElementById('inp-start-datetime').value || "TBD"}\n` +
+                        `**Time:** ${timeString}\n` +
                         `**Format:** ${data.game_type}\n` +
                         `**Tier:** ${data.tier}\n` +
                         `\n${data.game_description}`;
     
     document.getElementById('listing-content').innerText = listingText;
+
+    // Optional: Also update the Ad content if it differs
+    // document.getElementById('ad-content').innerText = listingText; 
 }
 
 // Global copy function

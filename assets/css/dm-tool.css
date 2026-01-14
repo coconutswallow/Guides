@@ -45,6 +45,8 @@ body {
     height: auto; 
     width: 100%;
 }
+
+
 /* ============================
    2. Dashboard Specifics (index.html)
    ============================ */
@@ -408,3 +410,12 @@ dialog::backdrop {
 }
 
 .hidden { display: none !important; }
+
+/* assets/css/dm-tool.css */
+
+/* Specific override for the Duration input */
+#inp-duration-text {
+    width: 30vw; /* 30% of the viewport width */
+    min-width: 20ch; /* Minimum 20 characters wide */
+    max-width: 100%; /* Prevent overflow on mobile */
+}
