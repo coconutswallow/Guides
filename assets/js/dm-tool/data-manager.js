@@ -104,6 +104,35 @@ export async function createSession(userId, title, isTemplate = false) {
 }
 
 /**
+ * Saves the current form data as a reusable Template.
+ * This creates a NEW row in the database with is_template = true.
+ * @param {string} userId 
+ * @param {string} templateName 
+ * @param {object} formData 
+ */
+export async function saveAsTemplate(userId, templateName, formData) {
+    try {
+        const { data, error } = await supabase
+            .from('session_logs')
+            .insert([{
+                user_id: userId,
+                title: templateName,
+                is_template: true,
+                form_data: formData,
+                session_date: null // Templates usually don't have dates
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    } catch (err) {
+        console.error('Error saving template:', err);
+        throw err;
+    }
+}
+
+/**
  * Loads the full state (including the JSONB blob) for the editor.
  * @param {string} sessionId - UUID of the session.
  * @returns {Promise<Object|null>} The full session row.
