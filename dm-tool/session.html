@@ -190,18 +190,12 @@ extra_css:
                 </div>
             </div> <div id="ad-output" class="subtab-content hidden-section">
                 <h3>Game Listing</h3>
-                <p>Copy and paste this into the #game-listings channel.</p>
-                <div class="output-block" id="out-listing">
-                    <button class="copy-btn" id="btn-copy-listing">Copy</button>
-                    <span id="listing-content"></span>
-                </div>
+                <p>This output is formatted for the Discord listing channel.</p>
+                {% include discord-output.html id="out-listing-text" channel_name="#game-listings" %}
 
                 <h3>Game Ad</h3>
-                <p>Copy and paste this into the #game-ads channel.</p>
-                <div class="output-block" id="out-ad">
-                    <button class="copy-btn" id="btn-copy-ad">Copy</button>
-                    <span id="ad-content"></span>
-                </div>
+                <p>This output is formatted for the Discord advertisement channel.</p>
+                {% include discord-output.html id="out-ad-text" channel_name="#game-ads" %}
             </div>
         </div>
 
