@@ -1,9 +1,7 @@
 /* assets/css/dm-tool.css */
 
-/* assets/css/dm-tool.css */
-
 /* ============================
-   1. Global Layout & Scroll Fixes 
+   1. GLOBAL LAYOUT & SCROLL
    ============================ */
 :root {
     /* Adjust this value to match your website's navigation bar height */
@@ -21,23 +19,19 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    background-color: transparent; /* Changed to transparent so image shows */
-    /* Push the entire page down to reveal the top */
+    background-color: transparent;
     padding-top: var(--header-height-buffer);
 }
 
-/* Fix for Editor Layout */
+/* Editor Layout Calculation */
 .editor-container {
     display: flex;
-    /* Calculate available height: 
-       100% Viewport - (The Editor's own header) - (The padding we added for the site Nav) 
-    */
     height: calc(100vh - var(--editor-header-height) - var(--header-height-buffer)); 
     overflow: hidden; 
     min-height: 0; 
 }
 
-/* Fix for Dashboard Layout (Ensures scrolling works on index page) */
+/* Dashboard Layout */
 .dashboard-container {
     flex: 1;
     overflow-y: visible;
@@ -48,7 +42,7 @@ body {
 
 
 /* ============================
-   2. Dashboard Specifics (index.html)
+   2. DASHBOARD (INDEX PAGE)
    ============================ */
 .dashboard-header {
     display: flex;
@@ -67,7 +61,6 @@ body {
     margin-bottom: 1rem;
 }
 
-/* Empty State Styling */
 #empty-state {
     text-align: left; 
     padding: 3rem; 
@@ -76,8 +69,21 @@ body {
     border-radius: 8px;
 }
 
+.session-link {
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.session-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+
 /* ============================
-   3. Sidebar Navigation (session.html)
+   3. SIDEBAR NAVIGATION
    ============================ */
 .editor-sidebar {
     width: 260px;
@@ -86,7 +92,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 1rem 0;
-    overflow-y: auto; /* Internal scroll for sidebar */
+    overflow-y: auto;
     flex-shrink: 0;
 }
 
@@ -120,13 +126,14 @@ body {
     opacity: 0.5;
 }
 
+
 /* ============================
-   4. Editor Main Area 
+   4. EDITOR MAIN AREA & HEADER
    ============================ */
 .editor-main {
     flex: 1;
     background: var(--color-bg-page);
-    overflow-y: auto; /* Internal scroll for content */
+    overflow-y: auto;
     padding: 2rem;
     position: relative;
     height: 100%;
@@ -142,7 +149,6 @@ body {
     box-shadow: var(--shadow-md);
     z-index: 10;
     flex-shrink: 0;
-    /* Ensure header has a fixed height for our calc() to work */
     height: 85px; 
     box-sizing: border-box;
 }
@@ -212,8 +218,9 @@ body {
     font-weight: bold;
 }
 
+
 /* ============================
-   5. Forms & Tabs 
+   5. FORMS & TABS
    ============================ */
 .content-tabs {
     display: flex;
@@ -244,7 +251,7 @@ body {
     border-color: var(--color-border);
     border-bottom-color: var(--color-bg-page);
     color: var(--color-primary);
-    margin-bottom: -2px; /* Overlap border */
+    margin-bottom: -2px;
     z-index: 1;
 }
 
@@ -308,18 +315,38 @@ body {
     text-transform: uppercase;
 }
 
-/* ============================
-   6. Buttons & Interactive Elements 
-   ============================ */
+/* Specific Input Overrides */
+#inp-duration-text {
+    width: 30vw;
+    min-width: 20ch;
+    max-width: 100%;
+}
 
-/* Small Button Override */
+#inp-event[multiple] {
+    height: 100px;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-light); 
+    color: var(--color-text);
+    border-radius: 4px;
+}
+
+#template-select {
+    background-color: var(--color-bg-light);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+
+/* ============================
+   6. BUTTONS & ACTIONS
+   ============================ */
 .btn-sm {
     padding: 0.4em 0.6em !important;
     font-size: 0.75em !important;
     margin-left: 5px;
 }
 
-/* Danger Button Variant (Red Outline) */
 .btn-danger-outline {
     border-color: var(--palette-alert-danger-action) !important;
     color: var(--palette-alert-danger-action) !important;
@@ -345,11 +372,25 @@ body {
     border-radius: 4px;
 }
 
-/* ============================
-   7. Modals & Overlays 
-   ============================ */
+#btn-load-template, 
+#btn-open-save-template {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.2s ease;
+}
 
-/* Native Dialog (Used in session.html) */
+#btn-load-template:hover, 
+#btn-open-save-template:hover {
+    background-color: var(--color-primary);
+    color: var(--color-btn-text);
+    border-color: var(--color-primary);
+}
+
+
+/* ============================
+   7. MODALS & OVERLAYS
+   ============================ */
 dialog {
     border: 2px solid var(--color-primary);
     border-radius: 8px;
@@ -359,11 +400,11 @@ dialog {
     max-width: 500px;
     width: 100%;
 }
+
 dialog::backdrop {
     background: rgba(0,0,0,0.5);
 }
 
-/* Custom Modal Overlay (Used in index.html) */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -378,13 +419,13 @@ dialog::backdrop {
 }
 
 .modal-content {
-    background: var(--color-bg-page); /* Adapted to variable */
+    background: var(--color-bg-page);
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     max-width: 400px;
     width: 90%;
-    border: 2px solid var(--color-primary); /* Matching dialog style */
+    border: 2px solid var(--color-primary);
 }
 
 .modal-actions {
@@ -394,8 +435,9 @@ dialog::backdrop {
     margin-top: 1.5rem;
 }
 
+
 /* ============================
-   8. Utilities
+   8. UTILITIES
    ============================ */
 .output-block {
     background: #282c34;
@@ -415,34 +457,12 @@ dialog::backdrop {
 
 .hidden { display: none !important; }
 
-/* assets/css/dm-tool.css */
-
-/* Specific override for the Duration input */
-#inp-duration-text {
-    width: 30vw; /* 30% of the viewport width */
-    min-width: 20ch; /* Minimum 20 characters wide */
-    max-width: 100%; /* Prevent overflow on mobile */
-}
 
 /* ============================
-   9. Dark Mode & Table Fixes
+   9. DARK MODE & THEME OVERRIDES
    ============================ */
 
-/* Fix Session Link Color */
-.session-link {
-    font-weight: 600;
-    color: var(--color-text); /* Uses theme variable (Dark in light mode, Light in dark mode) */
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.session-link:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
-}
-
-/* Fix "Edit" Button in Dark Mode */
-/* The global style sets text to dark-on-dark for secondary buttons in dark mode. We override it here. */
+/* Button Visibility in Dark Mode */
 [data-theme="dark"] .button-secondary {
     color: var(--color-primary);
     border-color: var(--color-primary);
@@ -450,5 +470,33 @@ dialog::backdrop {
 
 [data-theme="dark"] .button-secondary:hover {
     background: var(--color-primary);
-    color: var(--color-btn-text); /* Text becomes light on hover */
+    color: var(--color-btn-text);
+}
+
+[data-theme="dark"] #btn-load-template, 
+[data-theme="dark"] #btn-open-save-template {
+    color: var(--color-text);
+}
+
+/* Form Input Visibility in Dark Mode */
+[data-theme="dark"] #template-select {
+    background-color: var(--color-bg-medium);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] #template-select option {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] #inp-event[multiple] {
+    background-color: var(--color-bg-medium);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] #inp-event[multiple] option {
+    background-color: var(--color-bg-medium);
+    color: var(--color-text);
 }
