@@ -1,8 +1,7 @@
 // assets/js/dm-tool/session-editor.js
 
 import { supabase } from '../supabaseClient.js'; 
-// Fixed Imports: Combined into a single line to prevent "Identifier already declared" error
-import { saveSession, saveAsTemplate, loadSession, fetchSessionList, fetchGameRules } from './data-manager.js';
+import { saveSession, saveAsTemplate, loadSession, fetchGameRules, fetchActiveEvents } from './data-manager.js';
 import { calculateSessionCount, toUnixTimestamp } from './calculators.js';
 
 // ==========================================
@@ -10,18 +9,17 @@ import { calculateSessionCount, toUnixTimestamp } from './calculators.js';
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize UI Components
     initTabs();
     initTimezone();
     initHoursLogic();
     initDateTimeConverter();
     initTemplateLogic();
     
-    // Load dropdown options first
+    // Load dropdowns
     await initDynamicDropdowns(); 
+    await initEventsDropdown(); // New function for Events table
     await initTemplateDropdown(); 
 
-    // Check if we are editing an existing session
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
 
@@ -35,51 +33,45 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ==========================================
 
 async function initDynamicDropdowns() {
-    console.log("Initializing dynamic dropdowns...");
     const rules = await fetchGameRules();
-    
-    console.log("Fetched rules:", rules);
+    if (!rules || !rules.options) return;
 
-    if (!rules || !rules.options) {
-        console.error("Could not load dropdown options from DB. Rules:", rules);
-        return;
-    }
-
-    console.log("Available options:", rules.options);
-
-    // Helper to fill a select element
     const fillSelect = (id, options) => {
         const select = document.getElementById(id);
-        if (!select) {
-            console.warn(`Select element not found: ${id}`);
-            return;
-        }
-
-        // Clear "Loading..."
+        if (!select) return;
         select.innerHTML = '<option value="">Select...</option>';
-
         options.forEach(opt => {
             const el = document.createElement('option');
             el.value = opt;
             el.textContent = opt;
             select.appendChild(el);
         });
-        
-        console.log(`Populated ${id} with ${options.length} options`);
     };
 
-    // Map DB keys to HTML IDs
-    // JSON Key -> HTML ID
-    // Note: Matches the JSON structure you provided
     if(rules.options["Game Version"]) fillSelect('inp-version', rules.options["Game Version"]);
     if(rules.options["Application Types"]) fillSelect('inp-apps-type', rules.options["Application Types"]);
     if(rules.options["Game Format"]) fillSelect('inp-format', rules.options["Game Format"]);
+}
+
+async function initEventsDropdown() {
+    const events = await fetchActiveEvents();
+    const select = document.getElementById('inp-event');
+    if (!select) return;
+
+    select.innerHTML = ''; // Clear existing
     
-    console.log("Dropdown initialization complete");
+    // Optional: Add a placeholder or empty option if needed, 
+    // but for multi-select usually we just list items.
+    
+    events.forEach(evt => {
+        const el = document.createElement('option');
+        el.value = evt.name; // Storing Name as requested
+        el.textContent = evt.name;
+        select.appendChild(el);
+    });
 }
 
 function initTabs() {
-    // Sidebar Navigation
     document.querySelectorAll('#sidebar-nav .nav-item').forEach(item => {
         item.addEventListener('click', () => {
             document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
@@ -92,7 +84,6 @@ function initTabs() {
         });
     });
 
-    // Sub-tabs (Input/Output)
     document.querySelectorAll('.content-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             tab.parentElement.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
@@ -103,7 +94,6 @@ function initTabs() {
             parent.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
             document.getElementById(targetId).classList.remove('hidden-section');
             
-            // Re-generate markdown if output tab is selected
             if(targetId === 'ad-output') {
                 generateOutput();
             }
@@ -115,7 +105,7 @@ function initHoursLogic() {
     const hoursInput = document.getElementById('header-hours');
     const sessionDisplay = document.getElementById('header-session-count');
     
-    if(!hoursInput) return; // Guard clause
+    if(!hoursInput) return;
 
     const updateDisplay = () => {
         const count = calculateSessionCount(hoursInput.value);
@@ -124,14 +114,14 @@ function initHoursLogic() {
     };
 
     hoursInput.addEventListener('input', updateDisplay);
-    updateDisplay(); // Run once on load
+    updateDisplay(); 
 }
 
 function updateSessionNav(count) {
     const navContainer = document.getElementById('dynamic-session-nav');
     if(!navContainer) return;
 
-    navContainer.innerHTML = ''; // Clear
+    navContainer.innerHTML = ''; 
     
     for(let i=1; i<=count; i++) {
         const div = document.createElement('div');
@@ -145,9 +135,7 @@ function updateSessionNav(count) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
             
             let targetSection = document.getElementById(`view-session-${i}`);
-            // If section doesn't exist yet, we just show Session 1 for now or handle dynamic creation
             if(!targetSection) targetSection = document.getElementById('view-session-1');
-            
             if(targetSection) targetSection.classList.remove('hidden-section');
         });
         
@@ -165,11 +153,9 @@ function initDateTimeConverter() {
     const updateUnix = () => {
         const dateVal = dateInput.value;
         const tzVal = tzSelect.value;
-        // Pass both values to the calculator
         if(unixInput) unixInput.value = toUnixTimestamp(dateVal, tzVal);
     };
 
-    // Listen to changes on BOTH inputs
     dateInput.addEventListener('change', updateUnix);
     dateInput.addEventListener('input', updateUnix); 
     tzSelect.addEventListener('change', updateUnix);
@@ -181,10 +167,8 @@ function initTimezone() {
 
     const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     
-    // Clear existing options
     tzSelect.innerHTML = '';
     
-    // 1. Get all supported timezones from the browser
     let timezones = [];
     if (Intl.supportedValuesOf) {
         timezones = Intl.supportedValuesOf('timeZone');
@@ -215,7 +199,6 @@ async function initTemplateDropdown() {
     const select = document.getElementById('template-select');
     if(!select) return;
 
-    // Get current user
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return; 
 
@@ -264,7 +247,6 @@ function initTemplateLogic() {
                 await saveAsTemplate(user.id, tmplName, formData);
                 alert("Template Saved!");
                 modal.close();
-                // Refresh dropdown
                 const select = document.getElementById('template-select');
                 const opt = document.createElement('option');
                 opt.text = tmplName; 
@@ -292,7 +274,6 @@ function initTemplateLogic() {
         btnSaveGame.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const sessionId = urlParams.get('id');
-            const { data: { user } } = await supabase.auth.getUser();
 
             const formData = getFormData();
             const title = document.getElementById('header-game-name').value || "Untitled Session";
@@ -301,7 +282,6 @@ function initTemplateLogic() {
 
             if (sessionId) {
                 await saveSession(sessionId, formData, { title, date });
-                // Provide visual feedback
                 const btn = document.getElementById('btn-save-game');
                 const originalText = btn.innerText;
                 btn.innerText = "Saved!";
@@ -314,8 +294,11 @@ function initTemplateLogic() {
 }
 
 function getFormData() {
-    // Helper to safely get value
     const val = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
+
+    // Handle Multi-Select for Events
+    const eventSelect = document.getElementById('inp-event');
+    const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
 
     return {
         header: {
@@ -330,10 +313,9 @@ function getFormData() {
             intended_duration: val('inp-duration-text'),
             tone: val('inp-tone'),
             encounter_difficulty: val('inp-diff-encounter'),
-            // Add other fields to match session.html IDs
             game_version: val('inp-version'),
             apps_type: val('inp-apps-type'),
-            event_tag: val('inp-event'),
+            event_tags: selectedEvents, // Store array
             focus: val('inp-focus'),
             threat_level: val('inp-diff-threat'),
             char_loss: val('inp-diff-loss'),
@@ -352,21 +334,16 @@ function populateForm(session) {
         if(titleEl) titleEl.value = session.title;
     }
     
-    // Safety check: New sessions might not have 'header' data yet
     if (!session.form_data || !session.form_data.header) return;
 
     const h = session.form_data.header;
-    
-    // Safe set helper
     const setVal = (id, val) => { 
         const el = document.getElementById(id); 
         if(el) el.value = val || ""; 
     };
     
     setVal('inp-unix-time', h.game_datetime);
-    // Note: timezone handling might require re-running the calculator logic if needed
     setVal('inp-timezone', h.timezone);
-    
     setVal('inp-format', h.game_type);
     setVal('inp-tier', h.tier);
     setVal('inp-apl', h.apl);
@@ -376,16 +353,23 @@ function populateForm(session) {
     setVal('inp-tone', h.tone);
     setVal('inp-diff-encounter', h.encounter_difficulty);
     setVal('inp-description', h.game_description);
-
-    // New fields
     setVal('inp-version', h.game_version);
     setVal('inp-apps-type', h.apps_type);
-    setVal('inp-event', h.event_tag);
+    
+    // Handle Multi-Select Population
+    const eventSelect = document.getElementById('inp-event');
+    if (eventSelect && Array.isArray(h.event_tags)) {
+        Array.from(eventSelect.options).forEach(opt => {
+            opt.selected = h.event_tags.includes(opt.value);
+        });
+    } else if (eventSelect && h.event_tag) {
+        // Fallback for old data where it was a single string
+        eventSelect.value = h.event_tag;
+    }
+
     setVal('inp-focus', h.focus);
     setVal('inp-diff-threat', h.threat_level);
     setVal('inp-diff-loss', h.char_loss);
-    
-    // Markdown fields
     setVal('inp-houserules', h.house_rules);
     setVal('inp-notes', h.notes);
     setVal('inp-warnings', h.warnings);
@@ -401,24 +385,65 @@ async function loadSessionData(sessionId) {
 function generateOutput() {
     const data = getFormData().header;
     const unixTime = document.getElementById('inp-unix-time').value;
+    const name = document.getElementById('header-game-name').value || "Untitled";
     
-    // DISCORD TIMESTAMP LOGIC
     let timeString = "TBD";
     if (unixTime && unixTime > 0) {
-        timeString = `<t:${unixTime}:F> (<t:${unixTime}:R>)`;
+        timeString = `<t:${unixTime}:F>`;
     }
 
-    const listingText = `**${document.getElementById('header-game-name').value}**\n` +
-                        `**Time:** ${timeString}\n` +
-                        `**Format:** ${data.game_type || 'N/A'}\n` +
-                        `**Tier:** ${data.tier || 'N/A'}\n` +
-                        `\n${data.game_description || ''}`;
+    // --- GAME LISTING ---
+    const listingText = `**Start Time:** ${timeString}
+
+**Name:** ${name}
+**Description:** ${data.game_description || 'N/A'}
+
+**Version:** ${data.game_version || 'N/A'}
+**Format:** ${data.game_type || 'N/A'}
+**Tier and APL:** ${data.tier || 'N/A'} (${data.apl || 'N/A'})
+**Party Size:** ${data.party_size || 'N/A'}
+**Applications:** ${data.apps_type || 'N/A'}
+
+**Tone:** ${data.tone || 'N/A'}
+**Focus:** ${data.focus || 'N/A'}
+**Difficulty:** ${data.encounter_difficulty || 'N/A'}
+- **Encounter Difficulty:** ${data.encounter_difficulty || 'N/A'}
+- **Chance of Character Loss:** ${data.char_loss || 'N/A'}
+- **Enemy Threat Level:** ${data.threat_level || 'N/A'}
+- **Environment Hazard Level:** N/A
+
+**Lobby:** N/A
+**Platform:** ${data.platform || 'N/A'}
+**Duration:** ${data.intended_duration || 'N/A'}
+
+**House Rules:** ${data.house_rules || 'N/A'}
+
+**Notes:** ${data.notes || 'N/A'}
+
+**Content Warnings:** ${data.warnings || 'N/A'}
+
+**How to Apply:**
+${data.how_to_apply || 'Post your application below.'}`;
     
     const outListing = document.getElementById('listing-content');
     if(outListing) outListing.innerText = listingText;
 
+    // --- GAME AD ---
+    // Calculate Pings/Tags (e.g., @Voice T2)
+    let tags = "";
+    if (data.game_type && data.game_type.toLowerCase().includes('voice')) tags += "@Voice ";
+    else if (data.game_type && data.game_type.toLowerCase().includes('pbp')) tags += "@PBP ";
+    
+    // Attempt to extract short tier (e.g. "Tier 2" -> "T2")
+    if (data.tier) {
+        const tMatch = data.tier.match(/\d+/);
+        if (tMatch) tags += `T${tMatch[0]}`;
+    }
+
+    const adText = `> ${tags.trim()} **Name:** ${name} **Version and Format:** ${data.game_version} / ${data.game_type} **Tier and APL:** ${data.tier} (${data.apl}) **Start Time and Duration:** ${timeString} (${data.intended_duration}) **Listing:** #game-listings **Description:** ${data.game_description || ''}`;
+
     const outAd = document.getElementById('ad-content');
-    if(outAd) outAd.innerText = listingText; // Mirror for now
+    if(outAd) outAd.innerText = adText; 
 }
 
 // Global copy function
@@ -430,7 +455,6 @@ window.copyToClipboard = (id) => {
     }
 };
 
-// Hook up copy buttons
 document.addEventListener('DOMContentLoaded', () => {
     const btnCopyList = document.getElementById('btn-copy-listing');
     if(btnCopyList) {

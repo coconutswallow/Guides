@@ -6,6 +6,51 @@ extra_css:
   - /assets/css/dm-tool.css
 ---
 
+<style>
+    /* 1. Fix Template Dropdown in Dark Mode */
+    #template-select {
+        background-color: var(--color-bg-medium, #2c3e50);
+        color: var(--color-text, #ffffff);
+        border: 1px solid var(--color-border, #444);
+    }
+    #template-select option {
+        background-color: var(--color-bg-dark, #1a252f);
+        color: var(--color-text, #ffffff);
+    }
+
+    /* 2. Fix Secondary Buttons (Load/Save Template) legibility */
+    /* Making them look like Doc Navigation Buttons (.nav-link / button-secondary) */
+    #btn-load-template, 
+    #btn-open-save-template {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--color-text, #e0e0e0);
+        border: 1px solid var(--color-border, #555);
+        transition: all 0.2s ease;
+    }
+
+    #btn-load-template:hover, 
+    #btn-open-save-template:hover {
+        background-color: var(--color-primary, #3498db);
+        color: white;
+        border-color: var(--color-primary, #3498db);
+    }
+
+    /* 3. Event Multi-select height adjustment */
+    #inp-event[multiple] {
+        height: 100px; /* Show a few options at once */
+        background-color: var(--color-bg-input, #fff);
+        color: var(--color-text-input, #000);
+        padding: 0.5rem;
+    }
+    /* Dark mode override for inputs if variables exist */
+    @media (prefers-color-scheme: dark) {
+        #inp-event[multiple] {
+            background-color: #2b2b2b;
+            color: #eee;
+        }
+    }
+</style>
+
 <header class="editor-header">
     <div class="header-inputs">
         <div class="header-game-title-wrapper">
@@ -116,12 +161,9 @@ extra_css:
                     </div>
 
                     <div class="form-group">
-                        <label>Event(s)</label>
-                        <select id="inp-event">
-                            <option value="">None</option>
-                            <option value="gameday">Game Day</option>
-                            <option value="charity">Charity Event</option>
-                        </select>
+                        <label>Event(s) (Hold Ctrl/Cmd to select multiple)</label>
+                        <select id="inp-event" multiple>
+                            </select>
                     </div>
 
                     <h3 class="form-section-title">Player Requirements</h3>

@@ -1,31 +1,20 @@
 /**
  * data-manager.js
  * Location: /assets/js/dm-tool/data-manager.js
- * * Responsibilities:
- * - Bridges the Frontend and Supabase Database.
- * - Handles CRUD operations for Session Logs.
- * - Fetches Game Rules (XP/Gold tables) from the Lookups table.
  */
 
-// Import from the shared assets folder (One level up)
 import { supabase } from '../supabaseClient.js';
 
 /* =========================================
-   1. GAME RULES (LOOKUPS)
+   1. GAME RULES & LOOKUPS
    ========================================= */
 
 let cachedRules = null;
 
-/**
- * Fetches the static XP/Gold/Tier rules from the 'lookups' table.
- * Caches the result to prevent unnecessary DB calls.
- * @returns {Promise<Object|null>} The rules object or null on error.
- */
 export async function fetchGameRules() {
     if (cachedRules) return cachedRules;
 
     try {
-        // FIXED: Changed 'dm_rules' to 'dm-tool' to match your database record
         const { data, error } = await supabase
             .from('lookups')
             .select('data')
@@ -34,7 +23,7 @@ export async function fetchGameRules() {
 
         if (error) throw error;
         
-        cachedRules = data.data; // The JSON object inside the 'data' column
+        cachedRules = data.data; 
         return cachedRules;
     } catch (err) {
         console.error('Error fetching game rules:', err);
@@ -42,16 +31,31 @@ export async function fetchGameRules() {
     }
 }
 
+/**
+ * Fetches active events for the dropdown.
+ * Selects name where is_active = true.
+ * @returns {Promise<Array>} List of event objects {id, name}.
+ */
+export async function fetchActiveEvents() {
+    try {
+        const { data, error } = await supabase
+            .from('events')
+            .select('id, name')
+            .eq('is_active', true)
+            .order('name', { ascending: true });
+
+        if (error) throw error;
+        return data || [];
+    } catch (err) {
+        console.error('Error fetching events:', err);
+        return [];
+    }
+}
+
 /* =========================================
-   2. DASHBOARD OPERATIONS (LIST VIEWS)
+   2. DASHBOARD OPERATIONS
    ========================================= */
 
-/**
- * Fetches the list of sessions for the dashboard.
- * Optimizes performance by only selecting metadata columns, not the heavy JSON blob.
- * @param {string} userId - The current user's UUID.
- * @returns {Promise<Array>} List of session objects.
- */
 export async function fetchSessionList(userId) {
     try {
         const { data, error } = await supabase
@@ -69,16 +73,9 @@ export async function fetchSessionList(userId) {
 }
 
 /* =========================================
-   3. CRUD OPERATIONS (CREATE, READ, UPDATE, DELETE)
+   3. CRUD OPERATIONS
    ========================================= */
 
-/**
- * Creates a new blank session or template.
- * @param {string} userId - Owner UUID.
- * @param {string} title - Name of the session.
- * @param {boolean} isTemplate - Whether this is a reusable template.
- * @returns {Promise<Object|null>} The created session object.
- */
 export async function createSession(userId, title, isTemplate = false) {
     try {
         const { data, error } = await supabase
@@ -87,12 +84,12 @@ export async function createSession(userId, title, isTemplate = false) {
                 user_id: userId,
                 title: title,
                 is_template: isTemplate,
-                session_date: new Date().toISOString().split('T')[0], // Default to today YYYY-MM-DD
+                session_date: new Date().toISOString().split('T')[0],
                 form_data: { 
-                    // FIXED: Initialize with 'header' so session-editor.js doesn't crash on load
                     header: {
                         intended_duration: "3-4 Hours",
-                        party_size: "5"
+                        party_size: "5",
+                        event_tags: [] // Initialize array for multi-select
                     },
                     sessions: [] 
                 } 
@@ -108,13 +105,6 @@ export async function createSession(userId, title, isTemplate = false) {
     }
 }
 
-/**
- * Saves the current form data as a reusable Template.
- * This creates a NEW row in the database with is_template = true.
- * @param {string} userId 
- * @param {string} templateName 
- * @param {object} formData 
- */
 export async function saveAsTemplate(userId, templateName, formData) {
     try {
         const { data, error } = await supabase
@@ -124,7 +114,7 @@ export async function saveAsTemplate(userId, templateName, formData) {
                 title: templateName,
                 is_template: true,
                 form_data: formData,
-                session_date: null // Templates usually don't have dates
+                session_date: null 
             }])
             .select()
             .single();
@@ -137,11 +127,6 @@ export async function saveAsTemplate(userId, templateName, formData) {
     }
 }
 
-/**
- * Loads the full state (including the JSONB blob) for the editor.
- * @param {string} sessionId - UUID of the session.
- * @returns {Promise<Object|null>} The full session row.
- */
 export async function loadSession(sessionId) {
     try {
         const { data, error } = await supabase
@@ -158,13 +143,6 @@ export async function loadSession(sessionId) {
     }
 }
 
-/**
- * Saves the session state.
- * Updates both the relational metadata (for dashboard sorting) and the JSONB blob.
- * * @param {string} sessionId - UUID of the session.
- * @param {object} formData - The massive JSON object containing players, notes, calculations.
- * @param {object} metadata - Specific fields extracted for columns (title, date, status).
- */
 export async function saveSession(sessionId, formData, metadata) {
     try {
         const updatePayload = {
@@ -172,7 +150,6 @@ export async function saveSession(sessionId, formData, metadata) {
             updated_at: new Date().toISOString()
         };
 
-        // Only update metadata columns if they are provided
         if (metadata.title) updatePayload.title = metadata.title;
         if (metadata.date) updatePayload.session_date = metadata.date;
         if (metadata.status) updatePayload.status = metadata.status;
@@ -188,15 +165,10 @@ export async function saveSession(sessionId, formData, metadata) {
         return data;
     } catch (err) {
         console.error('Error saving session:', err);
-        throw err; // Re-throw so the UI knows the save failed
+        throw err; 
     }
 }
 
-/**
- * Deletes a session log.
- * @param {string} sessionId 
- * @returns {Promise<boolean>} True if successful.
- */
 export async function deleteSession(sessionId) {
     try {
         const { error } = await supabase
