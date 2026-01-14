@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Load dropdowns
     await initDynamicDropdowns(); 
-    await initEventsDropdown(); // New function for Events table
+    await initEventsDropdown(); 
     await initTemplateDropdown(); 
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -58,14 +58,11 @@ async function initEventsDropdown() {
     const select = document.getElementById('inp-event');
     if (!select) return;
 
-    select.innerHTML = ''; // Clear existing
-    
-    // Optional: Add a placeholder or empty option if needed, 
-    // but for multi-select usually we just list items.
+    select.innerHTML = ''; 
     
     events.forEach(evt => {
         const el = document.createElement('option');
-        el.value = evt.name; // Storing Name as requested
+        el.value = evt.name; 
         el.textContent = evt.name;
         select.appendChild(el);
     });
@@ -425,8 +422,9 @@ function generateOutput() {
 **How to Apply:**
 ${data.how_to_apply || 'Post your application below.'}`;
     
-    const outListing = document.getElementById('listing-content');
-    if(outListing) outListing.innerText = listingText;
+    // UPDATED: Output to the Discord Output Widget Textarea
+    const outListing = document.getElementById('out-listing-text');
+    if(outListing) outListing.value = listingText;
 
     // --- GAME AD ---
     // Calculate Pings/Tags (e.g., @Voice T2)
@@ -442,27 +440,7 @@ ${data.how_to_apply || 'Post your application below.'}`;
 
     const adText = `> ${tags.trim()} **Name:** ${name} **Version and Format:** ${data.game_version} / ${data.game_type} **Tier and APL:** ${data.tier} (${data.apl}) **Start Time and Duration:** ${timeString} (${data.intended_duration}) **Listing:** #game-listings **Description:** ${data.game_description || ''}`;
 
-    const outAd = document.getElementById('ad-content');
-    if(outAd) outAd.innerText = adText; 
+    // UPDATED: Output to the Discord Output Widget Textarea
+    const outAd = document.getElementById('out-ad-text');
+    if(outAd) outAd.value = adText; 
 }
-
-// Global copy function
-window.copyToClipboard = (id) => {
-    const el = document.getElementById(id);
-    if(el) {
-        navigator.clipboard.writeText(el.innerText);
-        alert("Copied!");
-    }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    const btnCopyList = document.getElementById('btn-copy-listing');
-    if(btnCopyList) {
-        btnCopyList.addEventListener('click', () => window.copyToClipboard('listing-content'));
-    }
-    
-    const btnCopyAd = document.getElementById('btn-copy-ad');
-    if(btnCopyAd) {
-        btnCopyAd.addEventListener('click', () => window.copyToClipboard('ad-content'));
-    }
-});
