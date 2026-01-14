@@ -156,14 +156,12 @@ async function handleNewSession() {
 }
 
 async function handleDelete(e) {
-    function handleDelete(e) {
-    // Store the ID globally so executeDelete knows what to remove
+    // 1. Store the ID globally so executeDelete knows what to remove
     deleteTargetId = e.target.dataset.id;
 
-    // Show the modal
+    // 2. Show the modal
     const modal = document.getElementById('delete-modal');
     if (modal) modal.classList.remove('hidden');
-}
 }
 
 function escapeHtml(text) {
