@@ -497,6 +497,8 @@ function getFormData() {
     };
 }
 
+// assets/js/dm-tool/session-editor.js
+
 function populateForm(session) {
     if(session.title) {
         const titleEl = document.getElementById('header-game-name');
@@ -505,16 +507,31 @@ function populateForm(session) {
     
     if (!session.form_data) return;
 
+    // Helper: Sets value AND triggers events for Markdown widgets/listeners
+    const setVal = (id, val) => { 
+        const el = document.getElementById(id); 
+        if(el) {
+            el.value = val || ""; 
+            // Dispatch events to notify connected widgets (like SimpleMDE or Auto-resize)
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    };
+
     // 1. Populate Header Fields
     if (session.form_data.header) {
         const h = session.form_data.header;
-        const setVal = (id, val) => { 
-            const el = document.getElementById(id); 
-            if(el) el.value = val || ""; 
-        };
         
         setVal('inp-unix-time', h.game_datetime);
         setVal('inp-timezone', h.timezone);
+        
+        // --- FIX: Populate the Visual Date Picker ---
+        // We must convert the saved Unix Timestamp + Timezone back to "YYYY-MM-DDTHH:MM"
+        if(h.game_datetime && h.timezone) {
+            const dateStr = unixToLocalIso(h.game_datetime, h.timezone);
+            setVal('inp-start-datetime', dateStr);
+        }
+        
         setVal('inp-format', h.game_type);
         setVal('inp-tier', h.tier);
         setVal('inp-apl', h.apl);
@@ -535,8 +552,6 @@ function populateForm(session) {
             Array.from(eventSelect.options).forEach(opt => {
                 opt.selected = h.event_tags.includes(opt.value);
             });
-        } else if (eventSelect && h.event_tag) {
-            eventSelect.value = h.event_tag;
         }
 
         setVal('inp-focus', h.focus);
@@ -551,7 +566,7 @@ function populateForm(session) {
     // 2. Populate Player Roster
     const tbody = document.getElementById('roster-body');
     if (tbody) {
-        tbody.innerHTML = ''; // Clear existing rows
+        tbody.innerHTML = ''; 
         if (session.form_data.players && Array.isArray(session.form_data.players)) {
             session.form_data.players.forEach(player => {
                 addPlayerRow(player);
@@ -562,13 +577,38 @@ function populateForm(session) {
     // 3. Populate DM Details
     if (session.form_data.dm) {
         const d = session.form_data.dm;
-        const setVal = (id, val) => { 
-            const el = document.getElementById(id); 
-            if(el) el.value = val || ""; 
-        };
         setVal('inp-dm-char-name', d.character_name);
         setVal('inp-dm-level', d.level);
         setVal('inp-dm-games-count', d.games_count);
+    }
+    
+    // 4. Force Output Refresh
+    // This ensures the Output tab matches the inputs we just filled
+    generateOutput();
+}
+
+/**
+ * Helper: Converts Unix Timestamp back to "YYYY-MM-DDTHH:MM" 
+ * based on the saved Timezone.
+ */
+function unixToLocalIso(unixSeconds, timeZone) {
+    try {
+        const date = new Date(unixSeconds * 1000);
+        // Use en-CA because it formats as YYYY-MM-DD
+        const fmt = new Intl.DateTimeFormat('en-CA', {
+            timeZone: timeZone,
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', hour12: false
+        });
+        
+        const parts = fmt.formatToParts(date);
+        const get = (t) => parts.find(p => p.type === t).value;
+        
+        // Reassemble into HTML value format
+        return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
+    } catch(e) {
+        console.error("Date conversion error", e);
+        return "";
     }
 }
 
