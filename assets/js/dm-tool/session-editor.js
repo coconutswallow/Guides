@@ -290,6 +290,10 @@ function initTemplateLogic() {
     }
 }
 
+// ==========================================
+// Updated Functions for session-editor.js
+// ==========================================
+
 function getFormData() {
     const val = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
 
@@ -312,14 +316,17 @@ function getFormData() {
             encounter_difficulty: val('inp-diff-encounter'),
             game_version: val('inp-version'),
             apps_type: val('inp-apps-type'),
-            event_tags: selectedEvents, // Store array
+            event_tags: selectedEvents, 
             focus: val('inp-focus'),
             threat_level: val('inp-diff-threat'),
             char_loss: val('inp-diff-loss'),
             house_rules: val('inp-houserules'),
             notes: val('inp-notes'),
             warnings: val('inp-warnings'),
-            how_to_apply: val('inp-apply')
+            how_to_apply: val('inp-apply'),
+            // New Fields
+            listing_url: val('inp-listing-url'),
+            lobby_url: val('inp-lobby-url')
         },
         sessions: [] 
     };
@@ -353,6 +360,10 @@ function populateForm(session) {
     setVal('inp-version', h.game_version);
     setVal('inp-apps-type', h.apps_type);
     
+    // New Fields Population
+    setVal('inp-listing-url', h.listing_url);
+    setVal('inp-lobby-url', h.lobby_url);
+
     // Handle Multi-Select Population
     const eventSelect = document.getElementById('inp-event');
     if (eventSelect && Array.isArray(h.event_tags)) {
@@ -360,7 +371,6 @@ function populateForm(session) {
             opt.selected = h.event_tags.includes(opt.value);
         });
     } else if (eventSelect && h.event_tag) {
-        // Fallback for old data where it was a single string
         eventSelect.value = h.event_tag;
     }
 
@@ -373,10 +383,70 @@ function populateForm(session) {
     setVal('inp-apply', h.how_to_apply);
 }
 
-async function loadSessionData(sessionId) {
-    const session = await loadSession(sessionId);
-    if(!session) return;
-    populateForm(session);
+function generateOutput() {
+    const data = getFormData().header;
+    const unixTime = document.getElementById('inp-unix-time').value;
+    const name = document.getElementById('header-game-name').value || "Untitled";
+    
+    let timeString = "TBD";
+    if (unixTime && unixTime > 0) {
+        timeString = `<t:${unixTime}:F>`;
+    }
+
+    // --- GAME LISTING ---
+    // Wrapped in ``` code blocks
+    const listingText = `\`\`\`
+**Start Time:** ${timeString}
+
+**Name:** ${name}
+**Description:** ${data.game_description || 'N/A'}
+
+**Version:** ${data.game_version || 'N/A'}
+**Format:** ${data.game_type || 'N/A'}
+**Tier and APL:** ${data.tier || 'N/A'} (${data.apl || 'N/A'})
+**Party Size:** ${data.party_size || 'N/A'}
+**Applications:** ${data.apps_type || 'N/A'}
+
+**Tone:** ${data.tone || 'N/A'}
+**Focus:** ${data.focus || 'N/A'}
+**Difficulty:** ${data.encounter_difficulty || 'N/A'}
+- **Encounter Difficulty:** ${data.encounter_difficulty || 'N/A'}
+- **Chance of Character Loss:** ${data.char_loss || 'N/A'}
+- **Enemy Threat Level:** ${data.threat_level || 'N/A'}
+- **Environment Hazard Level:** N/A
+
+**Lobby:** ${data.lobby_url || 'N/A'}
+**Platform:** ${data.platform || 'N/A'}
+**Duration:** ${data.intended_duration || 'N/A'}
+
+**House Rules:** ${data.house_rules || 'N/A'}
+
+**Notes:** ${data.notes || 'N/A'}
+
+**Content Warnings:** ${data.warnings || 'N/A'}
+
+**How to Apply:**
+${data.how_to_apply || 'Post your application below.'}
+\`\`\``;
+    
+    const outListing = document.getElementById('out-listing-text');
+    if(outListing) outListing.value = listingText;
+
+    // --- GAME AD ---
+    // Updated format wrapped in ``` code blocks
+    
+    const adText = `\`\`\`
+> **Name:** ${name}
+**Version and Format:** ${data.game_version} / ${data.game_type}
+/ **Tier and APL:** ${data.tier || 'N/A'} , APL ${data.apl || 'N/A'}
+**Start Time and Duration:** ${timeString} (${data.intended_duration || 'N/A'})
+**Listing:** ${data.listing_url || 'N/A'}
+**Description:**
+${data.game_description || ''}
+\`\`\``;
+
+    const outAd = document.getElementById('out-ad-text');
+    if(outAd) outAd.value = adText; 
 }
 
 function generateOutput() {

@@ -2,7 +2,8 @@
 layout: doc
 title: "Contents"
 order: 1
-background_image: 
+background_image:
+hide_from_nav: true  
 ---
 
 ![Adventure Locations](https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001)

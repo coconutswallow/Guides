@@ -2,7 +2,8 @@
 layout: doc
 title: "Contents"
 order: 1
-background_image: 
+background_image:
+hide_from_nav: true  
 ---
 
 ![Player's Guide Cover]({{ '/assets/images/players-guide-cover.png' | relative_url }})
