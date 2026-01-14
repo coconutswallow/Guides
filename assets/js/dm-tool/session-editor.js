@@ -7,21 +7,31 @@ import {
     loadSession, 
     fetchGameRules, 
     fetchActiveEvents,
-    fetchTemplates // <--- Added here correctly
+    fetchTemplates 
 } from './data-manager.js';
-import { calculateSessionCount, toUnixTimestamp } from './calculators.js';
+import { 
+    calculateSessionCount, 
+    toUnixTimestamp, 
+    distributeHours,
+    calculateXP 
+} from './calculators.js';
+
+let cachedGameRules = null; // Store rules globally for XP calc
 
 // ==========================================
 // 1. Initialization
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Fetch rules immediately for XP calculations
+    cachedGameRules = await fetchGameRules();
+
     initTabs();
     initTimezone();
     initHoursLogic();
-    initDateTimeConverter();
+    initDateTimeConverter(); // Global header converter
     initTemplateLogic();
-    initPlayerRoster(); 
+    initPlayerRoster(); // Master Roster logic
     
     // Load dropdowns
     await initDynamicDropdowns(); 
@@ -33,6 +43,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (sessionId) {
         await loadSessionData(sessionId);
+    } else {
+        // If new session, trigger the logic to create at least Session 1
+        // We trigger the input event manually to run the calculation logic once
+        const hoursInput = document.getElementById('header-hours');
+        if(hoursInput) hoursInput.dispatchEvent(new Event('input'));
     }
 });
 
@@ -54,7 +69,7 @@ async function loadSessionData(sessionId) {
 }
 
 async function initDynamicDropdowns() {
-    const rules = await fetchGameRules();
+    const rules = cachedGameRules || await fetchGameRules();
     if (!rules || !rules.options) return;
 
     const fillSelect = (id, options) => {
@@ -78,9 +93,7 @@ async function initEventsDropdown() {
     const events = await fetchActiveEvents();
     const select = document.getElementById('inp-event');
     if (!select) return;
-
     select.innerHTML = ''; 
-    
     events.forEach(evt => {
         const el = document.createElement('option');
         el.value = evt.name; 
@@ -92,19 +105,14 @@ async function initEventsDropdown() {
 async function initTemplateDropdown() {
     const select = document.getElementById('template-select');
     if (!select) return;
-
-    // 1. Get current user
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return; // Not logged in, can't load templates
+    if (!user) return; 
 
-    // 2. Fetch templates
     const templates = await fetchTemplates(user.id);
-
-    // 3. Populate Dropdown
     select.innerHTML = '<option value="">Select a saved template...</option>';
     templates.forEach(tmpl => {
         const opt = document.createElement('option');
-        opt.value = tmpl.id; // The ID is needed to load it later
+        opt.value = tmpl.id; 
         opt.textContent = tmpl.title;
         select.appendChild(opt);
     });
@@ -115,31 +123,43 @@ async function initTemplateDropdown() {
 // ==========================================
 
 function initTabs() {
-    document.querySelectorAll('#sidebar-nav .nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
-            
-            const targetId = item.dataset.target;
-            const targetEl = document.getElementById(targetId);
-            if(targetEl) targetEl.classList.remove('hidden-section');
-        });
+    // Delegate click for dynamic sidebar items
+    const sidebarNav = document.getElementById('sidebar-nav');
+    sidebarNav.addEventListener('click', (e) => {
+        const item = e.target.closest('.nav-item');
+        if (!item) return;
+
+        // Visual Active State
+        document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+
+        // Hide all sections
+        document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
+
+        // Show target
+        const targetId = item.dataset.target;
+        const targetEl = document.getElementById(targetId);
+        
+        // Target element might be created dynamically, so we check existence
+        if(targetEl) targetEl.classList.remove('hidden-section');
     });
 
+    // Content Tabs (Input/Output inside sections)
     document.querySelectorAll('.content-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             tab.parentElement.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             
             const targetId = tab.dataset.subtab;
+            if(!targetId) return; // For tabs without subtabs (like placeholders)
+
             const parent = tab.closest('.view-section');
             parent.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
-            document.getElementById(targetId).classList.remove('hidden-section');
             
-            if(targetId === 'ad-output') {
-                generateOutput();
-            }
+            const subTarget = document.getElementById(targetId);
+            if(subTarget) subTarget.classList.remove('hidden-section');
+            
+            if(targetId === 'ad-output') generateOutput();
         });
     });
 }
@@ -151,40 +171,229 @@ function initHoursLogic() {
     if(!hoursInput) return;
 
     const updateDisplay = () => {
-        const count = calculateSessionCount(hoursInput.value);
+        const totalHours = parseFloat(hoursInput.value) || 0;
+        const count = calculateSessionCount(totalHours);
         if(sessionDisplay) sessionDisplay.textContent = count;
-        updateSessionNav(count);
+        
+        updateSessionNavAndViews(count, totalHours);
     };
 
     hoursInput.addEventListener('input', updateDisplay);
-    updateDisplay(); 
 }
 
-function updateSessionNav(count) {
+/**
+ * Core Logic: Creates Sidebar links AND Session Views (DOM)
+ * Handles creating new tabs or removing old ones based on hours.
+ */
+function updateSessionNavAndViews(count, totalHours) {
     const navContainer = document.getElementById('dynamic-session-nav');
-    if(!navContainer) return;
+    const viewContainer = document.getElementById('session-views-container');
+    if(!navContainer || !viewContainer) return;
 
-    navContainer.innerHTML = ''; 
-    
-    for(let i=1; i<=count; i++) {
-        const div = document.createElement('div');
-        div.className = 'nav-item';
-        div.dataset.target = `view-session-${i}`;
-        div.textContent = `Session ${i}`;
-        
-        div.addEventListener('click', () => {
-            document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
-            div.classList.add('active');
-            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
+    // 1. Determine current number of sessions
+    const currentSessions = viewContainer.children.length;
+
+    // 2. Add Sessions if needed
+    if (count > currentSessions) {
+        for (let i = currentSessions + 1; i <= count; i++) {
+            // Sidebar Link
+            const div = document.createElement('div');
+            div.className = 'nav-item';
+            div.dataset.target = `view-session-${i}`;
+            div.textContent = `Session ${i}`;
+            div.id = `nav-link-session-${i}`;
+            navContainer.appendChild(div);
+
+            // View DOM (Clone Template)
+            const tmpl = document.getElementById('tpl-session-view');
+            const clone = tmpl.content.cloneNode(true);
+            const viewDiv = clone.querySelector('.session-view');
             
-            let targetSection = document.getElementById(`view-session-${i}`);
-            if(!targetSection) targetSection = document.getElementById('view-session-1');
-            if(targetSection) targetSection.classList.remove('hidden-section');
-        });
-        
-        navContainer.appendChild(div);
+            viewDiv.id = `view-session-${i}`;
+            viewDiv.dataset.sessionIndex = i;
+            viewDiv.querySelector('.lbl-session-num').textContent = i;
+            
+            // Default Data logic
+            const gameName = document.getElementById('header-game-name').value || "Game";
+            viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
+            
+            // Distribute Hours (Simple default)
+            const hoursPerSession = distributeHours(totalHours, count);
+            viewDiv.querySelector('.inp-session-hours').value = hoursPerSession;
+
+            viewContainer.appendChild(viewDiv);
+
+            // Initialize Listeners for this new specific view
+            initSessionViewLogic(viewDiv, i);
+        }
+    } 
+    // 3. Remove Sessions if needed (Truncate from end)
+    else if (count < currentSessions) {
+        for (let i = currentSessions; i > count; i--) {
+            const nav = document.getElementById(`nav-link-session-${i}`);
+            const view = document.getElementById(`view-session-${i}`);
+            if(nav) nav.remove();
+            if(view) view.remove();
+        }
     }
 }
+
+/**
+ * Initialize listeners for a specific Session View (Date logic, Player Table)
+ */
+function initSessionViewLogic(viewElement, index) {
+    // 1. Date Converter for this session
+    const dateInput = viewElement.querySelector('.inp-session-date');
+    const unixInput = viewElement.querySelector('.inp-session-unix');
+    
+    // Default Date: Use main start date if Session 1
+    if(index === 1) {
+        const mainDate = document.getElementById('inp-start-datetime').value;
+        if(mainDate) dateInput.value = mainDate;
+    }
+
+    const updateUnix = () => {
+        // Always read the GLOBAL timezone select
+        const tzVal = document.getElementById('inp-timezone').value;
+        if(unixInput) unixInput.value = toUnixTimestamp(dateInput.value, tzVal);
+    };
+    dateInput.addEventListener('change', updateUnix);
+    
+    // 2. Sync Button (The Waterfall)
+    const btnSync = viewElement.querySelector('.btn-sync-players');
+    btnSync.addEventListener('click', () => {
+        if(confirm("This will overwrite current player rows with data from the previous step. Continue?")) {
+            syncSessionPlayers(viewElement, index);
+        }
+    });
+
+    // 3. Add Player Button
+    const btnAdd = viewElement.querySelector('.btn-add-session-player');
+    btnAdd.addEventListener('click', () => {
+        addSessionPlayerRow(viewElement.querySelector('.session-roster-body'), {}, index, viewElement);
+    });
+
+    // 4. Update XP when Hours change
+    const hoursInput = viewElement.querySelector('.inp-session-hours');
+    hoursInput.addEventListener('change', () => recalculateSessionXP(viewElement));
+}
+
+// ==========================================
+// 4. Session Player Logic (Waterfall & XP)
+// ==========================================
+
+function syncSessionPlayers(viewElement, sessionIndex) {
+    const tbody = viewElement.querySelector('.session-roster-body');
+    tbody.innerHTML = ''; // Clear current
+
+    let sourceData = [];
+
+    if (sessionIndex === 1) {
+        // Source is Master Roster (Setup Tab)
+        sourceData = getPlayerRosterData(); 
+    } else {
+        // Source is Previous Session
+        const prevView = document.getElementById(`view-session-${sessionIndex - 1}`);
+        if(prevView) {
+            sourceData = getSessionRosterData(prevView);
+        }
+    }
+
+    sourceData.forEach(p => {
+        // Logic: Increment games played
+        let nextGames = "1";
+        const currentGames = p.games_count;
+
+        if (currentGames === "10+") {
+            nextGames = "10+";
+        } else {
+            const g = parseInt(currentGames) || 0;
+            // Cap at 10, then use "10+" as the next step
+            if (g >= 9) nextGames = "10"; // Or should it be 10+? Logic says "stop at 10+"
+            // If they had 9, next is 10. If they had 10, next is 10+? 
+            // Simplified:
+            nextGames = (g + 1).toString();
+            if (g >= 10) nextGames = "10+";
+        }
+
+        const newRowData = {
+            discord_id: p.discord_id,
+            character_name: p.character_name,
+            level: p.level,
+            games_count: nextGames,
+            loot: "",
+            notes: ""
+        };
+        addSessionPlayerRow(tbody, newRowData, sessionIndex, viewElement);
+    });
+    
+    // Recalc XP after sync
+    recalculateSessionXP(viewElement);
+}
+
+function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
+    const tr = document.createElement('tr');
+    tr.className = 'session-player-row';
+    
+    tr.innerHTML = `
+        <td><input type="text" class="table-input s-discord-id" value="${data.discord_id || ''}"></td>
+        <td><input type="text" class="table-input s-char-name" value="${data.character_name || ''}"></td>
+        <td><input type="number" class="table-input s-level" style="width:50px" value="${data.level || ''}"></td>
+        <td><input type="text" class="table-input s-games" style="width:50px" value="${data.games_count || ''}"></td>
+        <td><input type="text" class="table-input s-xp" style="width:60px" readonly placeholder="Auto"></td>
+        <td><textarea class="table-input s-loot" rows="1">${data.loot || ''}</textarea></td>
+        <td><textarea class="table-input s-notes" rows="1">${data.notes || ''}</textarea></td>
+        <td style="text-align:center;">
+            <button class="button button-danger btn-sm btn-delete-row">&times;</button>
+        </td>
+    `;
+
+    // Listeners
+    tr.querySelector('.btn-delete-row').addEventListener('click', () => tr.remove());
+    
+    // Recalc XP if Level changes
+    tr.querySelector('.s-level').addEventListener('input', () => {
+        if(viewContext) recalculateSessionXP(viewContext);
+    });
+
+    tbody.appendChild(tr);
+    
+    // Trigger calc for this row immediately if context provided
+    if (viewContext && data.level) recalculateSessionXP(viewContext);
+}
+
+function getSessionRosterData(viewElement) {
+    const rows = viewElement.querySelectorAll('.session-player-row');
+    const players = [];
+    rows.forEach(row => {
+        players.push({
+            discord_id: row.querySelector('.s-discord-id').value,
+            character_name: row.querySelector('.s-char-name').value,
+            level: row.querySelector('.s-level').value,
+            games_count: row.querySelector('.s-games').value,
+            xp: row.querySelector('.s-xp').value,
+            loot: row.querySelector('.s-loot').value,
+            notes: row.querySelector('.s-notes').value
+        });
+    });
+    return players;
+}
+
+function recalculateSessionXP(viewElement) {
+    if (!cachedGameRules) return; 
+    const hours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
+    
+    viewElement.querySelectorAll('.session-player-row').forEach(row => {
+        const lvl = parseInt(row.querySelector('.s-level').value) || 0;
+        const xpInput = row.querySelector('.s-xp');
+        const xp = calculateXP(lvl, hours, cachedGameRules);
+        xpInput.value = xp;
+    });
+}
+
+// ==========================================
+// 5. Existing Utilities & Helpers (Global Date/TZ)
+// ==========================================
 
 function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
@@ -235,7 +444,7 @@ function initTimezone() {
 }
 
 // ==========================================
-// 4. Player Roster Logic (PC/DMPC)
+// 6. Master Player Roster Logic (PC/DMPC)
 // ==========================================
 
 function initPlayerRoster() {
@@ -302,7 +511,7 @@ function getPlayerRosterData() {
 }
 
 // ==========================================
-// 5. Template & Saving Logic
+// 7. Template & Saving Logic
 // ==========================================
 
 function initTemplateLogic() {
@@ -377,7 +586,6 @@ function initTemplateLogic() {
             // 2. Extract Metadata for SQL Columns (title, date)
             const title = document.getElementById('header-game-name').value || "Untitled Session";
             const dateInput = document.getElementById('inp-start-datetime');
-            // Ensure we save NULL to SQL if date is empty, otherwise ISO string
             const date = dateInput && dateInput.value ? new Date(dateInput.value).toISOString().split('T')[0] : null;
 
             if (sessionId) {
@@ -402,102 +610,85 @@ function initTemplateLogic() {
 
 /**
  * Helper to strip specific data for Templates
- * Rules:
- * - Keep Timezone, Skip Date/Time
- * - Skip Listing/Lobby URLs
- * - Skip Player Table
- * - Skip DM Table
  */
 function prepareTemplateData(originalData) {
-    // Deep copy to avoid modifying the actual form data on screen
     const data = JSON.parse(JSON.stringify(originalData));
 
     if (data.header) {
-        // Reset Date/Time but keep Timezone
         data.header.game_datetime = null; 
-        // Note: data.header.timezone is PRESERVED
-
-        // Clear URLs
         data.header.listing_url = "";
         data.header.lobby_url = "";
     }
 
-    // Clear Roster and DM
     data.players = []; 
     data.dm = {
         character_name: "",
         level: "",
         games_count: "0"
     };
-    
-    // Ensure sessions array is empty for a template
     data.sessions = [];
 
     return data;
 }
 
 // ==========================================
-// 6. Form Handling (Get/Populate)
+// 8. Form Handling (Get/Populate)
 // ==========================================
 
 function getFormData() {
     const val = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
-
-    // Handle Multi-Select for Events
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
 
-    // Construct JSON based on Design Doc
+    // NEW: Scrape Sessions Data
+    const sessionsData = [];
+    const sessionViews = document.querySelectorAll('.session-view');
+    sessionViews.forEach(view => {
+        sessionsData.push({
+            session_index: view.dataset.sessionIndex,
+            title: view.querySelector('.inp-session-title').value,
+            hours: view.querySelector('.inp-session-hours').value,
+            date_time: view.querySelector('.inp-session-unix').value, 
+            notes: view.querySelector('.inp-session-notes').value,
+            players: getSessionRosterData(view)
+        });
+    });
+
     return {
         header: {
-            // -- Logistics --
-            game_datetime: val('inp-unix-time'), // UNIX timestamp
+            game_datetime: val('inp-unix-time'),
             timezone: val('inp-timezone'),
             intended_duration: val('inp-duration-text'),
-            
-            // -- Game Details --
             game_description: val('inp-description'), 
             game_version: val('inp-version'),
-            game_type: val('inp-format'), // Format
+            game_type: val('inp-format'),
             apps_type: val('inp-apps-type'),
             platform: val('inp-platform'),
             event_tags: selectedEvents, 
-            
-            // -- Requirements --
             tier: val('inp-tier'),
             apl: val('inp-apl'),
             party_size: val('inp-party-size'),
-
-            // -- Tone & Difficulty --
             tone: val('inp-tone'),
             focus: val('inp-focus'),
             encounter_difficulty: val('inp-diff-encounter'),
             threat_level: val('inp-diff-threat'),
             char_loss: val('inp-diff-loss'),
-            
-            // -- Text Blocks --
             house_rules: val('inp-houserules'),
             notes: val('inp-notes'),
             warnings: val('inp-warnings'),
             how_to_apply: val('inp-apply'),
-            
-            // -- Links --
             listing_url: val('inp-listing-url'),
             lobby_url: val('inp-lobby-url')
         },
-        // Setup Phase Data (Master Roster)
         players: getPlayerRosterData(),
         dm: {
             character_name: val('inp-dm-char-name'),
             level: val('inp-dm-level'),
             games_count: val('inp-dm-games-count')
         },
-        // Future Session Logs
-        sessions: [] 
+        sessions: sessionsData // Saving new session array
     };
 }
-
-// assets/js/dm-tool/session-editor.js
 
 function populateForm(session) {
     if(session.title) {
@@ -507,12 +698,10 @@ function populateForm(session) {
     
     if (!session.form_data) return;
 
-    // Helper: Sets value AND triggers events for Markdown widgets/listeners
     const setVal = (id, val) => { 
         const el = document.getElementById(id); 
         if(el) {
             el.value = val || ""; 
-            // Dispatch events to notify connected widgets (like SimpleMDE or Auto-resize)
             el.dispatchEvent(new Event('input', { bubbles: true }));
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
@@ -525,8 +714,6 @@ function populateForm(session) {
         setVal('inp-unix-time', h.game_datetime);
         setVal('inp-timezone', h.timezone);
         
-        // --- FIX: Populate the Visual Date Picker ---
-        // We must convert the saved Unix Timestamp + Timezone back to "YYYY-MM-DDTHH:MM"
         if(h.game_datetime && h.timezone) {
             const dateStr = unixToLocalIso(h.game_datetime, h.timezone);
             setVal('inp-start-datetime', dateStr);
@@ -546,7 +733,6 @@ function populateForm(session) {
         setVal('inp-listing-url', h.listing_url);
         setVal('inp-lobby-url', h.lobby_url);
 
-        // Handle Multi-Select
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && Array.isArray(h.event_tags)) {
             Array.from(eventSelect.options).forEach(opt => {
@@ -563,7 +749,7 @@ function populateForm(session) {
         setVal('inp-apply', h.how_to_apply);
     }
 
-    // 2. Populate Player Roster
+    // 2. Populate Master Player Roster
     const tbody = document.getElementById('roster-body');
     if (tbody) {
         tbody.innerHTML = ''; 
@@ -582,14 +768,44 @@ function populateForm(session) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
-    // 4. Force Output Refresh
-    // This ensures the Output tab matches the inputs we just filled
+    // 4. Populate Dynamic Sessions
+    if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
+        const count = session.form_data.sessions.length;
+        // Total hours fallback if not explicitly saved (simplified)
+        const totalHours = parseFloat(document.getElementById('header-hours').value) || (count * 3); 
+        
+        // Force create views
+        updateSessionNavAndViews(count, totalHours);
+
+        // Fill Views
+        session.form_data.sessions.forEach((sData, i) => {
+            const index = i + 1;
+            const view = document.getElementById(`view-session-${index}`);
+            if(!view) return;
+
+            view.querySelector('.inp-session-title').value = sData.title;
+            view.querySelector('.inp-session-hours').value = sData.hours;
+            view.querySelector('.inp-session-notes').value = sData.notes || "";
+            
+            if(sData.date_time) {
+                view.querySelector('.inp-session-unix').value = sData.date_time;
+                const tz = document.getElementById('inp-timezone').value;
+                view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
+            }
+
+            const sTbody = view.querySelector('.session-roster-body');
+            sTbody.innerHTML = '';
+            if(sData.players) {
+                sData.players.forEach(p => addSessionPlayerRow(sTbody, p, index, view));
+            }
+        });
+    }
+
     generateOutput();
 }
 
 /**
  * Helper: Converts Unix Timestamp back to "YYYY-MM-DDTHH:MM" 
- * based on the saved Timezone.
  */
 function unixToLocalIso(unixSeconds, timeZone) {
     try {
@@ -604,7 +820,6 @@ function unixToLocalIso(unixSeconds, timeZone) {
         const parts = fmt.formatToParts(date);
         const get = (t) => parts.find(p => p.type === t).value;
         
-        // Reassemble into HTML value format
         return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
     } catch(e) {
         console.error("Date conversion error", e);
