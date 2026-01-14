@@ -1879,6 +1879,18 @@ img + .image-caption {
   background: var(--palette-statblock-modifier-dark);
 }
 
+/* Fix for Secondary Buttons (Add Class, etc) in Dark Mode */
+/* Ensures text remains Gold (Primary) instead of turning Black */
+[data-theme="dark"] .button-secondary {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .button-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-btn-text); /* Text turns black on gold background */
+}
+
 
 /* ============================================
    20. PDF RENDERING
