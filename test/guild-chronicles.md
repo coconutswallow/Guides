@@ -16,7 +16,9 @@ extra_css:
     <div class="sticky-wrapper">
       <h4 class="nav-header">Years</h4>
       
-      <button id="global-toggle" class="global-toggle-btn">Collapse All</button>
+      <button id="global-toggle" class="global-toggle-btn">
+        <span class="icon">−</span> Collapse All
+      </button>
       
       <nav class="year-nav">
         <ul>
@@ -46,9 +48,6 @@ extra_css:
           <div class="timeline-events-stack">
             {% for event in group.items %}
               
-              {% comment %} 
-                LOGIC: Detect full entry.
-              {% endcomment %}
               {% assign is_full_entry = false %}
               {% if event.link %}
                 {% unless event.link contains "discord.com" %}
@@ -97,70 +96,9 @@ extra_css:
   </div>
 </div>
 
-<style>
-  /* Sidebar Toggle Button */
-  .global-toggle-btn {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 5px 10px;
-    margin-bottom: 15px;
-    cursor: pointer;
-    font-size: 0.85em;
-    color: inherit;
-  }
-  .global-toggle-btn:hover {
-    background-color: rgba(0,0,0,0.05);
-  }
-
-  /* Flexbox for Title + Button alignment */
-  .timeline-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.5em;
-  }
-  
-  /* Ensure title takes up available space */
-  .timeline-title {
-    margin-bottom: 0 !important; /* Override default title margin */
-    flex-grow: 1;
-    padding-right: 10px;
-  }
-
-  /* Individual Card Toggle Button */
-  .card-toggle-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0 5px;
-    font-size: 0.8em;
-    opacity: 0.6;
-    transition: transform 0.2s ease;
-  }
-  .card-toggle-btn:hover {
-    opacity: 1;
-  }
-
-  /* Hidden State Logic */
-  .timeline-body.is-hidden, 
-  .timeline-footer.is-hidden {
-    display: none;
-  }
-  
-  /* Rotate icon when hidden */
-  .card-toggle-btn.is-collapsed .toggle-icon {
-    display: inline-block;
-    transform: rotate(-90deg);
-  }
-</style>
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // --- Existing Scroll Spy Logic ---
+    // --- Scroll Spy Logic ---
     const navLinks = document.querySelectorAll('.year-nav a');
     const sections = document.querySelectorAll('.timeline-year-group');
 
@@ -176,64 +114,44 @@ document.addEventListener("DOMContentLoaded", function() {
                 navLinks.forEach(link => link.classList.remove('active'));
                 const id = entry.target.getAttribute('id');
                 const activeLink = document.querySelector(`.year-nav a[href="#${id}"]`);
-
-                if (activeLink) {
-                    activeLink.classList.add('active');
-                }
+                if (activeLink) activeLink.classList.add('active');
             }
         });
     }, observerOptions);
 
-    sections.forEach(section => {
-        observer.observe(section);
-    });
+    sections.forEach(section => observer.observe(section));
 
-    // --- New Toggle Logic ---
+    // --- Toggle Logic ---
 
     // 1. Individual Card Toggles
     const cardButtons = document.querySelectorAll('.card-toggle-btn');
     
     cardButtons.forEach(btn => {
       btn.addEventListener('click', function() {
-        // Find the parent container
-        const container = this.closest('.timeline-content');
-        const body = container.querySelector('.timeline-body');
-        const footer = container.querySelector('.timeline-footer'); // Also toggle footer if exists
-        
-        // Toggle visibility classes
-        body.classList.toggle('is-hidden');
-        if(footer) footer.classList.toggle('is-hidden');
-        
-        // Toggle icon rotation class
-        this.classList.toggle('is-collapsed');
+        // We toggle the class on the PARENT content wrapper
+        // This allows CSS to handle padding/margins for the whole card
+        const contentWrapper = this.closest('.timeline-content');
+        contentWrapper.classList.toggle('collapsed-view');
       });
     });
 
     // 2. Global Toggle Sidebar
     const globalBtn = document.getElementById('global-toggle');
+    const globalIcon = globalBtn.querySelector('.icon');
     let isGlobalCollapsed = false;
 
     globalBtn.addEventListener('click', function() {
       isGlobalCollapsed = !isGlobalCollapsed; // Toggle state
-      
-      const allBodies = document.querySelectorAll('.timeline-body');
-      const allFooters = document.querySelectorAll('.timeline-footer');
-      const allCardBtns = document.querySelectorAll('.card-toggle-btn');
+      const allContentWrappers = document.querySelectorAll('.timeline-content');
 
       if (isGlobalCollapsed) {
         // Collapse All
-        globalBtn.textContent = "Expand All";
-        
-        allBodies.forEach(el => el.classList.add('is-hidden'));
-        allFooters.forEach(el => el.classList.add('is-hidden'));
-        allCardBtns.forEach(el => el.classList.add('is-collapsed'));
+        globalBtn.innerHTML = '<span class="icon">+</span> Expand All';
+        allContentWrappers.forEach(el => el.classList.add('collapsed-view'));
       } else {
         // Expand All
-        globalBtn.textContent = "Collapse All";
-        
-        allBodies.forEach(el => el.classList.remove('is-hidden'));
-        allFooters.forEach(el => el.classList.remove('is-hidden'));
-        allCardBtns.forEach(el => el.classList.remove('is-collapsed'));
+        globalBtn.innerHTML = '<span class="icon">−</span> Collapse All';
+        allContentWrappers.forEach(el => el.classList.remove('collapsed-view'));
       }
     });
 });

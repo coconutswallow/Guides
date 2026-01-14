@@ -125,10 +125,10 @@
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
-    /* Tighter Top Padding: 0.5rem (8px) */
+    /* Standard Padding */
     padding: 0.5rem 1.5rem 1.5rem 1.5rem;
     box-shadow: var(--shadow-sm);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, padding 0.2s;
     position: relative;
 }
 
@@ -152,6 +152,7 @@
 /* Typography inside Card */
 .timeline-title {
     margin-top: 0;
+    margin-bottom: 0.5rem; /* Standard margin */
     font-size: 1.25rem;
     color: var(--color-primary);
 }
@@ -204,6 +205,110 @@
     border-left-color: var(--color-primary);
     padding-left: 15px;
 }
+
+/* ============================================
+   TOGGLE CONTROLS (New Additions)
+   ============================================ */
+
+/* 1. Global Toggle Button (Sidebar) */
+.global-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 6px 12px;
+    font-family: var(--font-header);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-border);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.global-toggle-btn:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg-medium);
+    transform: translateY(-1px);
+}
+
+.global-toggle-btn .icon {
+    font-weight: bold;
+    font-size: 1.1em;
+    line-height: 1;
+}
+
+/* 2. Header Layout */
+.timeline-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    width: 100%;
+}
+
+.timeline-title {
+    flex-grow: 1;
+    /* Ensure title doesn't shift weirdly */
+    line-height: 1.3; 
+}
+
+/* 3. Card Toggle Button */
+.card-toggle-btn {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: all 0.2s ease;
+    padding: 0;
+    margin-top: -2px; /* Slight alignment fix with title text */
+}
+
+.card-toggle-btn:hover {
+    background-color: var(--color-bg-medium);
+    color: var(--color-primary);
+}
+
+.toggle-icon {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+}
+
+/* 4. Collapsed State Logic (The "Tight" look) */
+
+/* Rotate the icon when collapsed */
+.timeline-content.collapsed-view .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+/* Hide content */
+.timeline-content.collapsed-view .timeline-body,
+.timeline-content.collapsed-view .timeline-footer {
+    display: none;
+}
+
+/* TIGHTEN SPACING: When collapsed, remove bottom padding */
+.timeline-content.collapsed-view {
+    padding-bottom: 0.5rem; /* Matches top padding (0.5rem) */
+}
+
+/* Remove bottom margin from title to kill the gap */
+.timeline-content.collapsed-view .timeline-title {
+    margin-bottom: 0;
+}
+
 /* ============================================
    RESPONSIVE (Mobile)
    ============================================ */
@@ -218,13 +323,8 @@
     /* 2. Turn Sidebar into a Sticky Top Bar */
     .chronicles-sidebar {
         position: sticky;
-        /* FIX: Push it down so it sits below the site header */
-        /* Your style.css sets header height to roughly 70px-85px on mobile */
         top: 70px; 
-        
-        /* FIX: Lower z-index so the Main Header stays on top of this bar */
         z-index: 90; 
-        
         width: 100%;
         background-color: var(--color-bg-page); 
         border-bottom: 1px solid var(--color-border);
@@ -241,17 +341,32 @@
         padding-right: 0;
         overflow-y: hidden;
         overflow-x: auto; 
-        -webkit-overflow-scrolling: touch; 
+        -webkit-overflow-scrolling: touch;
+        /* Flex container for button + nav */
+        display: flex; 
+        align-items: center;
+        gap: 15px;
+        padding-left: 15px;
     }
 
     .nav-header {
         display: none;
     }
 
+    /* Adjust Global Toggle for Mobile Bar */
+    .global-toggle-btn {
+        width: auto;
+        white-space: nowrap;
+        margin-bottom: 0;
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        flex-shrink: 0;
+    }
+
     .year-nav ul {
         display: flex;
         flex-direction: row;
-        padding: 0 15px;
+        padding: 0 15px 0 0;
         gap: 10px;
     }
 
@@ -295,5 +410,10 @@
     
     .timeline-content {
         padding: 1rem;
+    }
+    
+    /* Ensure padding tightness works on mobile too */
+    .timeline-content.collapsed-view {
+        padding-bottom: 1rem; /* On mobile, top padding is 1rem, so match that */
     }
 }
