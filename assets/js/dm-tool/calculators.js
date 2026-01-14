@@ -1,5 +1,20 @@
 // assets/js/dm-tool/calculators.js
 
+
+/**
+ * Distributes total hours across a number of sessions.
+ * Simple logic: Evenly divides hours.
+ * @param {number} totalHours 
+ * @param {number} sessionCount 
+ * @returns {number} Hours per session
+ */
+export function distributeHours(totalHours, sessionCount) {
+    if (!sessionCount || sessionCount <= 0) return 0;
+    // Round to nearest 0.5
+    const raw = totalHours / sessionCount;
+    return Math.round(raw * 2) / 2;
+}
+
 /**
  * Calculates rewards based on the User's specific rules:
  * - XP: Based on Character Level * Hours

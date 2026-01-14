@@ -294,10 +294,72 @@ extra_css:
             </div>
         </div>
 
-        <div id="view-session-1" class="view-section hidden-section">
-            <h2>Session 1 Log</h2>
-            <p>Log details for the first session...</p>
-        </div>
+        <div id="session-views-container"></div>
+
+        <template id="tpl-session-view">
+            <div class="view-section session-view hidden-section" data-session-index="">
+                <h2 class="session-header-title">Session <span class="lbl-session-num"></span> Log</h2>
+                
+                <div class="form-grid">
+                    <div class="form-row-full">
+                        <div class="form-group flex-grow">
+                            <label>Session Title</label>
+                            <input type="text" class="inp-session-title">
+                        </div>
+                        <div class="form-group" style="width: 150px;">
+                            <label>Duration (Hrs)</label>
+                            <input type="number" class="inp-session-hours" step="0.5" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row-full">
+                        <div class="form-group flex-grow">
+                            <label>Session Date</label>
+                            <input type="datetime-local" class="inp-session-date">
+                            <input type="hidden" class="inp-session-unix">
+                        </div>
+                        </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                            <label>Player Logs</label>
+                            <button class="button button-secondary btn-sm btn-sync-players" title="Reset table based on previous session">
+                                ↻ Sync Roster
+                            </button>
+                        </div>
+                        
+                        <div style="overflow-x: auto;">
+                            <table class="roster-table session-player-table" style="width:100%; min-width: 800px; border-collapse: separate; border-spacing: 0 10px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">Discord ID</th>
+                                        <th style="width: 15%;">Character</th>
+                                        <th style="width: 5%;">Lvl</th>
+                                        <th style="width: 5%;">Games</th>
+                                        <th style="width: 8%;">XP</th>
+                                        <th style="width: 20%;">Loot / Items</th>
+                                        <th style="width: 20%;">Notes</th>
+                                        <th style="width: 5%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="session-roster-body">
+                                    </tbody>
+                            </table>
+                        </div>
+                        <button class="button btn-sm btn-add-session-player" style="margin-top:0.5rem;">+ Add Player</button>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Session Summary / Notes</label>
+                        <textarea class="inp-session-notes table-input" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="content-tabs" style="margin-top: 2rem;">
+                    <div class="content-tab active">Session Output (Pending)</div>
+                </div>
+            </div>
+        </template>
 
     </main>
 </div>
