@@ -21,7 +21,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    background: var(--color-bg-page);
+    background-color: transparent; /* Changed to transparent so image shows */
     /* Push the entire page down to reveal the top */
     padding-top: var(--header-height-buffer);
 }
