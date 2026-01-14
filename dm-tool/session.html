@@ -64,7 +64,7 @@ extra_css:
 
                     <div class="form-row-full">
                         <div class="form-group flex-grow">
-                            <label>Start Date & Time {% raw %}{% include help-icon.html text="Enter in your own timezone. The tool will convert to Discord time for you in the output." %}{% endraw %}</label>
+                            <label>Start Date & Time {% include help-icon.html text="Enter in your own timezone. The tool will convert to Discord time for you in the output." %}</label>
                             <input type="datetime-local" id="inp-start-datetime">
                             <input type="hidden" id="inp-unix-time">
                         </div>
@@ -84,13 +84,13 @@ extra_css:
 
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Game Description</label>
-                        {% raw %}{% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}{% endraw %}
+                        {% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}
                     </div>
 
                     <h3 class="form-section-title">Game Settings</h3>
 
                     <div class="form-group">
-                        <label>Game Format</label>
+                        <label>Game Format {% include help-icon.html text="Are you running a 2014 or 2024 game? If a 2014 game, are 2024 characters allowed to join?" %}</label>
                         <select id="inp-format">
                             <option value="">Loading...</option>
                         </select>
@@ -169,22 +169,22 @@ extra_css:
                     
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>House Rules</label>
-                        {% raw %}{% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}{% endraw %}
+                        {% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}
                     </div>
 
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Notes</label>
-                        {% raw %}{% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}{% endraw %}
+                        {% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}
                     </div>
 
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Content Warnings</label>
-                        {% raw %}{% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}{% endraw %}
+                        {% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}
                     </div>
                     
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>How to Apply</label>
-                        {% raw %}{% include markdown-widget.html id="inp-apply" name="how_to_apply" height="200px" %}{% endraw %}
+                        {% include markdown-widget.html id="inp-apply" name="how_to_apply" height="200px" %}
                     </div>
 
                 </div>
