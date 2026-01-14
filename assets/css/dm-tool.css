@@ -1,7 +1,7 @@
 /* assets/css/dm-tool.css */
 
 /* ============================
-   Layout & Scroll Fixes 
+   1. Global Layout & Scroll Fixes 
    ============================ */
 html, body {
     height: 100%;
@@ -16,15 +16,54 @@ body {
     background: var(--color-bg-page);
 }
 
+/* Fix for Editor Layout */
 .editor-container {
     display: flex;
     flex: 1;
     overflow: hidden; 
-    min-height: 0; /* CRITICAL FIX: Allows flex child to scroll */
+    min-height: 0; 
+}
+
+/* Fix for Dashboard Layout (Ensures scrolling works on index page) */
+.dashboard-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 2rem;
+    height: 100%;
+    width: 100%;
 }
 
 /* ============================
-   Sidebar Navigation 
+   2. Dashboard Specifics (index.html)
+   ============================ */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+}
+
+#auth-header {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1rem;
+}
+
+/* Empty State Styling */
+#empty-state {
+    text-align: left; 
+    padding: 3rem; 
+    background: var(--color-bg-light); 
+    border: 2px solid var(--color-border); 
+    border-radius: 8px;
+}
+
+/* ============================
+   3. Sidebar Navigation (session.html)
    ============================ */
 .editor-sidebar {
     width: 260px;
@@ -68,7 +107,7 @@ body {
 }
 
 /* ============================
-   Main Content Area 
+   4. Editor Main Area 
    ============================ */
 .editor-main {
     flex: 1;
@@ -79,9 +118,6 @@ body {
     height: 100%;
 }
 
-/* ============================
-   Header Styling 
-   ============================ */
 .editor-header {
     display: flex;
     align-items: center;
@@ -160,7 +196,7 @@ body {
 }
 
 /* ============================
-   Tabs & Forms 
+   5. Forms & Tabs 
    ============================ */
 .content-tabs {
     display: flex;
@@ -256,18 +292,27 @@ body {
 }
 
 /* ============================
-   Utility & Components
+   6. Buttons & Interactive Elements 
    ============================ */
-.output-block {
-    background: #282c34;
-    color: #abb2bf;
-    padding: 1.5rem;
-    border-radius: 6px;
-    font-family: 'Courier New', monospace;
-    white-space: pre-wrap;
-    position: relative;
-    margin-bottom: 2rem;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+
+/* Small Button Override */
+.btn-sm {
+    padding: 0.4em 0.6em !important;
+    font-size: 0.75em !important;
+    margin-left: 5px;
+}
+
+/* Danger Button Variant (Red Outline) */
+.btn-danger-outline {
+    border-color: var(--palette-alert-danger-action) !important;
+    color: var(--palette-alert-danger-action) !important;
+    background: transparent;
+    border: 1px solid;
+}
+
+.btn-danger-outline:hover {
+    background-color: var(--palette-alert-danger-action) !important;
+    color: #fff !important;
 }
 
 .copy-btn {
@@ -283,9 +328,11 @@ body {
     border-radius: 4px;
 }
 
-.hidden-section { display: none; }
+/* ============================
+   7. Modals & Overlays 
+   ============================ */
 
-/* Modal */
+/* Native Dialog (Used in session.html) */
 dialog {
     border: 2px solid var(--color-primary);
     border-radius: 8px;
@@ -298,3 +345,51 @@ dialog {
 dialog::backdrop {
     background: rgba(0,0,0,0.5);
 }
+
+/* Custom Modal Overlay (Used in index.html) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--color-bg-page); /* Adapted to variable */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    max-width: 400px;
+    width: 90%;
+    border: 2px solid var(--color-primary); /* Matching dialog style */
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* ============================
+   8. Utilities
+   ============================ */
+.output-block {
+    background: #282c34;
+    color: #abb2bf;
+    padding: 1.5rem;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    position: relative;
+    margin-bottom: 2rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.hidden { display: none !important; }

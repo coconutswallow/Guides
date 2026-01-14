@@ -3,93 +3,25 @@ layout: default
 title: DM Session Logs | Dashboard
 ---
 
-<style>
-    .dashboard-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        margin-top: 2rem;
-    }
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/dm-tool.css">
 
-    /* Ensure the included auth header aligns correctly */
-    #auth-header {
-        display: flex;
-        justify-content: flex-end; 
-        align-items: center;
-        padding: 1rem 0;
-        border-bottom: 1px solid var(--color-border); /* Updated to use variable */
-        margin-bottom: 1rem;
-    }
-
-    /* Small Button Override for Tables */
-    .btn-sm {
-        padding: 0.4em 0.6em !important;
-        font-size: 0.75em !important;
-        margin-left: 5px;
-    }
-
-    /* Danger Button Variant (Red Outline) */
-    .btn-danger-outline {
-        border-color: var(--palette-alert-danger-action) !important;
-        color: var(--palette-alert-danger-action) !important;
-    }
-    
-    .btn-danger-outline:hover {
-        background-color: var(--palette-alert-danger-action) !important;
-        color: #fff !important;
-        border-color: var(--palette-alert-danger-action) !important;
-    }
-
-    /* Modal Overlay - Darkens the background */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-
-    /* Modal Box */
-    .modal-content {
-        background: #fff; /* or var(--color-bg-light) if defined */
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        max-width: 400px;
-        width: 90%;
-        border: 1px solid var(--color-border);
-    }
-
-    .modal-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 1.5rem;
-    }
-
-    .hidden { display: none !important; }
-</style>
-
-<div class="dashboard-container page"> {% include auth-header.html %}
+<div class="dashboard-container page"> 
+    {% include auth-header.html %}
 
     <div id="dashboard-content" class="hidden">
         <div class="dashboard-header">
             <h1>My Session Logs</h1>
-            <button id="btn-new-session" class="button">+ New Session</button> </div>
+            <button id="btn-new-session" class="button">+ New Session</button> 
+        </div>
 
         <div id="loading-state" style="text-align:left; padding:3rem; color:var(--color-text-secondary);">
             Loading sessions...
         </div>
 
-        <div id="empty-state" class="hidden" style="text-align:left; padding:3rem; background:var(--color-bg-light); border: 2px solid var(--color-border); border-radius:8px;">
+        <div id="empty-state" class="hidden">
             <h3>No sessions found</h3>
-            <p style="margin-bottom:1rem;">No Session Logs Found.  Please Click +New Session Button to get started.</p>
+            <p style="margin-bottom:1rem;">No Session Logs Found. Please Click +New Session Button to get started.</p>
             <button id="btn-create-first" class="button button-secondary">Create Session</button>
         </div>
 
@@ -109,8 +41,8 @@ title: DM Session Logs | Dashboard
     <div id="public-landing" class="hidden" style="text-align:left; padding: 4rem 1rem;">
         <h2>Welcome to the Hawthorne DM Tool</h2>
         <p style="max-width:600px; margin: 1rem auto; color:var(--color-text-secondary);">
-            The new DM Session Log tool.  Features:  improved design (vs Google Sheet), save templates to save typing, and 
-            copy-to-clipboard feature to quickly post your session logs.  (1-click posting to Discord is on the roadmap!) 
+            The new DM Session Log tool. Features: improved design (vs Google Sheet), save templates to save typing, and 
+            copy-to-clipboard feature to quickly post your session logs. (1-click posting to Discord is on the roadmap!) 
         </p>
     </div>
 
