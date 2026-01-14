@@ -6,51 +6,6 @@ extra_css:
   - /assets/css/dm-tool.css
 ---
 
-<style>
-    /* 1. Fix Template Dropdown in Dark Mode */
-    #template-select {
-        background-color: var(--color-bg-medium, #2c3e50);
-        color: var(--color-text, #ffffff);
-        border: 1px solid var(--color-border, #444);
-    }
-    #template-select option {
-        background-color: var(--color-bg-dark, #1a252f);
-        color: var(--color-text, #ffffff);
-    }
-
-    /* 2. Fix Secondary Buttons (Load/Save Template) legibility */
-    /* Making them look like Doc Navigation Buttons (.nav-link / button-secondary) */
-    #btn-load-template, 
-    #btn-open-save-template {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: var(--color-text, #e0e0e0);
-        border: 1px solid var(--color-border, #555);
-        transition: all 0.2s ease;
-    }
-
-    #btn-load-template:hover, 
-    #btn-open-save-template:hover {
-        background-color: var(--color-primary, #3498db);
-        color: white;
-        border-color: var(--color-primary, #3498db);
-    }
-
-    /* 3. Event Multi-select height adjustment */
-    #inp-event[multiple] {
-        height: 100px; /* Show a few options at once */
-        background-color: var(--color-bg-input, #fff);
-        color: var(--color-text-input, #000);
-        padding: 0.5rem;
-    }
-    /* Dark mode override for inputs if variables exist */
-    @media (prefers-color-scheme: dark) {
-        #inp-event[multiple] {
-            background-color: #2b2b2b;
-            color: #eee;
-        }
-    }
-</style>
-
 <header class="editor-header">
     <div class="header-inputs">
         <div class="header-game-title-wrapper">
@@ -109,7 +64,7 @@ extra_css:
 
                     <div class="form-row-full">
                         <div class="form-group flex-grow">
-                            <label>Start Date & Time {% include help-icon.html text="Enter in your own timezone. The tool will convert to Discord time for you in the output." %}</label>
+                            <label>Start Date & Time {% raw %}{% include help-icon.html text="Enter in your own timezone. The tool will convert to Discord time for you in the output." %}{% endraw %}</label>
                             <input type="datetime-local" id="inp-start-datetime">
                             <input type="hidden" id="inp-unix-time">
                         </div>
@@ -129,7 +84,7 @@ extra_css:
 
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Game Description</label>
-                        {% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}
+                        {% raw %}{% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}{% endraw %}
                     </div>
 
                     <h3 class="form-section-title">Game Settings</h3>
@@ -214,22 +169,22 @@ extra_css:
                     
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>House Rules</label>
-                        {% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}
+                        {% raw %}{% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}{% endraw %}
                     </div>
 
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Notes</label>
-                        {% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}
+                        {% raw %}{% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}{% endraw %}
                     </div>
 
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Content Warnings</label>
-                        {% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}
+                        {% raw %}{% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}{% endraw %}
                     </div>
                     
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>How to Apply</label>
-                        {% include markdown-widget.html id="inp-apply" name="how_to_apply" height="200px" %}
+                        {% raw %}{% include markdown-widget.html id="inp-apply" name="how_to_apply" height="200px" %}{% endraw %}
                     </div>
 
                 </div>
@@ -291,4 +246,4 @@ extra_css:
     </div>
 </dialog>
 
-<script type="module" src="../assets/js/dm-tool/session-editor.js"></script>
+<script type="module" src="/assets/js/dm-tool/session-editor.js"></script>
