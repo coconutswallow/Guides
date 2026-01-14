@@ -1,3 +1,8 @@
+---
+layout: default
+title: DM Tool | Session Editor
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,167 +13,481 @@
     <link rel="stylesheet" href="assets/css/style.css">
     
     <style>
-        /* Editor Specific Styles */
-        .editor-toolbar {
+        /* Layout Structure */
+        body {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll, handle internally */
+        }
+
+        .editor-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            margin-top: 0; /* Override default page margin if needed */
+        }
+
+        /* Sidebar Navigation */
+        .editor-sidebar {
+            width: 250px;
+            background: var(--color-bg-medium);
+            border-right: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
             padding: 1rem 0;
-            border-bottom: 2px solid #eee;
-            margin-bottom: 1.5rem;
+            overflow-y: auto;
         }
 
-        .section-card {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #444;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
-        }
-
-        /* Grid for the Top Metadata */
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        /* Player Roster Table */
-        .roster-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .roster-table th { text-align: left; font-size: 0.9em; color: #666; padding-bottom: 0.5rem; }
-        .roster-table td { padding: 0.25rem 0.5rem 0.25rem 0; }
-        .roster-table input { width: 100%; }
-
-        /* Tabs for Session Parts */
-        .tabs { display: flex; gap: 5px; margin-bottom: -1px; }
-        .tab-btn {
-            padding: 10px 20px;
-            background: #f1f1f1;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            border-radius: 6px 6px 0 0;
+        .nav-item {
+            padding: 0.75rem 1.5rem;
             cursor: pointer;
+            color: var(--color-text);
             font-weight: 500;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
         }
-        .tab-btn.active {
-            background: #fff;
-            border-bottom: 1px solid #fff; /* Blend with content */
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-            border: 1px solid #ddd;
-            background: #fff;
-            padding: 20px;
-            border-radius: 0 4px 4px 4px;
-        }
-        .tab-content.active { display: block; }
 
-        /* Output Box (Markdown) */
-        .code-block {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 1rem;
-            border-radius: 4px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            font-size: 0.9em;
+        .nav-item:hover {
+            background: var(--color-bg-light);
+            color: var(--color-primary);
+        }
+
+        .nav-item.active {
+            background: #fff;
+            border-left-color: var(--color-primary);
+            color: var(--color-primary);
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--color-border);
+            margin: 0.5rem 1.5rem;
+        }
+
+        /* Main Content Area */
+        .editor-main {
+            flex: 1;
+            background: var(--color-bg-page);
+            overflow-y: auto;
+            padding: 2rem;
             position: relative;
         }
+
+        /* Header Bar */
+        .editor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--color-border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .header-inputs {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex: 1;
+        }
+
+        .header-inputs input[type="text"] {
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-bottom: 2px solid var(--color-border);
+            padding: 0.25rem 0;
+            width: 300px;
+            background: transparent;
+        }
+
+        .header-inputs input[type="text"]:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .stat-badge {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+        
+        .stat-badge strong {
+            font-size: 1.1rem;
+            color: var(--color-primary);
+        }
+
+        /* Tabs (Input vs Output) */
+        .content-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .content-tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid transparent;
+            border-bottom: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .content-tab.active {
+            background: #fff;
+            border-color: var(--color-border);
+            border-bottom-color: #fff;
+            color: var(--color-primary);
+            margin-bottom: -1px;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--color-text);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        .form-section-title {
+            grid-column: 1 / -1;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Code Block (Output) */
+        .output-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 1.5rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
         .copy-btn {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 0.8em;
-            padding: 2px 8px;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 4px;
         }
+        
+        .hidden-section { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="auth-header">
-        </div>
+    <header class="editor-header">
+        <div class="header-inputs">
+            <div>
+                <input type="text" id="header-game-name" placeholder="Untitled Game Session">
+            </div>
+            
+            <div class="stat-badge">
+                <label>Hours</label>
+                <input type="number" id="header-hours" value="3.0" step="0.5" min="0.5" style="width: 70px; font-weight:bold; border:1px solid #ddd; padding:2px;">
+            </div>
 
-    <div class="container">
-        
-        <div class="editor-toolbar">
-            <a href="index.html" class="btn btn-secondary">&larr; Dashboard</a>
-            <h2 id="session-title-display" style="margin:0;">New Session</h2>
-            <div class="actions">
-                <span id="save-status" style="color:#666; margin-right:10px; font-size:0.9em;"></span>
-                <button id="btn-save" class="btn btn-primary">Save Changes</button>
+            <div class="stat-badge">
+                <label>Sessions</label>
+                <strong id="header-session-count">1</strong>
             </div>
         </div>
 
-        <div class="section-card">
-            <div class="section-title">Game Setup</div>
-            <div class="meta-grid">
-                <div class="form-group">
-                    <label>Session Name</label>
-                    <input type="text" id="inp-title" class="form-control" placeholder="e.g. Descent into Avernus">
+        <div class="header-actions">
+            <span id="save-status" style="margin-right:1rem; color:var(--color-text-secondary); font-size:0.9em;"></span>
+            <button id="btn-save" class="button">Save Changes</button>
+        </div>
+    </header>
+
+    <div class="editor-container">
+        <nav class="editor-sidebar" id="sidebar-nav">
+            <div class="nav-item active" data-target="view-ad-listing">Game Ad & Listing</div>
+            <div class="nav-item" data-target="view-pc-setup">PC / DMPC Setup</div>
+            <div class="nav-divider"></div>
+            <div id="dynamic-session-nav">
+                <div class="nav-item" data-target="view-session-1">Session 1</div>
+            </div>
+        </nav>
+
+        <main class="editor-main">
+            
+            <div id="view-ad-listing" class="view-section">
+                
+                <div class="content-tabs">
+                    <div class="content-tab active" data-subtab="ad-input">Input Form</div>
+                    <div class="content-tab" data-subtab="ad-output">Output (Markdown)</div>
                 </div>
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="inp-date" class="form-control">
+
+                <div id="ad-input" class="subtab-content">
+                    
+                    <div class="form-grid">
+                        <h3 class="form-section-title">General Details</h3>
+                        
+                        <div class="form-group">
+                            <label>Template Actions</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <select id="template-select" style="flex:1;"><option>Select Template...</option></select>
+                                <button class="button button-secondary" style="padding:0.4rem;">Load</button>
+                                <button class="button button-secondary" style="padding:0.4rem;">Save</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Start Date & Time</label>
+                            <input type="datetime-local" id="inp-start-datetime">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Intended Duration (Text)</label>
+                            <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 Hours">
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Game Description</label>
+                            {% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}
+                        </div>
+
+                        <h3 class="form-section-title">Game Settings</h3>
+
+                        <div class="form-group">
+                            <label>Game Format</label>
+                            <select id="inp-format">
+                                <option value="">Select...</option>
+                                <option value="Voice">Voice</option>
+                                <option value="Text">Text</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Game Version</label>
+                            <select id="inp-version">
+                                <option value="2014">2014</option>
+                                <option value="2024">2024</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Event Tag</label>
+                            <select id="inp-event">
+                                <option value="">None</option>
+                                <option value="gameday">Game Day</option>
+                                <option value="charity">Charity Event</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Platform</label>
+                            <input type="text" id="inp-platform" value="Discord & FoundryVTT">
+                        </div>
+
+                        <h3 class="form-section-title">Player Requirements</h3>
+
+                        <div class="form-group">
+                            <label>Intended Tier</label>
+                            <input type="text" id="inp-tier" placeholder="e.g. Tier 2">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Intended APL</label>
+                            <input type="text" id="inp-apl" placeholder="e.g. 8">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Party Size</label>
+                            <input type="text" id="inp-party-size" value="5">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Applications Type</label>
+                            <input type="text" id="inp-apps-type" value="First Come First Serve">
+                        </div>
+
+                        <h3 class="form-section-title">Tone & Difficulty</h3>
+
+                        <div class="form-group">
+                            <label>Tone</label>
+                            <input type="text" id="inp-tone" placeholder="e.g. Heroic, Dark Fantasy">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Focus</label>
+                            <input type="text" id="inp-focus" placeholder="e.g. Combat Heavy, RP Heavy">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Encounter Difficulty</label>
+                            <input type="text" id="inp-diff-encounter" placeholder="Medium / Hard / Deadly">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Chance of Char. Loss</label>
+                            <input type="text" id="inp-diff-loss" placeholder="Low / Medium / High">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Enemy Threat Level</label>
+                            <input type="text" id="inp-diff-threat" placeholder="Tactical / Optimal">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Environmental Threat</label>
+                            <input type="text" id="inp-diff-env" placeholder="Low / High">
+                        </div>
+
+                        <h3 class="form-section-title">Details & Rules</h3>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>House Rules</label>
+                            {% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>DM Notes</label>
+                            {% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Content Warnings</label>
+                            {% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>How to Apply</label>
+                            {% include markdown-widget.html id="inp-apply" name="how_to_apply" height="100px" %}
+                        </div>
+
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Total Duration (Hours)</label>
-                    <input type="number" id="inp-hours" class="form-control" value="3" min="1" step="0.5">
-                    <small style="color:#666">Splits into parts automatically (e.g. 7h = 3h + 4h)</small>
-                </div>
-                <div class="form-group">
-                    <label>APL (Calculated)</label>
-                    <input type="text" id="out-apl" class="form-control" readonly style="background:#f9f9f9; cursor:not-allowed;">
+
+                <div id="ad-output" class="subtab-content hidden-section">
+                    <h3>Game Listing</h3>
+                    <p>Copy and paste this into the #game-listings channel.</p>
+                    <div class="output-block" id="out-listing">
+                        <button class="copy-btn" onclick="copyToClipboard('out-listing')">Copy</button>
+                        <span id="listing-content"></span>
+                    </div>
+
+                    <h3>Game Ad</h3>
+                    <p>Copy and paste this into the #game-ads channel.</p>
+                    <div class="output-block" id="out-ad">
+                        <button class="copy-btn" onclick="copyToClipboard('out-ad')">Copy</button>
+                        <span id="ad-content"></span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="section-card">
-            <div class="section-title">
-                Player Roster
-                <button id="btn-add-player" class="btn btn-sm btn-outline" style="float:right;">+ Add Player</button>
+            <div id="view-pc-setup" class="view-section hidden-section">
+                <h2>PC / DMPC Setup</h2>
+                <div class="card">
+                    <p>Player roster and DMPC configuration will go here.</p>
+                    <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
+                    <table class="roster-table" style="margin-top:1rem;">
+                        <thead>
+                            <tr>
+                                <th>Character Name</th>
+                                <th>Discord ID</th>
+                                <th>Level</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roster-body">
+                            </tbody>
+                    </table>
+                </div>
             </div>
-            <table class="roster-table">
-                <thead>
-                    <tr>
-                        <th width="30%">Character Name</th>
-                        <th width="30%">Discord Handle</th>
-                        <th width="15%">Level</th>
-                        <th width="15%">Rewards</th> <th width="10%"></th>
-                    </tr>
-                </thead>
-                <tbody id="roster-body">
-                    </tbody>
-            </table>
-        </div>
 
-        <div id="session-parts-container">
-            <div class="tabs" id="part-tabs">
-                </div>
+            <div id="view-session-1" class="view-section hidden-section">
+                <h2>Session 1 Log</h2>
+                <p>Log details for the first session...</p>
+            </div>
 
-            <div id="part-contents">
-                </div>
-        </div>
-
+        </main>
     </div>
 
-    <script type="module" src="assets/js/auth-check.js"></script>
-    
+    <script type="module" src="assets/js/supabaseClient.js"></script>
     <script type="module" src="assets/js/dm-tool/session-editor.js"></script>
 
+    <script>
+        // Basic Tab Switching Logic (UI only, data handling in session-editor.js)
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Sidebar Navigation
+            const navItems = document.querySelectorAll('#sidebar-nav .nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Update Active Nav
+                    document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Show Content
+                    const targetId = item.dataset.target;
+                    document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
+                    const targetEl = document.getElementById(targetId);
+                    if(targetEl) targetEl.classList.remove('hidden-section');
+                });
+            });
+
+            // Content Subtabs (Input vs Output)
+            const subTabs = document.querySelectorAll('.content-tab');
+            subTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Update Active Tab
+                    tab.parentElement.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // Show Content
+                    const targetId = tab.dataset.subtab;
+                    const parent = tab.closest('.view-section');
+                    parent.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
+                    document.getElementById(targetId).classList.remove('hidden-section');
+                });
+            });
+        });
+
+        function copyToClipboard(elementId) {
+            const el = document.getElementById(elementId);
+            // In a real implementation, we'd grab the text content properly
+            const text = el.querySelector('span') ? el.querySelector('span').innerText : el.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Copied to clipboard!");
+            });
+        }
+    </script>
 </body>
 </html>
