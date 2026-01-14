@@ -174,12 +174,12 @@ title: Character Rework Tool
 
     <div id="tab-output" class="tab-content">
         <h2 class="column-header">Rework Request Form</h2>
-        <textarea id="output-text" class="output-area" readonly></textarea>
-        <button class="button action-btn btn-save" onclick="window.copyOutput()"
-            style="width:100%; margin-bottom: 15px;">Copy to Clipboard</button>
-        <p style="text-align: center; font-size: 0.9em; color: var(--text-muted);">Please copy this statblock to <a
-                href="https://discord.com/channels/308324031478890497/1094052066898518057" target="_blank"
-                style="color: var(--primary-color); font-weight: bold;">#Character-Rework-Log</a></p>
+        
+        {% include discord-output.html 
+            id="output-text" 
+            channel_name="#Character-Rework-Log" 
+            channel_url="https://discord.com/channels/308324031478890497/1094052066898518057" 
+        %}
     </div>
 </div>
 
@@ -663,9 +663,7 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
         document.getElementById(`tab-${t}`).classList.add('active');
         if (t === 'output') window.generateOutput();
     };
-
-    window.copyOutput = () => { const el = document.getElementById('output-text'); el.select(); document.execCommand('copy'); alert("Copied to Clipboard!"); };
-
+    
     async function startApp() {
         try {
             const { data } = await supabase.from('lookups').select('data').eq('type', 'character').single();
