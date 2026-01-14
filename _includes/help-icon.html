@@ -1,3 +1,4 @@
+{% comment %}
 <!-- 
   Usage: {% include help-icon.html text="Your explanation text here" %}
   
@@ -5,6 +6,8 @@
   - text: The tooltip content (required)
   - position: "top", "bottom", "left", "right" (default: "top")
 -->
+  {% endcomment %}
+
 
 {% assign position = include.position | default: "top" %}
 
