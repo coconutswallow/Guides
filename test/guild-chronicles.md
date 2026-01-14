@@ -146,11 +146,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
       if (isGlobalCollapsed) {
         // Collapse All
-        globalBtn.innerHTML = '<span class="icon">+</span> Show Descriptions';
+        globalBtn.innerHTML = '<span class="icon">+</span> Show Details';
         allContentWrappers.forEach(el => el.classList.add('collapsed-view'));
       } else {
         // Expand All
-        globalBtn.innerHTML = '<span class="icon">−</span> Hide All Descriptions';
+        globalBtn.innerHTML = '<span class="icon">−</span> Hide Details';
         allContentWrappers.forEach(el => el.classList.remove('collapsed-view'));
       }
     });
