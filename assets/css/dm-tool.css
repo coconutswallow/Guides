@@ -259,7 +259,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
-    width: 100%; /* Force full width */
+    width: 100%;
 }
 
 .form-row-full {
@@ -273,7 +273,7 @@ body {
 .form-group {
     display: flex;
     flex-direction: column;
-    width: 100%; /* Ensure groups fill grid cells */
+    width: 100%; 
 }
 
 .form-group.flex-grow {
@@ -340,20 +340,152 @@ body {
 }
 
 /* ============================
-   6. PLAYER CARD STYLES
+   6. PLAYER CARDS (DIV LAYOUT)
    ============================ */
 
-/* ... (Previous table styles) ... */
+/* Container for the cards */
+#player-roster-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Spacing between cards */
+}
 
-/* NEW: Session Stats Bar (APL, Tier, etc) */
+/* The Card Itself */
+.player-card {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.player-card:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    border-color: var(--color-primary);
+}
+
+/* Card Header */
+.player-card-header {
+    background: var(--color-primary);
+    color: var(--palette-neutral-white);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-card-title {
+    font-family: var(--font-header);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.95em;
+}
+
+.btn-delete-card {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.2s;
+}
+.btn-delete-card:hover {
+    background: var(--palette-alert-danger-action);
+}
+
+/* Card Body Grid */
+.player-card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Rows inside the card */
+.card-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+/* Field styling inside card */
+.card-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Sizing utilities for card fields */
+.w-25 { width: 25%; }
+.w-30 { width: 30%; }
+.w-20 { width: 20%; }
+.w-15 { width: 15%; }
+.w-50 { width: 50%; }
+.w-100 { width: 100%; }
+
+.field-label {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.5px;
+}
+
+/* Input Styling inside cards */
+.table-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-page);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.table-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--shadow-color-light);
+    outline: none;
+}
+
+.readonly-input, .readonly-result {
+    background-color: var(--color-bg-medium);
+    color: var(--color-text);
+    cursor: default;
+    font-weight: bold;
+}
+
+/* Validation Styles */
+.table-input.is-invalid {
+    border-color: var(--palette-alert-danger-border) !important;
+    background-color: var(--palette-alert-danger-bg-light) !important;
+}
+
+.validation-msg {
+    color: var(--palette-alert-danger-action);
+    font-size: 0.7em;
+    margin-top: 2px;
+    display: none;
+}
+
+.card-field.error .validation-msg {
+    display: block;
+}
+
+/* Session Stats Bar */
 .session-stats-bar {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     background: var(--color-bg-medium);
     border: 1px solid var(--color-border);
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 4px;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     align-items: center;
     font-family: var(--font-header);
     color: var(--color-primary);
@@ -368,51 +500,32 @@ body {
 .stat-label {
     font-weight: bold;
     text-transform: uppercase;
-    font-size: 0.8em;
+    font-size: 0.85em;
     color: var(--color-text-secondary);
 }
 
 .stat-value {
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
-/* NEW: Validation Styles */
-.table-input.is-invalid {
-    border-color: var(--palette-alert-danger-border) !important;
-    background-color: var(--palette-alert-danger-bg-light) !important;
+/* Square Incentives Button */
+.dtp-wrapper {
+    display: flex;
+    gap: 5px;
 }
 
-.validation-msg {
-    color: var(--palette-alert-danger-action);
-    font-size: 0.7em;
-    margin-top: 2px;
-    display: none; /* Hidden by default */
-}
-
-.field-group.error .validation-msg {
-    display: block;
-}
-
-/* NEW: Square Incentives Button */
 .s-incentives-btn {
-    width: 38px; /* Fixed width */
-    height: 38px; /* Fixed height to match input */
+    width: 40px;
+    height: 38px; /* Matches standard input height */
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     font-size: 1.2em;
-    margin-left: 5px;
+    flex-shrink: 0;
 }
-
-/* Adjust the container for DTP/Incentives to fit the square button */
-.dtp-container {
-    display: flex;
-    align-items: flex-end;
-}
-
 
 /* ============================
    7. BUTTONS & ACTIONS
@@ -433,19 +546,6 @@ body {
 .btn-danger-outline:hover {
     background-color: var(--palette-alert-danger-action) !important;
     color: #fff !important;
-}
-
-.copy-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 4px 8px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    border-radius: 4px;
 }
 
 #btn-load-template, 
@@ -481,64 +581,34 @@ dialog::backdrop {
     background: rgba(0,0,0,0.5);
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+.checkbox-list {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.checkbox-item {
+    display: flex;
     align-items: center;
-    z-index: 1000;
+    gap: 0.8rem;
+    padding: 0.8rem;
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.modal-content {
-    background: var(--color-bg-page);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    max-width: 400px;
-    width: 90%;
-    border: 2px solid var(--color-primary);
+.checkbox-item:hover {
+    background: var(--color-bg-medium);
 }
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
 
 /* ============================
-   9. UTILITIES
+   9. DARK MODE & THEME OVERRIDES
    ============================ */
-.output-block {
-    background: #282c34;
-    color: #abb2bf;
-    padding: 1.5rem;
-    border-radius: 6px;
-    font-family: 'Courier New', monospace;
-    white-space: pre-wrap;
-    position: relative;
-    margin-bottom: 2rem;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-}
-
-.hidden-section {
-    display: none !important;
-}
-
-.hidden { display: none !important; }
-
-
-/* ============================
-   10. DARK MODE & THEME OVERRIDES
-   ============================ */
-
-/* Button Visibility in Dark Mode */
 [data-theme="dark"] .button-secondary {
     color: var(--color-primary);
     border-color: var(--color-primary);
@@ -554,25 +624,23 @@ dialog::backdrop {
     color: var(--color-text);
 }
 
-/* Form Input Visibility in Dark Mode */
 [data-theme="dark"] #template-select {
     background-color: var(--color-bg-medium);
     color: var(--color-text);
     border-color: var(--color-border);
 }
 
-[data-theme="dark"] #template-select option {
-    background-color: var(--color-bg-dark);
-    color: var(--color-text);
-}
-
-[data-theme="dark"] #inp-event[multiple] {
-    background-color: var(--color-bg-medium);
-    color: var(--color-text);
+[data-theme="dark"] .player-card {
+    background: var(--color-bg-light); 
     border-color: var(--color-border);
 }
 
-[data-theme="dark"] #inp-event[multiple] option {
-    background-color: var(--color-bg-medium);
+[data-theme="dark"] .table-input {
+    background: var(--color-bg-medium);
     color: var(--color-text);
+}
+
+[data-theme="dark"] .readonly-input, 
+[data-theme="dark"] .readonly-result {
+    background: rgba(255,255,255,0.05);
 }
