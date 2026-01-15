@@ -55,8 +55,7 @@ extra_css:
             <p class="instruction-text">Configure the core details of your game here.</p>
             
             <div class="card" style="border-left: 4px solid var(--color-primary); margin-bottom: 2rem;">
-                <h3 class="card-title" style="font-size: 1rem;">Templates</h3>
-                <p>Use templates to quickly load your common settings for faster game setup</p>
+                <h3 class="card-title" style="font-size: 1rem;">Templates{% include help-icon.html text="Use templates to quickly load your common settings for faster game setup" %}</h3>
                 <div class="form-group">
                     <label>Manage Templates</label>
                     <div style="display:flex; gap:10px;">
@@ -129,7 +128,7 @@ extra_css:
                             <div class="form-row-full" style="gap: 1.5rem;">
                                 <div class="form-group flex-grow"><label>Tier <span class="req">*</span></label><input type="text" id="inp-tier" placeholder="e.g. Tier 2" data-required="true"></div>
                                 <div class="form-group flex-grow"><label>APL <span class="req">*</span></label><input type="text" id="inp-apl" placeholder="e.g. APL 8" data-required="true"></div>
-                                <div class="form-group flex-grow"><label>Party Size <span class="req">*</span></label><input type="text" id="inp-party-size" value="5" data-required="true"></div>
+                                <div class="form-group flex-grow"><label>Party Size <span class="req">*</span></label><input type="text" id="inp-party-size" value="" data-required="true"></div>
                             </div>
                         </div>
                     </div>
@@ -143,9 +142,9 @@ extra_css:
                     <div class="accordion-body">
                         <div class="form-grid">
                             <div class="form-group"><label>Tone <span class="req">*</span></label><input type="text" id="inp-tone" placeholder="e.g. Serious" data-required="true"></div>
-                            <div class="form-group"><label>Focus <span class="req">*</span></label><input type="text" id="inp-focus" placeholder="e.g. 50/50" data-required="true"></div>
-                            <div class="form-group"><label>Difficulty <span class="req">*</span></label><input type="text" id="inp-diff-encounter" placeholder="Hard" data-required="true"></div>
-                            <div class="form-group"><label>Threat Level <span class="req">*</span></label><input type="text" id="inp-diff-threat" placeholder="Deadly" data-required="true"></div>
+                            <div class="form-group"><label>Focus <span class="req">*</span></label><input type="text" id="inp-focus" placeholder="e.g. 30% RP, 70% Combat" data-required="true"></div>
+                            <div class="form-group"><label>Encounter Difficulty <span class="req">*</span></label><input type="text" id="inp-diff-encounter" placeholder="Hard" data-required="true"></div>
+                            <div class="form-group"><label>Enemy Threat Level <span class="req">*</span></label><input type="text" id="inp-diff-threat" placeholder="Deadly" data-required="true"></div>
                             <div class="form-group"><label>Chance of Character Loss <span class="req">*</span></label><input type="text" id="inp-diff-loss" placeholder="Medium" data-required="true"></div>
                         </div>
                     </div>
