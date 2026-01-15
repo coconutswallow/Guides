@@ -88,8 +88,8 @@ export function initTabs(outputCallback) {
             if(targetEl) {
                 targetEl.classList.remove('hidden-section');
                 
-                // Trigger output gen if going to Ad view
-                if(targetId === 'view-game-ad' && outputCallback) {
+                // Trigger output generation if going to Listing or Ad view
+                if((targetId === 'view-game-listing-output' || targetId === 'view-game-ad') && outputCallback) {
                     outputCallback();
                 }
             }

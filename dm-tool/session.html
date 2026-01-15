@@ -32,9 +32,10 @@ extra_css:
 <div class="editor-container">
     <nav class="editor-sidebar" id="sidebar-nav">
         <div class="nav-item active" data-target="view-template-landing">1. Start / Template</div>
-        <div class="nav-item" data-target="view-game-listing">2. Game Listing</div>
-        <div class="nav-item" data-target="view-game-ad">3. Game Advertisement</div>
-        <div class="nav-item" data-target="view-player-setup">4. Player & DM Setup</div>
+        <div class="nav-item" data-target="view-game-setup">2. Game Setup</div>
+        <div class="nav-item" data-target="view-game-listing-output">3. Game Listing</div>
+        <div class="nav-item" data-target="view-game-ad">4. Game Advertisement</div>
+        <div class="nav-item" data-target="view-player-setup">5. Player & DM Setup</div>
         <div class="nav-divider"></div>
         <div id="dynamic-session-nav"></div>
     </nav>
@@ -57,8 +58,8 @@ extra_css:
             </div>
         </div>
 
-        <div id="view-game-listing" class="view-section hidden-section">
-            <h2>Game Listing Configuration</h2>
+        <div id="view-game-setup" class="view-section hidden-section">
+            <h2>Game Setup</h2>
             
             <div class="accordion-group">
                 
@@ -66,8 +67,7 @@ extra_css:
                     <div class="accordion-header">
                         <span class="step-number">1</span>
                         <span class="step-title">Basics</span>
-                        <span class="step-status"></span>
-                    </div>
+                        <span class="step-icon"></span> </div>
                     <div class="accordion-body">
                         <div class="form-grid">
                             <div class="form-row-full" style="gap: 1rem;">
@@ -98,7 +98,7 @@ extra_css:
                     <div class="accordion-header">
                         <span class="step-number">2</span>
                         <span class="step-title">Game Settings</span>
-                        <span class="step-status"></span>
+                        <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
@@ -115,7 +115,7 @@ extra_css:
                     <div class="accordion-header">
                         <span class="step-number">3</span>
                         <span class="step-title">Party Configuration</span>
-                        <span class="step-status"></span>
+                        <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
@@ -130,7 +130,7 @@ extra_css:
                     <div class="accordion-header">
                         <span class="step-number">4</span>
                         <span class="step-title">Tone & Difficulty</span>
-                        <span class="step-status"></span>
+                        <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
@@ -147,7 +147,7 @@ extra_css:
                     <div class="accordion-header">
                         <span class="step-number">5</span>
                         <span class="step-title">Details & Rules</span>
-                        <span class="step-status"></span>
+                        <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
@@ -163,28 +163,26 @@ extra_css:
                     </div>
                 </div>
 
-                <div class="card accordion-card" id="card-listing-output">
-                    <div class="accordion-header">
-                        <span class="step-number">6</span>
-                        <span class="step-title">Create Listing</span>
-                        <span class="step-status"></span>
-                    </div>
-                    <div class="accordion-body">
-                        <div class="form-group">
-                            <label>Game Lobby URL (Discord Channel Link)</label>
-                            <input type="text" id="inp-lobby-url" placeholder="https://discord.com/channels/...">
-                        </div>
-                        
-                        <h3>Listing Output</h3>
-                        {% include discord-output.html id="out-listing-text" channel_name="#game-listings" height="400px" %}
-                        
-                        <div style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1rem; text-align: right;">
-                             <button class="button button-secondary" id="btn-open-save-template">Save As Template</button>
-                        </div>
-                    </div>
-                </div>
-
             </div> </div>
+
+        <div id="view-game-listing-output" class="view-section hidden-section">
+            <h2>Game Listing Output</h2>
+            <div class="card">
+                <p>Review your listing below. This is formatted for the Discord <strong>#game-listings</strong> channel.</p>
+                
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label>Game Lobby URL (Discord Channel Link)</label>
+                    <input type="text" id="inp-lobby-url" placeholder="https://discord.com/channels/...">
+                </div>
+                
+                <h3>Listing Text</h3>
+                {% include discord-output.html id="out-listing-text" channel_name="#game-listings" height="400px" %}
+                
+                <div style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1rem; text-align: right;">
+                        <button class="button button-secondary" id="btn-open-save-template">Save As Template</button>
+                </div>
+            </div>
+        </div>
 
         <div id="view-game-ad" class="view-section hidden-section">
             <h2>Game Advertisement</h2>
@@ -394,7 +392,6 @@ extra_css:
 
             </div>
         </template>
-
     </main>
 </div>
 

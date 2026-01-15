@@ -715,7 +715,7 @@ dialog::backdrop {
 }
 
 /* ============================
-   ACCORDION STYLES (NEW)
+   ACCORDION STYLES (ENHANCED)
    ============================ */
 .accordion-group {
     display: flex;
@@ -729,7 +729,7 @@ dialog::backdrop {
     background: var(--color-bg-light);
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 0; /* Override generic card margin */
+    margin-bottom: 0;
 }
 
 .accordion-card.completed {
@@ -745,6 +745,7 @@ dialog::backdrop {
     gap: 1rem;
     user-select: none;
     transition: background 0.2s;
+    border-bottom: 1px solid transparent;
 }
 
 .accordion-header:hover {
@@ -772,7 +773,6 @@ dialog::backdrop {
 
 .completed .step-number {
     background: var(--color-alert-success-border);
-    content: "✓"; /* Note: content replacement needs span tweaking or pseudo el */
 }
 
 .step-title {
@@ -783,9 +783,25 @@ dialog::backdrop {
     flex: 1;
 }
 
-.step-status {
-    font-size: 1.5rem;
+/* Chevron Icon */
+.step-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.step-icon::after {
+    content: "▼";
+    font-size: 0.8em;
     color: var(--color-text-secondary);
+}
+
+/* Rotate Chevron when Open */
+.accordion-card.open .step-icon {
+    transform: rotate(180deg);
 }
 
 /* Accordion Body Transition */
@@ -794,23 +810,16 @@ dialog::backdrop {
     opacity: 0;
     overflow: hidden;
     padding: 0 1.5rem;
-    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    transition: max-height 0.4s ease-in-out, opacity 0.3s ease, padding 0.3s ease;
+    background: var(--color-bg-light);
 }
 
 /* Open State */
 .accordion-card.open .accordion-body {
-    max-height: 2000px; /* Arbitrary large number for CSS transition */
+    max-height: 2000px;
     opacity: 1;
     padding: 1.5rem;
     border-top: 1px solid var(--color-border);
-}
-
-/* Completed Indicator (Green Checkmark logic can be handled via CSS or JS icon replacement) */
-.accordion-card.completed .accordion-header::after {
-    content: "✓";
-    font-weight: bold;
-    color: var(--color-alert-success-border);
-    font-size: 1.2rem;
 }
 
 /* Required Field Indicator */
@@ -819,13 +828,8 @@ dialog::backdrop {
     margin-left: 2px;
 }
 
-/* Hide Old Horizontal Tabs */
-.content-tabs {
-    display: none !important;
-}
-
 /* Ensure Output Textareas are editable now */
 .out-session-text {
     pointer-events: auto !important;
-    background: #36393f !important; /* Keep Discord Look */
+    background: #36393f !important;
 }
