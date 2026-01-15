@@ -752,29 +752,7 @@ dialog::backdrop {
     background: var(--color-bg-hover-light);
 }
 
-/* Header Text Styles */
-.step-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: var(--color-neutral-gray-400, #999);
-    color: #fff;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 0.9em;
-    transition: background 0.3s;
-}
-
-.open .step-number {
-    background: var(--color-primary);
-}
-
-.completed .step-number {
-    background: var(--color-alert-success-border);
-}
-
+/* Step Title (formerly next to bubble) */
 .step-title {
     font-family: var(--font-header);
     font-size: 1.2rem;

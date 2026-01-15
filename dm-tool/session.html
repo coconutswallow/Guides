@@ -52,9 +52,11 @@ extra_css:
 
         <div id="view-game-setup" class="view-section hidden-section">
             <h2>Game Setup</h2>
+            <p class="instruction-text">Configure the core details of your game here.</p>
             
             <div class="card" style="border-left: 4px solid var(--color-primary); margin-bottom: 2rem;">
-                <h3 class="card-title" style="font-size: 1rem;">Template Management</h3>
+                <h3 class="card-title" style="font-size: 1rem;">Templates</h3>
+                <p>Use templates to quickly load your common settings for faster game setup</p>
                 <div class="form-group">
                     <label>Manage Templates</label>
                     <div style="display:flex; gap:10px;">
@@ -67,12 +69,9 @@ extra_css:
                 </div>
             </div>
 
-            <p class="instruction-text">Configure the core details of your game here.</p>
-            
             <div class="accordion-group">
                 <div class="card accordion-card open" id="card-listing-basics">
                     <div class="accordion-header">
-                        <span class="step-number">1</span>
                         <span class="step-title">Basics</span>
                         <span class="step-icon"></span>
                     </div>
@@ -80,7 +79,7 @@ extra_css:
                         <div class="form-grid">
                             <div class="form-row-full" style="gap: 1.5rem;">
                                 <div class="form-group" style="flex: 2;">
-                                    <label>Start Date & Time <span class="req">*</span></label>
+                                    <label>Start Date & Time <span class="req">*</span>{% include help-icon.html text="Enter the date & time in your own timezone. The tool will translate into Discord timestamp in the output." %}</label>
                                     <input type="datetime-local" id="inp-start-datetime" data-required="true">
                                     <input type="hidden" id="inp-unix-time">
                                 </div>
@@ -91,8 +90,8 @@ extra_css:
                             </div>
                             <div class="form-row-full">
                                 <div class="form-group" style="width: 100%;">
-                                    <label>Duration <span class="req">*</span></label>
-                                    <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 Hours, hard stop at 6 hours" data-required="true">
+                                    <label>Planned Duration <span class="req">*</span></label>
+                                    <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 hours, hard stop at 6 hours" data-required="true">
                                 </div>
                             </div>
                             <div class="form-group form-row-full">
@@ -106,7 +105,6 @@ extra_css:
 
                 <div class="card accordion-card" id="card-listing-settings">
                     <div class="accordion-header">
-                        <span class="step-number">2</span>
                         <span class="step-title">Game Settings</span>
                         <span class="step-icon"></span>
                     </div>
@@ -115,30 +113,30 @@ extra_css:
                             <div class="form-group"><label>Game Format <span class="req">*</span></label><select id="inp-format" data-required="true"><option value="">Loading...</option></select></div>
                             <div class="form-group"><label>Game Version <span class="req">*</span></label><select id="inp-version" data-required="true"><option value="">Loading...</option></select></div>
                             <div class="form-group"><label>App Type <span class="req">*</span></label><select id="inp-apps-type" data-required="true"><option value="">Loading...</option></select></div>
-                            <div class="form-group"><label>Platform <span class="req">*</span></label><input type="text" id="inp-platform" placeholder="Roll20/Foundry" data-required="true"></div>
-                            <div class="form-group"><label>Event(s)</label><select id="inp-event" multiple></select></div>
+                            <div class="form-group"><label>Platform <span class="req">*</span></label><input type="text" id="inp-platform" placeholder="Roll20" data-required="true"></div>
+                            <div class="form-group"><label>Event(s){% include help-icon.html text="Ctrl-click to multi-select" %}</label><select id="inp-event" multiple></select></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card accordion-card" id="card-listing-party">
                     <div class="accordion-header">
-                        <span class="step-number">3</span>
                         <span class="step-title">Party Configuration</span>
                         <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
-                            <div class="form-group"><label>Tier <span class="req">*</span></label><input type="text" id="inp-tier" placeholder="e.g. Tier 2" data-required="true"></div>
-                            <div class="form-group"><label>APL <span class="req">*</span></label><input type="text" id="inp-apl" placeholder="e.g. APL 8" data-required="true"></div>
-                            <div class="form-group"><label>Party Size <span class="req">*</span></label><input type="text" id="inp-party-size" value="5" data-required="true"></div>
+                            <div class="form-row-full" style="gap: 1.5rem;">
+                                <div class="form-group flex-grow"><label>Tier <span class="req">*</span></label><input type="text" id="inp-tier" placeholder="e.g. Tier 2" data-required="true"></div>
+                                <div class="form-group flex-grow"><label>APL <span class="req">*</span></label><input type="text" id="inp-apl" placeholder="e.g. APL 8" data-required="true"></div>
+                                <div class="form-group flex-grow"><label>Party Size <span class="req">*</span></label><input type="text" id="inp-party-size" value="5" data-required="true"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card accordion-card" id="card-listing-tone">
                     <div class="accordion-header">
-                        <span class="step-number">4</span>
                         <span class="step-title">Tone & Difficulty</span>
                         <span class="step-icon"></span>
                     </div>
@@ -148,21 +146,20 @@ extra_css:
                             <div class="form-group"><label>Focus <span class="req">*</span></label><input type="text" id="inp-focus" placeholder="e.g. 50/50" data-required="true"></div>
                             <div class="form-group"><label>Difficulty <span class="req">*</span></label><input type="text" id="inp-diff-encounter" placeholder="Hard" data-required="true"></div>
                             <div class="form-group"><label>Threat Level <span class="req">*</span></label><input type="text" id="inp-diff-threat" placeholder="Deadly" data-required="true"></div>
-                            <div class="form-group"><label>Char. Loss <span class="req">*</span></label><input type="text" id="inp-diff-loss" placeholder="Medium" data-required="true"></div>
+                            <div class="form-group"><label>Chance of Character Loss <span class="req">*</span></label><input type="text" id="inp-diff-loss" placeholder="Medium" data-required="true"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card accordion-card" id="card-listing-details">
                     <div class="accordion-header">
-                        <span class="step-number">5</span>
                         <span class="step-title">Details & Rules</span>
                         <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
                             <div class="form-group form-row-full"><label>House Rules</label>{% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}</div>
-                            <div class="form-group form-row-full"><label>Notes</label>{% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}</div>
+                            <div class="form-group form-row-full"><label>Additional Notes</label>{% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}</div>
                             <div class="form-group form-row-full"><label>Content Warnings</label>{% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}</div>
                             <div class="form-group form-row-full">
                                 <label>How to Apply <span class="req">*</span></label>
@@ -254,7 +251,6 @@ extra_css:
             <div class="accordion-group">
                 <div class="card accordion-card open">
                     <div class="accordion-header">
-                        <span class="step-number">1</span>
                         <span class="step-title">Session Info</span>
                         <span class="step-icon"></span>
                     </div>
@@ -281,7 +277,6 @@ extra_css:
 
                 <div class="card accordion-card">
                     <div class="accordion-header">
-                        <span class="step-number">2</span>
                         <span class="step-title">Player Logs</span>
                         <span class="step-icon"></span>
                     </div>
@@ -315,7 +310,6 @@ extra_css:
 
                 <div class="card accordion-card">
                     <div class="accordion-header">
-                        <span class="step-number">3</span>
                         <span class="step-title">DM Logs</span>
                         <span class="step-icon"></span>
                     </div>
@@ -387,7 +381,6 @@ extra_css:
 
                 <div class="card accordion-card">
                     <div class="accordion-header">
-                        <span class="step-number">4</span>
                         <span class="step-title">Documentation</span>
                         <span class="step-icon"></span>
                     </div>
