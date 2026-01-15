@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } 
 
     // Init Hours Listener (Central Logic)
-    // Updated ID target:
     const hoursInput = document.getElementById('inp-session-total-hours');
     if(hoursInput) {
         hoursInput.addEventListener('input', () => {
@@ -278,7 +277,6 @@ function updateSessionCalculations() {
     if(lblGold) lblGold.textContent = maxGold;
 
     // 3. Row Updates
-    // Updated ID target:
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours').value) || 0;
     
     cards.forEach(card => {
@@ -365,7 +363,7 @@ function initCopyGameLogic() {
             const fullData = IO.getFormData();
             
             fullData.header.title = newName; 
-            fullData.session_log.hours = 3; // Default for next part
+            fullData.session_log.hours = 3; 
             
             if (isNextPart) {
                 fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
@@ -415,8 +413,12 @@ function initTemplateLogic() {
     
     if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
     
-    // Add listener for new button
-    if(btnSaveSetup) btnSaveSetup.addEventListener('click', () => modal.showModal());
+    // Add listener for new button - Prefill Name
+    if(btnSaveSetup) btnSaveSetup.addEventListener('click', () => {
+        const currentName = document.getElementById('header-game-name').value;
+        if(currentName) document.getElementById('inp-template-name').value = currentName;
+        modal.showModal();
+    });
     
     if(btnConfirm) {
         btnConfirm.addEventListener('click', async () => {
