@@ -422,18 +422,18 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
             <div class="card-row">
                 <div class="card-field w-50">
                     <label class="field-label">Loot Rewarded</label>
-                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="Magic items...">
+                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="">
                 </div>
                 <div class="card-field w-50">
                     <label class="field-label">Items Used</label>
-                    <input type="text" class="table-input s-items" value="${data.items_used || ''}" placeholder="Potions...">
+                    <input type="text" class="table-input s-items" value="${data.items_used || ''}" placeholder="">
                 </div>
             </div>
 
             <div class="card-row">
                 <div class="card-field w-100">
                     <label class="field-label">Notes</label>
-                    <textarea class="table-input s-notes" rows="1" placeholder="Session notes...">${data.notes || ''}</textarea>
+                    <textarea class="table-input s-notes" rows="1" placeholder="">${data.notes || ''}</textarea>
                 </div>
             </div>
         </div>
