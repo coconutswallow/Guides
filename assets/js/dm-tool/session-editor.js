@@ -3,6 +3,7 @@
 import { supabase } from '../supabaseClient.js'; 
 import { 
     saveSession, 
+    createSession,
     saveAsTemplate, 
     loadSession, 
     fetchGameRules, 
@@ -10,8 +11,7 @@ import {
     fetchTemplates 
 } from './data-manager.js';
 import { 
-    calculateSessionCount, 
-    toUnixTimestamp, // <--- ADDED THIS IMPORT
+    toUnixTimestamp,
     calculatePlayerRewards,
     calculateDMRewards
 } from './calculators.js';
@@ -22,7 +22,7 @@ import * as IO from './session-io.js';
 
 let cachedGameRules = null; 
 
-/// ==========================================
+// ==========================================
 // 1. Initialization
 // ==========================================
 
@@ -33,12 +33,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     UI.initTabs(() => IO.generateOutput()); 
     UI.initTimezone();
     UI.initDateTimeConverter(); 
-    UI.initAccordions(); // <--- ADDED THIS
+    UI.initAccordions();
     
-    UI.initIncentivesModal((viewContext) => {
-        updateSessionCalculations(viewContext);
-    });
-    
+    // Init Modals
+    UI.initIncentivesModal((ctx) => updateSessionCalculations());
+    initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
 
@@ -53,45 +52,99 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initEventsDropdown(); 
     await initTemplateDropdown(); 
 
-    // Main Load
+    // Load Data or Defaults
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
 
-    if (sessionId) {
-        await loadSessionData(sessionId);
-    } else {
-        const hoursInput = document.getElementById('header-hours');
-        if(hoursInput) {
-            hoursInput.dispatchEvent(new Event('input')); 
-        }
-    }
+    // Callbacks for dynamic rows
+    const callbacks = {
+        onUpdate: updateSessionCalculations,
+        onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
+    };
     
-    // Init Hours Listener (The Heartbeat)
+    // Store callbacks globally/module-scope for Rows to use if needed
+    window._sessionCallbacks = callbacks;
+
+    if (sessionId) {
+        await loadSessionData(sessionId, callbacks);
+    } 
+
+    // Init Hours Listener (Central Logic)
     const hoursInput = document.getElementById('header-hours');
-    const sessionDisplay = document.getElementById('header-session-count');
     if(hoursInput) {
         hoursInput.addEventListener('input', () => {
-            const totalHours = parseFloat(hoursInput.value) || 0;
-            const count = calculateSessionCount(totalHours);
-            if(sessionDisplay) sessionDisplay.textContent = count;
-            updateSessionNavAndViews(count, totalHours);
+            const val = parseFloat(hoursInput.value) || 0;
+            
+            // 5.5 Hour Limit Logic
+            if (val > 5.5) {
+                const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
+                if(proceed) {
+                    // 1. Set current to 3
+                    hoursInput.value = 3;
+                    updateSessionCalculations();
+                    
+                    // 2. Trigger Copy (Next Part)
+                    document.getElementById('chk-next-part').checked = true;
+                    // Default name increment
+                    const currentName = document.getElementById('header-game-name').value;
+                    const nextName = incrementPartName(currentName);
+                    document.getElementById('inp-copy-name').value = nextName;
+                    
+                    // Open Modal or Auto-Submit? Let's Open Modal to confirm
+                    document.getElementById('modal-copy-game').showModal();
+                }
+            } else {
+                updateSessionCalculations();
+            }
         });
     }
+
+    // Bind other calculation triggers
+    setupCalculationTriggers(callbacks);
 });
 
+function setupCalculationTriggers(callbacks) {
+    const dmLevel = document.getElementById('out-dm-level');
+    const dmGames = document.getElementById('out-dm-games');
+    const btnDMInc = document.getElementById('btn-dm-incentives');
+    const syncBtn = document.getElementById('btn-sync-roster');
+    const addPlayerBtn = document.getElementById('btn-add-session-player');
+
+    if(dmLevel) dmLevel.addEventListener('input', updateSessionCalculations);
+    if(dmGames) dmGames.addEventListener('input', updateSessionCalculations);
+    if(btnDMInc) btnDMInc.addEventListener('click', () => callbacks.onOpenModal(btnDMInc, null, true));
+    
+    if(syncBtn) syncBtn.addEventListener('click', () => {
+        if(confirm("Replace session roster with game setup roster?")) {
+            Rows.syncSessionPlayersFromMaster(callbacks);
+        }
+    });
+
+    if(addPlayerBtn) addPlayerBtn.addEventListener('click', () => {
+        Rows.addSessionPlayerRow(document.getElementById('session-roster-list'), {}, callbacks);
+    });
+}
+
+function incrementPartName(name) {
+    if(!name) return "Session Part 2";
+    // Check if ends in Part X
+    const match = name.match(/(.*Part\s)(\d+)$/i);
+    if(match) {
+        const num = parseInt(match[2]) + 1;
+        return `${match[1]}${num}`;
+    }
+    return `${name} Part 2`;
+}
+
 // ==========================================
-// 2. Data Loading & Syncing
+// 2. Data Loading
 // ==========================================
 
-async function loadSessionData(sessionId) {
+async function loadSessionData(sessionId, callbacks) {
     try {
         const session = await loadSession(sessionId);
         if (session) {
-            // Pass the callback to create views
-            IO.populateForm(session, updateSessionNavAndViews, {
-                onUpdate: updateSessionCalculations,
-                onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
-            });
+            IO.populateForm(session, callbacks);
         }
     } catch (error) {
         console.error("Error loading session:", error);
@@ -133,165 +186,22 @@ function initPlayerSetup() {
 }
 
 // ==========================================
-// 3. Core Logic Loop
+// 3. Calculations
 // ==========================================
 
-function updateSessionNavAndViews(count, totalHours) {
-    const navContainer = document.getElementById('dynamic-session-nav');
-    const viewContainer = document.getElementById('session-views-container');
-    if(!navContainer || !viewContainer) return;
-
-    let createdNew = false;
-
-    // Define Callbacks object for rows
-    const rowCallbacks = {
-        onUpdate: updateSessionCalculations,
-        onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
-    };
-
-    for (let i = 1; i <= count; i++) {
-        let sessionDur = 3.0;
-        if (i === count) {
-            sessionDur = totalHours - (3 * (i - 1));
-            sessionDur = Math.round(sessionDur * 10) / 10;
-        }
-
-        const existingView = document.getElementById(`view-session-${i}`);
-        if (existingView) {
-            const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
-            if (currentVal !== sessionDur) {
-                existingView.querySelector('.inp-session-hours').value = sessionDur;
-                existingView.querySelectorAll('.player-card').forEach(card => {
-                    const hInput = card.querySelector('.s-hours');
-                    if(hInput) {
-                        hInput.value = sessionDur;
-                        hInput.dispatchEvent(new Event('input'));
-                    }
-                });
-                updateSessionCalculations(existingView);
-            }
-            continue; 
-        }
-
-        // Create New
-        createdNew = true;
-        
-        // Nav
-        const div = document.createElement('div');
-        div.className = 'nav-item';
-        div.dataset.target = `view-session-${i}`;
-        div.textContent = `Session ${i}`;
-        div.id = `nav-link-session-${i}`;
-        navContainer.appendChild(div);
-
-        // View
-        const tmpl = document.getElementById('tpl-session-view');
-        const clone = tmpl.content.cloneNode(true);
-        const viewDiv = clone.querySelector('.session-view');
-        
-        viewDiv.id = `view-session-${i}`;
-        viewDiv.dataset.sessionIndex = i;
-        viewDiv.querySelector('.lbl-session-num').textContent = i;
-        
-        // Unique Tab IDs
-        const tabInput = viewDiv.querySelector('.tab-input');
-        const tabOutput = viewDiv.querySelector('.tab-output');
-        const contentInput = viewDiv.querySelector('.content-input');
-        const contentOutput = viewDiv.querySelector('.content-output');
-        
-        if (tabInput && tabOutput && contentInput && contentOutput) {
-            const inputId = `session-input-${i}`;
-            const outputId = `session-output-${i}`;
-            tabInput.dataset.subtab = inputId;
-            tabOutput.dataset.subtab = outputId;
-            contentInput.id = inputId;
-            contentOutput.id = outputId;
-        }
-        
-        const gameName = document.getElementById('header-game-name').value || "Game";
-        viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
-        viewDiv.querySelector('.inp-session-hours').value = sessionDur;
-
-        viewContainer.appendChild(viewDiv);
-
-        // Init Listeners
-        initSessionViewLogic(viewDiv, i, rowCallbacks);
-        
-        // Sync Data
-        Rows.syncSessionPlayers(viewDiv, i, rowCallbacks);
-        Rows.syncDMRewards(viewDiv, i, rowCallbacks);
-    }
-
-    // Cleanup Excess
-    const currentViews = viewContainer.querySelectorAll('.session-view');
-    const currentCount = currentViews.length;
-    if (currentCount > count) {
-        for (let i = currentCount; i > count; i--) {
-            const nav = document.getElementById(`nav-link-session-${i}`);
-            const view = document.getElementById(`view-session-${i}`);
-            if(nav) nav.remove();
-            if(view) view.remove();
-        }
-    }
-
-    if (createdNew && count === 1) {
-        const s1Link = document.getElementById('nav-link-session-1');
-        if (s1Link) s1Link.click();
-    }
-}
-
-function initSessionViewLogic(viewElement, index, callbacks) {
-    const dateInput = viewElement.querySelector('.inp-session-date');
-    const unixInput = viewElement.querySelector('.inp-session-unix');
-    
-    if(index === 1) {
-        const mainDate = document.getElementById('inp-start-datetime').value;
-        if(mainDate) dateInput.value = mainDate;
-    }
-
-    const updateUnix = () => {
-        const tzVal = document.getElementById('inp-timezone').value;
-        if(unixInput) unixInput.value = toUnixTimestamp(dateInput.value, tzVal);
-    };
-    
-    dateInput.addEventListener('change', updateUnix);
-    
-    const btnSync = viewElement.querySelector('.btn-sync-players');
-    btnSync.addEventListener('click', () => {
-        if(confirm("Reset roster?")) {
-            Rows.syncSessionPlayers(viewElement, index, callbacks);
-        }
-    });
-
-    const btnAdd = viewElement.querySelector('.btn-add-session-player');
-    btnAdd.addEventListener('click', () => {
-        Rows.addSessionPlayerRow(viewElement.querySelector('.player-roster-list'), {}, callbacks);
-    });
-
-    // DM Listeners
-    const dmLevel = viewElement.querySelector('.dm-level');
-    const dmGames = viewElement.querySelector('.dm-games');
-    const btnDMInc = viewElement.querySelector('.dm-incentives-btn');
-    
-    if(dmLevel) dmLevel.addEventListener('input', () => updateSessionCalculations(viewElement));
-    if(dmGames) dmGames.addEventListener('input', () => updateSessionCalculations(viewElement));
-    if(btnDMInc) btnDMInc.addEventListener('click', () => callbacks.onOpenModal(btnDMInc, viewElement, true));
-}
-
-// ==========================================
-// 4. Calculations
-// ==========================================
-
-function updateSessionCalculations(viewElement) {
+function updateSessionCalculations() {
     if (!cachedGameRules) return; 
     
-    // 1. Calculate APL and Counts
+    const container = document.getElementById('view-session-log');
+    if(!container) return;
+
+    // 1. Calculate APL / Counts
     let totalLevel = 0;
     let playerCount = 0;
     let welcomeWagonCount = 0;
     let newHireCount = 0;
 
-    const cards = viewElement.querySelectorAll('.player-card');
+    const cards = container.querySelectorAll('.player-card');
     cards.forEach(card => {
         const lvl = parseFloat(card.querySelector('.s-level').value) || 0;
         if(lvl > 0) { totalLevel += lvl; playerCount++; }
@@ -312,72 +222,44 @@ function updateSessionCalculations(viewElement) {
     
     const maxGold = cachedGameRules.gold_per_session_by_apl ? (cachedGameRules.gold_per_session_by_apl[apl] || 0) : 0;
 
-    const lblApl = viewElement.querySelector('.val-apl');
-    const lblTier = viewElement.querySelector('.val-tier');
-    const lblGold = viewElement.querySelector('.val-max-gold');
+    const lblApl = container.querySelector('.val-apl');
+    const lblTier = container.querySelector('.val-tier');
+    const lblGold = container.querySelector('.val-max-gold');
     
     if(lblApl) lblApl.textContent = apl;
     if(lblTier) lblTier.textContent = tier;
     if(lblGold) lblGold.textContent = maxGold;
 
     // 3. Row Updates
-    const sessionHours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
-    const sessionIndex = parseInt(viewElement.dataset.sessionIndex) || 1;
-    const previousData = getPreviousSessionData(sessionIndex);
-
+    const sessionHours = parseFloat(document.getElementById('header-hours').value) || 0;
+    
     cards.forEach(card => {
-        const did = card.querySelector('.s-discord-id').value;
-        const lInput = card.querySelector('.s-level');
-        const lvl = parseFloat(lInput.value) || 0;
         const hInput = card.querySelector('.s-hours');
-        const playerHours = parseFloat(hInput.value) || 0;
+        hInput.value = sessionHours; // Auto-sync to header
+        
         const gInput = card.querySelector('.s-gold');
         const playerGold = parseFloat(gInput.value) || 0;
-        const gamesInput = card.querySelector('.s-games');
-        const gamesVal = gamesInput.value;
-
-        // Validations
-        hInput.parentElement.classList.toggle('error', playerHours > sessionHours);
+        const lInput = card.querySelector('.s-level');
+        const lvl = parseFloat(lInput.value) || 0;
         
+        // Validation Visuals
         if (maxGold > 0 && playerGold > maxGold) {
             gInput.parentElement.classList.add('error');
-            gInput.parentElement.querySelector('.val-max-msg').textContent = maxGold;
         } else {
             gInput.parentElement.classList.remove('error');
         }
 
-        let isLevelError = false;
-        let isGamesError = false;
-
-        if (did && previousData.has(did)) {
-            const prev = previousData.get(did);
-            if (lvl < prev.level) isLevelError = true;
-            if (prev.games_count === "10+") {
-                if (gamesVal !== "10+") isGamesError = true; 
-            } else {
-                const prevG = parseInt(prev.games_count) || 0;
-                const currG = parseInt(gamesVal);
-                if (gamesVal !== "10+") {
-                    if (isNaN(currG) || currG < prevG) isGamesError = true;
-                }
-            }
-        }
-
-        lInput.parentElement.classList.toggle('error', isLevelError);
-        gamesInput.parentElement.classList.toggle('error', isGamesError);
-
-        // Calc
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
-        const rewards = calculatePlayerRewards(lvl, playerHours, cachedGameRules, incentives);
+        const rewards = calculatePlayerRewards(lvl, sessionHours, cachedGameRules, incentives);
         
         card.querySelector('.s-xp').value = rewards.xp;
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
 
     // 4. DM Calc
-    const dmLevelInput = viewElement.querySelector('.dm-level');
-    const dmGamesInput = viewElement.querySelector('.dm-games');
+    const dmLevelInput = document.getElementById('out-dm-level');
+    const dmGamesInput = document.getElementById('out-dm-games');
     
     if (dmLevelInput && dmGamesInput) {
         const dmLvl = parseFloat(dmLevelInput.value) || 0;
@@ -386,11 +268,11 @@ function updateSessionCalculations(viewElement) {
 
         const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
         
-        viewElement.querySelector('.dm-val-jumpstart').value = isJumpstart ? "Yes" : "No";
-        viewElement.querySelector('.dm-val-welcome').value = welcomeWagonCount;
-        viewElement.querySelector('.dm-val-newhires').value = newHireCount;
+        container.querySelector('.dm-val-jumpstart').value = isJumpstart ? "Yes" : "No";
+        container.querySelector('.dm-val-welcome').value = welcomeWagonCount;
+        container.querySelector('.dm-val-newhires').value = newHireCount;
 
-        const btnDM = viewElement.querySelector('.dm-incentives-btn');
+        const btnDM = document.getElementById('btn-dm-incentives');
         const dmIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
 
         const dmRewards = calculateDMRewards(
@@ -403,34 +285,90 @@ function updateSessionCalculations(viewElement) {
             dmIncentives
         );
 
-        viewElement.querySelector('.dm-res-xp').value = dmRewards.xp;
-        viewElement.querySelector('.dm-res-dtp').value = dmRewards.dtp;
-        viewElement.querySelector('.dm-res-gp').value = dmRewards.gp;
-        viewElement.querySelector('.dm-res-loot').value = dmRewards.loot;
+        container.querySelector('.dm-res-xp').value = dmRewards.xp;
+        container.querySelector('.dm-res-dtp').value = dmRewards.dtp;
+        container.querySelector('.dm-res-gp').value = dmRewards.gp;
+        container.querySelector('.dm-res-loot').value = dmRewards.loot;
     }
 }
 
-function getPreviousSessionData(currentSessionIndex) {
-    const baseline = new Map(); 
-    if (currentSessionIndex === 1) {
-        Rows.getMasterRosterData().forEach(p => {
-            if(p.discord_id) baseline.set(p.discord_id, { level: parseFloat(p.level)||0, games_count: p.games_count });
+// ==========================================
+// 4. Save / Copy / Template Logic
+// ==========================================
+
+function initCopyGameLogic() {
+    const btnCopy = document.getElementById('btn-copy-game');
+    const modal = document.getElementById('modal-copy-game');
+    const btnConfirm = document.getElementById('btn-confirm-copy');
+    
+    if(btnCopy) {
+        btnCopy.addEventListener('click', () => {
+            const currentName = document.getElementById('header-game-name').value;
+            document.getElementById('inp-copy-name').value = incrementPartName(currentName);
+            modal.showModal();
         });
-    } else {
-        const prevIndex = currentSessionIndex - 1;
-        const prevView = document.getElementById(`view-session-${prevIndex}`);
-        if(prevView) {
-            Rows.getSessionRosterData(prevView).forEach(p => {
-                if(p.discord_id) baseline.set(p.discord_id, { level: parseFloat(p.level)||0, games_count: p.games_count });
-            });
-        }
     }
-    return baseline;
+
+    if(btnConfirm) {
+        btnConfirm.addEventListener('click', async () => {
+            const newName = document.getElementById('inp-copy-name').value;
+            if(!newName) return alert("Please enter a name.");
+            
+            const isNextPart = document.getElementById('chk-next-part').checked;
+            const fullData = IO.getFormData();
+            
+            // Prepare Data for Copy
+            fullData.header.title = newName; // Note: Ensure title is mapped correctly in createSession
+            
+            // Set default duration for new part
+            const currentDuration = parseFloat(fullData.session_log.hours) || 0;
+            // If current was split (e.g. 3), new one defaults to 3? Or remainder?
+            // "then each part will be 3 hours". Let's default to 3.
+            fullData.session_log.hours = 3;
+            
+            if (isNextPart) {
+                // Increment Master Roster
+                fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
+                
+                // Increment DM
+                fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
+                
+                // Sync to Session Log
+                fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
+                fullData.session_log.players.forEach(p => p.games_count = incrementGameString(p.games_count));
+            }
+            
+            // Clean up logs
+            fullData.session_log.title = newName;
+            fullData.session_log.notes = "";
+            fullData.session_log.summary = "";
+            fullData.session_log.dm_rewards.loot_selected = "";
+            
+            const { data: { user } } = await supabase.auth.getUser();
+            if(!user) return alert("Not logged in");
+
+            try {
+                // We reuse createSession logic
+                const newSession = await createSession(user.id, newName, false);
+                if(newSession) {
+                    // Update the newly created session with our copied data
+                    await saveSession(newSession.id, fullData, { title: newName });
+                    window.location.href = `session.html?id=${newSession.id}`;
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Error copying game.");
+            }
+        });
+    }
 }
 
-// ==========================================
-// 5. Save/Template Logic
-// ==========================================
+function incrementGameString(val) {
+    if (val === "10+") return "10+";
+    const num = parseInt(val) || 0;
+    if (num >= 10) return "10+";
+    return (num + 1).toString();
+}
 
 function initTemplateLogic() {
     const modal = document.getElementById('modal-save-template');
@@ -455,9 +393,6 @@ function initTemplateLogic() {
                 await saveAsTemplate(user.id, tmplName, templateData);
                 alert("Template Saved!");
                 modal.close();
-                const select = document.getElementById('template-select');
-                const opt = document.createElement('option');
-                opt.text = tmplName; select.appendChild(opt);
             } catch (e) {
                 console.error(e);
                 alert("Error saving template");
@@ -471,10 +406,7 @@ function initTemplateLogic() {
             if(!tmplId) return;
             const session = await loadSession(tmplId);
             if(session) {
-                IO.populateForm(session, updateSessionNavAndViews, {
-                    onUpdate: updateSessionCalculations,
-                    onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
-                });
+                IO.populateForm(session, window._sessionCallbacks);
                 alert("Template Loaded!");
             }
         });
@@ -500,7 +432,14 @@ function initTemplateLogic() {
                     btn.classList.remove('button-success');
                 }, 1500);
             } else {
-                alert("Session ID missing. Please create a session from the dashboard first.");
+                // Auto-create if no ID (new session)
+                const { data: { user } } = await supabase.auth.getUser();
+                if(user) {
+                    const newS = await createSession(user.id, title);
+                    await saveSession(newS.id, formData, { title, date });
+                    window.history.pushState({}, "", `?id=${newS.id}`);
+                    alert("Session Created & Saved");
+                }
             }
         });
     }

@@ -48,21 +48,10 @@ export function getMasterRosterData() {
    2. SESSION PLAYER CARDS
    =========================== */
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
-    // Check if listContainer exists
-    if (!listContainer) {
-        console.error("Session Player Row Error: listContainer is null.");
-        return;
-    }
+    if (!listContainer) return;
 
-    // Find context variables
-    const viewContext = listContainer.closest('.session-view');
-    if (!viewContext) {
-        console.error("Session Player Row Error: Context .session-view not found.");
-        return;
-    }
-
-    const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
-    const rowHours = data.hours || sessionHours;
+    // Use header hours
+    const rowHours = data.hours || document.getElementById('header-hours').value || "0";
     
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);
@@ -91,13 +80,11 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
                 </div>
                 <div class="card-field w-20">
                     <label class="field-label">Hours Played</label>
-                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5">
-                    <div class="validation-msg">Exceeds Session</div>
+                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" readonly>
                 </div>
                 <div class="card-field w-20">
                     <label class="field-label"># Games</label>
                     <input type="text" class="table-input s-games" value="${data.games_count || ''}">
-                    <div class="validation-msg">Cannot be less than previous</div>
                 </div>
             </div>
 
@@ -105,16 +92,14 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
                 <div class="card-field w-20">
                     <label class="field-label">Level</label>
                     <input type="number" class="table-input s-level" value="${data.level || ''}">
-                    <div class="validation-msg">Cannot be less than previous</div>
                 </div>
                 <div class="card-field w-20">
                     <label class="field-label">XP Earned</label>
                     <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
                 </div>
                 <div class="card-field w-30">
-                    <label class="field-label">Gold Rewarded <span title="Gold reward should be appropriate and not always be max allowed" style="cursor:help; font-size:0.8em;">ⓘ</span></label>
+                    <label class="field-label">Gold Rewarded</label>
                     <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
-                    <div class="validation-msg">Max <span class="val-max-msg"></span>gp</div>
                 </div>
                 <div class="card-field w-30">
                     <label class="field-label">DTP / Incentives</label>
@@ -138,8 +123,8 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
 
             <div class="card-row">
                 <div class="card-field w-100">
-                    <label class="field-label">Character Outcomes / Notes <span title="Optional - record any character outcomes that persist outside of the game/session" style="cursor:help; font-size:0.8em;">ⓘ</span></label>
-                    <textarea class="table-input s-notes" rows="1" placeholder="">${data.notes || ''}</textarea>
+                    <label class="field-label">Notes</label>
+                    <textarea class="table-input s-notes" rows="1">${data.notes || ''}</textarea>
                 </div>
             </div>
         </div>
@@ -148,35 +133,26 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     // Listeners
     card.querySelector('.btn-delete-card').addEventListener('click', () => {
         card.remove();
-        renumberCards(listContainer);
-        if(callbacks.onUpdate) callbacks.onUpdate(viewContext);
+        if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    ['.s-hours', '.s-level', '.s-games', '.s-gold'].forEach(cls => {
+    ['.s-level', '.s-games', '.s-gold'].forEach(cls => {
         card.querySelector(cls).addEventListener('input', () => {
-            if(callbacks.onUpdate) callbacks.onUpdate(viewContext);
+            if(callbacks.onUpdate) callbacks.onUpdate();
         });
     });
     
     const btnIncentives = card.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
-        if(callbacks.onOpenModal) callbacks.onOpenModal(btnIncentives, viewContext, false);
+        if(callbacks.onOpenModal) callbacks.onOpenModal(btnIncentives, null, false);
     });
 
     listContainer.appendChild(card);
-    
-    if(callbacks.onUpdate) callbacks.onUpdate(viewContext);
+    if(callbacks.onUpdate) callbacks.onUpdate();
 }
 
-function renumberCards(container) {
-    const titles = container.querySelectorAll('.player-card-title');
-    titles.forEach((span, index) => {
-        span.textContent = `Player ${index + 1}`;
-    });
-}
-
-export function getSessionRosterData(viewElement) {
-    const cards = viewElement.querySelectorAll('.player-card');
+export function getSessionRosterData() {
+    const cards = document.querySelectorAll('#session-roster-list .player-card');
     const players = [];
     cards.forEach(card => {
         const btn = card.querySelector('.s-incentives-btn');
@@ -200,84 +176,21 @@ export function getSessionRosterData(viewElement) {
     return players;
 }
 
-/* ===========================
-   3. SYNCING LOGIC
-   =========================== */
-export function syncSessionPlayers(viewElement, sessionIndex, callbacks) {
-    const listContainer = viewElement.querySelector('.player-roster-list');
+export function syncSessionPlayersFromMaster(callbacks) {
+    const listContainer = document.getElementById('session-roster-list');
     listContainer.innerHTML = ''; 
-
-    let sourceData = [];
-
-    if (sessionIndex === 1) {
-        sourceData = getMasterRosterData(); 
-    } else {
-        const prevView = document.getElementById(`view-session-${sessionIndex - 1}`);
-        if(prevView) {
-            sourceData = getSessionRosterData(prevView);
-        }
-    }
+    const sourceData = getMasterRosterData(); 
+    
+    // Also sync DM Data
+    const dmLvl = document.getElementById('inp-dm-level').value;
+    const dmGames = document.getElementById('inp-dm-games-count').value;
+    const dmChar = document.getElementById('inp-dm-char-name').value;
+    
+    document.getElementById('out-dm-level').value = dmLvl;
+    document.getElementById('out-dm-games').value = dmGames;
+    document.getElementById('out-dm-name').value = dmChar;
 
     sourceData.forEach(p => {
-        let nextGames = "1";
-        const currentGames = p.games_count;
-
-        if (currentGames === "10+") {
-            nextGames = "10+";
-        } else {
-            const g = parseInt(currentGames) || 0;
-            if (g >= 9) nextGames = "10"; 
-            nextGames = (g + 1).toString();
-            if (g >= 10) nextGames = "10+";
-        }
-
-        const newRowData = {
-            discord_id: p.discord_id,
-            character_name: p.character_name,
-            level: p.level,
-            games_count: nextGames,
-            loot: "",
-            gold: "",
-            items_used: "",
-            notes: ""
-        };
-        addSessionPlayerRow(listContainer, newRowData, callbacks);
+        addSessionPlayerRow(listContainer, p, callbacks);
     });
-}
-
-export function syncDMRewards(viewElement, sessionIndex, callbacks) {
-    const masterName = document.getElementById('inp-dm-char-name').value;
-    const dmNameEl = viewElement.querySelector('.dm-name');
-    if(dmNameEl) dmNameEl.value = masterName;
-
-    let level = "";
-    let games = "";
-
-    if (sessionIndex === 1) {
-        level = document.getElementById('inp-dm-level').value;
-        const gRaw = document.getElementById('inp-dm-games-count').value; 
-        if (gRaw === "10+") games = "10+";
-        else {
-            let g = parseInt(gRaw) || 0;
-            g += 1;
-            games = (g >= 10) ? "10" : g.toString(); 
-        }
-    } else {
-        const prevView = document.getElementById(`view-session-${sessionIndex - 1}`);
-        if (prevView) {
-            level = prevView.querySelector('.dm-level').value; 
-            const prevGames = prevView.querySelector('.dm-games').value;
-            if (prevGames === "10+") games = "10+";
-            else {
-                let g = parseInt(prevGames) || 0;
-                g += 1;
-                games = (g >= 10) ? "10" : g.toString();
-            }
-        }
-    }
-
-    viewElement.querySelector('.dm-level').value = level;
-    viewElement.querySelector('.dm-games').value = games;
-
-    if(callbacks.onUpdate) callbacks.onUpdate(viewElement);
 }

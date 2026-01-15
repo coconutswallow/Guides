@@ -11,30 +11,25 @@ export function getFormData() {
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
     
-    const sessionsData = [];
-    const sessionViews = document.querySelectorAll('.session-view');
-    
-    sessionViews.forEach(view => {
-        const dmBtn = view.querySelector('.dm-incentives-btn');
-        const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
+    // Process Single Session Log
+    const dmBtn = document.getElementById('btn-dm-incentives');
+    const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
 
-        sessionsData.push({
-            session_index: view.dataset.sessionIndex,
-            title: view.querySelector('.inp-session-title').value,
-            hours: view.querySelector('.inp-session-hours').value,
-            date_time: view.querySelector('.inp-session-unix').value, 
-            notes: view.querySelector('.inp-session-notes').value,
-            summary: view.querySelector('.inp-session-summary').value,
-            dm_collaborators: view.querySelector('.inp-dm-collab').value,
-            players: Rows.getSessionRosterData(view),
-            dm_rewards: {
-                level: view.querySelector('.dm-level').value,
-                games_played: view.querySelector('.dm-games').value,
-                incentives: dmIncentives,
-                loot_selected: view.querySelector('.dm-loot-selected').value
-            }
-        });
-    });
+    const sessionLog = {
+        title: val('inp-session-title'),
+        date_time: val('inp-session-unix'), 
+        hours: document.getElementById('header-hours').value, // Use header hours as master
+        notes: val('inp-session-notes'),
+        summary: val('inp-session-summary'),
+        dm_collaborators: val('inp-dm-collab'),
+        players: Rows.getSessionRosterData(),
+        dm_rewards: {
+            level: val('out-dm-level'),
+            games_played: val('out-dm-games'),
+            incentives: dmIncentives,
+            loot_selected: val('dm-loot-selected')
+        }
+    };
 
     return {
         header: {
@@ -68,11 +63,11 @@ export function getFormData() {
             level: val('inp-dm-level'),
             games_count: val('inp-dm-games-count')
         },
-        sessions: sessionsData
+        session_log: sessionLog
     };
 }
 
-export function populateForm(session, createSessionViewCallback, callbacks) {
+export function populateForm(session, callbacks) {
     if(session.title) {
         const titleEl = document.getElementById('header-game-name');
         if(titleEl) titleEl.value = session.title;
@@ -89,7 +84,7 @@ export function populateForm(session, createSessionViewCallback, callbacks) {
         }
     };
 
-    // Header
+    // Header & Setup
     if (session.form_data.header) {
         const h = session.form_data.header;
         setVal('inp-unix-time', h.game_datetime);
@@ -147,69 +142,50 @@ export function populateForm(session, createSessionViewCallback, callbacks) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
-    // Sessions
-    let totalLoadedHours = 0;
-    if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
-        totalLoadedHours = session.form_data.sessions.reduce((acc, s) => acc + (parseFloat(s.hours) || 0), 0);
-    }
-    
-    const headerHoursInput = document.getElementById('header-hours');
-    if(headerHoursInput) {
-        headerHoursInput.value = totalLoadedHours;
-        const sessionDisplay = document.getElementById('header-session-count');
-        if(sessionDisplay) sessionDisplay.textContent = (session.form_data.sessions || []).length;
-    }
-
-    if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
-        const count = session.form_data.sessions.length;
+    // Session Log Data
+    const sLog = session.form_data.session_log;
+    if (sLog) {
+        setVal('inp-session-title', sLog.title);
+        setVal('header-hours', sLog.hours || 0);
+        setVal('inp-session-notes', sLog.notes);
+        setVal('inp-session-summary', sLog.summary);
+        setVal('inp-dm-collab', sLog.dm_collaborators);
         
-        // Re-create views
-        createSessionViewCallback(count, totalLoadedHours);
-        
-        // Populate views
-        session.form_data.sessions.forEach((sData, i) => {
-            const index = i + 1;
-            const view = document.getElementById(`view-session-${index}`);
-            if(!view) return;
-            
-            view.querySelector('.inp-session-title').value = sData.title;
-            view.querySelector('.inp-session-hours').value = sData.hours; 
-            view.querySelector('.inp-session-notes').value = sData.notes || "";
-            if (view.querySelector('.inp-session-summary')) view.querySelector('.inp-session-summary').value = sData.summary || "";
-            if (view.querySelector('.inp-dm-collab')) view.querySelector('.inp-dm-collab').value = sData.dm_collaborators || "";
-            
-            if(sData.date_time) {
-                view.querySelector('.inp-session-unix').value = sData.date_time;
-                const tz = document.getElementById('inp-timezone').value;
-                view.querySelector('.inp-session-date').value = UI.unixToLocalIso(sData.date_time, tz);
-            }
-            
-            // Restore DM Data
-            if (sData.dm_rewards) {
-                view.querySelector('.dm-level').value = sData.dm_rewards.level || "";
-                view.querySelector('.dm-games').value = sData.dm_rewards.games_played || "";
-                view.querySelector('.dm-loot-selected').value = sData.dm_rewards.loot_selected || "";
-                
-                const dmBtn = view.querySelector('.dm-incentives-btn');
-                const loadedInc = sData.dm_rewards.incentives || [];
-                if(dmBtn) {
-                    dmBtn.dataset.incentives = JSON.stringify(loadedInc);
-                    dmBtn.innerText = loadedInc.length > 0 ? "+" : "+";
-                }
-            }
+        if(sLog.date_time) {
+            setVal('inp-session-unix', sLog.date_time);
+            const tz = document.getElementById('inp-timezone').value;
+            setVal('inp-session-date', UI.unixToLocalIso(sLog.date_time, tz));
+        }
 
-            const listContainer = view.querySelector('.player-roster-list');
-            listContainer.innerHTML = ''; 
+        // DM Log
+        if (sLog.dm_rewards) {
+            setVal('out-dm-level', sLog.dm_rewards.level);
+            setVal('out-dm-games', sLog.dm_rewards.games_played);
+            setVal('dm-loot-selected', sLog.dm_rewards.loot_selected);
             
-            if(sData.players) {
-                sData.players.forEach(p => Rows.addSessionPlayerRow(listContainer, p, callbacks));
+            const dmBtn = document.getElementById('btn-dm-incentives');
+            const loadedInc = sLog.dm_rewards.incentives || [];
+            if(dmBtn) {
+                dmBtn.dataset.incentives = JSON.stringify(loadedInc);
+                dmBtn.innerText = loadedInc.length > 0 ? "+" : "+";
             }
+        }
 
-            if(callbacks.onUpdate) callbacks.onUpdate(view);
-        });
+        // Player Log Roster
+        const listContainer = document.getElementById('session-roster-list');
+        listContainer.innerHTML = '';
+        if(sLog.players) {
+            sLog.players.forEach(p => Rows.addSessionPlayerRow(listContainer, p, callbacks));
+        }
+    } else {
+        // If loading a legacy template that has 'sessions' array, grab first one
+        if (session.form_data.sessions && session.form_data.sessions.length > 0) {
+            // ... legacy mapping logic if strictly needed, otherwise assume new structure
+        }
     }
     
     generateOutput();
+    if(callbacks.onUpdate) callbacks.onUpdate();
 }
 
 export function generateOutput() {
@@ -268,22 +244,18 @@ ${data.game_description || ''}
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
     
-    // Session Outputs
-    const sessionViews = document.querySelectorAll('.session-view');
-    sessionViews.forEach(view => {
-        const outText = view.querySelector('.out-session-text');
-        if(outText) {
-            const sTitle = view.querySelector('.inp-session-title').value;
-            const sDate = view.querySelector('.inp-session-date').value; 
-            const sNotes = view.querySelector('.inp-session-notes').value;
-            const sSummary = view.querySelector('.inp-session-summary').value;
-            
-            outText.value = `**${sTitle}**\n*${sDate}*\n\n**Summary:**\n${sSummary}\n\n**Notes:**\n${sNotes}`;
-        }
-    });
+    // Session Output
+    const outText = document.getElementById('out-session-text');
+    if(outText) {
+        const sTitle = document.getElementById('inp-session-title').value;
+        const sDate = document.getElementById('inp-session-date').value; 
+        const sNotes = document.getElementById('inp-session-notes').value;
+        const sSummary = document.getElementById('inp-session-summary').value;
+        
+        outText.value = `**${sTitle}**\n*${sDate}*\n\n**Summary:**\n${sSummary}\n\n**Notes:**\n${sNotes}`;
+    }
 }
 
-// Added this function which was missing
 export function prepareTemplateData(originalData) {
     const data = JSON.parse(JSON.stringify(originalData));
     if (data.header) {
@@ -293,6 +265,7 @@ export function prepareTemplateData(originalData) {
     }
     data.players = []; 
     data.dm = { character_name: "", level: "", games_count: "0" };
-    data.sessions = [];
+    // Clear log specific data for template
+    data.session_log = { hours: 0, notes: "", summary: "", players: [], dm_rewards: {} };
     return data;
 }
