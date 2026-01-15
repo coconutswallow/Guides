@@ -46,13 +46,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindOutput('inp-listing-url');
     // --------------------------------------------------------------------------
 
-    // Dropdowns
+    // Dropdowns & Options
     const rules = cachedGameRules;
     if(rules && rules.options) {
         if(rules.options["Game Version"]) UI.fillDropdown('inp-version', rules.options["Game Version"]);
         if(rules.options["Application Types"]) UI.fillDropdown('inp-apps-type', rules.options["Application Types"]);
         if(rules.options["Game Format"]) UI.fillDropdown('inp-format', rules.options["Game Format"]);
     }
+    
+    // --- UPDATED: Tier Dropdown Initialization ---
+    if (rules && rules.tier) {
+        const tierSelect = document.getElementById('inp-tier');
+        if (tierSelect) {
+            // Enable multi-select
+            tierSelect.setAttribute('multiple', 'true');
+            // Optional: Set a height or class for better visibility if needed, or rely on CSS
+            // tierSelect.style.height = '100px'; 
+            
+            tierSelect.innerHTML = ''; // Clear existing
+            Object.keys(rules.tier).sort().forEach(key => {
+                const el = document.createElement('option');
+                el.value = key; // e.g., "Tier 1"
+                el.textContent = key;
+                tierSelect.appendChild(el);
+            });
+        }
+    }
+    // ---------------------------------------------
     
     await initEventsDropdown(); 
     await initTemplateDropdown(); 
@@ -347,10 +367,7 @@ function updateSessionCalculations() {
     }
 }
 
-// ==========================================
-// 4. Save / Copy / Template Logic
-// ==========================================
-
+// ... (Rest of Copy/Template logic remains unchanged) ...
 function initCopyGameLogic() {
     const btnCopy = document.getElementById('btn-copy-game');
     const modal = document.getElementById('modal-copy-game');
@@ -418,20 +435,17 @@ function initTemplateLogic() {
     const btnLoad = document.getElementById('btn-load-template');
     const btnSaveGame = document.getElementById('btn-save-game');
     
-    // New Buttons
     const btnSaveSetup = document.getElementById('btn-save-template-setup');
     const btnDelete = document.getElementById('btn-delete-template');
     
     if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
     
-    // Auto-fill template name
     if(btnSaveSetup) btnSaveSetup.addEventListener('click', () => {
         const currentName = document.getElementById('header-game-name').value;
         if(currentName) document.getElementById('inp-template-name').value = currentName;
         modal.showModal();
     });
     
-    // Delete Logic
     if(btnDelete) {
         btnDelete.addEventListener('click', async () => {
             const tmplId = document.getElementById('template-select').value;
@@ -439,8 +453,8 @@ function initTemplateLogic() {
             
             if(confirm("Are you sure you want to delete this template? This cannot be undone.")) {
                 try {
-                    await deleteSession(tmplId); // Reusing deleteSession as templates are just session records
-                    await initTemplateDropdown(); // Refresh the list
+                    await deleteSession(tmplId); 
+                    await initTemplateDropdown(); 
                     alert("Template deleted.");
                 } catch(e) {
                     console.error(e);
@@ -462,7 +476,7 @@ function initTemplateLogic() {
             
             try {
                 await saveAsTemplate(user.id, tmplName, templateData);
-                await initTemplateDropdown(); // Refresh list after save
+                await initTemplateDropdown(); 
                 alert("Template Saved!");
                 modal.close();
             } catch (e) {
@@ -478,7 +492,6 @@ function initTemplateLogic() {
             if(!tmplId) return;
             const session = await loadSession(tmplId);
             if(session) {
-                // Pass { keepTitle: true } so we don't overwrite current game name with template name
                 IO.populateForm(session, window._sessionCallbacks, { keepTitle: true });
                 alert("Template Loaded!");
             }
@@ -505,7 +518,6 @@ function initTemplateLogic() {
                     btn.classList.remove('button-success');
                 }, 1500);
             } else {
-                // Auto-create if no ID (new session)
                 const { data: { user } } = await supabase.auth.getUser();
                 if(user) {
                     const newS = await createSession(user.id, title);

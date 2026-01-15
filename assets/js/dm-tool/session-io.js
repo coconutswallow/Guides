@@ -1,6 +1,7 @@
 // assets/js/dm-tool/session-io.js
 import * as Rows from './session-rows.js';
 import * as UI from './session-ui.js';
+import { fetchGameRules } from './data-manager.js';
 
 export function getFormData() {
     const val = (id) => {
@@ -11,10 +12,14 @@ export function getFormData() {
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
     
+    // --- UPDATED: Multi-select for Tier ---
+    const tierSelect = document.getElementById('inp-tier');
+    const selectedTiers = tierSelect ? Array.from(tierSelect.selectedOptions).map(opt => opt.value) : [];
+    // --------------------------------------
+
     const dmBtn = document.getElementById('btn-dm-incentives');
     const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
 
-    // Get Session Log Hours safely
     const hoursEl = document.getElementById('inp-session-total-hours');
     const sessionHours = hoursEl ? hoursEl.value : 0;
 
@@ -36,8 +41,7 @@ export function getFormData() {
 
     return {
         header: {
-            // These are the Game Setup fields
-            game_datetime: val('inp-unix-time'), // Specific to a scheduled game (cleared in template)
+            game_datetime: val('inp-unix-time'), 
             timezone: val('inp-timezone'),
             intended_duration: val('inp-duration-text'),
             game_description: val('inp-description'), 
@@ -46,7 +50,7 @@ export function getFormData() {
             apps_type: val('inp-apps-type'),
             platform: val('inp-platform'),
             event_tags: selectedEvents, 
-            tier: val('inp-tier'),
+            tier: selectedTiers, // Now an array
             apl: val('inp-apl'),
             party_size: val('inp-party-size'),
             tone: val('inp-tone'),
@@ -58,10 +62,8 @@ export function getFormData() {
             notes: val('inp-notes'),
             warnings: val('inp-warnings'),
             how_to_apply: val('inp-apply'),
-            
-            // URLs
-            listing_url: val('inp-listing-url'), // Specific to a posted game (cleared in template)
-            lobby_url: val('inp-lobby-url'),     // Often reused, kept in template
+            listing_url: val('inp-listing-url'), 
+            lobby_url: val('inp-lobby-url'),     
             loot_plan: val('inp-loot-plan') 
         },
         players: Rows.getMasterRosterData(),
@@ -75,8 +77,6 @@ export function getFormData() {
 }
 
 export function populateForm(session, callbacks, options = {}) {
-    // 1. Load Header Info (Title)
-    // Only load title if we aren't preserving the current one (e.g. loading template)
     if(session.title && !options.keepTitle) {
         const titleEl = document.getElementById('header-game-name');
         if(titleEl) titleEl.value = session.title;
@@ -93,7 +93,6 @@ export function populateForm(session, callbacks, options = {}) {
         }
     };
 
-    // 2. Load Game Setup (Header)
     if (session.form_data.header) {
         const h = session.form_data.header;
         setVal('inp-unix-time', h.game_datetime);
@@ -103,7 +102,18 @@ export function populateForm(session, callbacks, options = {}) {
             setVal('inp-start-datetime', dateStr);
         }
         setVal('inp-format', h.game_type);
-        setVal('inp-tier', h.tier);
+        
+        // --- UPDATED: Multi-select population for Tier ---
+        const tierSelect = document.getElementById('inp-tier');
+        if (tierSelect) {
+            // Handle both legacy string format and new array format
+            const values = Array.isArray(h.tier) ? h.tier : [h.tier];
+            Array.from(tierSelect.options).forEach(opt => {
+                opt.selected = values.includes(opt.value);
+            });
+        }
+        // -------------------------------------------------
+        
         setVal('inp-apl', h.apl);
         setVal('inp-party-size', h.party_size);
         setVal('inp-duration-text', h.intended_duration);
@@ -133,7 +143,6 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-apply', h.how_to_apply);
     }
 
-    // 3. Load Master Roster
     const tbody = document.getElementById('roster-body');
     if (tbody) {
         tbody.innerHTML = ''; 
@@ -144,7 +153,6 @@ export function populateForm(session, callbacks, options = {}) {
         }
     }
 
-    // 4. Load DM Details
     if (session.form_data.dm) {
         const d = session.form_data.dm;
         setVal('inp-dm-char-name', d.character_name);
@@ -152,7 +160,6 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
-    // 5. Load Session Log
     const sLog = session.form_data.session_log;
     if (sLog) {
         setVal('inp-session-title', sLog.title);
@@ -191,7 +198,8 @@ export function populateForm(session, callbacks, options = {}) {
     if(callbacks.onUpdate) callbacks.onUpdate();
 }
 
-export function generateOutput() {
+// --- UPDATED: Async to support ping fetching and formatting ---
+export async function generateOutput() {
     const data = getFormData().header;
     const unixTime = document.getElementById('inp-unix-time').value;
     const name = document.getElementById('header-game-name').value || "Untitled";
@@ -201,6 +209,28 @@ export function generateOutput() {
         timeString = `<t:${unixTime}:F>`;
     }
     
+    // 1. Format Tier Range ("Tier 1 to Tier 3")
+    let tierString = 'N/A';
+    if (Array.isArray(data.tier) && data.tier.length > 0) {
+        // Extract numbers to sort correctly
+        const sortedTiers = data.tier.sort((a, b) => {
+            const numA = parseInt(a.replace(/\D/g, '')) || 0;
+            const numB = parseInt(b.replace(/\D/g, '')) || 0;
+            return numA - numB;
+        });
+        
+        if (sortedTiers.length === 1) {
+            tierString = sortedTiers[0];
+        } else {
+            const first = sortedTiers[0];
+            const last = sortedTiers[sortedTiers.length - 1];
+            tierString = `${first} to ${last}`;
+        }
+    } else if (typeof data.tier === 'string' && data.tier) {
+        // Fallback for old data
+        tierString = data.tier;
+    }
+
     const listingText = `**Start Time:** ${timeString}
 **Name:** ${name}
 **Description:**
@@ -208,7 +238,7 @@ ${data.game_description || 'N/A'}
 
 **Version:** ${data.game_version || 'N/A'}
 **Format:** ${data.game_type || 'N/A'}
-**Tier and APL:** ${data.tier || 'N/A'} (${data.apl || 'N/A'})
+**Tier and APL:** ${tierString} (${data.apl || 'N/A'})
 **Party Size:** ${data.party_size || 'N/A'}
 **Applications:** ${data.apps_type || 'N/A'}
 **Tone:** ${data.tone || 'N/A'}
@@ -237,13 +267,39 @@ ${data.how_to_apply || 'Post your application below.'}`;
     const outListing = document.getElementById('out-listing-text');
     if(outListing) outListing.value = listingText;
     
+    // 2. Determine Pings
+    const rules = await fetchGameRules();
+    let pingString = "";
+    
+    if (rules && rules.tier && Array.isArray(data.tier)) {
+        const pings = new Set();
+        
+        data.tier.forEach(t => {
+            const tierData = rules.tier[t];
+            if (tierData) {
+                if (data.game_type === "Voice") {
+                    if (tierData["voice ping"]) pings.add(tierData["voice ping"]);
+                } else if (data.game_type === "PBP" || data.game_type === "Live Text") {
+                    if (tierData["PBP ping"]) pings.add(tierData["PBP ping"]);
+                }
+            }
+        });
+        
+        if (pings.size > 0) {
+            pingString = Array.from(pings).join(' ');
+        }
+    }
+
+    // 3. Construct Ad Text
     const adText = `**Game Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
-**Tier and APL:** ${data.tier || 'N/A'} , APL ${data.apl || 'N/A'}
+**Tier and APL:** ${tierString} , APL ${data.apl || 'N/A'}
 **Start Time and Duration:** ${timeString} (${data.intended_duration || 'N/A'})
 **Listing:** ${data.listing_url || 'N/A'}
 **Description:**
-${data.game_description || ''}`;
+${data.game_description || ''}
+
+${pingString}`; // Append pings at the bottom
 
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
@@ -259,38 +315,18 @@ ${data.game_description || ''}`;
     }
 }
 
-/**
- * Filters the data to only include generic Game Setup fields.
- * Strips out specific dates, players, and session logs.
- */
 export function prepareTemplateData(originalData) {
     const data = JSON.parse(JSON.stringify(originalData));
     
-    // 1. Filter Header / Game Setup Fields
     if (data.header) {
-        data.header.game_datetime = null; // Clear Start Date
-        data.header.listing_url = "";     // Clear Listing URL
-        
-        // PRESERVED:
-        // - Timezone
-        // - Intended Duration
-        // - Game Description
-        // - All Game Settings (Format, Version, App Type, Platform, Events)
-        // - All Party Config (Tier, APL, Party Size)
-        // - All Tone & Difficulty
-        // - All Details & Rules
-        // - Lobby URL (kept as it is usually consistent)
+        data.header.game_datetime = null; 
+        data.header.listing_url = "";     
     }
 
-    // 2. Clear Roster (Templates should not have players)
     data.players = []; 
-
-    // 3. Clear DM Details (Optional: User can re-enter this per game)
     data.dm = { character_name: "", level: "", games_count: "0" };
-
-    // 4. Clear Session Log (Templates are for fresh games)
     data.session_log = { 
-        title: "", // Clear specific session name
+        title: "", 
         hours: 0, 
         notes: "", 
         summary: "", 
