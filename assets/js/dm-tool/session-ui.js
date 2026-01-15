@@ -8,39 +8,54 @@ let activeIncentiveRowData = null;
 
 /**
  * Converts a datetime string and timezone to a Unix timestamp.
- * Moved from calculators.js
  */
 export function toUnixTimestamp(dateStr, timeZone) {
     if (!dateStr) return 0;
-    // If no timezone provided, assume local or UTC based on browser handling, 
-    // but usually we want specific timezone handling.
     if (!timeZone) return Math.floor(new Date(dateStr).getTime() / 1000);
 
-    // Append 'Z' to treat the input as UTC-relative base for calculation
     const utcDate = new Date(dateStr + 'Z');
     
-    // Use Intl to extract the specific offset for the target timezone
-    const fmt = new Intl.DateTimeFormat('en-US', {
-        timeZone: timeZone,
-        timeZoneName: 'longOffset'
-    });
-    
-    const parts = fmt.formatToParts(utcDate);
-    const offsetStr = parts.find(p => p.type === 'timeZoneName').value; 
+    try {
+        const fmt = new Intl.DateTimeFormat('en-US', {
+            timeZone: timeZone,
+            timeZoneName: 'longOffset'
+        });
+        
+        const parts = fmt.formatToParts(utcDate);
+        const offsetStr = parts.find(p => p.type === 'timeZoneName').value; 
 
-    // Handle GMT edge case
-    if (offsetStr === 'GMT') return Math.floor(utcDate.getTime() / 1000);
+        if (offsetStr === 'GMT') return Math.floor(utcDate.getTime() / 1000);
 
-    // Parse offset string (e.g., GMT-05:00)
-    const match = offsetStr.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
-    if (!match) return Math.floor(utcDate.getTime() / 1000); 
+        const match = offsetStr.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
+        if (!match) return Math.floor(utcDate.getTime() / 1000); 
 
-    const sign = match[1] === '+' ? 1 : -1;
-    const hours = parseInt(match[2], 10);
-    const minutes = parseInt(match[3] || '0', 10);
-    const offsetMs = (hours * 60 + minutes) * 60 * 1000 * sign;
+        const sign = match[1] === '+' ? 1 : -1;
+        const hours = parseInt(match[2], 10);
+        const minutes = parseInt(match[3] || '0', 10);
+        const offsetMs = (hours * 60 + minutes) * 60 * 1000 * sign;
 
-    return Math.floor((utcDate.getTime() - offsetMs) / 1000);
+        return Math.floor((utcDate.getTime() - offsetMs) / 1000);
+    } catch (e) {
+        console.warn("Date conversion fallback", e);
+        return Math.floor(utcDate.getTime() / 1000);
+    }
+}
+
+export function unixToLocalIso(unixSeconds, timeZone) {
+    try {
+        const date = new Date(unixSeconds * 1000);
+        const fmt = new Intl.DateTimeFormat('en-CA', {
+            timeZone: timeZone,
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', hour12: false
+        });
+        const parts = fmt.formatToParts(date);
+        const get = (t) => parts.find(p => p.type === t).value;
+        return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
+    } catch(e) {
+        console.error("Date conversion error", e);
+        return "";
+    }
 }
 
 /* ===========================
@@ -52,11 +67,8 @@ export function initAccordions() {
         header.addEventListener('click', (e) => {
             const card = header.closest('.accordion-card');
             const isOpen = card.classList.contains('open');
-            if(isOpen) {
-                card.classList.remove('open');
-            } else {
-                card.classList.add('open');
-            }
+            if(isOpen) card.classList.remove('open');
+            else card.classList.add('open');
         });
     });
 
@@ -65,28 +77,34 @@ export function initAccordions() {
         const handler = () => validateCard(input.closest('.accordion-card'));
         input.addEventListener('input', handler);
         input.addEventListener('change', handler);
+        input.addEventListener('blur', handler);
     });
     
     document.querySelectorAll('.accordion-card').forEach(validateCard);
+
+    // Polling for markdown hidden inputs
+    setInterval(() => {
+        const mdInputs = document.querySelectorAll('.md-trigger');
+        mdInputs.forEach(input => {
+            const oldVal = input.dataset.lastVal || "";
+            const newVal = input.value;
+            if(oldVal !== newVal) {
+                input.dataset.lastVal = newVal;
+                validateCard(input.closest('.accordion-card'));
+            }
+        });
+    }, 1000); 
 }
 
 function validateCard(card) {
     if(!card) return;
-    
     const reqFields = card.querySelectorAll('[data-required="true"]');
     let allValid = true;
-
     reqFields.forEach(field => {
-        if(!field.value || field.value.trim() === "") {
-            allValid = false;
-        }
+        if(!field.value || field.value.trim() === "") allValid = false;
     });
-
-    if(allValid) {
-        card.classList.add('completed');
-    } else {
-        card.classList.remove('completed');
-    }
+    if(allValid) card.classList.add('completed');
+    else card.classList.remove('completed');
 }
 
 /* ===========================
@@ -108,9 +126,8 @@ export function initTabs(outputCallback) {
             const targetEl = document.getElementById(targetId);
             if(targetEl) {
                 targetEl.classList.remove('hidden-section');
-                if(targetId === 'view-game-ad' && outputCallback) {
-                    outputCallback();
-                }
+                if(targetId === 'view-game-ad' && outputCallback) outputCallback();
+                if(targetId === 'view-session-output' && outputCallback) outputCallback();
             }
         });
     }
@@ -157,25 +174,8 @@ export function initTimezone() {
     });
 }
 
-export function unixToLocalIso(unixSeconds, timeZone) {
-    try {
-        const date = new Date(unixSeconds * 1000);
-        const fmt = new Intl.DateTimeFormat('en-CA', {
-            timeZone: timeZone,
-            year: 'numeric', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit', hour12: false
-        });
-        const parts = fmt.formatToParts(date);
-        const get = (t) => parts.find(p => p.type === t).value;
-        return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
-    } catch(e) {
-        console.error("Date conversion error", e);
-        return "";
-    }
-}
-
 /* ===========================
-   5. DROPDOWNS
+   5. DROPDOWNS & MODALS
    =========================== */
 export function fillDropdown(id, options) {
     const select = document.getElementById(id);
@@ -189,9 +189,6 @@ export function fillDropdown(id, options) {
     });
 }
 
-/* ===========================
-   6. INCENTIVES MODAL
-   =========================== */
 export function initIncentivesModal(saveCallback) {
     const modal = document.getElementById('modal-incentives');
     const btnCancel = document.getElementById('btn-cancel-incentives');
@@ -202,10 +199,7 @@ export function initIncentivesModal(saveCallback) {
     if(btnSave) {
         const newBtn = btnSave.cloneNode(true);
         btnSave.parentNode.replaceChild(newBtn, btnSave);
-        
-        newBtn.addEventListener('click', () => {
-            saveIncentivesInternal(saveCallback);
-        });
+        newBtn.addEventListener('click', () => saveIncentivesInternal(saveCallback));
     }
 }
 
@@ -244,7 +238,6 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
 
 function saveIncentivesInternal(saveCallback) {
     if (!activeIncentiveRowData) return;
-    
     const modal = document.getElementById('modal-incentives');
     const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
     const selected = Array.from(checkboxes).map(cb => cb.value);
@@ -253,9 +246,7 @@ function saveIncentivesInternal(saveCallback) {
     btn.dataset.incentives = JSON.stringify(selected);
     btn.innerText = selected.length > 0 ? `+` : '+'; 
     
-    if(saveCallback) {
-        saveCallback(activeIncentiveRowData.viewContext);
-    }
+    if(saveCallback) saveCallback(activeIncentiveRowData.viewContext);
     
     activeIncentiveRowData = null;
     modal.close();

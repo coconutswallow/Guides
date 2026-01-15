@@ -11,6 +11,7 @@ import {
     fetchTemplates 
 } from './data-manager.js';
 
+// No calculators import here!
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
@@ -69,23 +70,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(hoursInput) {
         hoursInput.addEventListener('input', () => {
             const val = parseFloat(hoursInput.value) || 0;
-            
-            // 5.5 Hour Limit Logic
             if (val > 5.5) {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
-                    // 1. Set current to 3
                     hoursInput.value = 3;
                     updateSessionCalculations();
                     
-                    // 2. Trigger Copy (Next Part)
                     document.getElementById('chk-next-part').checked = true;
-                    // Default name increment
                     const currentName = document.getElementById('header-game-name').value;
                     const nextName = incrementPartName(currentName);
                     document.getElementById('inp-copy-name').value = nextName;
                     
-                    // Open Modal
                     document.getElementById('modal-copy-game').showModal();
                 }
             } else {
@@ -363,7 +358,7 @@ function initCopyGameLogic() {
             const fullData = IO.getFormData();
             
             fullData.header.title = newName; 
-            fullData.session_log.hours = 3; // Default for next part
+            fullData.session_log.hours = 3; 
             
             if (isNextPart) {
                 fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
@@ -463,7 +458,6 @@ function initTemplateLogic() {
                     btn.classList.remove('button-success');
                 }, 1500);
             } else {
-                // Auto-create if no ID (new session)
                 const { data: { user } } = await supabase.auth.getUser();
                 if(user) {
                     const newS = await createSession(user.id, title);

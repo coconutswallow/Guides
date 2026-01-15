@@ -55,7 +55,7 @@ export function getFormData() {
             how_to_apply: val('inp-apply'),
             listing_url: val('inp-listing-url'),
             lobby_url: val('inp-lobby-url'),
-            loot_plan: val('inp-loot-plan') // New field
+            loot_plan: val('inp-loot-plan')
         },
         players: Rows.getMasterRosterData(),
         dm: {
@@ -84,7 +84,6 @@ export function populateForm(session, callbacks) {
         }
     };
 
-    // Header & Setup
     if (session.form_data.header) {
         const h = session.form_data.header;
         setVal('inp-unix-time', h.game_datetime);
@@ -106,7 +105,7 @@ export function populateForm(session, callbacks) {
         setVal('inp-apps-type', h.apps_type);
         setVal('inp-listing-url', h.listing_url);
         setVal('inp-lobby-url', h.lobby_url);
-        setVal('inp-loot-plan', h.loot_plan); // New Field
+        setVal('inp-loot-plan', h.loot_plan);
         
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && Array.isArray(h.event_tags)) {
@@ -124,7 +123,6 @@ export function populateForm(session, callbacks) {
         setVal('inp-apply', h.how_to_apply);
     }
 
-    // Master Roster
     const tbody = document.getElementById('roster-body');
     if (tbody) {
         tbody.innerHTML = ''; 
@@ -135,7 +133,6 @@ export function populateForm(session, callbacks) {
         }
     }
 
-    // DM Master Data
     if (session.form_data.dm) {
         const d = session.form_data.dm;
         setVal('inp-dm-char-name', d.character_name);
@@ -143,7 +140,6 @@ export function populateForm(session, callbacks) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
-    // Session Log Data
     const sLog = session.form_data.session_log;
     if (sLog) {
         setVal('inp-session-title', sLog.title);
