@@ -6,9 +6,6 @@ let activeIncentiveRowData = null;
    1. UTILITIES
    =========================== */
 
-/**
- * Converts a datetime string and timezone to a Unix timestamp.
- */
 export function toUnixTimestamp(dateStr, timeZone) {
     if (!dateStr) return 0;
     if (!timeZone) return Math.floor(new Date(dateStr).getTime() / 1000);
@@ -82,7 +79,6 @@ export function initAccordions() {
     
     document.querySelectorAll('.accordion-card').forEach(validateCard);
 
-    // Polling for markdown hidden inputs
     setInterval(() => {
         const mdInputs = document.querySelectorAll('.md-trigger');
         mdInputs.forEach(input => {
@@ -126,7 +122,6 @@ export function initTabs(outputCallback) {
             const targetEl = document.getElementById(targetId);
             if(targetEl) {
                 targetEl.classList.remove('hidden-section');
-                // FIXED: Added view-game-listing to trigger output generation on click
                 if(targetId === 'view-game-listing' && outputCallback) outputCallback();
                 if(targetId === 'view-game-ad' && outputCallback) outputCallback();
                 if(targetId === 'view-session-output' && outputCallback) outputCallback();
@@ -149,7 +144,8 @@ export function initDateTimeConverter() {
         const dateVal = dateInput.value;
         const tzVal = tzSelect.value;
         if(unixInput) unixInput.value = toUnixTimestamp(dateVal, tzVal);
-        if(dateInput.dataset.required) dateInput.dispatchEvent(new Event('change'));
+        
+        // --- FIX: Removed the recursive dispatchEvent call ---
     };
     
     dateInput.addEventListener('change', updateUnix);
@@ -220,36 +216,4 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
         const entries = Object.entries(gameRules[sourceKey]);
         if (entries.length > 0) {
             hasIncentives = true;
-            msgContainer.textContent = `Check any ${isDM ? 'DM' : 'Player'} incentives that apply.`;
-            entries.forEach(([name, val]) => {
-                const label = document.createElement('label');
-                label.className = 'checkbox-item';
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = name;
-                if (currentSelection.includes(name)) checkbox.checked = true;
-                label.appendChild(checkbox);
-                label.appendChild(document.createTextNode(`${name} (+${val} DTP)`));
-                listContainer.appendChild(label);
-            });
-        }
-    } 
-    if (!hasIncentives) msgContainer.textContent = `No ${isDM ? 'DM' : 'Player'} Incentives found in game rules.`;
-    modal.showModal();
-}
-
-function saveIncentivesInternal(saveCallback) {
-    if (!activeIncentiveRowData) return;
-    const modal = document.getElementById('modal-incentives');
-    const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
-    const selected = Array.from(checkboxes).map(cb => cb.value);
-    
-    const btn = activeIncentiveRowData.button;
-    btn.dataset.incentives = JSON.stringify(selected);
-    btn.innerText = selected.length > 0 ? `+` : '+'; 
-    
-    if(saveCallback) saveCallback(activeIncentiveRowData.viewContext);
-    
-    activeIncentiveRowData = null;
-    modal.close();
-}
+            msgContainer.textContent = `Check any ${isDM ? 'DM' : 'Player'}

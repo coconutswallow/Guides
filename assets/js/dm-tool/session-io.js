@@ -12,10 +12,15 @@ export function getFormData() {
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
     
-    // --- UPDATED: Multi-select for Tier ---
+    // --- UPDATED: Multi-select for Tier (Safe check) ---
     const tierSelect = document.getElementById('inp-tier');
-    const selectedTiers = tierSelect ? Array.from(tierSelect.selectedOptions).map(opt => opt.value) : [];
-    // --------------------------------------
+    let selectedTiers = [];
+    if (tierSelect && tierSelect.selectedOptions) {
+        selectedTiers = Array.from(tierSelect.selectedOptions).map(opt => opt.value);
+    } else if (tierSelect) {
+        // Fallback if it's still an input
+        selectedTiers = tierSelect.value ? [tierSelect.value] : [];
+    }
 
     const dmBtn = document.getElementById('btn-dm-incentives');
     const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
@@ -103,16 +108,22 @@ export function populateForm(session, callbacks, options = {}) {
         }
         setVal('inp-format', h.game_type);
         
-        // --- UPDATED: Multi-select population for Tier ---
+        // --- FIX: Safe Multi-select population ---
         const tierSelect = document.getElementById('inp-tier');
         if (tierSelect) {
-            // Handle both legacy string format and new array format
             const values = Array.isArray(h.tier) ? h.tier : [h.tier];
-            Array.from(tierSelect.options).forEach(opt => {
-                opt.selected = values.includes(opt.value);
-            });
+            
+            // Only try to loop options if it is actually a SELECT element
+            if (tierSelect.tagName === 'SELECT' && tierSelect.options) {
+                Array.from(tierSelect.options).forEach(opt => {
+                    opt.selected = values.includes(opt.value);
+                });
+            } else {
+                // Fallback for INPUT element
+                tierSelect.value = values.join(', ');
+            }
         }
-        // -------------------------------------------------
+        // -----------------------------------------
         
         setVal('inp-apl', h.apl);
         setVal('inp-party-size', h.party_size);

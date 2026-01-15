@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindOutput('inp-listing-url');
     // --------------------------------------------------------------------------
 
-    // Dropdowns & Options
+    // Dropdowns
     const rules = cachedGameRules;
     if(rules && rules.options) {
         if(rules.options["Game Version"]) UI.fillDropdown('inp-version', rules.options["Game Version"]);
@@ -58,10 +58,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (rules && rules.tier) {
         const tierSelect = document.getElementById('inp-tier');
         if (tierSelect) {
-            // Enable multi-select
+            // Enable multi-select (already in HTML, but good safeguard)
             tierSelect.setAttribute('multiple', 'true');
-            // Optional: Set a height or class for better visibility if needed, or rely on CSS
-            // tierSelect.style.height = '100px'; 
             
             tierSelect.innerHTML = ''; // Clear existing
             Object.keys(rules.tier).sort().forEach(key => {
