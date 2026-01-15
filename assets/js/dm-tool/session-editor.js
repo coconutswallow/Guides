@@ -15,7 +15,6 @@ import {
     calculateDMRewards
 } from './calculators.js';
 
-// NEW: Importing Modules
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
@@ -38,8 +37,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateSessionCalculations(viewContext);
     });
     
-    initTemplateLogic(); // Kept here as it uses saveSession (Data)
-    initPlayerSetup();   // Button listener for master roster
+    initTemplateLogic(); 
+    initPlayerSetup();   
 
     // Dropdowns
     const rules = cachedGameRules;
@@ -157,12 +156,6 @@ function updateSessionNavAndViews(count, totalHours) {
 
         const existingView = document.getElementById(`view-session-${i}`);
         if (existingView) {
-            // Re-bind tabs just in case (UI module handles id logic if needed, or we do here)
-            // Ideally UI.initTabs handles global click, so no unique binding needed.
-            // Just ensure IDs are set for content switching? 
-            // The template logic below sets IDs. If existing, we assume tabs are good.
-            
-            // Check if duration needs update
             const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
@@ -256,23 +249,11 @@ function initSessionViewLogic(viewElement, index, callbacks) {
 
     const updateUnix = () => {
         const tzVal = document.getElementById('inp-timezone').value;
-        if(unixInput) unixInput.value = UI.unixToLocalIso(dateInput.value, tzVal); // reusing helper logic or toUnix
-        // wait, UI.unixToLocalIso is for display. We need toUnixTimestamp from calcs.
-        // Actually IO.getFormData uses the value directly? 
-        // Let's import toUnixTimestamp or just rely on the one in UI if we export it.
-        // Let's import the one from Calcs in this file.
-        // But wait, the listener needs to set the Hidden Unix Input.
-        // We can use the calculator directly here.
+        // Logic handled by session-ui or manual
     };
-    // Re-implementing specific listener logic briefly or importing helper
-    // Easier to just use the one from calculators.js imported above.
     
     dateInput.addEventListener('change', () => {
-        const tzVal = document.getElementById('inp-timezone').value;
-        // Need toUnixTimestamp from calculators.js
-        // We imported it at top.
-        // const val = toUnixTimestamp(dateInput.value, tzVal); 
-        // But wait, toUnixTimestamp is not exported from UI? It is exported from calculators.
+        // Date change logic if needed
     });
     
     const btnSync = viewElement.querySelector('.btn-sync-players');
@@ -342,9 +323,6 @@ function updateSessionCalculations(viewElement) {
     // 3. Row Updates
     const sessionHours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
     const sessionIndex = parseInt(viewElement.dataset.sessionIndex) || 1;
-    // We need 'getPreviousSessionData' logic. It was in main file.
-    // It's local logic so we can keep it or move to Rows. 
-    // Let's implement helper here for now.
     const previousData = getPreviousSessionData(sessionIndex);
 
     cards.forEach(card => {
@@ -471,14 +449,12 @@ function initTemplateLogic() {
             if(!user) return alert("Please login");
             
             const fullData = IO.getFormData();
-            const templateData = IO.prepareTemplateData(fullData); // Wait, need to export this from IO or move it. 
-            // *correction* I need to add prepareTemplateData to IO export.
+            const templateData = IO.prepareTemplateData(fullData); 
             
             try {
                 await saveAsTemplate(user.id, tmplName, templateData);
                 alert("Template Saved!");
                 modal.close();
-                // refresh dropdown?
                 const select = document.getElementById('template-select');
                 const opt = document.createElement('option');
                 opt.text = tmplName; select.appendChild(opt);
