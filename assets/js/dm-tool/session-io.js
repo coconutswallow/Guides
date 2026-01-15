@@ -18,6 +18,14 @@ export function getFormData() {
     const hoursEl = document.getElementById('inp-session-total-hours');
     const sessionHours = hoursEl ? hoursEl.value : 0;
 
+    // Smart retrieval for Markdown fields that have validation syncs
+    // Use the hidden 'val-' input if 'inp-' is empty, as editors sometimes update hidden inputs first
+    const getMdVal = (baseId) => {
+        const main = val(`inp-${baseId}`);
+        if (main) return main;
+        return val(`val-${baseId}`); 
+    };
+
     const sessionLog = {
         title: val('inp-session-title'),
         date_time: val('inp-session-unix'), 
@@ -36,11 +44,11 @@ export function getFormData() {
 
     return {
         header: {
-            // These are the Game Setup fields
-            game_datetime: val('inp-unix-time'), // Specific to a scheduled game (cleared in template)
+            // Game Setup fields
+            game_datetime: val('inp-unix-time'), 
             timezone: val('inp-timezone'),
             intended_duration: val('inp-duration-text'),
-            game_description: val('inp-description'), 
+            game_description: getMdVal('description'), // Uses smart check
             game_version: val('inp-version'),
             game_type: val('inp-format'),
             apps_type: val('inp-apps-type'),
@@ -57,11 +65,11 @@ export function getFormData() {
             house_rules: val('inp-houserules'),
             notes: val('inp-notes'),
             warnings: val('inp-warnings'),
-            how_to_apply: val('inp-apply'),
+            how_to_apply: getMdVal('apply'), // Uses smart check
             
             // URLs
-            listing_url: val('inp-listing-url'), // Specific to a posted game (cleared in template)
-            lobby_url: val('inp-lobby-url'),     // Often reused, kept in template
+            listing_url: val('inp-listing-url'), 
+            lobby_url: val('inp-lobby-url'),     
             loot_plan: val('inp-loot-plan') 
         },
         players: Rows.getMasterRosterData(),
@@ -75,7 +83,6 @@ export function getFormData() {
 }
 
 export function populateForm(session, callbacks) {
-    // 1. Load Header Info (Title)
     if(session.title) {
         const titleEl = document.getElementById('header-game-name');
         if(titleEl) titleEl.value = session.title;
@@ -92,7 +99,7 @@ export function populateForm(session, callbacks) {
         }
     };
 
-    // 2. Load Game Setup (Header)
+    // Header & Setup
     if (session.form_data.header) {
         const h = session.form_data.header;
         setVal('inp-unix-time', h.game_datetime);
@@ -132,7 +139,7 @@ export function populateForm(session, callbacks) {
         setVal('inp-apply', h.how_to_apply);
     }
 
-    // 3. Load Master Roster
+    // Master Roster
     const tbody = document.getElementById('roster-body');
     if (tbody) {
         tbody.innerHTML = ''; 
@@ -143,7 +150,7 @@ export function populateForm(session, callbacks) {
         }
     }
 
-    // 4. Load DM Details
+    // DM Details
     if (session.form_data.dm) {
         const d = session.form_data.dm;
         setVal('inp-dm-char-name', d.character_name);
@@ -151,7 +158,7 @@ export function populateForm(session, callbacks) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
-    // 5. Load Session Log
+    // Session Log
     const sLog = session.form_data.session_log;
     if (sLog) {
         setVal('inp-session-title', sLog.title);
@@ -200,8 +207,7 @@ export function generateOutput() {
         timeString = `<t:${unixTime}:F>`;
     }
     
-    const listingText = `\`\`\`
-**Start Time:** ${timeString}
+    const listingText = `**Start Time:** ${timeString}
 **Name:** ${name}
 **Description:**
 ${data.game_description || 'N/A'}
@@ -212,7 +218,7 @@ ${data.game_description || 'N/A'}
 **Applications:** ${data.apps_type || 'N/A'}
 **Tone:** ${data.tone || 'N/A'}
 **Focus:** ${data.focus || 'N/A'}
-**Difficulty:** ${data.encounter_difficulty || 'N/A'}
+**Difficulty:**
 - **Encounter Difficulty:** ${data.encounter_difficulty || 'N/A'}
 - **Chance of Character Loss:** ${data.char_loss || 'N/A'}
 - **Enemy Threat Level:** ${data.threat_level || 'N/A'}
@@ -227,21 +233,18 @@ ${data.notes || 'N/A'}
 **Content Warnings:**
 ${data.warnings || 'N/A'}
 **How to Apply:**
-${data.how_to_apply || 'Post your application below.'}
-\`\`\``;
+${data.how_to_apply || 'Post your application below.'}`;
 
     const outListing = document.getElementById('out-listing-text');
     if(outListing) outListing.value = listingText;
     
-    const adText = `\`\`\`
-> **Name:** ${name}
+    const adText = `> **Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
 **Tier and APL:** ${data.tier || 'N/A'} , APL ${data.apl || 'N/A'}
 **Start Time and Duration:** ${timeString} (${data.intended_duration || 'N/A'})
 **Listing:** ${data.listing_url || 'N/A'}
 **Description:**
-${data.game_description || ''}
-\`\`\``;
+${data.game_description || ''}`;
 
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
@@ -259,7 +262,6 @@ ${data.game_description || ''}
 
 /**
  * Filters the data to only include generic Game Setup fields.
- * Strips out specific dates, players, and session logs.
  */
 export function prepareTemplateData(originalData) {
     const data = JSON.parse(JSON.stringify(originalData));
@@ -268,27 +270,18 @@ export function prepareTemplateData(originalData) {
     if (data.header) {
         data.header.game_datetime = null; // Clear Start Date
         data.header.listing_url = "";     // Clear Listing URL
-        
-        // PRESERVED:
-        // - Timezone
-        // - Intended Duration
-        // - Game Description
-        // - All Game Settings (Format, Version, App Type, Platform, Events)
-        // - All Party Config (Tier, APL, Party Size)
-        // - All Tone & Difficulty
-        // - All Details & Rules
-        // - Lobby URL (kept as it is usually consistent)
+        // Keeps: Timezone, Duration, Desc, Settings, Party, Tone, Rules, Lobby URL
     }
 
-    // 2. Clear Roster (Templates should not have players)
+    // 2. Clear Roster
     data.players = []; 
 
-    // 3. Clear DM Details (Optional: User can re-enter this per game)
+    // 3. Clear DM Details 
     data.dm = { character_name: "", level: "", games_count: "0" };
 
-    // 4. Clear Session Log (Templates are for fresh games)
+    // 4. Clear Session Log
     data.session_log = { 
-        title: "", // Clear specific session name
+        title: "", 
         hours: 0, 
         notes: "", 
         summary: "", 

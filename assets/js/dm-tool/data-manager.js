@@ -31,11 +31,6 @@ export async function fetchGameRules() {
     }
 }
 
-/**
- * Fetches active events for the dropdown.
- * Selects name where is_active = true.
- * @returns {Promise<Array>} List of event objects {id, name}.
- */
 export async function fetchActiveEvents() {
     try {
         const { data, error } = await supabase
@@ -58,6 +53,7 @@ export async function fetchActiveEvents() {
 
 export async function fetchSessionList(userId) {
     try {
+        // Explicitly fetch only items where is_template is FALSE
         const { data, error } = await supabase
             .from('session_logs')
             .select('id, title, session_date, is_template, updated_at')
@@ -73,10 +69,6 @@ export async function fetchSessionList(userId) {
     }
 }
 
-/**
- * Fetches saved templates for the dropdown.
- * Selects title and id where is_template = true.
- */
 export async function fetchTemplates(userId) {
     try {
         const { data, error } = await supabase
@@ -127,22 +119,49 @@ export async function createSession(userId, title, isTemplate = false) {
     }
 }
 
+/**
+ * Saves as template. Overwrites if a template with the same name exists for the user.
+ */
 export async function saveAsTemplate(userId, templateName, formData) {
     try {
-        const { data, error } = await supabase
+        // 1. Check if template exists
+        const { data: existing, error: fetchError } = await supabase
             .from('session_logs')
-            .insert([{
-                user_id: userId,
-                title: templateName,
-                is_template: true,
-                form_data: formData,
-                session_date: null 
-            }])
-            .select()
+            .select('id')
+            .eq('user_id', userId)
+            .eq('is_template', true)
+            .eq('title', templateName)
             .single();
 
-        if (error) throw error;
-        return data;
+        if (existing) {
+            // 2a. Overwrite existing
+            const { data, error } = await supabase
+                .from('session_logs')
+                .update({
+                    form_data: formData,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', existing.id)
+                .select()
+                .single();
+            if (error) throw error;
+            return data;
+        } else {
+            // 2b. Create new
+            const { data, error } = await supabase
+                .from('session_logs')
+                .insert([{
+                    user_id: userId,
+                    title: templateName,
+                    is_template: true,
+                    form_data: formData,
+                    session_date: null 
+                }])
+                .select()
+                .single();
+            if (error) throw error;
+            return data;
+        }
     } catch (err) {
         console.error('Error saving template:', err);
         throw err;
