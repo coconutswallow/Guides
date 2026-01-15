@@ -4,35 +4,48 @@ import { toUnixTimestamp } from './calculators.js';
 let activeIncentiveRowData = null;
 
 /* ===========================
-   1. ACCORDION & VALIDATION (NEW)
+   1. ACCORDION & VALIDATION
    =========================== */
 export function initAccordions() {
     const headers = document.querySelectorAll('.accordion-header');
     headers.forEach(header => {
         header.addEventListener('click', (e) => {
             const card = header.closest('.accordion-card');
-            
-            // Toggle current
             const isOpen = card.classList.contains('open');
-            if(isOpen) {
-                card.classList.remove('open');
-            } else {
-                card.classList.add('open');
-            }
+            
+            // Allow multiple open or just toggle current
+            if(isOpen) card.classList.remove('open');
+            else card.classList.add('open');
         });
     });
 
-    // Init Validation Listeners
+    // 1. Standard Input Listeners
     const inputs = document.querySelectorAll('[data-required="true"]');
     inputs.forEach(input => {
         const handler = () => validateCard(input.closest('.accordion-card'));
         input.addEventListener('input', handler);
         input.addEventListener('change', handler);
-        // Special case for Markdown widgets (if they update hidden inputs)
+        input.addEventListener('blur', handler);
     });
     
-    // Validate on load
+    // 2. Initial Validation
     document.querySelectorAll('.accordion-card').forEach(validateCard);
+
+    // 3. Polling for Markdown Hidden Inputs
+    // Since we don't control the markdown editor's events, we poll the hidden inputs
+    // that have the class .md-trigger for value changes.
+    setInterval(() => {
+        const mdInputs = document.querySelectorAll('.md-trigger');
+        let needsValidation = false;
+        mdInputs.forEach(input => {
+            const oldVal = input.dataset.lastVal || "";
+            const newVal = input.value;
+            if(oldVal !== newVal) {
+                input.dataset.lastVal = newVal;
+                validateCard(input.closest('.accordion-card'));
+            }
+        });
+    }, 1000); 
 }
 
 function validateCard(card) {
@@ -49,16 +62,6 @@ function validateCard(card) {
 
     if(allValid) {
         card.classList.add('completed');
-        // Auto-open next sibling if not already visited/open
-        const nextCard = card.nextElementSibling;
-        if(nextCard && nextCard.classList.contains('accordion-card')) {
-             // Only auto-open if the current one is being interacted with and next is closed
-             // To avoid annoying jumping on load, we might restrict this. 
-             // For now, let's just mark completed.
-             
-             // UX Decision: Let's unlock visual opacity if we had that, 
-             // but just adding 'completed' class is good feedback.
-        }
     } else {
         card.classList.remove('completed');
     }
@@ -68,7 +71,6 @@ function validateCard(card) {
    2. TABS & VISIBILITY
    =========================== */
 export function initTabs(outputCallback) {
-    // Sidebar Navigation
     const sidebarNav = document.getElementById('sidebar-nav');
     if (sidebarNav) {
         sidebarNav.addEventListener('click', (e) => {
@@ -88,7 +90,7 @@ export function initTabs(outputCallback) {
             if(targetEl) {
                 targetEl.classList.remove('hidden-section');
                 
-                // Trigger output generation if going to Listing or Ad view
+                // Trigger output gen if going to Listing or Ad view
                 if((targetId === 'view-game-listing-output' || targetId === 'view-game-ad') && outputCallback) {
                     outputCallback();
                 }

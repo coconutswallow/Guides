@@ -833,3 +833,21 @@ dialog::backdrop {
     pointer-events: auto !important;
     background: #36393f !important;
 }
+
+/* INSTRUCTION TEXT */
+.instruction-text {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    margin-top: -0.5rem;
+    font-style: italic;
+    border-left: 3px solid var(--color-primary);
+    padding-left: 1rem;
+}
+
+/* SESSION STATS BAR TWEAK for Accordion */
+.accordion-body .session-stats-bar {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9em;
+}
