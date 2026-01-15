@@ -24,6 +24,11 @@ extra_css:
         border-color: var(--color-primary);
         box-shadow: 0 0 0 3px var(--shadow-color-light);
     }
+    .readonly-input {
+        background-color: var(--color-bg-medium);
+        color: var(--color-text-secondary);
+        cursor: not-allowed;
+    }
 </style>
 
 <header class="editor-header">
@@ -309,7 +314,7 @@ extra_css:
                         </div>
                         <div class="form-group" style="width: 150px;">
                             <label>Duration (Hrs)</label>
-                            <input type="number" class="inp-session-hours" step="0.5" min="0">
+                            <input type="number" class="inp-session-hours readonly-input" readonly>
                         </div>
                     </div>
 
@@ -326,8 +331,8 @@ extra_css:
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
                             <label style="margin:0;">Player Logs</label>
                             <div>
-                                <button class="button button-secondary btn-sm btn-sync-players" title="Copy from previous session">
-                                    ↻ Sync Roster
+                                <button class="button button-secondary btn-sm btn-sync-players" title="Reset this table using data from the previous session">
+                                    ↻ Reset Roster
                                 </button>
                                 <button class="button btn-sm btn-add-session-player">+ Add Player</button>
                             </div>
@@ -341,9 +346,9 @@ extra_css:
                                         <th style="width: 15%;">Character</th>
                                         <th style="width: 5%;">Lvl</th>
                                         <th style="width: 5%;">Games</th>
-                                        <th style="width: 8%;">XP</th>
-                                        <th style="width: 20%;">Loot / Items</th>
-                                        <th style="width: 20%;">Notes</th>
+                                        <th style="width: 8%;">Hours</th> <th style="width: 8%;">XP</th>
+                                        <th style="width: 18%;">Loot / Items</th>
+                                        <th style="width: 18%;">Notes</th>
                                         <th style="width: 5%;"></th>
                                     </tr>
                                 </thead>

@@ -12,7 +12,6 @@ import {
 import { 
     calculateSessionCount, 
     toUnixTimestamp, 
-    distributeHours,
     calculateXP 
 } from './calculators.js';
 
@@ -44,10 +43,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (sessionId) {
         await loadSessionData(sessionId);
     } else {
-        // If new session, trigger the logic to create at least Session 1
-        // We trigger the input event manually to run the calculation logic once
+        // Force initial update so Session 1 appears by default
         const hoursInput = document.getElementById('header-hours');
-        if(hoursInput) hoursInput.dispatchEvent(new Event('input'));
+        if(hoursInput) {
+            hoursInput.dispatchEvent(new Event('input')); 
+        }
     }
 });
 
@@ -123,35 +123,28 @@ async function initTemplateDropdown() {
 // ==========================================
 
 function initTabs() {
-    // Delegate click for dynamic sidebar items
     const sidebarNav = document.getElementById('sidebar-nav');
     sidebarNav.addEventListener('click', (e) => {
         const item = e.target.closest('.nav-item');
         if (!item) return;
 
-        // Visual Active State
         document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
         item.classList.add('active');
 
-        // Hide all sections
         document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
 
-        // Show target
         const targetId = item.dataset.target;
         const targetEl = document.getElementById(targetId);
-        
-        // Target element might be created dynamically, so we check existence
         if(targetEl) targetEl.classList.remove('hidden-section');
     });
 
-    // Content Tabs (Input/Output inside sections)
     document.querySelectorAll('.content-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             tab.parentElement.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             
             const targetId = tab.dataset.subtab;
-            if(!targetId) return; // For tabs without subtabs (like placeholders)
+            if(!targetId) return; 
 
             const parent = tab.closest('.view-section');
             parent.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
@@ -179,12 +172,13 @@ function initHoursLogic() {
     };
 
     hoursInput.addEventListener('input', updateDisplay);
+    
+    // Trigger once on load to ensure defaults are applied
+    updateDisplay();
 }
 
 /**
  * Core Logic: Creates Sidebar links AND Session Views (DOM)
- * Handles creating new tabs or removing old ones based on hours.
- * PREVENTS DUPLICATES by checking IDs.
  */
 function updateSessionNavAndViews(count, totalHours) {
     const navContainer = document.getElementById('dynamic-session-nav');
@@ -219,18 +213,30 @@ function updateSessionNavAndViews(count, totalHours) {
         const gameName = document.getElementById('header-game-name').value || "Game";
         viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
         
-        // Distribute Hours (Simple default)
-        const hoursPerSession = distributeHours(totalHours, count);
-        viewDiv.querySelector('.inp-session-hours').value = hoursPerSession;
+        // ----------------------------------------------------
+        // DURATION CALCULATION LOGIC
+        // Rule: Intermediate sessions are 3h. Last session is remainder.
+        // ----------------------------------------------------
+        let sessionDur = 3.0;
+        if (i === count) {
+            // Formula: Total - 3*(n-1)
+            sessionDur = totalHours - (3 * (i - 1));
+            // Round nicely to avoid floating point ugliness
+            sessionDur = Math.round(sessionDur * 10) / 10;
+        }
+        viewDiv.querySelector('.inp-session-hours').value = sessionDur;
+        // ----------------------------------------------------
 
         viewContainer.appendChild(viewDiv);
 
         // Initialize Listeners for this new specific view
         initSessionViewLogic(viewDiv, i);
+
+        // AUTO-SYNC ROSTER ON CREATION
+        syncSessionPlayers(viewDiv, i);
     }
 
-    // 2. Remove Excess Sessions (if user reduces hours)
-    // We check current DOM count vs desired count by querying the actual existing elements
+    // 2. Remove Excess Sessions
     const currentViews = viewContainer.querySelectorAll('.session-view');
     const currentCount = currentViews.length;
 
@@ -259,16 +265,15 @@ function initSessionViewLogic(viewElement, index) {
     }
 
     const updateUnix = () => {
-        // Always read the GLOBAL timezone select
         const tzVal = document.getElementById('inp-timezone').value;
         if(unixInput) unixInput.value = toUnixTimestamp(dateInput.value, tzVal);
     };
     dateInput.addEventListener('change', updateUnix);
     
-    // 2. Sync Button (The Waterfall)
+    // 2. Sync Button (Manual Reset)
     const btnSync = viewElement.querySelector('.btn-sync-players');
     btnSync.addEventListener('click', () => {
-        if(confirm("This will overwrite current player rows with data from the previous step. Continue?")) {
+        if(confirm("This will reset the roster to match the previous session. Current changes in this tab will be lost. Continue?")) {
             syncSessionPlayers(viewElement, index);
         }
     });
@@ -279,9 +284,7 @@ function initSessionViewLogic(viewElement, index) {
         addSessionPlayerRow(viewElement.querySelector('.session-roster-body'), {}, index, viewElement);
     });
 
-    // 4. Update XP when Hours change
-    const hoursInput = viewElement.querySelector('.inp-session-hours');
-    hoursInput.addEventListener('change', () => recalculateSessionXP(viewElement));
+    // 4. (No Listener needed for inp-session-hours anymore as it is readonly)
 }
 
 // ==========================================
@@ -314,10 +317,7 @@ function syncSessionPlayers(viewElement, sessionIndex) {
             nextGames = "10+";
         } else {
             const g = parseInt(currentGames) || 0;
-            // Cap at 10, then use "10+" as the next step
             if (g >= 9) nextGames = "10"; 
-            
-            // Simplified increment logic
             nextGames = (g + 1).toString();
             if (g >= 10) nextGames = "10+";
         }
@@ -333,7 +333,6 @@ function syncSessionPlayers(viewElement, sessionIndex) {
         addSessionPlayerRow(tbody, newRowData, sessionIndex, viewElement);
     });
     
-    // Recalc XP after sync
     recalculateSessionXP(viewElement);
 }
 
@@ -341,11 +340,17 @@ function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
     const tr = document.createElement('tr');
     tr.className = 'session-player-row';
     
+    // Get default hours from the session input
+    const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
+    // If data.hours exists (loading from save), use it; otherwise use session default
+    const rowHours = data.hours || sessionHours;
+
     tr.innerHTML = `
         <td><input type="text" class="table-input s-discord-id" value="${data.discord_id || ''}"></td>
         <td><input type="text" class="table-input s-char-name" value="${data.character_name || ''}"></td>
         <td><input type="number" class="table-input s-level" style="width:50px" value="${data.level || ''}"></td>
         <td><input type="text" class="table-input s-games" style="width:50px" value="${data.games_count || ''}"></td>
+        <td><input type="number" class="table-input s-hours" style="width:60px" value="${rowHours}" step="0.5"></td>
         <td><input type="text" class="table-input s-xp" style="width:60px" readonly placeholder="Auto"></td>
         <td><textarea class="table-input s-loot" rows="1">${data.loot || ''}</textarea></td>
         <td><textarea class="table-input s-notes" rows="1">${data.notes || ''}</textarea></td>
@@ -362,9 +367,14 @@ function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
         if(viewContext) recalculateSessionXP(viewContext);
     });
 
+    // Recalc XP if Hours changes (Specific to this player)
+    tr.querySelector('.s-hours').addEventListener('input', () => {
+        if(viewContext) recalculateSessionXP(viewContext);
+    });
+
     tbody.appendChild(tr);
     
-    // Trigger calc for this row immediately if context provided
+    // Trigger calc for this row immediately
     if (viewContext && data.level) recalculateSessionXP(viewContext);
 }
 
@@ -377,6 +387,7 @@ function getSessionRosterData(viewElement) {
             character_name: row.querySelector('.s-char-name').value,
             level: row.querySelector('.s-level').value,
             games_count: row.querySelector('.s-games').value,
+            hours: row.querySelector('.s-hours').value, // Save individual hours
             xp: row.querySelector('.s-xp').value,
             loot: row.querySelector('.s-loot').value,
             notes: row.querySelector('.s-notes').value
@@ -387,12 +398,13 @@ function getSessionRosterData(viewElement) {
 
 function recalculateSessionXP(viewElement) {
     if (!cachedGameRules) return; 
-    const hours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
     
     viewElement.querySelectorAll('.session-player-row').forEach(row => {
         const lvl = parseInt(row.querySelector('.s-level').value) || 0;
+        const playerHours = parseFloat(row.querySelector('.s-hours').value) || 0;
+        
         const xpInput = row.querySelector('.s-xp');
-        const xp = calculateXP(lvl, hours, cachedGameRules);
+        const xp = calculateXP(lvl, playerHours, cachedGameRules);
         xpInput.value = xp;
     });
 }
@@ -469,7 +481,6 @@ function addPlayerRow(data = {}) {
     const tr = document.createElement('tr');
     tr.className = 'player-row';
 
-    // Games Dropdown Generator
     let gamesOptions = '';
     for(let i=0; i<=10; i++) {
         const val = i.toString();
@@ -493,7 +504,6 @@ function addPlayerRow(data = {}) {
         </td>
     `;
 
-    // Delete Event
     tr.querySelector('.btn-delete-row').addEventListener('click', () => {
         tr.remove();
     });
@@ -527,12 +537,10 @@ function initTemplateLogic() {
     const btnLoad = document.getElementById('btn-load-template');
     const btnSaveGame = document.getElementById('btn-save-game');
 
-    // Open Modal
     if(btnOpen) {
         btnOpen.addEventListener('click', () => modal.showModal());
     }
 
-    // CONFIRM SAVE TEMPLATE
     if(btnConfirm) {
         btnConfirm.addEventListener('click', async () => {
             const tmplName = document.getElementById('inp-template-name').value;
@@ -541,20 +549,14 @@ function initTemplateLogic() {
             const { data: { user } } = await supabase.auth.getUser();
             if(!user) return alert("Please login");
 
-            // 1. Get All Data
             const fullData = getFormData();
-
-            // 2. Filter Data for Template (Remove specific fields)
             const templateData = prepareTemplateData(fullData);
             
             try {
-                // Save with the filtered data
                 await saveAsTemplate(user.id, tmplName, templateData);
-                
                 alert("Template Saved!");
                 modal.close();
                 
-                // Add to dropdown immediately
                 const select = document.getElementById('template-select');
                 const opt = document.createElement('option');
                 opt.text = tmplName; 
@@ -566,7 +568,6 @@ function initTemplateLogic() {
         });
     }
 
-    // LOAD TEMPLATE
     if(btnLoad) {
         btnLoad.addEventListener('click', async () => {
             const tmplId = document.getElementById('template-select').value;
@@ -580,25 +581,20 @@ function initTemplateLogic() {
         });
     }
     
-    // SAVE GAME (Top Button)
     if(btnSaveGame) {
         btnSaveGame.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const sessionId = urlParams.get('id');
 
-            // 1. Get Full Data (No filtering)
             const formData = getFormData();
             
-            // 2. Extract Metadata for SQL Columns (title, date)
             const title = document.getElementById('header-game-name').value || "Untitled Session";
             const dateInput = document.getElementById('inp-start-datetime');
             const date = dateInput && dateInput.value ? new Date(dateInput.value).toISOString().split('T')[0] : null;
 
             if (sessionId) {
-                // Save Full Session
                 await saveSession(sessionId, formData, { title, date });
                 
-                // Visual Feedback
                 const btn = document.getElementById('btn-save-game');
                 const originalText = btn.innerText;
                 btn.innerText = "Saved!";
@@ -614,26 +610,16 @@ function initTemplateLogic() {
     }
 }
 
-/**
- * Helper to strip specific data for Templates
- */
 function prepareTemplateData(originalData) {
     const data = JSON.parse(JSON.stringify(originalData));
-
     if (data.header) {
         data.header.game_datetime = null; 
         data.header.listing_url = "";
         data.header.lobby_url = "";
     }
-
     data.players = []; 
-    data.dm = {
-        character_name: "",
-        level: "",
-        games_count: "0"
-    };
+    data.dm = { character_name: "", level: "", games_count: "0" };
     data.sessions = [];
-
     return data;
 }
 
@@ -646,7 +632,6 @@ function getFormData() {
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
 
-    // NEW: Scrape Sessions Data
     const sessionsData = [];
     const sessionViews = document.querySelectorAll('.session-view');
     sessionViews.forEach(view => {
@@ -692,7 +677,7 @@ function getFormData() {
             level: val('inp-dm-level'),
             games_count: val('inp-dm-games-count')
         },
-        sessions: sessionsData // Saving new session array
+        sessions: sessionsData
     };
 }
 
@@ -713,18 +698,14 @@ function populateForm(session) {
         }
     };
 
-    // 1. Populate Header Fields
     if (session.form_data.header) {
         const h = session.form_data.header;
-        
         setVal('inp-unix-time', h.game_datetime);
         setVal('inp-timezone', h.timezone);
-        
         if(h.game_datetime && h.timezone) {
             const dateStr = unixToLocalIso(h.game_datetime, h.timezone);
             setVal('inp-start-datetime', dateStr);
         }
-        
         setVal('inp-format', h.game_type);
         setVal('inp-tier', h.tier);
         setVal('inp-apl', h.apl);
@@ -755,7 +736,6 @@ function populateForm(session) {
         setVal('inp-apply', h.how_to_apply);
     }
 
-    // 2. Populate Master Player Roster
     const tbody = document.getElementById('roster-body');
     if (tbody) {
         tbody.innerHTML = ''; 
@@ -766,7 +746,6 @@ function populateForm(session) {
         }
     }
 
-    // 3. Populate DM Details
     if (session.form_data.dm) {
         const d = session.form_data.dm;
         setVal('inp-dm-char-name', d.character_name);
@@ -774,23 +753,20 @@ function populateForm(session) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
-    // 4. Populate Dynamic Sessions
     if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
         const count = session.form_data.sessions.length;
-        // Total hours fallback if not explicitly saved (simplified)
         const totalHours = parseFloat(document.getElementById('header-hours').value) || (count * 3); 
         
-        // Force create views
         updateSessionNavAndViews(count, totalHours);
 
-        // Fill Views
         session.form_data.sessions.forEach((sData, i) => {
             const index = i + 1;
             const view = document.getElementById(`view-session-${index}`);
             if(!view) return;
 
             view.querySelector('.inp-session-title').value = sData.title;
-            view.querySelector('.inp-session-hours').value = sData.hours;
+            // Ensure we respect saved hours if present, otherwise recalculate
+            view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
             
             if(sData.date_time) {
@@ -810,13 +786,9 @@ function populateForm(session) {
     generateOutput();
 }
 
-/**
- * Helper: Converts Unix Timestamp back to "YYYY-MM-DDTHH:MM" 
- */
 function unixToLocalIso(unixSeconds, timeZone) {
     try {
         const date = new Date(unixSeconds * 1000);
-        // Use en-CA because it formats as YYYY-MM-DD
         const fmt = new Intl.DateTimeFormat('en-CA', {
             timeZone: timeZone,
             year: 'numeric', month: '2-digit', day: '2-digit',
@@ -843,7 +815,6 @@ function generateOutput() {
         timeString = `<t:${unixTime}:F>`;
     }
 
-    // --- GAME LISTING ---
     const listingText = `\`\`\`
 **Start Time:** ${timeString}
 
@@ -861,7 +832,8 @@ ${data.game_description || 'N/A'}
 **Focus:** ${data.focus || 'N/A'}
 **Difficulty:** ${data.encounter_difficulty || 'N/A'}
 - **Encounter Difficulty:** ${data.encounter_difficulty || 'N/A'}
-- **Chance of Character Loss:** ${data.char_loss || 'N/A'}\r\n- **Enemy Threat Level:** ${data.threat_level || 'N/A'}
+- **Chance of Character Loss:** ${data.char_loss || 'N/A'}
+- **Enemy Threat Level:** ${data.threat_level || 'N/A'}
 - **Environment Hazard Level:** N/A
 
 **Lobby:** ${data.lobby_url || 'N/A'}
@@ -884,7 +856,6 @@ ${data.how_to_apply || 'Post your application below.'}
     const outListing = document.getElementById('out-listing-text');
     if(outListing) outListing.value = listingText;
 
-    // --- GAME AD ---
     const adText = `\`\`\`
 > **Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
