@@ -11,6 +11,7 @@ import {
 } from './data-manager.js';
 import { 
     calculateSessionCount, 
+    toUnixTimestamp, // <--- ADDED THIS IMPORT
     calculatePlayerRewards,
     calculateDMRewards
 } from './calculators.js';
@@ -29,11 +30,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     cachedGameRules = await fetchGameRules();
 
     // Init UI Modules
-    UI.initTabs(() => IO.generateOutput()); // Pass callback for when tabs switch
+    UI.initTabs(() => IO.generateOutput()); 
     UI.initTimezone();
     UI.initDateTimeConverter(); 
     UI.initIncentivesModal((viewContext) => {
-        // Callback when incentives are saved
         updateSessionCalculations(viewContext);
     });
     
@@ -249,12 +249,10 @@ function initSessionViewLogic(viewElement, index, callbacks) {
 
     const updateUnix = () => {
         const tzVal = document.getElementById('inp-timezone').value;
-        // Logic handled by session-ui or manual
+        if(unixInput) unixInput.value = toUnixTimestamp(dateInput.value, tzVal);
     };
     
-    dateInput.addEventListener('change', () => {
-        // Date change logic if needed
-    });
+    dateInput.addEventListener('change', updateUnix);
     
     const btnSync = viewElement.querySelector('.btn-sync-players');
     btnSync.addEventListener('click', () => {
