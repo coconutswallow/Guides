@@ -222,6 +222,13 @@ body {
 /* ============================
    5. VIEW SECTIONS & VISIBILITY
    ============================ */
+
+/* General hidden class for dashboard elements */
+.hidden {
+    display: none !important;
+}
+
+/* View sections in the session editor */
 .view-section {
     display: block;
 }
