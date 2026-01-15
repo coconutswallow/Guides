@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initDateTimeConverter(); 
     initTemplateLogic();
     initPlayerRoster(); 
-    initIncentivesModal(); // New
+    initIncentivesModal(); 
     
     await initDynamicDropdowns(); 
     await initEventsDropdown(); 
@@ -186,19 +186,27 @@ function updateSessionNavAndViews(count, totalHours) {
 
     // 1. Loop desired count
     for (let i = 1; i <= count; i++) {
-        // Prevent duplicate creation
+        // Calculate the target duration for this session
+        let sessionDur = 3.0;
+        if (i === count) {
+            sessionDur = totalHours - (3 * (i - 1));
+            sessionDur = Math.round(sessionDur * 10) / 10;
+        }
+
+        // Check existence
         if (document.getElementById(`view-session-${i}`)) {
-            // Update duration if needed
             const existingView = document.getElementById(`view-session-${i}`);
-            let sessionDur = 3.0;
-            if (i === count) {
-                sessionDur = totalHours - (3 * (i - 1));
-                sessionDur = Math.round(sessionDur * 10) / 10;
-            }
-            // Only update if changed to avoid overwriting user edits if we allowed them
             const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
+            
+            // If duration changed (because Total Hours changed), update the input AND all players
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
+                
+                // FORCE UPDATE ALL PLAYERS IN THIS SESSION
+                existingView.querySelectorAll('.player-row-main .s-hours').forEach(pInput => {
+                    pInput.value = sessionDur;
+                });
+                
                 recalculateSessionXP(existingView);
             }
             continue; 
@@ -227,12 +235,7 @@ function updateSessionNavAndViews(count, totalHours) {
         const gameName = document.getElementById('header-game-name').value || "Game";
         viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
         
-        // Duration Logic
-        let sessionDur = 3.0;
-        if (i === count) {
-            sessionDur = totalHours - (3 * (i - 1));
-            sessionDur = Math.round(sessionDur * 10) / 10;
-        }
+        // Set Duration
         viewDiv.querySelector('.inp-session-hours').value = sessionDur;
 
         viewContainer.appendChild(viewDiv);
@@ -342,11 +345,19 @@ function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
     const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
     const rowHours = data.hours || sessionHours;
     
-    // Store incentives in a data attribute on the button for easy access
-    // If loading from save, data.incentives is an array of strings ["incentive 1", ...]
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `${currentIncentives.length} Selected` : 'Select...';
+
+    // Calculate Player Number based on existing Header Rows
+    const playerNum = tbody.querySelectorAll('.player-header-row').length + 1;
+
+    // --- ROW 0: HEADER (Visual Separation) ---
+    const trHead = document.createElement('tr');
+    trHead.className = 'player-header-row';
+    trHead.innerHTML = `
+        <td colspan="9">Player ${playerNum}</td>
+    `;
 
     // --- ROW 1: STATS ---
     const tr1 = document.createElement('tr');
@@ -362,58 +373,69 @@ function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
         <td>
             <button class="button button-secondary btn-sm s-incentives-btn" 
                     data-incentives='${incentivesJson}' 
-                    style="width:100%;">${btnText}</button>
+                    style="width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    ${btnText}
+            </button>
         </td>
         <td style="text-align:center;">
              <button class="button button-danger btn-sm btn-delete-row">&times;</button>
         </td>
     `;
 
-    // --- ROW 2: LOOT (Left Aligned, Full Width) ---
+    // --- ROW 2: LOOT ---
     const tr2 = document.createElement('tr');
     tr2.className = 'player-row-loot';
     tr2.innerHTML = `
-        <td colspan="4" style="padding-right: 10px;">
-            <input type="text" class="table-input s-loot" placeholder="Loot Rewarded" value="${data.loot || ''}">
+        <td colspan="4" style="padding-right: 15px;">
+            <label style="font-size:0.75em; color:var(--color-text-secondary); text-transform:uppercase;">Loot Rewarded</label>
+            <input type="text" class="table-input s-loot" placeholder="Gold, items, etc." value="${data.loot || ''}">
         </td>
         <td colspan="5">
-            <input type="text" class="table-input s-items" placeholder="Items Used" value="${data.items_used || ''}">
+            <label style="font-size:0.75em; color:var(--color-text-secondary); text-transform:uppercase;">Items Used</label>
+            <input type="text" class="table-input s-items" placeholder="Consumables, etc." value="${data.items_used || ''}">
         </td>
     `;
 
-    // --- ROW 3: NOTES (Left Aligned, Full Width) ---
+    // --- ROW 3: NOTES ---
     const tr3 = document.createElement('tr');
     tr3.className = 'player-row-notes';
     tr3.innerHTML = `
         <td colspan="9">
-            <input type="text" class="table-input s-notes" placeholder="Notes" value="${data.notes || ''}">
+            <input type="text" class="table-input s-notes" placeholder="Private Notes / Session Comments" value="${data.notes || ''}">
         </td>
     `;
 
     // --- LISTENERS ---
-    
-    // Delete
     tr1.querySelector('.btn-delete-row').addEventListener('click', () => {
+        trHead.remove();
         tr1.remove();
         tr2.remove();
         tr3.remove();
+        // Renumber remaining players (Optional, but good UX)
+        renumberPlayers(tbody);
     });
 
-    // Recalc XP/DTP
     tr1.querySelector('.s-level').addEventListener('input', () => recalculateSessionXP(viewContext));
     tr1.querySelector('.s-hours').addEventListener('input', () => recalculateSessionXP(viewContext));
     
-    // Incentives Modal Trigger
     const btnIncentives = tr1.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
         openIncentivesModal(btnIncentives, viewContext);
     });
 
+    tbody.appendChild(trHead);
     tbody.appendChild(tr1);
     tbody.appendChild(tr2);
     tbody.appendChild(tr3);
     
     if (viewContext && data.level) recalculateSessionXP(viewContext);
+}
+
+function renumberPlayers(tbody) {
+    const headers = tbody.querySelectorAll('.player-header-row td');
+    headers.forEach((td, index) => {
+        td.textContent = `Player ${index + 1}`;
+    });
 }
 
 function getSessionRosterData(viewElement) {
@@ -423,7 +445,6 @@ function getSessionRosterData(viewElement) {
         const row2 = row.nextElementSibling;
         const row3 = row2.nextElementSibling;
 
-        // Retrieve incentives from button data attribute
         const btn = row.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
 
@@ -456,10 +477,9 @@ function recalculateSessionXP(viewElement) {
 
         const xp = calculateXP(lvl, playerHours, cachedGameRules);
         
-        // --- DTP CALCULATION ---
+        // DTP = floor(5 * hours) + incentives
         let dtp = Math.floor(5 * playerHours);
         
-        // Add Incentives from button data
         const btn = row.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
         
@@ -504,12 +524,10 @@ function openIncentivesModal(buttonEl, viewContext) {
 
     const modal = document.getElementById('modal-incentives');
     const listContainer = document.getElementById('incentives-list');
-    listContainer.innerHTML = ''; // Clear previous
+    listContainer.innerHTML = ''; 
 
-    // Get current selection
     const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
 
-    // Populate checkboxes from rules
     if (cachedGameRules && cachedGameRules['player incentives']) {
         for (const [name, val] of Object.entries(cachedGameRules['player incentives'])) {
             const label = document.createElement('label');
@@ -539,12 +557,10 @@ function saveIncentivesFromModal() {
     const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
     const selected = Array.from(checkboxes).map(cb => cb.value);
 
-    // Update Button Data & Text
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
     btn.innerText = selected.length > 0 ? `${selected.length} Selected` : 'Select...';
 
-    // Recalculate DTP
     recalculateSessionXP(activeIncentiveRowData.viewContext);
 
     activeIncentiveRowData = null;
@@ -552,9 +568,8 @@ function saveIncentivesFromModal() {
 }
 
 // ==========================================
-// 6. Standard Utils (Date, Roster, Template)
+// 6. Standard Utils
 // ==========================================
-// (Standard utilities unchanged - same as previous version)
 
 function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
@@ -845,11 +860,32 @@ function populateForm(session) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
+    // CALCULATE AND SET TOTAL HOURS BEFORE CREATING VIEWS
+    // This ensures that when updateSessionNavAndViews runs, it uses the correct total
+    // to calculate the final session length (e.g. 4.5) instead of defaulting.
+    let totalLoadedHours = 0;
+    let savedSessionCount = 0;
+    
+    if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
+        savedSessionCount = session.form_data.sessions.length;
+        // Sum up the actual hours saved in each session
+        totalLoadedHours = session.form_data.sessions.reduce((acc, s) => acc + (parseFloat(s.hours) || 0), 0);
+    }
+
+    // Set the Header Input
+    const headerHoursInput = document.getElementById('header-hours');
+    if(headerHoursInput) {
+        headerHoursInput.value = totalLoadedHours;
+        // Update the display count too
+        const sessionDisplay = document.getElementById('header-session-count');
+        if(sessionDisplay) sessionDisplay.textContent = savedSessionCount;
+    }
+
     if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
         const count = session.form_data.sessions.length;
-        const totalHours = parseFloat(document.getElementById('header-hours').value) || (count * 3); 
         
-        updateSessionNavAndViews(count, totalHours);
+        // Pass the calculated total loaded hours here
+        updateSessionNavAndViews(count, totalLoadedHours);
 
         session.form_data.sessions.forEach((sData, i) => {
             const index = i + 1;
@@ -857,6 +893,8 @@ function populateForm(session) {
             if(!view) return;
 
             view.querySelector('.inp-session-title').value = sData.title;
+            
+            // Respect saved hours explicitly (though updateSessionNavAndViews should have set it correctly via total)
             view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
             
@@ -925,8 +963,7 @@ ${data.game_description || 'N/A'}
 - **Environment Hazard Level:** N/A
 **Lobby:** ${data.lobby_url || 'N/A'}
 **Platform:** ${data.platform || 'N/A'}
-**Duration:** ${data.intended_duration || 'N/A'}
-**House Rules:**
+**Duration:** ${data.intended_duration || 'N/A'}\r\n**House Rules:**
 ${data.house_rules || 'N/A'}
 **Notes:**
 ${data.notes || 'N/A'}
