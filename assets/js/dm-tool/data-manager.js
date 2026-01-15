@@ -56,17 +56,13 @@ export async function fetchActiveEvents() {
    2. DASHBOARD OPERATIONS
    ========================================= */
 
-/* =========================================
-   2. DASHBOARD OPERATIONS
-   ========================================= */
-
 export async function fetchSessionList(userId) {
     try {
         const { data, error } = await supabase
             .from('session_logs')
             .select('id, title, session_date, is_template, updated_at')
             .eq('user_id', userId)
-            .eq('is_template', false) // Added filter to show only active sessions
+            .eq('is_template', false) 
             .order('session_date', { ascending: false, nullsFirst: false });
 
         if (error) throw error;
@@ -115,7 +111,7 @@ export async function createSession(userId, title, isTemplate = false) {
                     header: {
                         intended_duration: "3-4 Hours",
                         party_size: "5",
-                        event_tags: [] // Initialize array for multi-select
+                        event_tags: [] 
                     },
                     sessions: [] 
                 } 

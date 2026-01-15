@@ -713,3 +713,119 @@ dialog::backdrop {
     background: transparent !important;
     color: var(--color-text-secondary);
 }
+
+/* ============================
+   ACCORDION STYLES (NEW)
+   ============================ */
+.accordion-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.accordion-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-light);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0; /* Override generic card margin */
+}
+
+.accordion-card.completed {
+    border-color: var(--color-alert-success-border);
+}
+
+.accordion-header {
+    padding: 1rem 1.5rem;
+    background: var(--color-bg-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.accordion-header:hover {
+    background: var(--color-bg-hover-light);
+}
+
+/* Header Text Styles */
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--color-neutral-gray-400, #999);
+    color: #fff;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: background 0.3s;
+}
+
+.open .step-number {
+    background: var(--color-primary);
+}
+
+.completed .step-number {
+    background: var(--color-alert-success-border);
+    content: "✓"; /* Note: content replacement needs span tweaking or pseudo el */
+}
+
+.step-title {
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-text);
+    flex: 1;
+}
+
+.step-status {
+    font-size: 1.5rem;
+    color: var(--color-text-secondary);
+}
+
+/* Accordion Body Transition */
+.accordion-body {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 1.5rem;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+/* Open State */
+.accordion-card.open .accordion-body {
+    max-height: 2000px; /* Arbitrary large number for CSS transition */
+    opacity: 1;
+    padding: 1.5rem;
+    border-top: 1px solid var(--color-border);
+}
+
+/* Completed Indicator (Green Checkmark logic can be handled via CSS or JS icon replacement) */
+.accordion-card.completed .accordion-header::after {
+    content: "✓";
+    font-weight: bold;
+    color: var(--color-alert-success-border);
+    font-size: 1.2rem;
+}
+
+/* Required Field Indicator */
+.req {
+    color: var(--palette-alert-danger-action);
+    margin-left: 2px;
+}
+
+/* Hide Old Horizontal Tabs */
+.content-tabs {
+    display: none !important;
+}
+
+/* Ensure Output Textareas are editable now */
+.out-session-text {
+    pointer-events: auto !important;
+    background: #36393f !important; /* Keep Discord Look */
+}
