@@ -18,10 +18,12 @@ export function addPlayerRowToMaster(data = {}) {
     }
     gamesOptions += `<option value="10+" ${data.games_count === '10+' ? 'selected' : ''}>10+</option>`;
     
+    // UPDATED: Added inp-level-play-as column
     tr.innerHTML = `
         <td><input type="text" class="table-input inp-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}"></td>
         <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
         <td><input type="number" class="table-input inp-level" placeholder="Lvl" value="${data.level || ''}"></td>
+        <td><input type="number" class="table-input inp-level-play-as" placeholder="Lvl" value="${data.level_playing_as || ''}"></td>
         <td><select class="table-input inp-games-count">${gamesOptions}</select></td>
         <td style="text-align:center;"><button class="button button-danger btn-sm btn-delete-row">&times;</button></td>
     `;
@@ -38,6 +40,7 @@ export function getMasterRosterData() {
             discord_id: row.querySelector('.inp-discord-id').value,
             character_name: row.querySelector('.inp-char-name').value,
             level: row.querySelector('.inp-level').value,
+            level_playing_as: row.querySelector('.inp-level-play-as').value, // Captured new field
             games_count: row.querySelector('.inp-games-count').value
         });
     });

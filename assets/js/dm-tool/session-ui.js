@@ -126,6 +126,8 @@ export function initTabs(outputCallback) {
             const targetEl = document.getElementById(targetId);
             if(targetEl) {
                 targetEl.classList.remove('hidden-section');
+                // FIXED: Added view-game-listing to trigger output generation on click
+                if(targetId === 'view-game-listing' && outputCallback) outputCallback();
                 if(targetId === 'view-game-ad' && outputCallback) outputCallback();
                 if(targetId === 'view-session-output' && outputCallback) outputCallback();
             }

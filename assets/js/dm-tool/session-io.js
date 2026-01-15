@@ -205,6 +205,7 @@ export function generateOutput() {
 **Name:** ${name}
 **Description:**
 ${data.game_description || 'N/A'}
+
 **Version:** ${data.game_version || 'N/A'}
 **Format:** ${data.game_type || 'N/A'}
 **Tier and APL:** ${data.tier || 'N/A'} (${data.apl || 'N/A'})
@@ -236,7 +237,7 @@ ${data.how_to_apply || 'Post your application below.'}`;
     const outListing = document.getElementById('out-listing-text');
     if(outListing) outListing.value = listingText;
     
-    const adText = `> **Name:** ${name}
+    const adText = `**Game Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
 **Tier and APL:** ${data.tier || 'N/A'} , APL ${data.apl || 'N/A'}
 **Start Time and Duration:** ${timeString} (${data.intended_duration || 'N/A'})
