@@ -159,7 +159,7 @@ extra_css:
             <div class="view-section session-view hidden-section" data-session-index="">
                 <h2 class="session-header-title">Session <span class="lbl-session-num"></span> Log</h2>
                 
-                <div class="form-grid">
+                <div class="form-grid" style="margin-bottom: 2rem;">
                     <div class="form-row-full">
                         <div class="form-group flex-grow">
                             <label>Session Title</label>
@@ -178,30 +178,30 @@ extra_css:
                             <input type="hidden" class="inp-session-unix">
                         </div>
                     </div>
-
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
-                            <label style="margin:0;">Player Logs</label>
-                            <div>
-                                <button class="button button-secondary btn-sm btn-sync-players" title="Reset using previous session data">
-                                    ↻ Reset Roster
-                                </button>
-                                <button class="button btn-sm btn-add-session-player">+ Add Player</button>
-                            </div>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+                        <label style="font-weight:bold; font-size:1.1em;">Player Logs</label>
+                        <div>
+                            <button class="button button-secondary btn-sm btn-sync-players" title="Reset using previous session data">
+                                ↻ Reset Roster
+                            </button>
+                            <button class="button btn-sm btn-add-session-player">+ Add Player</button>
                         </div>
-                        
+                    </div>
+                    
+                    <div style="overflow-x: auto; padding: 5px;"> 
                         <table class="session-player-table">
                             </table>
                     </div>
+                </div>
 
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Session Summary / Notes</label>
-                        <textarea class="inp-session-notes table-input" rows="3"></textarea>
-                    </div>
+                <div style="margin-bottom: 2rem;">
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:bold;">Session Summary / Notes</label>
+                    <textarea class="inp-session-notes table-input" rows="3"></textarea>
                 </div>
                 
-                <div class="content-tabs" style="margin-top: 2rem;">
+                <div class="content-tabs">
                     <div class="content-tab active">Session Output (Pending)</div>
                 </div>
             </div>

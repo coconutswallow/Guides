@@ -359,7 +359,6 @@ body {
     border: 1px solid var(--color-border);
     border-radius: 8px;
     position: relative;
-    /* Clip corners so the header row respects radius */
     overflow: hidden; 
 }
 
@@ -387,7 +386,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    width: 100%;
+    width: 100%; /* Force inputs to fill column */
 }
 
 /* The Label Above the Field */
@@ -409,13 +408,19 @@ body {
     font-family: inherit;
     font-size: 0.95rem;
     transition: all 0.2s;
-    box-sizing: border-box; /* Ensure padding doesn't overflow width */
+    box-sizing: border-box; 
 }
 
 .table-input:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px var(--shadow-color-light);
     outline: none;
+}
+
+.readonly-input {
+    background-color: var(--color-bg-medium);
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
 }
 
 /* Read-only inputs (Calculated) */
