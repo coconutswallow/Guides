@@ -1,10 +1,50 @@
 // assets/js/dm-tool/session-ui.js
-import { toUnixTimestamp } from './calculators.js';
 
 let activeIncentiveRowData = null;
 
 /* ===========================
-   1. ACCORDION & VALIDATION
+   1. UTILITIES
+   =========================== */
+
+/**
+ * Converts a datetime string and timezone to a Unix timestamp.
+ * Moved from calculators.js
+ */
+export function toUnixTimestamp(dateStr, timeZone) {
+    if (!dateStr) return 0;
+    // If no timezone provided, assume local or UTC based on browser handling, 
+    // but usually we want specific timezone handling.
+    if (!timeZone) return Math.floor(new Date(dateStr).getTime() / 1000);
+
+    // Append 'Z' to treat the input as UTC-relative base for calculation
+    const utcDate = new Date(dateStr + 'Z');
+    
+    // Use Intl to extract the specific offset for the target timezone
+    const fmt = new Intl.DateTimeFormat('en-US', {
+        timeZone: timeZone,
+        timeZoneName: 'longOffset'
+    });
+    
+    const parts = fmt.formatToParts(utcDate);
+    const offsetStr = parts.find(p => p.type === 'timeZoneName').value; 
+
+    // Handle GMT edge case
+    if (offsetStr === 'GMT') return Math.floor(utcDate.getTime() / 1000);
+
+    // Parse offset string (e.g., GMT-05:00)
+    const match = offsetStr.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
+    if (!match) return Math.floor(utcDate.getTime() / 1000); 
+
+    const sign = match[1] === '+' ? 1 : -1;
+    const hours = parseInt(match[2], 10);
+    const minutes = parseInt(match[3] || '0', 10);
+    const offsetMs = (hours * 60 + minutes) * 60 * 1000 * sign;
+
+    return Math.floor((utcDate.getTime() - offsetMs) / 1000);
+}
+
+/* ===========================
+   2. ACCORDION & VALIDATION
    =========================== */
 export function initAccordions() {
     const headers = document.querySelectorAll('.accordion-header');
@@ -12,40 +52,22 @@ export function initAccordions() {
         header.addEventListener('click', (e) => {
             const card = header.closest('.accordion-card');
             const isOpen = card.classList.contains('open');
-            
-            // Allow multiple open or just toggle current
-            if(isOpen) card.classList.remove('open');
-            else card.classList.add('open');
+            if(isOpen) {
+                card.classList.remove('open');
+            } else {
+                card.classList.add('open');
+            }
         });
     });
 
-    // 1. Standard Input Listeners
     const inputs = document.querySelectorAll('[data-required="true"]');
     inputs.forEach(input => {
         const handler = () => validateCard(input.closest('.accordion-card'));
         input.addEventListener('input', handler);
         input.addEventListener('change', handler);
-        input.addEventListener('blur', handler);
     });
     
-    // 2. Initial Validation
     document.querySelectorAll('.accordion-card').forEach(validateCard);
-
-    // 3. Polling for Markdown Hidden Inputs
-    // Since we don't control the markdown editor's events, we poll the hidden inputs
-    // that have the class .md-trigger for value changes.
-    setInterval(() => {
-        const mdInputs = document.querySelectorAll('.md-trigger');
-        let needsValidation = false;
-        mdInputs.forEach(input => {
-            const oldVal = input.dataset.lastVal || "";
-            const newVal = input.value;
-            if(oldVal !== newVal) {
-                input.dataset.lastVal = newVal;
-                validateCard(input.closest('.accordion-card'));
-            }
-        });
-    }, 1000); 
 }
 
 function validateCard(card) {
@@ -68,7 +90,7 @@ function validateCard(card) {
 }
 
 /* ===========================
-   2. TABS & VISIBILITY
+   3. TABS & VISIBILITY
    =========================== */
 export function initTabs(outputCallback) {
     const sidebarNav = document.getElementById('sidebar-nav');
@@ -77,21 +99,16 @@ export function initTabs(outputCallback) {
             const item = e.target.closest('.nav-item');
             if (!item) return;
 
-            // Handle Active State
             document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
             item.classList.add('active');
 
-            // Hide all Sections
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
 
-            // Show Target Section
             const targetId = item.dataset.target;
             const targetEl = document.getElementById(targetId);
             if(targetEl) {
                 targetEl.classList.remove('hidden-section');
-                
-                // Trigger output gen if going to Listing or Ad view
-                if((targetId === 'view-game-listing-output' || targetId === 'view-game-ad') && outputCallback) {
+                if(targetId === 'view-game-ad' && outputCallback) {
                     outputCallback();
                 }
             }
@@ -100,7 +117,7 @@ export function initTabs(outputCallback) {
 }
 
 /* ===========================
-   3. DATE & TIME (Keep Existing)
+   4. DATE & TIME
    =========================== */
 export function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
@@ -113,8 +130,6 @@ export function initDateTimeConverter() {
         const dateVal = dateInput.value;
         const tzVal = tzSelect.value;
         if(unixInput) unixInput.value = toUnixTimestamp(dateVal, tzVal);
-        
-        // Trigger validation if inside accordion
         if(dateInput.dataset.required) dateInput.dispatchEvent(new Event('change'));
     };
     
@@ -160,7 +175,7 @@ export function unixToLocalIso(unixSeconds, timeZone) {
 }
 
 /* ===========================
-   4. DROPDOWNS (Keep Existing)
+   5. DROPDOWNS
    =========================== */
 export function fillDropdown(id, options) {
     const select = document.getElementById(id);
@@ -175,7 +190,7 @@ export function fillDropdown(id, options) {
 }
 
 /* ===========================
-   5. INCENTIVES MODAL (Keep Existing)
+   6. INCENTIVES MODAL
    =========================== */
 export function initIncentivesModal(saveCallback) {
     const modal = document.getElementById('modal-incentives');
