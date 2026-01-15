@@ -1,7 +1,7 @@
 ---
 layout: default
 title: DM Tool | Session Editor
-background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
+background_image: /assets/images/still-life-objects-with-role-playing-game-sheet.jpg
 extra_css: 
   - /assets/css/dm-tool.css
 ---
@@ -58,27 +58,21 @@ extra_css:
                     </div>
 
                     <h3 class="form-section-title">Logistics</h3>
-                    <div class="form-row-full">
-                        <div class="form-group flex-grow">
-                            <label>Start Date & Time</label>
-                            <input type="datetime-local" id="inp-start-datetime">
-                            <input type="hidden" id="inp-unix-time">
-                        </div>
-                        <div class="form-group" style="width: 250px;">
-                            <label>Timezone</label>
-                            <select id="inp-timezone"></select>
-                        </div>
+                    <div class="form-row-full" style="display: flex; gap: 1rem; align-items: flex-end;">
+                    <div class="form-group" style="flex: 2;">
+                        <label>Start Date & Time</label>
+                        <input type="datetime-local" id="inp-start-datetime">
+                        <input type="hidden" id="inp-unix-time">
                     </div>
-                    <div class="form-row-full">
-                        <div class="form-group">
-                            <label>Intended Duration</label>
-                            <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 Hours">
-                        </div>
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label>Timezone</label>
+                        <select id="inp-timezone"></select>
                     </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Game Description</label>
-                        {% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label>Intended Duration</label>
+                        <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 Hours">
                     </div>
+                </div>
                     <h3 class="form-section-title">Game Settings</h3>
                     <div class="form-group"><label>Game Format</label><select id="inp-format"><option value="">Loading...</option></select></div>
                     <div class="form-group"><label>Game Version</label><select id="inp-version"><option value="">Loading...</option></select></div>
