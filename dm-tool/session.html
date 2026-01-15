@@ -179,9 +179,9 @@ extra_css:
                         </div>
                     </div>
 
-                    <div class="form-group" style="grid-column: 1 / -1; background: var(--color-bg-light); padding: 1rem; border: 1px solid var(--color-border); border-radius: 4px;">
+                    <div class="form-group" style="grid-column: 1 / -1;">
                         
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
                             <label style="margin:0;">Player Logs</label>
                             <div>
                                 <button class="button button-secondary btn-sm btn-sync-players" title="Reset using previous session data">
@@ -191,24 +191,20 @@ extra_css:
                             </div>
                         </div>
                         
-                        <div style="overflow-x: auto;">
-                            <table class="roster-table session-player-table" style="width:100%; min-width: 900px;">
+                        <div style="overflow-x: auto; padding: 5px;"> 
+                            <table class="session-player-table">
                                 <thead>
-                                    <tr style="border-bottom: 2px solid var(--color-text);">
-                                        <th style="width: 15%;">Discord ID</th>
-                                        <th style="width: 15%;">Character</th>
-                                        <th style="width: 5%;">Lvl</th>
-                                        <th style="width: 5%;">Games</th>
-                                        <th style="width: 7%;">Hrs</th>
-                                        <th style="width: 7%;">XP</th>
-                                        <th style="width: 7%;">DTP</th>
-                                        <th style="width: 15%;">Incentives</th>
-                                        <th style="width: 5%;"></th>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-identity">Identity</th>
+                                        <th class="col-stats">Lvl / Games</th>
+                                        <th class="col-hours">Hours</th>
+                                        <th class="col-results">XP / DTP</th>
+                                        <th class="col-identity">Incentives</th>
+                                        <th class="col-actions"></th>
                                     </tr>
                                 </thead>
-                                <tbody class="session-roster-body">
-                                    </tbody>
-                            </table>
+                                </table>
                         </div>
                     </div>
 

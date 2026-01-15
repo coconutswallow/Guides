@@ -186,7 +186,6 @@ function updateSessionNavAndViews(count, totalHours) {
 
     // 1. Loop desired count
     for (let i = 1; i <= count; i++) {
-        // Calculate the target duration for this session
         let sessionDur = 3.0;
         if (i === count) {
             sessionDur = totalHours - (3 * (i - 1));
@@ -198,13 +197,15 @@ function updateSessionNavAndViews(count, totalHours) {
             const existingView = document.getElementById(`view-session-${i}`);
             const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
             
-            // If duration changed (because Total Hours changed), update the input AND all players
+            // Auto-update duration for players if the global duration changed
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
                 
-                // FORCE UPDATE ALL PLAYERS IN THIS SESSION
-                existingView.querySelectorAll('.player-row-main .s-hours').forEach(pInput => {
-                    pInput.value = sessionDur;
+                existingView.querySelectorAll('.session-roster-body').forEach(tbody => {
+                    const hInput = tbody.querySelector('.s-hours');
+                    if(hInput) {
+                        hInput.value = sessionDur;
+                    }
                 });
                 
                 recalculateSessionXP(existingView);
@@ -231,11 +232,9 @@ function updateSessionNavAndViews(count, totalHours) {
         viewDiv.dataset.sessionIndex = i;
         viewDiv.querySelector('.lbl-session-num').textContent = i;
         
-        // Default Data
         const gameName = document.getElementById('header-game-name').value || "Game";
         viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
         
-        // Set Duration
         viewDiv.querySelector('.inp-session-hours').value = sessionDur;
 
         viewContainer.appendChild(viewDiv);
@@ -264,9 +263,6 @@ function updateSessionNavAndViews(count, totalHours) {
     }
 }
 
-/**
- * Initialize listeners for a specific Session View
- */
 function initSessionViewLogic(viewElement, index) {
     const dateInput = viewElement.querySelector('.inp-session-date');
     const unixInput = viewElement.querySelector('.inp-session-unix');
@@ -291,17 +287,18 @@ function initSessionViewLogic(viewElement, index) {
 
     const btnAdd = viewElement.querySelector('.btn-add-session-player');
     btnAdd.addEventListener('click', () => {
-        addSessionPlayerRow(viewElement.querySelector('.session-roster-body'), {}, index, viewElement);
+        addSessionPlayerRow(viewElement.querySelector('.session-player-table'), {}, index, viewElement);
     });
 }
 
 // ==========================================
-// 4. Session Player Logic
+// 4. Session Player Logic (Card-List Layout)
 // ==========================================
 
 function syncSessionPlayers(viewElement, sessionIndex) {
-    const tbody = viewElement.querySelector('.session-roster-body');
-    tbody.innerHTML = ''; 
+    const table = viewElement.querySelector('.session-player-table');
+    // Clear all player cards (tbodies)
+    table.querySelectorAll('.session-roster-body').forEach(b => b.remove());
 
     let sourceData = [];
 
@@ -333,133 +330,141 @@ function syncSessionPlayers(viewElement, sessionIndex) {
             level: p.level,
             games_count: nextGames,
             loot: "",
+            items_used: "",
             notes: ""
         };
-        addSessionPlayerRow(tbody, newRowData, sessionIndex, viewElement);
+        addSessionPlayerRow(table, newRowData, sessionIndex, viewElement);
     });
     
     recalculateSessionXP(viewElement);
 }
 
-function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
+/**
+ * Creates a "Player Card" (TBODY) containing 2 rows
+ */
+function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext) {
+    // Note: tableElement IS the <table class="session-player-table">
+    
     const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
     const rowHours = data.hours || sessionHours;
     
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);
-    const btnText = currentIncentives.length > 0 ? `${currentIncentives.length} Selected` : 'Select...';
+    const btnText = currentIncentives.length > 0 ? `${currentIncentives.length} Active` : 'Select...';
 
-    // Calculate Player Number based on existing Header Rows
-    const playerNum = tbody.querySelectorAll('.player-header-row').length + 1;
+    // Calculate Player Number based on existing tbodies
+    const playerNum = tableElement.querySelectorAll('.session-roster-body').length + 1;
 
-    // --- ROW 0: HEADER (Visual Separation) ---
-    const trHead = document.createElement('tr');
-    trHead.className = 'player-header-row';
-    trHead.innerHTML = `
-        <td colspan="9">Player ${playerNum}</td>
-    `;
+    // Create the Card (TBODY)
+    const tbody = document.createElement('tbody');
+    tbody.className = 'session-roster-body';
 
-    // --- ROW 1: STATS ---
-    const tr1 = document.createElement('tr');
-    tr1.className = 'player-row-main';
-    tr1.innerHTML = `
-        <td><input type="text" class="table-input s-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}"></td>
-        <td><input type="text" class="table-input s-char-name" placeholder="Character" value="${data.character_name || ''}"></td>
-        <td><input type="number" class="table-input s-level" value="${data.level || ''}" style="width:50px;"></td>
-        <td><input type="text" class="table-input s-games" value="${data.games_count || ''}" style="width:50px;"></td>
-        <td><input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" style="width:60px;"></td>
-        <td><input type="text" class="table-input s-xp" readonly placeholder="XP" style="width:60px;"></td>
-        <td><input type="text" class="table-input s-dtp" readonly placeholder="DTP" style="width:60px;"></td>
-        <td>
-            <button class="button button-secondary btn-sm s-incentives-btn" 
+    tbody.innerHTML = `
+        <tr class="player-row-main">
+            <td class="col-num">${playerNum}</td>
+            
+            <td class="col-identity">
+                <input type="text" class="table-input s-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}" style="margin-bottom: 4px; font-weight:bold;">
+                <input type="text" class="table-input s-char-name" placeholder="Character Name" value="${data.character_name || ''}">
+            </td>
+            
+            <td class="col-stats">
+                <input type="number" class="table-input s-level" value="${data.level || ''}" placeholder="Lvl" title="Level" style="margin-bottom: 4px;">
+                <input type="text" class="table-input s-games" value="${data.games_count || ''}" placeholder="Gms" title="Games Played">
+            </td>
+            
+            <td class="col-hours">
+                <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" style="font-size: 1.1em; text-align: center;">
+            </td>
+            
+            <td class="col-results">
+                <input type="text" class="table-input readonly-result s-xp" readonly placeholder="XP" title="XP Earned" style="margin-bottom: 4px;">
+                <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" title="DTP Earned">
+            </td>
+            
+            <td class="col-identity">
+                 <button class="button button-secondary btn-sm s-incentives-btn" 
                     data-incentives='${incentivesJson}' 
-                    style="width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    ${btnText}
-            </button>
-        </td>
-        <td style="text-align:center;">
-             <button class="button button-danger btn-sm btn-delete-row">&times;</button>
-        </td>
-    `;
+                    style="width:100%; text-align:left;">${btnText}</button>
+            </td>
+            
+            <td class="col-actions">
+                 <button class="button button-danger btn-sm btn-delete-row" title="Remove Player">&times;</button>
+            </td>
+        </tr>
 
-    // --- ROW 2: LOOT ---
-    const tr2 = document.createElement('tr');
-    tr2.className = 'player-row-loot';
-    tr2.innerHTML = `
-        <td colspan="4" style="padding-right: 15px;">
-            <label style="font-size:0.75em; color:var(--color-text-secondary); text-transform:uppercase;">Loot Rewarded</label>
-            <input type="text" class="table-input s-loot" placeholder="Gold, items, etc." value="${data.loot || ''}">
-        </td>
-        <td colspan="5">
-            <label style="font-size:0.75em; color:var(--color-text-secondary); text-transform:uppercase;">Items Used</label>
-            <input type="text" class="table-input s-items" placeholder="Consumables, etc." value="${data.items_used || ''}">
-        </td>
-    `;
+        <tr class="row-separator">
+            <td></td> <td colspan="3">
+                <label class="field-label">Rewards & Items</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" class="table-input s-loot" placeholder="Gold / Loot" value="${data.loot || ''}" style="flex:1;">
+                    <input type="text" class="table-input s-items" placeholder="Items Used" value="${data.items_used || ''}" style="flex:1;">
+                </div>
+            </td>
 
-    // --- ROW 3: NOTES ---
-    const tr3 = document.createElement('tr');
-    tr3.className = 'player-row-notes';
-    tr3.innerHTML = `
-        <td colspan="9">
-            <input type="text" class="table-input s-notes" placeholder="Private Notes / Session Comments" value="${data.notes || ''}">
-        </td>
+            <td colspan="3">
+                <label class="field-label">Notes</label>
+                <textarea class="table-input s-notes" rows="1" placeholder="Session notes..." style="resize: vertical;">${data.notes || ''}</textarea>
+            </td>
+        </tr>
     `;
 
     // --- LISTENERS ---
-    tr1.querySelector('.btn-delete-row').addEventListener('click', () => {
-        trHead.remove();
-        tr1.remove();
-        tr2.remove();
-        tr3.remove();
-        // Renumber remaining players
-        renumberPlayers(tbody);
+    tbody.querySelector('.btn-delete-row').addEventListener('click', () => {
+        tbody.remove();
+        renumberPlayers(tableElement);
     });
 
-    tr1.querySelector('.s-level').addEventListener('input', () => recalculateSessionXP(viewContext));
-    tr1.querySelector('.s-hours').addEventListener('input', () => recalculateSessionXP(viewContext));
+    tbody.querySelector('.s-level').addEventListener('input', () => recalculateSessionXP(viewContext));
+    tbody.querySelector('.s-hours').addEventListener('input', () => recalculateSessionXP(viewContext));
     
-    const btnIncentives = tr1.querySelector('.s-incentives-btn');
+    const btnIncentives = tbody.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
         openIncentivesModal(btnIncentives, viewContext);
     });
 
-    tbody.appendChild(trHead);
-    tbody.appendChild(tr1);
-    tbody.appendChild(tr2);
-    tbody.appendChild(tr3);
+    tableElement.appendChild(tbody);
     
     if (viewContext && data.level) recalculateSessionXP(viewContext);
 }
 
-function renumberPlayers(tbody) {
-    const headers = tbody.querySelectorAll('.player-header-row td');
-    headers.forEach((td, index) => {
-        td.textContent = `Player ${index + 1}`;
+function renumberPlayers(table) {
+    const nums = table.querySelectorAll('.col-num');
+    nums.forEach((td, index) => {
+        // Skip header row if it has class col-num (index 0 might be thead's th)
+        // But querySelectorAll includes th if class matches. 
+        // Our th has class="col-num" too.
+        // The header is index 0. Actual players are index 1+.
+        // Better: select only in bodies.
+    });
+    
+    // Select only cells inside tbodies
+    const playerNums = table.querySelectorAll('.session-roster-body .col-num');
+    playerNums.forEach((td, index) => {
+        td.textContent = index + 1;
     });
 }
 
 function getSessionRosterData(viewElement) {
-    const rows = viewElement.querySelectorAll('.player-row-main');
+    const bodies = viewElement.querySelectorAll('.session-roster-body');
     const players = [];
-    rows.forEach(row => {
-        const row2 = row.nextElementSibling;
-        const row3 = row2.nextElementSibling;
-
-        const btn = row.querySelector('.s-incentives-btn');
+    
+    bodies.forEach(body => {
+        const btn = body.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
 
         players.push({
-            discord_id: row.querySelector('.s-discord-id').value,
-            character_name: row.querySelector('.s-char-name').value,
-            level: row.querySelector('.s-level').value,
-            games_count: row.querySelector('.s-games').value,
-            hours: row.querySelector('.s-hours').value,
-            xp: row.querySelector('.s-xp').value,
-            dtp: row.querySelector('.s-dtp').value,
+            discord_id: body.querySelector('.s-discord-id').value,
+            character_name: body.querySelector('.s-char-name').value,
+            level: body.querySelector('.s-level').value,
+            games_count: body.querySelector('.s-games').value,
+            hours: body.querySelector('.s-hours').value,
+            xp: body.querySelector('.s-xp').value,
+            dtp: body.querySelector('.s-dtp').value,
             incentives: incentives,
-            loot: row2.querySelector('.s-loot').value,
-            items_used: row2.querySelector('.s-items').value,
-            notes: row3.querySelector('.s-notes').value
+            loot: body.querySelector('.s-loot').value,
+            items_used: body.querySelector('.s-items').value,
+            notes: body.querySelector('.s-notes').value
         });
     });
     return players;
@@ -468,19 +473,17 @@ function getSessionRosterData(viewElement) {
 function recalculateSessionXP(viewElement) {
     if (!cachedGameRules) return; 
     
-    viewElement.querySelectorAll('.player-row-main').forEach(row => {
-        const lvl = parseInt(row.querySelector('.s-level').value) || 0;
-        const playerHours = parseFloat(row.querySelector('.s-hours').value) || 0;
+    viewElement.querySelectorAll('.session-roster-body').forEach(body => {
+        const lvl = parseInt(body.querySelector('.s-level').value) || 0;
+        const playerHours = parseFloat(body.querySelector('.s-hours').value) || 0;
         
-        const xpInput = row.querySelector('.s-xp');
-        const dtpInput = row.querySelector('.s-dtp');
+        const xpInput = body.querySelector('.s-xp');
+        const dtpInput = body.querySelector('.s-dtp');
 
         const xp = calculateXP(lvl, playerHours, cachedGameRules);
-        
-        // DTP = floor(5 * hours) + incentives
         let dtp = Math.floor(5 * playerHours);
         
-        const btn = row.querySelector('.s-incentives-btn');
+        const btn = body.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
         
         if (cachedGameRules['player incentives']) {
@@ -559,7 +562,7 @@ function saveIncentivesFromModal() {
 
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
-    btn.innerText = selected.length > 0 ? `${selected.length} Selected` : 'Select...';
+    btn.innerText = selected.length > 0 ? `${selected.length} Active` : 'Select...';
 
     recalculateSessionXP(activeIncentiveRowData.viewContext);
 
@@ -889,6 +892,7 @@ function populateForm(session) {
             if(!view) return;
 
             view.querySelector('.inp-session-title').value = sData.title;
+            
             view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
             
@@ -898,10 +902,9 @@ function populateForm(session) {
                 view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
             }
 
-            const sTbody = view.querySelector('.session-roster-body');
-            sTbody.innerHTML = '';
+            const table = view.querySelector('.session-player-table');
             if(sData.players) {
-                sData.players.forEach(p => addSessionPlayerRow(sTbody, p, index, view));
+                sData.players.forEach(p => addSessionPlayerRow(table, p, index, view));
             }
         });
     }

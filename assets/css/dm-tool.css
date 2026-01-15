@@ -337,68 +337,101 @@ body {
 }
 
 /* ============================
-   6. PLAYER TABLE STYLES (NEW)
+   6. PLAYER CARD TABLE STYLES (NEW)
    ============================ */
+
+/* Remove standard table borders for the container */
+.session-player-table {
+    border-collapse: separate;
+    border-spacing: 0 1.5rem; /* Spacing between Player Cards */
+    width: 100%;
+}
+
+/* Treat each TBODY as a "Card" */
+.session-roster-body {
+    background: var(--color-bg-light);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border);
+    border-radius: 8px; /* Note: border-radius on tbody requires specific display in some browsers, but works well with shadow */
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.session-roster-body:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-color: var(--color-primary);
+}
+
+/* Inner Cell Styles */
+.session-roster-body td {
+    border: none; /* Remove default row borders */
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Column Widths & Typography */
+.col-num { width: 40px; font-weight: bold; color: var(--color-primary); text-align: center; font-size: 1.2em; vertical-align: top !important; padding-top: 1rem !important; }
+.col-identity { width: 25%; }
+.col-stats { width: 10%; }
+.col-hours { width: 10%; }
+.col-results { width: 10%; }
+.col-actions { width: 5%; }
+
+/* Input Styling - "Ghost" inputs */
 .table-input {
     width: 100%;
-    padding: 0.6rem;
-    border: 1px solid var(--color-border);
+    padding: 6px 8px;
+    border: 1px solid transparent; 
+    background: rgba(0,0,0,0.03); 
     border-radius: 4px;
     font-family: inherit;
-    background: var(--color-bg-light);
-    color: var(--color-text);
+    transition: all 0.2s;
 }
+
+.table-input:hover {
+    background: var(--color-bg-page);
+    border-color: var(--color-border);
+}
+
 .table-input:focus {
-    outline: none;
+    background: var(--color-bg-page);
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--shadow-color-light);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--shadow-color-light);
 }
+
 .readonly-input {
     background-color: var(--color-bg-medium);
     color: var(--color-text-secondary);
     cursor: not-allowed;
 }
 
-/* Player Row Grouping */
-.session-player-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-/* Header Row for Player (Player 1, Player 2...) */
-.player-header-row td {
-    background-color: var(--color-bg-medium);
-    color: var(--color-primary);
+/* Calculated Fields (XP/DTP) */
+.table-input.readonly-result {
+    background: transparent;
     font-weight: bold;
-    font-size: 0.85em;
+    color: var(--color-primary);
+    text-align: center;
+    border: none;
+}
+
+/* Row Separator Line (Dashed line inside the card) */
+.row-separator td {
+    border-top: 1px dashed var(--color-border) !important;
+    padding-top: 0.75rem !important;
+}
+
+/* Labels inside the card */
+.field-label {
+    display: block;
+    font-size: 0.7em;
     text-transform: uppercase;
-    padding: 4px 8px !important;
-    border-top: 4px solid var(--color-primary) !important; /* Strong divider */
-    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-weight: bold;
+    margin-bottom: 2px;
 }
 
-/* Main Stats Row */
-.player-row-main td {
-    border-top: none !important;
-    padding-top: 8px !important;
-    vertical-align: bottom;
-    padding-bottom: 4px !important;
-}
-
-/* Loot/Items Row */
-.player-row-loot td {
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-    border: none !important;
-}
-
-/* Notes Row */
-.player-row-notes td {
-    padding-bottom: 12px !important;
-    border: none !important;
-}
-
-/* Checkbox list in modal */
+/* Modal Checkbox List */
 .checkbox-list {
     display: flex;
     flex-direction: column;
