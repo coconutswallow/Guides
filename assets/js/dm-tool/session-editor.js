@@ -15,24 +15,25 @@ import {
     calculateXP 
 } from './calculators.js';
 
-let cachedGameRules = null; // Store rules globally for XP calc
+let cachedGameRules = null; 
+// State for the incentives modal
+let activeIncentiveRowData = null; // { button: element, incentives: [], viewContext: element }
 
 // ==========================================
 // 1. Initialization
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Fetch rules immediately for XP calculations
     cachedGameRules = await fetchGameRules();
 
     initTabs();
     initTimezone();
     initHoursLogic();
-    initDateTimeConverter(); // Global header converter
+    initDateTimeConverter(); 
     initTemplateLogic();
-    initPlayerRoster(); // Master Roster logic
+    initPlayerRoster(); 
+    initIncentivesModal(); // New
     
-    // Load dropdowns
     await initDynamicDropdowns(); 
     await initEventsDropdown(); 
     await initTemplateDropdown(); 
@@ -43,8 +44,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (sessionId) {
         await loadSessionData(sessionId);
     } else {
-        // Force initial update. If default is 0, this sets count to 0 (no tabs).
-        // If user enters 13.5, it triggers logic.
         const hoursInput = document.getElementById('header-hours');
         if(hoursInput) {
             hoursInput.dispatchEvent(new Event('input')); 
@@ -173,11 +172,10 @@ function initHoursLogic() {
     };
 
     hoursInput.addEventListener('input', updateDisplay);
-    // Note: Do not call updateDisplay() here, let the main init handle it
 }
 
 /**
- * Core Logic: Creates Sidebar links AND Session Views (DOM)
+ * Core Logic: Creates Sidebar links AND Session Views
  */
 function updateSessionNavAndViews(count, totalHours) {
     const navContainer = document.getElementById('dynamic-session-nav');
@@ -190,16 +188,19 @@ function updateSessionNavAndViews(count, totalHours) {
     for (let i = 1; i <= count; i++) {
         // Prevent duplicate creation
         if (document.getElementById(`view-session-${i}`)) {
-            // Update duration if it changed (e.g. from 3.0 to 4.5)
-            // But strict rule: only LAST session changes. 
-            // We'll update the value just in case.
+            // Update duration if needed
             const existingView = document.getElementById(`view-session-${i}`);
             let sessionDur = 3.0;
             if (i === count) {
                 sessionDur = totalHours - (3 * (i - 1));
                 sessionDur = Math.round(sessionDur * 10) / 10;
             }
-            existingView.querySelector('.inp-session-hours').value = sessionDur;
+            // Only update if changed to avoid overwriting user edits if we allowed them
+            const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
+            if (currentVal !== sessionDur) {
+                existingView.querySelector('.inp-session-hours').value = sessionDur;
+                recalculateSessionXP(existingView);
+            }
             continue; 
         }
 
@@ -213,7 +214,7 @@ function updateSessionNavAndViews(count, totalHours) {
         div.id = `nav-link-session-${i}`;
         navContainer.appendChild(div);
 
-        // View DOM (Clone Template)
+        // View DOM
         const tmpl = document.getElementById('tpl-session-view');
         const clone = tmpl.content.cloneNode(true);
         const viewDiv = clone.querySelector('.session-view');
@@ -222,7 +223,7 @@ function updateSessionNavAndViews(count, totalHours) {
         viewDiv.dataset.sessionIndex = i;
         viewDiv.querySelector('.lbl-session-num').textContent = i;
         
-        // Default Data logic
+        // Default Data
         const gameName = document.getElementById('header-game-name').value || "Game";
         viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
         
@@ -236,10 +237,7 @@ function updateSessionNavAndViews(count, totalHours) {
 
         viewContainer.appendChild(viewDiv);
 
-        // Initialize Listeners for this new specific view
         initSessionViewLogic(viewDiv, i);
-
-        // AUTO-SYNC ROSTER ON CREATION
         syncSessionPlayers(viewDiv, i);
     }
 
@@ -258,27 +256,18 @@ function updateSessionNavAndViews(count, totalHours) {
 
     // 3. Auto-Select Session 1 if created and nothing active
     if (createdNew && count === 1) {
-        // If we just made session 1, and there are no other sessions...
-        const activeNav = document.querySelector('#sidebar-nav .nav-item.active');
-        // If the user was on the Ad tab, we might want to stay there. 
-        // But the user complained about it being hidden. 
-        // Let's switch ONLY if we just went from 0 sessions to 1.
         const s1Link = document.getElementById('nav-link-session-1');
-        if (s1Link && (!activeNav || !activeNav.id.includes('session'))) {
-            s1Link.click();
-        }
+        if (s1Link) s1Link.click();
     }
 }
 
 /**
- * Initialize listeners for a specific Session View (Date logic, Player Table)
+ * Initialize listeners for a specific Session View
  */
 function initSessionViewLogic(viewElement, index) {
-    // 1. Date Converter for this session
     const dateInput = viewElement.querySelector('.inp-session-date');
     const unixInput = viewElement.querySelector('.inp-session-unix');
     
-    // Default Date: Use main start date if Session 1
     if(index === 1) {
         const mainDate = document.getElementById('inp-start-datetime').value;
         if(mainDate) dateInput.value = mainDate;
@@ -290,7 +279,6 @@ function initSessionViewLogic(viewElement, index) {
     };
     dateInput.addEventListener('change', updateUnix);
     
-    // 2. Sync Button
     const btnSync = viewElement.querySelector('.btn-sync-players');
     btnSync.addEventListener('click', () => {
         if(confirm("Reset this roster to match the previous session? Current data will be lost.")) {
@@ -298,7 +286,6 @@ function initSessionViewLogic(viewElement, index) {
         }
     });
 
-    // 3. Add Player Button
     const btnAdd = viewElement.querySelector('.btn-add-session-player');
     btnAdd.addEventListener('click', () => {
         addSessionPlayerRow(viewElement.querySelector('.session-roster-body'), {}, index, viewElement);
@@ -306,20 +293,18 @@ function initSessionViewLogic(viewElement, index) {
 }
 
 // ==========================================
-// 4. Session Player Logic (Waterfall & XP)
+// 4. Session Player Logic
 // ==========================================
 
 function syncSessionPlayers(viewElement, sessionIndex) {
     const tbody = viewElement.querySelector('.session-roster-body');
-    tbody.innerHTML = ''; // Clear current
+    tbody.innerHTML = ''; 
 
     let sourceData = [];
 
     if (sessionIndex === 1) {
-        // Source is Master Roster (Setup Tab)
         sourceData = getPlayerRosterData(); 
     } else {
-        // Source is Previous Session
         const prevView = document.getElementById(`view-session-${sessionIndex - 1}`);
         if(prevView) {
             sourceData = getSessionRosterData(prevView);
@@ -327,7 +312,6 @@ function syncSessionPlayers(viewElement, sessionIndex) {
     }
 
     sourceData.forEach(p => {
-        // Logic: Increment games played
         let nextGames = "1";
         const currentGames = p.games_count;
 
@@ -354,86 +338,76 @@ function syncSessionPlayers(viewElement, sessionIndex) {
     recalculateSessionXP(viewElement);
 }
 
-// NEW: Generates 3 Rows per Player (Grouped by Tbody)
-function addSessionPlayerRow(tableContainer, data = {}, sessionIndex, viewContext) {
-    // Note: tableContainer passed here is the main TBODY of the table, 
-    // but we want to append a whole NEW TBODY for this player to group the 3 rows.
-    // However, HTML doesn't allow nested TBODYs.
-    // Actually, HTML allows multiple TBODYs in a TABLE. 
-    // So 'session-roster-body' should likely be the TABLE itself or we append adjacent TBODYs.
-    // But our HTML template has <tbody class="session-roster-body">.
-    // We will append a TBODY to the TABLE, not the existing tbody.
-    
-    // Fix: We need to find the TABLE, not just the tbody, if we want multiple tbodies.
-    // OR we just append 3 TRs to the single tbody and style them.
-    // Let's stick to appending 3 TRs to the existing tbody and use classes to style boundaries.
-
-    const tbody = viewContext.querySelector('.session-roster-body');
-    
-    // Create a wrapper class for these 3 rows? No, just add them.
-    
+function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
     const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
     const rowHours = data.hours || sessionHours;
+    
+    // Store incentives in a data attribute on the button for easy access
+    // If loading from save, data.incentives is an array of strings ["incentive 1", ...]
+    const currentIncentives = data.incentives || [];
+    const incentivesJson = JSON.stringify(currentIncentives);
+    const btnText = currentIncentives.length > 0 ? `${currentIncentives.length} Selected` : 'Select...';
 
     // --- ROW 1: STATS ---
     const tr1 = document.createElement('tr');
     tr1.className = 'player-row-main';
-    tr1.style.borderTop = "2px solid var(--color-border)";
     tr1.innerHTML = `
-        <td style="vertical-align:top;">
-            <input type="text" class="table-input s-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}" style="margin-bottom:4px;">
-            <input type="text" class="table-input s-char-name" placeholder="Character Name" value="${data.character_name || ''}">
+        <td><input type="text" class="table-input s-discord-id" placeholder="Discord ID" value="${data.discord_id || ''}"></td>
+        <td><input type="text" class="table-input s-char-name" placeholder="Character" value="${data.character_name || ''}"></td>
+        <td><input type="number" class="table-input s-level" value="${data.level || ''}" style="width:50px;"></td>
+        <td><input type="text" class="table-input s-games" value="${data.games_count || ''}" style="width:50px;"></td>
+        <td><input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" style="width:60px;"></td>
+        <td><input type="text" class="table-input s-xp" readonly placeholder="XP" style="width:60px;"></td>
+        <td><input type="text" class="table-input s-dtp" readonly placeholder="DTP" style="width:60px;"></td>
+        <td>
+            <button class="button button-secondary btn-sm s-incentives-btn" 
+                    data-incentives='${incentivesJson}' 
+                    style="width:100%;">${btnText}</button>
         </td>
-        <td style="vertical-align:top;"><input type="number" class="table-input s-level" value="${data.level || ''}"></td>
-        <td style="vertical-align:top;"><input type="text" class="table-input s-games" value="${data.games_count || ''}"></td>
-        <td style="vertical-align:top;"><input type="number" class="table-input s-hours" value="${rowHours}" step="0.5"></td>
-        <td style="vertical-align:top;"><input type="text" class="table-input s-xp" readonly placeholder="XP"></td>
-        <td style="vertical-align:top;"><input type="text" class="table-input s-dtp" readonly placeholder="DTP"></td>
-        
-        <td colspan="2" style="vertical-align:top; background: rgba(0,0,0,0.02);">
-            <div style="font-size:0.8em; font-weight:bold; margin-bottom:2px;">Incentives</div>
-            <select class="table-input s-incentives" multiple style="height: 60px;">
-                <option value="New Player">New Player</option>
-                <option value="Server Boost">Server Boost</option>
-                <option value="Birthday">Birthday</option>
-            </select>
-        </td>
-        <td style="vertical-align:top; text-align:center;">
-             <button class="button button-danger btn-sm btn-delete-row" style="height:100%;">&times;</button>
+        <td style="text-align:center;">
+             <button class="button button-danger btn-sm btn-delete-row">&times;</button>
         </td>
     `;
 
-    // --- ROW 2: LOOT ---
+    // --- ROW 2: LOOT (Left Aligned, Full Width) ---
     const tr2 = document.createElement('tr');
+    tr2.className = 'player-row-loot';
     tr2.innerHTML = `
-        <td colspan="6" style="text-align:right; vertical-align:middle; font-size:0.9em; font-weight:bold; color:var(--color-text-secondary);">Rewards & Items:</td>
-        <td colspan="2">
-            <input type="text" class="table-input s-loot" placeholder="Loot Rewarded" value="${data.loot || ''}" style="margin-bottom:4px;">
+        <td colspan="4" style="padding-right: 10px;">
+            <input type="text" class="table-input s-loot" placeholder="Loot Rewarded" value="${data.loot || ''}">
+        </td>
+        <td colspan="5">
             <input type="text" class="table-input s-items" placeholder="Items Used" value="${data.items_used || ''}">
         </td>
-        <td></td>
     `;
 
-    // --- ROW 3: NOTES ---
+    // --- ROW 3: NOTES (Left Aligned, Full Width) ---
     const tr3 = document.createElement('tr');
+    tr3.className = 'player-row-notes';
     tr3.innerHTML = `
-        <td colspan="6" style="text-align:right; vertical-align:top; font-size:0.9em; font-weight:bold; color:var(--color-text-secondary); padding-top:10px;">Notes:</td>
-        <td colspan="2">
-            <textarea class="table-input s-notes" rows="2" placeholder="Session Notes / Comments">${data.notes || ''}</textarea>
+        <td colspan="9">
+            <input type="text" class="table-input s-notes" placeholder="Notes" value="${data.notes || ''}">
         </td>
-        <td></td>
     `;
 
-    // Logic to delete all 3 rows
+    // --- LISTENERS ---
+    
+    // Delete
     tr1.querySelector('.btn-delete-row').addEventListener('click', () => {
         tr1.remove();
         tr2.remove();
         tr3.remove();
     });
 
-    // Recalc Listeners
+    // Recalc XP/DTP
     tr1.querySelector('.s-level').addEventListener('input', () => recalculateSessionXP(viewContext));
     tr1.querySelector('.s-hours').addEventListener('input', () => recalculateSessionXP(viewContext));
+    
+    // Incentives Modal Trigger
+    const btnIncentives = tr1.querySelector('.s-incentives-btn');
+    btnIncentives.addEventListener('click', () => {
+        openIncentivesModal(btnIncentives, viewContext);
+    });
 
     tbody.appendChild(tr1);
     tbody.appendChild(tr2);
@@ -443,17 +417,15 @@ function addSessionPlayerRow(tableContainer, data = {}, sessionIndex, viewContex
 }
 
 function getSessionRosterData(viewElement) {
-    // We select only the MAIN rows to iterate logic
     const rows = viewElement.querySelectorAll('.player-row-main');
     const players = [];
     rows.forEach(row => {
-        // Find sibling rows
         const row2 = row.nextElementSibling;
         const row3 = row2.nextElementSibling;
 
-        // Get Incentives (Multi)
-        const incentiveSelect = row.querySelector('.s-incentives');
-        const incentives = Array.from(incentiveSelect.selectedOptions).map(o => o.value);
+        // Retrieve incentives from button data attribute
+        const btn = row.querySelector('.s-incentives-btn');
+        const incentives = JSON.parse(btn.dataset.incentives || '[]');
 
         players.push({
             discord_id: row.querySelector('.s-discord-id').value,
@@ -483,7 +455,20 @@ function recalculateSessionXP(viewElement) {
         const dtpInput = row.querySelector('.s-dtp');
 
         const xp = calculateXP(lvl, playerHours, cachedGameRules);
-        const dtp = 5 * playerHours; // Fixed rule
+        
+        // --- DTP CALCULATION ---
+        let dtp = Math.floor(5 * playerHours);
+        
+        // Add Incentives from button data
+        const btn = row.querySelector('.s-incentives-btn');
+        const incentives = JSON.parse(btn.dataset.incentives || '[]');
+        
+        if (cachedGameRules['player incentives']) {
+            incentives.forEach(incName => {
+                const bonus = cachedGameRules['player incentives'][incName] || 0;
+                dtp += bonus;
+            });
+        }
 
         xpInput.value = xp;
         dtpInput.value = dtp;
@@ -491,9 +476,86 @@ function recalculateSessionXP(viewElement) {
 }
 
 // ==========================================
-// 5. Existing Utilities & Helpers (Global Date/TZ)
+// 5. Incentives Modal Logic
 // ==========================================
-// (Standard utilities unchanged, included for completeness)
+
+function initIncentivesModal() {
+    const modal = document.getElementById('modal-incentives');
+    const btnCancel = document.getElementById('btn-cancel-incentives');
+    const btnSave = document.getElementById('btn-save-incentives');
+
+    if(btnCancel) {
+        btnCancel.addEventListener('click', () => {
+            activeIncentiveRowData = null;
+            modal.close();
+        });
+    }
+
+    if(btnSave) {
+        btnSave.addEventListener('click', saveIncentivesFromModal);
+    }
+}
+
+function openIncentivesModal(buttonEl, viewContext) {
+    activeIncentiveRowData = {
+        button: buttonEl,
+        viewContext: viewContext
+    };
+
+    const modal = document.getElementById('modal-incentives');
+    const listContainer = document.getElementById('incentives-list');
+    listContainer.innerHTML = ''; // Clear previous
+
+    // Get current selection
+    const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
+
+    // Populate checkboxes from rules
+    if (cachedGameRules && cachedGameRules['player incentives']) {
+        for (const [name, val] of Object.entries(cachedGameRules['player incentives'])) {
+            const label = document.createElement('label');
+            label.className = 'checkbox-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = name;
+            if (currentSelection.includes(name)) checkbox.checked = true;
+            
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(`${name} (+${val} DTP)`));
+            
+            listContainer.appendChild(label);
+        }
+    } else {
+        listContainer.innerHTML = '<p>No incentives found in Game Rules.</p>';
+    }
+
+    modal.showModal();
+}
+
+function saveIncentivesFromModal() {
+    if (!activeIncentiveRowData) return;
+
+    const modal = document.getElementById('modal-incentives');
+    const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
+    const selected = Array.from(checkboxes).map(cb => cb.value);
+
+    // Update Button Data & Text
+    const btn = activeIncentiveRowData.button;
+    btn.dataset.incentives = JSON.stringify(selected);
+    btn.innerText = selected.length > 0 ? `${selected.length} Selected` : 'Select...';
+
+    // Recalculate DTP
+    recalculateSessionXP(activeIncentiveRowData.viewContext);
+
+    activeIncentiveRowData = null;
+    modal.close();
+}
+
+// ==========================================
+// 6. Standard Utils (Date, Roster, Template)
+// ==========================================
+// (Standard utilities unchanged - same as previous version)
+
 function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
     const tzSelect = document.getElementById('inp-timezone');
@@ -525,9 +587,6 @@ function initTimezone() {
     });
 }
 
-// ==========================================
-// 6. Master Player Roster Logic (PC/DMPC)
-// ==========================================
 function initPlayerRoster() {
     const btnAdd = document.getElementById('btn-add-player');
     if(btnAdd) {
@@ -575,9 +634,6 @@ function getPlayerRosterData() {
     return players;
 }
 
-// ==========================================
-// 7. Template & Saving Logic
-// ==========================================
 function initTemplateLogic() {
     const modal = document.getElementById('modal-save-template');
     const btnOpen = document.getElementById('btn-open-save-template');
@@ -662,10 +718,6 @@ function prepareTemplateData(originalData) {
     data.sessions = [];
     return data;
 }
-
-// ==========================================
-// 8. Form Handling (Get/Populate)
-// ==========================================
 
 function getFormData() {
     const val = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
@@ -805,7 +857,6 @@ function populateForm(session) {
             if(!view) return;
 
             view.querySelector('.inp-session-title').value = sData.title;
-            // Respect saved hours or default
             view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
             
@@ -846,7 +897,6 @@ function unixToLocalIso(unixSeconds, timeZone) {
 }
 
 function generateOutput() {
-    // (Unchanged from previous versions)
     const data = getFormData().header;
     const unixTime = document.getElementById('inp-unix-time').value;
     const name = document.getElementById('header-game-name').value || "Untitled";

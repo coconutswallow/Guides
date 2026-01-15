@@ -29,20 +29,42 @@ extra_css:
     }
     
     /* Player Row Grouping */
-    .player-tbody {
-        border-bottom: 2px solid var(--color-primary);
-    }
-    .player-tbody tr td {
+    .session-roster-body tr td {
         border-top: none;
         padding-top: 4px;
         padding-bottom: 4px;
     }
-    .player-tbody tr:first-child td {
-        padding-top: 12px; /* Spacing top of group */
+    /* Top of a player group */
+    .player-row-main td {
+        padding-top: 12px !important;
+        border-top: 1px solid var(--color-border) !important;
     }
-    .player-tbody tr:last-child td {
-        padding-bottom: 12px; /* Spacing bottom of group */
-        border-bottom: 1px solid var(--color-border);
+    /* Bottom of a player group */
+    .player-row-notes td {
+        padding-bottom: 12px !important;
+    }
+
+    /* Checkbox list in modal */
+    .checkbox-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 1rem 0;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: var(--color-bg-light);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .checkbox-item:hover {
+        background: var(--color-bg-medium);
     }
 </style>
 
@@ -81,7 +103,7 @@ extra_css:
     <main class="editor-main">
         
         <div id="view-ad-listing" class="view-section">
-            <div class="content-tabs">
+             <div class="content-tabs">
                 <div class="content-tab active" data-subtab="ad-input">Input</div>
                 <div class="content-tab" data-subtab="ad-output">Output</div>
             </div>
@@ -164,7 +186,7 @@ extra_css:
 
         <div id="view-player-setup" class="view-section hidden-section">
             <h2>Player & DM Setup</h2>
-            <div class="card">
+             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <h3 class="card-title" style="margin:0;">Player Roster</h3>
                     <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
@@ -224,7 +246,7 @@ extra_css:
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
                             <label style="margin:0;">Player Logs</label>
                             <div>
-                                <button class="button button-secondary btn-sm btn-sync-players" title="Reset this table using data from the previous session">
+                                <button class="button button-secondary btn-sm btn-sync-players" title="Reset using previous session data">
                                     ↻ Reset Roster
                                 </button>
                                 <button class="button btn-sm btn-add-session-player">+ Add Player</button>
@@ -235,14 +257,14 @@ extra_css:
                             <table class="roster-table session-player-table" style="width:100%; min-width: 900px; border-collapse: collapse;">
                                 <thead>
                                     <tr style="border-bottom: 2px solid var(--color-text);">
-                                        <th style="width: 20%;">Identity</th>
+                                        <th style="width: 15%;">Discord ID</th>
+                                        <th style="width: 15%;">Character</th>
                                         <th style="width: 5%;">Lvl</th>
                                         <th style="width: 5%;">Games</th>
                                         <th style="width: 7%;">Hrs</th>
                                         <th style="width: 7%;">XP</th>
                                         <th style="width: 7%;">DTP</th>
-                                        <th style="width: 25%;">Rewards / Incentives</th>
-                                        <th style="width: 19%;">Notes</th>
+                                        <th style="width: 15%;">Incentives</th>
                                         <th style="width: 5%;"></th>
                                     </tr>
                                 </thead>
@@ -269,14 +291,24 @@ extra_css:
 
 <dialog id="modal-save-template">
     <h3 style="margin-top:0;">Save As Template</h3>
-    <p>Enter a name for this template to easily load these settings later.</p>
+    <p>Enter a name for this template.</p>
     <div class="form-group">
         <label>Template Name</label>
-        <input type="text" id="inp-template-name" placeholder="e.g. Standard Tier 2 Voice Game">
+        <input type="text" id="inp-template-name">
     </div>
     <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
         <button class="button button-secondary" onclick="document.getElementById('modal-save-template').close()">Cancel</button>
-        <button class="button" id="btn-confirm-save-template">Save Template</button>
+        <button class="button" id="btn-confirm-save-template">Save</button>
+    </div>
+</dialog>
+
+<dialog id="modal-incentives">
+    <h3 style="margin-top:0;">Select Incentives</h3>
+    <div id="incentives-list" class="checkbox-list">
+        </div>
+    <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+        <button class="button button-secondary" id="btn-cancel-incentives">Cancel</button>
+        <button class="button" id="btn-save-incentives">Apply Incentives</button>
     </div>
 </dialog>
 
