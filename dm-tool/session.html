@@ -151,22 +151,19 @@ extra_css:
                 <h2 class="session-header-title">Session <span class="lbl-session-num"></span> Log</h2>
                 
                 <div class="form-grid">
-                    <div class="form-row-full">
-                        <div class="form-group flex-grow">
-                            <label>Session Title</label>
+                    <div class="form-row-full" style="display: flex; gap: 1rem; align-items: flex-end;">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Session Name</label>
                             <input type="text" class="inp-session-title">
                         </div>
-                        <div class="form-group" style="width: 150px;">
-                            <label>Duration (Hrs)</label>
-                            <input type="number" class="inp-session-hours readonly-input" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-row-full">
-                        <div class="form-group flex-grow">
+                        <div class="form-group" style="flex: 1;">
                             <label>Session Date</label>
                             <input type="datetime-local" class="inp-session-date">
                             <input type="hidden" class="inp-session-unix">
+                        </div>
+                         <div class="form-group" style="width: 120px;">
+                            <label>Duration (Hrs)</label>
+                            <input type="number" class="inp-session-hours readonly-input" readonly>
                         </div>
                     </div>
                 </div>
