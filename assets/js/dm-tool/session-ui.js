@@ -4,7 +4,68 @@ import { toUnixTimestamp } from './calculators.js';
 let activeIncentiveRowData = null;
 
 /* ===========================
-   1. TABS & VISIBILITY
+   1. ACCORDION & VALIDATION (NEW)
+   =========================== */
+export function initAccordions() {
+    const headers = document.querySelectorAll('.accordion-header');
+    headers.forEach(header => {
+        header.addEventListener('click', (e) => {
+            const card = header.closest('.accordion-card');
+            
+            // Toggle current
+            const isOpen = card.classList.contains('open');
+            if(isOpen) {
+                card.classList.remove('open');
+            } else {
+                card.classList.add('open');
+            }
+        });
+    });
+
+    // Init Validation Listeners
+    const inputs = document.querySelectorAll('[data-required="true"]');
+    inputs.forEach(input => {
+        const handler = () => validateCard(input.closest('.accordion-card'));
+        input.addEventListener('input', handler);
+        input.addEventListener('change', handler);
+        // Special case for Markdown widgets (if they update hidden inputs)
+    });
+    
+    // Validate on load
+    document.querySelectorAll('.accordion-card').forEach(validateCard);
+}
+
+function validateCard(card) {
+    if(!card) return;
+    
+    const reqFields = card.querySelectorAll('[data-required="true"]');
+    let allValid = true;
+
+    reqFields.forEach(field => {
+        if(!field.value || field.value.trim() === "") {
+            allValid = false;
+        }
+    });
+
+    if(allValid) {
+        card.classList.add('completed');
+        // Auto-open next sibling if not already visited/open
+        const nextCard = card.nextElementSibling;
+        if(nextCard && nextCard.classList.contains('accordion-card')) {
+             // Only auto-open if the current one is being interacted with and next is closed
+             // To avoid annoying jumping on load, we might restrict this. 
+             // For now, let's just mark completed.
+             
+             // UX Decision: Let's unlock visual opacity if we had that, 
+             // but just adding 'completed' class is good feedback.
+        }
+    } else {
+        card.classList.remove('completed');
+    }
+}
+
+/* ===========================
+   2. TABS & VISIBILITY
    =========================== */
 export function initTabs(outputCallback) {
     // Sidebar Navigation
@@ -24,38 +85,20 @@ export function initTabs(outputCallback) {
             // Show Target Section
             const targetId = item.dataset.target;
             const targetEl = document.getElementById(targetId);
-            if(targetEl) targetEl.classList.remove('hidden-section');
-        });
-    }
-
-    // Content Tabs (Input/Output) - Event Delegation
-    document.body.addEventListener('click', (e) => {
-        const tab = e.target.closest('.content-tab');
-        if (!tab) return;
-        
-        const parent = tab.closest('.content-tabs');
-        if (!parent) return;
-
-        parent.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        const targetId = tab.dataset.subtab;
-        const viewSection = tab.closest('.view-section');
-        if (viewSection && targetId) {
-            viewSection.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
+            if(targetEl) {
                 targetEl.classList.remove('hidden-section');
-                if (targetId === 'ad-output' || targetId.includes('session-output')) {
-                    if (outputCallback) outputCallback(); 
+                
+                // Trigger output gen if going to Ad view
+                if(targetId === 'view-game-ad' && outputCallback) {
+                    outputCallback();
                 }
             }
-        }
-    });
+        });
+    }
 }
 
 /* ===========================
-   2. DATE & TIME
+   3. DATE & TIME (Keep Existing)
    =========================== */
 export function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
@@ -68,6 +111,9 @@ export function initDateTimeConverter() {
         const dateVal = dateInput.value;
         const tzVal = tzSelect.value;
         if(unixInput) unixInput.value = toUnixTimestamp(dateVal, tzVal);
+        
+        // Trigger validation if inside accordion
+        if(dateInput.dataset.required) dateInput.dispatchEvent(new Event('change'));
     };
     
     dateInput.addEventListener('change', updateUnix);
@@ -112,7 +158,7 @@ export function unixToLocalIso(unixSeconds, timeZone) {
 }
 
 /* ===========================
-   3. DROPDOWNS
+   4. DROPDOWNS (Keep Existing)
    =========================== */
 export function fillDropdown(id, options) {
     const select = document.getElementById(id);
@@ -127,7 +173,7 @@ export function fillDropdown(id, options) {
 }
 
 /* ===========================
-   4. INCENTIVES MODAL
+   5. INCENTIVES MODAL (Keep Existing)
    =========================== */
 export function initIncentivesModal(saveCallback) {
     const modal = document.getElementById('modal-incentives');
@@ -137,7 +183,6 @@ export function initIncentivesModal(saveCallback) {
     if(btnCancel) btnCancel.addEventListener('click', () => { activeIncentiveRowData = null; modal.close(); });
     
     if(btnSave) {
-        // Clone to remove old listeners if re-initialized
         const newBtn = btnSave.cloneNode(true);
         btnSave.parentNode.replaceChild(newBtn, btnSave);
         
@@ -156,8 +201,6 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
 
     const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
     let hasIncentives = false;
-    
-    // Look up "DM incentives" or "player incentives"
     const sourceKey = isDM ? 'DM incentives' : 'player incentives';
 
     if (gameRules && gameRules[sourceKey]) {

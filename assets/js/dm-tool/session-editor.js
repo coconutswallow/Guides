@@ -22,7 +22,7 @@ import * as IO from './session-io.js';
 
 let cachedGameRules = null; 
 
-// ==========================================
+/// ==========================================
 // 1. Initialization
 // ==========================================
 
@@ -33,12 +33,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     UI.initTabs(() => IO.generateOutput()); 
     UI.initTimezone();
     UI.initDateTimeConverter(); 
+    UI.initAccordions(); // <--- ADDED THIS
+    
     UI.initIncentivesModal((viewContext) => {
         updateSessionCalculations(viewContext);
     });
     
     initTemplateLogic(); 
-    initPlayerSetup();   
+    initPlayerSetup();
 
     // Dropdowns
     const rules = cachedGameRules;
