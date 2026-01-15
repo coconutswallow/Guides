@@ -159,7 +159,7 @@ extra_css:
             <div class="view-section session-view hidden-section" data-session-index="">
                 <h2 class="session-header-title">Session <span class="lbl-session-num"></span> Log</h2>
                 
-                <div class="form-grid" style="margin-bottom: 2rem;">
+                <div class="form-grid">
                     <div class="form-row-full">
                         <div class="form-group flex-grow">
                             <label>Session Title</label>
@@ -179,6 +179,7 @@ extra_css:
                         </div>
                     </div>
                 </div>
+
                 <div style="margin-bottom: 2rem;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
                         <label style="font-weight:bold; font-size:1.1em;">Player Logs</label>
@@ -192,6 +193,12 @@ extra_css:
                     
                     <div style="overflow-x: auto; padding: 5px;"> 
                         <table class="session-player-table">
+                            <colgroup>
+                                <col style="width: 30%;">
+                                <col style="width: 30%;">
+                                <col style="width: 20%;">
+                                <col style="width: 20%;">
+                            </colgroup>
                             </table>
                     </div>
                 </div>

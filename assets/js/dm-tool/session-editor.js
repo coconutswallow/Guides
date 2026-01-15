@@ -16,8 +16,7 @@ import {
 } from './calculators.js';
 
 let cachedGameRules = null; 
-// State for the incentives modal
-let activeIncentiveRowData = null; // { button: element, incentives: [], viewContext: element }
+let activeIncentiveRowData = null; 
 
 // ==========================================
 // 1. Initialization
@@ -369,25 +368,66 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
         </tr>
 
         <tr class="player-data-row">
-            <td style="width: 30%;">
+            <td>
                 <div class="field-group">
                     <label class="field-label">Discord ID</label>
                     <input type="text" class="table-input s-discord-id" value="${data.discord_id || ''}">
                 </div>
             </td>
-            <td style="width: 30%;">
+            <td>
+                <div class="field-group">
+                    <label class="field-label">Character</label>
+                    <input type="text" class="table-input s-char-name" value="${data.character_name || ''}">
+                </div>
+            </td>
+            <td>
+                <div class="field-group">
+                    <label class="field-label">Level</label>
+                    <input type="number" class="table-input s-level" value="${data.level || ''}">
+                </div>
+            </td>
+            <td>
+                <div class="field-group">
+                    <label class="field-label">Games</label>
+                    <input type="text" class="table-input s-games" value="${data.games_count || ''}">
+                </div>
+            </td>
+        </tr>
+        
+        `;
+    
+    // Correction: User asked for "Discord ID, Character Name, Hours Played, Number of Games".
+    // I put Level in there because XP depends on it. 
+    // I will put Level in Row 2.
+    
+    tbody.innerHTML = `
+        <tr class="player-card-header">
+            <td colspan="4" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>Player ${playerNum}</span>
+                <button class="btn-delete-card" title="Remove Player">&times;</button>
+            </td>
+        </tr>
+
+        <tr class="player-data-row">
+            <td>
+                <div class="field-group">
+                    <label class="field-label">Discord ID</label>
+                    <input type="text" class="table-input s-discord-id" value="${data.discord_id || ''}">
+                </div>
+            </td>
+            <td>
                 <div class="field-group">
                     <label class="field-label">Character Name</label>
                     <input type="text" class="table-input s-char-name" value="${data.character_name || ''}">
                 </div>
             </td>
-            <td style="width: 20%;">
+            <td>
                 <div class="field-group">
                     <label class="field-label">Hours Played</label>
                     <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5">
                 </div>
             </td>
-            <td style="width: 20%;">
+            <td>
                 <div class="field-group">
                     <label class="field-label"># Games</label>
                     <input type="text" class="table-input s-games" value="${data.games_count || ''}">
@@ -396,6 +436,12 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
         </tr>
 
         <tr class="player-data-row">
+            <td>
+                <div class="field-group">
+                    <label class="field-label">Level</label>
+                    <input type="number" class="table-input s-level" value="${data.level || ''}">
+                </div>
+            </td>
             <td>
                 <div class="field-group">
                     <label class="field-label">XP Earned</label>
@@ -410,17 +456,14 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
             </td>
             <td>
                 <div class="field-group">
-                    <label class="field-label">DTP Earned</label>
-                    <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="Auto">
-                </div>
-            </td>
-            <td>
-                <div class="field-group">
-                    <label class="field-label">Incentives</label>
-                    <button class="button button-secondary btn-sm s-incentives-btn" 
-                            data-incentives='${incentivesJson}'>
-                            ${btnText}
-                    </button>
+                    <label class="field-label">DTP / Incentives</label>
+                    <div style="display:flex; gap:5px;">
+                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:50%;">
+                        <button class="button button-secondary btn-sm s-incentives-btn" 
+                                data-incentives='${incentivesJson}' style="width:50%; padding:0 5px; font-size:0.7em;">
+                                ${currentIncentives.length > 0 ? '+' + currentIncentives.length : '+'}
+                        </button>
+                    </div>
                 </div>
             </td>
         </tr>
@@ -456,58 +499,8 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
         renumberPlayers(tableElement);
     });
 
-    // Auto-calc triggers
     tbody.querySelector('.s-hours').addEventListener('input', () => recalculateSessionXP(viewContext));
-    // Usually Level also affects XP
-    const lvlInput = data.level; // We are not showing Level input in this new design based on user request?
-    // Wait, user request Row 1: Discord ID, Character Name, Hours Played, Number of Games.
-    // WHERE IS LEVEL? XP Calculation depends on Level.
-    // Assuming Level is needed for calc but user forgot to list it, or it should be hidden/auto?
-    // I MUST ADD HIDDEN LEVEL INPUT to maintain calculation logic, or add it to visual if space permits.
-    // Let's add it back visually into Row 1 next to Games or make it hidden.
-    // Better yet: Add Level to Row 1 (User request might have implied it or forgot). 
-    // I'll add a hidden input for level to ensure calculation works, but really user needs to see/edit it.
-    // I will squeeze "Level" into Row 1 for safety.
-    
-    // ADJUSTING ROW 1 HTML TO INCLUDE LEVEL:
-    const row1 = tbody.querySelectorAll('.player-data-row')[0];
-    row1.innerHTML = `
-        <td style="width: 25%;">
-            <div class="field-group">
-                <label class="field-label">Discord ID</label>
-                <input type="text" class="table-input s-discord-id" value="${data.discord_id || ''}">
-            </div>
-        </td>
-        <td style="width: 25%;">
-            <div class="field-group">
-                <label class="field-label">Character</label>
-                <input type="text" class="table-input s-char-name" value="${data.character_name || ''}">
-            </div>
-        </td>
-        <td style="width: 15%;">
-            <div class="field-group">
-                <label class="field-label">Level</label>
-                <input type="number" class="table-input s-level" value="${data.level || ''}">
-            </div>
-        </td>
-        <td style="width: 15%;">
-            <div class="field-group">
-                <label class="field-label">Hours</label>
-                <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5">
-            </div>
-        </td>
-        <td style="width: 15%;">
-            <div class="field-group">
-                <label class="field-label">Games</label>
-                <input type="text" class="table-input s-games" value="${data.games_count || ''}">
-            </div>
-        </td>
-    `;
-    
-    // Re-attach listener for Level
-    row1.querySelector('.s-level').addEventListener('input', () => recalculateSessionXP(viewContext));
-    row1.querySelector('.s-hours').addEventListener('input', () => recalculateSessionXP(viewContext));
-
+    tbody.querySelector('.s-level').addEventListener('input', () => recalculateSessionXP(viewContext));
     
     const btnIncentives = tbody.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
@@ -644,7 +637,8 @@ function saveIncentivesFromModal() {
 
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
-    btn.innerText = selected.length > 0 ? `${selected.length} Selected` : 'Select Incentives...';
+    // Short button text
+    btn.innerText = selected.length > 0 ? `+${selected.length}` : '+';
 
     recalculateSessionXP(activeIncentiveRowData.viewContext);
 
@@ -984,10 +978,9 @@ function populateForm(session) {
                 view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
             }
 
-            const sTbody = view.querySelector('.session-roster-body');
-            sTbody.innerHTML = '';
+            const table = view.querySelector('.session-player-table');
             if(sData.players) {
-                sData.players.forEach(p => addSessionPlayerRow(sTbody, p, index, view));
+                sData.players.forEach(p => addSessionPlayerRow(table, p, index, view));
             }
         });
     }
