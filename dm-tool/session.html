@@ -40,20 +40,13 @@ extra_css:
         <div id="view-start" class="view-section">
             <h2>Welcome to the DM Tool</h2>
             <div class="card">
-                <p>This tool is designed to support you with everything you need to DM on the Hawthorne Server:</p> 
+                <p>Select a tab on the left to begin.</p>
+                <p>This tool auto-saves your session logs to the database when you click "Save Changes".</p>
                 <ul>
-                    <li><strong>Game Setup:</strong> Create Game Listing and Game Ads</li>
-                    <li><strong>Player Setup:</strong> Calculate incentives and declare Player and DM Loot</li>
-                    <li><strong>Session Details:</strong>Complete the your session log</li>
-                    <li><strong>MAL:</strong>Copy and paste an entry into your MAL</li>
-                    <li><strong>Multi-session support:</strong>Automatically create the draft next session (unlimited!)</li>
+                    <li><strong>Game Setup:</strong> Configure your game details and load templates.</li>
+                    <li><strong>Player Setup:</strong> Manage your persistent roster and DM stats.</li>
+                    <li><strong>Session Details:</strong> Log the actual events, hours, and rewards for this session.</li>
                 </ul>
-                <br>
-                <p>For new DMs, the tabs on on the left are setup to take you step-by-step through the process</p>
-                <p>For experienced DMs, use the templates feature to quickly spin up a listing and ad in a couple of minutes</p>
-                <br>
-                <p>MAL integation and bot to auto-post to Discord is planned for the future!</p>
-                
             </div>
         </div>
 
@@ -62,15 +55,17 @@ extra_css:
             <p class="instruction-text">Configure the core details of your game here.</p>
             
             <div class="card" style="border-left: 4px solid var(--color-primary); margin-bottom: 2rem;">
-                <h3 class="card-title" style="font-size: 1rem;">Templates{% include help-icon.html text="Use templates to quickly load your common settings for faster game setup" %}</h3>
+                <h3 class="card-title" style="font-size: 1rem;">Templates</h3>
+                <p>Use templates to quickly load your common settings for faster game setup.</p>
                 <div class="form-group">
                     <label>Manage Templates</label>
-                    <div style="display:flex; gap:10px;">
+                    <div style="display:flex; gap:10px; align-items: center;">
                         <select id="template-select" style="flex:1; padding: 0.5rem;">
                             <option value="">Select a saved template...</option>
                         </select>
-                        <button class="button" id="btn-load-template">Load</button>
-                        <button class="button button-secondary" id="btn-save-template-setup">Save</button>
+                        <button class="button" id="btn-load-template" title="Load selected template into this form">Load</button>
+                        <button class="button button-secondary" id="btn-save-template-setup" title="Save current settings as a new template">Save</button>
+                        <button class="button btn-danger-outline" id="btn-delete-template" title="Delete selected template">Delete</button>
                     </div>
                 </div>
             </div>
@@ -119,7 +114,7 @@ extra_css:
                             <div class="form-group"><label>Game Format <span class="req">*</span></label><select id="inp-format" data-required="true"><option value="">Loading...</option></select></div>
                             <div class="form-group"><label>Game Version <span class="req">*</span></label><select id="inp-version" data-required="true"><option value="">Loading...</option></select></div>
                             <div class="form-group"><label>App Type <span class="req">*</span></label><select id="inp-apps-type" data-required="true"><option value="">Loading...</option></select></div>
-                            <div class="form-group"><label>Platform <span class="req">*</span></label><input type="text" id="inp-platform" placeholder="Roll20" data-required="true"></div>
+                            <div class="form-group"><label>Platform <span class="req">*</span></label><input type="text" id="inp-platform" placeholder="Roll20/Foundry" data-required="true"></div>
                             <div class="form-group"><label>Event(s){% include help-icon.html text="Ctrl-click to multi-select" %}</label><select id="inp-event" multiple></select></div>
                         </div>
                     </div>
@@ -135,7 +130,7 @@ extra_css:
                             <div class="form-row-full" style="gap: 1.5rem;">
                                 <div class="form-group flex-grow"><label>Tier <span class="req">*</span></label><input type="text" id="inp-tier" placeholder="e.g. Tier 2" data-required="true"></div>
                                 <div class="form-group flex-grow"><label>APL <span class="req">*</span></label><input type="text" id="inp-apl" placeholder="e.g. APL 8" data-required="true"></div>
-                                <div class="form-group flex-grow"><label>Party Size <span class="req">*</span></label><input type="text" id="inp-party-size" value="" data-required="true"></div>
+                                <div class="form-group flex-grow"><label>Party Size <span class="req">*</span></label><input type="text" id="inp-party-size" value="5" data-required="true"></div>
                             </div>
                         </div>
                     </div>
@@ -149,10 +144,10 @@ extra_css:
                     <div class="accordion-body">
                         <div class="form-grid">
                             <div class="form-group"><label>Tone <span class="req">*</span></label><input type="text" id="inp-tone" placeholder="e.g. Serious" data-required="true"></div>
-                            <div class="form-group"><label>Focus <span class="req">*</span></label><input type="text" id="inp-focus" placeholder="e.g. 30% RP, 70% Combat" data-required="true"></div>
-                            <div class="form-group"><label>Encounter Difficulty <span class="req">*</span></label><input type="text" id="inp-diff-encounter" placeholder="Hard" data-required="true"></div>
-                            <div class="form-group"><label>Enemy Threat Level <span class="req">*</span></label><input type="text" id="inp-diff-threat" placeholder="Deadly" data-required="true"></div>
-                            <div class="form-group"><label>Chance of Character Loss <span class="req">*</span></label><input type="text" id="inp-diff-loss" placeholder="Medium" data-required="true"></div>
+                            <div class="form-group"><label>Focus <span class="req">*</span></label><input type="text" id="inp-focus" placeholder="e.g. 50/50" data-required="true"></div>
+                            <div class="form-group"><label>Difficulty <span class="req">*</span></label><input type="text" id="inp-diff-encounter" placeholder="Hard" data-required="true"></div>
+                            <div class="form-group"><label>Threat Level <span class="req">*</span></label><input type="text" id="inp-diff-threat" placeholder="Deadly" data-required="true"></div>
+                            <div class="form-group"><label>Char. Loss <span class="req">*</span></label><input type="text" id="inp-diff-loss" placeholder="Medium" data-required="true"></div>
                         </div>
                     </div>
                 </div>
@@ -165,7 +160,7 @@ extra_css:
                     <div class="accordion-body">
                         <div class="form-grid">
                             <div class="form-group form-row-full"><label>House Rules</label>{% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}</div>
-                            <div class="form-group form-row-full"><label>Additional Notes</label>{% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}</div>
+                            <div class="form-group form-row-full"><label>Notes</label>{% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}</div>
                             <div class="form-group form-row-full"><label>Content Warnings</label>{% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}</div>
                             <div class="form-group form-row-full">
                                 <label>How to Apply <span class="req">*</span></label>

@@ -8,7 +8,8 @@ import {
     loadSession, 
     fetchGameRules, 
     fetchActiveEvents,
-    fetchTemplates 
+    fetchTemplates,
+    deleteSession // <--- ADDED IMPORT
 } from './data-manager.js';
 
 import * as UI from './session-ui.js';
@@ -408,17 +409,37 @@ function initTemplateLogic() {
     const btnLoad = document.getElementById('btn-load-template');
     const btnSaveGame = document.getElementById('btn-save-game');
     
-    // New Save Button from Game Setup
+    // New Buttons
     const btnSaveSetup = document.getElementById('btn-save-template-setup');
+    const btnDelete = document.getElementById('btn-delete-template');
     
     if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
     
-    // Add listener for new button - Prefill Name
+    // Auto-fill template name
     if(btnSaveSetup) btnSaveSetup.addEventListener('click', () => {
         const currentName = document.getElementById('header-game-name').value;
         if(currentName) document.getElementById('inp-template-name').value = currentName;
         modal.showModal();
     });
+    
+    // Delete Logic
+    if(btnDelete) {
+        btnDelete.addEventListener('click', async () => {
+            const tmplId = document.getElementById('template-select').value;
+            if(!tmplId) return alert("Please select a template to delete.");
+            
+            if(confirm("Are you sure you want to delete this template? This cannot be undone.")) {
+                try {
+                    await deleteSession(tmplId); // Reusing deleteSession as templates are just session records
+                    await initTemplateDropdown(); // Refresh the list
+                    alert("Template deleted.");
+                } catch(e) {
+                    console.error(e);
+                    alert("Error deleting template.");
+                }
+            }
+        });
+    }
     
     if(btnConfirm) {
         btnConfirm.addEventListener('click', async () => {
@@ -432,6 +453,7 @@ function initTemplateLogic() {
             
             try {
                 await saveAsTemplate(user.id, tmplName, templateData);
+                await initTemplateDropdown(); // Refresh list after save
                 alert("Template Saved!");
                 modal.close();
             } catch (e) {
@@ -447,7 +469,8 @@ function initTemplateLogic() {
             if(!tmplId) return;
             const session = await loadSession(tmplId);
             if(session) {
-                IO.populateForm(session, window._sessionCallbacks);
+                // Pass { keepTitle: true } so we don't overwrite current game name with template name
+                IO.populateForm(session, window._sessionCallbacks, { keepTitle: true });
                 alert("Template Loaded!");
             }
         });
