@@ -27,19 +27,38 @@ extra_css:
 
 <div class="editor-container">
     <nav class="editor-sidebar" id="sidebar-nav">
-        <div class="nav-item active" data-target="view-template-landing">1. Start / Template</div>
+        <div class="nav-item active" data-target="view-start">1. Start / Info</div>
         <div class="nav-item" data-target="view-game-setup">2. Game Setup</div>
-        <div class="nav-item" data-target="view-game-listing-output">3. Game Listing</div>
+        <div class="nav-item" data-target="view-game-listing">3. Game Listing</div>
         <div class="nav-item" data-target="view-game-ad">4. Game Advertisement</div>
-        <div class="nav-item" data-target="view-session-log">5. Session Log</div>
+        <div class="nav-item" data-target="view-player-setup">5. Player & DM Setup</div>
+        <div class="nav-item" data-target="view-loot-plan">6. Plan / Declare Loot</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item" data-target="view-session-details">7. Session Details</div>
+        <div class="nav-item" data-target="view-session-output">8. Session Log (Output)</div>
+        <div class="nav-item" data-target="view-mal-update">9. MAL Update</div>
     </nav>
 
     <main class="editor-main">
         
-        <div id="view-template-landing" class="view-section">
-            <h2>Session Management</h2>
-            <p class="instruction-text">Use this section to load existing templates or start a new session log.</p>
+        <div id="view-start" class="view-section">
+            <h2>Welcome to the DM Tool</h2>
             <div class="card">
+                <p>Select a tab on the left to begin.</p>
+                <p>This tool auto-saves your session logs to the database when you click "Save Changes".</p>
+                <ul>
+                    <li><strong>Game Setup:</strong> Configure your game details and load templates.</li>
+                    <li><strong>Player Setup:</strong> Manage your persistent roster and DM stats.</li>
+                    <li><strong>Session Details:</strong> Log the actual events, hours, and rewards for this session.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="view-game-setup" class="view-section hidden-section">
+            <h2>Game Setup</h2>
+            
+            <div class="card" style="border-left: 4px solid var(--color-primary); margin-bottom: 2rem;">
+                <h3 class="card-title" style="font-size: 1rem;">Template Management</h3>
                 <div class="form-group">
                     <label>Load a Saved Template</label>
                     <div style="display:flex; gap:10px;">
@@ -50,11 +69,8 @@ extra_css:
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="view-game-setup" class="view-section hidden-section">
-            <h2>Game Setup</h2>
-            <p class="instruction-text">Configure the core details of your game here. Sections will mark as complete automatically.</p>
+            <p class="instruction-text">Configure the core details of your game here.</p>
             
             <div class="accordion-group">
                 <div class="card accordion-card open" id="card-listing-basics">
@@ -162,7 +178,7 @@ extra_css:
             </div> 
         </div>
 
-        <div id="view-game-listing-output" class="view-section hidden-section">
+        <div id="view-game-listing" class="view-section hidden-section">
             <h2>Game Listing Output</h2>
             <p class="instruction-text">Generate and copy your listing for Discord.</p>
             <div class="card">
@@ -172,6 +188,10 @@ extra_css:
                 </div>
                 <h3>Listing Text</h3>
                 {% include discord-output.html id="out-listing-text" channel_name="#game-listings" height="400px" %}
+                
+                <div style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1rem; text-align: right;">
+                        <button class="button button-secondary" id="btn-open-save-template">Save As Template</button>
+                </div>
             </div>
         </div>
 
@@ -187,12 +207,54 @@ extra_css:
             </div>
         </div>
 
-        <div id="view-session-log" class="view-section hidden-section">
-            <h2 class="session-header-title">Session Log</h2>
+        <div id="view-player-setup" class="view-section hidden-section">
+            <h2>Player & DM Setup</h2>
+            <p class="instruction-text">Manage your master roster and DM details here. This data persists across copy/split.</p>
+             <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 class="card-title" style="margin:0;">Master Roster</h3>
+                    <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
+                </div>
+                <table class="roster-table" style="width:100%; border-collapse: separate; border-spacing: 0 10px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Discord ID</th>
+                            <th style="width: 30%;">Character Name</th>
+                            <th style="width: 15%;">Level</th>
+                            <th style="width: 20%;">Games on Server</th>
+                            <th style="width: 10%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roster-body"></tbody>
+                </table>
+            </div>
+            
+            <div class="card" style="margin-top: 2rem;">
+                <h3 class="card-title">Dungeon Master Details</h3>
+                <div class="form-row-full" style="align-items: flex-end; gap: 1rem;">
+                    <div class="form-group flex-grow"><label>DM Character Name</label><input type="text" id="inp-dm-char-name" placeholder="Character Name"></div>
+                    <div class="form-group" style="width: 100px;"><label>DM PC Level</label><input type="number" id="inp-dm-level" placeholder="Lvl"></div>
+                    <div class="form-group" style="width: 120px;"><label>Games DMed</label><select id="inp-dm-games-count"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="10+">10+</option></select></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-loot-plan" class="view-section hidden-section">
+             <h2>Plan / Declare Loot</h2>
+             <p class="instruction-text">Record intended loot drops or declarations for this session.</p>
+             <div class="card">
+                <div class="form-group">
+                    <label>Loot Plan / Declaration</label>
+                    <textarea id="inp-loot-plan" class="table-input" rows="8" placeholder="List items, magic items, or gold distributions planned..."></textarea>
+                </div>
+             </div>
+        </div>
+
+        <div id="view-session-details" class="view-section hidden-section">
+            <h2 class="session-header-title">Session Details</h2>
             <p class="instruction-text">Log your actual session data here.</p>
             
             <div class="accordion-group">
-
                 <div class="card accordion-card open">
                     <div class="accordion-header">
                         <span class="step-number">1</span>
@@ -343,29 +405,31 @@ extra_css:
                         </div>
                     </div>
                 </div>
+            </div> 
+        </div>
 
-                <div class="card accordion-card">
-                    <div class="accordion-header">
-                        <span class="step-number">5</span>
-                        <span class="step-title">Output</span>
-                        <span class="step-icon"></span>
+        <div id="view-session-output" class="view-section hidden-section">
+            <h2>Session Log (Output)</h2>
+            <div class="card">
+                    <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                    <div class="discord-header" style="background: #2f3136; color: #dcddde; padding: 8px 12px; font-size: 0.9em; font-weight: bold; border-bottom: 1px solid #202225;">
+                        # session-logs
                     </div>
-                    <div class="accordion-body">
-                            <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
-                            <div class="discord-header" style="background: #2f3136; color: #dcddde; padding: 8px 12px; font-size: 0.9em; font-weight: bold; border-bottom: 1px solid #202225;">
-                                # session-logs
-                            </div>
-                            <div style="position: relative;">
-                                <textarea id="out-session-text" class="out-session-text" style="width: 100%; height: 300px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;"></textarea>
-                            </div>
-                        </div>
-                        <div style="margin-top: 0.5rem; text-align: right;">
-                            <button class="button" onclick="window.copyToClipboard('out-session-text')">Copy to Clipboard</button>
-                        </div>
+                    <div style="position: relative;">
+                        <textarea id="out-session-text" class="out-session-text" style="width: 100%; height: 300px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;"></textarea>
                     </div>
                 </div>
+                <div style="margin-top: 0.5rem; text-align: right;">
+                    <button class="button" onclick="window.copyToClipboard('out-session-text')">Copy to Clipboard</button>
+                </div>
+            </div>
+        </div>
 
-            </div> 
+        <div id="view-mal-update" class="view-section hidden-section">
+             <h2>MAL Update</h2>
+             <div class="card">
+                 <p><em>(Placeholder)</em></p>
+             </div>
         </div>
 
     </main>

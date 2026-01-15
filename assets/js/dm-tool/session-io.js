@@ -11,14 +11,13 @@ export function getFormData() {
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
     
-    // Process Single Session Log
     const dmBtn = document.getElementById('btn-dm-incentives');
     const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
 
     const sessionLog = {
         title: val('inp-session-title'),
         date_time: val('inp-session-unix'), 
-        hours: document.getElementById('header-hours').value, // Use header hours as master
+        hours: document.getElementById('header-hours').value, 
         notes: val('inp-session-notes'),
         summary: val('inp-session-summary'),
         dm_collaborators: val('inp-dm-collab'),
@@ -55,7 +54,8 @@ export function getFormData() {
             warnings: val('inp-warnings'),
             how_to_apply: val('inp-apply'),
             listing_url: val('inp-listing-url'),
-            lobby_url: val('inp-lobby-url')
+            lobby_url: val('inp-lobby-url'),
+            loot_plan: val('inp-loot-plan') // New field
         },
         players: Rows.getMasterRosterData(),
         dm: {
@@ -106,6 +106,7 @@ export function populateForm(session, callbacks) {
         setVal('inp-apps-type', h.apps_type);
         setVal('inp-listing-url', h.listing_url);
         setVal('inp-lobby-url', h.lobby_url);
+        setVal('inp-loot-plan', h.loot_plan); // New Field
         
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && Array.isArray(h.event_tags)) {
@@ -157,7 +158,6 @@ export function populateForm(session, callbacks) {
             setVal('inp-session-date', UI.unixToLocalIso(sLog.date_time, tz));
         }
 
-        // DM Log
         if (sLog.dm_rewards) {
             setVal('out-dm-level', sLog.dm_rewards.level);
             setVal('out-dm-games', sLog.dm_rewards.games_played);
@@ -171,18 +171,12 @@ export function populateForm(session, callbacks) {
             }
         }
 
-        // Player Log Roster
         const listContainer = document.getElementById('session-roster-list');
         listContainer.innerHTML = '';
         if(sLog.players) {
             sLog.players.forEach(p => Rows.addSessionPlayerRow(listContainer, p, callbacks));
         }
-    } else {
-        // If loading a legacy template that has 'sessions' array, grab first one
-        if (session.form_data.sessions && session.form_data.sessions.length > 0) {
-            // ... legacy mapping logic if strictly needed, otherwise assume new structure
-        }
-    }
+    } 
     
     generateOutput();
     if(callbacks.onUpdate) callbacks.onUpdate();
@@ -244,7 +238,6 @@ ${data.game_description || ''}
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
     
-    // Session Output
     const outText = document.getElementById('out-session-text');
     if(outText) {
         const sTitle = document.getElementById('inp-session-title').value;
@@ -265,7 +258,6 @@ export function prepareTemplateData(originalData) {
     }
     data.players = []; 
     data.dm = { character_name: "", level: "", games_count: "0" };
-    // Clear log specific data for template
     data.session_log = { hours: 0, notes: "", summary: "", players: [], dm_rewards: {} };
     return data;
 }

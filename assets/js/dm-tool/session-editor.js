@@ -10,11 +10,6 @@ import {
     fetchActiveEvents,
     fetchTemplates 
 } from './data-manager.js';
-import { 
-    toUnixTimestamp,
-    calculatePlayerRewards,
-    calculateDMRewards
-} from './calculators.js';
 
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
@@ -90,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const nextName = incrementPartName(currentName);
                     document.getElementById('inp-copy-name').value = nextName;
                     
-                    // Open Modal or Auto-Submit? Let's Open Modal to confirm
+                    // Open Modal
                     document.getElementById('modal-copy-game').showModal();
                 }
             } else {
@@ -99,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Bind other calculation triggers
     setupCalculationTriggers(callbacks);
 });
 
@@ -127,7 +121,6 @@ function setupCalculationTriggers(callbacks) {
 
 function incrementPartName(name) {
     if(!name) return "Session Part 2";
-    // Check if ends in Part X
     const match = name.match(/(.*Part\s)(\d+)$/i);
     if(match) {
         const num = parseInt(match[2]) + 1;
@@ -137,7 +130,7 @@ function incrementPartName(name) {
 }
 
 // ==========================================
-// 2. Data Loading
+// 2. Data Loading & Events
 // ==========================================
 
 async function loadSessionData(sessionId, callbacks) {
@@ -186,13 +179,66 @@ function initPlayerSetup() {
 }
 
 // ==========================================
-// 3. Calculations
+// 3. Calculation Logic (Merged)
 // ==========================================
+
+function calculateXP(level, hours, rules) {
+    if (!rules || !rules.xp_per_hour) return 0;
+    const hourlyXP = rules.xp_per_hour[level] || 0;
+    return Math.floor(hourlyXP * hours);
+}
+
+function calculatePlayerRewards(level, hours, rules, incentives = []) {
+    const xp = calculateXP(level, hours, rules);
+    let dtp = Math.floor(5 * hours);
+    if (rules && rules['player incentives']) {
+        incentives.forEach(name => {
+            dtp += (rules['player incentives'][name] || 0);
+        });
+    }
+    return { xp, dtp };
+}
+
+function calculateDMRewards(dmLevel, hours, sessionApl, newHireCount, isJumpstart, rules, selectedIncentives = []) {
+    const rewards = { xp: 0, dtp: 0, gp: 0, loot: "1" };
+    if (!rules) return rewards;
+
+    // XP
+    rewards.xp = calculateXP(dmLevel, hours, rules);
+
+    // DTP
+    let dtp = Math.floor(5 * hours) + (5 * newHireCount);
+    if (rules['DM incentives']) {
+        selectedIncentives.forEach(name => {
+            dtp += (rules['DM incentives'][name] || 0);
+        });
+    }
+    rewards.dtp = dtp;
+
+    // Gold (Jumpstart Only)
+    if (isJumpstart) {
+        const safeApl = Math.floor(sessionApl) || 1;
+        rewards.gp = rules.gold_per_session_by_apl ? (rules.gold_per_session_by_apl[safeApl] || 0) : 0;
+    }
+
+    // Loot
+    let baseLoot = 1 + newHireCount;
+    let lootStr = `${baseLoot}`;
+    if (isJumpstart) {
+        lootStr += " + 1 Jumpstart Loot";
+    } else if (newHireCount > 0) {
+        lootStr += " (Inc. New Hire Bonus)";
+    }
+    rewards.loot = lootStr;
+
+    return rewards;
+}
 
 function updateSessionCalculations() {
     if (!cachedGameRules) return; 
     
-    const container = document.getElementById('view-session-log');
+    // Target the session details view container specifically
+    const container = document.getElementById('view-session-details');
     if(!container) return;
 
     // 1. Calculate APL / Counts
@@ -235,14 +281,13 @@ function updateSessionCalculations() {
     
     cards.forEach(card => {
         const hInput = card.querySelector('.s-hours');
-        hInput.value = sessionHours; // Auto-sync to header
+        hInput.value = sessionHours; 
         
         const gInput = card.querySelector('.s-gold');
         const playerGold = parseFloat(gInput.value) || 0;
         const lInput = card.querySelector('.s-level');
         const lvl = parseFloat(lInput.value) || 0;
         
-        // Validation Visuals
         if (maxGold > 0 && playerGold > maxGold) {
             gInput.parentElement.classList.add('error');
         } else {
@@ -317,28 +362,16 @@ function initCopyGameLogic() {
             const isNextPart = document.getElementById('chk-next-part').checked;
             const fullData = IO.getFormData();
             
-            // Prepare Data for Copy
-            fullData.header.title = newName; // Note: Ensure title is mapped correctly in createSession
-            
-            // Set default duration for new part
-            const currentDuration = parseFloat(fullData.session_log.hours) || 0;
-            // If current was split (e.g. 3), new one defaults to 3? Or remainder?
-            // "then each part will be 3 hours". Let's default to 3.
-            fullData.session_log.hours = 3;
+            fullData.header.title = newName; 
+            fullData.session_log.hours = 3; // Default for next part
             
             if (isNextPart) {
-                // Increment Master Roster
                 fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
-                
-                // Increment DM
                 fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
-                
-                // Sync to Session Log
                 fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
                 fullData.session_log.players.forEach(p => p.games_count = incrementGameString(p.games_count));
             }
             
-            // Clean up logs
             fullData.session_log.title = newName;
             fullData.session_log.notes = "";
             fullData.session_log.summary = "";
@@ -348,10 +381,8 @@ function initCopyGameLogic() {
             if(!user) return alert("Not logged in");
 
             try {
-                // We reuse createSession logic
                 const newSession = await createSession(user.id, newName, false);
                 if(newSession) {
-                    // Update the newly created session with our copied data
                     await saveSession(newSession.id, fullData, { title: newName });
                     window.location.href = `session.html?id=${newSession.id}`;
                 }
