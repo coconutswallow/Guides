@@ -7,9 +7,7 @@ extra_css:
 ---
 
 <style>
-    /* Specific styling for table inputs to match the main form 
-       and support Dark Mode variables automatically.
-    */
+    /* Styling for the new multi-line player table */
     .table-input {
         width: 100%;
         padding: 0.6rem;
@@ -29,6 +27,23 @@ extra_css:
         color: var(--color-text-secondary);
         cursor: not-allowed;
     }
+    
+    /* Player Row Grouping */
+    .player-tbody {
+        border-bottom: 2px solid var(--color-primary);
+    }
+    .player-tbody tr td {
+        border-top: none;
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+    .player-tbody tr:first-child td {
+        padding-top: 12px; /* Spacing top of group */
+    }
+    .player-tbody tr:last-child td {
+        padding-bottom: 12px; /* Spacing bottom of group */
+        border-bottom: 1px solid var(--color-border);
+    }
 </style>
 
 <header class="editor-header">
@@ -39,12 +54,12 @@ extra_css:
         
         <div class="stat-badge">
             <label>Hours</label>
-            <input type="number" id="header-hours" class="stat-input" value="3.0" step="0.5" min="0.5">
+            <input type="number" id="header-hours" class="stat-input" value="0" step="0.5" min="0">
         </div>
 
         <div class="stat-badge">
             <label>Sessions</label>
-            <div id="header-session-count" class="stat-display">1</div>
+            <div id="header-session-count" class="stat-display">0</div>
         </div>
     </div>
 
@@ -66,7 +81,6 @@ extra_css:
     <main class="editor-main">
         
         <div id="view-ad-listing" class="view-section">
-            
             <div class="content-tabs">
                 <div class="content-tab active" data-subtab="ad-input">Input</div>
                 <div class="content-tab" data-subtab="ad-output">Output</div>
@@ -76,7 +90,7 @@ extra_css:
                 <div class="form-grid">
     
                     <div class="form-row-full" style="background: var(--color-bg-medium); padding: 1rem; border-radius: 6px; border: 1px solid var(--color-border); align-items: center;">
-                        <strong style="color:var(--color-primary); margin-right: 1rem;">TEMPLATE: {% include help-icon.html text="This function allows you to save the Game Listing info into template(s) so you can re-load content quickly." %}</strong>
+                        <strong style="color:var(--color-primary); margin-right: 1rem;">TEMPLATE:</strong>
                         <select id="template-select" style="flex:1; max-width:300px; padding: 0.5rem;">
                             <option value="">Select a saved template...</option>
                         </select>
@@ -88,17 +102,16 @@ extra_css:
 
                     <div class="form-row-full">
                         <div class="form-group flex-grow">
-                            <label>Start Date & Time {% include help-icon.html text="Enter in your own timezone. The tool will convert to Discord time for you in the output." %}</label>
+                            <label>Start Date & Time</label>
                             <input type="datetime-local" id="inp-start-datetime">
                             <input type="hidden" id="inp-unix-time">
                         </div>
-                        
                         <div class="form-group" style="width: 250px;">
                             <label>Timezone</label>
                             <select id="inp-timezone"></select>
                         </div>
                     </div>
-
+                    
                     <div class="form-row-full">
                         <div class="form-group">
                             <label>Intended Duration</label>
@@ -112,143 +125,50 @@ extra_css:
                     </div>
 
                     <h3 class="form-section-title">Game Settings</h3>
-
-                    <div class="form-group">
-                        <label>Game Format</label>
-                        <select id="inp-format">
-                            <option value="">Loading...</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Game Version</label>
-                        <select id="inp-version">
-                            <option value="">Loading...</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Applications Type</label>
-                        <select id="inp-apps-type">
-                            <option value="">Loading...</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Platform</label>
-                        <input type="text" id="inp-platform" placeholder="e.g. Roll20, FoundryVTT">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Event(s) (Hold Ctrl/Cmd to select multiple)</label>
-                        <select id="inp-event" multiple>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>Game Format</label><select id="inp-format"><option value="">Loading...</option></select></div>
+                    <div class="form-group"><label>Game Version</label><select id="inp-version"><option value="">Loading...</option></select></div>
+                    <div class="form-group"><label>Applications Type</label><select id="inp-apps-type"><option value="">Loading...</option></select></div>
+                    <div class="form-group"><label>Platform</label><input type="text" id="inp-platform" placeholder="e.g. Roll20, FoundryVTT"></div>
+                    <div class="form-group"><label>Event(s)</label><select id="inp-event" multiple></select></div>
 
                     <h3 class="form-section-title">Player Requirements</h3>
-
-                    <div class="form-group">
-                        <label>Intended Tier</label>
-                        <input type="text" id="inp-tier" placeholder="e.g. Tier 2">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Intended APL</label>
-                        <input type="text" id="inp-apl" placeholder="e.g. APL 8">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Party Size</label>
-                        <input type="text" id="inp-party-size" value="4">
-                    </div>
+                    <div class="form-group"><label>Intended Tier</label><input type="text" id="inp-tier" placeholder="e.g. Tier 2"></div>
+                    <div class="form-group"><label>Intended APL</label><input type="text" id="inp-apl" placeholder="e.g. APL 8"></div>
+                    <div class="form-group"><label>Party Size</label><input type="text" id="inp-party-size" value="4"></div>
 
                     <h3 class="form-section-title">Tone & Difficulty</h3>
-
-                    <div class="form-group">
-                        <label>Tone</label>
-                        <input type="text" id="inp-tone" placeholder="e.g. Serious, Dark">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Focus</label>
-                        <input type="text" id="inp-focus" placeholder="e.g. 70% Combat, 30% Role-play">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Encounter Difficulty</label>
-                        <input type="text" id="inp-diff-encounter" placeholder="Medium / Hard / Deadly">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Enemy Threat Level</label>
-                        <input type="text" id="inp-diff-threat" placeholder="e.g. Deadly">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Chance of Char. Loss</label>
-                        <input type="text" id="inp-diff-loss" placeholder="Low / Medium / High">
-                    </div>
+                    <div class="form-group"><label>Tone</label><input type="text" id="inp-tone" placeholder="e.g. Serious, Dark"></div>
+                    <div class="form-group"><label>Focus</label><input type="text" id="inp-focus" placeholder="e.g. 70% Combat, 30% Role-play"></div>
+                    <div class="form-group"><label>Encounter Difficulty</label><input type="text" id="inp-diff-encounter" placeholder="Medium / Hard / Deadly"></div>
+                    <div class="form-group"><label>Enemy Threat Level</label><input type="text" id="inp-diff-threat" placeholder="e.g. Deadly"></div>
+                    <div class="form-group"><label>Chance of Char. Loss</label><input type="text" id="inp-diff-loss" placeholder="Low / Medium / High"></div>
 
                     <h3 class="form-section-title">Details & Rules</h3>
-                    
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>House Rules</label>
-                        {% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}
-                    </div>
-
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Notes</label>
-                        {% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}
-                    </div>
-
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Content Warnings</label>
-                        {% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}
-                    </div>
-                    
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>How to Apply</label>
-                        {% include markdown-widget.html id="inp-apply" name="how_to_apply" height="200px" %}
-                    </div>
-
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Game Listing URL</label>
-                        <input type="text" id="inp-listing-url" placeholder="Link to the Game Listing">
-                    </div>
-
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Game Lobby URL
-                            <a href="https://discord.com/channels/308324031478890497/1404082758342676651" target="_blank" style="font-size: 0.8em; text-decoration: underline;">
-                            (How to create a lobby)
-                            </a>    
-                        </label>
-                        <input type="text" id="inp-lobby-url" placeholder="Link to the Voice/Text channel">
-                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>House Rules</label>{% include markdown-widget.html id="inp-houserules" name="house_rules" height="150px" %}</div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>Notes</label>{% include markdown-widget.html id="inp-notes" name="notes" height="150px" %}</div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>Content Warnings</label>{% include markdown-widget.html id="inp-warnings" name="content_warnings" height="100px" %}</div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>How to Apply</label>{% include markdown-widget.html id="inp-apply" name="how_to_apply" height="200px" %}</div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>Game Listing URL</label><input type="text" id="inp-listing-url" placeholder="Link to the Game Listing"></div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>Game Lobby URL</label><input type="text" id="inp-lobby-url" placeholder="Link to the Voice/Text channel"></div>
 
                 </div> 
             </div>
 
             <div id="ad-output" class="subtab-content hidden-section">
                 <h3>Game Listing</h3>
-                <p>This output is formatted for the Discord listing channel.</p>
                 {% include discord-output.html id="out-listing-text" channel_name="#game-listings" height="500px" %}
-
                 <h3>Game Ad</h3>
-                <p>This output is formatted for the Discord advertisement channel.</p>
                 {% include discord-output.html id="out-ad-text" channel_name="#game-ads" height="200px" %}
             </div>
         </div>
 
         <div id="view-player-setup" class="view-section hidden-section">
             <h2>Player & DM Setup</h2>
-            
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <h3 class="card-title" style="margin:0;">Player Roster</h3>
                     <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
                 </div>
-                <p>Enter the details for the players participating in this session.</p>
-                
                 <table class="roster-table" style="width:100%; border-collapse: separate; border-spacing: 0 10px;">
                     <thead>
                         <tr>
@@ -259,43 +179,16 @@ extra_css:
                             <th style="width: 10%;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="roster-body">
-                    </tbody>
+                    <tbody id="roster-body"></tbody>
                 </table>
             </div>
-
+            
             <div class="card" style="margin-top: 2rem;">
                 <h3 class="card-title">Dungeon Master Details</h3>
                 <div class="form-row-full" style="align-items: flex-end; gap: 1rem;">
-                    
-                    <div class="form-group flex-grow">
-                        <label>DM Character Name</label>
-                        <input type="text" id="inp-dm-char-name" placeholder="Character Name">
-                    </div>
-                    
-                    <div class="form-group" style="width: 100px;">
-                        <label>DM PC Level</label>
-                        <input type="number" id="inp-dm-level" placeholder="Lvl">
-                    </div>
-                    
-                    <div class="form-group" style="width: 120px;">
-                        <label>Games DMed</label>
-                        <select id="inp-dm-games-count">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="10+">10+</option>
-                        </select>
-                    </div>
-
+                    <div class="form-group flex-grow"><label>DM Character Name</label><input type="text" id="inp-dm-char-name" placeholder="Character Name"></div>
+                    <div class="form-group" style="width: 100px;"><label>DM PC Level</label><input type="number" id="inp-dm-level" placeholder="Lvl"></div>
+                    <div class="form-group" style="width: 120px;"><label>Games DMed</label><select id="inp-dm-games-count"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="10+">10+</option></select></div>
                 </div>
             </div>
         </div>
@@ -339,16 +232,17 @@ extra_css:
                         </div>
                         
                         <div style="overflow-x: auto;">
-                            <table class="roster-table session-player-table" style="width:100%; min-width: 800px; border-collapse: separate; border-spacing: 0 10px;">
+                            <table class="roster-table session-player-table" style="width:100%; min-width: 900px; border-collapse: collapse;">
                                 <thead>
-                                    <tr>
-                                        <th style="width: 15%;">Discord ID</th>
-                                        <th style="width: 15%;">Character</th>
+                                    <tr style="border-bottom: 2px solid var(--color-text);">
+                                        <th style="width: 20%;">Identity</th>
                                         <th style="width: 5%;">Lvl</th>
                                         <th style="width: 5%;">Games</th>
-                                        <th style="width: 8%;">Hours</th> <th style="width: 8%;">XP</th>
-                                        <th style="width: 18%;">Loot / Items</th>
-                                        <th style="width: 18%;">Notes</th>
+                                        <th style="width: 7%;">Hrs</th>
+                                        <th style="width: 7%;">XP</th>
+                                        <th style="width: 7%;">DTP</th>
+                                        <th style="width: 25%;">Rewards / Incentives</th>
+                                        <th style="width: 19%;">Notes</th>
                                         <th style="width: 5%;"></th>
                                     </tr>
                                 </thead>

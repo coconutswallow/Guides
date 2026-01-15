@@ -18,15 +18,25 @@ export function distributeHours(totalHours, sessionCount) {
  * Calculates rewards based on the User's specific rules:
  * - XP: Based on Character Level * Hours
  * - Gold: Based on Session APL (Flat limit per session)
- * - DTP: 5 per hour
+ * - DTP: floor(5 * hours) + Incentives
  * * @param {number} charLevel - The individual player's level
  * @param {number} sessionApl - The Average Party Level of the group
  * @param {number} hours - Duration of the session
  * @param {object} rules - The 'dm_rules' object fetched from DB
+ * @param {string[]} incentives - Array of incentive names selected
  */
-export function calculateRewards(charLevel, sessionApl, hours, rules) {
-    // 1. DTP Calculation (Fixed Formula)
-    const earnedDTP = 5 * hours;
+export function calculateRewards(charLevel, sessionApl, hours, rules, incentives = []) {
+    // 1. DTP Calculation
+    // Formula: floor(5 * hours) + Incentives
+    let earnedDTP = Math.floor(5 * hours);
+    
+    // Add incentives
+    if (rules && rules['player incentives']) {
+        incentives.forEach(name => {
+            const bonus = rules['player incentives'][name] || 0;
+            earnedDTP += bonus;
+        });
+    }
 
     // 2. XP Calculation (Per Hour, based on Character Level)
     const hourlyXP = rules.xp_per_hour[charLevel] || 0;
@@ -41,7 +51,7 @@ export function calculateRewards(charLevel, sessionApl, hours, rules) {
     return {
         tier,
         maxXP,
-        maxGold,
+        maxGold, 
         earnedDTP
     };
 }
@@ -71,13 +81,9 @@ export function calculateSessionCount(hours) {
  */
 export function toUnixTimestamp(dateStr, timeZone) {
     if (!dateStr) return 0;
-    
-    if (!timeZone) {
-        return Math.floor(new Date(dateStr).getTime() / 1000);
-    }
+    if (!timeZone) return Math.floor(new Date(dateStr).getTime() / 1000);
 
     const utcDate = new Date(dateStr + 'Z');
-
     const fmt = new Intl.DateTimeFormat('en-US', {
         timeZone: timeZone,
         timeZoneName: 'longOffset'
@@ -94,16 +100,11 @@ export function toUnixTimestamp(dateStr, timeZone) {
     const sign = match[1] === '+' ? 1 : -1;
     const hours = parseInt(match[2], 10);
     const minutes = parseInt(match[3] || '0', 10);
-    
     const offsetMs = (hours * 60 + minutes) * 60 * 1000 * sign;
 
     return Math.floor((utcDate.getTime() - offsetMs) / 1000);
 }
 
-/**
- * Helper to determine Tier from Level (Standard 5e)
- * Not exported as it is used internally, but safe to keep here.
- */
 function getTier(level) {
     if (level <= 4) return 1;
     if (level <= 10) return 2;

@@ -59,5 +59,9 @@
     "18": 1900,
     "19": 2300,
     "20": 2300
-  }
+  },
+  "player incentives": {
+	  "incentive 1": 5,
+	  "incentive 2": 10
+  }  
 }
