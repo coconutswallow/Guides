@@ -3,67 +3,90 @@
 /**
  * Distributes total hours across a number of sessions.
  * Simple logic: Evenly divides hours.
- * @param {number} totalHours 
- * @param {number} sessionCount 
- * @returns {number} Hours per session
  */
 export function distributeHours(totalHours, sessionCount) {
     if (!sessionCount || sessionCount <= 0) return 0;
-    // Round to nearest 0.5
     const raw = totalHours / sessionCount;
     return Math.round(raw * 2) / 2;
 }
 
 /**
- * Calculates rewards based on the User's specific rules:
- * - XP: Based on Character Level * Hours
- * - Gold: Based on Session APL (Flat limit per session)
- * - DTP: floor(5 * hours) + Incentives
- * * @param {number} charLevel - The individual player's level
- * @param {number} sessionApl - The Average Party Level of the group
- * @param {number} hours - Duration of the session
- * @param {object} rules - The 'dm_rules' object fetched from DB
- * @param {string[]} incentives - Array of incentive names selected
- */
-export function calculateRewards(charLevel, sessionApl, hours, rules, incentives = []) {
-    // 1. DTP Calculation
-    // Formula: floor(5 * hours) + Incentives
-    let earnedDTP = Math.floor(5 * hours);
-    
-    // Add incentives
-    if (rules && rules['player incentives']) {
-        incentives.forEach(name => {
-            const bonus = rules['player incentives'][name] || 0;
-            earnedDTP += bonus;
-        });
-    }
-
-    // 2. XP Calculation (Per Hour, based on Character Level)
-    const hourlyXP = rules.xp_per_hour[charLevel] || 0;
-    const maxXP = hourlyXP * hours;
-
-    // 3. Gold Calculation (Flat per Session, based on APL)
-    const safeApl = Math.floor(sessionApl) || 1;
-    const maxGold = rules.gold_per_session_by_apl[safeApl] || 0;
-
-    const tier = getTier(charLevel);
-
-    return {
-        tier,
-        maxXP,
-        maxGold, 
-        earnedDTP
-    };
-}
-
-/**
  * Calculates XP separately. 
- * Required by session-editor.js for dynamic updates in the roster table.
  */
 export function calculateXP(level, hours, rules) {
     if (!rules || !rules.xp_per_hour) return 0;
     const hourlyXP = rules.xp_per_hour[level] || 0;
     return Math.floor(hourlyXP * hours);
+}
+
+/**
+ * Calculates Player Rewards (XP and DTP)
+ */
+export function calculatePlayerRewards(level, hours, rules, incentives = []) {
+    const xp = calculateXP(level, hours, rules);
+    
+    // DTP: floor(5 * hours) + incentives
+    let dtp = Math.floor(5 * hours);
+    
+    if (rules && rules['player incentives']) {
+        incentives.forEach(name => {
+            dtp += (rules['player incentives'][name] || 0);
+        });
+    }
+
+    return { xp, dtp };
+}
+
+/**
+ * Calculates DM Rewards based on specific rules:
+ * - DTP: floor(5 * hours) + (5 * newHires) + Incentives
+ * - XP: Based on DMPC Level & Hours
+ * - Gold: Max Gold for Session APL (Only if Jumpstart = Yes)
+ * - Loot: 1 + New Hires + (1 if Jumpstart)
+ */
+export function calculateDMRewards(dmLevel, hours, sessionApl, newHireCount, isJumpstart, rules, selectedIncentives = []) {
+    const rewards = {
+        xp: 0,
+        dtp: 0,
+        gp: 0,
+        loot: "1"
+    };
+
+    if (!rules) return rewards;
+
+    // 1. XP
+    rewards.xp = calculateXP(dmLevel, hours, rules);
+
+    // 2. DTP
+    let dtp = Math.floor(5 * hours) + (5 * newHireCount);
+    
+    if (rules['DM incentives']) {
+        selectedIncentives.forEach(name => {
+            dtp += (rules['DM incentives'][name] || 0);
+        });
+    }
+    rewards.dtp = dtp;
+
+    // 3. Gold (Only if Jumpstart)
+    if (isJumpstart) {
+        const safeApl = Math.floor(sessionApl) || 1;
+        rewards.gp = rules.gold_per_session_by_apl ? (rules.gold_per_session_by_apl[safeApl] || 0) : 0;
+    }
+
+    // 4. Loot String Construction
+    // "1 + [New Hires] + [Jumpstart]"
+    let baseLoot = 1 + newHireCount;
+    let lootStr = `${baseLoot}`;
+    
+    if (isJumpstart) {
+        lootStr += " + 1 Jumpstart Loot";
+    } else if (newHireCount > 0) {
+        lootStr += " (Inc. New Hire Bonus)";
+    }
+    
+    rewards.loot = lootStr;
+
+    return rewards;
 }
 
 /**
@@ -103,11 +126,4 @@ export function toUnixTimestamp(dateStr, timeZone) {
     const offsetMs = (hours * 60 + minutes) * 60 * 1000 * sign;
 
     return Math.floor((utcDate.getTime() - offsetMs) / 1000);
-}
-
-function getTier(level) {
-    if (level <= 4) return 1;
-    if (level <= 10) return 2;
-    if (level <= 16) return 3;
-    return 4;
 }

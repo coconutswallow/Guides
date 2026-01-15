@@ -12,11 +12,12 @@ import {
 import { 
     calculateSessionCount, 
     toUnixTimestamp, 
-    calculateXP 
+    calculatePlayerRewards,
+    calculateDMRewards
 } from './calculators.js';
 
 let cachedGameRules = null; 
-let activeIncentiveRowData = null; // Used for both Player and DM incentives
+let activeIncentiveRowData = null; 
 
 // ==========================================
 // 1. Initialization
@@ -123,7 +124,6 @@ async function initTemplateDropdown() {
 // ==========================================
 
 function initTabs() {
-    // 1. Sidebar Navigation
     const sidebarNav = document.getElementById('sidebar-nav');
     if (sidebarNav) {
         sidebarNav.addEventListener('click', (e) => {
@@ -144,7 +144,7 @@ function initTabs() {
         });
     }
 
-    // 2. Content Tabs (Input/Output) - Event Delegation for Dynamic Elements
+    // Content Tabs (Input/Output)
     document.body.addEventListener('click', (e) => {
         const tab = e.target.closest('.content-tab');
         if (!tab) return;
@@ -152,11 +152,9 @@ function initTabs() {
         const parent = tab.closest('.content-tabs');
         if (!parent) return;
 
-        // Deactivate siblings
         parent.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
 
-        // Hide sibling content areas
         const targetId = tab.dataset.subtab;
         const viewSection = tab.closest('.view-section');
         if (viewSection && targetId) {
@@ -164,7 +162,6 @@ function initTabs() {
             const targetEl = document.getElementById(targetId);
             if (targetEl) {
                 targetEl.classList.remove('hidden-section');
-                // Trigger Output Generation if clicking an output tab
                 if (targetId === 'ad-output' || targetId.includes('session-output')) {
                     generateOutput(); 
                 }
@@ -202,7 +199,6 @@ function updateSessionNavAndViews(count, totalHours) {
 
     // Loop through sessions
     for (let i = 1; i <= count; i++) {
-        // Calculate the target duration for this specific session
         let sessionDur = 3.0;
         if (i === count) {
             sessionDur = totalHours - (3 * (i - 1));
@@ -212,7 +208,6 @@ function updateSessionNavAndViews(count, totalHours) {
         // CHECK IF SESSION VIEW ALREADY EXISTS
         const existingView = document.getElementById(`view-session-${i}`);
         if (existingView) {
-            // Setup tabs for existing views (in case they weren't set)
             const tabInput = existingView.querySelector('.tab-input');
             const tabOutput = existingView.querySelector('.tab-output');
             const contentInput = existingView.querySelector('.content-input');
@@ -228,7 +223,6 @@ function updateSessionNavAndViews(count, totalHours) {
                 contentOutput.id = outputId;
             }
 
-            // Update duration if changed
             const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
@@ -244,7 +238,6 @@ function updateSessionNavAndViews(count, totalHours) {
         // CREATE NEW SESSION
         createdNew = true;
 
-        // 1. Sidebar Link
         const div = document.createElement('div');
         div.className = 'nav-item';
         div.dataset.target = `view-session-${i}`;
@@ -252,7 +245,6 @@ function updateSessionNavAndViews(count, totalHours) {
         div.id = `nav-link-session-${i}`;
         navContainer.appendChild(div);
 
-        // 2. View DOM
         const tmpl = document.getElementById('tpl-session-view');
         const clone = tmpl.content.cloneNode(true);
         const viewDiv = clone.querySelector('.session-view');
@@ -261,7 +253,6 @@ function updateSessionNavAndViews(count, totalHours) {
         viewDiv.dataset.sessionIndex = i;
         viewDiv.querySelector('.lbl-session-num').textContent = i;
         
-        // --- SETUP UNIQUE TABS FOR NEW SESSION ---
         const tabInput = viewDiv.querySelector('.tab-input');
         const tabOutput = viewDiv.querySelector('.tab-output');
         const contentInput = viewDiv.querySelector('.content-input');
@@ -284,15 +275,10 @@ function updateSessionNavAndViews(count, totalHours) {
         viewContainer.appendChild(viewDiv);
 
         initSessionViewLogic(viewDiv, i);
-        
-        // Auto-populate roster from previous session/master
         syncSessionPlayers(viewDiv, i);
-        
-        // Auto-populate DM Info
         syncDMRewards(viewDiv, i);
     }
 
-    // Remove Excess Sessions
     const currentViews = viewContainer.querySelectorAll('.session-view');
     const currentCount = currentViews.length;
 
@@ -305,7 +291,6 @@ function updateSessionNavAndViews(count, totalHours) {
         }
     }
 
-    // Auto-select first session if just created
     if (createdNew && count === 1) {
         const s1Link = document.getElementById('nav-link-session-1');
         if (s1Link) s1Link.click();
@@ -336,11 +321,9 @@ function initSessionViewLogic(viewElement, index) {
 
     const btnAdd = viewElement.querySelector('.btn-add-session-player');
     btnAdd.addEventListener('click', () => {
-        // Target .player-roster-list
         addSessionPlayerRow(viewElement.querySelector('.player-roster-list'), {}, index, viewElement);
     });
 
-    // Listeners for DM fields
     const dmLevel = viewElement.querySelector('.dm-level');
     const dmGames = viewElement.querySelector('.dm-games');
     const btnDMInc = viewElement.querySelector('.dm-incentives-btn');
@@ -399,20 +382,15 @@ function syncSessionPlayers(viewElement, sessionIndex) {
 }
 
 function syncDMRewards(viewElement, sessionIndex) {
-    // 1. Get Master Data
     const masterName = document.getElementById('inp-dm-char-name').value;
-    
-    // Set Name (Always from Master)
     viewElement.querySelector('.dm-name').value = masterName;
 
-    // 2. Logic for Level & Games
     let level = "";
     let games = "";
 
     if (sessionIndex === 1) {
         level = document.getElementById('inp-dm-level').value;
         const gRaw = document.getElementById('inp-dm-games-count').value; 
-        // Logic: Master Value + 1
         if (gRaw === "10+") games = "10+";
         else {
             let g = parseInt(gRaw) || 0;
@@ -420,10 +398,9 @@ function syncDMRewards(viewElement, sessionIndex) {
             games = (g >= 10) ? "10" : g.toString(); 
         }
     } else {
-        // Previous Session Logic
         const prevView = document.getElementById(`view-session-${sessionIndex - 1}`);
         if (prevView) {
-            level = prevView.querySelector('.dm-level').value; // Default to prev level
+            level = prevView.querySelector('.dm-level').value; 
             const prevGames = prevView.querySelector('.dm-games').value;
             if (prevGames === "10+") games = "10+";
             else {
@@ -434,7 +411,6 @@ function syncDMRewards(viewElement, sessionIndex) {
         }
     }
 
-    // Set Values
     viewElement.querySelector('.dm-level').value = level;
     viewElement.querySelector('.dm-games').value = games;
 
@@ -526,7 +502,6 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
         </div>
     `;
 
-    // Listeners
     card.querySelector('.btn-delete-card').addEventListener('click', () => {
         card.remove();
         updateSessionCalculations(viewContext);
@@ -540,7 +515,7 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     
     const btnIncentives = card.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
-        openIncentivesModal(btnIncentives, viewContext, false); // False = Player mode
+        openIncentivesModal(btnIncentives, viewContext, false); 
     });
 
     listContainer.appendChild(card);
@@ -580,12 +555,10 @@ function getSessionRosterData(viewElement) {
     return players;
 }
 
-// Validation Helper
 function getPreviousSessionData(currentSessionIndex) {
     const baseline = new Map(); 
 
     if (currentSessionIndex === 1) {
-        // Source: Master Roster
         const rows = document.querySelectorAll('#roster-body .player-row');
         rows.forEach(row => {
             const did = row.querySelector('.inp-discord-id').value;
@@ -597,7 +570,6 @@ function getPreviousSessionData(currentSessionIndex) {
             }
         });
     } else {
-        // Source: Previous Session
         const prevIndex = currentSessionIndex - 1;
         const prevView = document.getElementById(`view-session-${prevIndex}`);
         if(prevView) {
@@ -619,7 +591,7 @@ function getPreviousSessionData(currentSessionIndex) {
 function updateSessionCalculations(viewElement) {
     if (!cachedGameRules) return; 
     
-    // 1. Calculate APL
+    // 1. Calculate APL and Counts
     let totalLevel = 0;
     let playerCount = 0;
     let welcomeWagonCount = 0;
@@ -673,11 +645,10 @@ function updateSessionCalculations(viewElement) {
         const gamesInput = card.querySelector('.s-games');
         const gamesVal = gamesInput.value;
 
-        // Validation: Hours
+        // Validation
         if (playerHours > sessionHours) hInput.parentElement.classList.add('error');
         else hInput.parentElement.classList.remove('error');
 
-        // Validation: Gold
         if (maxGold > 0 && playerGold > maxGold) {
             const grp = gInput.parentElement;
             grp.classList.add('error');
@@ -686,23 +657,17 @@ function updateSessionCalculations(viewElement) {
             gInput.parentElement.classList.remove('error');
         }
 
-        // Validation: Level & Games vs Previous
         let isLevelError = false;
         let isGamesError = false;
 
         if (did && previousData.has(did)) {
             const prev = previousData.get(did);
-            
-            // Level Check
             if (lvl < prev.level) isLevelError = true;
-
-            // Games Check
             if (prev.games_count === "10+") {
                 if (gamesVal !== "10+") isGamesError = true; 
             } else {
                 const prevG = parseInt(prev.games_count) || 0;
-                const currG = parseInt(gamesVal); // might be NaN if "10+"
-                
+                const currG = parseInt(gamesVal);
                 if (gamesVal !== "10+") {
                     if (isNaN(currG) || currG < prevG) isGamesError = true;
                 }
@@ -715,17 +680,14 @@ function updateSessionCalculations(viewElement) {
         if (isGamesError) gamesInput.parentElement.classList.add('error');
         else gamesInput.parentElement.classList.remove('error');
 
-        // Calcs
-        const xp = calculateXP(lvl, playerHours, cachedGameRules);
-        let dtp = Math.floor(5 * playerHours);
+        // Player Calculations via Calculator
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
-        if (cachedGameRules['player incentives']) {
-            incentives.forEach(i => dtp += (cachedGameRules['player incentives'][i] || 0));
-        }
-
-        card.querySelector('.s-xp').value = xp;
-        card.querySelector('.s-dtp').value = dtp;
+        
+        const rewards = calculatePlayerRewards(lvl, playerHours, cachedGameRules, incentives);
+        
+        card.querySelector('.s-xp').value = rewards.xp;
+        card.querySelector('.s-dtp').value = rewards.dtp;
     });
 
     // 4. DM REWARDS CALCULATION
@@ -737,46 +699,32 @@ function updateSessionCalculations(viewElement) {
         const dmGamesVal = dmGamesInput.value;
         const dmGamesNum = parseInt(dmGamesVal) || 999; 
 
-        // Incentives
+        // Derived Checks
         const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
         
         viewElement.querySelector('.dm-val-jumpstart').value = isJumpstart ? "Yes" : "No";
         viewElement.querySelector('.dm-val-welcome').value = welcomeWagonCount;
         viewElement.querySelector('.dm-val-newhires').value = newHireCount;
 
-        // Rewards
-        // XP
-        const dmXp = calculateXP(dmLvl, sessionHours, cachedGameRules);
-        viewElement.querySelector('.dm-res-xp').value = dmXp;
-
-        // DTP: Floor(5 * hours) + (5 * newHires) + Incentives
-        let dmDtp = Math.floor(5 * sessionHours) + (5 * newHireCount);
+        // Fetch selected incentives
         const btnDM = viewElement.querySelector('.dm-incentives-btn');
-        const dmIncentives = JSON.parse(btnDM.dataset.incentives || '[]');
-        
-        // Manual DM Incentives Lookup
-        if (cachedGameRules['dm incentives']) {
-            dmIncentives.forEach(i => dmDtp += (cachedGameRules['dm incentives'][i] || 0));
-        }
-        viewElement.querySelector('.dm-res-dtp').value = dmDtp;
+        const dmIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
 
-        // Gold: Only if Jumpstart? Using prompt: "get 1x DM Gold". Assuming Gold lookup.
-        let dmGold = 0;
-        if (isJumpstart) {
-             // Find Tier of DM Level to guess gold, or just base calculation?
-             // Since no direct DM gold table exists, using Player Gold table by Level/APL equivalence
-             const dmMockTier = dmLvl >= 11 ? 3 : (dmLvl >= 5 ? 2 : 1); // Simple tier approx
-             // Actually, usually DM Gold is same as Max Gold for the APL?
-             // Let's use the current Session Max Gold (based on APL) as "1x Gold" proxy
-             dmGold = maxGold; 
-        }
-        viewElement.querySelector('.dm-res-gp').value = dmGold;
+        // Use Calculator
+        const dmRewards = calculateDMRewards(
+            dmLvl, 
+            sessionHours, 
+            apl, 
+            newHireCount, 
+            isJumpstart, 
+            cachedGameRules, 
+            dmIncentives
+        );
 
-        // Loot
-        let lootStr = "1";
-        if (newHireCount > 0) lootStr += ` + ${newHireCount} (New Hires)`;
-        if (isJumpstart) lootStr += " + 1 Jumpstart Loot";
-        viewElement.querySelector('.dm-res-loot').value = lootStr;
+        viewElement.querySelector('.dm-res-xp').value = dmRewards.xp;
+        viewElement.querySelector('.dm-res-dtp').value = dmRewards.dtp;
+        viewElement.querySelector('.dm-res-gp').value = dmRewards.gp;
+        viewElement.querySelector('.dm-res-loot').value = dmRewards.loot;
     }
 }
 
@@ -802,8 +750,8 @@ function openIncentivesModal(buttonEl, viewContext, isDM = false) {
     const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
     let hasIncentives = false;
     
-    // Choose Source: Player vs DM Incentives
-    const sourceKey = isDM ? 'dm incentives' : 'player incentives';
+    // FIXED: Use uppercase 'DM' to match JSON data
+    const sourceKey = isDM ? 'DM incentives' : 'player incentives';
 
     if (cachedGameRules && cachedGameRules[sourceKey]) {
         const entries = Object.entries(cachedGameRules[sourceKey]);
@@ -839,6 +787,8 @@ function saveIncentivesFromModal() {
     activeIncentiveRowData = null;
     modal.close();
 }
+
+// ... (Standard Utils unchanged) ...
 
 function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
@@ -997,7 +947,6 @@ function getFormData() {
     const sessionsData = [];
     const sessionViews = document.querySelectorAll('.session-view');
     sessionViews.forEach(view => {
-        // Collect DM data
         const dmBtn = view.querySelector('.dm-incentives-btn');
         const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
 
@@ -1010,12 +959,11 @@ function getFormData() {
             summary: view.querySelector('.inp-session-summary').value,
             dm_collaborators: view.querySelector('.inp-dm-collab').value,
             players: getSessionRosterData(view),
-            // New DM Section
             dm_rewards: {
                 level: view.querySelector('.dm-level').value,
                 games_played: view.querySelector('.dm-games').value,
                 incentives: dmIncentives,
-                // Result fields could be recalculated on load, but we can save if needed
+                loot_selected: view.querySelector('.dm-loot-selected').value
             }
         });
     });
@@ -1151,10 +1099,10 @@ function populateForm(session) {
                 view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
             }
             
-            // Restore DM Data
             if (sData.dm_rewards) {
                 view.querySelector('.dm-level').value = sData.dm_rewards.level || "";
                 view.querySelector('.dm-games').value = sData.dm_rewards.games_played || "";
+                view.querySelector('.dm-loot-selected').value = sData.dm_rewards.loot_selected || "";
                 
                 const dmBtn = view.querySelector('.dm-incentives-btn');
                 const loadedInc = sData.dm_rewards.incentives || [];
@@ -1171,7 +1119,6 @@ function populateForm(session) {
                 sData.players.forEach(p => addSessionPlayerRow(listContainer, p, index, view));
             }
 
-            // Trigger calc to show DM results
             updateSessionCalculations(view);
         });
     }
@@ -1255,10 +1202,6 @@ ${data.game_description || ''}
             const sDate = view.querySelector('.inp-session-date').value; 
             const sNotes = view.querySelector('.inp-session-notes').value;
             const sSummary = view.querySelector('.inp-session-summary').value;
-            
-            // Format DM Rewards for output if needed? 
-            // Currently requested prompt only mentioned display fields on screen, not specific Markdown output format for DM rewards.
-            // Leaving standard output as is for now.
             
             outText.value = `**${sTitle}**\n*${sDate}*\n\n**Summary:**\n${sSummary}\n\n**Notes:**\n${sNotes}`;
         }
