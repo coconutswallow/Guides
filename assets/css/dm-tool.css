@@ -231,10 +231,17 @@ body {
 /* View sections in the session editor */
 .view-section {
     display: block;
+    animation: fadeIn 0.3s ease;
 }
 
-.view-section.hidden-section {
+/* Global utility for tabs/sections */
+.hidden-section {
     display: none !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================
@@ -307,6 +314,7 @@ body {
     color: var(--color-text);
 }
 
+/* Standard Inputs in Game Ads & Forms */
 .form-group input, 
 .form-group select, 
 .form-group textarea {
@@ -315,7 +323,8 @@ body {
     border: 1px solid var(--color-border);
     border-radius: 4px;
     font-family: inherit;
-    background: var(--color-bg-light);
+    /* FIX: Force white background for editable fields in Light Mode */
+    background: #ffffff;
     color: var(--color-text);
 }
 
@@ -347,13 +356,15 @@ body {
     height: 100px;
     padding: 0.5rem;
     border: 1px solid var(--color-border);
-    background-color: var(--color-bg-light); 
+    /* FIX: Force white background */
+    background-color: #ffffff; 
     color: var(--color-text);
     border-radius: 4px;
 }
 
 #template-select {
-    background-color: var(--color-bg-light);
+    /* FIX: Force white background */
+    background-color: #ffffff;
     color: var(--color-text);
     border: 1px solid var(--color-border);
 }
@@ -476,7 +487,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Input Styling inside cards */
+/* Input Styling inside cards (Table Inputs) */
 .table-input {
     width: 100%;
     padding: 8px;
@@ -485,8 +496,7 @@ body {
     font-family: inherit;
     font-size: 0.95rem;
     box-sizing: border-box;
-    
-    /* FIX: Make editable fields white by default (Light Mode) */
+    /* FIX: Force white background */
     background: #ffffff; 
     color: var(--color-text);
 }
@@ -503,8 +513,8 @@ body {
     background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    font-weight: normal !important; /* Unbolds XP and DM fields */
-    padding-left: 0; /* Aligns text with the label since border is gone */
+    font-weight: normal !important;
+    padding-left: 0;
     color: var(--color-text);
     cursor: default;
 }
@@ -685,8 +695,13 @@ dialog::backdrop {
     border-color: var(--color-border);
 }
 
-[data-theme="dark"] .table-input {
-    /* Restore dark background for inputs in dark mode */
+/* Restore dark background for inputs in dark mode */
+[data-theme="dark"] .table-input,
+[data-theme="dark"] .form-group input, 
+[data-theme="dark"] .form-group select, 
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] #inp-event[multiple],
+[data-theme="dark"] #template-select {
     background: var(--color-bg-medium); 
     border-color: var(--color-border);
     color: var(--color-text);
