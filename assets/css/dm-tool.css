@@ -233,7 +233,7 @@ body {
     display: block;
 }
 
-.view-section.hidden-section {
+.hidden-section {
     display: none !important;
 }
 

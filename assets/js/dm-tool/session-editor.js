@@ -123,45 +123,53 @@ async function initTemplateDropdown() {
 // ==========================================
 
 function initTabs() {
+    // 1. Sidebar Navigation
     const sidebarNav = document.getElementById('sidebar-nav');
-    sidebarNav.addEventListener('click', (e) => {
-        const item = e.target.closest('.nav-item');
-        if (!item) return;
+    if (sidebarNav) {
+        sidebarNav.addEventListener('click', (e) => {
+            const item = e.target.closest('.nav-item');
+            if (!item) return;
 
-        // 1. Handle Active State
-        document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
-        item.classList.add('active');
+            // Handle Active State
+            document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+            item.classList.add('active');
 
-        // 2. Hide all Sections
-        document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
+            // Hide all Sections
+            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
 
-        // 3. Show Target Section
-        const targetId = item.dataset.target;
-        const targetEl = document.getElementById(targetId);
-        if(targetEl) {
-            targetEl.classList.remove('hidden-section');
-        } else {
-            console.warn("Tab target not found:", targetId);
-        }
-    });
-
-    // Content Tabs (Input/Output)
-    document.querySelectorAll('.content-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            tab.parentElement.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            const targetId = tab.dataset.subtab;
-            if(!targetId) return; 
-
-            const parent = tab.closest('.view-section');
-            parent.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
-            
-            const subTarget = document.getElementById(targetId);
-            if(subTarget) subTarget.classList.remove('hidden-section');
-            
-            if(targetId === 'ad-output') generateOutput();
+            // Show Target Section
+            const targetId = item.dataset.target;
+            const targetEl = document.getElementById(targetId);
+            if(targetEl) targetEl.classList.remove('hidden-section');
         });
+    }
+
+    // 2. Content Tabs (Input/Output) - Event Delegation for Dynamic Elements
+    document.body.addEventListener('click', (e) => {
+        const tab = e.target.closest('.content-tab');
+        if (!tab) return;
+        
+        const parent = tab.closest('.content-tabs');
+        if (!parent) return;
+
+        // Deactivate siblings
+        parent.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Hide sibling content areas
+        const targetId = tab.dataset.subtab;
+        const viewSection = tab.closest('.view-section');
+        if (viewSection && targetId) {
+            viewSection.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.classList.remove('hidden-section');
+                // Trigger Output Generation if clicking an output tab
+                if (targetId === 'ad-output' || targetId.includes('session-output')) {
+                    generateOutput(); 
+                }
+            }
+        }
     });
 }
 
@@ -202,22 +210,32 @@ function updateSessionNavAndViews(count, totalHours) {
         }
 
         // CHECK IF SESSION VIEW ALREADY EXISTS
-        if (document.getElementById(`view-session-${i}`)) {
-            const existingView = document.getElementById(`view-session-${i}`);
-            const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
+        const existingView = document.getElementById(`view-session-${i}`);
+        if (existingView) {
+            // Setup tabs for existing views (in case they weren't set)
+            const tabInput = existingView.querySelector('.tab-input');
+            const tabOutput = existingView.querySelector('.tab-output');
+            const contentInput = existingView.querySelector('.content-input');
+            const contentOutput = existingView.querySelector('.content-output');
             
-            // If the calculated duration differs from what's there, update it
+            if (tabInput && tabOutput && contentInput && contentOutput) {
+                const inputId = `session-input-${i}`;
+                const outputId = `session-output-${i}`;
+                
+                tabInput.dataset.subtab = inputId;
+                tabOutput.dataset.subtab = outputId;
+                contentInput.id = inputId;
+                contentOutput.id = outputId;
+            }
+
+            // Update duration if changed
+            const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
-                
-                // FIXED: Target .player-card instead of .session-roster-body
                 existingView.querySelectorAll('.player-card').forEach(card => {
                     const hInput = card.querySelector('.s-hours');
-                    if(hInput) {
-                        hInput.value = sessionDur;
-                    }
+                    if(hInput) hInput.value = sessionDur;
                 });
-                
                 updateSessionCalculations(existingView);
             }
             continue; 
@@ -242,6 +260,23 @@ function updateSessionNavAndViews(count, totalHours) {
         viewDiv.id = `view-session-${i}`;
         viewDiv.dataset.sessionIndex = i;
         viewDiv.querySelector('.lbl-session-num').textContent = i;
+        
+        // --- SETUP UNIQUE TABS FOR NEW SESSION ---
+        const tabInput = viewDiv.querySelector('.tab-input');
+        const tabOutput = viewDiv.querySelector('.tab-output');
+        const contentInput = viewDiv.querySelector('.content-input');
+        const contentOutput = viewDiv.querySelector('.content-output');
+        
+        if (tabInput && tabOutput && contentInput && contentOutput) {
+            const inputId = `session-input-${i}`;
+            const outputId = `session-output-${i}`;
+            
+            tabInput.dataset.subtab = inputId;
+            tabOutput.dataset.subtab = outputId;
+            contentInput.id = inputId;
+            contentOutput.id = outputId;
+        }
+        // -----------------------------------------
         
         const gameName = document.getElementById('header-game-name').value || "Game";
         viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
@@ -299,7 +334,7 @@ function initSessionViewLogic(viewElement, index) {
 
     const btnAdd = viewElement.querySelector('.btn-add-session-player');
     btnAdd.addEventListener('click', () => {
-        // FIXED: Target .player-roster-list
+        // Target .player-roster-list
         addSessionPlayerRow(viewElement.querySelector('.player-roster-list'), {}, index, viewElement);
     });
 }
@@ -309,10 +344,7 @@ function initSessionViewLogic(viewElement, index) {
 // ==========================================
 
 function syncSessionPlayers(viewElement, sessionIndex) {
-    // FIXED: Target the DIV container, not the table
     const listContainer = viewElement.querySelector('.player-roster-list');
-    
-    // Clear all existing cards
     listContainer.innerHTML = ''; 
 
     let sourceData = [];
@@ -349,7 +381,6 @@ function syncSessionPlayers(viewElement, sessionIndex) {
             items_used: "",
             notes: ""
         };
-        // FIXED: Pass listContainer
         addSessionPlayerRow(listContainer, newRowData, sessionIndex, viewElement);
     });
     
@@ -369,6 +400,7 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     const card = document.createElement('div');
     card.className = 'player-card';
 
+    // No Liquid tags used here to prevent JS errors
     card.innerHTML = `
         <div class="player-card-header">
             <span class="player-card-title">Player ${playerNum}</span>
@@ -393,6 +425,7 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
                 <div class="card-field w-20">
                     <label class="field-label"># Games</label>
                     <input type="text" class="table-input s-games" value="${data.games_count || ''}">
+                    <div class="validation-msg">Cannot be less than previous</div>
                 </div>
             </div>
 
@@ -400,13 +433,14 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
                 <div class="card-field w-20">
                     <label class="field-label">Level</label>
                     <input type="number" class="table-input s-level" value="${data.level || ''}">
+                    <div class="validation-msg">Cannot be less than previous</div>
                 </div>
                 <div class="card-field w-20">
                     <label class="field-label">XP Earned</label>
                     <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
                 </div>
                 <div class="card-field w-30">
-                    <label class="field-label">Gold Rewarded</label>
+                    <label class="field-label">Gold Rewarded <span title="Gold reward should be appropriate and not always be max allowed" style="cursor:help; font-size:0.8em;">ⓘ</span></label>
                     <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
                     <div class="validation-msg">Max <span class="val-max-msg"></span>gp</div>
                 </div>
@@ -432,7 +466,7 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
 
             <div class="card-row">
                 <div class="card-field w-100">
-                    <label class="field-label">Notes</label>
+                    <label class="field-label">Character Outcomes / Notes <span title="Optional - record any character outcomes that persist outside of the game/session" style="cursor:help; font-size:0.8em;">ⓘ</span></label>
                     <textarea class="table-input s-notes" rows="1" placeholder="">${data.notes || ''}</textarea>
                 </div>
             </div>
@@ -443,12 +477,12 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     card.querySelector('.btn-delete-card').addEventListener('click', () => {
         card.remove();
         updateSessionCalculations(viewContext);
-        // Renumber remaining cards
         renumberCards(listContainer);
     });
 
     card.querySelector('.s-hours').addEventListener('input', () => updateSessionCalculations(viewContext));
     card.querySelector('.s-level').addEventListener('input', () => updateSessionCalculations(viewContext));
+    card.querySelector('.s-games').addEventListener('input', () => updateSessionCalculations(viewContext));
     card.querySelector('.s-gold').addEventListener('input', () => updateSessionCalculations(viewContext));
     
     const btnIncentives = card.querySelector('.s-incentives-btn');
@@ -493,6 +527,42 @@ function getSessionRosterData(viewElement) {
     return players;
 }
 
+// Validation Helper
+function getPreviousSessionData(currentSessionIndex) {
+    const baseline = new Map(); 
+
+    if (currentSessionIndex === 1) {
+        // Source: Master Roster
+        const rows = document.querySelectorAll('#roster-body .player-row');
+        rows.forEach(row => {
+            const did = row.querySelector('.inp-discord-id').value;
+            if(did) {
+                baseline.set(did, {
+                    level: parseFloat(row.querySelector('.inp-level').value) || 0,
+                    games_count: row.querySelector('.inp-games-count').value
+                });
+            }
+        });
+    } else {
+        // Source: Previous Session
+        const prevIndex = currentSessionIndex - 1;
+        const prevView = document.getElementById(`view-session-${prevIndex}`);
+        if(prevView) {
+            const cards = prevView.querySelectorAll('.player-card');
+            cards.forEach(card => {
+                const did = card.querySelector('.s-discord-id').value;
+                if(did) {
+                    baseline.set(did, {
+                        level: parseFloat(card.querySelector('.s-level').value) || 0,
+                        games_count: card.querySelector('.s-games').value
+                    });
+                }
+            });
+        }
+    }
+    return baseline;
+}
+
 function updateSessionCalculations(viewElement) {
     if (!cachedGameRules) return; 
     
@@ -522,16 +592,25 @@ function updateSessionCalculations(viewElement) {
     if(lblTier) lblTier.textContent = tier;
     if(lblGold) lblGold.textContent = maxGold;
 
-    // 3. Row Updates
+    // 3. Row Updates & Validations
     const sessionHours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
+    const sessionIndex = parseInt(viewElement.dataset.sessionIndex) || 1;
+    const previousData = getPreviousSessionData(sessionIndex);
 
     cards.forEach(card => {
-        const lvl = parseInt(card.querySelector('.s-level').value) || 0;
+        const did = card.querySelector('.s-discord-id').value;
+        const lInput = card.querySelector('.s-level');
+        const lvl = parseFloat(lInput.value) || 0;
+        
         const hInput = card.querySelector('.s-hours');
         const playerHours = parseFloat(hInput.value) || 0;
+        
         const gInput = card.querySelector('.s-gold');
         const playerGold = parseFloat(gInput.value) || 0;
-        
+
+        const gamesInput = card.querySelector('.s-games');
+        const gamesVal = gamesInput.value;
+
         // Validation: Hours
         if (playerHours > sessionHours) hInput.parentElement.classList.add('error');
         else hInput.parentElement.classList.remove('error');
@@ -544,6 +623,35 @@ function updateSessionCalculations(viewElement) {
         } else {
             gInput.parentElement.classList.remove('error');
         }
+
+        // Validation: Level & Games vs Previous
+        let isLevelError = false;
+        let isGamesError = false;
+
+        if (did && previousData.has(did)) {
+            const prev = previousData.get(did);
+            
+            // Level Check
+            if (lvl < prev.level) isLevelError = true;
+
+            // Games Check
+            if (prev.games_count === "10+") {
+                if (gamesVal !== "10+") isGamesError = true; 
+            } else {
+                const prevG = parseInt(prev.games_count) || 0;
+                const currG = parseInt(gamesVal); // might be NaN if "10+"
+                
+                if (gamesVal !== "10+") {
+                    if (isNaN(currG) || currG < prevG) isGamesError = true;
+                }
+            }
+        }
+
+        if (isLevelError) lInput.parentElement.classList.add('error');
+        else lInput.parentElement.classList.remove('error');
+
+        if (isGamesError) gamesInput.parentElement.classList.add('error');
+        else gamesInput.parentElement.classList.remove('error');
 
         // Calcs
         const xp = calculateXP(lvl, playerHours, cachedGameRules);
@@ -558,9 +666,6 @@ function updateSessionCalculations(viewElement) {
         card.querySelector('.s-dtp').value = dtp;
     });
 }
-
-// ... (Modal logic and Standard Utils remain the same as previous) ...
-// (Included for completeness)
 
 function initIncentivesModal() {
     const modal = document.getElementById('modal-incentives');
@@ -609,7 +714,7 @@ function saveIncentivesFromModal() {
     const selected = Array.from(checkboxes).map(cb => cb.value);
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
-    btn.innerText = selected.length > 0 ? `+` : '+'; // Update text to + symbol logic
+    btn.innerText = selected.length > 0 ? `+` : '+'; 
     updateSessionCalculations(activeIncentiveRowData.viewContext);
     activeIncentiveRowData = null;
     modal.close();
@@ -648,7 +753,7 @@ function initTimezone() {
 
 function initPlayerRoster() {
     const btnAdd = document.getElementById('btn-add-player');
-    if(btnAdd) btnAdd.addEventListener('click', addPlayerRowToMaster); // Renamed helper to avoid confusion
+    if(btnAdd) btnAdd.addEventListener('click', addPlayerRowToMaster); 
 }
 
 function addPlayerRowToMaster(data = {}) {
@@ -778,6 +883,8 @@ function getFormData() {
             hours: view.querySelector('.inp-session-hours').value,
             date_time: view.querySelector('.inp-session-unix').value, 
             notes: view.querySelector('.inp-session-notes').value,
+            summary: view.querySelector('.inp-session-summary').value,
+            dm_collaborators: view.querySelector('.inp-dm-collab').value,
             players: getSessionRosterData(view)
         });
     });
@@ -904,13 +1011,15 @@ function populateForm(session) {
             view.querySelector('.inp-session-title').value = sData.title;
             view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
+            if (view.querySelector('.inp-session-summary')) view.querySelector('.inp-session-summary').value = sData.summary || "";
+            if (view.querySelector('.inp-dm-collab')) view.querySelector('.inp-dm-collab').value = sData.dm_collaborators || "";
+            
             if(sData.date_time) {
                 view.querySelector('.inp-session-unix').value = sData.date_time;
                 const tz = document.getElementById('inp-timezone').value;
                 view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
             }
             
-            // FIXED: Target new Div List
             const listContainer = view.querySelector('.player-roster-list');
             listContainer.innerHTML = ''; 
             
@@ -989,4 +1098,18 @@ ${data.game_description || ''}
 \`\`\``;
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
+    
+    // Session Outputs
+    const sessionViews = document.querySelectorAll('.session-view');
+    sessionViews.forEach(view => {
+        const outText = view.querySelector('.out-session-text');
+        if(outText) {
+            const sTitle = view.querySelector('.inp-session-title').value;
+            const sDate = view.querySelector('.inp-session-date').value; 
+            const sNotes = view.querySelector('.inp-session-notes').value;
+            const sSummary = view.querySelector('.inp-session-summary').value;
+            
+            outText.value = `**${sTitle}**\n*${sDate}*\n\n**Summary:**\n${sSummary}\n\n**Notes:**\n${sNotes}`;
+        }
+    });
 }
