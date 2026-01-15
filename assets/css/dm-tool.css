@@ -259,6 +259,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
+    width: 100%; /* Force full width */
 }
 
 .form-row-full {
@@ -266,11 +267,13 @@ body {
     display: flex;
     gap: 1.5rem;
     align-items: flex-start;
+    width: 100%;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
+    width: 100%; /* Ensure groups fill grid cells */
 }
 
 .form-group.flex-grow {
@@ -337,14 +340,16 @@ body {
 }
 
 /* ============================
-   6. PLAYER CARD STYLES 
+   6. PLAYER CARD STYLES (Redesigned)
    ============================ */
 
 /* The Table Container */
 .session-player-table {
     border-collapse: separate;
     border-spacing: 0 2rem; /* Large gap between player cards */
-    width: 100%;
+    width: 100% !important; /* Force Full Width */
+    min-width: 800px; /* Force scroll on small screens instead of crushing */
+    table-layout: fixed; /* Crucial: Forces columns to respect % widths */
 }
 
 /* The Player Card (TBODY) */
@@ -382,6 +387,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    width: 100%;
 }
 
 /* The Label Above the Field */
@@ -403,6 +409,7 @@ body {
     font-family: inherit;
     font-size: 0.95rem;
     transition: all 0.2s;
+    box-sizing: border-box; /* Ensure padding doesn't overflow width */
 }
 
 .table-input:focus {
@@ -457,6 +464,7 @@ body {
 [data-theme="dark"] .readonly-result {
     background: rgba(255,255,255,0.05);
 }
+
 
 /* ============================
    7. BUTTONS & ACTIONS
