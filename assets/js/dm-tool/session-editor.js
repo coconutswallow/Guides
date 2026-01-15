@@ -411,7 +411,7 @@ function addSessionPlayerRow(tbody, data = {}, sessionIndex, viewContext) {
         tr1.remove();
         tr2.remove();
         tr3.remove();
-        // Renumber remaining players (Optional, but good UX)
+        // Renumber remaining players
         renumberPlayers(tbody);
     });
 
@@ -861,8 +861,6 @@ function populateForm(session) {
     }
     
     // CALCULATE AND SET TOTAL HOURS BEFORE CREATING VIEWS
-    // This ensures that when updateSessionNavAndViews runs, it uses the correct total
-    // to calculate the final session length (e.g. 4.5) instead of defaulting.
     let totalLoadedHours = 0;
     let savedSessionCount = 0;
     
@@ -876,7 +874,6 @@ function populateForm(session) {
     const headerHoursInput = document.getElementById('header-hours');
     if(headerHoursInput) {
         headerHoursInput.value = totalLoadedHours;
-        // Update the display count too
         const sessionDisplay = document.getElementById('header-session-count');
         if(sessionDisplay) sessionDisplay.textContent = savedSessionCount;
     }
@@ -884,7 +881,6 @@ function populateForm(session) {
     if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
         const count = session.form_data.sessions.length;
         
-        // Pass the calculated total loaded hours here
         updateSessionNavAndViews(count, totalLoadedHours);
 
         session.form_data.sessions.forEach((sData, i) => {
@@ -893,8 +889,6 @@ function populateForm(session) {
             if(!view) return;
 
             view.querySelector('.inp-session-title').value = sData.title;
-            
-            // Respect saved hours explicitly (though updateSessionNavAndViews should have set it correctly via total)
             view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
             
