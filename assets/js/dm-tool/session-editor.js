@@ -9,7 +9,7 @@ import {
     fetchGameRules, 
     fetchActiveEvents,
     fetchTemplates,
-    deleteSession // <--- ADDED IMPORT
+    deleteSession 
 } from './data-manager.js';
 
 import * as UI from './session-ui.js';
@@ -36,6 +36,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
+
+    // --- NEW: Update outputs immediately when specific URL fields are changed ---
+    const bindOutput = (id) => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', () => IO.generateOutput());
+    };
+    bindOutput('inp-lobby-url');
+    bindOutput('inp-listing-url');
+    // --------------------------------------------------------------------------
 
     // Dropdowns
     const rules = cachedGameRules;
