@@ -1,3 +1,7 @@
+{
+type: uploaded file
+fileName: session-editor.js
+fullContent:
 // assets/js/dm-tool/session-editor.js
 
 import { supabase } from '../supabaseClient.js'; 
@@ -210,7 +214,6 @@ function updateSessionNavAndViews(count, totalHours) {
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
                 
-                // FIXED: Target .player-card instead of .session-roster-body
                 existingView.querySelectorAll('.player-card').forEach(card => {
                     const hInput = card.querySelector('.s-hours');
                     if(hInput) {
@@ -299,7 +302,6 @@ function initSessionViewLogic(viewElement, index) {
 
     const btnAdd = viewElement.querySelector('.btn-add-session-player');
     btnAdd.addEventListener('click', () => {
-        // FIXED: Target .player-roster-list
         addSessionPlayerRow(viewElement.querySelector('.player-roster-list'), {}, index, viewElement);
     });
 }
@@ -309,10 +311,7 @@ function initSessionViewLogic(viewElement, index) {
 // ==========================================
 
 function syncSessionPlayers(viewElement, sessionIndex) {
-    // FIXED: Target the DIV container, not the table
     const listContainer = viewElement.querySelector('.player-roster-list');
-    
-    // Clear all existing cards
     listContainer.innerHTML = ''; 
 
     let sourceData = [];
@@ -349,7 +348,6 @@ function syncSessionPlayers(viewElement, sessionIndex) {
             items_used: "",
             notes: ""
         };
-        // FIXED: Pass listContainer
         addSessionPlayerRow(listContainer, newRowData, sessionIndex, viewElement);
     });
     
@@ -393,6 +391,7 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
                 <div class="card-field w-20">
                     <label class="field-label"># Games</label>
                     <input type="text" class="table-input s-games" value="${data.games_count || ''}">
+                     <div class="validation-msg">Cannot be less than previous</div>
                 </div>
             </div>
 
@@ -400,14 +399,15 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
                 <div class="card-field w-20">
                     <label class="field-label">Level</label>
                     <input type="number" class="table-input s-level" value="${data.level || ''}">
+                     <div class="validation-msg">Cannot be less than previous</div>
                 </div>
                 <div class="card-field w-20">
                     <label class="field-label">XP Earned</label>
                     <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
                 </div>
                 <div class="card-field w-30">
-                    <label class="field-label">Gold Rewarded</label>
-                    <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
+                    <label class="field-label">Gold Rewarded {% include help-icon.html text="Gold reward should be appropriate and not always be max allowed" %} </label>
+                    <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="">
                     <div class="validation-msg">Max <span class="val-max-msg"></span>gp</div>
                 </div>
                 <div class="card-field w-30">
@@ -422,18 +422,18 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
             <div class="card-row">
                 <div class="card-field w-50">
                     <label class="field-label">Loot Rewarded</label>
-                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="Magic items...">
+                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="">
                 </div>
                 <div class="card-field w-50">
                     <label class="field-label">Items Used</label>
-                    <input type="text" class="table-input s-items" value="${data.items_used || ''}" placeholder="Potions...">
+                    <input type="text" class="table-input s-items" value="${data.items_used || ''}" placeholder="">
                 </div>
             </div>
 
             <div class="card-row">
                 <div class="card-field w-100">
-                    <label class="field-label">Notes</label>
-                    <textarea class="table-input s-notes" rows="1" placeholder="Session notes...">${data.notes || ''}</textarea>
+                    <label class="field-label">Character Outcomes / Notes{% include help-icon.html text="Optional - record any character outcomes that persist outside of the game/session" %}</label>
+                    <textarea class="table-input s-notes" rows="1" placeholder="">${data.notes || ''}</textarea>
                 </div>
             </div>
         </div>
@@ -443,12 +443,12 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     card.querySelector('.btn-delete-card').addEventListener('click', () => {
         card.remove();
         updateSessionCalculations(viewContext);
-        // Renumber remaining cards
         renumberCards(listContainer);
     });
 
     card.querySelector('.s-hours').addEventListener('input', () => updateSessionCalculations(viewContext));
     card.querySelector('.s-level').addEventListener('input', () => updateSessionCalculations(viewContext));
+    card.querySelector('.s-games').addEventListener('input', () => updateSessionCalculations(viewContext));
     card.querySelector('.s-gold').addEventListener('input', () => updateSessionCalculations(viewContext));
     
     const btnIncentives = card.querySelector('.s-incentives-btn');
@@ -493,6 +493,42 @@ function getSessionRosterData(viewElement) {
     return players;
 }
 
+// Validation Helper: Retrieves baseline data from Previous Session or Master Roster
+function getPreviousSessionData(currentSessionIndex) {
+    const baseline = new Map(); // Key: DiscordID, Value: { level, games_count }
+
+    if (currentSessionIndex === 1) {
+        // Source: Master Roster
+        const rows = document.querySelectorAll('#roster-body .player-row');
+        rows.forEach(row => {
+            const did = row.querySelector('.inp-discord-id').value;
+            if(did) {
+                baseline.set(did, {
+                    level: parseFloat(row.querySelector('.inp-level').value) || 0,
+                    games_count: row.querySelector('.inp-games-count').value
+                });
+            }
+        });
+    } else {
+        // Source: Previous Session
+        const prevIndex = currentSessionIndex - 1;
+        const prevView = document.getElementById(`view-session-${prevIndex}`);
+        if(prevView) {
+            const cards = prevView.querySelectorAll('.player-card');
+            cards.forEach(card => {
+                const did = card.querySelector('.s-discord-id').value;
+                if(did) {
+                    baseline.set(did, {
+                        level: parseFloat(card.querySelector('.s-level').value) || 0,
+                        games_count: card.querySelector('.s-games').value
+                    });
+                }
+            });
+        }
+    }
+    return baseline;
+}
+
 function updateSessionCalculations(viewElement) {
     if (!cachedGameRules) return; 
     
@@ -522,16 +558,25 @@ function updateSessionCalculations(viewElement) {
     if(lblTier) lblTier.textContent = tier;
     if(lblGold) lblGold.textContent = maxGold;
 
-    // 3. Row Updates
+    // 3. Row Updates & Validations
     const sessionHours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
+    const sessionIndex = parseInt(viewElement.dataset.sessionIndex) || 1;
+    const previousData = getPreviousSessionData(sessionIndex);
 
     cards.forEach(card => {
-        const lvl = parseInt(card.querySelector('.s-level').value) || 0;
+        const did = card.querySelector('.s-discord-id').value;
+        const lInput = card.querySelector('.s-level');
+        const lvl = parseFloat(lInput.value) || 0;
+        
         const hInput = card.querySelector('.s-hours');
         const playerHours = parseFloat(hInput.value) || 0;
+        
         const gInput = card.querySelector('.s-gold');
         const playerGold = parseFloat(gInput.value) || 0;
-        
+
+        const gamesInput = card.querySelector('.s-games');
+        const gamesVal = gamesInput.value;
+
         // Validation: Hours
         if (playerHours > sessionHours) hInput.parentElement.classList.add('error');
         else hInput.parentElement.classList.remove('error');
@@ -544,6 +589,36 @@ function updateSessionCalculations(viewElement) {
         } else {
             gInput.parentElement.classList.remove('error');
         }
+
+        // Validation: Level & Games vs Previous
+        let isLevelError = false;
+        let isGamesError = false;
+
+        if (did && previousData.has(did)) {
+            const prev = previousData.get(did);
+            
+            // Level Check
+            if (lvl < prev.level) isLevelError = true;
+
+            // Games Check
+            if (prev.games_count === "10+") {
+                if (gamesVal !== "10+") isGamesError = true; 
+            } else {
+                const prevG = parseInt(prev.games_count) || 0;
+                const currG = parseInt(gamesVal); // might be NaN if "10+"
+                
+                if (gamesVal !== "10+") {
+                    if (isNaN(currG) || currG < prevG) isGamesError = true;
+                }
+                // If gamesVal is "10+", and prev was number, that's valid progression
+            }
+        }
+
+        if (isLevelError) lInput.parentElement.classList.add('error');
+        else lInput.parentElement.classList.remove('error');
+
+        if (isGamesError) gamesInput.parentElement.classList.add('error');
+        else gamesInput.parentElement.classList.remove('error');
 
         // Calcs
         const xp = calculateXP(lvl, playerHours, cachedGameRules);
@@ -559,8 +634,7 @@ function updateSessionCalculations(viewElement) {
     });
 }
 
-// ... (Modal logic and Standard Utils remain the same as previous) ...
-// (Included for completeness)
+// ... (Modal logic and Standard Utils remain the same) ...
 
 function initIncentivesModal() {
     const modal = document.getElementById('modal-incentives');
@@ -609,7 +683,7 @@ function saveIncentivesFromModal() {
     const selected = Array.from(checkboxes).map(cb => cb.value);
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
-    btn.innerText = selected.length > 0 ? `+` : '+'; // Update text to + symbol logic
+    btn.innerText = selected.length > 0 ? `+` : '+'; 
     updateSessionCalculations(activeIncentiveRowData.viewContext);
     activeIncentiveRowData = null;
     modal.close();
@@ -648,7 +722,7 @@ function initTimezone() {
 
 function initPlayerRoster() {
     const btnAdd = document.getElementById('btn-add-player');
-    if(btnAdd) btnAdd.addEventListener('click', addPlayerRowToMaster); // Renamed helper to avoid confusion
+    if(btnAdd) btnAdd.addEventListener('click', addPlayerRowToMaster); 
 }
 
 function addPlayerRowToMaster(data = {}) {
@@ -778,6 +852,8 @@ function getFormData() {
             hours: view.querySelector('.inp-session-hours').value,
             date_time: view.querySelector('.inp-session-unix').value, 
             notes: view.querySelector('.inp-session-notes').value,
+            summary: view.querySelector('.inp-session-summary').value, 
+            dm_collaborators: view.querySelector('.inp-dm-collaborators').value, 
             players: getSessionRosterData(view)
         });
     });
@@ -904,13 +980,15 @@ function populateForm(session) {
             view.querySelector('.inp-session-title').value = sData.title;
             view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
+            if (view.querySelector('.inp-session-summary')) view.querySelector('.inp-session-summary').value = sData.summary || "";
+            if (view.querySelector('.inp-dm-collaborators')) view.querySelector('.inp-dm-collaborators').value = sData.dm_collaborators || "";
+            
             if(sData.date_time) {
                 view.querySelector('.inp-session-unix').value = sData.date_time;
                 const tz = document.getElementById('inp-timezone').value;
                 view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
             }
             
-            // FIXED: Target new Div List
             const listContainer = view.querySelector('.player-roster-list');
             listContainer.innerHTML = ''; 
             
@@ -989,4 +1067,5 @@ ${data.game_description || ''}
 \`\`\``;
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
+}
 }

@@ -1,3 +1,7 @@
+{
+type: uploaded file
+fileName: session.html
+fullContent:
 ---
 layout: default
 title: DM Tool | Session Editor
@@ -151,22 +155,19 @@ extra_css:
                 <h2 class="session-header-title">Session <span class="lbl-session-num"></span> Log</h2>
                 
                 <div class="form-grid">
-                    <div class="form-row-full">
-                        <div class="form-group flex-grow">
-                            <label>Session Title</label>
+                    <div class="form-row-full" style="gap: 1rem; align-items: flex-end;">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Session Name</label>
                             <input type="text" class="inp-session-title">
                         </div>
-                        <div class="form-group" style="width: 150px;">
-                            <label>Duration (Hrs)</label>
-                            <input type="number" class="inp-session-hours readonly-input" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-row-full">
-                        <div class="form-group flex-grow">
+                        <div class="form-group" style="flex: 1;">
                             <label>Session Date</label>
                             <input type="datetime-local" class="inp-session-date">
                             <input type="hidden" class="inp-session-unix">
+                        </div>
+                        <div class="form-group" style="width: 100px;">
+                            <label>Duration</label>
+                            <input type="number" class="inp-session-hours readonly-input" readonly>
                         </div>
                     </div>
                 </div>
@@ -201,9 +202,21 @@ extra_css:
                         </div>
                 </div>
 
+                <div style="margin-bottom: 1rem;">
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:bold;">Session Summary (Public)</label>
+                    {% include markdown-widget.html class="inp-session-summary" height="150px" %}
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:bold;">Session Notes (Internal/Private)</label>
+                    {% include markdown-widget.html class="inp-session-notes" height="150px" %}
+                </div>
+
                 <div style="margin-bottom: 2rem;">
-                    <label style="display:block; margin-bottom:0.5rem; font-weight:bold;">Session Summary / Notes</label>
-                    <textarea class="inp-session-notes table-input" rows="3"></textarea>
+                     <div class="form-group" style="width: 100%;">
+                        <label>DM Collaborators (Co-DMs)</label>
+                        <input type="text" class="inp-dm-collaborators" placeholder="Discord IDs or Names">
+                    </div>
                 </div>
                 
                 <div class="content-tabs">
@@ -241,3 +254,4 @@ extra_css:
 </dialog>
 
 <script type="module" src="../assets/js/dm-tool/session-editor.js"></script>
+}
