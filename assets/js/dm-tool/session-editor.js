@@ -18,6 +18,10 @@ import {
 let cachedGameRules = null; 
 let activeIncentiveRowData = null; 
 
+// ==========================================
+// 1. Initialization
+// ==========================================
+
 document.addEventListener('DOMContentLoaded', async () => {
     cachedGameRules = await fetchGameRules();
 
@@ -39,12 +43,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (sessionId) {
         await loadSessionData(sessionId);
     } else {
+        // Trigger initial calculation for new sessions
         const hoursInput = document.getElementById('header-hours');
         if(hoursInput) {
             hoursInput.dispatchEvent(new Event('input')); 
         }
     }
 });
+
+// ==========================================
+// 2. Data Loading & Saving Logic
+// ==========================================
 
 async function loadSessionData(sessionId) {
     try {
@@ -59,19 +68,22 @@ async function loadSessionData(sessionId) {
     }
 }
 
-// ... (Dropdown Inits same as before) ...
 async function initDynamicDropdowns() {
     const rules = cachedGameRules || await fetchGameRules();
     if (!rules || !rules.options) return;
+
     const fillSelect = (id, options) => {
         const select = document.getElementById(id);
         if (!select) return;
         select.innerHTML = '<option value="">Select...</option>';
         options.forEach(opt => {
             const el = document.createElement('option');
-            el.value = opt; el.textContent = opt; select.appendChild(el);
+            el.value = opt;
+            el.textContent = opt;
+            select.appendChild(el);
         });
     };
+
     if(rules.options["Game Version"]) fillSelect('inp-version', rules.options["Game Version"]);
     if(rules.options["Application Types"]) fillSelect('inp-apps-type', rules.options["Application Types"]);
     if(rules.options["Game Format"]) fillSelect('inp-format', rules.options["Game Format"]);
@@ -84,7 +96,9 @@ async function initEventsDropdown() {
     select.innerHTML = ''; 
     events.forEach(evt => {
         const el = document.createElement('option');
-        el.value = evt.name; el.textContent = evt.name; select.appendChild(el);
+        el.value = evt.name; 
+        el.textContent = evt.name;
+        select.appendChild(el);
     });
 }
 
@@ -93,37 +107,59 @@ async function initTemplateDropdown() {
     if (!select) return;
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return; 
+
     const templates = await fetchTemplates(user.id);
     select.innerHTML = '<option value="">Select a saved template...</option>';
     templates.forEach(tmpl => {
         const opt = document.createElement('option');
-        opt.value = tmpl.id; opt.textContent = tmpl.title; select.appendChild(opt);
+        opt.value = tmpl.id; 
+        opt.textContent = tmpl.title;
+        select.appendChild(opt);
     });
 }
 
-// ... (Tabs and Hours Logic) ...
+// ==========================================
+// 3. UI Logic (Tabs, Hours, Timezone)
+// ==========================================
+
 function initTabs() {
     const sidebarNav = document.getElementById('sidebar-nav');
     sidebarNav.addEventListener('click', (e) => {
         const item = e.target.closest('.nav-item');
         if (!item) return;
+
+        // 1. Handle Active State
         document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
         item.classList.add('active');
+
+        // 2. Hide all Sections
         document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
+
+        // 3. Show Target Section
         const targetId = item.dataset.target;
         const targetEl = document.getElementById(targetId);
-        if(targetEl) targetEl.classList.remove('hidden-section');
+        if(targetEl) {
+            targetEl.classList.remove('hidden-section');
+        } else {
+            console.warn("Tab target not found:", targetId);
+        }
     });
+
+    // Content Tabs (Input/Output)
     document.querySelectorAll('.content-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             tab.parentElement.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
+            
             const targetId = tab.dataset.subtab;
             if(!targetId) return; 
+
             const parent = tab.closest('.view-section');
             parent.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden-section'));
+            
             const subTarget = document.getElementById(targetId);
             if(subTarget) subTarget.classList.remove('hidden-section');
+            
             if(targetId === 'ad-output') generateOutput();
         });
     });
@@ -132,17 +168,23 @@ function initTabs() {
 function initHoursLogic() {
     const hoursInput = document.getElementById('header-hours');
     const sessionDisplay = document.getElementById('header-session-count');
+    
     if(!hoursInput) return;
+
     const updateDisplay = () => {
         const totalHours = parseFloat(hoursInput.value) || 0;
         const count = calculateSessionCount(totalHours);
         if(sessionDisplay) sessionDisplay.textContent = count;
+        
         updateSessionNavAndViews(count, totalHours);
     };
+
     hoursInput.addEventListener('input', updateDisplay);
 }
 
-// ... (updateSessionNavAndViews Logic) ...
+/**
+ * Core Logic: Creates Sidebar links AND Session Views
+ */
 function updateSessionNavAndViews(count, totalHours) {
     const navContainer = document.getElementById('dynamic-session-nav');
     const viewContainer = document.getElementById('session-views-container');
@@ -150,29 +192,41 @@ function updateSessionNavAndViews(count, totalHours) {
 
     let createdNew = false;
 
+    // Loop through sessions
     for (let i = 1; i <= count; i++) {
+        // Calculate the target duration for this specific session
         let sessionDur = 3.0;
         if (i === count) {
             sessionDur = totalHours - (3 * (i - 1));
             sessionDur = Math.round(sessionDur * 10) / 10;
         }
 
+        // CHECK IF SESSION VIEW ALREADY EXISTS
         if (document.getElementById(`view-session-${i}`)) {
             const existingView = document.getElementById(`view-session-${i}`);
             const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
             
+            // If the calculated duration differs from what's there, update it
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
+                
+                // FIXED: Target .player-card instead of .session-roster-body
                 existingView.querySelectorAll('.player-card').forEach(card => {
                     const hInput = card.querySelector('.s-hours');
-                    if(hInput) hInput.value = sessionDur;
+                    if(hInput) {
+                        hInput.value = sessionDur;
+                    }
                 });
+                
                 updateSessionCalculations(existingView);
             }
             continue; 
         }
 
+        // CREATE NEW SESSION
         createdNew = true;
+
+        // 1. Sidebar Link
         const div = document.createElement('div');
         div.className = 'nav-item';
         div.dataset.target = `view-session-${i}`;
@@ -180,6 +234,7 @@ function updateSessionNavAndViews(count, totalHours) {
         div.id = `nav-link-session-${i}`;
         navContainer.appendChild(div);
 
+        // 2. View DOM
         const tmpl = document.getElementById('tpl-session-view');
         const clone = tmpl.content.cloneNode(true);
         const viewDiv = clone.querySelector('.session-view');
@@ -193,12 +248,17 @@ function updateSessionNavAndViews(count, totalHours) {
         viewDiv.querySelector('.inp-session-hours').value = sessionDur;
 
         viewContainer.appendChild(viewDiv);
+
         initSessionViewLogic(viewDiv, i);
+        
+        // Auto-populate roster from previous session/master
         syncSessionPlayers(viewDiv, i);
     }
 
+    // Remove Excess Sessions
     const currentViews = viewContainer.querySelectorAll('.session-view');
     const currentCount = currentViews.length;
+
     if (currentCount > count) {
         for (let i = currentCount; i > count; i--) {
             const nav = document.getElementById(`nav-link-session-${i}`);
@@ -208,6 +268,7 @@ function updateSessionNavAndViews(count, totalHours) {
         }
     }
 
+    // Auto-select first session if just created
     if (createdNew && count === 1) {
         const s1Link = document.getElementById('nav-link-session-1');
         if (s1Link) s1Link.click();
@@ -217,10 +278,12 @@ function updateSessionNavAndViews(count, totalHours) {
 function initSessionViewLogic(viewElement, index) {
     const dateInput = viewElement.querySelector('.inp-session-date');
     const unixInput = viewElement.querySelector('.inp-session-unix');
+    
     if(index === 1) {
         const mainDate = document.getElementById('inp-start-datetime').value;
         if(mainDate) dateInput.value = mainDate;
     }
+
     const updateUnix = () => {
         const tzVal = document.getElementById('inp-timezone').value;
         if(unixInput) unixInput.value = toUnixTimestamp(dateInput.value, tzVal);
@@ -229,36 +292,49 @@ function initSessionViewLogic(viewElement, index) {
     
     const btnSync = viewElement.querySelector('.btn-sync-players');
     btnSync.addEventListener('click', () => {
-        if(confirm("Reset this roster? Current data will be lost.")) {
+        if(confirm("Reset this roster to match the previous session? Current data will be lost.")) {
             syncSessionPlayers(viewElement, index);
         }
     });
 
     const btnAdd = viewElement.querySelector('.btn-add-session-player');
     btnAdd.addEventListener('click', () => {
-        // Target the DIV list now
+        // FIXED: Target .player-roster-list
         addSessionPlayerRow(viewElement.querySelector('.player-roster-list'), {}, index, viewElement);
     });
 }
 
+// ==========================================
+// 4. Session Player Logic
+// ==========================================
+
 function syncSessionPlayers(viewElement, sessionIndex) {
+    // FIXED: Target the DIV container, not the table
     const listContainer = viewElement.querySelector('.player-roster-list');
-    listContainer.innerHTML = ''; // Clear div cards
+    
+    // Clear all existing cards
+    listContainer.innerHTML = ''; 
 
     let sourceData = [];
+
     if (sessionIndex === 1) {
         sourceData = getPlayerRosterData(); 
     } else {
         const prevView = document.getElementById(`view-session-${sessionIndex - 1}`);
-        if(prevView) sourceData = getSessionRosterData(prevView);
+        if(prevView) {
+            sourceData = getSessionRosterData(prevView);
+        }
     }
 
     sourceData.forEach(p => {
         let nextGames = "1";
         const currentGames = p.games_count;
-        if (currentGames === "10+") nextGames = "10+";
-        else {
+
+        if (currentGames === "10+") {
+            nextGames = "10+";
+        } else {
             const g = parseInt(currentGames) || 0;
+            if (g >= 9) nextGames = "10"; 
             nextGames = (g + 1).toString();
             if (g >= 10) nextGames = "10+";
         }
@@ -273,20 +349,21 @@ function syncSessionPlayers(viewElement, sessionIndex) {
             items_used: "",
             notes: ""
         };
+        // FIXED: Pass listContainer
         addSessionPlayerRow(listContainer, newRowData, sessionIndex, viewElement);
     });
     
     updateSessionCalculations(viewElement);
 }
 
-// === NEW: CARD BUILDER ===
 function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext) {
     const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
     const rowHours = data.hours || sessionHours;
     
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);
-    
+    const btnText = currentIncentives.length > 0 ? `+` : '+';
+
     const playerNum = listContainer.children.length + 1;
 
     const card = document.createElement('div');
@@ -295,8 +372,9 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     card.innerHTML = `
         <div class="player-card-header">
             <span class="player-card-title">Player ${playerNum}</span>
-            <button class="btn-delete-card" title="Remove">&times;</button>
+            <button class="btn-delete-card" title="Remove Player">&times;</button>
         </div>
+        
         <div class="player-card-body">
             <div class="card-row">
                 <div class="card-field w-30">
@@ -307,8 +385,8 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
                     <label class="field-label">Character Name</label>
                     <input type="text" class="table-input s-char-name" value="${data.character_name || ''}">
                 </div>
-                <div class="card-field w-20 error-container">
-                    <label class="field-label">Hours</label>
+                <div class="card-field w-20">
+                    <label class="field-label">Hours Played</label>
                     <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5">
                     <div class="validation-msg">Exceeds Session</div>
                 </div>
@@ -327,16 +405,16 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
                     <label class="field-label">XP Earned</label>
                     <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
                 </div>
-                <div class="card-field w-30 error-container">
-                    <label class="field-label">Gold</label>
+                <div class="card-field w-30">
+                    <label class="field-label">Gold Rewarded</label>
                     <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
                     <div class="validation-msg">Max <span class="val-max-msg"></span>gp</div>
                 </div>
                 <div class="card-field w-30">
                     <label class="field-label">DTP / Incentives</label>
                     <div class="dtp-wrapper">
-                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP">
-                        <button class="button button-secondary s-incentives-btn" data-incentives='${incentivesJson}'>+</button>
+                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);">
+                        <button class="button button-secondary s-incentives-btn" data-incentives='${incentivesJson}'>${btnText}</button>
                     </div>
                 </div>
             </div>
@@ -344,18 +422,18 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
             <div class="card-row">
                 <div class="card-field w-50">
                     <label class="field-label">Loot Rewarded</label>
-                    <input type="text" class="table-input s-loot" value="${data.loot || ''}">
+                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="Magic items...">
                 </div>
                 <div class="card-field w-50">
                     <label class="field-label">Items Used</label>
-                    <input type="text" class="table-input s-items" value="${data.items_used || ''}">
+                    <input type="text" class="table-input s-items" value="${data.items_used || ''}" placeholder="Potions...">
                 </div>
             </div>
 
             <div class="card-row">
                 <div class="card-field w-100">
                     <label class="field-label">Notes</label>
-                    <textarea class="table-input s-notes" rows="1">${data.notes || ''}</textarea>
+                    <textarea class="table-input s-notes" rows="1" placeholder="Session notes...">${data.notes || ''}</textarea>
                 </div>
             </div>
         </div>
@@ -365,7 +443,8 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     card.querySelector('.btn-delete-card').addEventListener('click', () => {
         card.remove();
         updateSessionCalculations(viewContext);
-        // Renumber logic could go here
+        // Renumber remaining cards
+        renumberCards(listContainer);
     });
 
     card.querySelector('.s-hours').addEventListener('input', () => updateSessionCalculations(viewContext));
@@ -382,12 +461,20 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     if (viewContext && data.level) updateSessionCalculations(viewContext);
 }
 
+function renumberCards(container) {
+    const titles = container.querySelectorAll('.player-card-title');
+    titles.forEach((span, index) => {
+        span.textContent = `Player ${index + 1}`;
+    });
+}
+
 function getSessionRosterData(viewElement) {
     const cards = viewElement.querySelectorAll('.player-card');
     const players = [];
     cards.forEach(card => {
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
+
         players.push({
             discord_id: card.querySelector('.s-discord-id').value,
             character_name: card.querySelector('.s-char-name').value,
@@ -427,9 +514,13 @@ function updateSessionCalculations(viewElement) {
     
     const maxGold = cachedGameRules.gold_per_session_by_apl ? (cachedGameRules.gold_per_session_by_apl[apl] || 0) : 0;
 
-    viewElement.querySelector('.val-apl').textContent = apl;
-    viewElement.querySelector('.val-tier').textContent = tier;
-    viewElement.querySelector('.val-max-gold').textContent = maxGold;
+    const lblApl = viewElement.querySelector('.val-apl');
+    const lblTier = viewElement.querySelector('.val-tier');
+    const lblGold = viewElement.querySelector('.val-max-gold');
+    
+    if(lblApl) lblApl.textContent = apl;
+    if(lblTier) lblTier.textContent = tier;
+    if(lblGold) lblGold.textContent = maxGold;
 
     // 3. Row Updates
     const sessionHours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
@@ -441,10 +532,11 @@ function updateSessionCalculations(viewElement) {
         const gInput = card.querySelector('.s-gold');
         const playerGold = parseFloat(gInput.value) || 0;
         
-        // Validations
+        // Validation: Hours
         if (playerHours > sessionHours) hInput.parentElement.classList.add('error');
         else hInput.parentElement.classList.remove('error');
 
+        // Validation: Gold
         if (maxGold > 0 && playerGold > maxGold) {
             const grp = gInput.parentElement;
             grp.classList.add('error');
@@ -466,6 +558,9 @@ function updateSessionCalculations(viewElement) {
         card.querySelector('.s-dtp').value = dtp;
     });
 }
+
+// ... (Modal logic and Standard Utils remain the same as previous) ...
+// (Included for completeness)
 
 function initIncentivesModal() {
     const modal = document.getElementById('modal-incentives');
@@ -514,6 +609,7 @@ function saveIncentivesFromModal() {
     const selected = Array.from(checkboxes).map(cb => cb.value);
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
+    btn.innerText = selected.length > 0 ? `+` : '+'; // Update text to + symbol logic
     updateSessionCalculations(activeIncentiveRowData.viewContext);
     activeIncentiveRowData = null;
     modal.close();
@@ -552,10 +648,10 @@ function initTimezone() {
 
 function initPlayerRoster() {
     const btnAdd = document.getElementById('btn-add-player');
-    if(btnAdd) btnAdd.addEventListener('click', addPlayerRow);
+    if(btnAdd) btnAdd.addEventListener('click', addPlayerRowToMaster); // Renamed helper to avoid confusion
 }
 
-function addPlayerRow(data = {}) {
+function addPlayerRowToMaster(data = {}) {
     const tbody = document.getElementById('roster-body');
     if(!tbody) return;
     const tr = document.createElement('tr');
@@ -613,8 +709,7 @@ function initTemplateLogic() {
                 modal.close();
                 const select = document.getElementById('template-select');
                 const opt = document.createElement('option');
-                opt.text = tmplName; 
-                select.appendChild(opt);
+                opt.text = tmplName; select.appendChild(opt);
             } catch (e) {
                 console.error(e);
                 alert("Error saving template");
@@ -727,9 +822,7 @@ function populateForm(session) {
         const titleEl = document.getElementById('header-game-name');
         if(titleEl) titleEl.value = session.title;
     }
-    
     if (!session.form_data) return;
-
     const setVal = (id, val) => { 
         const el = document.getElementById(id); 
         if(el) {
@@ -738,7 +831,6 @@ function populateForm(session) {
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
     };
-
     if (session.form_data.header) {
         const h = session.form_data.header;
         setVal('inp-unix-time', h.game_datetime);
@@ -760,14 +852,12 @@ function populateForm(session) {
         setVal('inp-apps-type', h.apps_type);
         setVal('inp-listing-url', h.listing_url);
         setVal('inp-lobby-url', h.lobby_url);
-
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && Array.isArray(h.event_tags)) {
             Array.from(eventSelect.options).forEach(opt => {
                 opt.selected = h.event_tags.includes(opt.value);
             });
         }
-
         setVal('inp-focus', h.focus);
         setVal('inp-diff-threat', h.threat_level);
         setVal('inp-diff-loss', h.char_loss);
@@ -776,17 +866,15 @@ function populateForm(session) {
         setVal('inp-warnings', h.warnings);
         setVal('inp-apply', h.how_to_apply);
     }
-
     const tbody = document.getElementById('roster-body');
     if (tbody) {
         tbody.innerHTML = ''; 
         if (session.form_data.players && Array.isArray(session.form_data.players)) {
             session.form_data.players.forEach(player => {
-                addPlayerRow(player);
+                addPlayerRowToMaster(player);
             });
         }
     }
-
     if (session.form_data.dm) {
         const d = session.form_data.dm;
         setVal('inp-dm-char-name', d.character_name);
@@ -794,52 +882,43 @@ function populateForm(session) {
         setVal('inp-dm-games-count', d.games_count);
     }
     
-    // CALCULATE AND SET TOTAL HOURS BEFORE CREATING VIEWS
     let totalLoadedHours = 0;
     let savedSessionCount = 0;
-    
     if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
         savedSessionCount = session.form_data.sessions.length;
-        // Sum up the actual hours saved in each session
         totalLoadedHours = session.form_data.sessions.reduce((acc, s) => acc + (parseFloat(s.hours) || 0), 0);
     }
-
     const headerHoursInput = document.getElementById('header-hours');
     if(headerHoursInput) {
         headerHoursInput.value = totalLoadedHours;
         const sessionDisplay = document.getElementById('header-session-count');
         if(sessionDisplay) sessionDisplay.textContent = savedSessionCount;
     }
-
     if (session.form_data.sessions && Array.isArray(session.form_data.sessions)) {
         const count = session.form_data.sessions.length;
-        
         updateSessionNavAndViews(count, totalLoadedHours);
-
         session.form_data.sessions.forEach((sData, i) => {
             const index = i + 1;
             const view = document.getElementById(`view-session-${index}`);
             if(!view) return;
-
             view.querySelector('.inp-session-title').value = sData.title;
             view.querySelector('.inp-session-hours').value = sData.hours; 
             view.querySelector('.inp-session-notes').value = sData.notes || "";
-            
             if(sData.date_time) {
                 view.querySelector('.inp-session-unix').value = sData.date_time;
                 const tz = document.getElementById('inp-timezone').value;
                 view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
             }
-
+            
+            // FIXED: Target new Div List
             const listContainer = view.querySelector('.player-roster-list');
-            listContainer.innerHTML = ''; // DUPLICATION FIX
-
+            listContainer.innerHTML = ''; 
+            
             if(sData.players) {
                 sData.players.forEach(p => addSessionPlayerRow(listContainer, p, index, view));
             }
         });
     }
-
     generateOutput();
 }
 
@@ -864,12 +943,10 @@ function generateOutput() {
     const data = getFormData().header;
     const unixTime = document.getElementById('inp-unix-time').value;
     const name = document.getElementById('header-game-name').value || "Untitled";
-    
     let timeString = "TBD";
     if (unixTime && unixTime > 0) {
         timeString = `<t:${unixTime}:F>`;
     }
-
     const listingText = `\`\`\`
 **Start Time:** ${timeString}
 **Name:** ${name}
@@ -899,10 +976,8 @@ ${data.warnings || 'N/A'}
 **How to Apply:**
 ${data.how_to_apply || 'Post your application below.'}
 \`\`\``;
-    
     const outListing = document.getElementById('out-listing-text');
     if(outListing) outListing.value = listingText;
-
     const adText = `\`\`\`
 > **Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
@@ -912,7 +987,6 @@ ${data.how_to_apply || 'Post your application below.'}
 **Description:**
 ${data.game_description || ''}
 \`\`\``;
-
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
 }
