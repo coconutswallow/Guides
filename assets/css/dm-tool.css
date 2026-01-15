@@ -218,8 +218,20 @@ body {
 }
 
 
+
 /* ============================
-   5. FORMS & TABS
+   5. VIEW SECTIONS & VISIBILITY
+   ============================ */
+.view-section {
+    display: block;
+}
+
+.view-section.hidden-section {
+    display: none !important;
+}
+
+/* ============================
+   6. FORMS & TABS
    ============================ */
 .content-tabs {
     display: flex;
@@ -340,7 +352,7 @@ body {
 }
 
 /* ============================
-   6. PLAYER CARDS (DIV LAYOUT)
+   7. PLAYER CARDS (DIV LAYOUT)
    ============================ */
 
 /* Container for the cards */
@@ -528,7 +540,7 @@ body {
 }
 
 /* ============================
-   7. BUTTONS & ACTIONS
+   8. BUTTONS & ACTIONS
    ============================ */
 .btn-sm {
     padding: 0.4em 0.6em !important;
@@ -565,7 +577,7 @@ body {
 
 
 /* ============================
-   8. MODALS & OVERLAYS
+   9. MODALS & OVERLAYS
    ============================ */
 dialog {
     border: 2px solid var(--color-primary);
@@ -607,7 +619,7 @@ dialog::backdrop {
 }
 
 /* ============================
-   9. DARK MODE & THEME OVERRIDES
+   10. DARK MODE & THEME OVERRIDES
    ============================ */
 [data-theme="dark"] .button-secondary {
     color: var(--color-primary);
