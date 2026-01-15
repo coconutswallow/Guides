@@ -50,8 +50,8 @@ export function getMasterRosterData() {
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     if (!listContainer) return;
 
-    // Use header hours
-    const rowHours = data.hours || document.getElementById('header-hours').value || "0";
+    // Updated ID target:
+    const rowHours = data.hours || document.getElementById('inp-session-total-hours').value || "0";
     
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);

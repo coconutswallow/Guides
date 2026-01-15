@@ -11,12 +11,7 @@ extra_css:
         <div class="header-game-title-wrapper">
             <input type="text" id="header-game-name" placeholder="Untitled Game Session">
         </div>
-        
-        <div class="stat-badge">
-            <label>Hours</label>
-            <input type="number" id="header-hours" class="stat-input" value="0" step="0.5" min="0">
         </div>
-    </div>
 
     <div class="header-actions">
         <span id="save-status" style="margin-right:1rem; color:var(--color-text-secondary); font-size:0.9em;"></span>
@@ -27,16 +22,17 @@ extra_css:
 
 <div class="editor-container">
     <nav class="editor-sidebar" id="sidebar-nav">
-        <div class="nav-item active" data-target="view-start">1. Start / Info</div>
-        <div class="nav-item" data-target="view-game-setup">2. Game Setup</div>
-        <div class="nav-item" data-target="view-game-listing">3. Game Listing</div>
-        <div class="nav-item" data-target="view-game-ad">4. Game Advertisement</div>
-        <div class="nav-item" data-target="view-player-setup">5. Player & DM Setup</div>
-        <div class="nav-item" data-target="view-loot-plan">6. Plan / Declare Loot</div>
+        <div class="nav-item active" data-target="view-start">0. Start / Info</div>
         <div class="nav-divider"></div>
-        <div class="nav-item" data-target="view-session-details">7. Session Details</div>
-        <div class="nav-item" data-target="view-session-output">8. Session Log (Output)</div>
-        <div class="nav-item" data-target="view-mal-update">9. MAL Update</div>
+        <div class="nav-item" data-target="view-game-setup">1. Game Setup</div>
+        <div class="nav-item" data-target="view-game-listing">2. Game Listing</div>
+        <div class="nav-item" data-target="view-game-ad">3. Game Advertisement</div>
+        <div class="nav-item" data-target="view-player-setup">4. Player & DM Setup</div>
+        <div class="nav-item" data-target="view-loot-plan">5. Plan / Declare Loot</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item" data-target="view-session-details">6. Session Details</div>
+        <div class="nav-item" data-target="view-session-output">7. Session Log (Output)</div>
+        <div class="nav-item" data-target="view-mal-update">8. MAL Update</div>
     </nav>
 
     <main class="editor-main">
@@ -60,12 +56,13 @@ extra_css:
             <div class="card" style="border-left: 4px solid var(--color-primary); margin-bottom: 2rem;">
                 <h3 class="card-title" style="font-size: 1rem;">Template Management</h3>
                 <div class="form-group">
-                    <label>Load a Saved Template</label>
+                    <label>Manage Templates</label>
                     <div style="display:flex; gap:10px;">
                         <select id="template-select" style="flex:1; padding: 0.5rem;">
                             <option value="">Select a saved template...</option>
                         </select>
                         <button class="button" id="btn-load-template">Load</button>
+                        <button class="button button-secondary" id="btn-save-template-setup">Save</button>
                     </div>
                 </div>
             </div>
@@ -272,6 +269,10 @@ extra_css:
                                     <label>Session Date</label>
                                     <input type="datetime-local" id="inp-session-date">
                                     <input type="hidden" id="inp-session-unix">
+                                </div>
+                                <div class="form-group" style="width: 100px;">
+                                    <label>Hours</label>
+                                    <input type="number" id="inp-session-total-hours" value="3" step="0.5" min="0">
                                 </div>
                             </div>
                         </div>

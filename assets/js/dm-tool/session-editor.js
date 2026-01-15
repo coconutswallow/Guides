@@ -11,7 +11,6 @@ import {
     fetchTemplates 
 } from './data-manager.js';
 
-// No calculators import here!
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
@@ -66,21 +65,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     } 
 
     // Init Hours Listener (Central Logic)
-    const hoursInput = document.getElementById('header-hours');
+    // Updated ID target:
+    const hoursInput = document.getElementById('inp-session-total-hours');
     if(hoursInput) {
         hoursInput.addEventListener('input', () => {
             const val = parseFloat(hoursInput.value) || 0;
+            
+            // 5.5 Hour Limit Logic
             if (val > 5.5) {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
+                    // 1. Set current to 3
                     hoursInput.value = 3;
                     updateSessionCalculations();
                     
+                    // 2. Trigger Copy (Next Part)
                     document.getElementById('chk-next-part').checked = true;
+                    // Default name increment
                     const currentName = document.getElementById('header-game-name').value;
                     const nextName = incrementPartName(currentName);
                     document.getElementById('inp-copy-name').value = nextName;
                     
+                    // Open Modal
                     document.getElementById('modal-copy-game').showModal();
                 }
             } else {
@@ -272,7 +278,8 @@ function updateSessionCalculations() {
     if(lblGold) lblGold.textContent = maxGold;
 
     // 3. Row Updates
-    const sessionHours = parseFloat(document.getElementById('header-hours').value) || 0;
+    // Updated ID target:
+    const sessionHours = parseFloat(document.getElementById('inp-session-total-hours').value) || 0;
     
     cards.forEach(card => {
         const hInput = card.querySelector('.s-hours');
@@ -358,7 +365,7 @@ function initCopyGameLogic() {
             const fullData = IO.getFormData();
             
             fullData.header.title = newName; 
-            fullData.session_log.hours = 3; 
+            fullData.session_log.hours = 3; // Default for next part
             
             if (isNextPart) {
                 fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
@@ -403,7 +410,13 @@ function initTemplateLogic() {
     const btnLoad = document.getElementById('btn-load-template');
     const btnSaveGame = document.getElementById('btn-save-game');
     
+    // New Save Button from Game Setup
+    const btnSaveSetup = document.getElementById('btn-save-template-setup');
+    
     if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
+    
+    // Add listener for new button
+    if(btnSaveSetup) btnSaveSetup.addEventListener('click', () => modal.showModal());
     
     if(btnConfirm) {
         btnConfirm.addEventListener('click', async () => {
@@ -458,6 +471,7 @@ function initTemplateLogic() {
                     btn.classList.remove('button-success');
                 }, 1500);
             } else {
+                // Auto-create if no ID (new session)
                 const { data: { user } } = await supabase.auth.getUser();
                 if(user) {
                     const newS = await createSession(user.id, title);
