@@ -40,19 +40,22 @@ extra_css:
         <div id="view-start" class="view-section">
             <h2>Welcome to the DM Tool</h2>
             <div class="card">
-                <p>Select a tab on the left to begin.</p>
-                <p>This tool auto-saves your session logs to the database when you click "Save Changes".</p>
+                <p>This tool is intended to make it easy for you to DM in the Hawthorne Server from initial game listing to logging your session. </p>
+                <p>For new DMs, it provides a guided step-by-step workflow; for experienced DMs, you can save/load templates to spin up a game in a couple of minutes:</p>
                 <ul>
-                    <li><strong>Game Setup:</strong> Configure your game details and load templates.</li>
-                    <li><strong>Player Setup:</strong> Manage your persistent roster and DM stats.</li>
-                    <li><strong>Session Details:</strong> Log the actual events, hours, and rewards for this session.</li>
+                    <li><strong>Game Setup: </strong> Setup your game details for the Game Listing and Ad buttons to copy to clipboard.</li>
+                    <li><strong>Templates: </strong> Save templates to quickly load your game setup.</li>
+                    <li><strong>Loot & Incentive Calculations: </strong> Manage loot rolls and incentives for players and yourself</li>
+                    <li><strong>Session Details: </strong> Create the session log details to post to #session-log</li>
+                    <li><strong>MAL: </strong> Copy-Paste your session details into your MAL</li>
+                    <li><strong>Multi-session support: </strong> Function to create a copy for next session and auto-updates games played stats for incentive calculations</li>
                 </ul>
             </div>
         </div>
 
         <div id="view-game-setup" class="view-section hidden-section">
             <h2>Game Setup</h2>
-            <p class="instruction-text">Configure the core details of your game here.</p>
+            <p class="instruction-text">The first step is to create a game listing and game ad.  Fill in the information on this tab, and use tabs 2 and 3 to create those postings in discord.  Don't forget to save!</p>
             
             <div class="card" style="border-left: 4px solid var(--color-primary); margin-bottom: 2rem;">
                 <h3 class="card-title" style="font-size: 1rem;">Templates</h3>
@@ -178,8 +181,9 @@ extra_css:
 
         <div id="view-game-listing" class="view-section hidden-section">
             <h2>Game Listing Output</h2>
-            <p class="instruction-text">Generate and copy your listing for Discord.</p>
-            <div class="card">
+            <p class="instruction-text">If you have a lobby already, copy the lobby link below. Otherwise use "TBD" and update the lobby later.  Otherwise, review the game listing below, click the "copy to clipboard" button, then post this in <a href="https://discord.com/channels/308324031478890497/1366924010255814768">#game-listings</a>/p>
+            <p class="instruction-text">Note: the listing text below is editable for last minute edits, but will not be saved. If you need to make updates, do it before you post.</p>
+                <div class="card">
                 <div class="form-group" style="margin-bottom: 2rem;">
                     <label>Game Lobby URL</label>
                     <input type="text" id="inp-lobby-url" value="TBD">
