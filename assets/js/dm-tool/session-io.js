@@ -18,7 +18,7 @@ export function getFormData() {
     if (tierSelect && tierSelect.selectedOptions) {
         selectedTiers = Array.from(tierSelect.selectedOptions).map(opt => opt.value);
     } else if (tierSelect) {
-        // Fallback if it's still an input
+        // Fallback if it's still an input (though it shouldn't be now)
         selectedTiers = tierSelect.value ? [tierSelect.value] : [];
     }
 
