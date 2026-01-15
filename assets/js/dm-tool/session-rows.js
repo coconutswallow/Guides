@@ -47,6 +47,21 @@ export function getMasterRosterData() {
     return players;
 }
 
+export function getMasterRosterData() {
+    const rows = document.querySelectorAll('#roster-body .player-row');
+    const players = [];
+    rows.forEach(row => {
+        players.push({
+            discord_id: row.querySelector('.inp-discord-id').value,
+            character_name: row.querySelector('.inp-char-name').value,
+            level: row.querySelector('.inp-level').value,
+            level_playing_as: row.querySelector('.inp-level-play-as').value, // Captured new field
+            games_count: row.querySelector('.inp-games-count').value
+        });
+    });
+    return players;
+}
+
 /* ===========================
    2. SESSION PLAYER CARDS
    =========================== */
