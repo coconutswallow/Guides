@@ -220,12 +220,16 @@ ${data.game_description || 'N/A'}
 **Lobby:** ${data.lobby_url || 'N/A'}
 **Platform:** ${data.platform || 'N/A'}
 **Duration:** ${data.intended_duration || 'N/A'}
+
 **House Rules:**
 ${data.house_rules || 'N/A'}
+
 **Notes:**
 ${data.notes || 'N/A'}
+
 **Content Warnings:**
 ${data.warnings || 'N/A'}
+
 **How to Apply:**
 ${data.how_to_apply || 'Post your application below.'}`;
 
