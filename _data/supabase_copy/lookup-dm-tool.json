@@ -63,5 +63,9 @@
   "player incentives": {
 	  "incentive 1": 5,
 	  "incentive 2": 10
+  },
+  "DM incentives": {
+	  "DM incentive 1": 5,
+	  "DM incentive 2": 10
   }  
 }

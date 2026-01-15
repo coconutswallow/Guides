@@ -16,7 +16,7 @@ import {
 } from './calculators.js';
 
 let cachedGameRules = null; 
-let activeIncentiveRowData = null; 
+let activeIncentiveRowData = null; // Used for both Player and DM incentives
 
 // ==========================================
 // 1. Initialization
@@ -276,7 +276,6 @@ function updateSessionNavAndViews(count, totalHours) {
             contentInput.id = inputId;
             contentOutput.id = outputId;
         }
-        // -----------------------------------------
         
         const gameName = document.getElementById('header-game-name').value || "Game";
         viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
@@ -288,6 +287,9 @@ function updateSessionNavAndViews(count, totalHours) {
         
         // Auto-populate roster from previous session/master
         syncSessionPlayers(viewDiv, i);
+        
+        // Auto-populate DM Info
+        syncDMRewards(viewDiv, i);
     }
 
     // Remove Excess Sessions
@@ -337,10 +339,19 @@ function initSessionViewLogic(viewElement, index) {
         // Target .player-roster-list
         addSessionPlayerRow(viewElement.querySelector('.player-roster-list'), {}, index, viewElement);
     });
+
+    // Listeners for DM fields
+    const dmLevel = viewElement.querySelector('.dm-level');
+    const dmGames = viewElement.querySelector('.dm-games');
+    const btnDMInc = viewElement.querySelector('.dm-incentives-btn');
+    
+    if(dmLevel) dmLevel.addEventListener('input', () => updateSessionCalculations(viewElement));
+    if(dmGames) dmGames.addEventListener('input', () => updateSessionCalculations(viewElement));
+    if(btnDMInc) btnDMInc.addEventListener('click', () => openDMIncentivesModal(btnDMInc, viewElement));
 }
 
 // ==========================================
-// 4. Session Player Logic
+// 4. Session Player & DM Logic
 // ==========================================
 
 function syncSessionPlayers(viewElement, sessionIndex) {
@@ -387,6 +398,49 @@ function syncSessionPlayers(viewElement, sessionIndex) {
     updateSessionCalculations(viewElement);
 }
 
+function syncDMRewards(viewElement, sessionIndex) {
+    // 1. Get Master Data
+    const masterName = document.getElementById('inp-dm-char-name').value;
+    
+    // Set Name (Always from Master)
+    viewElement.querySelector('.dm-name').value = masterName;
+
+    // 2. Logic for Level & Games
+    let level = "";
+    let games = "";
+
+    if (sessionIndex === 1) {
+        level = document.getElementById('inp-dm-level').value;
+        const gRaw = document.getElementById('inp-dm-games-count').value; 
+        // Logic: Master Value + 1
+        if (gRaw === "10+") games = "10+";
+        else {
+            let g = parseInt(gRaw) || 0;
+            g += 1;
+            games = (g >= 10) ? "10" : g.toString(); 
+        }
+    } else {
+        // Previous Session Logic
+        const prevView = document.getElementById(`view-session-${sessionIndex - 1}`);
+        if (prevView) {
+            level = prevView.querySelector('.dm-level').value; // Default to prev level
+            const prevGames = prevView.querySelector('.dm-games').value;
+            if (prevGames === "10+") games = "10+";
+            else {
+                let g = parseInt(prevGames) || 0;
+                g += 1;
+                games = (g >= 10) ? "10" : g.toString();
+            }
+        }
+    }
+
+    // Set Values
+    viewElement.querySelector('.dm-level').value = level;
+    viewElement.querySelector('.dm-games').value = games;
+
+    updateSessionCalculations(viewElement);
+}
+
 function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext) {
     const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
     const rowHours = data.hours || sessionHours;
@@ -400,7 +454,6 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     const card = document.createElement('div');
     card.className = 'player-card';
 
-    // No Liquid tags used here to prevent JS errors
     card.innerHTML = `
         <div class="player-card-header">
             <span class="player-card-title">Player ${playerNum}</span>
@@ -487,7 +540,7 @@ function addSessionPlayerRow(listContainer, data = {}, sessionIndex, viewContext
     
     const btnIncentives = card.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
-        openIncentivesModal(btnIncentives, viewContext);
+        openIncentivesModal(btnIncentives, viewContext, false); // False = Player mode
     });
 
     listContainer.appendChild(card);
@@ -569,10 +622,19 @@ function updateSessionCalculations(viewElement) {
     // 1. Calculate APL
     let totalLevel = 0;
     let playerCount = 0;
+    let welcomeWagonCount = 0;
+    let newHireCount = 0;
+
     const cards = viewElement.querySelectorAll('.player-card');
     cards.forEach(card => {
         const lvl = parseFloat(card.querySelector('.s-level').value) || 0;
         if(lvl > 0) { totalLevel += lvl; playerCount++; }
+
+        const gVal = card.querySelector('.s-games').value;
+        const gNum = parseInt(gVal);
+
+        if (gVal === "1") welcomeWagonCount++;
+        if (gVal !== "10+" && !isNaN(gNum) && gNum <= 10) newHireCount++;
     });
     const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
     
@@ -665,6 +727,57 @@ function updateSessionCalculations(viewElement) {
         card.querySelector('.s-xp').value = xp;
         card.querySelector('.s-dtp').value = dtp;
     });
+
+    // 4. DM REWARDS CALCULATION
+    const dmLevelInput = viewElement.querySelector('.dm-level');
+    const dmGamesInput = viewElement.querySelector('.dm-games');
+    
+    if (dmLevelInput && dmGamesInput) {
+        const dmLvl = parseFloat(dmLevelInput.value) || 0;
+        const dmGamesVal = dmGamesInput.value;
+        const dmGamesNum = parseInt(dmGamesVal) || 999; 
+
+        // Incentives
+        const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
+        
+        viewElement.querySelector('.dm-val-jumpstart').value = isJumpstart ? "Yes" : "No";
+        viewElement.querySelector('.dm-val-welcome').value = welcomeWagonCount;
+        viewElement.querySelector('.dm-val-newhires').value = newHireCount;
+
+        // Rewards
+        // XP
+        const dmXp = calculateXP(dmLvl, sessionHours, cachedGameRules);
+        viewElement.querySelector('.dm-res-xp').value = dmXp;
+
+        // DTP: Floor(5 * hours) + (5 * newHires) + Incentives
+        let dmDtp = Math.floor(5 * sessionHours) + (5 * newHireCount);
+        const btnDM = viewElement.querySelector('.dm-incentives-btn');
+        const dmIncentives = JSON.parse(btnDM.dataset.incentives || '[]');
+        
+        // Manual DM Incentives Lookup
+        if (cachedGameRules['dm incentives']) {
+            dmIncentives.forEach(i => dmDtp += (cachedGameRules['dm incentives'][i] || 0));
+        }
+        viewElement.querySelector('.dm-res-dtp').value = dmDtp;
+
+        // Gold: Only if Jumpstart? Using prompt: "get 1x DM Gold". Assuming Gold lookup.
+        let dmGold = 0;
+        if (isJumpstart) {
+             // Find Tier of DM Level to guess gold, or just base calculation?
+             // Since no direct DM gold table exists, using Player Gold table by Level/APL equivalence
+             const dmMockTier = dmLvl >= 11 ? 3 : (dmLvl >= 5 ? 2 : 1); // Simple tier approx
+             // Actually, usually DM Gold is same as Max Gold for the APL?
+             // Let's use the current Session Max Gold (based on APL) as "1x Gold" proxy
+             dmGold = maxGold; 
+        }
+        viewElement.querySelector('.dm-res-gp').value = dmGold;
+
+        // Loot
+        let lootStr = "1";
+        if (newHireCount > 0) lootStr += ` + ${newHireCount} (New Hires)`;
+        if (isJumpstart) lootStr += " + 1 Jumpstart Loot";
+        viewElement.querySelector('.dm-res-loot').value = lootStr;
+    }
 }
 
 function initIncentivesModal() {
@@ -675,8 +788,12 @@ function initIncentivesModal() {
     if(btnSave) btnSave.addEventListener('click', saveIncentivesFromModal);
 }
 
-function openIncentivesModal(buttonEl, viewContext) {
-    activeIncentiveRowData = { button: buttonEl, viewContext: viewContext };
+function openDMIncentivesModal(buttonEl, viewContext) {
+    openIncentivesModal(buttonEl, viewContext, true);
+}
+
+function openIncentivesModal(buttonEl, viewContext, isDM = false) {
+    activeIncentiveRowData = { button: buttonEl, viewContext: viewContext, isDM: isDM };
     const modal = document.getElementById('modal-incentives');
     const listContainer = document.getElementById('incentives-list');
     const msgContainer = document.getElementById('incentives-message');
@@ -684,12 +801,15 @@ function openIncentivesModal(buttonEl, viewContext) {
 
     const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
     let hasIncentives = false;
+    
+    // Choose Source: Player vs DM Incentives
+    const sourceKey = isDM ? 'dm incentives' : 'player incentives';
 
-    if (cachedGameRules && cachedGameRules['player incentives']) {
-        const entries = Object.entries(cachedGameRules['player incentives']);
+    if (cachedGameRules && cachedGameRules[sourceKey]) {
+        const entries = Object.entries(cachedGameRules[sourceKey]);
         if (entries.length > 0) {
             hasIncentives = true;
-            msgContainer.textContent = "Check any incentives that apply.";
+            msgContainer.textContent = `Check any ${isDM ? 'DM' : 'Player'} incentives that apply.`;
             entries.forEach(([name, val]) => {
                 const label = document.createElement('label');
                 label.className = 'checkbox-item';
@@ -703,7 +823,7 @@ function openIncentivesModal(buttonEl, viewContext) {
             });
         }
     } 
-    if (!hasIncentives) msgContainer.textContent = "No Player Incentives at this time.";
+    if (!hasIncentives) msgContainer.textContent = `No ${isDM ? 'DM' : 'Player'} Incentives found in game rules.`;
     modal.showModal();
 }
 
@@ -877,6 +997,10 @@ function getFormData() {
     const sessionsData = [];
     const sessionViews = document.querySelectorAll('.session-view');
     sessionViews.forEach(view => {
+        // Collect DM data
+        const dmBtn = view.querySelector('.dm-incentives-btn');
+        const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
+
         sessionsData.push({
             session_index: view.dataset.sessionIndex,
             title: view.querySelector('.inp-session-title').value,
@@ -885,7 +1009,14 @@ function getFormData() {
             notes: view.querySelector('.inp-session-notes').value,
             summary: view.querySelector('.inp-session-summary').value,
             dm_collaborators: view.querySelector('.inp-dm-collab').value,
-            players: getSessionRosterData(view)
+            players: getSessionRosterData(view),
+            // New DM Section
+            dm_rewards: {
+                level: view.querySelector('.dm-level').value,
+                games_played: view.querySelector('.dm-games').value,
+                incentives: dmIncentives,
+                // Result fields could be recalculated on load, but we can save if needed
+            }
         });
     });
     return {
@@ -1020,12 +1151,28 @@ function populateForm(session) {
                 view.querySelector('.inp-session-date').value = unixToLocalIso(sData.date_time, tz);
             }
             
+            // Restore DM Data
+            if (sData.dm_rewards) {
+                view.querySelector('.dm-level').value = sData.dm_rewards.level || "";
+                view.querySelector('.dm-games').value = sData.dm_rewards.games_played || "";
+                
+                const dmBtn = view.querySelector('.dm-incentives-btn');
+                const loadedInc = sData.dm_rewards.incentives || [];
+                if(dmBtn) {
+                    dmBtn.dataset.incentives = JSON.stringify(loadedInc);
+                    dmBtn.innerText = loadedInc.length > 0 ? "+" : "+";
+                }
+            }
+
             const listContainer = view.querySelector('.player-roster-list');
             listContainer.innerHTML = ''; 
             
             if(sData.players) {
                 sData.players.forEach(p => addSessionPlayerRow(listContainer, p, index, view));
             }
+
+            // Trigger calc to show DM results
+            updateSessionCalculations(view);
         });
     }
     generateOutput();
@@ -1108,6 +1255,10 @@ ${data.game_description || ''}
             const sDate = view.querySelector('.inp-session-date').value; 
             const sNotes = view.querySelector('.inp-session-notes').value;
             const sSummary = view.querySelector('.inp-session-summary').value;
+            
+            // Format DM Rewards for output if needed? 
+            // Currently requested prompt only mentioned display fields on screen, not specific Markdown output format for DM rewards.
+            // Leaving standard output as is for now.
             
             outText.value = `**${sTitle}**\n*${sDate}*\n\n**Summary:**\n${sSummary}\n\n**Notes:**\n${sNotes}`;
         }

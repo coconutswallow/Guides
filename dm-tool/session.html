@@ -57,7 +57,7 @@ extra_css:
                         <button class="button button-secondary" id="btn-open-save-template" style="padding:0.4rem 1rem;">Save Current as Template</button>
                     </div>
 
-                    <h3 class="form-section-title">Game Settings</h3>
+                    <h3 class="form-section-title">Logistics</h3>
                     <div class="form-row-full" style="display: flex; gap: 1rem; align-items: flex-end;">
                     <div class="form-group" style="flex: 2;">
                         <label>Start Date & Time</label>
@@ -73,7 +73,11 @@ extra_css:
                         <input type="text" id="inp-duration-text" placeholder="e.g. 3-4 Hours">
                     </div>
                 </div>
-                    
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Game Description</label>
+                        {% include markdown-widget.html id="inp-description" name="game_description" height="200px" %}
+                    </div>
+                    <h3 class="form-section-title">Game Settings</h3>
                     <div class="form-group"><label>Game Format</label><select id="inp-format"><option value="">Loading...</option></select></div>
                     <div class="form-group"><label>Game Version</label><select id="inp-version"><option value="">Loading...</option></select></div>
                     <div class="form-group"><label>Applications Type</label><select id="inp-apps-type"><option value="">Loading...</option></select></div>
@@ -161,7 +165,7 @@ extra_css:
                                 <input type="datetime-local" class="inp-session-date">
                                 <input type="hidden" class="inp-session-unix">
                             </div>
-                            <div class="form-group" style="width: 120px;">
+                             <div class="form-group" style="width: 120px;">
                                 <label>Duration (Hrs)</label>
                                 <input type="number" class="inp-session-hours readonly-input" readonly>
                             </div>
@@ -197,6 +201,66 @@ extra_css:
                         <div class="player-roster-list"></div>
                     </div>
 
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <h3 class="card-title">DM Rewards</h3>
+                        <div class="player-card-body">
+                            <div class="card-row">
+                                <div class="card-field w-30">
+                                    <label class="field-label">DMPC Name</label>
+                                    <input type="text" class="table-input dm-name readonly-input" readonly>
+                                </div>
+                                <div class="card-field w-20">
+                                    <label class="field-label">DMPC Level</label>
+                                    <input type="number" class="table-input dm-level">
+                                </div>
+                                 <div class="card-field w-20">
+                                    <label class="field-label">Games DM'ed</label>
+                                    <input type="text" class="table-input dm-games">
+                                </div>
+                                 <div class="card-field w-30">
+                                    <label class="field-label">Incentives (Manual)</label>
+                                    <div class="dtp-wrapper">
+                                         <button class="button button-secondary dm-incentives-btn" data-incentives='[]'>+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-row" style="margin-top:1rem; border-top:1px solid var(--color-border); padding-top:1rem;">
+                                 <div class="card-field w-25">
+                                    <label class="field-label">Jumpstart</label>
+                                    <input type="text" class="table-input dm-val-jumpstart readonly-input" readonly>
+                                </div>
+                                 <div class="card-field w-25">
+                                    <label class="field-label">Welcome Wagon</label>
+                                    <input type="text" class="table-input dm-val-welcome readonly-input" readonly>
+                                </div>
+                                 <div class="card-field w-25">
+                                    <label class="field-label">New Hires</label>
+                                    <input type="text" class="table-input dm-val-newhires readonly-input" readonly>
+                                </div>
+                            </div>
+
+                            <div class="card-row" style="margin-top:1rem;">
+                                <div class="card-field w-25">
+                                    <label class="field-label">Total DTP</label>
+                                    <input type="text" class="table-input dm-res-dtp readonly-result" readonly>
+                                </div>
+                                <div class="card-field w-25">
+                                    <label class="field-label">XP Earned</label>
+                                    <input type="text" class="table-input dm-res-xp readonly-result" readonly>
+                                </div>
+                                <div class="card-field w-25">
+                                    <label class="field-label">GP Earned</label>
+                                    <input type="text" class="table-input dm-res-gp readonly-result" readonly>
+                                </div>
+                                 <div class="card-field w-25">
+                                    <label class="field-label">Loot Roll</label>
+                                    <input type="text" class="table-input dm-res-loot readonly-result" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="margin-bottom: 2rem;">
                         <label style="display:block; margin-bottom:0.5rem; font-weight:bold;">Session Notes</label>
                         <textarea class="inp-session-notes table-input" rows="3"></textarea>
@@ -215,13 +279,30 @@ extra_css:
 
                 <div class="subtab-content content-output hidden-section">
                     <h3>Session Output</h3>
-                    <div class="form-group">
-                        <textarea class="out-session-text" style="width:100%; height:500px; font-family:monospace; white-space:pre;" readonly></textarea>
-                        <button class="button" style="margin-top:0.5rem;" onclick="navigator.clipboard.writeText(this.previousElementSibling.value); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy to Clipboard', 1500);">Copy to Clipboard</button>
+                    
+                    <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                        <div class="discord-header" style="background: #2f3136; color: #dcddde; padding: 8px 12px; font-size: 0.9em; font-weight: bold; border-bottom: 1px solid #202225;">
+                            # session-logs
+                        </div>
+                        <div style="position: relative;">
+                            <textarea class="out-session-text" style="width: 100%; height: 300px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 0.5rem; text-align: right;">
+                        <button class="button" onclick="
+                            const txt = this.parentElement.previousElementSibling.querySelector('textarea');
+                            txt.select();
+                            navigator.clipboard.writeText(txt.value);
+                            const original = this.innerText;
+                            this.innerText = 'Copied!';
+                            setTimeout(() => this.innerText = original, 1500);
+                        ">Copy to Clipboard</button>
                     </div>
                 </div>
             </div>
         </template>
+
     </main>
 </div>
 
