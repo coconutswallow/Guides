@@ -340,134 +340,77 @@ body {
 }
 
 /* ============================
-   6. PLAYER CARD STYLES (Redesigned)
+   6. PLAYER CARD STYLES
    ============================ */
 
-/* The Table Container */
-.session-player-table {
-    border-collapse: separate;
-    border-spacing: 0 2rem; /* Large gap between player cards */
-    width: 100% !important; /* Force Full Width */
-    min-width: 800px; /* Force scroll on small screens instead of crushing */
-    table-layout: fixed; /* Crucial: Forces columns to respect % widths */
-}
+/* ... (Previous table styles) ... */
 
-/* The Player Card (TBODY) */
-.session-roster-body {
-    background: var(--color-bg-light);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden; 
-}
-
-/* Card Header Row (Player #) */
-.player-card-header td {
-    background-color: var(--color-primary);
-    color: var(--palette-neutral-white);
-    padding: 0.5rem 1rem !important;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-family: var(--font-header);
-    letter-spacing: 1px;
-    border-bottom: 1px solid var(--color-primary);
-}
-
-/* Standard Data Rows */
-.player-data-row td {
-    padding: 0.75rem 1rem !important;
-    border: none;
-    vertical-align: bottom;
-}
-
-/* Field Group Container (Label + Input) */
-.field-group {
+/* NEW: Session Stats Bar (APL, Tier, etc) */
+.session-stats-bar {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%; /* Force inputs to fill column */
-}
-
-/* The Label Above the Field */
-.field-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.5px;
-}
-
-/* Input Styling */
-.table-input {
-    width: 100%;
-    padding: 8px;
+    gap: 1.5rem;
+    background: var(--color-bg-medium);
     border: 1px solid var(--color-border);
-    background: var(--color-bg-page);
+    padding: 0.75rem 1rem;
     border-radius: 4px;
-    font-family: inherit;
-    font-size: 0.95rem;
-    transition: all 0.2s;
-    box-sizing: border-box; 
-}
-
-.table-input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--shadow-color-light);
-    outline: none;
-}
-
-.readonly-input {
-    background-color: var(--color-bg-medium);
-    color: var(--color-text-secondary);
-    cursor: not-allowed;
-}
-
-/* Read-only inputs (Calculated) */
-.readonly-result {
-    background-color: rgba(0,0,0,0.03);
+    margin-bottom: 1rem;
+    align-items: center;
+    font-family: var(--font-header);
     color: var(--color-primary);
-    font-weight: bold;
-    border-color: transparent;
 }
 
-/* Incentives Button */
+.stat-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.stat-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    color: var(--color-text-secondary);
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* NEW: Validation Styles */
+.table-input.is-invalid {
+    border-color: var(--palette-alert-danger-border) !important;
+    background-color: var(--palette-alert-danger-bg-light) !important;
+}
+
+.validation-msg {
+    color: var(--palette-alert-danger-action);
+    font-size: 0.7em;
+    margin-top: 2px;
+    display: none; /* Hidden by default */
+}
+
+.field-group.error .validation-msg {
+    display: block;
+}
+
+/* NEW: Square Incentives Button */
 .s-incentives-btn {
-    width: 100%;
-    text-align: left;
-    justify-content: space-between;
+    width: 38px; /* Fixed width */
+    height: 38px; /* Fixed height to match input */
+    padding: 0;
     display: flex;
     align-items: center;
-    padding: 8px;
-    height: 38px; /* Match input height */
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-left: 5px;
 }
 
-/* Delete Button in Header */
-.btn-delete-card {
-    background: rgba(255,255,255,0.2);
-    color: #fff;
-    border: none;
-    padding: 2px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background 0.2s;
-}
-.btn-delete-card:hover {
-    background: var(--palette-alert-danger-action);
-}
-
-/* Dark Mode Adjustments */
-[data-theme="dark"] .session-roster-body {
-    background: var(--color-bg-light); /* Dark card bg */
-    border-color: var(--color-border);
-}
-[data-theme="dark"] .table-input {
-    background: var(--color-bg-medium);
-    color: var(--color-text);
-}
-[data-theme="dark"] .readonly-result {
-    background: rgba(255,255,255,0.05);
+/* Adjust the container for DTP/Incentives to fit the square button */
+.dtp-container {
+    display: flex;
+    align-items: flex-end;
 }
 
 

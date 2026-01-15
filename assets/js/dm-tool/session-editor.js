@@ -183,7 +183,6 @@ function updateSessionNavAndViews(count, totalHours) {
 
     let createdNew = false;
 
-    // 1. Loop desired count
     for (let i = 1; i <= count; i++) {
         let sessionDur = 3.0;
         if (i === count) {
@@ -196,10 +195,10 @@ function updateSessionNavAndViews(count, totalHours) {
             const existingView = document.getElementById(`view-session-${i}`);
             const currentVal = parseFloat(existingView.querySelector('.inp-session-hours').value);
             
-            // Auto-update duration for players if the global duration changed
             if (currentVal !== sessionDur) {
                 existingView.querySelector('.inp-session-hours').value = sessionDur;
                 
+                // Update players
                 existingView.querySelectorAll('.session-roster-body').forEach(tbody => {
                     const hInput = tbody.querySelector('.s-hours');
                     if(hInput) {
@@ -207,14 +206,13 @@ function updateSessionNavAndViews(count, totalHours) {
                     }
                 });
                 
-                recalculateSessionXP(existingView);
+                updateSessionCalculations(existingView);
             }
             continue; 
         }
 
         createdNew = true;
 
-        // Sidebar Link
         const div = document.createElement('div');
         div.className = 'nav-item';
         div.dataset.target = `view-session-${i}`;
@@ -222,7 +220,6 @@ function updateSessionNavAndViews(count, totalHours) {
         div.id = `nav-link-session-${i}`;
         navContainer.appendChild(div);
 
-        // View DOM
         const tmpl = document.getElementById('tpl-session-view');
         const clone = tmpl.content.cloneNode(true);
         const viewDiv = clone.querySelector('.session-view');
@@ -233,7 +230,6 @@ function updateSessionNavAndViews(count, totalHours) {
         
         const gameName = document.getElementById('header-game-name').value || "Game";
         viewDiv.querySelector('.inp-session-title').value = `${gameName} Part ${i}`;
-        
         viewDiv.querySelector('.inp-session-hours').value = sessionDur;
 
         viewContainer.appendChild(viewDiv);
@@ -242,7 +238,7 @@ function updateSessionNavAndViews(count, totalHours) {
         syncSessionPlayers(viewDiv, i);
     }
 
-    // 2. Remove Excess Sessions
+    // Remove Excess Sessions
     const currentViews = viewContainer.querySelectorAll('.session-view');
     const currentCount = currentViews.length;
 
@@ -255,7 +251,6 @@ function updateSessionNavAndViews(count, totalHours) {
         }
     }
 
-    // 3. Auto-Select Session 1 if created and nothing active
     if (createdNew && count === 1) {
         const s1Link = document.getElementById('nav-link-session-1');
         if (s1Link) s1Link.click();
@@ -291,12 +286,12 @@ function initSessionViewLogic(viewElement, index) {
 }
 
 // ==========================================
-// 4. Session Player Logic (Card Layout)
+// 4. Session Player Logic
 // ==========================================
 
 function syncSessionPlayers(viewElement, sessionIndex) {
     const table = viewElement.querySelector('.session-player-table');
-    // Clear all player cards (tbodies)
+    // Clear all existing
     table.querySelectorAll('.session-roster-body').forEach(b => b.remove());
 
     let sourceData = [];
@@ -336,70 +331,22 @@ function syncSessionPlayers(viewElement, sessionIndex) {
         addSessionPlayerRow(table, newRowData, sessionIndex, viewElement);
     });
     
-    recalculateSessionXP(viewElement);
+    updateSessionCalculations(viewElement);
 }
 
-/**
- * Creates a "Player Card" (TBODY) containing 4 specific rows
- */
 function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext) {
-    // Note: tableElement IS the <table class="session-player-table">
-    
     const sessionHours = viewContext.querySelector('.inp-session-hours').value || "0";
     const rowHours = data.hours || sessionHours;
     
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);
-    const btnText = currentIncentives.length > 0 ? `${currentIncentives.length} Selected` : 'Select Incentives...';
+    const btnText = currentIncentives.length > 0 ? `+` : '+';
 
-    // Calculate Player Number based on existing tbodies
     const playerNum = tableElement.querySelectorAll('.session-roster-body').length + 1;
 
-    // Create the Card (TBODY)
     const tbody = document.createElement('tbody');
     tbody.className = 'session-roster-body';
 
-    tbody.innerHTML = `
-        <tr class="player-card-header">
-            <td colspan="4" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>Player ${playerNum}</span>
-                <button class="btn-delete-card" title="Remove Player">&times;</button>
-            </td>
-        </tr>
-
-        <tr class="player-data-row">
-            <td>
-                <div class="field-group">
-                    <label class="field-label">Discord ID</label>
-                    <input type="text" class="table-input s-discord-id" value="${data.discord_id || ''}">
-                </div>
-            </td>
-            <td>
-                <div class="field-group">
-                    <label class="field-label">Character</label>
-                    <input type="text" class="table-input s-char-name" value="${data.character_name || ''}">
-                </div>
-            </td>
-            <td>
-                <div class="field-group">
-                    <label class="field-label">Level</label>
-                    <input type="number" class="table-input s-level" value="${data.level || ''}">
-                </div>
-            </td>
-            <td>
-                <div class="field-group">
-                    <label class="field-label">Games</label>
-                    <input type="text" class="table-input s-games" value="${data.games_count || ''}">
-                </div>
-            </td>
-        </tr>
-        
-        `;
-    
-    // Correction: User asked for "Discord ID, Character Name, Hours Played, Number of Games".
-    // I put Level in there because XP depends on it. 
-    // I will put Level in Row 2.
-    
     tbody.innerHTML = `
         <tr class="player-card-header">
             <td colspan="4" style="display:flex; justify-content:space-between; align-items:center;">
@@ -425,6 +372,7 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
                 <div class="field-group">
                     <label class="field-label">Hours Played</label>
                     <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5">
+                    <div class="validation-msg">Exceeds Session Duration</div>
                 </div>
             </td>
             <td>
@@ -452,16 +400,17 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
                 <div class="field-group">
                     <label class="field-label">Gold Rewarded</label>
                     <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
+                    <div class="validation-msg">Exceeds Max (<span class="val-max-msg"></span>)</div>
                 </div>
             </td>
             <td>
                 <div class="field-group">
                     <label class="field-label">DTP / Incentives</label>
-                    <div style="display:flex; gap:5px;">
-                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:50%;">
+                    <div class="dtp-container">
+                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);">
                         <button class="button button-secondary btn-sm s-incentives-btn" 
-                                data-incentives='${incentivesJson}' style="width:50%; padding:0 5px; font-size:0.7em;">
-                                ${currentIncentives.length > 0 ? '+' + currentIncentives.length : '+'}
+                                data-incentives='${incentivesJson}'>
+                                ${btnText}
                         </button>
                     </div>
                 </div>
@@ -497,10 +446,12 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
     tbody.querySelector('.btn-delete-card').addEventListener('click', () => {
         tbody.remove();
         renumberPlayers(tableElement);
+        updateSessionCalculations(viewContext); // Recalc APL after deletion
     });
 
-    tbody.querySelector('.s-hours').addEventListener('input', () => recalculateSessionXP(viewContext));
-    tbody.querySelector('.s-level').addEventListener('input', () => recalculateSessionXP(viewContext));
+    tbody.querySelector('.s-hours').addEventListener('input', () => updateSessionCalculations(viewContext));
+    tbody.querySelector('.s-level').addEventListener('input', () => updateSessionCalculations(viewContext));
+    tbody.querySelector('.s-gold').addEventListener('input', () => updateSessionCalculations(viewContext));
     
     const btnIncentives = tbody.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
@@ -509,7 +460,7 @@ function addSessionPlayerRow(tableElement, data = {}, sessionIndex, viewContext)
 
     tableElement.appendChild(tbody);
     
-    if (viewContext && data.level) recalculateSessionXP(viewContext);
+    if (viewContext && data.level) updateSessionCalculations(viewContext);
 }
 
 function renumberPlayers(table) {
@@ -545,13 +496,79 @@ function getSessionRosterData(viewElement) {
     return players;
 }
 
-function recalculateSessionXP(viewElement) {
+/**
+ * Unified Calculation & Validation Function
+ * - Calculates APL
+ * - Updates Header Stats
+ * - Validates Inputs
+ * - Calculates XP/DTP
+ */
+function updateSessionCalculations(viewElement) {
     if (!cachedGameRules) return; 
     
-    viewElement.querySelectorAll('.session-roster-body').forEach(body => {
+    // 1. Calculate APL (Average Party Level)
+    let totalLevel = 0;
+    let playerCount = 0;
+    const playerBodies = viewElement.querySelectorAll('.session-roster-body');
+    
+    playerBodies.forEach(body => {
+        const lvl = parseFloat(body.querySelector('.s-level').value) || 0;
+        if(lvl > 0) {
+            totalLevel += lvl;
+            playerCount++;
+        }
+    });
+
+    const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
+    
+    // 2. Determine Tier
+    let tier = 1;
+    if (apl >= 17) tier = 4;
+    else if (apl >= 11) tier = 3;
+    else if (apl >= 5) tier = 2;
+    
+    // 3. Determine Max Gold
+    const maxGold = cachedGameRules.gold_per_session_by_apl 
+                    ? (cachedGameRules.gold_per_session_by_apl[apl] || 0) 
+                    : 0;
+
+    // 4. Update Stats UI
+    viewElement.querySelector('.val-apl').textContent = apl;
+    viewElement.querySelector('.val-tier').textContent = tier;
+    viewElement.querySelector('.val-max-gold').textContent = maxGold;
+
+    // 5. Update Player Rows (Calc & Validate)
+    const sessionHours = parseFloat(viewElement.querySelector('.inp-session-hours').value) || 0;
+
+    playerBodies.forEach(body => {
         const lvl = parseInt(body.querySelector('.s-level').value) || 0;
-        const playerHours = parseFloat(body.querySelector('.s-hours').value) || 0;
+        const hInput = body.querySelector('.s-hours');
+        const playerHours = parseFloat(hInput.value) || 0;
+        const gInput = body.querySelector('.s-gold');
+        const playerGold = parseFloat(gInput.value) || 0;
         
+        // Validation: Hours
+        if (playerHours > sessionHours) {
+            hInput.classList.add('is-invalid');
+            hInput.parentElement.classList.add('error');
+        } else {
+            hInput.classList.remove('is-invalid');
+            hInput.parentElement.classList.remove('error');
+        }
+
+        // Validation: Gold
+        if (maxGold > 0 && playerGold > maxGold) {
+            gInput.classList.add('is-invalid');
+            const grp = gInput.parentElement;
+            grp.classList.add('error');
+            const msgSpan = grp.querySelector('.val-max-msg');
+            if(msgSpan) msgSpan.textContent = maxGold;
+        } else {
+            gInput.classList.remove('is-invalid');
+            gInput.parentElement.classList.remove('error');
+        }
+
+        // Calculations
         const xpInput = body.querySelector('.s-xp');
         const dtpInput = body.querySelector('.s-dtp');
 
@@ -602,27 +619,38 @@ function openIncentivesModal(buttonEl, viewContext) {
 
     const modal = document.getElementById('modal-incentives');
     const listContainer = document.getElementById('incentives-list');
+    const msgContainer = document.getElementById('incentives-message');
     listContainer.innerHTML = ''; 
 
     const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
+    let hasIncentives = false;
 
     if (cachedGameRules && cachedGameRules['player incentives']) {
-        for (const [name, val] of Object.entries(cachedGameRules['player incentives'])) {
-            const label = document.createElement('label');
-            label.className = 'checkbox-item';
+        const entries = Object.entries(cachedGameRules['player incentives']);
+        if (entries.length > 0) {
+            hasIncentives = true;
+            msgContainer.textContent = "Check any incentives that apply to this player.";
             
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = name;
-            if (currentSelection.includes(name)) checkbox.checked = true;
-            
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(`${name} (+${val} DTP)`));
-            
-            listContainer.appendChild(label);
+            entries.forEach(([name, val]) => {
+                const label = document.createElement('label');
+                label.className = 'checkbox-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = name;
+                if (currentSelection.includes(name)) checkbox.checked = true;
+                
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(`${name} (+${val} DTP)`));
+                
+                listContainer.appendChild(label);
+            });
         }
-    } else {
-        listContainer.innerHTML = '<p>No incentives found in Game Rules.</p>';
+    } 
+    
+    if (!hasIncentives) {
+        msgContainer.textContent = "No Player Incentives at this time.";
+        // Hide Save button potentially? Or just leave empty list
     }
 
     modal.showModal();
@@ -637,10 +665,9 @@ function saveIncentivesFromModal() {
 
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
-    // Short button text
-    btn.innerText = selected.length > 0 ? `+${selected.length}` : '+';
+    btn.innerText = selected.length > 0 ? `+` : '+';
 
-    recalculateSessionXP(activeIncentiveRowData.viewContext);
+    updateSessionCalculations(activeIncentiveRowData.viewContext);
 
     activeIncentiveRowData = null;
     modal.close();
@@ -979,6 +1006,9 @@ function populateForm(session) {
             }
 
             const table = view.querySelector('.session-player-table');
+            // DUPLICATION FIX: Clear table before adding saved rows
+            table.querySelectorAll('.session-roster-body').forEach(b => b.remove());
+
             if(sData.players) {
                 sData.players.forEach(p => addSessionPlayerRow(table, p, index, view));
             }
