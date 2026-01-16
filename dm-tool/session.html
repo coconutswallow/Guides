@@ -275,7 +275,7 @@ extra_css:
         <div id="view-loot-plan" class="view-section hidden-section">
             <h2>Plan / Declare Loot</h2>
             <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.  **Note:** you can declare loot at any time (up to the end of the session).</p>
-            
+
             <div class="accordion-group">
                 <div class="card accordion-card open">
                     <div class="accordion-header">
@@ -348,17 +348,19 @@ extra_css:
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>New Hires (Players &lt; 10 games)</label>
-                                <input type="text" id="loot-val-newhires" class="table-input readonly-input" readonly value="0">
-                            </div>
-                            <div class="form-group">
-                                <label>Welcome Wagon (First game)</label>
-                                <input type="text" id="loot-val-welcome" class="table-input readonly-input" readonly value="0">
-                            </div>
-                            <div class="form-group">
-                                <label>Jumpstart DM?</label>
-                                <input type="text" id="loot-val-jumpstart" class="table-input readonly-input" readonly value="No">
+                            <div class="form-group" style="grid-column: 1 / -1; display: flex; flex-direction: row; gap: 1.5rem; align-items: flex-end;">
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:0.5rem; font-weight:600;">New Hires (Players &lt; 10 games)</label>
+                                    <input type="text" id="loot-val-newhires" class="table-input readonly-input" readonly value="0">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Welcome Wagon (First game)</label>
+                                    <input type="text" id="loot-val-welcome" class="table-input readonly-input" readonly value="0">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Jumpstart DM?</label>
+                                    <input type="text" id="loot-val-jumpstart" class="table-input readonly-input" readonly value="No">
+                                </div>
                             </div>
 
                             <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.5rem;">
