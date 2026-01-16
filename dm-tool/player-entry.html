@@ -4,139 +4,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player Session Entry</title>
-    <link rel="stylesheet" href="assets/css/dm-tool.css">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/dm-tool.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Almendra:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body { padding: 20px; max-width: 600px; margin: 0 auto; background: #202225; color: #dcddde; }
-        .container { background: #2f3136; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .hidden { display: none; }
-        .tab-nav { display: flex; border-bottom: 2px solid #202225; margin-bottom: 20px; }
-        .tab-btn { flex: 1; background: none; border: none; color: #72767d; padding: 10px; cursor: pointer; font-weight: bold; }
-        .tab-btn.active { color: #fff; border-bottom: 2px solid #5865f2; }
-        h2 { color: #fff; margin-top: 0; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.9em; color: #b9bbbe; }
-        input, textarea { width: 100%; padding: 10px; background: #202225; border: 1px solid #202225; color: #fff; border-radius: 4px; box-sizing: border-box; }
-        input:focus { border-color: #5865f2; outline: none; }
-        .btn-primary { width: 100%; padding: 12px; background: #5865f2; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
-        .btn-primary:hover { background: #4752c4; }
-        .status-msg { margin-top: 10px; text-align: center; font-size: 0.9em; height: 20px; }
-        .login-screen { text-align: center; }
+        /* Local overrides for the centered layout specifically */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Vertically center */
+            min-height: 100vh;
+            padding: 20px;
+            background-image: var(--page-bg-image, none); /* Inherits from style.css */
+        }
+        
+        .entry-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Ensure textareas in this view look consistent */
+        textarea {
+            resize: vertical;
+        }
+
+        .status-msg { 
+            margin-top: 15px; 
+            text-align: center; 
+            font-weight: bold;
+            min-height: 24px;
+        }
+        
+        /* Helper to hide elements */
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="login-section" class="login-screen">
-        <h2>Player Check-In</h2>
-        <p style="color:#b9bbbe; margin-bottom: 20px;">Enter your Discord ID to access this session.</p>
-        <div class="form-group">
-            <input type="text" id="login-discord-id" placeholder="Your Discord ID (e.g. username123)">
-        </div>
-        <button class="btn-primary" id="btn-login">Start / Load</button>
-    </div>
-
-    <div id="form-section" class="hidden">
-        <div class="tab-nav">
-            <button class="tab-btn active" data-tab="tab-setup">1. Setup</button>
-            <button class="tab-btn" data-tab="tab-end">2. End of Session</button>
+<div class="entry-container">
+    
+    <div class="card">
+        
+        <div class="site-title" style="color: var(--color-primary); text-align: center; margin-bottom: 1rem; text-shadow: none;">
+            Player Check-In
         </div>
 
-        <form id="player-form">
-            <input type="hidden" id="p-discord-id">
-
-            <div id="tab-setup" class="tab-content">
-                <div class="form-group">
-                    <label>Character Name</label>
-                    <input type="text" id="p-char-name" placeholder="Character Name">
-                </div>
-                <div class="form-group" style="display:flex; gap:10px;">
-                    <div style="flex:1;">
-                        <label>Level</label>
-                        <input type="number" id="p-level" placeholder="Current Level">
-                    </div>
-                    <div style="flex:1;">
-                        <label>Playing As (Optional)</label>
-                        <input type="number" id="p-level-as" placeholder="Lvl">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Games Played (Current Count)</label>
-                    <input type="text" id="p-games" placeholder="e.g. 5">
-                </div>
+        <div id="login-section">
+            <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 2rem;">
+                Enter your Discord ID to access the session data.
+            </p>
+            
+            <div class="form-group">
+                <label>Discord ID</label>
+                <input type="text" id="login-discord-id" placeholder="e.g. username123" class="table-input">
             </div>
 
-            <div id="tab-end" class="tab-content hidden">
-                <div class="form-group">
-                    <label>Loot Rewarded</label>
-                    <textarea id="p-loot" rows="3" placeholder="List loot items received..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Gold Spent/Earned (Optional)</label>
-                    <input type="text" id="p-gold" placeholder="GP value">
-                </div>
-                <div class="form-group">
-                    <label>Items Used</label>
-                    <textarea id="p-items" rows="2" placeholder="Potions, scrolls, etc..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="p-notes" rows="2" placeholder="Private notes..."></textarea>
-                </div>
+            <div style="margin-top: 2rem;">
+                <button type="button" class="button" id="btn-login" style="width: 100%;">Start / Load</button>
+            </div>
+        </div>
+
+        <div id="form-section" class="hidden">
+            
+            <div class="content-tabs">
+                <div class="content-tab active" data-tab="tab-character">1. Character</div>
+                <div class="content-tab" data-tab="tab-session">2. Session</div>
             </div>
 
-            <button type="button" class="btn-primary" id="btn-submit">Save Updates</button>
-            <div id="status-message" class="status-msg"></div>
-        </form>
+            <form id="player-form">
+                <input type="hidden" id="p-discord-id">
+
+                <div id="tab-character" class="tab-content">
+                    <div class="form-group">
+                        <label>Character Name</label>
+                        <input type="text" id="p-char-name" class="table-input" placeholder="Character Name">
+                    </div>
+                    
+                    <div class="form-row-full" style="gap: 1rem; margin-bottom: 15px;">
+                        <div class="form-group flex-grow">
+                            <label>Level</label>
+                            <input type="number" id="p-level" class="table-input" placeholder="Actual">
+                        </div>
+                        <div class="form-group flex-grow">
+                            <label>Playing As</label>
+                            <input type="number" id="p-level-as" class="table-input" placeholder="Adjusted">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Number of Games on Server</label>
+                        <input type="number" id="p-games" class="table-input" placeholder="Total games played">
+                    </div>
+                </div>
+
+                <div id="tab-session" class="tab-content hidden">
+                    <div class="form-group">
+                        <label>Loot Acquired</label>
+                        <textarea id="p-loot" rows="4" class="table-input" placeholder="List items, gold, or rewards received..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Items Used</label>
+                        <textarea id="p-items" rows="3" class="table-input" placeholder="Potions, scrolls, charges spent..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Character Notes</label>
+                        <textarea id="p-notes" rows="3" class="table-input" placeholder="Private session notes..."></textarea>
+                    </div>
+                </div>
+
+                <hr style="border-color: var(--color-border); margin: 2rem 0;">
+
+                <button type="button" class="button" id="btn-submit" style="width: 100%;">Save Updates</button>
+                <div id="status-message" class="status-msg"></div>
+            </form>
+        </div>
+
     </div>
+    
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+    </button>
 </div>
 
 <script type="module">
-    import { supabase } from './assets/js/supabaseClient.js';
+    // 1. Import Supabase (Adjusted path for /dm-tool/ folder structure)
+    import { supabase } from '../assets/js/supabaseClient.js';
 
-    // 1. Get Session ID
+    // 2. Theme Toggle Logic (Matches site standard)
+    const toggleBtn = document.getElementById('theme-toggle');
+    const htmlEl = document.documentElement;
+    
+    // Check local storage or default
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlEl.setAttribute('data-theme', 'dark');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        htmlEl.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+
+    // 3. Application Logic
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
 
-    if(!sessionId) {
-        document.body.innerHTML = "<h3 style='color:white; text-align:center;'>Error: No Session ID provided.</h3>";
-    }
-
-    // 2. UI Logic
+    // UI References
     const loginSection = document.getElementById('login-section');
     const formSection = document.getElementById('form-section');
     const statusMsg = document.getElementById('status-message');
+    const btnLogin = document.getElementById('btn-login');
+    const btnSubmit = document.getElementById('btn-submit');
 
-    // Tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    // Tab Logic
+    document.querySelectorAll('.content-tab').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            // Remove active class from all tabs
+            document.querySelectorAll('.content-tab').forEach(b => b.classList.remove('active'));
+            // Hide all contents
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            
+            // Activate clicked
             btn.classList.add('active');
-            document.getElementById(btn.dataset.tab).classList.remove('hidden');
+            const targetId = btn.dataset.tab;
+            document.getElementById(targetId).classList.remove('hidden');
         });
     });
 
-    // 3. Login / Load Data
-    document.getElementById('btn-login').addEventListener('click', async () => {
+    // Login Handler
+    btnLogin.addEventListener('click', async () => {
         const discordId = document.getElementById('login-discord-id').value.trim();
-        if(!discordId) return alert("Please enter a Discord ID");
-
-        document.getElementById('p-discord-id').value = discordId;
-
-        // Fetch existing
-        const { data, error } = await supabase
-            .from('session_player_submissions')
-            .select('payload')
-            .eq('session_id', sessionId)
-            .eq('discord_id', discordId)
-            .single();
-
-        if(data && data.payload) {
-            populateForm(data.payload);
+        
+        if (!sessionId) {
+            alert("Error: No Session ID found in URL. Please use the link provided by your DM.");
+            return;
         }
 
-        loginSection.classList.add('hidden');
-        formSection.classList.remove('hidden');
+        if (!discordId) {
+            alert("Please enter your Discord ID.");
+            return;
+        }
+
+        document.getElementById('p-discord-id').value = discordId;
+        btnLogin.textContent = "Loading...";
+        btnLogin.disabled = true;
+
+        try {
+            // Check for existing submission
+            const { data, error } = await supabase
+                .from('session_player_submissions')
+                .select('payload')
+                .eq('session_id', sessionId)
+                .eq('discord_id', discordId)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            if (data && data.payload) {
+                populateForm(data.payload);
+            }
+
+            // Transition UI
+            loginSection.classList.add('hidden');
+            formSection.classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            alert("Error loading data. Check console for details.");
+            btnLogin.textContent = "Start / Load";
+            btnLogin.disabled = false;
+        }
     });
 
     function populateForm(p) {
@@ -145,46 +234,52 @@
         if(p.level_as) document.getElementById('p-level-as').value = p.level_as;
         if(p.games) document.getElementById('p-games').value = p.games;
         if(p.loot) document.getElementById('p-loot').value = p.loot;
-        if(p.gold) document.getElementById('p-gold').value = p.gold;
         if(p.items) document.getElementById('p-items').value = p.items;
         if(p.notes) document.getElementById('p-notes').value = p.notes;
     }
 
-    // 4. Submit / Save
-    document.getElementById('btn-submit').addEventListener('click', async () => {
+    // Save Handler
+    btnSubmit.addEventListener('click', async () => {
         const discordId = document.getElementById('p-discord-id').value;
+        
         const payload = {
             char_name: document.getElementById('p-char-name').value,
             level: document.getElementById('p-level').value,
             level_as: document.getElementById('p-level-as').value,
             games: document.getElementById('p-games').value,
             loot: document.getElementById('p-loot').value,
-            gold: document.getElementById('p-gold').value,
             items: document.getElementById('p-items').value,
             notes: document.getElementById('p-notes').value
         };
 
         statusMsg.textContent = "Saving...";
-        statusMsg.style.color = "#fbbf24";
+        statusMsg.style.color = "var(--palette-role-auditor)"; // Orange/Warning color from CSS vars
 
-        const { error } = await supabase
-            .from('session_player_submissions')
-            .upsert({ 
-                session_id: sessionId,
-                discord_id: discordId,
-                payload: payload,
-                updated_at: new Date().toISOString()
-            }, { onConflict: 'session_id, discord_id' });
+        try {
+            const { error } = await supabase
+                .from('session_player_submissions')
+                .upsert({ 
+                    session_id: sessionId,
+                    discord_id: discordId,
+                    payload: payload,
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'session_id, discord_id' });
 
-        if(error) {
-            console.error(error);
-            statusMsg.textContent = "Error saving.";
-            statusMsg.style.color = "#f87171";
-        } else {
+            if(error) throw error;
+
             statusMsg.textContent = "Saved successfully!";
-            statusMsg.style.color = "#34d399";
+            statusMsg.style.color = "var(--palette-role-full-dm)"; // Green color
+            
+            // Optional: Reset message after a few seconds
+            setTimeout(() => { statusMsg.textContent = ""; }, 3000);
+
+        } catch (err) {
+            console.error(err);
+            statusMsg.textContent = "Error saving data.";
+            statusMsg.style.color = "var(--palette-alert-danger-action)";
         }
     });
 </script>
+
 </body>
 </html>
