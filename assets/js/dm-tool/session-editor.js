@@ -183,9 +183,11 @@ function setupCalculationTriggers(callbacks) {
     // We bind to the Setup inputs because Loot Planning often happens before Session Logging
     const dmLevelInputSetup = document.getElementById('inp-dm-level'); 
     const dmGamesInputSetup = document.getElementById('inp-dm-games-count'); 
+    const dmIncentivesSelect = document.getElementById('inp-dm-incentives');
 
     if(dmLevelInputSetup) dmLevelInputSetup.addEventListener('input', updateDMLootLogic);
     if(dmGamesInputSetup) dmGamesInputSetup.addEventListener('change', updateDMLootLogic);
+    if(dmIncentivesSelect) dmIncentivesSelect.addEventListener('change', updateDMLootLogic);
     
     // Trigger update on Roster changes (View 4 Roster affects View 5 Loot)
     const rosterBody = document.getElementById('roster-body');
@@ -375,42 +377,47 @@ function initPlayerSync() {
 }
 
 // NEW: Initialize DM Loot Incentives based on database rules
+// Updated to use a <select multiple> instead of checkboxes, with robust loading handling
 function initDMLootIncentives() {
-    const container = document.getElementById('dm-loot-incentives-container');
+    const select = document.getElementById('inp-dm-incentives');
     // Guard clause if container or rules are missing
-    if (!container || !cachedGameRules || !cachedGameRules['DM incentives']) return;
+    if (!select) return;
 
-    container.innerHTML = '';
+    // Clear "Loading..." immediately
+    select.innerHTML = '';
+
+    if (!cachedGameRules || !cachedGameRules['DM incentives']) {
+        const opt = document.createElement('option');
+        opt.text = "No incentives found.";
+        opt.disabled = true;
+        select.add(opt);
+        select.disabled = true;
+        return;
+    }
+
     const incentives = cachedGameRules['DM incentives'];
     let count = 0;
 
     for (const [name, data] of Object.entries(incentives)) {
+        // Safe Parse: Ensure string numbers are treated as numbers
+        const bonusRoll = parseInt(data["bonus loot roll"] || 0);
+
         // Filter: only show if bonus loot roll > 0
-        if (data["bonus loot roll"] && data["bonus loot roll"] > 0) {
+        if (bonusRoll > 0) {
             count++;
-            const label = document.createElement('label');
-            label.className = 'checkbox-item';
-            label.style.display = 'flex';
-            label.style.alignItems = 'center';
-            label.style.gap = '8px';
-            label.style.marginBottom = '5px';
-
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = name;
-            checkbox.dataset.bonus = data["bonus loot roll"];
-            
-            // Re-trigger logic when checked
-            checkbox.addEventListener('change', updateDMLootLogic);
-
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(`${name} (+${data["bonus loot roll"]} Roll)`));
-            container.appendChild(label);
+            const option = document.createElement('option');
+            option.value = name;
+            option.dataset.bonus = bonusRoll;
+            option.textContent = `${name} (+${bonusRoll} Roll)`;
+            select.appendChild(option);
         }
     }
 
     if (count === 0) {
-        container.innerHTML = '<span style="color:var(--color-text-secondary)">No specific loot incentives available.</span>';
+        select.innerHTML = '<option value="" disabled>No bonus loot incentives available</option>';
+        select.disabled = true;
+    } else {
+        select.disabled = false;
     }
 }
 
@@ -632,219 +639,6 @@ function updateLootInstructions() {
     container.innerHTML = html;
 }
 
-function initCopyGameLogic() {
-    const btnCopy = document.getElementById('btn-copy-game');
-    const modal = document.getElementById('modal-copy-game');
-    const btnConfirm = document.getElementById('btn-confirm-copy');
-    
-    if(btnCopy) {
-        btnCopy.addEventListener('click', () => {
-            const currentName = document.getElementById('header-game-name').value;
-            document.getElementById('inp-copy-name').value = incrementPartName(currentName);
-            modal.showModal();
-        });
-    }
-
-    if(btnConfirm) {
-        btnConfirm.addEventListener('click', async () => {
-            const newName = document.getElementById('inp-copy-name').value;
-            if(!newName) return alert("Please enter a name.");
-            
-            const isNextPart = document.getElementById('chk-next-part').checked;
-            const fullData = IO.getFormData();
-            
-            fullData.header.title = newName; 
-            fullData.session_log.hours = 3; 
-            
-            if (isNextPart) {
-                fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
-                fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
-                fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
-                fullData.session_log.players.forEach(p => p.games_count = incrementGameString(p.games_count));
-            }
-            
-            fullData.session_log.title = newName;
-            fullData.session_log.notes = "";
-            fullData.session_log.summary = "";
-            fullData.session_log.dm_rewards.loot_selected = "";
-            
-            const { data: { user } } = await supabase.auth.getUser();
-            if(!user) return alert("Not logged in");
-
-            try {
-                const newSession = await createSession(user.id, newName, false);
-                if(newSession) {
-                    await saveSession(newSession.id, fullData, { title: newName });
-                    window.location.href = `session.html?id=${newSession.id}`;
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Error copying game.");
-            }
-        });
-    }
-}
-
-function incrementGameString(val) {
-    if (val === "10+") return "10+";
-    const num = parseInt(val) || 0;
-    if (num >= 10) return "10+";
-    return (num + 1).toString();
-}
-
-function initTemplateLogic() {
-    const modal = document.getElementById('modal-save-template');
-    const btnOpen = document.getElementById('btn-open-save-template');
-    const btnConfirm = document.getElementById('btn-confirm-save-template');
-    const btnLoad = document.getElementById('btn-load-template');
-    const btnSaveGame = document.getElementById('btn-save-game');
-    
-    const btnSaveSetup = document.getElementById('btn-save-template-setup');
-    const btnDelete = document.getElementById('btn-delete-template');
-    
-    if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
-    
-    if(btnSaveSetup) btnSaveSetup.addEventListener('click', () => {
-        const currentName = document.getElementById('header-game-name').value;
-        if(currentName) document.getElementById('inp-template-name').value = currentName;
-        modal.showModal();
-    });
-    
-    if(btnDelete) {
-        btnDelete.addEventListener('click', async () => {
-            const tmplId = document.getElementById('template-select').value;
-            if(!tmplId) return alert("Please select a template to delete.");
-            
-            if(confirm("Are you sure you want to delete this template? This cannot be undone.")) {
-                try {
-                    await deleteSession(tmplId); 
-                    await initTemplateDropdown(); 
-                    alert("Template deleted.");
-                } catch(e) {
-                    console.error(e);
-                    alert("Error deleting template.");
-                }
-            }
-        });
-    }
-    
-    if(btnConfirm) {
-        btnConfirm.addEventListener('click', async () => {
-            const tmplName = document.getElementById('inp-template-name').value;
-            if(!tmplName) return alert("Enter a name");
-            const { data: { user } } = await supabase.auth.getUser();
-            if(!user) return alert("Please login");
-            
-            const fullData = IO.getFormData();
-            const templateData = IO.prepareTemplateData(fullData); 
-            
-            try {
-                await saveAsTemplate(user.id, tmplName, templateData);
-                await initTemplateDropdown(); 
-                alert("Template Saved!");
-                modal.close();
-            } catch (e) {
-                console.error(e);
-                alert("Error saving template");
-            }
-        });
-    }
-    
-    if(btnLoad) {
-        btnLoad.addEventListener('click', async () => {
-            const tmplId = document.getElementById('template-select').value;
-            if(!tmplId) return;
-            const session = await loadSession(tmplId);
-            if(session) {
-                IO.populateForm(session, window._sessionCallbacks, { keepTitle: true });
-                alert("Template Loaded!");
-            }
-        });
-    }
-    
-    if(btnSaveGame) {
-        btnSaveGame.addEventListener('click', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const sessionId = urlParams.get('id');
-            const formData = IO.getFormData();
-            const title = document.getElementById('header-game-name').value || "Untitled Session";
-            const dateInput = document.getElementById('inp-start-datetime');
-            const date = dateInput && dateInput.value ? new Date(dateInput.value).toISOString().split('T')[0] : null;
-            
-            if (sessionId) {
-                await saveSession(sessionId, formData, { title, date });
-                const btn = document.getElementById('btn-save-game');
-                const originalText = btn.innerText;
-                btn.innerText = "Saved!";
-                btn.classList.add('button-success'); 
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.classList.remove('button-success');
-                }, 1500);
-            } else {
-                const { data: { user } } = await supabase.auth.getUser();
-                if(user) {
-                    const newS = await createSession(user.id, title);
-                    await saveSession(newS.id, formData, { title, date });
-                    window.history.pushState({}, "", `?id=${newS.id}`);
-                    alert("Session Created & Saved");
-                }
-            }
-        });
-    }
-}
-
-async function updateLootDeclaration() {
-    const lootInput = document.getElementById('inp-loot-plan');
-    const output = document.getElementById('out-loot-declaration');
-    if (!lootInput || !output) return;
-
-    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
-    
-    // Retrieve calculated stats from the DOM (populated by session-rows.js)
-    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
-    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
-    const lootContent = lootInput.value.trim();
-
-    // Attempt to get Discord ID from Supabase Identity
-    let discordId = "YOUR_ID";
-    try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user && user.identities) {
-            const identity = user.identities.find(i => i.provider === 'discord');
-            if(identity && identity.id) discordId = identity.id;
-        }
-    } catch (e) { console.warn("Could not fetch user ID for loot template"); }
-
-    // Format the string
-    const declaration = `<@${discordId}> declares loot for **${gameName}**: Number of Players: ${partySize}, Tier ${tier}, APL ${apl}:\n||\n${lootContent}\n||`;
-
-    output.value = declaration;
-}
-
-function updateHgenLogic() {
-    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
-    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
-    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
-    
-    const predetPerms = document.getElementById('inp-predet-perms')?.value || "0";
-    const predetCons = document.getElementById('inp-predet-cons')?.value || "0";
-
-    // Format 1: Declaration
-    const declaration = `<@1360680887510892654> rolls loot for **${gameName}**: Number of Players: ${partySize}, Tier ${tier}, APL ${apl}:`;
-    
-    // Format 2: Command
-    const command = `/hgenloot ${partySize} ${apl} predetermined_perms ${predetPerms} predetermined_cons ${predetCons}`;
-
-    const outDecl = document.getElementById('out-hgen-declaration');
-    const outCmd = document.getElementById('out-hgen-command');
-    
-    if (outDecl) outDecl.value = declaration;
-    if (outCmd) outCmd.value = command;
-}
-
 // NEW: Calculates DM Loot Plan logic (View 5) based on Setup Roster (View 4)
 async function updateDMLootLogic() {
     // 1. Calculate Roster Stats from Setup Roster (View 4)
@@ -883,18 +677,22 @@ async function updateDMLootLogic() {
     // Base 1 + New Hires
     let totalRolls = 1 + newHires;
     
-    // Check Selected Incentives
-    const checkedIncentives = document.querySelectorAll('#dm-loot-incentives-container input:checked');
+    // Check Selected Incentives (From Multi-Select)
+    const selectEl = document.getElementById('inp-dm-incentives');
     let incentiveNames = [];
     
     if (newHires > 0) incentiveNames.push(`New Hires (${newHires})`);
-    if (isJumpstart) incentiveNames.push("Jumpstart");
+    
+    // NOTE: Jumpstart is handled separately in output now, but technically part of the "reasoning"
+    // if (isJumpstart) incentiveNames.push("Jumpstart"); // Removed to separate output
 
-    checkedIncentives.forEach(cb => {
-        const bonus = parseInt(cb.dataset.bonus) || 0;
-        totalRolls += bonus;
-        incentiveNames.push(cb.value);
-    });
+    if (selectEl && selectEl.selectedOptions) {
+        Array.from(selectEl.selectedOptions).forEach(opt => {
+            const bonus = parseInt(opt.dataset.bonus) || 0;
+            totalRolls += bonus;
+            incentiveNames.push(opt.value);
+        });
+    }
 
     // 5. Generate Output Text
     const gameName = document.getElementById('header-game-name').value || "Untitled Game";
@@ -918,13 +716,20 @@ async function updateDMLootLogic() {
     const outDecl = document.getElementById('out-dm-loot-decl');
     if (outDecl) outDecl.value = declText;
 
-    // -- Command --
+    // -- Command (Standard) --
+    // REMOVED JUMPSTART TEXT APPENDING HERE
     let cmdText = `/hgenloot ${totalRolls} ${dmLvl}`;
-    
-    if (isJumpstart) {
-        cmdText += `\n\nAs a Jumpstart DM, you get an additional loot roll:\n/hgenloot 1 ${dmLvl}`;
-    }
-    
     const outCmd = document.getElementById('out-dm-loot-cmd');
     if (outCmd) outCmd.value = cmdText;
+
+    // -- Jumpstart Command (Hidden/Shown) --
+    const jumpWrapper = document.getElementById('wrapper-jumpstart-bonus');
+    const jumpCmd = document.getElementById('out-dm-jumpstart-cmd');
+    
+    if (isJumpstart) {
+        if(jumpWrapper) jumpWrapper.style.display = "block"; // SHOW
+        if(jumpCmd) jumpCmd.value = `/hgenloot 1 ${dmLvl}`;
+    } else {
+        if(jumpWrapper) jumpWrapper.style.display = "none";  // HIDE
+    }
 }
