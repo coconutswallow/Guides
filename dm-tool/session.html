@@ -212,8 +212,8 @@ extra_css:
 
         <div id="view-player-setup" class="view-section hidden-section">
             <h2>Player & DM Setup</h2>
-            <p class="instruction-text">Manage your master roster and DM details here. This data persists across copy/split.</p>
-             <div class="card">
+            <p class="instruction-text"><b>There are 2 ways to manage your player roster data:</b> 1. Manually enter the player details below. 2. Create a link to a custom data entry page, and share the link with your selected players. Once they've completed the form, press <b>Sync</b> to pull the data into the tool.</p>
+            <div class="card">
                 <div style="background: var(--color-bg-medium); padding: 15px; border-radius: 4px; border: 1px solid var(--color-border); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <button class="button button-secondary btn-sm" id="btn-generate-invite" title="Create a link for players to edit their own data">
                         Create Player Invite Link
@@ -228,8 +228,19 @@ extra_css:
                     </button>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem;">
-                    <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
+                <div class="session-stats-bar" style="margin-bottom: 1rem;">
+                    <div class="stat-item">
+                        <span class="stat-label">Party Size:</span>
+                        <span class="stat-value" id="setup-val-party-size">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">APL:</span>
+                        <span class="stat-value" id="setup-val-apl">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Tier:</span>
+                        <span class="stat-value" id="setup-val-tier">1</span>
+                    </div>
                 </div>
                 
                 <table class="roster-table" style="width:100%; border-collapse: separate; border-spacing: 0 10px;">
@@ -245,6 +256,10 @@ extra_css:
                     </thead>
                     <tbody id="roster-body"></tbody>
                 </table>
+
+                <div style="display: flex; justify-content: center; margin-top: 1rem;">
+                    <button id="btn-add-player" class="button btn-sm" style="width: 100%;">+ Add Player</button>
+                </div>
             </div>
             
             <div class="card" style="margin-top: 2rem;">

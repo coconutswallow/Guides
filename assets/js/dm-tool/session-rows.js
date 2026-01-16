@@ -6,6 +6,47 @@ import { fetchMemberMap } from './data-manager.js';
    =========================== */
 
 /**
+ * Calculates APL, Tier, and Party Size based on the current rows in the Master Roster.
+ * Updates the stats bar in the DOM.
+ */
+function updateMasterRosterStats() {
+    const rows = document.querySelectorAll('#roster-body .player-row');
+    let totalLevel = 0;
+    let playerCount = 0; // Only counts players with a valid level > 0
+
+    rows.forEach(row => {
+        const lvlRaw = parseFloat(row.querySelector('.inp-level').value) || 0;
+        const lvlPlayAsRaw = parseFloat(row.querySelector('.inp-level-play-as').value) || 0;
+        
+        // Logic: Use 'Play As' if available, otherwise use actual 'Level'
+        const effectiveLevel = lvlPlayAsRaw > 0 ? lvlPlayAsRaw : lvlRaw;
+
+        if (effectiveLevel > 0) {
+            totalLevel += effectiveLevel;
+            playerCount++;
+        }
+    });
+
+    const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
+    
+    // Tier Logic based on APL
+    let tier = 1;
+    if (apl >= 17) tier = 4;
+    else if (apl >= 11) tier = 3;
+    else if (apl >= 5) tier = 2;
+
+    // Update DOM elements
+    const elSize = document.getElementById('setup-val-party-size');
+    const elApl = document.getElementById('setup-val-apl');
+    const elTier = document.getElementById('setup-val-tier');
+
+    // Party size is total rows, regardless of level entered
+    if(elSize) elSize.textContent = rows.length; 
+    if(elApl) elApl.textContent = apl;
+    if(elTier) elTier.textContent = tier;
+}
+
+/**
  * Adds a row to the Player & DM Setup table.
  * Supports a visible Display Name and a hidden Discord ID.
  */
@@ -24,8 +65,6 @@ export function addPlayerRowToMaster(data = {}) {
     }
     gamesOptions += `<option value="10+" ${data.games_count === '10+' ? 'selected' : ''}>10+</option>`;
     
-    // UPDATED: Visible 'inp-player-display' and hidden 'inp-discord-id'
-    // This allows us to show the Display Name while keeping the ID for logic
     tr.innerHTML = `
         <td>
             <input type="text" class="table-input inp-player-display" placeholder="Player Name" value="${data.display_name || data.discord_id || ''}">
@@ -45,8 +84,26 @@ export function addPlayerRowToMaster(data = {}) {
         if(!idInput.value) idInput.value = nameInput.value; 
     });
 
-    tr.querySelector('.btn-delete-row').addEventListener('click', () => tr.remove());
+    // Delete Listener
+    tr.querySelector('.btn-delete-row').addEventListener('click', () => {
+        tr.remove();
+        updateMasterRosterStats(); // Recalculate stats after deletion
+    });
+
+    // Real-time Calc Listeners
+    const lvlInput = tr.querySelector('.inp-level');
+    const playAsInput = tr.querySelector('.inp-level-play-as');
+    
+    // Update stats whenever levels change
+    [lvlInput, playAsInput].forEach(inp => {
+        inp.addEventListener('input', updateMasterRosterStats);
+        inp.addEventListener('change', updateMasterRosterStats);
+    });
+
     tbody.appendChild(tr);
+    
+    // Calculate initial stats for this new row
+    updateMasterRosterStats();
 }
 
 export function getMasterRosterData() {
@@ -98,7 +155,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 
         if (foundRow) {
             // Update Existing
-            foundRow.querySelector('.inp-player-display').value = displayName; // Update name in case it changed
+            foundRow.querySelector('.inp-player-display').value = displayName; 
             if (p.char_name) foundRow.querySelector('.inp-char-name').value = p.char_name;
             if (p.level) foundRow.querySelector('.inp-level').value = p.level;
             if (p.level_as) foundRow.querySelector('.inp-level-play-as').value = p.level_as;
@@ -116,6 +173,9 @@ export async function syncMasterRosterFromSubmissions(submissions) {
             addPlayerRowToMaster(newData);
         }
     });
+
+    // 3. Final calculation update after bulk sync
+    updateMasterRosterStats();
 }
 
 
@@ -125,7 +185,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     if (!listContainer) return;
 
-    // Updated ID target:
+    // Default hours to the session total if not specific to player
     const rowHours = data.hours || document.getElementById('inp-session-total-hours').value || "0";
     
     const currentIncentives = data.incentives || [];
@@ -273,7 +333,6 @@ export function syncSessionPlayersFromMaster(callbacks) {
 
 /**
  * Applies submissions to Session Logs (View 6)
- * (Logic retained from previous step but cleaned up)
  */
 export function applyPlayerSubmissions(submissions, callbacks) {
     const listContainer = document.getElementById('session-roster-list');
