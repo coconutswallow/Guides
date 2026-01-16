@@ -22,11 +22,29 @@ import * as IO from './session-io.js';
 let cachedGameRules = null; 
 let isFullDM = false; 
 
+let cachedDiscordId = "YOUR_ID"; // Default fallback
+
+async function cacheDiscordId() {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && user.identities) {
+            // Find the identity linked to Discord to get the Snowflake ID
+            const identity = user.identities.find(i => i.provider === 'discord');
+            if (identity && identity.id) {
+                cachedDiscordId = identity.id;
+            }
+        }
+    } catch (e) {
+        console.warn("Could not fetch Discord ID:", e);
+    }
+}
+
 // ==========================================
 // 1. Initialization
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
+    await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
 
     // Check DM Role
@@ -616,6 +634,66 @@ function updateLootInstructions() {
     }
 
     container.innerHTML = html;
+
+    // Updates the "Loot Declaration" text area for Discord
+function updateLootDeclaration() {
+    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
+    
+    // Grab stats from the setup tab text (calculated by View 4)
+    // Fallback to "0" or "1" if elements are missing
+    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
+    const apl = document.getElementById('setup-val-apl')?.textContent || "1";
+    
+    // The manually entered loot items
+    const lootPlan = document.getElementById('inp-loot-plan')?.value || "";
+    
+    // 1. Declaration Format (Used when specific loot is listed)
+    // Note: Adds the || spoilers around the item list
+    const declareText = `<@${cachedDiscordId}> declares loot for Game: ${gameName}, Number of Players: ${partySize}, APL ${apl}:\n||\n${lootPlan}\n||`;
+
+    // 2. Roll Format (Used when generic bot rolling is needed)
+    const rollText = `<@${cachedDiscordId}> rolls loot for Game: ${gameName}, Number of Players: ${partySize}, APL ${apl}.`;
+
+    const out = document.getElementById('out-loot-declaration');
+    if (out) {
+        // If there is text in the loot plan, use the Declaration format.
+        // Otherwise, default to the Roll format.
+        if (lootPlan.trim().length > 0) {
+            out.value = declareText;
+        } else {
+            out.value = rollText;
+        }
+    }
+}
+
+// Updates the /hgenloot command output
+function updateHgenLogic() {
+    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
+    const apl = document.getElementById('setup-val-apl')?.textContent || "1";
+    
+    // Parse the inputs for predetermined items, defaulting to 0
+    const permsVal = parseInt(document.getElementById('inp-predet-perms')?.value || "0");
+    const consVal = parseInt(document.getElementById('inp-predet-cons')?.value || "0");
+    
+    // Base Command: /hgenloot [players] [apl]
+    let cmd = `/hgenloot ${partySize} ${apl}`;
+    
+    // Optional: Add predetermined_perms if > 0
+    if (permsVal > 0) {
+        cmd += ` ${permsVal}`;
+    }
+    
+    // Optional: Add predetermined_cons if > 0
+    // Note: If perms is 0 but cons is > 0, we must include the 0 for perms 
+    // to ensure the bot parses the arguments in the correct order.
+    if (consVal > 0) {
+        if (permsVal <= 0) cmd += ` 0`; // Filler for missing perms arg
+        cmd += ` ${consVal}`;
+    }
+    
+    const out = document.getElementById('out-hgen-cmd');
+    if(out) out.value = cmd;
+}
 }
 function updateLootDeclaration() {
     const gameName = document.getElementById('header-game-name')?.value || "Untitled";
