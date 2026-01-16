@@ -634,8 +634,9 @@ function updateLootInstructions() {
     }
 
     container.innerHTML = html;
+}
 
-    // Updates the "Loot Declaration" text area for Discord
+// Updates the "Loot Declaration" text area for Discord
 function updateLootDeclaration() {
     const gameName = document.getElementById('header-game-name')?.value || "Untitled";
     
@@ -694,33 +695,6 @@ function updateHgenLogic() {
     const out = document.getElementById('out-hgen-cmd');
     if(out) out.value = cmd;
 }
-}
-function updateLootDeclaration() {
-    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
-    const lootPlan = document.getElementById('inp-loot-plan')?.value || "";
-    
-    const decl = `**Loot Plan for ${gameName}**\n${lootPlan}`;
-    
-    const out = document.getElementById('out-loot-declaration');
-    if (out) out.value = decl;
-}
-
-// Updates the /hgen command output based on tier and predetermined items
-function updateHgenLogic() {
-    const tierEl = document.getElementById('setup-val-tier');
-    // Default to 1 if not found
-    const tier = parseInt(tierEl ? tierEl.textContent : "1") || 1;
-    
-    const perms = document.getElementById('inp-predet-perms')?.value || "0";
-    const cons = document.getElementById('inp-predet-cons')?.value || "0";
-    
-    // Logic: /hgen [Tier] [Perms] [Cons]
-    const cmd = `/hgen ${tier} ${perms} ${cons}`;
-    
-    const out = document.getElementById('out-hgen-cmd');
-    if(out) out.value = cmd;
-}
-
 // ==========================================
 // 4. Session Calculations
 // ==========================================
