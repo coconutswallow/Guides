@@ -162,17 +162,28 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     if (!listContainer) return;
 
-    // Default hours to the session total if not specific to player
-    const rowHours = data.hours || document.getElementById('inp-session-total-hours').value || "0";
+    const sessionTotalEl = document.getElementById('inp-session-total-hours');
+    const sessionTotal = sessionTotalEl ? sessionTotalEl.value : "0";
+
+    // Initialization Logic: Use data.hours if present (even if 0), otherwise default
+    let rowHours;
+    if (data.hours !== undefined && data.hours !== null && data.hours !== "") {
+        rowHours = data.hours;
+    } else {
+        rowHours = sessionTotal;
+    }
     
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `+` : '+';
+    
+    // Check if forfeited
+    const isForfeit = !!data.forfeit_xp;
 
     const card = document.createElement('div');
-    card.className = 'player-card'; // We'll toggle .open via JS
+    card.className = 'player-card';
 
-    // Structure: Collapsible Header + Body
+    // UPDATED HTML: Hidden char name input, added Forfeit Checkbox, re-weighted columns
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -187,22 +198,27 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
         
         <div class="player-card-body" style="display:none;">
             <div class="card-row">
-                <div class="card-field w-30">
-                    <label class="field-label">Character Name</label>
-                    <input type="text" class="table-input s-char-name readonly-input" value="${data.character_name || ''}" readonly>
-                    <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
-                    <input type="hidden" class="s-level" value="${data.level || '0'}">
-                    <input type="hidden" class="s-games" value="${data.games_count || '0'}">
-                </div>
+                <input type="hidden" class="s-char-name" value="${data.character_name || ''}">
+                <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
+                <input type="hidden" class="s-level" value="${data.level || '0'}">
+                <input type="hidden" class="s-games" value="${data.games_count || '0'}">
+
                 <div class="card-field w-20">
                     <label class="field-label">Hours</label>
-                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" max="${document.getElementById('inp-session-total-hours').value}">
+                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" max="${sessionTotal}">
                 </div>
-                <div class="card-field w-25">
+
+                <div class="card-field w-40">
                     <label class="field-label">XP Earned</label>
-                    <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
+                        <label style="font-size:0.85em; display:flex; align-items:center; gap:4px; cursor:pointer; user-select:none;">
+                            <input type="checkbox" class="s-forfeit-xp" ${isForfeit ? 'checked' : ''}> Forfeit XP
+                        </label>
+                    </div>
                 </div>
-                <div class="card-field w-25">
+
+                <div class="card-field w-40">
                     <label class="field-label">DTP / Incentives</label>
                     <div class="dtp-wrapper">
                         <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);">
@@ -251,30 +267,45 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     const icon = card.querySelector('.step-icon');
 
     header.addEventListener('click', (e) => {
-        // Prevent collapse when clicking delete button
         if(e.target.closest('.btn-delete-card')) return;
         
         const isHidden = body.style.display === 'none';
         if(isHidden) {
             body.style.display = 'flex';
-            icon.style.transform = 'rotate(0deg)'; // Point down
+            icon.style.transform = 'rotate(0deg)'; 
         } else {
             body.style.display = 'none';
-            icon.style.transform = 'rotate(-90deg)'; // Point right
+            icon.style.transform = 'rotate(-90deg)'; 
         }
     });
 
-    // Delete Logic
     card.querySelector('.btn-delete-card').addEventListener('click', () => {
         card.remove();
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    // Recalculate triggers
-    ['.s-hours', '.s-gold'].forEach(cls => {
-        card.querySelector(cls).addEventListener('input', () => {
+    // BLUR FIX: Hours
+    const hInput = card.querySelector('.s-hours');
+    hInput.addEventListener('input', () => {
+        // Just trigger update, assume 0/empty during typing is fine for now
+        if(callbacks.onUpdate) callbacks.onUpdate();
+    });
+    hInput.addEventListener('blur', () => {
+        // If left empty on blur, revert to session default
+        if (!hInput.value || hInput.value.trim() === "") {
+            hInput.value = document.getElementById('inp-session-total-hours').value || "0";
             if(callbacks.onUpdate) callbacks.onUpdate();
-        });
+        }
+    });
+
+    // Gold Input
+    card.querySelector('.s-gold').addEventListener('input', () => {
+        if(callbacks.onUpdate) callbacks.onUpdate();
+    });
+
+    // Forfeit XP Checkbox
+    card.querySelector('.s-forfeit-xp').addEventListener('change', () => {
+        if(callbacks.onUpdate) callbacks.onUpdate();
     });
     
     // Incentives Modal
@@ -293,6 +324,7 @@ export function getSessionRosterData() {
     cards.forEach(card => {
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
+        const forfeitXp = card.querySelector('.s-forfeit-xp').checked;
 
         players.push({
             discord_id: card.querySelector('.s-discord-id').value,
@@ -303,6 +335,8 @@ export function getSessionRosterData() {
             
             hours: card.querySelector('.s-hours').value,
             xp: card.querySelector('.s-xp').value,
+            forfeit_xp: forfeitXp, // Save the state
+            
             gold: card.querySelector('.s-gold').value,
             gold_used: card.querySelector('.s-gold-used').value,
             dtp: card.querySelector('.s-dtp').value,
@@ -320,7 +354,6 @@ export function syncSessionPlayersFromMaster(callbacks) {
     const masterData = getMasterRosterData(); 
     const sessionCards = Array.from(listContainer.querySelectorAll('.player-card'));
     
-    // Track processed Discord IDs
     const processedIds = new Set();
 
     masterData.forEach(masterPlayer => {

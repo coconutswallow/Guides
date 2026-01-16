@@ -399,8 +399,8 @@ extra_css:
                                     <textarea id="out-dm-jumpstart-cmd" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                                 </div>
                             </div>
-                            <p>Once you have rolled your loot, edit your original declaration post with "and selects:" and write the loot you chose from the loot pool (1 for normal loot, 1 for jumpstart if applicable).</p>    
                         </div>
+                        <p>Once you have rolled your loot, edit your original declaration post with "and selects:" and write the loot you chose from the loot pool (1 for normal loot, 1 for jumpstart if applicable).</p>    
                     </div>
                 </div>
             </div>
@@ -419,10 +419,6 @@ extra_css:
                     <div class="accordion-body">
                         <div class="form-grid" style="margin-bottom:0;">
                             <div class="form-row-full" style="display: flex; gap: 1rem; align-items: flex-end;">
-                                <div class="form-group" style="flex: 2;">
-                                    <label>Session Name</label>
-                                    <input type="text" id="inp-session-title">
-                                </div>
                                 <div class="form-group" style="flex: 1;">
                                     <label>Session Date</label>
                                     <input type="datetime-local" id="inp-session-date">
@@ -503,10 +499,17 @@ extra_css:
                                     <label class="field-label">Total DTP</label>
                                     <input type="text" class="table-input dm-res-dtp readonly-result" readonly>
                                 </div>
-                                <div class="card-field w-30">
+                                
+                                <div class="card-field w-40">
                                     <label class="field-label">XP Earned</label>
-                                    <input type="text" class="table-input dm-res-xp readonly-result" readonly>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <input type="text" class="table-input dm-res-xp readonly-result" readonly>
+                                        <label style="font-size:0.85em; display:flex; align-items:center; gap:4px; cursor:pointer; user-select:none;">
+                                            <input type="checkbox" id="chk-dm-forfeit-xp"> Forfeit XP
+                                        </label>
+                                    </div>
                                 </div>
+                                
                                 <div class="card-field w-30">
                                     <label class="field-label">GP Earned</label>
                                     <input type="text" class="table-input dm-res-gp readonly-result" readonly>
@@ -522,7 +525,7 @@ extra_css:
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="card accordion-card">
                     <div class="accordion-header">
                         <span class="step-title">Documentation</span>

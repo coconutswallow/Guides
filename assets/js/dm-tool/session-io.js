@@ -20,15 +20,17 @@ export function getFormData() {
         selectedTiers = tierSelect.value ? [tierSelect.value] : [];
     }
 
-    // UPDATED: Get DM Incentives from the new Button in View 5
     const dmBtn = document.getElementById('btn-dm-loot-incentives');
     const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
 
     const hoursEl = document.getElementById('inp-session-total-hours');
     const sessionHours = hoursEl ? hoursEl.value : 0;
+    
+    // DM Forfeit State
+    const dmForfeitXp = document.getElementById('chk-dm-forfeit-xp') ? document.getElementById('chk-dm-forfeit-xp').checked : false;
 
     const sessionLog = {
-        title: val('inp-session-title'),
+        title: val('header-game-name'), 
         date_time: val('inp-session-unix'), 
         hours: sessionHours, 
         notes: val('inp-session-notes'),
@@ -38,8 +40,9 @@ export function getFormData() {
         dm_rewards: {
             level: val('out-dm-level'),
             games_played: val('out-dm-games'),
-            incentives: dmIncentives, // Saved from View 5 button
-            loot_selected: val('dm-loot-selected')
+            incentives: dmIncentives,
+            loot_selected: val('dm-loot-selected'),
+            forfeit_xp: dmForfeitXp // Saved here
         }
     };
 
@@ -171,7 +174,6 @@ export function populateForm(session, callbacks, options = {}) {
     
     const sLog = session.form_data.session_log;
     if (sLog) {
-        setVal('inp-session-title', sLog.title);
         setVal('inp-session-total-hours', sLog.hours || 0);
         setVal('inp-session-notes', sLog.notes);
         setVal('inp-session-summary', sLog.summary);
@@ -188,15 +190,22 @@ export function populateForm(session, callbacks, options = {}) {
             setVal('out-dm-games', sLog.dm_rewards.games_played);
             setVal('dm-loot-selected', sLog.dm_rewards.loot_selected);
             
-            // UPDATED: Populate the Loot Plan button (View 5)
+            // Restore DM Forfeit XP
+            const dmForfeit = document.getElementById('chk-dm-forfeit-xp');
+            if (dmForfeit) {
+                dmForfeit.checked = !!sLog.dm_rewards.forfeit_xp;
+                // Add listener here to ensure it updates calculations immediately upon change
+                dmForfeit.addEventListener('change', () => {
+                   if(callbacks.onUpdate) callbacks.onUpdate();
+                });
+            }
+            
             const dmBtn = document.getElementById('btn-dm-loot-incentives');
             const loadedInc = sLog.dm_rewards.incentives || [];
             if(dmBtn) {
                 dmBtn.dataset.incentives = JSON.stringify(loadedInc);
-                // Update button text based on selection
                 dmBtn.innerText = loadedInc.length > 0 ? "Edit Incentives" : "Add Additional Incentives";
                 
-                // Update sibling display text
                 const disp = document.getElementById('disp-dm-incentives');
                 if(disp) disp.value = loadedInc.join(', ');
             }
@@ -213,7 +222,6 @@ export function populateForm(session, callbacks, options = {}) {
     if(callbacks.onUpdate) callbacks.onUpdate();
 }
 
-// FIXED: Crash caused by missing elements accessing .value
 export async function generateOutput() {
     const getVal = (id) => {
         const el = document.getElementById(id);
@@ -316,10 +324,9 @@ ${pingString}`;
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
     
-    // SAFEGUARDS ADDED HERE
     const outText = document.getElementById('out-session-text');
     if(outText) {
-        const sTitle = getVal('inp-session-title');
+        const sTitle = getVal('header-game-name'); 
         const sDate = getVal('inp-session-date'); 
         const sNotes = getVal('inp-session-notes');
         const sSummary = getVal('inp-session-summary');

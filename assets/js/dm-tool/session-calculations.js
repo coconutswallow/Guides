@@ -90,11 +90,15 @@ export function updateSessionCalculations(rules) {
         
         // Hours Logic
         const hInput = card.querySelector('.s-hours');
-        if(!hInput.value) hInput.value = sessionTotalHours;
+        // BLUR FIX: We don't force default here anymore during typing. 
+        // We only use the current value for math.
         let pHours = parseFloat(hInput.value) || 0;
         if (pHours > sessionTotalHours) {
-            pHours = sessionTotalHours;
-            hInput.value = pHours; 
+            // Cap at max (optional UI choice, keeps math sane)
+            pHours = sessionTotalHours; 
+            // Only force input update if user exceeded max? 
+            // Or let them type? Let's leave value alone for typing feel, just cap math.
+            // hInput.value = pHours; 
         }
 
         // Gold Validation
@@ -112,6 +116,10 @@ export function updateSessionCalculations(rules) {
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
         const rewards = calculatePlayerRewards(lvl, pHours, rules, incentives);
         
+        // CHECK FORFEIT
+        const forfeitXp = card.querySelector('.s-forfeit-xp').checked;
+        if (forfeitXp) rewards.xp = 0;
+
         card.querySelector('.s-xp').value = rewards.xp;
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
@@ -142,6 +150,12 @@ export function updateSessionCalculations(rules) {
         rules, 
         dmIncentives
     );
+    
+    // CHECK DM FORFEIT
+    const dmForfeit = document.getElementById('chk-dm-forfeit-xp');
+    if (dmForfeit && dmForfeit.checked) {
+        dmRewards.xp = 0;
+    }
 
     container.querySelector('.dm-res-xp').value = dmRewards.xp;
     container.querySelector('.dm-res-dtp').value = dmRewards.dtp;
