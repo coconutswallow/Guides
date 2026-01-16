@@ -43,16 +43,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     UI.initAccordions();
     
     // Init Modals
-    UI.initIncentivesModal((ctx) => updateSessionCalculations());
+    UI.initIncentivesModal((ctx) => {
+        updateSessionCalculations();
+        updateDMLootLogic();
+    });
     
     // Restore logic functions
     initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
-    
-    // Initialize DM Loot Incentives UI based on rules
-    initDMLootIncentives();
 
     const bindOutput = (id) => {
         const el = document.getElementById(id);
@@ -184,13 +184,14 @@ function setupCalculationTriggers(callbacks) {
     // 3. Existing triggers
     const dmLevel = document.getElementById('out-dm-level');
     const dmGames = document.getElementById('out-dm-games');
-    const btnDMInc = document.getElementById('btn-dm-incentives');
+    const btnDMIncLoot = document.getElementById('btn-dm-loot-incentives');
     const syncBtn = document.getElementById('btn-sync-session'); // The manual sync button for submissions
     const addPlayerBtn = document.getElementById('btn-add-session-player');
 
     if(dmLevel) dmLevel.addEventListener('input', callbacks.onUpdate);
     if(dmGames) dmGames.addEventListener('input', callbacks.onUpdate);
-    if(btnDMInc) btnDMInc.addEventListener('click', () => callbacks.onOpenModal(btnDMInc, null, true));
+    // Button in View 5 for DM Incentives
+    if(btnDMIncLoot) btnDMIncLoot.addEventListener('click', () => callbacks.onOpenModal(btnDMIncLoot, null, true));
     
     if(syncBtn) {
         syncBtn.addEventListener('click', async () => {
@@ -212,11 +213,10 @@ function setupCalculationTriggers(callbacks) {
     // Listeners for DM Loot Logic (View 5)
     const dmLevelInputSetup = document.getElementById('inp-dm-level'); 
     const dmGamesInputSetup = document.getElementById('inp-dm-games-count'); 
-    const dmIncentivesSelect = document.getElementById('inp-dm-incentives');
-
+    // Note: old Select element listener removed
+    
     if(dmLevelInputSetup) dmLevelInputSetup.addEventListener('input', updateDMLootLogic);
     if(dmGamesInputSetup) dmGamesInputSetup.addEventListener('change', updateDMLootLogic);
-    if(dmIncentivesSelect) dmIncentivesSelect.addEventListener('change', updateDMLootLogic);
     
     // Trigger update on Roster changes (View 4 Roster affects View 5 Loot)
     const rosterBody = document.getElementById('roster-body');
@@ -619,44 +619,8 @@ function updateHgenLogic() {
     if (outCmd) outCmd.value = command;
 }
 
-function initDMLootIncentives() {
-    const select = document.getElementById('inp-dm-incentives');
-    if (!select) return;
-
-    select.innerHTML = '';
-
-    if (!cachedGameRules || !cachedGameRules['DM incentives']) {
-        const opt = document.createElement('option');
-        opt.text = "No incentives found.";
-        opt.disabled = true;
-        select.add(opt);
-        select.disabled = true;
-        return;
-    }
-
-    const incentives = cachedGameRules['DM incentives'];
-    let count = 0;
-
-    for (const [name, data] of Object.entries(incentives)) {
-        const bonusRoll = parseInt(data["bonus loot roll"] || 0);
-
-        if (bonusRoll > 0) {
-            count++;
-            const option = document.createElement('option');
-            option.value = name;
-            option.dataset.bonus = bonusRoll;
-            option.textContent = `${name} (+${bonusRoll} Roll)`;
-            select.appendChild(option);
-        }
-    }
-
-    if (count === 0) {
-        select.innerHTML = '<option value="" disabled>No bonus loot incentives available</option>';
-        select.disabled = true;
-    } else {
-        select.disabled = false;
-    }
-}
+// No longer needed - Modal handles population
+// function initDMLootIncentives() {}
 
 // ==========================================
 // 4. Session Calculations
@@ -676,7 +640,7 @@ function calculatePlayerRewards(level, hours, rules, incentives = []) {
     // Base DTP: 5 per hour
     let dtp = Math.floor(5 * hours);
     
-    // Incentive Bonus DTP (Player)
+    // Incentive Bonus DTP
     if (rules && rules['player incentives']) {
         incentives.forEach(name => {
             dtp += (rules['player incentives'][name] || 0);
@@ -724,15 +688,25 @@ function updateSessionCalculations() {
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     const sessionTotalHours = parseFloat(sessionHoursInput.value) || 0;
 
-    // 2. Stats for DM Calc
+    // 2. Determine Max Gold
+    const aplText = document.getElementById('setup-val-apl')?.textContent || "1";
+    const aplVal = parseInt(aplText) || 1;
+    
+    const goldTable = cachedGameRules.gold_per_session_by_apl || {};
+    const maxGold = goldTable[aplVal.toString()] || goldTable[aplVal] || 0;
+    
+    const lblGold = container.querySelector('.val-max-gold');
+    if(lblGold) lblGold.textContent = maxGold;
+
+    // 3. Process Player Cards
     let totalLevel = 0;
     let playerCount = 0;
     let welcomeWagonCount = 0;
     let newHireCount = 0;
 
-    // 3. Process Player Cards
     const cards = container.querySelectorAll('.player-card');
     cards.forEach(card => {
+        // Stats Gathering
         const lvl = parseFloat(card.querySelector('.s-level').value) || 0;
         if(lvl > 0) { totalLevel += lvl; playerCount++; }
 
@@ -741,37 +715,42 @@ function updateSessionCalculations() {
 
         if (gVal === "1") welcomeWagonCount++;
         if (gVal !== "10+" && !isNaN(gNum) && gNum <= 10) newHireCount++;
-
-        // Sync Hours if empty or just default
+        
+        // Hours Logic: Clamp to session total
         const hInput = card.querySelector('.s-hours');
+        // If undefined/empty, default to session total
         if(!hInput.value) hInput.value = sessionTotalHours;
         let pHours = parseFloat(hInput.value) || 0;
+        if (pHours > sessionTotalHours) {
+            pHours = sessionTotalHours;
+            hInput.value = pHours; 
+        }
+
+        // Gold Validation
+        const gInput = card.querySelector('.s-gold');
+        const playerGold = parseFloat(gInput.value) || 0;
         
+        if (maxGold > 0 && playerGold > maxGold) {
+            gInput.parentElement.classList.add('error');
+        } else {
+            gInput.parentElement.classList.remove('error');
+        }
+
         // Calculate Rewards (XP & DTP)
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
-        
         const rewards = calculatePlayerRewards(lvl, pHours, cachedGameRules, incentives);
+        
         card.querySelector('.s-xp').value = rewards.xp;
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
-    
-    // APL for display
-    const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
-    const goldTable = cachedGameRules.gold_per_session_by_apl || {};
-    const maxGold = goldTable[apl.toString()] || goldTable[apl] || 0;
 
-    const lblApl = container.querySelector('.val-apl');
-    const lblGold = container.querySelector('.val-max-gold');
-    if(lblApl) lblApl.textContent = apl;
-    if(lblGold) lblGold.textContent = maxGold;
-
-    // 4. DM Calculations (Using inputs from Setup tab directly as source of truth)
+    // 4. Calculate DM Rewards
     const dmLevelSetup = document.getElementById('inp-dm-level');
     const dmGamesSetup = document.getElementById('inp-dm-games-count');
     const dmNameSetup = document.getElementById('inp-dm-char-name');
 
-    // Update read-only fields in DM Log card
+    // Sync Name to Read-only field
     if(dmNameSetup) document.getElementById('out-dm-name').value = dmNameSetup.value;
     
     const dmLvl = parseFloat(dmLevelSetup ? dmLevelSetup.value : 0) || 0;
@@ -783,8 +762,13 @@ function updateSessionCalculations() {
     container.querySelector('.dm-val-welcome').value = welcomeWagonCount;
     container.querySelector('.dm-val-newhires').value = newHireCount;
 
-    const btnDM = document.getElementById('btn-dm-incentives');
+    // READ INCENTIVES FROM VIEW 5 BUTTON
+    const btnDM = document.getElementById('btn-dm-loot-incentives');
     const dmIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
+    
+    // Update read-only display in View 6
+    const dmIncDisplay = document.getElementById('out-dm-incentives-display');
+    if(dmIncDisplay) dmIncDisplay.value = dmIncentives.join(', ');
 
     const dmRewards = calculateDMRewards(
         dmLvl, 
@@ -834,17 +818,19 @@ async function updateDMLootLogic() {
     // 4. Calculate Loot Rolls
     let totalRolls = 1 + newHires;
     
-    // Check Selected Incentives (From Multi-Select)
-    const selectEl = document.getElementById('inp-dm-incentives');
+    // UPDATED: Read from Button Dataset
+    const btnDM = document.getElementById('btn-dm-loot-incentives');
+    const selectedIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
     let incentiveNames = [];
     
     if (newHires > 0) incentiveNames.push(`New Hires (${newHires})`);
     
-    if (selectEl && selectEl.selectedOptions) {
-        Array.from(selectEl.selectedOptions).forEach(opt => {
-            const bonus = parseInt(opt.dataset.bonus) || 0;
-            totalRolls += bonus;
-            incentiveNames.push(opt.value);
+    if (cachedGameRules && cachedGameRules['DM incentives']) {
+        selectedIncentives.forEach(name => {
+            const data = cachedGameRules['DM incentives'][name];
+            const bonus = (typeof data === 'object') ? (data['bonus loot roll'] || 0) : 0;
+            if (bonus > 0) totalRolls += bonus;
+            incentiveNames.push(name);
         });
     }
 

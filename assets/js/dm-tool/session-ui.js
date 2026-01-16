@@ -144,8 +144,6 @@ export function initDateTimeConverter() {
         const dateVal = dateInput.value;
         const tzVal = tzSelect.value;
         if(unixInput) unixInput.value = toUnixTimestamp(dateVal, tzVal);
-        
-        // --- FIX: Removed the recursive dispatchEvent call ---
     };
     
     dateInput.addEventListener('change', updateUnix);
@@ -224,8 +222,24 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
                 checkbox.type = 'checkbox';
                 checkbox.value = name;
                 if (currentSelection.includes(name)) checkbox.checked = true;
+                
                 label.appendChild(checkbox);
-                label.appendChild(document.createTextNode(`${name} (+${val} DTP)`));
+                
+                // UPDATED: Handle Object vs Number values
+                let desc = "";
+                if (typeof val === 'number') {
+                    desc = ` (+${val} DTP)`;
+                } else if (typeof val === 'object') {
+                    // DM Incentives usually have objects
+                    const dtp = val['bonus DTP'] || val.DTP || 0;
+                    const roll = val['bonus loot roll'] || 0;
+                    const parts = [];
+                    if (dtp > 0) parts.push(`+${dtp} DTP`);
+                    if (roll > 0) parts.push(`+${roll} Loot Roll`);
+                    if (parts.length > 0) desc = ` (${parts.join(', ')})`;
+                }
+                
+                label.appendChild(document.createTextNode(`${name}${desc}`));
                 listContainer.appendChild(label);
             });
         }
@@ -243,6 +257,12 @@ function saveIncentivesInternal(saveCallback) {
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
     btn.innerText = selected.length > 0 ? `+` : '+'; 
+    
+    // UPDATED: Sync display text if sibling input exists
+    const displayInput = btn.parentElement.querySelector('input[type="text"]');
+    if (displayInput) {
+        displayInput.value = selected.join(', ');
+    }
     
     if(saveCallback) saveCallback(activeIncentiveRowData.viewContext);
     

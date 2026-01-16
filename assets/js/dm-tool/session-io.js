@@ -12,17 +12,16 @@ export function getFormData() {
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
     
-    // --- UPDATED: Multi-select for Tier (Safe check) ---
     const tierSelect = document.getElementById('inp-tier');
     let selectedTiers = [];
     if (tierSelect && tierSelect.selectedOptions) {
         selectedTiers = Array.from(tierSelect.selectedOptions).map(opt => opt.value);
     } else if (tierSelect) {
-        // Fallback if it's still an input (though it shouldn't be now)
         selectedTiers = tierSelect.value ? [tierSelect.value] : [];
     }
 
-    const dmBtn = document.getElementById('btn-dm-incentives');
+    // UPDATED: Get DM Incentives from the new Button in View 5
+    const dmBtn = document.getElementById('btn-dm-loot-incentives');
     const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
 
     const hoursEl = document.getElementById('inp-session-total-hours');
@@ -39,7 +38,7 @@ export function getFormData() {
         dm_rewards: {
             level: val('out-dm-level'),
             games_played: val('out-dm-games'),
-            incentives: dmIncentives,
+            incentives: dmIncentives, // Saved from View 5 button
             loot_selected: val('dm-loot-selected')
         }
     };
@@ -55,7 +54,7 @@ export function getFormData() {
             apps_type: val('inp-apps-type'),
             platform: val('inp-platform'),
             event_tags: selectedEvents, 
-            tier: selectedTiers, // Now an array
+            tier: selectedTiers,
             apl: val('inp-apl'),
             party_size: val('inp-party-size'),
             tone: val('inp-tone'),
@@ -70,8 +69,8 @@ export function getFormData() {
             listing_url: val('inp-listing-url'), 
             lobby_url: val('inp-lobby-url'),     
             loot_plan: val('inp-loot-plan'),
-            predet_perms: val('inp-predet-perms'), // Added
-            predet_cons: val('inp-predet-cons')    // Added
+            predet_perms: val('inp-predet-perms'),
+            predet_cons: val('inp-predet-cons')
         },
         players: Rows.getMasterRosterData(),
         dm: {
@@ -110,22 +109,17 @@ export function populateForm(session, callbacks, options = {}) {
         }
         setVal('inp-format', h.game_type);
         
-        // --- FIX: Safe Multi-select population ---
         const tierSelect = document.getElementById('inp-tier');
         if (tierSelect) {
             const values = Array.isArray(h.tier) ? h.tier : [h.tier];
-            
-            // Only try to loop options if it is actually a SELECT element
             if (tierSelect.tagName === 'SELECT' && tierSelect.options) {
                 Array.from(tierSelect.options).forEach(opt => {
                     opt.selected = values.includes(opt.value);
                 });
             } else {
-                // Fallback for INPUT element
                 tierSelect.value = values.join(', ');
             }
         }
-        // -----------------------------------------
         
         setVal('inp-apl', h.apl);
         setVal('inp-party-size', h.party_size);
@@ -139,8 +133,8 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-listing-url', h.listing_url);
         setVal('inp-lobby-url', h.lobby_url);
         setVal('inp-loot-plan', h.loot_plan);
-        setVal('inp-predet-perms', h.predet_perms || "0"); // Added
-        setVal('inp-predet-cons', h.predet_cons || "0");   // Added
+        setVal('inp-predet-perms', h.predet_perms || "0");
+        setVal('inp-predet-cons', h.predet_cons || "0");
         
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && Array.isArray(h.event_tags)) {
@@ -194,11 +188,16 @@ export function populateForm(session, callbacks, options = {}) {
             setVal('out-dm-games', sLog.dm_rewards.games_played);
             setVal('dm-loot-selected', sLog.dm_rewards.loot_selected);
             
-            const dmBtn = document.getElementById('btn-dm-incentives');
+            // UPDATED: Populate the Loot Plan button (View 5)
+            const dmBtn = document.getElementById('btn-dm-loot-incentives');
             const loadedInc = sLog.dm_rewards.incentives || [];
             if(dmBtn) {
                 dmBtn.dataset.incentives = JSON.stringify(loadedInc);
                 dmBtn.innerText = loadedInc.length > 0 ? "+" : "+";
+                
+                // Update sibling display text
+                const disp = document.getElementById('disp-dm-incentives');
+                if(disp) disp.value = loadedInc.join(', ');
             }
         }
 
@@ -213,21 +212,24 @@ export function populateForm(session, callbacks, options = {}) {
     if(callbacks.onUpdate) callbacks.onUpdate();
 }
 
-// --- UPDATED: Async to support ping fetching and formatting ---
+// FIXED: Crash caused by missing elements accessing .value
 export async function generateOutput() {
+    const getVal = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value : "";
+    };
+
     const data = getFormData().header;
-    const unixTime = document.getElementById('inp-unix-time').value;
-    const name = document.getElementById('header-game-name').value || "Untitled";
+    const unixTime = getVal('inp-unix-time');
+    const name = getVal('header-game-name') || "Untitled";
     
     let timeString = "TBD";
     if (unixTime && unixTime > 0) {
         timeString = `<t:${unixTime}:F>`;
     }
     
-    // 1. Format Tier Range ("Tier 1 to Tier 3")
     let tierString = 'N/A';
     if (Array.isArray(data.tier) && data.tier.length > 0) {
-        // Extract numbers to sort correctly
         const sortedTiers = data.tier.sort((a, b) => {
             const numA = parseInt(a.replace(/\D/g, '')) || 0;
             const numB = parseInt(b.replace(/\D/g, '')) || 0;
@@ -242,7 +244,6 @@ export async function generateOutput() {
             tierString = `${first} to ${last}`;
         }
     } else if (typeof data.tier === 'string' && data.tier) {
-        // Fallback for old data
         tierString = data.tier;
     }
 
@@ -282,13 +283,11 @@ ${data.how_to_apply || 'Post your application below.'}`;
     const outListing = document.getElementById('out-listing-text');
     if(outListing) outListing.value = listingText;
     
-    // 2. Determine Pings
     const rules = await fetchGameRules();
     let pingString = "";
     
     if (rules && rules.tier && Array.isArray(data.tier)) {
         const pings = new Set();
-        
         data.tier.forEach(t => {
             const tierData = rules.tier[t];
             if (tierData) {
@@ -299,13 +298,9 @@ ${data.how_to_apply || 'Post your application below.'}`;
                 }
             }
         });
-        
-        if (pings.size > 0) {
-            pingString = Array.from(pings).join(' ');
-        }
+        if (pings.size > 0) pingString = Array.from(pings).join(' ');
     }
 
-    // 3. Construct Ad Text
     const adText = `**Game Name:** ${name}
 **Version and Format:** ${data.game_version} / ${data.game_type}
 **Tier and APL:** ${tierString} , APL ${data.apl || 'N/A'}
@@ -315,17 +310,18 @@ ${data.how_to_apply || 'Post your application below.'}`;
 **Description:**
 ${data.game_description || ''}
 
-${pingString}`; // Append pings at the bottom
+${pingString}`;
 
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
     
+    // SAFEGUARDS ADDED HERE
     const outText = document.getElementById('out-session-text');
     if(outText) {
-        const sTitle = document.getElementById('inp-session-title').value;
-        const sDate = document.getElementById('inp-session-date').value; 
-        const sNotes = document.getElementById('inp-session-notes').value;
-        const sSummary = document.getElementById('inp-session-summary').value;
+        const sTitle = getVal('inp-session-title');
+        const sDate = getVal('inp-session-date'); 
+        const sNotes = getVal('inp-session-notes');
+        const sSummary = getVal('inp-session-summary');
         
         outText.value = `**${sTitle}**\n*${sDate}*\n\n**Summary:**\n${sSummary}\n\n**Notes:**\n${sNotes}`;
     }

@@ -364,14 +364,14 @@ extra_css:
                             </div>
 
                             <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.5rem;">
-                                <label>Additional DM Incentives</label>
+                                <label>Additional DM Incentives (Loot & DTP)</label>
                                 <p style="font-size:0.85em; color:var(--color-text-secondary); margin-bottom:0.5rem;">
-                                    The server may offer additional incentives for DMs based on events or playtesting.  Select the applicable incentive below if available. 
-                                    Hold <strong>Ctrl</strong> (Windows) or <strong>Cmd</strong> (Mac) to select multiple options.
+                                    Click the button to select active incentives for this session.
                                 </p>
-                                <select id="inp-dm-incentives" multiple class="table-input" style="height: 120px; padding: 5px;">
-                                    <option value="" disabled>Loading incentives...</option>
-                                </select>
+                                <div class="dtp-wrapper" style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="disp-dm-incentives" class="table-input readonly-input" readonly placeholder="None selected">
+                                    <button class="button button-secondary" id="btn-dm-loot-incentives" data-incentives='[]' style="width:50px; font-weight:bold; font-size:1.2em;">+</button>
+                                </div>
                             </div>
 
                             <div class="form-group" style="grid-column: 1 / -1; margin-top: 1.5rem;">
@@ -423,12 +423,16 @@ extra_css:
                         <div class="form-grid" style="margin-bottom:0;">
                             <div class="form-row-full" style="display: flex; gap: 1rem; align-items: flex-end;">
                                 <div class="form-group" style="flex: 2;">
+                                    <label>Session Name</label>
+                                    <input type="text" id="inp-session-title">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
                                     <label>Session Date</label>
                                     <input type="datetime-local" id="inp-session-date">
                                     <input type="hidden" id="inp-session-unix">
                                 </div>
-                                <div class="form-group" style="width: 150px;">
-                                    <label>Session Duration (Hrs)</label>
+                                <div class="form-group" style="width: 100px;">
+                                    <label>Hours</label>
                                     <input type="number" id="inp-session-total-hours" value="3" step="0.5" min="0">
                                 </div>
                             </div>
@@ -493,9 +497,7 @@ extra_css:
                                 </div>
                                 <div class="card-field w-30">
                                     <label class="field-label">Add. Incentives</label>
-                                    <div class="dtp-wrapper">
-                                        <button class="button button-secondary" id="btn-dm-incentives" data-incentives='[]'>+</button>
-                                    </div>
+                                    <input type="text" id="out-dm-incentives-display" class="table-input readonly-input" readonly placeholder="Set in Loot Plan tab" style="font-style:italic;">
                                 </div>
                             </div>
 
@@ -515,13 +517,15 @@ extra_css:
                             </div>
                             
                             <div class="card-row" style="margin-top:1rem;">
-                                <p style="font-size:0.8em; color:var(--color-text-secondary);">
-                                    <em>Note: Loot selected should be logged in the "Loot Plan" tab.</em>
-                                </p>
+                                <div class="card-field w-100">
+                                    <label class="field-label">Loot Selected</label>
+                                    <input type="text" id="dm-loot-selected" class="table-input" placeholder="Enter Loot Selected...">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="card accordion-card">
                     <div class="accordion-header">
                         <span class="step-title">Documentation</span>
