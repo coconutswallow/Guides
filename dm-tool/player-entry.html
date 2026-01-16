@@ -33,7 +33,6 @@ title: Player Session Entry
             position: relative;
         }
 
-        /* Positions the auth header cleanly above the card */
         .auth-header-container {
             display: flex;
             justify-content: flex-end;
@@ -64,24 +63,12 @@ title: Player Session Entry
             letter-spacing: 1px;
         }
 
-        /* Instruction box styling (replaces the second button) */
-        .login-instruction {
-            text-align: center; 
-            color: var(--color-text-secondary); 
-            margin-bottom: 1.5rem;
+        /* Message shown when not logged in */
+        #guest-message {
+            text-align: center;
+            color: var(--color-text-secondary);
             padding: 2rem;
-            background: var(--color-bg-medium);
-            border: 1px dashed var(--color-border);
-            border-radius: 4px;
             font-style: italic;
-        }
-        
-        /* Arrow to point towards the auth header */
-        .login-arrow {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--color-primary);
         }
 
         .hidden { display: none !important; }
@@ -117,11 +104,8 @@ title: Player Session Entry
                 <div class="dm-name">DM: <span id="display-dm-name" class="skeleton">...</span></div>
             </div>
 
-            <div id="login-section">
-                <div class="login-instruction">
-                    <span class="login-arrow">↗</span>
-                    Please use the <strong>Login button</strong> in the top right corner to access this session.
-                </div>
+            <div id="guest-message">
+                Please log in above to access this session.
             </div>
 
             <div id="form-section" class="hidden">
@@ -134,7 +118,7 @@ title: Player Session Entry
                     <input type="hidden" id="p-discord-id">
                     
                     <div style="text-align: center; margin-bottom: 1rem; font-size: 0.9em; color: var(--color-primary);">
-                        Playing as: <strong id="current-player-display">Guest</strong>
+                        Playing as: <strong id="current-player-display">Loading...</strong>
                     </div>
 
                     <div id="tab-character" class="tab-content">
@@ -195,7 +179,8 @@ title: Player Session Entry
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
 
-    // 0. PATCH AUTH LOGIN (Preserves Session ID)
+    // 0. PATCH AUTH LOGIN (Preserves Session ID in URL)
+    // Overrides the default login to ensure we return to this specific session page
     const patchLogin = () => {
         if(window.authManager) {
             window.authManager.login = async function() {
@@ -234,34 +219,48 @@ title: Player Session Entry
     });
 
     // 2. PAGE AUTH HOOK
-    window.handlePageAuth = function(user) {
-        const loginSection = document.getElementById('login-section');
+    // This is called automatically by auth-header.html / auth-manager.js
+    window.handlePageAuth = async function(user) {
+        const guestMsg = document.getElementById('guest-message');
         const formSection = document.getElementById('form-section');
         const currentPlayer = document.getElementById('current-player-display');
+        const discordIdInput = document.getElementById('p-discord-id');
 
         if (user) {
-            // RETRY FETCH: Now that we have a token, RLS should allow us to read
+            // A. Authenticated: Fetch Session Data
             fetchSessionMetadata();
 
-            // ROBUST DISCORD ID EXTRACTION
-            // We search the identities array to find the one from 'discord'
-            const discordIdentity = user.identities?.find(i => i.provider === 'discord');
-            // Fallback to metadata if necessary, but identity.id is the true provider ID
-            const discordId = discordIdentity ? discordIdentity.id : user.user_metadata.provider_id;
-            
-            const discordName = user.user_metadata.full_name || "Adventurer";
+            // B. Identity Verification: Query discord_users table
+            try {
+                const { data: userData, error: userError } = await supabase
+                    .from('discord_users')
+                    .select('discord_id, display_name')
+                    .eq('user_id', user.id)
+                    .single();
 
-            if (discordId) {
-                currentPlayer.textContent = `${discordName} (Verified)`;
-                loadPlayerData(discordId);
-            } else {
-                alert("Error: Could not verify Discord Identity.");
+                if (userError || !userData) {
+                    console.error("Identity Error:", userError);
+                    currentPlayer.textContent = "Error loading Identity";
+                    return;
+                }
+
+                // C. Update UI with Database Identity
+                currentPlayer.textContent = `${userData.display_name} (Verified)`;
+                discordIdInput.value = userData.discord_id;
+
+                // D. Load existing player data for this session
+                loadPlayerData(userData.discord_id);
+                
+                // Toggle Views
+                guestMsg.classList.add('hidden');
+                formSection.classList.remove('hidden');
+
+            } catch (err) {
+                console.error("Auth Logic Error:", err);
             }
-            
-            loginSection.classList.add('hidden');
-            formSection.classList.remove('hidden');
         } else {
-            loginSection.classList.remove('hidden');
+            // Guest Mode
+            guestMsg.classList.remove('hidden');
             formSection.classList.add('hidden');
         }
     };
@@ -277,20 +276,15 @@ title: Player Session Entry
     };
 
     if (!sessionId) {
-        ui.sessionName.textContent = "Error";
+        ui.sessionName.textContent = "Error: No Session ID";
         ui.sessionName.classList.remove('skeleton');
         ui.sessionName.style.color = "var(--palette-alert-danger-action)";
-        document.querySelector('.card').innerHTML += "<h3 style='text-align:center; color:red'>No Session ID provided.</h3>";
-        throw new Error("No Session ID");
     }
 
-    (async function init() {
-        await fetchSessionMetadata();
-    })();
-
+    // 4. DATA FUNCTIONS
     async function fetchSessionMetadata() {
+        if(!sessionId) return;
         try {
-            // Try to fetch session data
             const { data: session, error: sErr } = await supabase
                 .from('session_logs')
                 .select('title, user_id') 
@@ -299,12 +293,12 @@ title: Player Session Entry
 
             if (sErr || !session) throw sErr;
 
-            // SUCCESS: Populate Data
             ui.sessionName.textContent = session.title;
             ui.sessionName.style.color = "";
             ui.sessionName.style.fontStyle = "";
 
             if (session.user_id) {
+                // Fetch DM Name from discord_users
                 const { data: dm } = await supabase
                     .from('discord_users')
                     .select('display_name')
@@ -317,21 +311,15 @@ title: Player Session Entry
             }
 
         } catch (err) {
-            // ERROR / RLS BLOCK: Show Login Prompt gracefully
-            ui.sessionName.textContent = "Login to View Session Details";
-            ui.sessionName.style.color = "var(--color-text-secondary)";
-            ui.sessionName.style.fontStyle = "italic";
-            
-            ui.dmName.textContent = "---";
+            console.warn("Session Fetch Error (likely RLS before login):", err.message);
         } finally {
-            // Always remove skeleton so whatever text we set is visible
             ui.sessionName.classList.remove('skeleton');
             ui.dmName.classList.remove('skeleton');
         }
     }
 
     async function loadPlayerData(discordId) {
-        document.getElementById('p-discord-id').value = discordId;
+        if(!sessionId || !discordId) return;
 
         try {
             const { data, error } = await supabase
@@ -345,7 +333,7 @@ title: Player Session Entry
                 populateForm(data.payload);
             }
         } catch (err) {
-            console.error("Load Error", err);
+            console.error("Load Player Data Error", err);
         }
     }
 
@@ -363,7 +351,7 @@ title: Player Session Entry
         const discordId = document.getElementById('p-discord-id').value;
         
         if (!discordId) {
-            alert("Error: Missing Discord ID. Please refresh and log in again.");
+            alert("Error: Missing verified identity. Please refresh.");
             return;
         }
 
