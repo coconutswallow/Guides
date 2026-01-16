@@ -190,6 +190,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 /* ===========================
    2. SESSION PLAYER CARDS (View 6)
    =========================== */
+
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     if (!listContainer) return;
 
@@ -200,74 +201,59 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `+` : '+';
 
-    const playerNum = listContainer.children.length + 1;
-
     const card = document.createElement('div');
     card.className = 'player-card';
 
     card.innerHTML = `
         <div class="player-card-header">
-            <span class="player-card-title">Player ${playerNum}</span>
+            <span class="player-card-title">${data.display_name || 'Player'}</span>
             <button class="btn-delete-card" title="Remove Player">&times;</button>
         </div>
         
         <div class="player-card-body">
             <div class="card-row">
                 <div class="card-field w-30">
-                    <label class="field-label">Discord Name</label>
-                    <input type="text" class="table-input s-char-name" value="${data.display_name || data.discord_id || ''}" readonly style="border:none; font-weight:bold;">
-                    <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
-                </div>
-                <div class="card-field w-30">
                     <label class="field-label">Character Name</label>
-                    <input type="text" class="table-input s-char-name" value="${data.character_name || ''}">
+                    <input type="text" class="table-input s-char-name readonly-input" value="${data.character_name || ''}" readonly>
+                    <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
+                    <input type="hidden" class="s-level" value="${data.level || '0'}">
+                    <input type="hidden" class="s-games" value="${data.games_count || '0'}">
                 </div>
                 <div class="card-field w-20">
-                    <label class="field-label">Hours Played</label>
-                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" readonly>
+                    <label class="field-label">Hours</label>
+                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" max="${document.getElementById('inp-session-total-hours').value}">
                 </div>
-                <div class="card-field w-20">
-                    <label class="field-label"># Games</label>
-                    <input type="text" class="table-input s-games" value="${data.games_count || ''}">
-                </div>
-            </div>
-
-            <div class="card-row">
-                <div class="card-field w-20">
-                    <label class="field-label">Level</label>
-                    <input type="number" class="table-input s-level" value="${data.level || ''}">
-                </div>
-                <div class="card-field w-20">
+                <div class="card-field w-25">
                     <label class="field-label">XP Earned</label>
                     <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
                 </div>
-                <div class="card-field w-30">
-                    <label class="field-label">Gold Rewarded</label>
-                    <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
-                </div>
-                <div class="card-field w-30">
+                <div class="card-field w-25">
                     <label class="field-label">DTP / Incentives</label>
                     <div class="dtp-wrapper">
                         <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);">
-                        <button class="button button-secondary s-incentives-btn" data-incentives='${incentivesJson}'>${btnText}</button>
+                        <button class="button button-secondary s-incentives-btn" data-incentives='${incentivesJson}' title="Select Player Incentives">${btnText}</button>
                     </div>
                 </div>
             </div>
 
             <div class="card-row">
-                <div class="card-field w-50">
-                    <label class="field-label">Loot Rewarded</label>
-                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="">
+                <div class="card-field w-30">
+                    <label class="field-label">Gold Awarded</label>
+                    <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
                 </div>
-                <div class="card-field w-50">
-                    <label class="field-label">Items Used</label>
-                    <input type="text" class="table-input s-items" value="${data.items_used || ''}" placeholder="">
+                 <div class="card-field w-70">
+                    <label class="field-label">Loot Received</label>
+                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="Item Name">
                 </div>
             </div>
 
             <div class="card-row">
-                <div class="card-field w-100">
-                    <label class="field-label">Notes</label>
+                 <div class="card-field w-30">
+                    <label class="field-label">Items Used</label>
+                    <textarea class="table-input s-items" rows="1">${data.items_used || ''}</textarea>
+                </div>
+                <div class="card-field w-70">
+                    <label class="field-label">Character Outcome Notes</label>
                     <textarea class="table-input s-notes" rows="1">${data.notes || ''}</textarea>
                 </div>
             </div>
@@ -280,14 +266,17 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    ['.s-level', '.s-games', '.s-gold'].forEach(cls => {
+    // Recalculate if Hours or Gold changes
+    ['.s-hours', '.s-gold'].forEach(cls => {
         card.querySelector(cls).addEventListener('input', () => {
             if(callbacks.onUpdate) callbacks.onUpdate();
         });
     });
     
+    // Incentives Modal
     const btnIncentives = card.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
+        // false = isDM flag (so it loads player incentives)
         if(callbacks.onOpenModal) callbacks.onOpenModal(btnIncentives, null, false);
     });
 
@@ -304,9 +293,13 @@ export function getSessionRosterData() {
 
         players.push({
             discord_id: card.querySelector('.s-discord-id').value,
-            character_name: card.querySelector('.s-char-name').value,
+            // Character name is now just read from the UI, originally sourced from master
+            character_name: card.querySelector('.s-char-name').value, 
+            display_name: card.querySelector('.player-card-title').textContent,
+            // Hidden fields needed for recalc if re-loaded
             level: card.querySelector('.s-level').value,
             games_count: card.querySelector('.s-games').value,
+            
             hours: card.querySelector('.s-hours').value,
             xp: card.querySelector('.s-xp').value,
             gold: card.querySelector('.s-gold').value,
@@ -318,6 +311,106 @@ export function getSessionRosterData() {
         });
     });
     return players;
+}
+
+/**
+ * SMART SYNC: Merges Master Roster data into Session Roster.
+ * 1. Adds players present in Master but missing in Session.
+ * 2. Updates Char Name/Level for players present in both.
+ * 3. Removes players present in Session but missing in Master.
+ */
+export function syncSessionPlayersFromMaster(callbacks) {
+    const listContainer = document.getElementById('session-roster-list');
+    const masterData = getMasterRosterData(); 
+    const sessionCards = Array.from(listContainer.querySelectorAll('.player-card'));
+    
+    // 1. Update DM Data
+    const dmLvl = document.getElementById('inp-dm-level').value;
+    const dmGames = document.getElementById('inp-dm-games-count').value;
+    const dmChar = document.getElementById('inp-dm-char-name').value;
+    
+    document.getElementById('out-dm-level').value = dmLvl;
+    document.getElementById('out-dm-games').value = dmGames;
+    document.getElementById('out-dm-name').value = dmChar;
+
+    // 2. Track processed Discord IDs
+    const processedIds = new Set();
+
+    masterData.forEach(masterPlayer => {
+        const pid = masterPlayer.discord_id;
+        processedIds.add(pid);
+
+        // Find existing card
+        const existingCard = sessionCards.find(c => c.querySelector('.s-discord-id').value === pid);
+
+        if (existingCard) {
+            // UPDATE existing card (Read-only fields only)
+            existingCard.querySelector('.player-card-title').textContent = masterPlayer.display_name;
+            existingCard.querySelector('.s-char-name').value = masterPlayer.character_name;
+            existingCard.querySelector('.s-level').value = masterPlayer.level_playing_as || masterPlayer.level;
+            existingCard.querySelector('.s-games').value = masterPlayer.games_count;
+        } else {
+            // ADD new card
+            const newData = {
+                ...masterPlayer,
+                // Use playing as level if set, otherwise actual level
+                level: masterPlayer.level_playing_as || masterPlayer.level
+            };
+            addSessionPlayerRow(listContainer, newData, callbacks);
+        }
+    });
+
+    // 3. Remove cards that are no longer in the master roster
+    sessionCards.forEach(card => {
+        const cid = card.querySelector('.s-discord-id').value;
+        if (!processedIds.has(cid)) {
+            card.remove();
+        }
+    });
+    
+    // Trigger Recalc
+    if(callbacks.onUpdate) callbacks.onUpdate();
+}
+
+/**
+ * Applies submissions to Session Logs (View 6)
+ * Merges into existing session cards rather than creating duplicates
+ */
+export function applyPlayerSubmissions(submissions, callbacks) {
+    const listContainer = document.getElementById('session-roster-list');
+    if (!listContainer) return;
+
+    const existingCards = Array.from(listContainer.querySelectorAll('.player-card'));
+
+    submissions.forEach(sub => {
+        const p = sub.payload || {};
+        const discordId = sub.discord_id || "";
+        
+        if (!discordId) return;
+
+        // Find existing card by Discord ID (Hidden Field)
+        const card = existingCards.find(c => {
+            const val = c.querySelector('.s-discord-id').value.trim().toLowerCase();
+            return val === discordId.trim().toLowerCase();
+        });
+
+        if (card) {
+            // Only update "Session Log" specific fields
+            if (p.loot) card.querySelector('.s-loot').value = p.loot;
+            if (p.items) card.querySelector('.s-items').value = p.items;
+            if (p.gold) card.querySelector('.s-gold').value = p.gold;
+            if (p.notes) card.querySelector('.s-notes').value = p.notes;
+            
+            // If submission included incentives, update the button data
+            if (p.incentives && Array.isArray(p.incentives)) {
+                 const btn = card.querySelector('.s-incentives-btn');
+                 btn.dataset.incentives = JSON.stringify(p.incentives);
+                 btn.innerText = p.incentives.length > 0 ? "+" : "+";
+            }
+        }
+    });
+
+    if (callbacks && callbacks.onUpdate) callbacks.onUpdate();
 }
 
 export function syncSessionPlayersFromMaster(callbacks) {
