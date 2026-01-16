@@ -272,163 +272,135 @@ extra_css:
             </div>
         </div>
 
-        <h2 class="session-header-title">Loot Plan & HGen</h2>
-            <p class="instruction-text">Declare your intended loot drops and generate the command for the Loot Bot.</p>
-            
-            <div class="form-grid">
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>Loot Instructions (Reference)</label>
-                    <div id="out-loot-instructions" class="instruction-box">
-                        <em>Calculated based on Tier & Party Size...</em>
-                    </div>
-                </div>
-
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>Loot Plan (Manual Entry)</label>
-                    <textarea id="inp-loot-plan" class="auto-resize-textarea" placeholder="List specific items here (e.g. 'Potion of Healing', 'Longsword +1'). Leave empty if rolling entirely randomly."></textarea>
-                    <p class="help-text">Items listed here will appear in your "Declares Loot" Discord output.</p>
-                </div>
-
-                <div class="form-group" style="grid-column: 1 / -1; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--color-border);">
-                    <h3 style="margin-top:0;">Loot Bot Helper</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1rem;">
-                        <div>
-                            <label>Predetermined Permanents</label>
-                            <input type="number" id="inp-predet-perms" value="0" min="0">
-                        </div>
-                        <div>
-                            <label>Predetermined Consumables</label>
-                            <input type="number" id="inp-predet-cons" value="0" min="0">
-                        </div>
-                    </div>
-                    
-                    <label>1. Post this declaration first:</label>
-                    <div class="copy-row">
-                        <input type="text" id="out-loot-declaration" readonly class="code-output">
-                        <button class="button button-secondary btn-copy" data-target="out-loot-declaration">Copy</button>
-                    </div>
-
-                    <label style="margin-top:1rem;">2. Reply to that message, and run this command (note: copy-pasting won't work. Please type it manually):</label>
-                    <div class="copy-row">
-                        <input type="text" id="out-hgen-command" readonly class="code-output">
-                        <button class="button button-secondary btn-copy" data-target="out-hgen-command">Copy</button>
-                    </div>
-                </div>
-
-                <div class="form-group" style="grid-column: 1 / -1; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--color-border);">
-                    <label>DM Loot Selected</label>
-                    <input type="text" id="dm-loot-selected" class="table-input" placeholder="Enter the item the DM is taking (if any)...">
-                    <p class="help-text">Record the specific item the DM keeps for their own character log.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-session-details" class="view-section hidden-section">
-            <h2 class="session-header-title">Session Details</h2>
-            <p class="instruction-text">Log your actual session data here. The roster is automatically synced from the Setup tab.</p>
+        <div id="view-loot-plan" class="view-section hidden-section">
+            <h2>Plan / Declare Loot</h2>
+            <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.  **Note:** you can declare loot at any time (up to the end of the session).</p>
             
             <div class="accordion-group">
                 <div class="card accordion-card open">
                     <div class="accordion-header">
-                        <span class="step-title">Session Info</span>
+                        <span class="step-title">Player Loot Determination:</span>
                         <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
-                        <div class="form-grid" style="margin-bottom:0;">
-                            <div class="form-row-full" style="display: flex; gap: 1rem; align-items: flex-end;">
-                                <div class="form-group" style="flex: 1;">
-                                    <label>Session Date</label>
-                                    <input type="datetime-local" id="inp-session-date">
-                                    <input type="hidden" id="inp-session-unix">
-                                </div>
-                                <div class="form-group" style="width: 100px;">
-                                    <label>Hours</label>
-                                    <input type="number" id="inp-session-total-hours" value="3" step="0.5" min="0">
-                                </div>
-                            </div>
-                            </div>
-                    </div>
-                </div>
-
-                <div class="card accordion-card">
-                    <div class="accordion-header">
-                        <span class="step-title">Session Roster & Rewards</span>
-                        <span class="step-icon"></span>
-                    </div>
-                    <div class="accordion-body">
-                         <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-                            <button class="button button-secondary btn-sm" id="btn-sync-session">Sync from Submissions</button>
-                            <button class="button button-secondary btn-sm" id="btn-add-session-player">Add Manual Player</button>
+                        <p>Please use the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632">Allowed Content</a> for allowable loot, and follow the guidelines below:</p>
+                        
+                        <div id="out-loot-instructions" style="margin-top: 1rem; padding: 10px; background: var(--color-bg-medium); border-left: 3px solid var(--color-primary); border-radius: 4px; font-size: 0.95em;">
+                            <span style="color: var(--color-text-secondary);">Loading instructions...</span>
                         </div>
-                        <div class="player-list-container" id="session-roster-list">
-                            </div>
-                        <div class="form-group" style="margin-top:1rem; text-align:right;">
-                             <label style="display:inline-block; margin-right:10px;">Session Max Gold:</label>
-                             <span class="val-max-gold" style="font-weight:bold; color:var(--color-accent);">0</span>
+
+                        <div class="form-group" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+                            <label>Pre-determined Player Loot</label>
+                            <p class="instruction-text">Enter your pre-determined loot below (one item per line). This will automatically format the Discord declaration below.</p>
+                            <textarea id="inp-loot-plan" class="table-input" rows="6" placeholder="* Item 1&#10;* Item 2"></textarea>
                         </div>
-                    </div>
-                </div>
 
-                <div class="card accordion-card">
-                    <div class="accordion-header">
-                        <span class="step-title">DM Logs</span>
-                        <span class="step-icon"></span>
-                    </div>
-                    <div class="accordion-body">
-                        <div class="player-card-body" style="padding:0;">
-                            <div class="card-row">
-                                <div class="card-field w-30">
-                                    <label class="field-label">DMPC Name</label>
-                                    <input type="text" id="out-dm-name" class="table-input readonly-input" readonly placeholder="Set in Setup">
-                                </div>
-                                <input type="hidden" id="out-dm-level">
-                                <input type="hidden" id="out-dm-games">
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label>Output for Discord:</label>
+                            <p>Copy to clipboard and post to <a href=:https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
+                            <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                <textarea id="out-loot-declaration" class="out-session-text" style="width: 100%; height: 150px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                             </div>
-
-                            <div class="card-row" style="margin-top:0.5rem; border-top:1px solid var(--color-border); padding-top:0.5rem;">
-                                <div class="card-field w-20">
-                                    <label class="field-label">Jumpstart</label>
-                                    <input type="text" class="table-input dm-val-jumpstart readonly-input" readonly>
-                                </div>
-                                <div class="card-field w-20">
-                                    <label class="field-label">Welcome Wagon</label>
-                                    <input type="text" class="table-input dm-val-welcome readonly-input" readonly>
-                                </div>
-                                <div class="card-field w-20">
-                                    <label class="field-label">New Hires</label>
-                                    <input type="text" class="table-input dm-val-newhires readonly-input" readonly>
-                                </div>
-                                <div class="card-field w-30">
-                                    <label class="field-label">Add. Incentives</label>
-                                    <input type="text" id="out-dm-incentives-display" class="table-input readonly-input" readonly placeholder="Set in Loot Plan tab" style="font-style:italic;">
-                                </div>
+                            <div style="margin-top: 0.5rem; text-align: right;">
+                                <button class="button" onclick="window.copyToClipboard('out-loot-declaration')">Copy to Clipboard</button>
                             </div>
+                        </div>
 
-                            <div class="card-row" style="margin-top:0.5rem;">
-                                <div class="card-field w-30">
-                                    <label class="field-label">Total DTP</label>
-                                    <input type="text" class="table-input dm-res-dtp readonly-result" readonly>
-                                </div>
-                                
-                                <div class="card-field w-25">
-                                    <label class="field-label">XP Earned</label>
-                                    <input type="text" class="table-input dm-res-xp readonly-result" readonly>
-                                </div>
-
-                                <div class="card-field w-15" style="text-align:center;">
-                                     <label class="field-label" style="display:block; width:100%; cursor:pointer;">Forfeit XP</label>
-                                     <div style="height:38px; display:flex; align-items:center; justify-content:center;">
-                                        <input type="checkbox" id="chk-dm-forfeit-xp" style="width:18px; height:18px; cursor:pointer;">
-                                     </div>
-                                </div>
-                                
-                                <div class="card-field w-30">
-                                    <label class="field-label">GP Earned</label>
-                                    <input type="text" class="table-input dm-res-gp readonly-result" readonly>
-                                </div>
-                            </div>
+                        <div class="hgen-section" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+                            <h4>Hgenloot Bot</h4>
+                            <p>Please refer the <a href="https://discord.com/channels/308324031478890497/617838916929847315/1423099262845190196" target="_blank">This Patch Update</a> for the full explanation of the Hgenloot, but you can use the bot to roll for all of your loot, or partially (in combination with pre-determined loot, if applicable).</p>
                             
+                            <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-direction: row; align-items: flex-end;">
+                                <div class="form-group">
+                                    <label>Predetermined Permanents</label>
+                                    <input type="number" id="inp-predet-perms" value="0" min="0" style="width: 180px;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Predetermined Consumables</label>
+                                    <input type="number" id="inp-predet-cons" value="0" min="0" style="width: 180px;">
+                                </div>
                             </div>
+
+                            <div class="form-group">
+                                <label>1. Copy this into <a href=:https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></label>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-hgen-declaration" class="out-session-text" style="width: 100%; height: 80px; padding: 1rem; background: #36393f; color: #dcddde; border: none; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                                <div style="text-align: right; margin-top: 0.5rem;">
+                                    <button class="button" onclick="window.copyToClipboard('out-hgen-declaration')">Copy to Clipboard</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 1.5rem;">
+                                <label>2. Reply to that message, and run this command (note: copy-pasting won't work. Please type it manually):</label>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-hgen-command" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card accordion-card" id="card-dm-loot">
+                    <div class="accordion-header">
+                        <span class="step-title">DM Loot Determination</span>
+                        <span class="step-icon"></span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <div class="form-group" style="grid-column: 1 / -1; display: flex; flex-direction: row; gap: 1.5rem; align-items: flex-end;">
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:0.5rem; font-weight:600;">New Hires (Players &lt; 10 games)</label>
+                                    <input type="text" id="loot-val-newhires" class="table-input readonly-input" readonly value="0">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Welcome Wagon (First game)</label>
+                                    <input type="text" id="loot-val-welcome" class="table-input readonly-input" readonly value="0">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Jumpstart DM?</label>
+                                    <input type="text" id="loot-val-jumpstart" class="table-input readonly-input" readonly value="No">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.5rem;">
+                                <label>Additional DM Incentives (Loot & DTP)</label>
+                                <div class="dtp-wrapper" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    <input type="text" id="disp-dm-incentives" class="table-input readonly-input" readonly placeholder="None selected" style="flex: 1; min-width: 200px;">
+                                    <button class="button button-secondary" id="btn-dm-loot-incentives" data-incentives='[]'>Add Additional Incentives</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1; margin-top: 1.5rem;">
+                                <label>1. Discord Declaration</label>
+                                <p>Copy to clipboard and post to <a href="https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-dm-loot-decl" class="out-session-text" style="width: 100%; height: 100px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                                <div style="text-align: right; margin-top: 0.5rem;">
+                                    <button class="button" onclick="window.copyToClipboard('out-dm-loot-decl')">Copy Declaration</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1; margin-top: 1.5rem;">
+                                <label>2. Bot Command</label>
+                                <p class="instruction-text" style="margin-bottom: 0.5rem;">Reply to your declaration with this command (copy and paste won't work, type this command):</p>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-dm-loot-cmd" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                            </div>
+
+                            <div id="wrapper-jumpstart-bonus" class="form-group" style="grid-column: 1 / -1; display:none; margin-top: 1.5rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                                <label>3. Jumpstart Bonus</label>
+                                
+                                <p> As a Jumpstart DM, you get an additional loot roll (type this command):</p>
+                                
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-dm-jumpstart-cmd" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Once you have rolled your loot, edit your original declaration post with "and selects:" and write the loot you chose from the loot pool (1 for normal loot, 1 for jumpstart if applicable).</p>    
                     </div>
                 </div>
             </div>

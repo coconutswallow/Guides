@@ -26,6 +26,7 @@ export function getFormData() {
     const hoursEl = document.getElementById('inp-session-total-hours');
     const sessionHours = hoursEl ? hoursEl.value : 0;
     
+    // DM Forfeit State
     const dmForfeitXp = document.getElementById('chk-dm-forfeit-xp') ? document.getElementById('chk-dm-forfeit-xp').checked : false;
 
     const sessionLog = {
@@ -41,7 +42,7 @@ export function getFormData() {
             games_played: val('out-dm-games'),
             incentives: dmIncentives,
             loot_selected: val('dm-loot-selected'),
-            forfeit_xp: dmForfeitXp
+            forfeit_xp: dmForfeitXp // Saved here
         }
     };
 
@@ -173,25 +174,15 @@ export function populateForm(session, callbacks, options = {}) {
     
     const sLog = session.form_data.session_log;
     if (sLog) {
-        // DEFAULTING HOURS: If 0 or null/undefined, default to 3
-        const loadedHours = (sLog.hours !== undefined && sLog.hours !== null) ? sLog.hours : 3;
-        const finalHours = parseFloat(loadedHours) === 0 ? 3 : loadedHours;
-        setVal('inp-session-total-hours', finalHours);
-        
+        setVal('inp-session-total-hours', sLog.hours || 0);
         setVal('inp-session-notes', sLog.notes);
         setVal('inp-session-summary', sLog.summary);
         setVal('inp-dm-collab', sLog.dm_collaborators);
         
-        // DATE LOGIC: Use Saved Session Date OR Default to Game Date
-        let dateToUse = sLog.date_time;
-        if (!dateToUse && session.form_data.header.game_datetime) {
-            dateToUse = session.form_data.header.game_datetime;
-        }
-
-        if(dateToUse) {
-            setVal('inp-session-unix', dateToUse);
+        if(sLog.date_time) {
+            setVal('inp-session-unix', sLog.date_time);
             const tz = document.getElementById('inp-timezone').value;
-            setVal('inp-session-date', UI.unixToLocalIso(dateToUse, tz));
+            setVal('inp-session-date', UI.unixToLocalIso(sLog.date_time, tz));
         }
 
         if (sLog.dm_rewards) {
@@ -199,9 +190,11 @@ export function populateForm(session, callbacks, options = {}) {
             setVal('out-dm-games', sLog.dm_rewards.games_played);
             setVal('dm-loot-selected', sLog.dm_rewards.loot_selected);
             
+            // Restore DM Forfeit XP
             const dmForfeit = document.getElementById('chk-dm-forfeit-xp');
             if (dmForfeit) {
                 dmForfeit.checked = !!sLog.dm_rewards.forfeit_xp;
+                // Add listener here to ensure it updates calculations immediately upon change
                 dmForfeit.addEventListener('change', () => {
                    if(callbacks.onUpdate) callbacks.onUpdate();
                 });
