@@ -14,17 +14,27 @@
         /* Layout Overrides */
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
             background-image: var(--page-bg-image, none);
+            padding-top: 80px; /* Space for the absolute header */
         }
         
         .entry-container {
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        /* Top Right Auth Header Position */
+        .top-auth-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
         }
 
         /* Session Header Styling */
@@ -87,121 +97,162 @@
         .btn-discord:hover {
             background-color: #4752C4;
             color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .hidden { display: none !important; }
         
         /* Loading skeleton for text */
         .skeleton {
-            background-color: var(--color-bg-medium);
             color: transparent;
+            background-color: var(--color-bg-medium);
             border-radius: 4px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.6; }
         }
     </style>
 </head>
 <body>
 
-<div class="entry-container">
-    
-    <div class="card">
+    <div class="top-auth-container">
+        <div id="auth-component" class="auth-wrapper">
+            <span id="auth-loading" class="auth-loading-text" role="status">Loading...</span>
         
-        <div class="session-info">
-            <div id="display-session-name" class="session-name">Loading Session...</div>
-            <div class="dm-name">DM: <span id="display-dm-name">...</span></div>
-        </div>
-
-        <div id="login-section">
-            <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
-                Check in to update your character stats and loot.
-            </p>
-
-            <div class="login-options">
+            <button id="header-login-btn" class="auth-btn auth-btn-discord" style="display:none;">
+                <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true">
+                    <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                </svg>
+                Login
+            </button>
+        
+            <div id="user-profile" class="auth-profile" style="display:none;">
+                <img id="user-avatar" src="" alt="User Avatar" class="auth-avatar" 
+                     onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTgxODBEIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINGE0IDQgMCAwIDAtNCA0djIiPjwvcGF0aD48Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiPjwvY2lyY2xlPjwvc3ZnPg==';">
                 
-                <button type="button" class="button btn-discord" id="btn-auth-discord">
-                    <svg width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true" fill="currentColor">
-                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                <div class="auth-user-info">
+                    <span id="user-name" class="auth-name">Adventurer</span>
+                </div>
+                
+                <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out" aria-label="Sign Out">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
                     </svg>
-                    Log in with Discord
                 </button>
-
-                <div class="divider-or">OR</div>
-
-                <div class="form-group">
-                    <input type="text" id="login-discord-id" placeholder="Enter Discord ID Manually" class="table-input" style="text-align: center;">
-                </div>
-                <button type="button" class="button" id="btn-manual-load" style="width: 100%;">Load Manually</button>
             </div>
         </div>
-
-        <div id="form-section" class="hidden">
-            
-            <div class="content-tabs">
-                <div class="content-tab active" data-tab="tab-character">1. Character</div>
-                <div class="content-tab" data-tab="tab-session">2. Session</div>
-            </div>
-
-            <form id="player-form">
-                <input type="hidden" id="p-discord-id">
-                
-                <div style="text-align: center; margin-bottom: 1rem; font-size: 0.9em; color: var(--color-primary);">
-                    Playing as: <strong id="current-player-display">Guest</strong>
-                </div>
-
-                <div id="tab-character" class="tab-content">
-                    <div class="form-group">
-                        <label>Character Name</label>
-                        <input type="text" id="p-char-name" class="table-input" placeholder="Character Name">
-                    </div>
-                    
-                    <div class="form-row-full" style="gap: 1rem; margin-bottom: 15px;">
-                        <div class="form-group flex-grow">
-                            <label>Level</label>
-                            <input type="number" id="p-level" class="table-input" placeholder="Actual">
-                        </div>
-                        <div class="form-group flex-grow">
-                            <label>Playing As</label>
-                            <input type="number" id="p-level-as" class="table-input" placeholder="Adjusted">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Number of Games on Server</label>
-                        <input type="number" id="p-games" class="table-input" placeholder="Total games played">
-                    </div>
-                </div>
-
-                <div id="tab-session" class="tab-content hidden">
-                    <div class="form-group">
-                        <label>Loot Acquired</label>
-                        <textarea id="p-loot" rows="4" class="table-input" placeholder="List items, gold, or rewards received..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Items Used</label>
-                        <textarea id="p-items" rows="3" class="table-input" placeholder="Potions, scrolls, charges spent..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Character Notes</label>
-                        <textarea id="p-notes" rows="3" class="table-input" placeholder="Private session notes..."></textarea>
-                    </div>
-                </div>
-
-                <hr style="border-color: var(--color-border); margin: 2rem 0;">
-
-                <button type="button" class="button" id="btn-submit" style="width: 100%;">Save Updates</button>
-                <div id="status-message" style="margin-top:15px; text-align:center; font-weight:bold; min-height:24px;"></div>
-            </form>
-        </div>
-
     </div>
-    
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
-        <span class="sun-icon">☀️</span>
-        <span class="moon-icon">🌙</span>
-    </button>
-</div>
 
+    <div class="entry-container">
+        
+        <div class="card">
+            
+            <div class="session-info">
+                <div id="display-session-name" class="session-name skeleton">Loading Session...</div>
+                <div class="dm-name">DM: <span id="display-dm-name" class="skeleton">...</span></div>
+            </div>
+
+            <div id="login-section">
+                <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
+                    Check in to update your character stats and loot.
+                </p>
+
+                <div class="login-options">
+                    
+                    <button type="button" class="button btn-discord" id="btn-card-login">
+                        <svg width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true" fill="currentColor">
+                            <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                        </svg>
+                        Log in with Discord
+                    </button>
+
+                    <div class="divider-or">OR</div>
+
+                    <div class="form-group">
+                        <input type="text" id="login-discord-id" placeholder="Enter Discord ID Manually" class="table-input" style="text-align: center;">
+                    </div>
+                    <button type="button" class="button" id="btn-manual-load" style="width: 100%;">Load Manually</button>
+                </div>
+            </div>
+
+            <div id="form-section" class="hidden">
+                
+                <div class="content-tabs">
+                    <div class="content-tab active" data-tab="tab-character">1. Character</div>
+                    <div class="content-tab" data-tab="tab-session">2. Session</div>
+                </div>
+
+                <form id="player-form">
+                    <input type="hidden" id="p-discord-id">
+                    
+                    <div style="text-align: center; margin-bottom: 1rem; font-size: 0.9em; color: var(--color-primary);">
+                        Playing as: <strong id="current-player-display">Guest</strong>
+                    </div>
+
+                    <div id="tab-character" class="tab-content">
+                        <div class="form-group">
+                            <label>Character Name</label>
+                            <input type="text" id="p-char-name" class="table-input" placeholder="Character Name">
+                        </div>
+                        
+                        <div class="form-row-full" style="gap: 1rem; margin-bottom: 15px;">
+                            <div class="form-group flex-grow">
+                                <label>Level</label>
+                                <input type="number" id="p-level" class="table-input" placeholder="Actual">
+                            </div>
+                            <div class="form-group flex-grow">
+                                <label>Playing As</label>
+                                <input type="number" id="p-level-as" class="table-input" placeholder="Adjusted">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Number of Games on Server</label>
+                            <input type="number" id="p-games" class="table-input" placeholder="Total games played">
+                        </div>
+                    </div>
+
+                    <div id="tab-session" class="tab-content hidden">
+                        <div class="form-group">
+                            <label>Loot Acquired</label>
+                            <textarea id="p-loot" rows="4" class="table-input" placeholder="List items, gold, or rewards received..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Items Used</label>
+                            <textarea id="p-items" rows="3" class="table-input" placeholder="Potions, scrolls, charges spent..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Character Notes</label>
+                            <textarea id="p-notes" rows="3" class="table-input" placeholder="Private session notes..."></textarea>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: var(--color-border); margin: 2rem 0;">
+
+                    <button type="button" class="button" id="btn-submit" style="width: 100%;">Save Updates</button>
+                    <div id="status-message" style="margin-top:15px; text-align:center; font-weight:bold; min-height:24px;"></div>
+                </form>
+            </div>
+
+        </div>
+        
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+            <span class="sun-icon">☀️</span>
+            <span class="moon-icon">🌙</span>
+        </button>
+    </div>
+
+<script type="module" src="../assets/js/auth-manager.js"></script>
 <script type="module">
     import { supabase } from '../assets/js/supabaseClient.js';
 
@@ -231,21 +282,28 @@
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
 
-    // UI References
     const ui = {
         sessionName: document.getElementById('display-session-name'),
         dmName: document.getElementById('display-dm-name'),
         loginSection: document.getElementById('login-section'),
         formSection: document.getElementById('form-section'),
         btnManual: document.getElementById('btn-manual-load'),
-        btnDiscord: document.getElementById('btn-auth-discord'),
+        btnCardLogin: document.getElementById('btn-card-login'),
         manualInput: document.getElementById('login-discord-id'),
         status: document.getElementById('status-message'),
-        currentPlayer: document.getElementById('current-player-display')
+        currentPlayer: document.getElementById('current-player-display'),
+        // Auth Header Elements
+        headerLoginBtn: document.getElementById('header-login-btn'),
+        headerProfile: document.getElementById('user-profile'),
+        headerLoading: document.getElementById('auth-loading'),
+        headerAvatar: document.getElementById('user-avatar'),
+        headerName: document.getElementById('user-name'),
+        headerLogout: document.getElementById('logout-btn')
     };
 
     if (!sessionId) {
         ui.sessionName.textContent = "Error";
+        ui.sessionName.classList.remove('skeleton');
         ui.sessionName.style.color = "var(--palette-alert-danger-action)";
         document.querySelector('.card').innerHTML += "<h3 style='text-align:center; color:red'>No Session ID provided.</h3>";
         throw new Error("No Session ID");
@@ -254,33 +312,79 @@
     // Initialize Page
     (async function init() {
         await fetchSessionMetadata();
-        checkAuthAndAutoLoad();
+        
+        // --- 3. AUTH LOGIC ---
+        // We use authManager for the state, but we manually update our specific UI here 
+        // because we are managing a hybrid view (Header + Card Content)
+        
+        if (!window.authManager) {
+             console.error("AuthManager not loaded");
+             return;
+        }
+
+        // Connect Header Buttons
+        ui.headerLoginBtn.onclick = () => window.authManager.login();
+        ui.headerLogout.onclick = () => window.authManager.logout();
+        ui.btnCardLogin.onclick = () => window.authManager.login(); // Big button in card
+
+        // Initialize Manager
+        window.authManager.init((user) => {
+            ui.headerLoading.style.display = 'none';
+            ui.sessionName.classList.remove('skeleton');
+            ui.dmName.classList.remove('skeleton');
+
+            if (user) {
+                // LOGGED IN STATE
+                // 1. Update Header
+                ui.headerLoginBtn.style.display = 'none';
+                ui.headerProfile.style.display = 'flex';
+                ui.headerName.textContent = user.user_metadata?.full_name || 'Adventurer';
+                if (user.user_metadata?.avatar_url) ui.headerAvatar.src = user.user_metadata.avatar_url;
+
+                // 2. Auto-load Form
+                const discordId = user.user_metadata.provider_id || user.identities?.[0]?.identity_data?.provider_id;
+                const discordName = user.user_metadata.full_name || "Adventurer";
+                
+                if (discordId) {
+                    ui.currentPlayer.textContent = `${discordName} (Verified)`;
+                    loadPlayerData(discordId);
+                }
+
+            } else {
+                // LOGGED OUT STATE
+                // 1. Update Header
+                ui.headerLoginBtn.style.display = 'inline-flex';
+                ui.headerProfile.style.display = 'none';
+
+                // 2. Show Manual/Login Card
+                ui.loginSection.classList.remove('hidden');
+                ui.formSection.classList.add('hidden');
+            }
+        });
     })();
 
     /**
      * Fetches Session Name and DM Name from DB
-     *
      */
     async function fetchSessionMetadata() {
         try {
-            // 1. Get Session Details
+            // 1. Get Session Details from 'session_logs' table (renamed from sessions)
             const { data: session, error: sErr } = await supabase
-                .from('sessions')
-                .select('session_name, dm_id')
+                .from('session_logs')
+                .select('title, user_id') // title = session name, user_id = dm's UUID
                 .eq('id', sessionId)
                 .single();
 
             if (sErr || !session) throw sErr || new Error("Session not found");
 
-            ui.sessionName.textContent = session.session_name;
+            ui.sessionName.textContent = session.title;
 
-            // 2. Get DM Name (via discord_users table using dm_id)
-            // Note: If dm_id is null, handle gracefully
-            if (session.dm_id) {
+            // 2. Get DM Name (via discord_users table using user_id)
+            if (session.user_id) {
                 const { data: dm, error: dErr } = await supabase
                     .from('discord_users')
                     .select('display_name')
-                    .eq('user_id', session.dm_id)
+                    .eq('user_id', session.user_id) // Map session.user_id -> discord_users.user_id
                     .single();
                 
                 ui.dmName.textContent = dm ? dm.display_name : "Unknown DM";
@@ -294,48 +398,6 @@
         }
     }
 
-    // --- 3. AUTH LOGIC ---
-
-    /**
-     * Checks if user is already logged in via Discord OAuth.
-     * If yes, auto-loads their data.
-     */
-    async function checkAuthAndAutoLoad() {
-        const { data } = await supabase.auth.getSession();
-        
-        if (data && data.session && data.session.user) {
-            // User is authenticated via Discord
-            const user = data.session.user;
-            
-            // In Discord OAuth, the provider_id (Discord ID) is usually in user_metadata or identites
-            // Supabase stores the provider ID (Discord ID) in identities.identity_data.provider_id 
-            // OR simply user_metadata.provider_id depending on config. 
-            // Let's try user_metadata.sub or provider_id. 
-            // Usually: user.user_metadata.provider_id
-            
-            const discordId = user.user_metadata.provider_id || user.identities?.[0]?.identity_data?.provider_id;
-            const discordName = user.user_metadata.full_name || "Adventurer";
-
-            if (discordId) {
-                console.log("Auto-detected Discord User:", discordName);
-                ui.currentPlayer.textContent = `${discordName} (Verified)`;
-                loadPlayerData(discordId);
-            }
-        }
-    }
-
-    // Handler: Login with Discord Button
-    ui.btnDiscord.addEventListener('click', async () => {
-        // Redirects to Discord, then back to this page
-        await supabase.auth.signInWithOAuth({
-            provider: 'discord',
-            options: {
-                redirectTo: window.location.href, // Come back to this exact session URL
-                scopes: 'identify'
-            }
-        });
-    });
-
     // Handler: Manual Load Button
     ui.btnManual.addEventListener('click', () => {
         const inputId = ui.manualInput.value.trim();
@@ -346,7 +408,6 @@
         ui.currentPlayer.textContent = `${inputId} (Manual Entry)`;
         loadPlayerData(inputId);
     });
-
 
     // --- 4. DATA LOADING & SAVING ---
 
