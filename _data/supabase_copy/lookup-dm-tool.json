@@ -66,8 +66,14 @@
     "incentive 2": 10
   },
   "DM incentives": {
-    "DM incentive 1": 5,
-    "DM incentive 2": 10
+    "DM incentive 1": {
+		"bonus DTP": 5,
+		"bonus loot roll": 0
+	},
+    "DM incentive 2": {
+		"bonus DTP": 5,
+		"bonus loot roll": 1
+	}
   },
   "tier": {
     "Tier 1": {

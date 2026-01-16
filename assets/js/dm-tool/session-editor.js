@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
+    
+    // NEW: Initialize DM Loot Incentives UI based on rules
+    initDMLootIncentives();
 
     const bindOutput = (id) => {
         const el = document.getElementById(id);
@@ -92,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateLootInstructions();
             updateLootDeclaration(); // Update standard Loot Declaration
             updateHgenLogic();       // Update Hgenloot Logic
+            updateDMLootLogic();     // Update DM Loot Logic
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
@@ -134,6 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         gameNameInput.addEventListener('input', () => {
             updateLootDeclaration();
             updateHgenLogic();
+            updateDMLootLogic();
         });
     }
 
@@ -148,6 +153,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateLootInstructions();
         updateLootDeclaration();
         updateHgenLogic();
+        updateDMLootLogic();
     }, 1000);
 });
 
@@ -158,6 +164,7 @@ function setupCalculationTriggers(callbacks) {
     const syncBtn = document.getElementById('btn-sync-roster');
     const addPlayerBtn = document.getElementById('btn-add-session-player');
 
+    // Existing session log triggers
     if(dmLevel) dmLevel.addEventListener('input', callbacks.onUpdate);
     if(dmGames) dmGames.addEventListener('input', callbacks.onUpdate);
     if(btnDMInc) btnDMInc.addEventListener('click', () => callbacks.onOpenModal(btnDMInc, null, true));
@@ -171,6 +178,25 @@ function setupCalculationTriggers(callbacks) {
     if(addPlayerBtn) addPlayerBtn.addEventListener('click', () => {
         Rows.addSessionPlayerRow(document.getElementById('session-roster-list'), {}, callbacks);
     });
+
+    // NEW: Listeners for DM Loot Logic (View 5)
+    // We bind to the Setup inputs because Loot Planning often happens before Session Logging
+    const dmLevelInputSetup = document.getElementById('inp-dm-level'); 
+    const dmGamesInputSetup = document.getElementById('inp-dm-games-count'); 
+
+    if(dmLevelInputSetup) dmLevelInputSetup.addEventListener('input', updateDMLootLogic);
+    if(dmGamesInputSetup) dmGamesInputSetup.addEventListener('change', updateDMLootLogic);
+    
+    // Trigger update on Roster changes (View 4 Roster affects View 5 Loot)
+    const rosterBody = document.getElementById('roster-body');
+    if (rosterBody) {
+        rosterBody.addEventListener('change', updateDMLootLogic);
+        rosterBody.addEventListener('click', (e) => {
+            if (e.target.matches('.btn-delete-row')) {
+                setTimeout(updateDMLootLogic, 100); 
+            }
+        });
+    }
 }
 
 function incrementPartName(name) {
@@ -241,6 +267,7 @@ function initPlayerSetup() {
                  updateLootInstructions();
                  updateLootDeclaration();
                  updateHgenLogic();
+                 updateDMLootLogic();
             }, 150);
         }); 
     }
@@ -254,6 +281,7 @@ function initPlayerSetup() {
                      updateLootInstructions();
                      updateLootDeclaration();
                      updateHgenLogic();
+                     updateDMLootLogic();
                 }, 150);
             }
         });
@@ -265,6 +293,7 @@ function initPlayerSetup() {
                      updateLootInstructions();
                      updateLootDeclaration();
                      updateHgenLogic();
+                     updateDMLootLogic();
                 }, 150);
             }
         });
@@ -325,6 +354,7 @@ function initPlayerSync() {
                 updateLootInstructions();
                 updateLootDeclaration();
                 updateHgenLogic();
+                updateDMLootLogic();
             }, 200);
         });
     }
@@ -341,6 +371,46 @@ function initPlayerSync() {
              const submissions = await fetchPlayerSubmissions(id);
              Rows.applyPlayerSubmissions(submissions, window._sessionCallbacks);
         });
+    }
+}
+
+// NEW: Initialize DM Loot Incentives based on database rules
+function initDMLootIncentives() {
+    const container = document.getElementById('dm-loot-incentives-container');
+    // Guard clause if container or rules are missing
+    if (!container || !cachedGameRules || !cachedGameRules['DM incentives']) return;
+
+    container.innerHTML = '';
+    const incentives = cachedGameRules['DM incentives'];
+    let count = 0;
+
+    for (const [name, data] of Object.entries(incentives)) {
+        // Filter: only show if bonus loot roll > 0
+        if (data["bonus loot roll"] && data["bonus loot roll"] > 0) {
+            count++;
+            const label = document.createElement('label');
+            label.className = 'checkbox-item';
+            label.style.display = 'flex';
+            label.style.alignItems = 'center';
+            label.style.gap = '8px';
+            label.style.marginBottom = '5px';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = name;
+            checkbox.dataset.bonus = data["bonus loot roll"];
+            
+            // Re-trigger logic when checked
+            checkbox.addEventListener('change', updateDMLootLogic);
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(`${name} (+${data["bonus loot roll"]} Roll)`));
+            container.appendChild(label);
+        }
+    }
+
+    if (count === 0) {
+        container.innerHTML = '<span style="color:var(--color-text-secondary)">No specific loot incentives available.</span>';
     }
 }
 
@@ -773,4 +843,88 @@ function updateHgenLogic() {
     
     if (outDecl) outDecl.value = declaration;
     if (outCmd) outCmd.value = command;
+}
+
+// NEW: Calculates DM Loot Plan logic (View 5) based on Setup Roster (View 4)
+async function updateDMLootLogic() {
+    // 1. Calculate Roster Stats from Setup Roster (View 4)
+    // We use Setup Roster because Planning happens before Session Logging
+    const rows = document.querySelectorAll('#roster-body .player-row');
+    let newHires = 0;
+    let welcomeWagon = 0;
+
+    rows.forEach(row => {
+        const gamesVal = row.querySelector('.inp-games-count').value;
+        const gamesNum = parseInt(gamesVal);
+        
+        if (gamesVal === "1") welcomeWagon++;
+        // New Hire: Not "10+" and <= 10
+        if (gamesVal !== "10+" && !isNaN(gamesNum) && gamesNum <= 10) {
+            newHires++;
+        }
+    });
+
+    // 2. DM Jumpstart Logic
+    const dmGamesInput = document.getElementById('inp-dm-games-count');
+    const dmGamesVal = dmGamesInput ? dmGamesInput.value : "10+";
+    const dmGamesNum = parseInt(dmGamesVal) || 999;
+    const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
+
+    // 3. Update UI Read-only fields
+    const elNewHires = document.getElementById('loot-val-newhires');
+    const elWelcome = document.getElementById('loot-val-welcome');
+    const elJump = document.getElementById('loot-val-jumpstart');
+
+    if(elNewHires) elNewHires.value = newHires;
+    if(elWelcome) elWelcome.value = welcomeWagon;
+    if(elJump) elJump.value = isJumpstart ? "Yes" : "No";
+
+    // 4. Calculate Loot Rolls
+    // Base 1 + New Hires
+    let totalRolls = 1 + newHires;
+    
+    // Check Selected Incentives
+    const checkedIncentives = document.querySelectorAll('#dm-loot-incentives-container input:checked');
+    let incentiveNames = [];
+    
+    if (newHires > 0) incentiveNames.push(`New Hires (${newHires})`);
+    if (isJumpstart) incentiveNames.push("Jumpstart");
+
+    checkedIncentives.forEach(cb => {
+        const bonus = parseInt(cb.dataset.bonus) || 0;
+        totalRolls += bonus;
+        incentiveNames.push(cb.value);
+    });
+
+    // 5. Generate Output Text
+    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
+    const dmLvlInput = document.getElementById('inp-dm-level');
+    const dmLvl = dmLvlInput ? dmLvlInput.value : "0";
+    
+    // Get Discord ID
+    let discordId = "YOUR_ID";
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && user.identities) {
+            const identity = user.identities.find(i => i.provider === 'discord');
+            if(identity && identity.id) discordId = identity.id;
+        }
+    } catch (e) { console.warn("ID fetch error"); }
+
+    // -- Declaration --
+    const incentiveStr = incentiveNames.length > 0 ? `, Incentives: ${incentiveNames.join(', ')}` : "";
+    const declText = `<@${discordId}> rolls loot for Game **${gameName}**${incentiveStr}`;
+    
+    const outDecl = document.getElementById('out-dm-loot-decl');
+    if (outDecl) outDecl.value = declText;
+
+    // -- Command --
+    let cmdText = `/hgenloot ${totalRolls} ${dmLvl}`;
+    
+    if (isJumpstart) {
+        cmdText += `\n\nAs a Jumpstart DM, you get an additional loot roll:\n/hgenloot 1 ${dmLvl}`;
+    }
+    
+    const outCmd = document.getElementById('out-dm-loot-cmd');
+    if (outCmd) outCmd.value = cmdText;
 }
