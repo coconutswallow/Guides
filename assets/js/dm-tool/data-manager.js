@@ -224,3 +224,18 @@ export async function deleteSession(sessionId) {
         return false;
     }
 }
+
+export async function fetchPlayerSubmissions(sessionId) {
+    try {
+        const { data, error } = await supabase
+            .from('session_player_submissions')
+            .select('discord_id, payload, updated_at')
+            .eq('session_id', sessionId);
+
+        if (error) throw error;
+        return data || [];
+    } catch (err) {
+        console.error('Error fetching submissions:', err);
+        return [];
+    }
+}

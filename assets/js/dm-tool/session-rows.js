@@ -197,3 +197,59 @@ export function syncSessionPlayersFromMaster(callbacks) {
         addSessionPlayerRow(listContainer, p, callbacks);
     });
 }
+/* ===========================
+   3. SYNC LOGIC (NEW)
+   =========================== */
+export function applyPlayerSubmissions(submissions, callbacks) {
+    const listContainer = document.getElementById('session-roster-list');
+    if (!listContainer) return;
+
+    // Get all current cards to check for duplicates
+    const existingCards = Array.from(listContainer.querySelectorAll('.player-card'));
+
+    submissions.forEach(sub => {
+        const p = sub.payload || {};
+        const discordId = sub.discord_id || "";
+        
+        // Skip empty data
+        if (!discordId) return;
+
+        // 1. Find existing card by Discord ID (case-insensitive check)
+        const card = existingCards.find(c => {
+            const val = c.querySelector('.s-discord-id').value.trim().toLowerCase();
+            return val === discordId.trim().toLowerCase();
+        });
+
+        // 2. FORK: Update existing OR Create new
+        if (card) {
+            // Update logic: Only overwrite if the player submitted a value (not empty)
+            if (p.char_name) card.querySelector('.s-char-name').value = p.char_name;
+            if (p.level) card.querySelector('.s-level').value = p.level;
+            if (p.games) card.querySelector('.s-games').value = p.games;
+            if (p.loot) card.querySelector('.s-loot').value = p.loot;
+            if (p.items) card.querySelector('.s-items').value = p.items;
+            if (p.gold) card.querySelector('.s-gold').value = p.gold;
+            if (p.notes) card.querySelector('.s-notes').value = p.notes;
+            
+            // Trigger calculation update
+            card.querySelector('.s-level').dispatchEvent(new Event('input'));
+        } else {
+            // Create New: Map the payload to your card structure
+            const newPlayerData = {
+                discord_id: discordId,
+                character_name: p.char_name,
+                level: p.level,
+                level_playing_as: p.level_as, // Note: Mapping 'level_as' to 'level_playing_as'
+                games_count: p.games,
+                loot: p.loot,
+                items_used: p.items,
+                gold: p.gold,
+                notes: p.notes
+            };
+            addSessionPlayerRow(listContainer, newPlayerData, callbacks);
+        }
+    });
+
+    // Final global update
+    if (callbacks && callbacks.onUpdate) callbacks.onUpdate();
+}

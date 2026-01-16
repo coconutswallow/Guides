@@ -9,7 +9,8 @@ import {
     fetchGameRules, 
     fetchActiveEvents,
     fetchTemplates,
-    deleteSession 
+    deleteSession,
+    fetchPlayerSubmissions 
 } from './data-manager.js';
 
 import * as UI from './session-ui.js';
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
+    initPlayerSync();
 
     // --- NEW: Update outputs immediately when specific URL fields are changed ---
     const bindOutput = (id) => {
@@ -204,6 +206,52 @@ async function initTemplateDropdown() {
 function initPlayerSetup() {
     const btnAdd = document.getElementById('btn-add-player');
     if(btnAdd) btnAdd.addEventListener('click', () => Rows.addPlayerRowToMaster({})); 
+}
+function initPlayerSync() {
+    const btnInvite = document.getElementById('btn-invite-players');
+    const btnSync = document.getElementById('btn-sync-submissions');
+
+    // 1. Copy Invite Link
+    if (btnInvite) {
+        btnInvite.addEventListener('click', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (!id) return alert("Please save the session first to generate a Session ID.");
+            
+            // Construct the full URL
+            const inviteUrl = `${window.location.origin}/player-entry.html?session_id=${id}`;
+            
+            navigator.clipboard.writeText(inviteUrl).then(() => {
+                // Visual feedback
+                const originalText = btnInvite.innerText;
+                btnInvite.innerText = "Copied!";
+                setTimeout(() => btnInvite.innerText = originalText, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                prompt("Copy this link:", inviteUrl);
+            });
+        });
+    }
+
+    // 2. Sync Player Data
+    if (btnSync) {
+        btnSync.addEventListener('click', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (!id) return alert("Please save the session first.");
+
+            if (!confirm("This will merge player submissions into your roster.\n\n- Updates existing players (by Discord ID)\n- Adds new players if they don't exist\n\nContinue?")) return;
+
+            const submissions = await fetchPlayerSubmissions(id);
+            if (!submissions || submissions.length === 0) {
+                return alert("No player submissions found for this session.");
+            }
+
+            // Call the new helper in Rows
+            Rows.applyPlayerSubmissions(submissions, window._sessionCallbacks);
+            alert(`Successfully processed ${submissions.length} player submission(s).`);
+        });
+    }
 }
 
 // ==========================================
