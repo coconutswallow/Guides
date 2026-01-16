@@ -215,7 +215,16 @@ extra_css:
             <p class="instruction-text">Manage your master roster and DM details here. This data persists across copy/split.</p>
              <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div style="flex-grow:1;"></div> <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
+                     <div style="display:flex; gap: 8px;">
+                        <button class="button button-secondary btn-sm" id="btn-invite-players" title="Copy link for players to edit their own data">
+                            Copy Player Invite Link
+                        </button>
+                        <button class="button button-secondary btn-sm" id="btn-sync-master" title="Sync Name/Level/Games to Master Roster">
+                            ↓ Sync Setup Data
+                        </button>
+                    </div>
+
+                    <button id="btn-add-player" class="button btn-sm">+ Add Player</button>
                 </div>
                 <table class="roster-table" style="width:100%; border-collapse: separate; border-spacing: 0 10px;">
                     <thead>
@@ -305,14 +314,20 @@ extra_css:
                             </div>
                         </div>
 
-                        <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom: 1rem;">
-                            <div>
-                                <button class="button button-secondary btn-sm" id="btn-sync-roster" title="Copy from Setup Roster">
-                                    ↻ Sync Roster
-                                </button>
-                                <button class="button btn-sm" id="btn-add-session-player">+ Add Player</button>
-                            </div>
+                        <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom: 1rem; gap: 8px; flex-wrap: wrap;">
+                            
+                            <button class="button button-secondary btn-sm" id="btn-sync-session" title="Sync Loot/Notes/Gold from Player Submissions">
+                                ↓ Sync Session Data
+                            </button>
+
+                            <div style="width: 1px; height: 24px; background: var(--color-border); margin: 0 4px;"></div>
+
+                            <button class="button button-secondary btn-sm" id="btn-sync-roster" title="Copy from Setup Roster">
+                                ↻ Sync Roster
+                            </button>
+                            <button class="button btn-sm" id="btn-add-session-player">+ Add Player</button>
                         </div>
+
                         <div id="session-roster-list" class="player-roster-list"></div>
                     </div>
                 </div>
