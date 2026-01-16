@@ -159,13 +159,13 @@ export async function syncMasterRosterFromSubmissions(submissions) {
    2. SESSION PLAYER CARDS (View 6)
    =========================== */
 
-export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
+// Updated to accept suppressUpdate to prevent infinite loops during auto-sync
+export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, suppressUpdate = false) {
     if (!listContainer) return;
 
     const sessionTotalEl = document.getElementById('inp-session-total-hours');
     const sessionTotal = sessionTotalEl ? sessionTotalEl.value : "0";
 
-    // Initialization Logic: Use data.hours if present (even if 0), otherwise default
     let rowHours;
     if (data.hours !== undefined && data.hours !== null && data.hours !== "") {
         rowHours = data.hours;
@@ -177,13 +177,12 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `+` : '+';
     
-    // Check if forfeited
     const isForfeit = !!data.forfeit_xp;
 
     const card = document.createElement('div');
     card.className = 'player-card';
 
-    // UPDATED HTML: Hidden char name input, added Forfeit Checkbox, re-weighted columns
+    // UPDATED LAYOUT: Separate column for Forfeit XP
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -208,14 +207,16 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
                     <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" max="${sessionTotal}">
                 </div>
 
-                <div class="card-field w-40">
+                <div class="card-field w-25">
                     <label class="field-label">XP Earned</label>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
-                        <label style="font-size:0.85em; display:flex; align-items:center; gap:4px; cursor:pointer; user-select:none;">
-                            <input type="checkbox" class="s-forfeit-xp" ${isForfeit ? 'checked' : ''}> Forfeit XP
-                        </label>
-                    </div>
+                    <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
+                </div>
+
+                <div class="card-field w-15" style="text-align:center;">
+                     <label class="field-label" style="display:block; width:100%; cursor:pointer;">Forfeit XP</label>
+                     <div style="height:38px; display:flex; align-items:center; justify-content:center;">
+                        <input type="checkbox" class="s-forfeit-xp" ${isForfeit ? 'checked' : ''} style="width:18px; height:18px; cursor:pointer;">
+                     </div>
                 </div>
 
                 <div class="card-field w-40">
@@ -287,35 +288,30 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}) {
     // BLUR FIX: Hours
     const hInput = card.querySelector('.s-hours');
     hInput.addEventListener('input', () => {
-        // Just trigger update, assume 0/empty during typing is fine for now
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
     hInput.addEventListener('blur', () => {
-        // If left empty on blur, revert to session default
         if (!hInput.value || hInput.value.trim() === "") {
             hInput.value = document.getElementById('inp-session-total-hours').value || "0";
             if(callbacks.onUpdate) callbacks.onUpdate();
         }
     });
 
-    // Gold Input
     card.querySelector('.s-gold').addEventListener('input', () => {
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    // Forfeit XP Checkbox
     card.querySelector('.s-forfeit-xp').addEventListener('change', () => {
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
     
-    // Incentives Modal
     const btnIncentives = card.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
         if(callbacks.onOpenModal) callbacks.onOpenModal(btnIncentives, null, false);
     });
 
     listContainer.appendChild(card);
-    if(callbacks.onUpdate) callbacks.onUpdate();
+    if(callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
 }
 
 export function getSessionRosterData() {
@@ -335,7 +331,7 @@ export function getSessionRosterData() {
             
             hours: card.querySelector('.s-hours').value,
             xp: card.querySelector('.s-xp').value,
-            forfeit_xp: forfeitXp, // Save the state
+            forfeit_xp: forfeitXp, 
             
             gold: card.querySelector('.s-gold').value,
             gold_used: card.querySelector('.s-gold-used').value,
@@ -349,7 +345,8 @@ export function getSessionRosterData() {
     return players;
 }
 
-export function syncSessionPlayersFromMaster(callbacks) {
+// Updated to accept suppressUpdate
+export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) {
     const listContainer = document.getElementById('session-roster-list');
     const masterData = getMasterRosterData(); 
     const sessionCards = Array.from(listContainer.querySelectorAll('.player-card'));
@@ -372,7 +369,8 @@ export function syncSessionPlayersFromMaster(callbacks) {
                 ...masterPlayer,
                 level: masterPlayer.level_playing_as || masterPlayer.level
             };
-            addSessionPlayerRow(listContainer, newData, callbacks);
+            // Pass suppressUpdate to prevent infinite loop during onUpdate calls
+            addSessionPlayerRow(listContainer, newData, callbacks, suppressUpdate);
         }
     });
 
@@ -383,7 +381,7 @@ export function syncSessionPlayersFromMaster(callbacks) {
         }
     });
     
-    if(callbacks.onUpdate) callbacks.onUpdate();
+    if(callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
 }
 
 export function applyPlayerSubmissions(submissions, callbacks) {
