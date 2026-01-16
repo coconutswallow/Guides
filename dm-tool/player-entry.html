@@ -82,15 +82,29 @@ title: Player Session Entry
             user-select: none;
         }
 
-        /* Incentives Checkbox List Styling */
+        /* Incentives Card Styling */
+        .incentives-card {
+            background: var(--color-bg-light); /* Matches card background */
+            border: 2px solid var(--color-primary); /* Distinct border */
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .incentives-header {
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
         .checkbox-list {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            background: var(--color-bg-light);
-            border: 1px solid var(--color-border);
-            padding: 0.5rem;
-            border-radius: 4px;
             max-height: 200px;
             overflow-y: auto;
         }
@@ -102,6 +116,12 @@ title: Player Session Entry
             font-size: 0.95em;
             cursor: pointer;
             padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .checkbox-item:hover {
+            background: var(--color-bg-medium);
         }
         
         .checkbox-item input {
@@ -154,14 +174,17 @@ title: Player Session Entry
                             <label>Character Name</label>
                             <input type="text" id="p-char-name" class="table-input" placeholder="Character Name">
                         </div>
-                        
+                        <br>
+
                         <div class="form-row-full" style="gap: 1rem; margin-bottom: 15px;">
                             <div class="form-group flex-grow">
-                                <label>Level (1-20)</label>
+                                <label>Level</label>
                                 <input type="number" id="p-level" class="table-input" placeholder="Actual" min="1" max="20">
                             </div>
+                            <br>
+
                             <div class="form-group flex-grow">
-                                <label>Playing As (1-20)</label>
+                                <label>Optional: Playing As Level{% include help-icon.html text="Leave blank unless playing at a different level" %}</label>
                                 <input type="number" id="p-level-as" class="table-input" placeholder="Adjusted" min="1" max="20">
                             </div>
                         </div>
@@ -187,6 +210,14 @@ title: Player Session Entry
                     </div>
 
                     <div id="tab-session" class="tab-content hidden">
+                        
+                        <div class="incentives-card">
+                            <div class="incentives-header">Player Incentives (if any)</div>
+                            <div id="incentives-container" class="checkbox-list">
+                                <div style="color:var(--color-text-secondary); padding:5px; font-style:italic;">Loading...</div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label>Loot Acquired</label>
                             <textarea id="p-loot" rows="3" class="table-input" placeholder="List items or rewards received..."></textarea>
@@ -200,13 +231,6 @@ title: Player Session Entry
                         <div class="form-group">
                             <label>Items Used</label>
                             <textarea id="p-items" rows="3" class="table-input" placeholder="Potions, scrolls, charges spent..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Player Incentives (If Any)</label>
-                            <div id="incentives-container" class="checkbox-list">
-                                <div style="color:var(--color-text-secondary); padding:5px;">Loading options...</div>
-                            </div>
                         </div>
                         
                         <div class="form-group">
@@ -387,7 +411,7 @@ title: Player Session Entry
                 .single();
 
             if (error || !data || !data.data || !data.data['player incentives']) {
-                ui.incentivesContainer.innerHTML = '<div style="color:var(--color-text-secondary); font-style:italic;">None available</div>';
+                ui.incentivesContainer.innerHTML = '<div style="color:var(--color-text-secondary); padding:5px; font-style:italic;">None active for this season.</div>';
                 return;
             }
 
@@ -395,7 +419,7 @@ title: Player Session Entry
             const incentiveKeys = Object.keys(incentivesMap);
 
             if (incentiveKeys.length === 0) {
-                 ui.incentivesContainer.innerHTML = '<div style="color:var(--color-text-secondary); font-style:italic;">None available</div>';
+                 ui.incentivesContainer.innerHTML = '<div style="color:var(--color-text-secondary); padding:5px; font-style:italic;">None active for this season.</div>';
                  return;
             }
 
@@ -413,6 +437,7 @@ title: Player Session Entry
 
         } catch (e) {
             console.error("Error fetching incentives:", e);
+            ui.incentivesContainer.innerHTML = '<div style="color:var(--palette-alert-danger-action); font-size:0.9em;">Error loading options.</div>';
         }
     }
 
@@ -466,15 +491,22 @@ title: Player Session Entry
 
         // VALIDATION: Level Range 1-20
         const level = parseInt(document.getElementById('p-level').value);
-        const levelAs = parseInt(document.getElementById('p-level-as').value);
-
+        const levelAsInput = document.getElementById('p-level-as').value;
+        
         if (level < 1 || level > 20 || isNaN(level)) {
             alert("Character Level must be between 1 and 20.");
             return;
         }
-        if (levelAs < 1 || levelAs > 20 || isNaN(levelAs)) {
-            alert("'Playing As' level must be between 1 and 20.");
-            return;
+
+        // OPTIONAL: Playing As validation (Only check if not empty)
+        let levelAs = null;
+        if(levelAsInput.trim() !== "") {
+            const val = parseInt(levelAsInput);
+            if (val < 1 || val > 20 || isNaN(val)) {
+                alert("'Playing As' level must be between 1 and 20 (or left blank).");
+                return;
+            }
+            levelAs = val;
         }
 
         // Collect Selected Incentives
@@ -486,7 +518,7 @@ title: Player Session Entry
         const payload = {
             char_name: document.getElementById('p-char-name').value,
             level: level,
-            level_as: levelAs,
+            level_as: levelAs, // Can be null now
             games: document.getElementById('p-games').value,
             loot: document.getElementById('p-loot').value,
             gold: document.getElementById('p-gold').value,
