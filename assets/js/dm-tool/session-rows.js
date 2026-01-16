@@ -9,14 +9,20 @@ import { fetchMemberMap } from './data-manager.js';
  * Calculates APL, Tier, and Party Size based on the current rows in the Master Roster.
  * Updates the stats bar in the DOM.
  */
-function updateMasterRosterStats() {
+export function updateMasterRosterStats() {
     const rows = document.querySelectorAll('#roster-body .player-row');
     let totalLevel = 0;
     let playerCount = 0; // Only counts players with a valid level > 0
 
     rows.forEach(row => {
-        const lvlRaw = parseFloat(row.querySelector('.inp-level').value) || 0;
-        const lvlPlayAsRaw = parseFloat(row.querySelector('.inp-level-play-as').value) || 0;
+        // Grab inputs
+        const elLvl = row.querySelector('.inp-level');
+        const elPlayAs = row.querySelector('.inp-level-play-as');
+
+        if (!elLvl || !elPlayAs) return;
+
+        const lvlRaw = parseFloat(elLvl.value) || 0;
+        const lvlPlayAsRaw = parseFloat(elPlayAs.value) || 0;
         
         // Logic: Use 'Play As' if available, otherwise use actual 'Level'
         const effectiveLevel = lvlPlayAsRaw > 0 ? lvlPlayAsRaw : lvlRaw;
@@ -40,15 +46,17 @@ function updateMasterRosterStats() {
     const elApl = document.getElementById('setup-val-apl');
     const elTier = document.getElementById('setup-val-tier');
 
-    // Party size is total rows, regardless of level entered
+    // Update Text
     if(elSize) elSize.textContent = rows.length; 
     if(elApl) elApl.textContent = apl;
     if(elTier) elTier.textContent = tier;
+
+    // Debugging log
+    console.log(`[Roster Stats] Count: ${rows.length}, APL: ${apl}, Tier: ${tier}`);
 }
 
 /**
  * Adds a row to the Player & DM Setup table.
- * Supports a visible Display Name and a hidden Discord ID.
  */
 export function addPlayerRowToMaster(data = {}) {
     const tbody = document.getElementById('roster-body');
@@ -77,7 +85,7 @@ export function addPlayerRowToMaster(data = {}) {
         <td style="text-align:center;"><button class="button button-danger btn-sm btn-delete-row">&times;</button></td>
     `;
     
-    // Auto-update hidden ID if user manually types in the name field (fallback)
+    // Auto-update hidden ID
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');
     nameInput.addEventListener('change', () => {
@@ -94,16 +102,16 @@ export function addPlayerRowToMaster(data = {}) {
     const lvlInput = tr.querySelector('.inp-level');
     const playAsInput = tr.querySelector('.inp-level-play-as');
     
-    // Update stats whenever levels change
     [lvlInput, playAsInput].forEach(inp => {
         inp.addEventListener('input', updateMasterRosterStats);
         inp.addEventListener('change', updateMasterRosterStats);
+        inp.addEventListener('blur', updateMasterRosterStats); // Extra trigger on blur
     });
 
     tbody.appendChild(tr);
     
-    // Calculate initial stats for this new row
-    updateMasterRosterStats();
+    // USE SETTIMEOUT: This ensures the row is fully rendered before we calculate
+    setTimeout(() => updateMasterRosterStats(), 50);
 }
 
 export function getMasterRosterData() {
@@ -174,8 +182,8 @@ export async function syncMasterRosterFromSubmissions(submissions) {
         }
     });
 
-    // 3. Final calculation update after bulk sync
-    updateMasterRosterStats();
+    // 3. Final calculation update
+    setTimeout(() => updateMasterRosterStats(), 100);
 }
 
 

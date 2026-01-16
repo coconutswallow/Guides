@@ -5,6 +5,8 @@ import { supabase } from './supabaseClient.js';
  * @param {string} userId - The UUID of the user.
  * @param {string|string[]} requiredRole - The role (or array of roles) to check for.
  * @returns {Promise<boolean>}
+ * 
+ * Documentation:  https://github.com/hawthorneguild/HawthorneTeams/issues/17
  */
 export async function checkAccess(userId, requiredRole) {
     if (!userId) return false;
