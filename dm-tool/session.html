@@ -348,7 +348,7 @@ extra_css:
                     </div>
                     <div class="accordion-body">
                         <div class="form-grid">
-                            <div class="form-row-full" style="gap: 1.5rem; align-items: flex-end;">
+                            <div class="form-row-full" style="gap: 1.5rem; align-items: flex-end; margin-bottom: 0;">
                                 <div class="form-group">
                                     <label>New Hires (Players &lt; 10 games)</label>
                                     <input type="text" id="loot-val-newhires" class="table-input readonly-input" readonly value="0">
@@ -363,23 +363,30 @@ extra_css:
                                 </div>
                             </div>
 
-                            <div class="form-group form-row-full" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
-                                <label>Additional DM Incentives (Loot Bonus)</label>
-                                <div id="dm-loot-incentives-container" class="checkbox-list" style="padding: 0;">
+                            <div class="form-group form-row-full" style="margin-top: 0.5rem;">
+                                <label>Additional DM Incentives</label>
+                                <div id="dm-loot-incentives-container" class="checkbox-list" style="width: 100%; padding: 0; border: none; background: transparent; box-shadow: none;">
                                     <span style="color: var(--color-text-secondary); font-style: italic;">Loading incentives...</span>
                                 </div>
                             </div>
 
                             <div class="form-group form-row-full" style="margin-top: 1.5rem;">
                                 <label>1. Discord Declaration</label>
-                                <p class="instruction-text">Copy to clipboard and post to <a href="https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
-                                {% include discord-output.html id="out-dm-loot-decl" height="100px" %}
+                                <p class="instruction-text" style="margin-bottom: 0.5rem;">Copy to clipboard and post to <a href="https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-dm-loot-decl" class="out-session-text" style="width: 100%; height: 100px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                                <div style="margin-top: 0.5rem; text-align: right;">
+                                    <button class="button" onclick="window.copyToClipboard('out-dm-loot-decl')">Copy to Clipboard</button>
+                                </div>
                             </div>
 
                             <div class="form-group form-row-full">
                                 <label>2. Bot Command</label>
-                                <p class="instruction-text">Reply to your declaration with this command:</p>
-                                {% include discord-output.html id="out-dm-loot-cmd" height="80px" %}
+                                <p class="instruction-text" style="margin-bottom: 0.5rem;">Reply to your declaration with this command:</p>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-dm-loot-cmd" class="out-session-text" style="width: 100%; height: 80px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
