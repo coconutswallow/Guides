@@ -32,8 +32,8 @@ export function addPlayerRowToMaster(data = {}) {
             <input type="hidden" class="inp-discord-id" value="${data.discord_id || ''}">
         </td>
         <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
-        <td><input type="number" class="table-input inp-level" placeholder="Lvl" value="${data.level || ''}"></td>
-        <td><input type="number" class="table-input inp-level-play-as" placeholder="Lvl" value="${data.level_playing_as || ''}"></td>
+        <td><input type="number" class="table-input inp-level" placeholder="" value="${data.level || ''}"></td>
+        <td><input type="number" class="table-input inp-level-play-as" placeholder="" value="${data.level_playing_as || ''}"></td>
         <td><select class="table-input inp-games-count">${gamesOptions}</select></td>
         <td style="text-align:center;"><button class="button button-danger btn-sm btn-delete-row">&times;</button></td>
     `;

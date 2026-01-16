@@ -307,6 +307,7 @@ ${data.how_to_apply || 'Post your application below.'}`;
 **Tier and APL:** ${tierString} , APL ${data.apl || 'N/A'}
 **Start Time and Duration:** ${timeString} (${data.intended_duration || 'N/A'})
 **Listing:** ${data.listing_url || 'N/A'}
+
 **Description:**
 ${data.game_description || ''}
 
