@@ -9,6 +9,7 @@ export function getFormData() {
         return el ? el.value : "";
     };
     
+    // ... (eventSelect / tierSelect logic) ...
     const eventSelect = document.getElementById('inp-event');
     const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
     
@@ -28,6 +29,7 @@ export function getFormData() {
     
     const dmForfeitXp = document.getElementById('chk-dm-forfeit-xp') ? document.getElementById('chk-dm-forfeit-xp').checked : false;
 
+    // FIXED: Corrected reference to header-game-name
     const sessionLog = {
         title: val('header-game-name'), 
         date_time: val('inp-session-unix'), 
@@ -46,6 +48,7 @@ export function getFormData() {
     };
 
     return {
+        // ... (Header / Players / DM structure remains the same) ...
         header: {
             game_datetime: val('inp-unix-time'), 
             timezone: val('inp-timezone'),
@@ -101,6 +104,7 @@ export function populateForm(session, callbacks, options = {}) {
         }
     };
 
+    // ... (Header / Roster / DM Population remains the same) ...
     if (session.form_data.header) {
         const h = session.form_data.header;
         setVal('inp-unix-time', h.game_datetime);
@@ -170,10 +174,10 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-dm-level', d.level);
         setVal('inp-dm-games-count', d.games_count);
     }
-    
+
     const sLog = session.form_data.session_log;
     if (sLog) {
-        // DEFAULTING HOURS: If 0 or null/undefined, default to 3
+        // DEFAULTING HOURS
         const loadedHours = (sLog.hours !== undefined && sLog.hours !== null) ? sLog.hours : 3;
         const finalHours = parseFloat(loadedHours) === 0 ? 3 : loadedHours;
         setVal('inp-session-total-hours', finalHours);
@@ -235,6 +239,7 @@ export async function generateOutput() {
         return el ? el.value : "";
     };
 
+    // ... (rest of output generation matches previous) ...
     const data = getFormData().header;
     const unixTime = getVal('inp-unix-time');
     const name = getVal('header-game-name') || "Untitled";
@@ -331,6 +336,7 @@ ${pingString}`;
     const outAd = document.getElementById('out-ad-text');
     if(outAd) outAd.value = adText; 
     
+    // FIXED: Use header-game-name instead of inp-session-title
     const outText = document.getElementById('out-session-text');
     if(outText) {
         const sTitle = getVal('header-game-name'); 
