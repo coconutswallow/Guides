@@ -366,6 +366,7 @@ extra_css:
                             <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.5rem;">
                                 <label>Additional DM Incentives</label>
                                 <p style="font-size:0.85em; color:var(--color-text-secondary); margin-bottom:0.5rem;">
+                                    The server may offer additional incentives for DMs based on events or playtesting.  Select the applicable incentive below if available. 
                                     Hold <strong>Ctrl</strong> (Windows) or <strong>Cmd</strong> (Mac) to select multiple options.
                                 </p>
                                 <select id="inp-dm-incentives" multiple class="table-input" style="height: 120px; padding: 5px;">
@@ -375,7 +376,7 @@ extra_css:
 
                             <div class="form-group" style="grid-column: 1 / -1; margin-top: 1.5rem;">
                                 <label>1. Discord Declaration</label>
-                                <p class="instruction-text" style="margin-bottom: 0.5rem;">Copy to clipboard and post to <a href="https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
+                                <p>Copy to clipboard and post to <a href="https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
                                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
                                     <textarea id="out-dm-loot-decl" class="out-session-text" style="width: 100%; height: 100px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                                 </div>
@@ -395,15 +396,13 @@ extra_css:
                             <div id="wrapper-jumpstart-bonus" class="form-group" style="grid-column: 1 / -1; display:none; margin-top: 1.5rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
                                 <label>3. Jumpstart Bonus</label>
                                 
-                                <p class="instruction-text" style="margin-bottom: 0.5rem; color: var(--color-primary); font-weight: bold;">
-                                    As a Jumpstart DM, you get an additional loot roll:
-                                </p>
+                                <p> As a Jumpstart DM, you get an additional loot roll:</p>
                                 
                                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
                                     <textarea id="out-dm-jumpstart-cmd" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                                 </div>
                             </div>
-
+                            <p>Once you have rolled your loot, edit your original declaration post with "and selects:" and write the loot you chose from the loot pool (1 for normal loot, 1 for jumpstart if applicable).</p>    
                         </div>
                     </div>
                 </div>
