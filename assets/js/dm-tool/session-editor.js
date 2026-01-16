@@ -204,7 +204,6 @@ function setupCalculationTriggers(callbacks) {
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     if (sessionHoursInput) {
         sessionHoursInput.addEventListener('input', () => {
-             // FIXED: Restored call to setAllPlayerHours
              Rows.setAllPlayerHours(sessionHoursInput.value);
              updateSessionCalculations(cachedGameRules);
         });
