@@ -5,17 +5,17 @@
 import { supabase } from '../supabaseClient.js';
 import '../auth-manager.js'; 
 import { fetchSessionList, createSession, deleteSession } from './data-manager.js';
+import { checkAccess } from '../auth-check.js'; // <--- 1. Import checkAccess
 
 let currentUser = null;
-let deleteTargetId = null; // Stores the ID of the session to delete
+let deleteTargetId = null; 
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Check Auth State
     const { data: { user } } = await supabase.auth.getUser();
     
     if (user) {
-        currentUser = user;
-        showDashboard();
+        await handleUserLogin(user); // <--- 2. Use a handler that checks roles
     } else {
         showLanding();
     }
@@ -28,23 +28,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnFirst) btnFirst.addEventListener('click', handleNewSession);
     
     // Auth State Listener
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
         if (event === 'SIGNED_IN') {
-            currentUser = session.user;
-            showDashboard();
+            await handleUserLogin(session.user);
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
             showLanding();
         }
     });
 
-    // Modal Listeners
+    // ... (Modal listeners remain the same)
     const btnCancel = document.getElementById('btn-cancel-delete');
     const btnConfirm = document.getElementById('btn-confirm-delete');
 
     if (btnCancel) btnCancel.addEventListener('click', closeDeleteModal);
     if (btnConfirm) btnConfirm.addEventListener('click', executeDelete);
 });
+
+// --- NEW HELPER FUNCTION ---
+async function handleUserLogin(user) {
+    // 3. Check for specific roles
+    const hasAccess = await checkAccess(user.id, ['Trial DM', 'Full DM']);
+
+    if (hasAccess) {
+        currentUser = user;
+        showDashboard();
+    } else {
+        // Option A: Show a "Not Authorized" message
+        alert("Access Denied: You must be a Trial DM or Full DM to use this tool.");
+        await supabase.auth.signOut(); // Force sign out
+        showLanding();
+    }
+}
+// ---------------------------
 
 function showLanding() {
     const dash = document.getElementById('dashboard-content');

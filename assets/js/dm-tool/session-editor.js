@@ -13,7 +13,6 @@ import {
     fetchPlayerSubmissions 
 } from './data-manager.js';
 
-// --- NEW IMPORT: Correct relative path based on your tree ---
 import { checkAccess } from '../auth-check.js'; 
 
 import * as UI from './session-ui.js';
@@ -21,7 +20,7 @@ import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
 
 let cachedGameRules = null; 
-let isFullDM = false; // <--- Store User Role
+let isFullDM = false; 
 
 // ==========================================
 // 1. Initialization
@@ -30,15 +29,12 @@ let isFullDM = false; // <--- Store User Role
 document.addEventListener('DOMContentLoaded', async () => {
     cachedGameRules = await fetchGameRules();
 
-    // --- NEW: Check DM Role ---
+    // Check DM Role
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-        // Checks if user has the specific "Full DM" role string
-        // Note: checkAccess returns true/false
         isFullDM = await checkAccess(user.id, 'Full DM');
         console.log("User Role Check - Full DM:", isFullDM);
     }
-    // --------------------------
 
     // Init UI Modules
     UI.initTabs(() => IO.generateOutput()); 
@@ -91,7 +87,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Callbacks for dynamic rows
     const callbacks = {
-        // Updated to include Loot Instructions hook
         onUpdate: () => {
             updateSessionCalculations();
             updateLootInstructions(); 
@@ -208,11 +203,39 @@ async function initTemplateDropdown() {
     });
 }
 
+// --- UPDATED: Triggers loot instruction update on player changes ---
 function initPlayerSetup() {
     const btnAdd = document.getElementById('btn-add-player');
-    if(btnAdd) btnAdd.addEventListener('click', () => Rows.addPlayerRowToMaster({})); 
+    const rosterBody = document.getElementById('roster-body');
+
+    // 1. Add Player Button
+    if(btnAdd) {
+        btnAdd.addEventListener('click', () => { 
+            Rows.addPlayerRowToMaster({});
+            // Wait slightly longer than session-rows.js (50ms) to ensure stats are ready
+            setTimeout(() => updateLootInstructions(), 150);
+        }); 
+    }
+
+    // 2. Listen for changes in the table (Level inputs or Deletions)
+    if (rosterBody) {
+        rosterBody.addEventListener('input', (e) => {
+            // If level fields change
+            if (e.target.matches('.inp-level') || e.target.matches('.inp-level-play-as')) {
+                setTimeout(() => updateLootInstructions(), 150);
+            }
+        });
+
+        rosterBody.addEventListener('click', (e) => {
+            // If delete button clicked
+            if (e.target.matches('.btn-delete-row')) {
+                setTimeout(() => updateLootInstructions(), 150);
+            }
+        });
+    }
 }
 
+// --- UPDATED: Triggers loot update after sync ---
 function initPlayerSync() {
     const btnGenerate = document.getElementById('btn-generate-invite');
     const btnCopy = document.getElementById('btn-copy-invite');
@@ -260,6 +283,9 @@ function initPlayerSync() {
             }
             await Rows.syncMasterRosterFromSubmissions(submissions);
             alert(`Synced ${submissions.length} player(s) from submissions.`);
+            
+            // Recalculate loot instructions after sync
+            setTimeout(() => updateLootInstructions(), 200);
         });
     }
     
@@ -428,13 +454,12 @@ function updateSessionCalculations() {
     }
 }
 
-// --- NEW: Dynamic Loot Instructions based on Role, Tier, Party ---
+// Dynamic Loot Instructions based on Role, Tier, Party
 function updateLootInstructions() {
     const container = document.getElementById('out-loot-instructions');
     if (!container) return;
 
     // Grab stats from the setup tab (View 4)
-    // IMPORTANT: Make sure these IDs match session-rows.js logic
     const tierEl = document.getElementById('setup-val-tier');
     const partySizeEl = document.getElementById('setup-val-party-size');
     
@@ -447,7 +472,7 @@ function updateLootInstructions() {
     
     if (isFullDM) {
         // --- FULL DM ---
-        html += `<strong>Full DM Detected (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
+        html += `<strong>Full DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
 
         if (tier === 1) {
             html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
@@ -470,11 +495,11 @@ function updateLootInstructions() {
             html += `<em>Bonus loot:</em> Add up to 1 T1 permanent or 2 slots worth of T1 consumables as either predetermined or from a roll at APL 4.`;
         }
 
-        html += `<br><br><small>For Full DM: Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for multi-session loot rules.</small>`;
+        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules, including multi-session loot rules.</small>`;
     
     } else {
         // --- TRIAL DM ---
-        html += `<strong>Trial DM Detected (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
+        html += `<strong>Trial DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
         
         if (tier === 1) {
             html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
@@ -491,6 +516,7 @@ function updateLootInstructions() {
             html += `As a Trial DM, you must use the loot roll bot for Tier 3 or higher games.<br>`;
             html += `Use the loot roll command instructions below to roll for loot.`;
         }
+        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules.</small>`;
     }
 
     container.innerHTML = html;
