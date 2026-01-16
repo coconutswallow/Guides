@@ -676,7 +676,7 @@ function calculatePlayerRewards(level, hours, rules, incentives = []) {
     // Base DTP: 5 per hour
     let dtp = Math.floor(5 * hours);
     
-    // Incentive Bonus DTP
+    // Incentive Bonus DTP (Player)
     if (rules && rules['player incentives']) {
         incentives.forEach(name => {
             dtp += (rules['player incentives'][name] || 0);
@@ -685,42 +685,31 @@ function calculatePlayerRewards(level, hours, rules, incentives = []) {
     return { xp, dtp };
 }
 
-function calculateDMRewards(dmLevel, hours, sessionApl, newHireCount, isJumpstart, rules, selectedIncentives = []) {
-    const rewards = { xp: 0, dtp: 0, gp: 0, loot: "1" };
+function calculateDMRewards(dmLevel, hours, newHireCount, welcomeWagonCount, rules, selectedIncentives = []) {
+    const rewards = { xp: 0, dtp: 0, gp: 0 };
     if (!rules) return rewards;
 
     rewards.xp = calculateXP(dmLevel, hours, rules);
 
-    // DTP: Base + New Hires + Incentives
+    // DM DTP Formula: floor(5 * hours) + 5x (number of new hires) + bonus incentives
     let dtp = Math.floor(5 * hours) + (5 * newHireCount);
+    
     if (rules['DM incentives']) {
         selectedIncentives.forEach(name => {
-            // Note: DM incentives might have "DTP" value in rules
             const incData = rules['DM incentives'][name];
-            const bonus = (typeof incData === 'number') ? incData : (incData?.DTP || 0);
+            // Bonus can be a direct number or object with "bonus DTP"
+            const bonus = (typeof incData === 'number') ? incData : (incData?.['bonus DTP'] || incData?.DTP || 0);
             dtp += bonus;
         });
     }
     rewards.dtp = dtp;
 
-    // Gold (Only for Jumpstart)
-    if (isJumpstart) {
-        const safeApl = Math.floor(sessionApl) || 1;
-        // Handle lookup keys as strings or numbers
-        const goldTable = rules.gold_per_session_by_apl;
-        const goldVal = goldTable ? (goldTable[safeApl.toString()] || goldTable[safeApl] || 0) : 0;
-        rewards.gp = goldVal;
-    }
-
-    // Loot String
-    let baseLoot = 1 + newHireCount;
-    let lootStr = `${baseLoot}`;
-    if (isJumpstart) {
-        lootStr += " + 1 Jumpstart Loot";
-    } else if (newHireCount > 0) {
-        lootStr += " (Inc. New Hire Bonus)";
-    }
-    rewards.loot = lootStr;
+    // DM Gold Formula: (lookup gold per session for DMPC Level) x (1 + Welcome Wagon Count)
+    const safeLevel = parseInt(dmLevel) || 1;
+    const goldTable = rules.gold_per_session_by_apl; // Using this table for DM Level lookup as per instruction
+    const baseGold = goldTable ? (goldTable[safeLevel.toString()] || goldTable[safeLevel] || 0) : 0;
+    
+    rewards.gp = baseGold * (1 + welcomeWagonCount);
 
     return rewards;
 }
@@ -735,26 +724,15 @@ function updateSessionCalculations() {
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     const sessionTotalHours = parseFloat(sessionHoursInput.value) || 0;
 
-    // 2. Determine Max Gold based on APL from setup
-    //    (Fallback to 1 if APL is missing or invalid)
-    const aplText = document.getElementById('setup-val-apl')?.textContent || "1";
-    const aplVal = parseInt(aplText) || 1;
-    
-    const goldTable = cachedGameRules.gold_per_session_by_apl || {};
-    const maxGold = goldTable[aplVal.toString()] || goldTable[aplVal] || 0;
-    
-    const lblGold = container.querySelector('.val-max-gold');
-    if(lblGold) lblGold.textContent = maxGold;
-
-    // 3. Process Player Cards
+    // 2. Stats for DM Calc
     let totalLevel = 0;
     let playerCount = 0;
     let welcomeWagonCount = 0;
     let newHireCount = 0;
 
+    // 3. Process Player Cards
     const cards = container.querySelectorAll('.player-card');
     cards.forEach(card => {
-        // Stats Gathering
         const lvl = parseFloat(card.querySelector('.s-level').value) || 0;
         if(lvl > 0) { totalLevel += lvl; playerCount++; }
 
@@ -763,70 +741,63 @@ function updateSessionCalculations() {
 
         if (gVal === "1") welcomeWagonCount++;
         if (gVal !== "10+" && !isNaN(gNum) && gNum <= 10) newHireCount++;
-        
-        // Hours Logic: Clamp to session total
+
+        // Sync Hours if empty or just default
         const hInput = card.querySelector('.s-hours');
+        if(!hInput.value) hInput.value = sessionTotalHours;
         let pHours = parseFloat(hInput.value) || 0;
-        if (pHours > sessionTotalHours) {
-            pHours = sessionTotalHours;
-            hInput.value = pHours; 
-        }
-
-        // Gold Validation
-        const gInput = card.querySelector('.s-gold');
-        const playerGold = parseFloat(gInput.value) || 0;
         
-        if (maxGold > 0 && playerGold > maxGold) {
-            gInput.parentElement.classList.add('error');
-            // Can add tooltip logic here if desired
-        } else {
-            gInput.parentElement.classList.remove('error');
-        }
-
         // Calculate Rewards (XP & DTP)
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
-        const rewards = calculatePlayerRewards(lvl, pHours, cachedGameRules, incentives);
         
+        const rewards = calculatePlayerRewards(lvl, pHours, cachedGameRules, incentives);
         card.querySelector('.s-xp').value = rewards.xp;
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
-
-    // 4. Calculate DM Rewards
-    const dmLevelInput = document.getElementById('out-dm-level');
-    const dmGamesInput = document.getElementById('out-dm-games');
     
-    if (dmLevelInput && dmGamesInput) {
-        const dmLvl = parseFloat(dmLevelInput.value) || 0;
-        const dmGamesVal = dmGamesInput.value;
-        const dmGamesNum = parseInt(dmGamesVal) || 999; 
+    // APL for display
+    const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
+    const goldTable = cachedGameRules.gold_per_session_by_apl || {};
+    const maxGold = goldTable[apl.toString()] || goldTable[apl] || 0;
 
-        const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
-        // Recalculate APL based on active players in session
-        const sessionApl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
-        
-        container.querySelector('.dm-val-jumpstart').value = isJumpstart ? "Yes" : "No";
-        container.querySelector('.dm-val-welcome').value = welcomeWagonCount;
-        container.querySelector('.dm-val-newhires').value = newHireCount;
+    const lblApl = container.querySelector('.val-apl');
+    const lblGold = container.querySelector('.val-max-gold');
+    if(lblApl) lblApl.textContent = apl;
+    if(lblGold) lblGold.textContent = maxGold;
 
-        const btnDM = document.getElementById('btn-dm-incentives');
-        const dmIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
+    // 4. DM Calculations (Using inputs from Setup tab directly as source of truth)
+    const dmLevelSetup = document.getElementById('inp-dm-level');
+    const dmGamesSetup = document.getElementById('inp-dm-games-count');
+    const dmNameSetup = document.getElementById('inp-dm-char-name');
 
-        const dmRewards = calculateDMRewards(
-            dmLvl, 
-            sessionTotalHours, 
-            sessionApl, 
-            newHireCount, 
-            isJumpstart, 
-            cachedGameRules, 
-            dmIncentives
-        );
+    // Update read-only fields in DM Log card
+    if(dmNameSetup) document.getElementById('out-dm-name').value = dmNameSetup.value;
+    
+    const dmLvl = parseFloat(dmLevelSetup ? dmLevelSetup.value : 0) || 0;
+    const dmGamesVal = dmGamesSetup ? dmGamesSetup.value : "10+";
+    const dmGamesNum = parseInt(dmGamesVal) || 999; 
+    const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
 
-        container.querySelector('.dm-res-xp').value = dmRewards.xp;
-        container.querySelector('.dm-res-dtp').value = dmRewards.dtp;
-        container.querySelector('.dm-res-gp').value = dmRewards.gp;
-        container.querySelector('.dm-res-loot').value = dmRewards.loot;
-    }
+    container.querySelector('.dm-val-jumpstart').value = isJumpstart ? "Yes" : "No";
+    container.querySelector('.dm-val-welcome').value = welcomeWagonCount;
+    container.querySelector('.dm-val-newhires').value = newHireCount;
+
+    const btnDM = document.getElementById('btn-dm-incentives');
+    const dmIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
+
+    const dmRewards = calculateDMRewards(
+        dmLvl, 
+        sessionTotalHours, 
+        newHireCount, 
+        welcomeWagonCount, 
+        cachedGameRules, 
+        dmIncentives
+    );
+
+    container.querySelector('.dm-res-xp').value = dmRewards.xp;
+    container.querySelector('.dm-res-dtp').value = dmRewards.dtp;
+    container.querySelector('.dm-res-gp').value = dmRewards.gp;
 }
 
 async function updateDMLootLogic() {

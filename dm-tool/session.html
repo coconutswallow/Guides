@@ -472,37 +472,33 @@ extra_css:
                             <div class="card-row">
                                 <div class="card-field w-30">
                                     <label class="field-label">DMPC Name</label>
-                                    <input type="text" id="out-dm-name" class="table-input readonly-input" readonly>
+                                    <input type="text" id="out-dm-name" class="table-input readonly-input" readonly placeholder="Set in Setup">
+                                </div>
+                                <input type="hidden" id="out-dm-level">
+                                <input type="hidden" id="out-dm-games">
+                            </div>
+
+                            <div class="card-row" style="margin-top:1rem; border-top:1px solid var(--color-border); padding-top:1rem;">
+                                <div class="card-field w-20">
+                                    <label class="field-label">Jumpstart</label>
+                                    <input type="text" class="table-input dm-val-jumpstart readonly-input" readonly>
                                 </div>
                                 <div class="card-field w-20">
-                                    <label class="field-label">DMPC Level</label>
-                                    <input type="number" id="out-dm-level" class="table-input">
+                                    <label class="field-label">Welcome Wagon</label>
+                                    <input type="text" class="table-input dm-val-welcome readonly-input" readonly>
                                 </div>
                                 <div class="card-field w-20">
-                                    <label class="field-label">Games DM'ed</label>
-                                    <input type="text" id="out-dm-games" class="table-input">
+                                    <label class="field-label">New Hires</label>
+                                    <input type="text" class="table-input dm-val-newhires readonly-input" readonly>
                                 </div>
                                 <div class="card-field w-30">
-                                    <label class="field-label">Incentives</label>
+                                    <label class="field-label">Add. Incentives</label>
                                     <div class="dtp-wrapper">
                                         <button class="button button-secondary" id="btn-dm-incentives" data-incentives='[]'>+</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-row" style="margin-top:1rem; border-top:1px solid var(--color-border); padding-top:1rem;">
-                                <div class="card-field w-25">
-                                    <label class="field-label">Jumpstart</label>
-                                    <input type="text" class="table-input dm-val-jumpstart readonly-input" readonly>
-                                </div>
-                                <div class="card-field w-25">
-                                    <label class="field-label">Welcome Wagon</label>
-                                    <input type="text" class="table-input dm-val-welcome readonly-input" readonly>
-                                </div>
-                                <div class="card-field w-25">
-                                    <label class="field-label">New Hires</label>
-                                    <input type="text" class="table-input dm-val-newhires readonly-input" readonly>
-                                </div>
-                            </div>
+
                             <div class="card-row" style="margin-top:1rem;">
                                 <div class="card-field w-30">
                                     <label class="field-label">Total DTP</label>
@@ -517,22 +513,15 @@ extra_css:
                                     <input type="text" class="table-input dm-res-gp readonly-result" readonly>
                                 </div>
                             </div>
+                            
                             <div class="card-row" style="margin-top:1rem;">
-                                <div class="card-field w-50">
-                                    <label class="field-label">Loot Roll</label>
-                                    <input type="text" class="table-input dm-res-loot readonly-result" readonly>
-                                </div>
-                            </div>
-                            <div class="card-row" style="margin-top:1rem;">
-                                <div class="card-field w-100">
-                                    <label class="field-label">Loot Selected</label>
-                                    <input type="text" id="dm-loot-selected" class="table-input" placeholder="Enter Loot Selected...">
-                                </div>
+                                <p style="font-size:0.8em; color:var(--color-text-secondary);">
+                                    <em>Note: Loot selected should be logged in the "Loot Plan" tab.</em>
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="card accordion-card">
                     <div class="accordion-header">
                         <span class="step-title">Documentation</span>
