@@ -70,43 +70,58 @@ export function updateLootDeclaration(discordId) {
     const gameName = document.getElementById('header-game-name')?.value || "Untitled";
     const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
     const apl = document.getElementById('setup-val-apl')?.textContent || "1";
+    
+    // The manually entered loot items
     const lootPlan = document.getElementById('inp-loot-plan')?.value || "";
     
-    // 1. Declaration Format (Specific items)
-    const declareText = `<@${discordId}> declares loot for Game: ${gameName}, Number of Players: ${partySize}, APL ${apl}:\n||\n${lootPlan}\n||`;
-
-    // 2. Roll Format (Generic roll)
-    const rollText = `<@${discordId}> rolls loot for Game: ${gameName}, Number of Players: ${partySize}, APL ${apl}.`;
+    // Declaration Format:
+    // <id> declares loot for [Game], Players: [N], APL: [N]
+    // ||
+    // [Items]
+    // ||
+    const declareText = `<@${discordId}> declares loot for ${gameName}, Number of Players: ${partySize}, APL: ${apl}\n||\n${lootPlan}\n||`;
 
     const out = document.getElementById('out-loot-declaration');
     if (out) {
-        if (lootPlan.trim().length > 0) {
-            out.value = declareText;
-        } else {
-            out.value = rollText;
-        }
+        out.value = declareText;
     }
 }
 
-// Updates the /hgenloot command output
-export function updateHgenLogic() {
+// Updates the Hgenloot Bot section (Declaration text AND Command)
+export function updateHgenLogic(discordId) {
+    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
     const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
     const apl = document.getElementById('setup-val-apl')?.textContent || "1";
     
     const permsVal = parseInt(document.getElementById('inp-predet-perms')?.value || "0");
     const consVal = parseInt(document.getElementById('inp-predet-cons')?.value || "0");
+
+    // 1. Output the "Rolls Loot" Declaration text
+    // <id> rolls loot for [Game], Players: [N], APL: [N]
+    const rollText = `<@${discordId}> rolls loot for ${gameName}, Number of Players: ${partySize}, APL: ${apl}`;
     
+    const outDecl = document.getElementById('out-hgen-declaration');
+    if (outDecl) {
+        outDecl.value = rollText;
+    }
+
+    // 2. Output the Bot Command
+    // /hgenloot [players] [apl] {optional: perms} {optional: cons}
     let cmd = `/hgenloot ${partySize} ${apl}`;
     
-    if (permsVal > 0) cmd += ` ${permsVal}`;
-    
+    // Logic: If we have Cons, we MUST print Perms (even if 0) to keep the order.
+    // If we only have Perms, we just print Perms.
     if (consVal > 0) {
-        if (permsVal <= 0) cmd += ` 0`; 
-        cmd += ` ${consVal}`;
+        cmd += ` ${permsVal} ${consVal}`;
+    } else if (permsVal > 0) {
+        cmd += ` ${permsVal}`;
     }
     
-    const out = document.getElementById('out-hgen-cmd');
-    if(out) out.value = cmd;
+    // Note: HTML id is 'out-hgen-command'
+    const outCmd = document.getElementById('out-hgen-command');
+    if(outCmd) {
+        outCmd.value = cmd;
+    }
 }
 
 // Updates the DM Loot logic (View 5)

@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateSessionCalculations(cachedGameRules);
             updateLootInstructions(isFullDM);
             updateLootDeclaration(cachedDiscordId); 
-            updateHgenLogic();       
+            updateHgenLogic(cachedDiscordId);   
             updateDMLootLogic(cachedDiscordId, cachedGameRules);     
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
