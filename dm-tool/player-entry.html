@@ -104,6 +104,10 @@ title: Player Session Entry
                 <div class="dm-name">DM: <span id="display-dm-name" class="skeleton">...</span></div>
             </div>
 
+            <div id="guest-message">
+                Please log in above to access this session.
+            </div>
+
             <div id="form-section" class="hidden">
                 <div class="content-tabs">
                     <div class="content-tab active" data-tab="tab-character">1. Character</div>
@@ -187,7 +191,9 @@ title: Player Session Entry
     const patchLogin = () => {
         if(window.authManager) {
             window.authManager.login = async function() {
-                const currentUrl = window.location.href; 
+                // FIX: Strip the hash (#) from the current URL to prevent double hashes (##) on re-login
+                const currentUrl = window.location.origin + window.location.pathname + window.location.search;
+                
                 await this.client.auth.signInWithOAuth({
                     provider: 'discord',
                     options: { redirectTo: currentUrl, scopes: 'guilds guilds.members.read' }
