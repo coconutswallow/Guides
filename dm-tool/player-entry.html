@@ -82,6 +82,34 @@ title: Player Session Entry
             user-select: none;
         }
 
+        /* Incentives Checkbox List Styling */
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            background: var(--color-bg-light);
+            border: 1px solid var(--color-border);
+            padding: 0.5rem;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95em;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        .checkbox-item input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
         @keyframes pulse {
             0% { opacity: 0.6; }
             50% { opacity: 0.3; }
@@ -129,34 +157,60 @@ title: Player Session Entry
                         
                         <div class="form-row-full" style="gap: 1rem; margin-bottom: 15px;">
                             <div class="form-group flex-grow">
-                                <label>Level</label>
-                                <input type="number" id="p-level" class="table-input" placeholder="Actual">
+                                <label>Level (1-20)</label>
+                                <input type="number" id="p-level" class="table-input" placeholder="Actual" min="1" max="20">
                             </div>
                             <div class="form-group flex-grow">
-                                <label>Playing As</label>
-                                <input type="number" id="p-level-as" class="table-input" placeholder="Adjusted">
+                                <label>Playing As (1-20)</label>
+                                <input type="number" id="p-level-as" class="table-input" placeholder="Adjusted" min="1" max="20">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Number of Games on Server</label>
-                            <input type="number" id="p-games" class="table-input" placeholder="Total games played">
+                            <select id="p-games" class="table-input">
+                                <option value="" disabled selected>Select...</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="10+">10+</option>
+                            </select>
                         </div>
                     </div>
 
                     <div id="tab-session" class="tab-content hidden">
                         <div class="form-group">
                             <label>Loot Acquired</label>
-                            <textarea id="p-loot" rows="4" class="table-input" placeholder="List items, gold, or rewards received..."></textarea>
+                            <textarea id="p-loot" rows="3" class="table-input" placeholder="List items or rewards received..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gold Acquired</label>
+                            <input type="text" id="p-gold" class="table-input" placeholder="e.g. 50gp">
                         </div>
 
                         <div class="form-group">
                             <label>Items Used</label>
                             <textarea id="p-items" rows="3" class="table-input" placeholder="Potions, scrolls, charges spent..."></textarea>
                         </div>
+
+                        <div class="form-group">
+                            <label>Player Incentives (If Any)</label>
+                            <div id="incentives-container" class="checkbox-list">
+                                <div style="color:var(--color-text-secondary); padding:5px;">Loading options...</div>
+                            </div>
+                        </div>
                         
                         <div class="form-group">
-                            <label>Character Notes</label>
+                            <label>Character Outcomes Notes</label>
                             <textarea id="p-notes" rows="3" class="table-input" placeholder="Private session notes..."></textarea>
                         </div>
                     </div>
@@ -182,9 +236,10 @@ title: Player Session Entry
     // GLOBAL UI REFERENCES
     const ui = {
         sessionName: document.getElementById('display-session-name'),
-        dmNameContainer: document.querySelector('.dm-name'), // Container for hiding
+        dmNameContainer: document.querySelector('.dm-name'), 
         dmNameSpan: document.getElementById('display-dm-name'),
-        status: document.getElementById('status-message')
+        status: document.getElementById('status-message'),
+        incentivesContainer: document.getElementById('incentives-container')
     };
 
     // 0. PATCH AUTH LOGIN (Preserves Session ID in URL)
@@ -235,17 +290,14 @@ title: Player Session Entry
 
         if (user) {
             // === AUTHENTICATED STATE ===
-            
-            // 1. Reset UI to "Loading" style while we fetch real data
             ui.sessionName.classList.add('skeleton');
-            ui.sessionName.style.fontSize = ""; // Reset font size
-            ui.sessionName.style.color = "";    // Reset color
-            ui.dmNameContainer.style.display = 'block'; // Show DM line
+            ui.sessionName.style.fontSize = ""; 
+            ui.sessionName.style.color = "";    
+            ui.dmNameContainer.style.display = 'block'; 
 
-            // 2. Fetch Session Data
             fetchSessionMetadata();
+            fetchIncentivesOptions(); // Fetch lookups
 
-            // 3. Identity Verification
             try {
                 const { data: userData, error: userError } = await supabase
                     .from('discord_users')
@@ -262,7 +314,11 @@ title: Player Session Entry
                 currentPlayer.textContent = `${userData.display_name} (Verified)`;
                 discordIdInput.value = userData.discord_id;
 
-                loadPlayerData(userData.discord_id);
+                // Load existing data AFTER fetching incentives to ensure checkboxes exist
+                setTimeout(() => {
+                    loadPlayerData(userData.discord_id);
+                }, 500);
+                
                 formSection.classList.remove('hidden');
 
             } catch (err) {
@@ -270,19 +326,11 @@ title: Player Session Entry
             }
         } else {
             // === GUEST / LOGGED OUT STATE ===
-            
-            // 1. Set the Invite Message
             ui.sessionName.textContent = "A DM has invited you to join their game! Login to enter your character and session details";
-            
-            // 2. Style the message to look better (smaller than a title)
             ui.sessionName.classList.remove('skeleton');
             ui.sessionName.style.fontSize = "1.2rem";
             ui.sessionName.style.lineHeight = "1.5";
-            
-            // 3. Hide the DM Name line completely
             ui.dmNameContainer.style.display = 'none';
-
-            // 4. Hide Form
             formSection.classList.add('hidden');
         }
     };
@@ -330,6 +378,44 @@ title: Player Session Entry
         }
     }
 
+    async function fetchIncentivesOptions() {
+        try {
+            const { data, error } = await supabase
+                .from('lookups')
+                .select('data')
+                .eq('type', 'dm-tool')
+                .single();
+
+            if (error || !data || !data.data || !data.data['player incentives']) {
+                ui.incentivesContainer.innerHTML = '<div style="color:var(--color-text-secondary); font-style:italic;">None available</div>';
+                return;
+            }
+
+            const incentivesMap = data.data['player incentives'];
+            const incentiveKeys = Object.keys(incentivesMap);
+
+            if (incentiveKeys.length === 0) {
+                 ui.incentivesContainer.innerHTML = '<div style="color:var(--color-text-secondary); font-style:italic;">None available</div>';
+                 return;
+            }
+
+            // Build Checkboxes
+            let html = '';
+            incentiveKeys.forEach(key => {
+                html += `
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="incentive" value="${key}">
+                        ${key}
+                    </label>
+                `;
+            });
+            ui.incentivesContainer.innerHTML = html;
+
+        } catch (e) {
+            console.error("Error fetching incentives:", e);
+        }
+    }
+
     async function loadPlayerData(discordId) {
         if(!sessionId || !discordId) return;
 
@@ -355,8 +441,19 @@ title: Player Session Entry
         if(p.level_as) document.getElementById('p-level-as').value = p.level_as;
         if(p.games) document.getElementById('p-games').value = p.games;
         if(p.loot) document.getElementById('p-loot').value = p.loot;
+        if(p.gold) document.getElementById('p-gold').value = p.gold; // New Field
         if(p.items) document.getElementById('p-items').value = p.items;
         if(p.notes) document.getElementById('p-notes').value = p.notes;
+        
+        // Populate Incentives Checkboxes
+        if (p.incentives && Array.isArray(p.incentives)) {
+            const checkboxes = document.querySelectorAll('input[name="incentive"]');
+            checkboxes.forEach(cb => {
+                if (p.incentives.includes(cb.value)) {
+                    cb.checked = true;
+                }
+            });
+        }
     }
 
     document.getElementById('btn-submit').addEventListener('click', async () => {
@@ -367,13 +464,34 @@ title: Player Session Entry
             return;
         }
 
+        // VALIDATION: Level Range 1-20
+        const level = parseInt(document.getElementById('p-level').value);
+        const levelAs = parseInt(document.getElementById('p-level-as').value);
+
+        if (level < 1 || level > 20 || isNaN(level)) {
+            alert("Character Level must be between 1 and 20.");
+            return;
+        }
+        if (levelAs < 1 || levelAs > 20 || isNaN(levelAs)) {
+            alert("'Playing As' level must be between 1 and 20.");
+            return;
+        }
+
+        // Collect Selected Incentives
+        const selectedIncentives = [];
+        document.querySelectorAll('input[name="incentive"]:checked').forEach(cb => {
+            selectedIncentives.push(cb.value);
+        });
+
         const payload = {
             char_name: document.getElementById('p-char-name').value,
-            level: document.getElementById('p-level').value,
-            level_as: document.getElementById('p-level-as').value,
+            level: level,
+            level_as: levelAs,
             games: document.getElementById('p-games').value,
             loot: document.getElementById('p-loot').value,
+            gold: document.getElementById('p-gold').value,
             items: document.getElementById('p-items').value,
+            incentives: selectedIncentives,
             notes: document.getElementById('p-notes').value
         };
 
