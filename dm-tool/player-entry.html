@@ -11,9 +11,7 @@ title: Player Session Entry
     
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/dm-tool.css' | relative_url }}">
-    
-   /* link href="https://fonts.googleapis.com/css2?family=Almendra:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" */
-
+        
     <style>
         /* Layout Overrides */
         body {
@@ -33,7 +31,6 @@ title: Player Session Entry
             position: relative;
         }
 
-        /* Positions the Auth Header in the top right */
         .top-auth-position {
             position: absolute;
             top: 20px;
@@ -41,7 +38,6 @@ title: Player Session Entry
             z-index: 1000;
         }
 
-        /* Session Header Styling */
         .session-info {
             text-align: center;
             margin-bottom: 1.5rem;
@@ -65,7 +61,6 @@ title: Player Session Entry
             letter-spacing: 1px;
         }
 
-        /* Login Options Styling */
         .login-options {
             display: flex;
             flex-direction: column;
@@ -159,7 +154,6 @@ title: Player Session Entry
             </div>
 
             <div id="form-section" class="hidden">
-                
                 <div class="content-tabs">
                     <div class="content-tab active" data-tab="tab-character">1. Character</div>
                     <div class="content-tab" data-tab="tab-session">2. Session</div>
@@ -218,7 +212,6 @@ title: Player Session Entry
                     <div id="status-message" style="margin-top:15px; text-align:center; font-weight:bold; min-height:24px;"></div>
                 </form>
             </div>
-
         </div>
         
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
@@ -230,6 +223,26 @@ title: Player Session Entry
 <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
+
+    // 0. PATCH AUTH LOGIN (CRITICAL FIX)
+    // The default login strips query params. We override it here to preserve the Session ID.
+    const patchLogin = () => {
+        if(window.authManager) {
+            window.authManager.login = async function() {
+                // Use current href (which includes ?session_id=...) as redirect target
+                const currentUrl = window.location.href; 
+                await this.client.auth.signInWithOAuth({
+                    provider: 'discord',
+                    options: { redirectTo: currentUrl, scopes: 'guilds guilds.members.read' }
+                });
+            };
+            console.log("AuthManager patched: Session ID will be preserved.");
+        } else {
+            setTimeout(patchLogin, 50); // Retry if not yet loaded
+        }
+    };
+    patchLogin();
+
 
     // 1. GLOBAL UI HANDLERS (Theme, Tabs)
     const toggleBtn = document.getElementById('theme-toggle');
@@ -254,14 +267,12 @@ title: Player Session Entry
     });
 
     // 2. PAGE AUTH HOOK
-    // This is called by auth-header.html logic whenever auth state changes
     window.handlePageAuth = function(user) {
         const loginSection = document.getElementById('login-section');
         const formSection = document.getElementById('form-section');
         const currentPlayer = document.getElementById('current-player-display');
 
         if (user) {
-            // Logged In -> Auto load
             const discordId = user.user_metadata.provider_id || user.identities?.[0]?.identity_data?.provider_id;
             const discordName = user.user_metadata.full_name || "Adventurer";
 
@@ -270,7 +281,6 @@ title: Player Session Entry
                 loadPlayerData(discordId);
             }
         } else {
-            // Logged Out -> Reset
             loginSection.classList.remove('hidden');
             formSection.classList.add('hidden');
         }
@@ -336,15 +346,12 @@ title: Player Session Entry
         }
     }
 
-    // Manual Load Button
     ui.btnManual.addEventListener('click', () => {
         const inputId = ui.manualInput.value.trim();
         if (!inputId) return alert("Please enter a Discord ID");
         ui.currentPlayer.textContent = `${inputId} (Manual Entry)`;
         loadPlayerData(inputId);
     });
-
-    // 4. DATA LOGIC
 
     async function loadPlayerData(discordId) {
         document.getElementById('p-discord-id').value = discordId;
