@@ -94,10 +94,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const callbacks = {
         onUpdate: () => {
             updateSessionCalculations();
-            updateLootInstructions();
-            updateLootDeclaration(); // Update standard Loot Declaration
-            updateHgenLogic();       // Update Hgenloot Logic
-            updateDMLootLogic();     // Update DM Loot Logic
+            updateLootInstructions(); // This caused the crash previously
+            updateLootDeclaration(); 
+            updateHgenLogic();       
+            updateDMLootLogic();     
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
@@ -532,6 +532,31 @@ function initTemplateLogic() {
         });
     }
 }
+
+// ==========================================
+// 3. Loot & Logic Calculations
+// ==========================================
+
+// --- ADDED FUNCTION: Replaces Missing Definition ---
+function updateLootInstructions() {
+    const container = document.getElementById('out-loot-instructions');
+    if (!container) return;
+
+    // Get calculated values from the DOM (these are updated by Rows.updateMasterRosterStats)
+    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
+    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
+
+    // Basic logic or fallback text
+    let instructions = `Active Tier: <strong>${tier}</strong> (APL ${apl}). <br>Please verify loot rarity limits against the Allowed Content spreadsheet.`;
+    
+    // If you have specific text per tier in your cached rules, access it here:
+    if (cachedGameRules && cachedGameRules.loot_instructions && cachedGameRules.loot_instructions[tier]) {
+         instructions = cachedGameRules.loot_instructions[tier];
+    } 
+
+    container.innerHTML = instructions;
+}
+// --------------------------------------------------
 
 // Loot Declaration
 async function updateLootDeclaration() {
