@@ -104,10 +104,6 @@ title: Player Session Entry
                 <div class="dm-name">DM: <span id="display-dm-name" class="skeleton">...</span></div>
             </div>
 
-            <div id="guest-message">
-                Please log in above to access this session.
-            </div>
-
             <div id="form-section" class="hidden">
                 <div class="content-tabs">
                     <div class="content-tab active" data-tab="tab-character">1. Character</div>
@@ -179,8 +175,15 @@ title: Player Session Entry
 <script type="module">
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
 
+    // GLOBAL UI REFERENCES
+    const ui = {
+        sessionName: document.getElementById('display-session-name'),
+        dmNameContainer: document.querySelector('.dm-name'), // Container for hiding
+        dmNameSpan: document.getElementById('display-dm-name'),
+        status: document.getElementById('status-message')
+    };
+
     // 0. PATCH AUTH LOGIN (Preserves Session ID in URL)
-    // Overrides the default login to ensure we return to this specific session page
     const patchLogin = () => {
         if(window.authManager) {
             window.authManager.login = async function() {
@@ -219,18 +222,24 @@ title: Player Session Entry
     });
 
     // 2. PAGE AUTH HOOK
-    // This is called automatically by auth-header.html / auth-manager.js
     window.handlePageAuth = async function(user) {
-        const guestMsg = document.getElementById('guest-message');
         const formSection = document.getElementById('form-section');
         const currentPlayer = document.getElementById('current-player-display');
         const discordIdInput = document.getElementById('p-discord-id');
 
         if (user) {
-            // A. Authenticated: Fetch Session Data
+            // === AUTHENTICATED STATE ===
+            
+            // 1. Reset UI to "Loading" style while we fetch real data
+            ui.sessionName.classList.add('skeleton');
+            ui.sessionName.style.fontSize = ""; // Reset font size
+            ui.sessionName.style.color = "";    // Reset color
+            ui.dmNameContainer.style.display = 'block'; // Show DM line
+
+            // 2. Fetch Session Data
             fetchSessionMetadata();
 
-            // B. Identity Verification: Query discord_users table
+            // 3. Identity Verification
             try {
                 const { data: userData, error: userError } = await supabase
                     .from('discord_users')
@@ -244,23 +253,30 @@ title: Player Session Entry
                     return;
                 }
 
-                // C. Update UI with Database Identity
                 currentPlayer.textContent = `${userData.display_name} (Verified)`;
                 discordIdInput.value = userData.discord_id;
 
-                // D. Load existing player data for this session
                 loadPlayerData(userData.discord_id);
-                
-                // Toggle Views
-                guestMsg.classList.add('hidden');
                 formSection.classList.remove('hidden');
 
             } catch (err) {
                 console.error("Auth Logic Error:", err);
             }
         } else {
-            // Guest Mode
-            guestMsg.classList.remove('hidden');
+            // === GUEST / LOGGED OUT STATE ===
+            
+            // 1. Set the Invite Message
+            ui.sessionName.textContent = "A DM has invited you to join their game! Login to enter your character and session details";
+            
+            // 2. Style the message to look better (smaller than a title)
+            ui.sessionName.classList.remove('skeleton');
+            ui.sessionName.style.fontSize = "1.2rem";
+            ui.sessionName.style.lineHeight = "1.5";
+            
+            // 3. Hide the DM Name line completely
+            ui.dmNameContainer.style.display = 'none';
+
+            // 4. Hide Form
             formSection.classList.add('hidden');
         }
     };
@@ -268,12 +284,6 @@ title: Player Session Entry
     // 3. INITIALIZATION
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
-
-    const ui = {
-        sessionName: document.getElementById('display-session-name'),
-        dmName: document.getElementById('display-dm-name'),
-        status: document.getElementById('status-message')
-    };
 
     if (!sessionId) {
         ui.sessionName.textContent = "Error: No Session ID";
@@ -294,27 +304,23 @@ title: Player Session Entry
             if (sErr || !session) throw sErr;
 
             ui.sessionName.textContent = session.title;
-            ui.sessionName.style.color = "";
-            ui.sessionName.style.fontStyle = "";
+            ui.sessionName.classList.remove('skeleton');
 
             if (session.user_id) {
-                // Fetch DM Name from discord_users
                 const { data: dm } = await supabase
                     .from('discord_users')
                     .select('display_name')
                     .eq('user_id', session.user_id)
                     .single();
                 
-                ui.dmName.textContent = dm ? dm.display_name : "Unknown DM";
+                ui.dmNameSpan.textContent = dm ? dm.display_name : "Unknown DM";
             } else {
-                ui.dmName.textContent = "N/A";
+                ui.dmNameSpan.textContent = "N/A";
             }
+            ui.dmNameSpan.classList.remove('skeleton');
 
         } catch (err) {
-            console.warn("Session Fetch Error (likely RLS before login):", err.message);
-        } finally {
-            ui.sessionName.classList.remove('skeleton');
-            ui.dmName.classList.remove('skeleton');
+            console.warn("Session Fetch Error:", err.message);
         }
     }
 
