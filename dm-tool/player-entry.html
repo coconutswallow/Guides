@@ -11,14 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Almendra:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Local overrides for the centered layout specifically */
+        /* Layout Overrides */
         body {
             display: flex;
             justify-content: center;
-            align-items: center; /* Vertically center */
+            align-items: center;
             min-height: 100vh;
             padding: 20px;
-            background-image: var(--page-bg-image, none); /* Inherits from style.css */
+            background-image: var(--page-bg-image, none);
         }
         
         .entry-container {
@@ -27,24 +27,76 @@
             margin: 0 auto;
         }
 
-        .tab-content {
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* Ensure textareas in this view look consistent */
-        textarea {
-            resize: vertical;
-        }
-
-        .status-msg { 
-            margin-top: 15px; 
-            text-align: center; 
-            font-weight: bold;
-            min-height: 24px;
+        /* Session Header Styling */
+        .session-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-border);
         }
         
-        /* Helper to hide elements */
+        .session-name {
+            font-family: var(--font-header);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dm-name {
+            color: var(--color-text-secondary);
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Login Options Styling */
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .divider-or {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--color-text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin: 0.5rem 0;
+        }
+        .divider-or::before, .divider-or::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .divider-or::before { margin-right: 10px; }
+        .divider-or::after { margin-left: 10px; }
+
+        /* Discord Button Specifics */
+        .btn-discord {
+            background-color: #5865F2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-discord:hover {
+            background-color: #4752C4;
+            color: white;
+        }
+
         .hidden { display: none !important; }
+        
+        /* Loading skeleton for text */
+        .skeleton {
+            background-color: var(--color-bg-medium);
+            color: transparent;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -53,22 +105,31 @@
     
     <div class="card">
         
-        <div class="site-title" style="color: var(--color-primary); text-align: center; margin-bottom: 1rem; text-shadow: none;">
-            Player Check-In
+        <div class="session-info">
+            <div id="display-session-name" class="session-name">Loading Session...</div>
+            <div class="dm-name">DM: <span id="display-dm-name">...</span></div>
         </div>
 
         <div id="login-section">
-            <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 2rem;">
-                Enter your Discord ID to access the session data.
+            <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
+                Check in to update your character stats and loot.
             </p>
-            
-            <div class="form-group">
-                <label>Discord ID</label>
-                <input type="text" id="login-discord-id" placeholder="e.g. username123" class="table-input">
-            </div>
 
-            <div style="margin-top: 2rem;">
-                <button type="button" class="button" id="btn-login" style="width: 100%;">Start / Load</button>
+            <div class="login-options">
+                
+                <button type="button" class="button btn-discord" id="btn-auth-discord">
+                    <svg width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true" fill="currentColor">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                    </svg>
+                    Log in with Discord
+                </button>
+
+                <div class="divider-or">OR</div>
+
+                <div class="form-group">
+                    <input type="text" id="login-discord-id" placeholder="Enter Discord ID Manually" class="table-input" style="text-align: center;">
+                </div>
+                <button type="button" class="button" id="btn-manual-load" style="width: 100%;">Load Manually</button>
             </div>
         </div>
 
@@ -81,6 +142,10 @@
 
             <form id="player-form">
                 <input type="hidden" id="p-discord-id">
+                
+                <div style="text-align: center; margin-bottom: 1rem; font-size: 0.9em; color: var(--color-primary);">
+                    Playing as: <strong id="current-player-display">Guest</strong>
+                </div>
 
                 <div id="tab-character" class="tab-content">
                     <div class="form-group">
@@ -125,7 +190,7 @@
                 <hr style="border-color: var(--color-border); margin: 2rem 0;">
 
                 <button type="button" class="button" id="btn-submit" style="width: 100%;">Save Updates</button>
-                <div id="status-message" class="status-msg"></div>
+                <div id="status-message" style="margin-top:15px; text-align:center; font-weight:bold; min-height:24px;"></div>
             </form>
         </div>
 
@@ -138,17 +203,13 @@
 </div>
 
 <script type="module">
-    // 1. Import Supabase (Adjusted path for /dm-tool/ folder structure)
     import { supabase } from '../assets/js/supabaseClient.js';
 
-    // 2. Theme Toggle Logic (Matches site standard)
+    // --- 1. GLOBAL UI HANDLERS (Theme, Tabs) ---
     const toggleBtn = document.getElementById('theme-toggle');
     const htmlEl = document.documentElement;
     
-    // Check local storage or default
-    if (localStorage.getItem('theme') === 'dark') {
-        htmlEl.setAttribute('data-theme', 'dark');
-    }
+    if (localStorage.getItem('theme') === 'dark') htmlEl.setAttribute('data-theme', 'dark');
 
     toggleBtn.addEventListener('click', () => {
         const currentTheme = htmlEl.getAttribute('data-theme');
@@ -157,52 +218,146 @@
         localStorage.setItem('theme', newTheme);
     });
 
-    // 3. Application Logic
+    document.querySelectorAll('.content-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.content-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.remove('hidden');
+        });
+    });
+
+    // --- 2. INITIALIZATION & METADATA ---
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
 
     // UI References
-    const loginSection = document.getElementById('login-section');
-    const formSection = document.getElementById('form-section');
-    const statusMsg = document.getElementById('status-message');
-    const btnLogin = document.getElementById('btn-login');
-    const btnSubmit = document.getElementById('btn-submit');
+    const ui = {
+        sessionName: document.getElementById('display-session-name'),
+        dmName: document.getElementById('display-dm-name'),
+        loginSection: document.getElementById('login-section'),
+        formSection: document.getElementById('form-section'),
+        btnManual: document.getElementById('btn-manual-load'),
+        btnDiscord: document.getElementById('btn-auth-discord'),
+        manualInput: document.getElementById('login-discord-id'),
+        status: document.getElementById('status-message'),
+        currentPlayer: document.getElementById('current-player-display')
+    };
 
-    // Tab Logic
-    document.querySelectorAll('.content-tab').forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active class from all tabs
-            document.querySelectorAll('.content-tab').forEach(b => b.classList.remove('active'));
-            // Hide all contents
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    if (!sessionId) {
+        ui.sessionName.textContent = "Error";
+        ui.sessionName.style.color = "var(--palette-alert-danger-action)";
+        document.querySelector('.card').innerHTML += "<h3 style='text-align:center; color:red'>No Session ID provided.</h3>";
+        throw new Error("No Session ID");
+    }
+
+    // Initialize Page
+    (async function init() {
+        await fetchSessionMetadata();
+        checkAuthAndAutoLoad();
+    })();
+
+    /**
+     * Fetches Session Name and DM Name from DB
+     *
+     */
+    async function fetchSessionMetadata() {
+        try {
+            // 1. Get Session Details
+            const { data: session, error: sErr } = await supabase
+                .from('sessions')
+                .select('session_name, dm_id')
+                .eq('id', sessionId)
+                .single();
+
+            if (sErr || !session) throw sErr || new Error("Session not found");
+
+            ui.sessionName.textContent = session.session_name;
+
+            // 2. Get DM Name (via discord_users table using dm_id)
+            // Note: If dm_id is null, handle gracefully
+            if (session.dm_id) {
+                const { data: dm, error: dErr } = await supabase
+                    .from('discord_users')
+                    .select('display_name')
+                    .eq('user_id', session.dm_id)
+                    .single();
+                
+                ui.dmName.textContent = dm ? dm.display_name : "Unknown DM";
+            } else {
+                ui.dmName.textContent = "N/A";
+            }
+        } catch (err) {
+            console.error("Metadata Error:", err);
+            ui.sessionName.textContent = "Session Not Found";
+            ui.dmName.textContent = "---";
+        }
+    }
+
+    // --- 3. AUTH LOGIC ---
+
+    /**
+     * Checks if user is already logged in via Discord OAuth.
+     * If yes, auto-loads their data.
+     */
+    async function checkAuthAndAutoLoad() {
+        const { data } = await supabase.auth.getSession();
+        
+        if (data && data.session && data.session.user) {
+            // User is authenticated via Discord
+            const user = data.session.user;
             
-            // Activate clicked
-            btn.classList.add('active');
-            const targetId = btn.dataset.tab;
-            document.getElementById(targetId).classList.remove('hidden');
+            // In Discord OAuth, the provider_id (Discord ID) is usually in user_metadata or identites
+            // Supabase stores the provider ID (Discord ID) in identities.identity_data.provider_id 
+            // OR simply user_metadata.provider_id depending on config. 
+            // Let's try user_metadata.sub or provider_id. 
+            // Usually: user.user_metadata.provider_id
+            
+            const discordId = user.user_metadata.provider_id || user.identities?.[0]?.identity_data?.provider_id;
+            const discordName = user.user_metadata.full_name || "Adventurer";
+
+            if (discordId) {
+                console.log("Auto-detected Discord User:", discordName);
+                ui.currentPlayer.textContent = `${discordName} (Verified)`;
+                loadPlayerData(discordId);
+            }
+        }
+    }
+
+    // Handler: Login with Discord Button
+    ui.btnDiscord.addEventListener('click', async () => {
+        // Redirects to Discord, then back to this page
+        await supabase.auth.signInWithOAuth({
+            provider: 'discord',
+            options: {
+                redirectTo: window.location.href, // Come back to this exact session URL
+                scopes: 'identify'
+            }
         });
     });
 
-    // Login Handler
-    btnLogin.addEventListener('click', async () => {
-        const discordId = document.getElementById('login-discord-id').value.trim();
-        
-        if (!sessionId) {
-            alert("Error: No Session ID found in URL. Please use the link provided by your DM.");
+    // Handler: Manual Load Button
+    ui.btnManual.addEventListener('click', () => {
+        const inputId = ui.manualInput.value.trim();
+        if (!inputId) {
+            alert("Please enter a Discord ID");
             return;
         }
+        ui.currentPlayer.textContent = `${inputId} (Manual Entry)`;
+        loadPlayerData(inputId);
+    });
 
-        if (!discordId) {
-            alert("Please enter your Discord ID.");
-            return;
-        }
 
+    // --- 4. DATA LOADING & SAVING ---
+
+    async function loadPlayerData(discordId) {
         document.getElementById('p-discord-id').value = discordId;
-        btnLogin.textContent = "Loading...";
-        btnLogin.disabled = true;
+        
+        // Update UI State
+        ui.btnManual.textContent = "Loading...";
+        ui.btnManual.disabled = true;
 
         try {
-            // Check for existing submission
             const { data, error } = await supabase
                 .from('session_player_submissions')
                 .select('payload')
@@ -210,23 +365,25 @@
                 .eq('discord_id', discordId)
                 .maybeSingle();
 
-            if (error) throw error;
+            if (error) console.error("Load Error:", error);
 
             if (data && data.payload) {
                 populateForm(data.payload);
+            } else {
+                console.log("No existing submission found. Starting fresh.");
             }
 
-            // Transition UI
-            loginSection.classList.add('hidden');
-            formSection.classList.remove('hidden');
+            // Show Form
+            ui.loginSection.classList.add('hidden');
+            ui.formSection.classList.remove('hidden');
 
         } catch (err) {
             console.error(err);
-            alert("Error loading data. Check console for details.");
-            btnLogin.textContent = "Start / Load";
-            btnLogin.disabled = false;
+            alert("Error connecting to database.");
+            ui.btnManual.textContent = "Load Manually";
+            ui.btnManual.disabled = false;
         }
-    });
+    }
 
     function populateForm(p) {
         if(p.char_name) document.getElementById('p-char-name').value = p.char_name;
@@ -238,8 +395,8 @@
         if(p.notes) document.getElementById('p-notes').value = p.notes;
     }
 
-    // Save Handler
-    btnSubmit.addEventListener('click', async () => {
+    // Handler: Save / Submit
+    document.getElementById('btn-submit').addEventListener('click', async () => {
         const discordId = document.getElementById('p-discord-id').value;
         
         const payload = {
@@ -252,8 +409,8 @@
             notes: document.getElementById('p-notes').value
         };
 
-        statusMsg.textContent = "Saving...";
-        statusMsg.style.color = "var(--palette-role-auditor)"; // Orange/Warning color from CSS vars
+        ui.status.textContent = "Saving...";
+        ui.status.style.color = "var(--palette-role-auditor)";
 
         try {
             const { error } = await supabase
@@ -267,18 +424,17 @@
 
             if(error) throw error;
 
-            statusMsg.textContent = "Saved successfully!";
-            statusMsg.style.color = "var(--palette-role-full-dm)"; // Green color
-            
-            // Optional: Reset message after a few seconds
-            setTimeout(() => { statusMsg.textContent = ""; }, 3000);
+            ui.status.textContent = "Saved successfully!";
+            ui.status.style.color = "var(--palette-role-full-dm)";
+            setTimeout(() => { ui.status.textContent = ""; }, 3000);
 
         } catch (err) {
             console.error(err);
-            statusMsg.textContent = "Error saving data.";
-            statusMsg.style.color = "var(--palette-alert-danger-action)";
+            ui.status.textContent = "Error saving data.";
+            ui.status.style.color = "var(--palette-alert-danger-action)";
         }
     });
+
 </script>
 
 </body>
