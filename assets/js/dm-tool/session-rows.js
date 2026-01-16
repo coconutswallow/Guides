@@ -159,6 +159,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
    2. SESSION PLAYER CARDS (View 6)
    =========================== */
 
+// Updated to accept suppressUpdate to prevent infinite loops during auto-sync
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, suppressUpdate = false) {
     if (!listContainer) return;
 
@@ -181,6 +182,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const card = document.createElement('div');
     card.className = 'player-card';
 
+    // UPDATED LAYOUT: Separate column for Forfeit XP
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -343,6 +345,7 @@ export function getSessionRosterData() {
     return players;
 }
 
+// Updated to accept suppressUpdate
 export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) {
     const listContainer = document.getElementById('session-roster-list');
     const masterData = getMasterRosterData(); 
@@ -366,6 +369,7 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
                 ...masterPlayer,
                 level: masterPlayer.level_playing_as || masterPlayer.level
             };
+            // Pass suppressUpdate to prevent infinite loop during onUpdate calls
             addSessionPlayerRow(listContainer, newData, callbacks, suppressUpdate);
         }
     });
@@ -413,12 +417,4 @@ export function applyPlayerSubmissions(submissions, callbacks) {
     });
 
     if (callbacks && callbacks.onUpdate) callbacks.onUpdate();
-}
-
-// NEW FUNCTION to sync hours to all players
-export function setAllPlayerHours(hours) {
-    const list = document.getElementById('session-roster-list');
-    if(!list) return;
-    const inputs = list.querySelectorAll('.s-hours');
-    inputs.forEach(inp => inp.value = hours);
 }

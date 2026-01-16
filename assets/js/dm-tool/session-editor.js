@@ -123,12 +123,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateSessionCalculations(cachedGameRules);
             updateLootInstructions(isFullDM);
             updateLootDeclaration(cachedDiscordId); 
-            updateHgenLogic(cachedDiscordId);       
-            updateDMLootLogic(cachedDiscordId, cachedGameRules);
-            
-            // NEW: Auto-sync roster from View 4 to View 6
-            // (Pass true to suppress a recursive update trigger)
-            Rows.syncSessionPlayersFromMaster(callbacks, true);     
+            updateHgenLogic(cachedDiscordId);   
+            updateDMLootLogic(cachedDiscordId, cachedGameRules);     
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
@@ -171,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (gameNameInput) {
         gameNameInput.addEventListener('input', () => {
             updateLootDeclaration(cachedDiscordId);
-            updateHgenLogic(cachedDiscordId);
+            updateHgenLogic();
             updateDMLootLogic(cachedDiscordId, cachedGameRules);
         });
     }
@@ -179,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Listeners for Hgen inputs
     ['inp-predet-perms', 'inp-predet-cons'].forEach(id => {
         const el = document.getElementById(id);
-        if(el) el.addEventListener('input', () => updateHgenLogic(cachedDiscordId));
+        if(el) el.addEventListener('input', updateHgenLogic);
     });
     
     // Initial Update Trigger
@@ -204,8 +200,6 @@ function setupCalculationTriggers(callbacks) {
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     if (sessionHoursInput) {
         sessionHoursInput.addEventListener('input', () => {
-             // NEW: Sync hours to all players immediately
-             Rows.setAllPlayerHours(sessionHoursInput.value);
              updateSessionCalculations(cachedGameRules);
         });
     }
