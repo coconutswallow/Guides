@@ -44,12 +44,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Init Modals
     UI.initIncentivesModal((ctx) => updateSessionCalculations());
+    
+    // Restore logic functions
     initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
     
-    // NEW: Initialize DM Loot Incentives UI based on rules
+    // Initialize DM Loot Incentives UI based on rules
     initDMLootIncentives();
 
     const bindOutput = (id) => {
@@ -179,8 +181,7 @@ function setupCalculationTriggers(callbacks) {
         Rows.addSessionPlayerRow(document.getElementById('session-roster-list'), {}, callbacks);
     });
 
-    // NEW: Listeners for DM Loot Logic (View 5)
-    // We bind to the Setup inputs because Loot Planning often happens before Session Logging
+    // Listeners for DM Loot Logic (View 5)
     const dmLevelInputSetup = document.getElementById('inp-dm-level'); 
     const dmGamesInputSetup = document.getElementById('inp-dm-games-count'); 
     const dmIncentivesSelect = document.getElementById('inp-dm-incentives');
@@ -255,16 +256,13 @@ async function initTemplateDropdown() {
     });
 }
 
-// --- UPDATED: Triggers loot instruction update on player changes ---
 function initPlayerSetup() {
     const btnAdd = document.getElementById('btn-add-player');
     const rosterBody = document.getElementById('roster-body');
 
-    // 1. Add Player Button
     if(btnAdd) {
         btnAdd.addEventListener('click', () => { 
             Rows.addPlayerRowToMaster({});
-            // Wait slightly longer than session-rows.js (50ms) to ensure stats are ready
             setTimeout(() => {
                  updateLootInstructions();
                  updateLootDeclaration();
@@ -274,10 +272,8 @@ function initPlayerSetup() {
         }); 
     }
 
-    // 2. Listen for changes in the table (Level inputs or Deletions)
     if (rosterBody) {
         rosterBody.addEventListener('input', (e) => {
-            // If level fields change
             if (e.target.matches('.inp-level') || e.target.matches('.inp-level-play-as')) {
                 setTimeout(() => {
                      updateLootInstructions();
@@ -289,7 +285,6 @@ function initPlayerSetup() {
         });
 
         rosterBody.addEventListener('click', (e) => {
-            // If delete button clicked
             if (e.target.matches('.btn-delete-row')) {
                 setTimeout(() => {
                      updateLootInstructions();
@@ -302,7 +297,6 @@ function initPlayerSetup() {
     }
 }
 
-// --- UPDATED: Triggers loot update after sync ---
 function initPlayerSync() {
     const btnGenerate = document.getElementById('btn-generate-invite');
     const btnCopy = document.getElementById('btn-copy-invite');
@@ -351,7 +345,6 @@ function initPlayerSync() {
             await Rows.syncMasterRosterFromSubmissions(submissions);
             alert(`Synced ${submissions.length} player(s) from submissions.`);
             
-            // Recalculate loot instructions after sync
             setTimeout(() => {
                 updateLootInstructions();
                 updateLootDeclaration();
@@ -376,15 +369,235 @@ function initPlayerSync() {
     }
 }
 
-// NEW: Initialize DM Loot Incentives based on database rules
-// Updated to use a <select multiple> instead of checkboxes, with robust loading handling
+// RESTORED: Copy Game Logic
+function initCopyGameLogic() {
+    const btnCopy = document.getElementById('btn-copy-game');
+    const modal = document.getElementById('modal-copy-game');
+    const btnConfirm = document.getElementById('btn-confirm-copy');
+    
+    if(btnCopy) {
+        btnCopy.addEventListener('click', () => {
+            const currentName = document.getElementById('header-game-name').value;
+            document.getElementById('inp-copy-name').value = incrementPartName(currentName);
+            modal.showModal();
+        });
+    }
+
+    if(btnConfirm) {
+        btnConfirm.addEventListener('click', async () => {
+            const newName = document.getElementById('inp-copy-name').value;
+            if(!newName) return alert("Please enter a name.");
+            
+            const isNextPart = document.getElementById('chk-next-part').checked;
+            const fullData = IO.getFormData();
+            
+            fullData.header.title = newName; 
+            fullData.session_log.hours = 3; 
+            
+            if (isNextPart) {
+                fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
+                fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
+                fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
+                fullData.session_log.players.forEach(p => p.games_count = incrementGameString(p.games_count));
+            }
+            
+            fullData.session_log.title = newName;
+            fullData.session_log.notes = "";
+            fullData.session_log.summary = "";
+            fullData.session_log.dm_rewards.loot_selected = "";
+            
+            const { data: { user } } = await supabase.auth.getUser();
+            if(!user) return alert("Not logged in");
+
+            try {
+                const newSession = await createSession(user.id, newName, false);
+                if(newSession) {
+                    await saveSession(newSession.id, fullData, { title: newName });
+                    window.location.href = `session.html?id=${newSession.id}`;
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Error copying game.");
+            }
+        });
+    }
+}
+
+function incrementGameString(val) {
+    if (val === "10+") return "10+";
+    const num = parseInt(val) || 0;
+    if (num >= 10) return "10+";
+    return (num + 1).toString();
+}
+
+// RESTORED: Template Logic
+function initTemplateLogic() {
+    const modal = document.getElementById('modal-save-template');
+    const btnOpen = document.getElementById('btn-open-save-template');
+    const btnConfirm = document.getElementById('btn-confirm-save-template');
+    const btnLoad = document.getElementById('btn-load-template');
+    const btnSaveGame = document.getElementById('btn-save-game');
+    
+    const btnSaveSetup = document.getElementById('btn-save-template-setup');
+    const btnDelete = document.getElementById('btn-delete-template');
+    
+    if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
+    
+    if(btnSaveSetup) btnSaveSetup.addEventListener('click', () => {
+        const currentName = document.getElementById('header-game-name').value;
+        if(currentName) document.getElementById('inp-template-name').value = currentName;
+        modal.showModal();
+    });
+    
+    if(btnDelete) {
+        btnDelete.addEventListener('click', async () => {
+            const tmplId = document.getElementById('template-select').value;
+            if(!tmplId) return alert("Please select a template to delete.");
+            
+            if(confirm("Are you sure you want to delete this template? This cannot be undone.")) {
+                try {
+                    await deleteSession(tmplId); 
+                    await initTemplateDropdown(); 
+                    alert("Template deleted.");
+                } catch(e) {
+                    console.error(e);
+                    alert("Error deleting template.");
+                }
+            }
+        });
+    }
+    
+    if(btnConfirm) {
+        btnConfirm.addEventListener('click', async () => {
+            const tmplName = document.getElementById('inp-template-name').value;
+            if(!tmplName) return alert("Enter a name");
+            const { data: { user } } = await supabase.auth.getUser();
+            if(!user) return alert("Please login");
+            
+            const fullData = IO.getFormData();
+            const templateData = IO.prepareTemplateData(fullData); 
+            
+            try {
+                await saveAsTemplate(user.id, tmplName, templateData);
+                await initTemplateDropdown(); 
+                alert("Template Saved!");
+                modal.close();
+            } catch (e) {
+                console.error(e);
+                alert("Error saving template");
+            }
+        });
+    }
+    
+    if(btnLoad) {
+        btnLoad.addEventListener('click', async () => {
+            const tmplId = document.getElementById('template-select').value;
+            if(!tmplId) return;
+            const session = await loadSession(tmplId);
+            if(session) {
+                IO.populateForm(session, window._sessionCallbacks, { keepTitle: true });
+                alert("Template Loaded!");
+            }
+        });
+    }
+    
+    if(btnSaveGame) {
+        btnSaveGame.addEventListener('click', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('id');
+            const formData = IO.getFormData();
+            const title = document.getElementById('header-game-name').value || "Untitled Session";
+            const dateInput = document.getElementById('inp-start-datetime');
+            const date = dateInput && dateInput.value ? new Date(dateInput.value).toISOString().split('T')[0] : null;
+            
+            if (sessionId) {
+                await saveSession(sessionId, formData, { title, date });
+                const btn = document.getElementById('btn-save-game');
+                const originalText = btn.innerText;
+                btn.innerText = "Saved!";
+                btn.classList.add('button-success'); 
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('button-success');
+                }, 1500);
+            } else {
+                const { data: { user } } = await supabase.auth.getUser();
+                if(user) {
+                    const newS = await createSession(user.id, title);
+                    await saveSession(newS.id, formData, { title, date });
+                    window.history.pushState({}, "", `?id=${newS.id}`);
+                    alert("Session Created & Saved");
+                }
+            }
+        });
+    }
+}
+
+// Loot Declaration
+async function updateLootDeclaration() {
+    const lootInput = document.getElementById('inp-loot-plan');
+    const output = document.getElementById('out-loot-declaration');
+    if (!lootInput || !output) return;
+
+    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
+    
+    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
+    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
+    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
+    const lootContent = lootInput.value.trim();
+
+    let discordId = "YOUR_ID";
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && user.identities) {
+            const identity = user.identities.find(i => i.provider === 'discord');
+            if(identity && identity.id) discordId = identity.id;
+        }
+    } catch (e) { console.warn("Could not fetch user ID for loot template"); }
+
+    const declaration = `<@${discordId}> declares loot for **${gameName}**: Number of Players: ${partySize}, Tier ${tier}, APL ${apl}:\n||\n${lootContent}\n||`;
+
+    output.value = declaration;
+}
+
+// UPDATED: Hgenloot Logic (Conditional arguments)
+function updateHgenLogic() {
+    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
+    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
+    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
+    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
+    
+    // Parse integers to check against 0
+    const predetPerms = parseInt(document.getElementById('inp-predet-perms')?.value) || 0;
+    const predetCons = parseInt(document.getElementById('inp-predet-cons')?.value) || 0;
+
+    // Format 1: Declaration
+    const declaration = `<@1360680887510892654> rolls loot for **${gameName}**: Number of Players: ${partySize}, Tier ${tier}, APL ${apl}:`;
+    
+    // Format 2: Command (Conditional)
+    let command = `/hgenloot ${partySize} ${apl}`;
+    
+    if (predetPerms > 0) {
+        command += ` predetermined_perms ${predetPerms}`;
+    }
+    
+    if (predetCons > 0) {
+        command += ` predetermined_cons ${predetCons}`;
+    }
+
+    const outDecl = document.getElementById('out-hgen-declaration');
+    const outCmd = document.getElementById('out-hgen-command');
+    
+    if (outDecl) outDecl.value = declaration;
+    if (outCmd) outCmd.value = command;
+}
+
+// Initialize DM Loot Incentives based on database rules
 function initDMLootIncentives() {
     const select = document.getElementById('inp-dm-incentives');
-    // Guard clause if container or rules are missing
     if (!select) return;
 
-    // Clear "Loading..." immediately
-    select.innerHTML = '';
+    select.innerHTML = ''; // Clear loading
 
     if (!cachedGameRules || !cachedGameRules['DM incentives']) {
         const opt = document.createElement('option');
@@ -399,10 +612,8 @@ function initDMLootIncentives() {
     let count = 0;
 
     for (const [name, data] of Object.entries(incentives)) {
-        // Safe Parse: Ensure string numbers are treated as numbers
         const bonusRoll = parseInt(data["bonus loot roll"] || 0);
 
-        // Filter: only show if bonus loot roll > 0
         if (bonusRoll > 0) {
             count++;
             const option = document.createElement('option');
@@ -420,10 +631,6 @@ function initDMLootIncentives() {
         select.disabled = false;
     }
 }
-
-// ==========================================
-// 3. Calculation Logic
-// ==========================================
 
 function calculateXP(level, hours, rules) {
     if (!rules || !rules.xp_per_hour) return 0;
@@ -571,78 +778,8 @@ function updateSessionCalculations() {
     }
 }
 
-// Dynamic Loot Instructions based on Role, Tier, Party
-function updateLootInstructions() {
-    const container = document.getElementById('out-loot-instructions');
-    if (!container) return;
-
-    // Grab stats from the setup tab (View 4)
-    const tierEl = document.getElementById('setup-val-tier');
-    const partySizeEl = document.getElementById('setup-val-party-size');
-    
-    const tier = parseInt(tierEl ? tierEl.textContent : "1") || 1;
-    const partySize = parseInt(partySizeEl ? partySizeEl.textContent : "0") || 0;
-    
-    const halfParty = Math.floor(partySize / 2);
-    
-    let html = "";
-    
-    if (isFullDM) {
-        // --- FULL DM ---
-        html += `<strong>Full DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
-
-        if (tier === 1) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
-        } 
-        else if (tier === 2) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
-        }
-        else if (tier === 3) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
-        }
-        else if (tier >= 4) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> Add up to 1 T1 permanent or 2 slots worth of T1 consumables as either predetermined or from a roll at APL 4.`;
-        }
-
-        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules, including multi-session loot rules.</small>`;
-    
-    } else {
-        // --- TRIAL DM ---
-        html += `<strong>Trial DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
-        
-        if (tier === 1) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
-        }
-        else if (tier === 2) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
-        }
-        else {
-            // Tier 3+
-            html += `As a Trial DM, you must use the loot roll bot for Tier 3 or higher games.<br>`;
-            html += `Use the loot roll command instructions below to roll for loot.`;
-        }
-        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules.</small>`;
-    }
-
-    container.innerHTML = html;
-}
-
-// NEW: Calculates DM Loot Plan logic (View 5) based on Setup Roster (View 4)
 async function updateDMLootLogic() {
-    // 1. Calculate Roster Stats from Setup Roster (View 4)
-    // We use Setup Roster because Planning happens before Session Logging
+    // 1. Calculate Roster Stats
     const rows = document.querySelectorAll('#roster-body .player-row');
     let newHires = 0;
     let welcomeWagon = 0;
@@ -652,7 +789,6 @@ async function updateDMLootLogic() {
         const gamesNum = parseInt(gamesVal);
         
         if (gamesVal === "1") welcomeWagon++;
-        // New Hire: Not "10+" and <= 10
         if (gamesVal !== "10+" && !isNaN(gamesNum) && gamesNum <= 10) {
             newHires++;
         }
@@ -674,7 +810,6 @@ async function updateDMLootLogic() {
     if(elJump) elJump.value = isJumpstart ? "Yes" : "No";
 
     // 4. Calculate Loot Rolls
-    // Base 1 + New Hires
     let totalRolls = 1 + newHires;
     
     // Check Selected Incentives (From Multi-Select)
@@ -683,9 +818,6 @@ async function updateDMLootLogic() {
     
     if (newHires > 0) incentiveNames.push(`New Hires (${newHires})`);
     
-    // NOTE: Jumpstart is handled separately in output now, but technically part of the "reasoning"
-    // if (isJumpstart) incentiveNames.push("Jumpstart"); // Removed to separate output
-
     if (selectEl && selectEl.selectedOptions) {
         Array.from(selectEl.selectedOptions).forEach(opt => {
             const bonus = parseInt(opt.dataset.bonus) || 0;
@@ -699,7 +831,6 @@ async function updateDMLootLogic() {
     const dmLvlInput = document.getElementById('inp-dm-level');
     const dmLvl = dmLvlInput ? dmLvlInput.value : "0";
     
-    // Get Discord ID
     let discordId = "YOUR_ID";
     try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -709,27 +840,25 @@ async function updateDMLootLogic() {
         }
     } catch (e) { console.warn("ID fetch error"); }
 
-    // -- Declaration --
     const incentiveStr = incentiveNames.length > 0 ? `, Incentives: ${incentiveNames.join(', ')}` : "";
     const declText = `<@${discordId}> rolls loot for Game **${gameName}**${incentiveStr}`;
     
     const outDecl = document.getElementById('out-dm-loot-decl');
     if (outDecl) outDecl.value = declText;
 
-    // -- Command (Standard) --
-    // REMOVED JUMPSTART TEXT APPENDING HERE
+    // Command (Standard)
     let cmdText = `/hgenloot ${totalRolls} ${dmLvl}`;
     const outCmd = document.getElementById('out-dm-loot-cmd');
     if (outCmd) outCmd.value = cmdText;
 
-    // -- Jumpstart Command (Hidden/Shown) --
+    // Jumpstart Command (Hidden/Shown)
     const jumpWrapper = document.getElementById('wrapper-jumpstart-bonus');
     const jumpCmd = document.getElementById('out-dm-jumpstart-cmd');
     
     if (isJumpstart) {
-        if(jumpWrapper) jumpWrapper.style.display = "block"; // SHOW
+        if(jumpWrapper) jumpWrapper.style.display = "block";
         if(jumpCmd) jumpCmd.value = `/hgenloot 1 ${dmLvl}`;
     } else {
-        if(jumpWrapper) jumpWrapper.style.display = "none";  // HIDE
+        if(jumpWrapper) jumpWrapper.style.display = "none";
     }
 }

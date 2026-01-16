@@ -73,6 +73,10 @@
     "DM incentive 2": {
 		"bonus DTP": 5,
 		"bonus loot roll": 1
+	},
+	"DM incentive 3": {
+		"bonus DTP": 5,
+		"bonus loot roll": 1
 	}
   },
   "tier": {
