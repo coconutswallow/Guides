@@ -219,7 +219,12 @@ function initPlayerSync() {
             if (!id) return alert("Please save the session first to generate a Session ID.");
             
             // Construct the full URL
-            const inviteUrl = `${window.location.origin}/player-entry.html?session_id=${id}`;
+            // Get the current path (e.g., /dm-tool/session.html)
+                const path = window.location.pathname;
+                // Remove the filename to get the directory (e.g., /dm-tool/)
+                const directory = path.substring(0, path.lastIndexOf('/'));
+                // Construct the full URL relative to the current directory
+                const inviteUrl = `${window.location.origin}${directory}/player-entry.html?session_id=${id}`;
             
             navigator.clipboard.writeText(inviteUrl).then(() => {
                 // Visual feedback
