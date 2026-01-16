@@ -365,12 +365,9 @@ extra_css:
 
                             <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.5rem;">
                                 <label>Additional DM Incentives (Loot & DTP)</label>
-                                <p style="font-size:0.85em; color:var(--color-text-secondary); margin-bottom:0.5rem;">
-                                    Click the button to select active incentives for this session.
-                                </p>
-                                <div class="dtp-wrapper" style="display: flex; gap: 0.5rem;">
-                                    <input type="text" id="disp-dm-incentives" class="table-input readonly-input" readonly placeholder="None selected">
-                                    <button class="button button-secondary" id="btn-dm-loot-incentives" data-incentives='[]' style="width:50px; font-weight:bold; font-size:1.2em;">+</button>
+                                <div class="dtp-wrapper" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    <input type="text" id="disp-dm-incentives" class="table-input readonly-input" readonly placeholder="None selected" style="flex: 1; min-width: 200px;">
+                                    <button class="button button-secondary" id="btn-dm-loot-incentives" data-incentives='[]'>Add Additional Incentives</button>
                                 </div>
                             </div>
 

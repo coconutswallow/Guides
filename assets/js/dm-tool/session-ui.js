@@ -256,12 +256,24 @@ function saveIncentivesInternal(saveCallback) {
     
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
-    btn.innerText = selected.length > 0 ? `+` : '+'; 
     
-    // UPDATED: Sync display text if sibling input exists
-    const displayInput = btn.parentElement.querySelector('input[type="text"]');
-    if (displayInput) {
-        displayInput.value = selected.join(', ');
+    // Logic: If it's the Player Card small button, keep the "+" style.
+    // If it's the large "Add Additional Incentives" button, keep/update that text.
+    if (btn.classList.contains('s-incentives-btn')) {
+        btn.innerText = selected.length > 0 ? "+" : "+";
+    } else {
+        // Optional: Change text to "Edit Incentives" if items are selected
+        btn.innerText = selected.length > 0 ? "Edit Incentives" : "Add Additional Incentives";
+    }
+    
+    // Sync display text if sibling input exists
+    // (This handles both the DM view and any future layouts)
+    const wrapper = btn.closest('.dtp-wrapper');
+    if (wrapper) {
+        const displayInput = wrapper.querySelector('input[type="text"]');
+        if (displayInput) {
+            displayInput.value = selected.join(', ');
+        }
     }
     
     if(saveCallback) saveCallback(activeIncentiveRowData.viewContext);

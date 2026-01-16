@@ -193,7 +193,8 @@ export function populateForm(session, callbacks, options = {}) {
             const loadedInc = sLog.dm_rewards.incentives || [];
             if(dmBtn) {
                 dmBtn.dataset.incentives = JSON.stringify(loadedInc);
-                dmBtn.innerText = loadedInc.length > 0 ? "+" : "+";
+                // Update button text based on selection
+                dmBtn.innerText = loadedInc.length > 0 ? "Edit Incentives" : "Add Additional Incentives";
                 
                 // Update sibling display text
                 const disp = document.getElementById('disp-dm-incentives');
