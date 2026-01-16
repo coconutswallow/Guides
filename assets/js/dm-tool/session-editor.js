@@ -19,16 +19,24 @@ import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
 
+// --- NEW IMPORTS ---
+import { updateSessionCalculations } from './session-calculations.js';
+import { 
+    updateLootInstructions, 
+    updateLootDeclaration, 
+    updateHgenLogic, 
+    updateDMLootLogic 
+} from './session-loot.js';
+
 let cachedGameRules = null; 
 let isFullDM = false; 
+let cachedDiscordId = "YOUR_ID"; 
 
-let cachedDiscordId = "YOUR_ID"; // Default fallback
-
+// --- STATE MANAGEMENT ---
 async function cacheDiscordId() {
     try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user && user.identities) {
-            // Find the identity linked to Discord to get the Snowflake ID
             const identity = user.identities.find(i => i.provider === 'discord');
             if (identity && identity.id) {
                 cachedDiscordId = identity.id;
@@ -62,11 +70,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Init Modals
     UI.initIncentivesModal((ctx) => {
-        updateSessionCalculations();
-        updateDMLootLogic();
+        updateSessionCalculations(cachedGameRules);
+        updateDMLootLogic(cachedDiscordId, cachedGameRules);
     });
     
-    // Restore logic functions
+    // Helper Logic
     initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
@@ -108,14 +116,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
 
-    // Callbacks for dynamic rows
+    // --- MAIN CALLBACK CONTROLLER ---
+    // This passes the state (Rules, ID, Roles) to the modular functions
     const callbacks = {
         onUpdate: () => {
-            updateSessionCalculations();
-            updateLootInstructions();
-            updateLootDeclaration(); 
+            updateSessionCalculations(cachedGameRules);
+            updateLootInstructions(isFullDM);
+            updateLootDeclaration(cachedDiscordId); 
             updateHgenLogic();       
-            updateDMLootLogic();     
+            updateDMLootLogic(cachedDiscordId, cachedGameRules);     
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
@@ -135,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
                     hoursInput.value = 3;
-                    updateSessionCalculations();
+                    updateSessionCalculations(cachedGameRules);
                     document.getElementById('chk-next-part').checked = true;
                     const currentName = document.getElementById('header-game-name').value;
                     const nextName = incrementPartName(currentName);
@@ -143,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('modal-copy-game').showModal();
                 }
             } else {
-                updateSessionCalculations();
+                updateSessionCalculations(cachedGameRules);
             }
         });
     }
@@ -152,14 +161,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Listeners for Loot Plan inputs
     const lootPlanInput = document.getElementById('inp-loot-plan');
-    if (lootPlanInput) lootPlanInput.addEventListener('input', updateLootDeclaration);
+    if (lootPlanInput) lootPlanInput.addEventListener('input', () => updateLootDeclaration(cachedDiscordId));
 
     const gameNameInput = document.getElementById('header-game-name');
     if (gameNameInput) {
         gameNameInput.addEventListener('input', () => {
-            updateLootDeclaration();
+            updateLootDeclaration(cachedDiscordId);
             updateHgenLogic();
-            updateDMLootLogic();
+            updateDMLootLogic(cachedDiscordId, cachedGameRules);
         });
     }
 
@@ -169,12 +178,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(el) el.addEventListener('input', updateHgenLogic);
     });
     
-    // Initial Loot Update call
+    // Initial Update Trigger
     setTimeout(() => {
-        updateLootInstructions();
-        updateLootDeclaration();
-        updateHgenLogic();
-        updateDMLootLogic();
+        callbacks.onUpdate();
     }, 1000);
 });
 
@@ -185,30 +191,29 @@ function setupCalculationTriggers(callbacks) {
         sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (item && item.dataset.target === 'view-session-details') {
-                // Automatically sync roster when entering Session Details tab
                 Rows.syncSessionPlayersFromMaster(callbacks);
             }
         });
     }
 
-    // 2. Session Hours Clamping & Recalc
+    // 2. Session Hours
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     if (sessionHoursInput) {
         sessionHoursInput.addEventListener('input', () => {
-             updateSessionCalculations(); // Clamps player hours instantly
+             updateSessionCalculations(cachedGameRules);
         });
     }
 
-    // 3. Existing triggers
+    // 3. DM Rewards & Sync
     const dmLevel = document.getElementById('out-dm-level');
     const dmGames = document.getElementById('out-dm-games');
     const btnDMIncLoot = document.getElementById('btn-dm-loot-incentives');
-    const syncBtn = document.getElementById('btn-sync-session'); // The manual sync button for submissions
+    const syncBtn = document.getElementById('btn-sync-session'); 
     const addPlayerBtn = document.getElementById('btn-add-session-player');
 
     if(dmLevel) dmLevel.addEventListener('input', callbacks.onUpdate);
     if(dmGames) dmGames.addEventListener('input', callbacks.onUpdate);
-    // Button in View 5 for DM Incentives
+    
     if(btnDMIncLoot) btnDMIncLoot.addEventListener('click', () => callbacks.onOpenModal(btnDMIncLoot, null, true));
     
     if(syncBtn) {
@@ -228,21 +233,20 @@ function setupCalculationTriggers(callbacks) {
         Rows.addSessionPlayerRow(document.getElementById('session-roster-list'), {}, callbacks);
     });
 
-    // Listeners for DM Loot Logic (View 5)
+    // Listeners for DM Loot Logic
     const dmLevelInputSetup = document.getElementById('inp-dm-level'); 
     const dmGamesInputSetup = document.getElementById('inp-dm-games-count'); 
-    // Note: old Select element listener removed
     
-    if(dmLevelInputSetup) dmLevelInputSetup.addEventListener('input', updateDMLootLogic);
-    if(dmGamesInputSetup) dmGamesInputSetup.addEventListener('change', updateDMLootLogic);
+    if(dmLevelInputSetup) dmLevelInputSetup.addEventListener('input', () => updateDMLootLogic(cachedDiscordId, cachedGameRules));
+    if(dmGamesInputSetup) dmGamesInputSetup.addEventListener('change', () => updateDMLootLogic(cachedDiscordId, cachedGameRules));
     
-    // Trigger update on Roster changes (View 4 Roster affects View 5 Loot)
+    // Trigger update on Roster changes
     const rosterBody = document.getElementById('roster-body');
     if (rosterBody) {
-        rosterBody.addEventListener('change', updateDMLootLogic);
+        rosterBody.addEventListener('change', () => updateDMLootLogic(cachedDiscordId, cachedGameRules));
         rosterBody.addEventListener('click', (e) => {
             if (e.target.matches('.btn-delete-row')) {
-                setTimeout(updateDMLootLogic, 100); 
+                setTimeout(() => updateDMLootLogic(cachedDiscordId, cachedGameRules), 100); 
             }
         });
     }
@@ -310,10 +314,7 @@ function initPlayerSetup() {
         btnAdd.addEventListener('click', () => { 
             Rows.addPlayerRowToMaster({});
             setTimeout(() => {
-                 updateLootInstructions();
-                 updateLootDeclaration();
-                 updateHgenLogic();
-                 updateDMLootLogic();
+                 window._sessionCallbacks.onUpdate();
             }, 150);
         }); 
     }
@@ -321,23 +322,13 @@ function initPlayerSetup() {
     if (rosterBody) {
         rosterBody.addEventListener('input', (e) => {
             if (e.target.matches('.inp-level') || e.target.matches('.inp-level-play-as')) {
-                setTimeout(() => {
-                     updateLootInstructions();
-                     updateLootDeclaration();
-                     updateHgenLogic();
-                     updateDMLootLogic();
-                }, 150);
+                setTimeout(() => window._sessionCallbacks.onUpdate(), 150);
             }
         });
 
         rosterBody.addEventListener('click', (e) => {
             if (e.target.matches('.btn-delete-row')) {
-                setTimeout(() => {
-                     updateLootInstructions();
-                     updateLootDeclaration();
-                     updateHgenLogic();
-                     updateDMLootLogic();
-                }, 150);
+                setTimeout(() => window._sessionCallbacks.onUpdate(), 150);
             }
         });
     }
@@ -391,12 +382,7 @@ function initPlayerSync() {
             await Rows.syncMasterRosterFromSubmissions(submissions);
             alert(`Synced ${submissions.length} player(s) from submissions.`);
             
-            setTimeout(() => {
-                updateLootInstructions();
-                updateLootDeclaration();
-                updateHgenLogic();
-                updateDMLootLogic();
-            }, 200);
+            setTimeout(() => window._sessionCallbacks.onUpdate(), 200);
         });
     }
 }
@@ -560,386 +546,5 @@ function initTemplateLogic() {
                 }
             }
         });
-    }
-}
-
-// ==========================================
-// 3. Loot & Logic Calculations
-// ==========================================
-
-// Dynamic Loot Instructions based on Role, Tier, Party
-function updateLootInstructions() {
-    const container = document.getElementById('out-loot-instructions');
-    if (!container) return;
-
-    // Grab stats from the setup tab (View 4)
-    const tierEl = document.getElementById('setup-val-tier');
-    const partySizeEl = document.getElementById('setup-val-party-size');
-    
-    const tier = parseInt(tierEl ? tierEl.textContent : "1") || 1;
-    const partySize = parseInt(partySizeEl ? partySizeEl.textContent : "0") || 0;
-    
-    const halfParty = Math.floor(partySize / 2);
-    
-    let html = "";
-    
-    // Note: isFullDM is a global variable defined at the top of this file
-    if (isFullDM) {
-        // --- FULL DM ---
-        html += `<strong>Full DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
-
-        if (tier === 1) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
-        } 
-        else if (tier === 2) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
-        }
-        else if (tier === 3) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
-        }
-        else if (tier >= 4) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> Add up to 1 T1 permanent or 2 slots worth of T1 consumables as either predetermined or from a roll at APL 4.`;
-        }
-
-        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules, including multi-session loot rules.</small>`;
-    
-    } else {
-        // --- TRIAL DM ---
-        html += `<strong>Trial DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
-        
-        if (tier === 1) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
-        }
-        else if (tier === 2) {
-            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
-            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
-        }
-        else {
-            // Tier 3+
-            html += `As a Trial DM, you must use the loot roll bot for Tier 3 or higher games.<br>`;
-            html += `Use the loot roll command instructions below to roll for loot.`;
-        }
-        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules.</small>`;
-    }
-
-    container.innerHTML = html;
-}
-
-// Updates the "Loot Declaration" text area for Discord
-function updateLootDeclaration() {
-    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
-    
-    // Grab stats from the setup tab text (calculated by View 4)
-    // Fallback to "0" or "1" if elements are missing
-    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "1";
-    
-    // The manually entered loot items
-    const lootPlan = document.getElementById('inp-loot-plan')?.value || "";
-    
-    // 1. Declaration Format (Used when specific loot is listed)
-    // Note: Adds the || spoilers around the item list
-    const declareText = `<@${cachedDiscordId}> declares loot for Game: ${gameName}, Number of Players: ${partySize}, APL ${apl}:\n||\n${lootPlan}\n||`;
-
-    // 2. Roll Format (Used when generic bot rolling is needed)
-    const rollText = `<@${cachedDiscordId}> rolls loot for Game: ${gameName}, Number of Players: ${partySize}, APL ${apl}.`;
-
-    const out = document.getElementById('out-loot-declaration');
-    if (out) {
-        // If there is text in the loot plan, use the Declaration format.
-        // Otherwise, default to the Roll format.
-        if (lootPlan.trim().length > 0) {
-            out.value = declareText;
-        } else {
-            out.value = rollText;
-        }
-    }
-}
-
-// Updates the /hgenloot command output
-function updateHgenLogic() {
-    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "1";
-    
-    // Parse the inputs for predetermined items, defaulting to 0
-    const permsVal = parseInt(document.getElementById('inp-predet-perms')?.value || "0");
-    const consVal = parseInt(document.getElementById('inp-predet-cons')?.value || "0");
-    
-    // Base Command: /hgenloot [players] [apl]
-    let cmd = `/hgenloot ${partySize} ${apl}`;
-    
-    // Optional: Add predetermined_perms if > 0
-    if (permsVal > 0) {
-        cmd += ` ${permsVal}`;
-    }
-    
-    // Optional: Add predetermined_cons if > 0
-    // Note: If perms is 0 but cons is > 0, we must include the 0 for perms 
-    // to ensure the bot parses the arguments in the correct order.
-    if (consVal > 0) {
-        if (permsVal <= 0) cmd += ` 0`; // Filler for missing perms arg
-        cmd += ` ${consVal}`;
-    }
-    
-    const out = document.getElementById('out-hgen-cmd');
-    if(out) out.value = cmd;
-}
-// ==========================================
-// 4. Session Calculations
-// ==========================================
-
-function calculateXP(level, hours, rules) {
-    if (!rules || !rules.xp_per_hour) return 0;
-    const safeLevel = parseInt(level) || 1;
-    // Handle both string and number keys in JSON lookup
-    const hourlyXP = rules.xp_per_hour[safeLevel.toString()] || rules.xp_per_hour[safeLevel] || 0;
-    return Math.floor(hourlyXP * hours);
-}
-
-function calculatePlayerRewards(level, hours, rules, incentives = []) {
-    const xp = calculateXP(level, hours, rules);
-    
-    // Base DTP: 5 per hour
-    let dtp = Math.floor(5 * hours);
-    
-    // Incentive Bonus DTP
-    if (rules && rules['player incentives']) {
-        incentives.forEach(name => {
-            dtp += (rules['player incentives'][name] || 0);
-        });
-    }
-    return { xp, dtp };
-}
-
-function calculateDMRewards(dmLevel, hours, newHireCount, welcomeWagonCount, rules, selectedIncentives = []) {
-    const rewards = { xp: 0, dtp: 0, gp: 0 };
-    if (!rules) return rewards;
-
-    rewards.xp = calculateXP(dmLevel, hours, rules);
-
-    // DM DTP Formula: floor(5 * hours) + 5x (number of new hires) + bonus incentives
-    let dtp = Math.floor(5 * hours) + (5 * newHireCount);
-    
-    if (rules['DM incentives']) {
-        selectedIncentives.forEach(name => {
-            const incData = rules['DM incentives'][name];
-            // Bonus can be a direct number or object with "bonus DTP"
-            const bonus = (typeof incData === 'number') ? incData : (incData?.['bonus DTP'] || incData?.DTP || 0);
-            dtp += bonus;
-        });
-    }
-    rewards.dtp = dtp;
-
-    // DM Gold Formula: (lookup gold per session for DMPC Level) x (1 + Welcome Wagon Count)
-    const safeLevel = parseInt(dmLevel) || 1;
-    const goldTable = rules.gold_per_session_by_apl; // Using this table for DM Level lookup as per instruction
-    const baseGold = goldTable ? (goldTable[safeLevel.toString()] || goldTable[safeLevel] || 0) : 0;
-    
-    rewards.gp = baseGold * (1 + welcomeWagonCount);
-
-    return rewards;
-}
-
-function updateSessionCalculations() {
-    if (!cachedGameRules) return; 
-    
-    const container = document.getElementById('view-session-details');
-    if(!container) return;
-
-    // 1. Get Session Total Hours
-    const sessionHoursInput = document.getElementById('inp-session-total-hours');
-    const sessionTotalHours = parseFloat(sessionHoursInput.value) || 0;
-
-    // 2. Determine Max Gold
-    const aplText = document.getElementById('setup-val-apl')?.textContent || "1";
-    const aplVal = parseInt(aplText) || 1;
-    
-    const goldTable = cachedGameRules.gold_per_session_by_apl || {};
-    const maxGold = goldTable[aplVal.toString()] || goldTable[aplVal] || 0;
-    
-    const lblGold = container.querySelector('.val-max-gold');
-    if(lblGold) lblGold.textContent = maxGold;
-
-    // 3. Process Player Cards
-    let totalLevel = 0;
-    let playerCount = 0;
-    let welcomeWagonCount = 0;
-    let newHireCount = 0;
-
-    const cards = container.querySelectorAll('.player-card');
-    cards.forEach(card => {
-        // Stats Gathering
-        const lvl = parseFloat(card.querySelector('.s-level').value) || 0;
-        if(lvl > 0) { totalLevel += lvl; playerCount++; }
-
-        const gVal = card.querySelector('.s-games').value;
-        const gNum = parseInt(gVal);
-
-        if (gVal === "1") welcomeWagonCount++;
-        if (gVal !== "10+" && !isNaN(gNum) && gNum <= 10) newHireCount++;
-        
-        // Hours Logic: Clamp to session total
-        const hInput = card.querySelector('.s-hours');
-        // If undefined/empty, default to session total
-        if(!hInput.value) hInput.value = sessionTotalHours;
-        let pHours = parseFloat(hInput.value) || 0;
-        if (pHours > sessionTotalHours) {
-            pHours = sessionTotalHours;
-            hInput.value = pHours; 
-        }
-
-        // Gold Validation
-        const gInput = card.querySelector('.s-gold');
-        const playerGold = parseFloat(gInput.value) || 0;
-        
-        if (maxGold > 0 && playerGold > maxGold) {
-            gInput.parentElement.classList.add('error');
-        } else {
-            gInput.parentElement.classList.remove('error');
-        }
-
-        // Calculate Rewards (XP & DTP)
-        const btn = card.querySelector('.s-incentives-btn');
-        const incentives = JSON.parse(btn.dataset.incentives || '[]');
-        const rewards = calculatePlayerRewards(lvl, pHours, cachedGameRules, incentives);
-        
-        card.querySelector('.s-xp').value = rewards.xp;
-        card.querySelector('.s-dtp').value = rewards.dtp;
-    });
-
-    // 4. Calculate DM Rewards
-    const dmLevelSetup = document.getElementById('inp-dm-level');
-    const dmGamesSetup = document.getElementById('inp-dm-games-count');
-    const dmNameSetup = document.getElementById('inp-dm-char-name');
-
-    // Sync Name to Read-only field
-    if(dmNameSetup) document.getElementById('out-dm-name').value = dmNameSetup.value;
-    
-    const dmLvl = parseFloat(dmLevelSetup ? dmLevelSetup.value : 0) || 0;
-    const dmGamesVal = dmGamesSetup ? dmGamesSetup.value : "10+";
-    const dmGamesNum = parseInt(dmGamesVal) || 999; 
-    const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
-
-    container.querySelector('.dm-val-jumpstart').value = isJumpstart ? "Yes" : "No";
-    container.querySelector('.dm-val-welcome').value = welcomeWagonCount;
-    container.querySelector('.dm-val-newhires').value = newHireCount;
-
-    // READ INCENTIVES FROM VIEW 5 BUTTON
-    const btnDM = document.getElementById('btn-dm-loot-incentives');
-    const dmIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
-    
-    // Update read-only display in View 6
-    const dmIncDisplay = document.getElementById('out-dm-incentives-display');
-    if(dmIncDisplay) dmIncDisplay.value = dmIncentives.join(', ');
-
-    const dmRewards = calculateDMRewards(
-        dmLvl, 
-        sessionTotalHours, 
-        newHireCount, 
-        welcomeWagonCount, 
-        cachedGameRules, 
-        dmIncentives
-    );
-
-    container.querySelector('.dm-res-xp').value = dmRewards.xp;
-    container.querySelector('.dm-res-dtp').value = dmRewards.dtp;
-    container.querySelector('.dm-res-gp').value = dmRewards.gp;
-}
-
-async function updateDMLootLogic() {
-    // 1. Calculate Roster Stats
-    const rows = document.querySelectorAll('#roster-body .player-row');
-    let newHires = 0;
-    let welcomeWagon = 0;
-
-    rows.forEach(row => {
-        const gamesVal = row.querySelector('.inp-games-count').value;
-        const gamesNum = parseInt(gamesVal);
-        
-        if (gamesVal === "1") welcomeWagon++;
-        if (gamesVal !== "10+" && !isNaN(gamesNum) && gamesNum <= 10) {
-            newHires++;
-        }
-    });
-
-    // 2. DM Jumpstart Logic
-    const dmGamesInput = document.getElementById('inp-dm-games-count');
-    const dmGamesVal = dmGamesInput ? dmGamesInput.value : "10+";
-    const dmGamesNum = parseInt(dmGamesVal) || 999;
-    const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
-
-    // 3. Update UI Read-only fields
-    const elNewHires = document.getElementById('loot-val-newhires');
-    const elWelcome = document.getElementById('loot-val-welcome');
-    const elJump = document.getElementById('loot-val-jumpstart');
-
-    if(elNewHires) elNewHires.value = newHires;
-    if(elWelcome) elWelcome.value = welcomeWagon;
-    if(elJump) elJump.value = isJumpstart ? "Yes" : "No";
-
-    // 4. Calculate Loot Rolls
-    let totalRolls = 1 + newHires;
-    
-    // UPDATED: Read from Button Dataset
-    const btnDM = document.getElementById('btn-dm-loot-incentives');
-    const selectedIncentives = JSON.parse(btnDM ? btnDM.dataset.incentives : '[]');
-    let incentiveNames = [];
-    
-    if (newHires > 0) incentiveNames.push(`New Hires (${newHires})`);
-    
-    if (cachedGameRules && cachedGameRules['DM incentives']) {
-        selectedIncentives.forEach(name => {
-            const data = cachedGameRules['DM incentives'][name];
-            const bonus = (typeof data === 'object') ? (data['bonus loot roll'] || 0) : 0;
-            if (bonus > 0) totalRolls += bonus;
-            incentiveNames.push(name);
-        });
-    }
-
-    // 5. Generate Output Text
-    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
-    const dmLvlInput = document.getElementById('inp-dm-level');
-    const dmLvl = dmLvlInput ? dmLvlInput.value : "0";
-    
-    let discordId = "YOUR_ID";
-    try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user && user.identities) {
-            const identity = user.identities.find(i => i.provider === 'discord');
-            if(identity && identity.id) discordId = identity.id;
-        }
-    } catch (e) { console.warn("ID fetch error"); }
-
-    const incentiveStr = incentiveNames.length > 0 ? `, Incentives: ${incentiveNames.join(', ')}` : "";
-    const declText = `<@${discordId}> rolls loot for Game **${gameName}**${incentiveStr}`;
-    
-    const outDecl = document.getElementById('out-dm-loot-decl');
-    if (outDecl) outDecl.value = declText;
-
-    // Command (Standard)
-    let cmdText = `/hgenloot ${totalRolls} ${dmLvl}`;
-    const outCmd = document.getElementById('out-dm-loot-cmd');
-    if (outCmd) outCmd.value = cmdText;
-
-    // Jumpstart Command (Hidden/Shown)
-    const jumpWrapper = document.getElementById('wrapper-jumpstart-bonus');
-    const jumpCmd = document.getElementById('out-dm-jumpstart-cmd');
-    
-    if (isJumpstart) {
-        if(jumpWrapper) jumpWrapper.style.display = "block";
-        if(jumpCmd) jumpCmd.value = `/hgenloot 1 ${dmLvl}`;
-    } else {
-        if(jumpWrapper) jumpWrapper.style.display = "none";
     }
 }
