@@ -338,62 +338,53 @@ extra_css:
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card accordion-card" id="card-dm-loot">
+                    <div class="accordion-header">
+                        <span class="step-title">DM Loot Determination</span>
+                        <span class="step-icon"></span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <div class="form-row-full" style="gap: 1.5rem; align-items: flex-end;">
+                                <div class="form-group">
+                                    <label>New Hires (Players &lt; 10 games)</label>
+                                    <input type="text" id="loot-val-newhires" class="table-input readonly-input" readonly value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Welcome Wagon (First game)</label>
+                                    <input type="text" id="loot-val-welcome" class="table-input readonly-input" readonly value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Jumpstart DM?</label>
+                                    <input type="text" id="loot-val-jumpstart" class="table-input readonly-input" readonly value="No">
+                                </div>
+                            </div>
+
+                            <div class="form-group form-row-full" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+                                <label>Additional DM Incentives (Loot Bonus)</label>
+                                <div id="dm-loot-incentives-container" class="checkbox-list" style="padding: 0;">
+                                    <span style="color: var(--color-text-secondary); font-style: italic;">Loading incentives...</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-row-full" style="margin-top: 1.5rem;">
+                                <label>1. Discord Declaration</label>
+                                <p class="instruction-text">Copy to clipboard and post to <a href="https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
+                                {% include discord-output.html id="out-dm-loot-decl" height="100px" %}
+                            </div>
+
+                            <div class="form-group form-row-full">
+                                <label>2. Bot Command</label>
+                                <p class="instruction-text">Reply to your declaration with this command:</p>
+                                {% include discord-output.html id="out-dm-loot-cmd" height="80px" %}
+                            </div>
                         </div>
+                    </div>
                 </div>
             </div>
-            <div class="card accordion-card open">
-    </div>
-
-<div class="card accordion-card" id="card-dm-loot">
-    <div class="accordion-header">
-        <span class="step-title">DM Loot Determination</span>
-        <span class="step-icon"></span>
-    </div>
-    <div class="accordion-body">
-        <div class="form-grid">
-            <div class="form-row-full" style="gap: 1.5rem; align-items: flex-end;">
-                <div class="form-group">
-                    <label>New Hires (Players &lt; 10 games)</label>
-                    <input type="text" id="loot-val-newhires" class="table-input readonly-input" readonly value="0">
-                </div>
-                <div class="form-group">
-                    <label>Welcome Wagon (First game)</label>
-                    <input type="text" id="loot-val-welcome" class="table-input readonly-input" readonly value="0">
-                </div>
-                <div class="form-group">
-                    <label>Jumpstart DM?</label>
-                    <input type="text" id="loot-val-jumpstart" class="table-input readonly-input" readonly value="No">
-                </div>
-            </div>
-
-            <div class="form-group form-row-full" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
-                <label>Additional DM Incentives (Loot Bonus)</label>
-                <div id="dm-loot-incentives-container" class="checkbox-list" style="max-height: 150px; overflow-y: auto; background: var(--color-bg-medium); padding: 10px; border-radius: 4px; border: 1px solid var(--color-border);">
-                    <span style="color: var(--color-text-secondary); font-style: italic;">Loading incentives...</span>
-                </div>
-            </div>
-
-            <div class="form-group form-row-full" style="margin-top: 1.5rem;">
-                <label>1. Discord Declaration</label>
-                <p class="instruction-text">Copy to clipboard and post to <a href="https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
-                <div class="discord-output-wrapper">
-                    <textarea id="out-dm-loot-decl" class="out-session-text" style="height: 80px;" readonly></textarea>
-                </div>
-                <div style="text-align: right; margin-top: 0.5rem;">
-                    <button class="button" onclick="window.copyToClipboard('out-dm-loot-decl')">Copy Declaration</button>
-                </div>
-            </div>
-
-            <div class="form-group form-row-full">
-                <label>2. Bot Command</label>
-                <p class="instruction-text">Reply to your declaration with this command:</p>
-                <div class="discord-output-wrapper">
-                    <textarea id="out-dm-loot-cmd" class="out-session-text" style="height: 80px;" readonly></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
         </div>
 
         <div id="view-session-details" class="view-section hidden-section">
