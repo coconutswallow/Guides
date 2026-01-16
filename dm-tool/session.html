@@ -273,38 +273,40 @@ extra_css:
         </div>
 
         <div id="view-loot-plan" class="view-section hidden-section">
-             <h2>Plan / Declare Loot</h2>
-             <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.</p>
-             
-             <div class="accordion-group">
-                 <div class="card accordion-card open">
-                     <div class="accordion-header">
-                         <span class="step-title">Player Loot Guidelines</span>
-                         <span class="step-icon"></span>
-                     </div>
-                     <div class="accordion-body">
+            <h2>Plan / Declare Loot</h2>
+            <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.</p>
+            
+            <div class="accordion-group">
+                <div class="card accordion-card open">
+                    <div class="accordion-header">
+                        <span class="step-title">Loot Guidelines & Declaration</span>
+                        <span class="step-icon"></span>
+                    </div>
+                    <div class="accordion-body">
                         <p>Please use the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632">Allowed Content</a> for allowable loot, and follow the guidelines below:</p>
                         
                         <div id="out-loot-instructions" style="margin-top: 1rem; padding: 10px; background: var(--color-bg-medium); border-left: 3px solid var(--color-primary); border-radius: 4px; font-size: 0.95em;">
                             <span style="color: var(--color-text-secondary);">Loading instructions...</span>
                         </div>
-                    </div>
-                 </div>
 
-                 <div class="card accordion-card open">
-                     <div class="accordion-header">
-                         <span class="step-title">Loot Declaration</span>
-                         <span class="step-icon"></span>
-                     </div>
-                     <div class="accordion-body">
-                        <div class="form-group">
+                        <div class="form-group" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <label>Pre-determined Player Loot</label>
-                            <p>Enter your pre-determined loot in bullets (* item) and the tool can help you format the loot declaration</p>
-                            <textarea id="inp-loot-plan" class="table-input" rows="8" placeholder="* Item 1"></textarea>
+                            <p class="instruction-text">Enter your pre-determined loot below (one item per line, starting with *). This will automatically format the Discord declaration below.</p>
+                            <textarea id="inp-loot-plan" class="table-input" rows="6" placeholder="* Item 1&#10;* Item 2"></textarea>
                         </div>
-                     </div>
-                 </div>
-             </div>
+
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label>Loot Declaration Output (Discord)</label>
+                            <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                <textarea id="out-loot-declaration" class="out-session-text" style="width: 100%; height: 150px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                            </div>
+                            <div style="margin-top: 0.5rem; text-align: right;">
+                                <button class="button" onclick="window.copyToClipboard('out-loot-declaration')">Copy to Clipboard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="view-session-details" class="view-section hidden-section">
