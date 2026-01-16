@@ -207,54 +207,74 @@ function initPlayerSetup() {
     const btnAdd = document.getElementById('btn-add-player');
     if(btnAdd) btnAdd.addEventListener('click', () => Rows.addPlayerRowToMaster({})); 
 }
+
 function initPlayerSync() {
-    const btnInvite = document.getElementById('btn-invite-players');
+    const btnGenerate = document.getElementById('btn-generate-invite');
+    const btnCopy = document.getElementById('btn-copy-invite');
+    const inpInvite = document.getElementById('inp-invite-link');
     const btnSync = document.getElementById('btn-sync-submissions');
 
-    // 1. Copy Invite Link
-    if (btnInvite) {
-        btnInvite.addEventListener('click', () => {
+    // 1. Generate Link
+    if (btnGenerate) {
+        btnGenerate.addEventListener('click', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             if (!id) return alert("Please save the session first to generate a Session ID.");
             
-            // Construct the full URL
-            // Get the current path (e.g., /dm-tool/session.html)
-                const path = window.location.pathname;
-                // Remove the filename to get the directory (e.g., /dm-tool/)
-                const directory = path.substring(0, path.lastIndexOf('/'));
-                // Construct the full URL relative to the current directory
-                const inviteUrl = `${window.location.origin}${directory}/player-entry.html?session_id=${id}`;
+            const path = window.location.pathname;
+            const directory = path.substring(0, path.lastIndexOf('/'));
+            const inviteUrl = `${window.location.origin}${directory}/player-entry.html?session_id=${id}`;
             
-            navigator.clipboard.writeText(inviteUrl).then(() => {
-                // Visual feedback
-                const originalText = btnInvite.innerText;
-                btnInvite.innerText = "Copied!";
-                setTimeout(() => btnInvite.innerText = originalText, 2000);
+            if(inpInvite) inpInvite.value = inviteUrl;
+        });
+    }
+
+    // 2. Copy Link
+    if (btnCopy) {
+        btnCopy.addEventListener('click', () => {
+            if (!inpInvite || !inpInvite.value) return alert("Generate a link first.");
+            
+            navigator.clipboard.writeText(inpInvite.value).then(() => {
+                const originalText = btnCopy.innerText;
+                btnCopy.innerText = "Copied!";
+                setTimeout(() => btnCopy.innerText = originalText, 2000);
             }).catch(err => {
                 console.error('Failed to copy: ', err);
-                prompt("Copy this link:", inviteUrl);
+                prompt("Copy this link:", inpInvite.value);
             });
         });
     }
 
-    // 2. Sync Player Data
+    // 3. Sync Data
     if (btnSync) {
         btnSync.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             if (!id) return alert("Please save the session first.");
 
-            if (!confirm("This will merge player submissions into your roster.\n\n- Updates existing players (by Discord ID)\n- Adds new players if they don't exist\n\nContinue?")) return;
-
             const submissions = await fetchPlayerSubmissions(id);
             if (!submissions || submissions.length === 0) {
                 return alert("No player submissions found for this session.");
             }
 
-            // Call the new helper in Rows
-            Rows.applyPlayerSubmissions(submissions, window._sessionCallbacks);
-            alert(`Successfully processed ${submissions.length} player submission(s).`);
+            // Calls the new sync function in Rows (View 4 Logic)
+            await Rows.syncMasterRosterFromSubmissions(submissions);
+            alert(`Synced ${submissions.length} player(s) from submissions.`);
+        });
+    }
+    
+    // Legacy support for View 6 sync (if button exists there)
+    const btnSyncSession = document.getElementById('btn-sync-session');
+    if(btnSyncSession) {
+        btnSyncSession.addEventListener('click', async () => {
+             const urlParams = new URLSearchParams(window.location.search);
+             const id = urlParams.get('id');
+             if(!id) return alert("Save session first");
+             
+             if (!confirm("This will merge player submissions into your Session Log.\n\nContinue?")) return;
+             
+             const submissions = await fetchPlayerSubmissions(id);
+             Rows.applyPlayerSubmissions(submissions, window._sessionCallbacks);
         });
     }
 }

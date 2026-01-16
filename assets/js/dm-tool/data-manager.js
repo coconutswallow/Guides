@@ -47,13 +47,37 @@ export async function fetchActiveEvents() {
     }
 }
 
+export async function fetchMemberMap(discordIds) {
+    if (!discordIds || discordIds.length === 0) return {};
+    
+    try {
+        const { data, error } = await supabase
+            .from('member_directory')
+            .select('discord_id, display_name')
+            .in('discord_id', discordIds);
+
+        if (error) throw error;
+        
+        // Convert to map: { "123": "Coconut", "456": "Banana" }
+        const map = {};
+        if (data) {
+            data.forEach(m => {
+                map[m.discord_id] = m.display_name;
+            });
+        }
+        return map;
+    } catch (err) {
+        console.error("Error fetching member directory:", err);
+        return {};
+    }
+}
+
 /* =========================================
    2. DASHBOARD OPERATIONS
    ========================================= */
 
 export async function fetchSessionList(userId) {
     try {
-        // Explicitly fetch only items where is_template is FALSE
         const { data, error } = await supabase
             .from('session_logs')
             .select('id, title, session_date, is_template, updated_at')
@@ -119,12 +143,8 @@ export async function createSession(userId, title, isTemplate = false) {
     }
 }
 
-/**
- * Saves as template. Overwrites if a template with the same name exists for the user.
- */
 export async function saveAsTemplate(userId, templateName, formData) {
     try {
-        // 1. Check if template exists
         const { data: existing, error: fetchError } = await supabase
             .from('session_logs')
             .select('id')
@@ -134,7 +154,6 @@ export async function saveAsTemplate(userId, templateName, formData) {
             .single();
 
         if (existing) {
-            // 2a. Overwrite existing
             const { data, error } = await supabase
                 .from('session_logs')
                 .update({
@@ -147,7 +166,6 @@ export async function saveAsTemplate(userId, templateName, formData) {
             if (error) throw error;
             return data;
         } else {
-            // 2b. Create new
             const { data, error } = await supabase
                 .from('session_logs')
                 .insert([{
