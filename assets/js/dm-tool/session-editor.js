@@ -549,78 +549,74 @@ function initTemplateLogic() {
 // 3. Loot & Logic Calculations
 // ==========================================
 
+// Dynamic Loot Instructions based on Role, Tier, Party
 function updateLootInstructions() {
     const container = document.getElementById('out-loot-instructions');
     if (!container) return;
 
-    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
-
-    let instructions = `Active Tier: <strong>${tier}</strong> (APL ${apl}). <br>Please verify loot rarity limits against the Allowed Content spreadsheet.`;
+    // Grab stats from the setup tab (View 4)
+    const tierEl = document.getElementById('setup-val-tier');
+    const partySizeEl = document.getElementById('setup-val-party-size');
     
-    if (cachedGameRules && cachedGameRules.loot_instructions && cachedGameRules.loot_instructions[tier]) {
-         instructions = cachedGameRules.loot_instructions[tier];
-    } 
-
-    container.innerHTML = instructions;
-}
-
-async function updateLootDeclaration() {
-    const lootInput = document.getElementById('inp-loot-plan');
-    const output = document.getElementById('out-loot-declaration');
-    if (!lootInput || !output) return;
-
-    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
+    const tier = parseInt(tierEl ? tierEl.textContent : "1") || 1;
+    const partySize = parseInt(partySizeEl ? partySizeEl.textContent : "0") || 0;
     
-    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
-    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
-    const lootContent = lootInput.value.trim();
+    const halfParty = Math.floor(partySize / 2);
+    
+    let html = "";
+    
+    // Note: isFullDM is a global variable defined at the top of this file
+    if (isFullDM) {
+        // --- FULL DM ---
+        html += `<strong>Full DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
 
-    let discordId = "YOUR_ID";
-    try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user && user.identities) {
-            const identity = user.identities.find(i => i.provider === 'discord');
-            if(identity && identity.id) discordId = identity.id;
+        if (tier === 1) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
+        } 
+        else if (tier === 2) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
         }
-    } catch (e) { console.warn("Could not fetch user ID for loot template"); }
+        else if (tier === 3) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
+        }
+        else if (tier >= 4) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> Add up to 1 T1 permanent or 2 slots worth of T1 consumables as either predetermined or from a roll at APL 4.`;
+        }
 
-    const declaration = `<@${discordId}> declares loot for **${gameName}**: Number of Players: ${partySize}, Tier ${tier}, APL ${apl}:\n||\n${lootContent}\n||`;
-
-    output.value = declaration;
-}
-
-function updateHgenLogic() {
-    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
-    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
-    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
+        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules, including multi-session loot rules.</small>`;
     
-    const predetPerms = parseInt(document.getElementById('inp-predet-perms')?.value) || 0;
-    const predetCons = parseInt(document.getElementById('inp-predet-cons')?.value) || 0;
-
-    const declaration = `<@1360680887510892654> rolls loot for **${gameName}**: Number of Players: ${partySize}, Tier ${tier}, APL ${apl}:`;
-    
-    let command = `/hgenloot ${partySize} ${apl}`;
-    
-    if (predetPerms > 0) {
-        command += ` predetermined_perms ${predetPerms}`;
+    } else {
+        // --- TRIAL DM ---
+        html += `<strong>Trial DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
+        
+        if (tier === 1) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+        }
+        else if (tier === 2) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+        }
+        else {
+            // Tier 3+
+            html += `As a Trial DM, you must use the loot roll bot for Tier 3 or higher games.<br>`;
+            html += `Use the loot roll command instructions below to roll for loot.`;
+        }
+        html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules.</small>`;
     }
-    
-    if (predetCons > 0) {
-        command += ` predetermined_cons ${predetCons}`;
-    }
 
-    const outDecl = document.getElementById('out-hgen-declaration');
-    const outCmd = document.getElementById('out-hgen-command');
-    
-    if (outDecl) outDecl.value = declaration;
-    if (outCmd) outCmd.value = command;
+    container.innerHTML = html;
 }
-
-// No longer needed - Modal handles population
-// function initDMLootIncentives() {}
 
 // ==========================================
 // 4. Session Calculations
