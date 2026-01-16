@@ -200,13 +200,31 @@ function setupCalculationTriggers(callbacks) {
         });
     }
 
-    // 2. Session Hours
+    // 2. Session Hours & Date Sync
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     if (sessionHoursInput) {
         sessionHoursInput.addEventListener('input', () => {
-             // NEW: Sync hours to all players immediately
              Rows.setAllPlayerHours(sessionHoursInput.value);
              updateSessionCalculations(cachedGameRules);
+        });
+    }
+
+    // NEW: Sync Session Date from Start Date IF session date is empty
+    const startDateInput = document.getElementById('inp-start-datetime');
+    if (startDateInput) {
+        startDateInput.addEventListener('change', () => {
+            const sessionDateInput = document.getElementById('inp-session-date');
+            const sessionUnixInput = document.getElementById('inp-session-unix');
+            const mainUnix = document.getElementById('inp-unix-time');
+            
+            // Only overwrite if currently empty
+            if (sessionDateInput && (!sessionDateInput.value)) {
+                sessionDateInput.value = startDateInput.value;
+                if(sessionUnixInput && mainUnix) {
+                    sessionUnixInput.value = mainUnix.value;
+                }
+            }
+            if(callbacks.onUpdate) callbacks.onUpdate();
         });
     }
 
