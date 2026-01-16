@@ -89,7 +89,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const callbacks = {
         onUpdate: () => {
             updateSessionCalculations();
-            updateLootInstructions(); 
+            updateLootInstructions();
+            updateLootDeclaration(); // Update standard Loot Declaration
+            updateHgenLogic();       // Update Hgenloot Logic
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
@@ -123,8 +125,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setupCalculationTriggers(callbacks);
     
+    // Listeners for Loot Plan inputs
+    const lootPlanInput = document.getElementById('inp-loot-plan');
+    if (lootPlanInput) lootPlanInput.addEventListener('input', updateLootDeclaration);
+
+    const gameNameInput = document.getElementById('header-game-name');
+    if (gameNameInput) {
+        gameNameInput.addEventListener('input', () => {
+            updateLootDeclaration();
+            updateHgenLogic();
+        });
+    }
+
+    // Listeners for Hgen inputs
+    ['inp-predet-perms', 'inp-predet-cons'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', updateHgenLogic);
+    });
+    
     // Initial Loot Update call
-    setTimeout(updateLootInstructions, 1000);
+    setTimeout(() => {
+        updateLootInstructions();
+        updateLootDeclaration();
+        updateHgenLogic();
+    }, 1000);
 });
 
 function setupCalculationTriggers(callbacks) {
@@ -213,7 +237,11 @@ function initPlayerSetup() {
         btnAdd.addEventListener('click', () => { 
             Rows.addPlayerRowToMaster({});
             // Wait slightly longer than session-rows.js (50ms) to ensure stats are ready
-            setTimeout(() => updateLootInstructions(), 150);
+            setTimeout(() => {
+                 updateLootInstructions();
+                 updateLootDeclaration();
+                 updateHgenLogic();
+            }, 150);
         }); 
     }
 
@@ -222,14 +250,22 @@ function initPlayerSetup() {
         rosterBody.addEventListener('input', (e) => {
             // If level fields change
             if (e.target.matches('.inp-level') || e.target.matches('.inp-level-play-as')) {
-                setTimeout(() => updateLootInstructions(), 150);
+                setTimeout(() => {
+                     updateLootInstructions();
+                     updateLootDeclaration();
+                     updateHgenLogic();
+                }, 150);
             }
         });
 
         rosterBody.addEventListener('click', (e) => {
             // If delete button clicked
             if (e.target.matches('.btn-delete-row')) {
-                setTimeout(() => updateLootInstructions(), 150);
+                setTimeout(() => {
+                     updateLootInstructions();
+                     updateLootDeclaration();
+                     updateHgenLogic();
+                }, 150);
             }
         });
     }
@@ -285,7 +321,11 @@ function initPlayerSync() {
             alert(`Synced ${submissions.length} player(s) from submissions.`);
             
             // Recalculate loot instructions after sync
-            setTimeout(() => updateLootInstructions(), 200);
+            setTimeout(() => {
+                updateLootInstructions();
+                updateLootDeclaration();
+                updateHgenLogic();
+            }, 200);
         });
     }
     
@@ -713,39 +753,24 @@ async function updateLootDeclaration() {
     output.value = declaration;
 }
 
-// 2. Update the 'onUpdate' callback inside DOMContentLoaded
-// Find the existing `callbacks` object definition and modify onUpdate:
-const callbacks = {
-    onUpdate: () => {
-        updateSessionCalculations();
-        updateLootInstructions();
-        updateLootDeclaration(); // <--- Add this line
-    },
-    onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
-};
+function updateHgenLogic() {
+    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
+    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
+    const apl = document.getElementById('setup-val-apl')?.textContent || "0";
+    const tier = document.getElementById('setup-val-tier')?.textContent || "1";
+    
+    const predetPerms = document.getElementById('inp-predet-perms')?.value || "0";
+    const predetCons = document.getElementById('inp-predet-cons')?.value || "0";
 
-// 3. Add a direct Event Listener for the text area and Game Name
-// Inside initPlayerSetup() or the main DOMContentLoaded block:
+    // Format 1: Declaration
+    const declaration = `<@1360680887510892654> rolls loot for **${gameName}**: Number of Players: ${partySize}, Tier ${tier}, APL ${apl}:`;
+    
+    // Format 2: Command
+    const command = `/hgenloot ${partySize} ${apl} predetermined_perms ${predetPerms} predetermined_cons ${predetCons}`;
 
-const lootPlanInput = document.getElementById('inp-loot-plan');
-if (lootPlanInput) {
-    lootPlanInput.addEventListener('input', updateLootDeclaration);
+    const outDecl = document.getElementById('out-hgen-declaration');
+    const outCmd = document.getElementById('out-hgen-command');
+    
+    if (outDecl) outDecl.value = declaration;
+    if (outCmd) outCmd.value = command;
 }
-
-const gameNameInput = document.getElementById('header-game-name');
-if (gameNameInput) {
-    // Existing listener might exist for other outputs, append this one
-    gameNameInput.addEventListener('input', updateLootDeclaration);
-}
-
-// 4. Update sync logic to trigger this update
-// Inside initPlayerSync(), inside the `btnSync` click handler:
-// ...
-await Rows.syncMasterRosterFromSubmissions(submissions);
-alert(`Synced ${submissions.length} player(s) from submissions.`);
-
-// Recalculate loot instructions AND declaration after sync
-setTimeout(() => {
-    updateLootInstructions();
-    updateLootDeclaration(); // <--- Add this line
-}, 200);

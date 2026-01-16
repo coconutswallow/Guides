@@ -274,7 +274,7 @@ extra_css:
 
         <div id="view-loot-plan" class="view-section hidden-section">
             <h2>Plan / Declare Loot</h2>
-            <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.</p>
+            <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.  **Note:** you can declare loot at any time (up to the end of the session).</p>
             
             <div class="accordion-group">
                 <div class="card accordion-card open">
@@ -291,12 +291,13 @@ extra_css:
 
                         <div class="form-group" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <label>Pre-determined Player Loot</label>
-                            <p class="instruction-text">Enter your pre-determined loot below (one item per line, starting with *). This will automatically format the Discord declaration below.</p>
+                            <p class="instruction-text">Enter your pre-determined loot below (one item per line). This will automatically format the Discord declaration below.</p>
                             <textarea id="inp-loot-plan" class="table-input" rows="6" placeholder="* Item 1&#10;* Item 2"></textarea>
                         </div>
 
                         <div class="form-group" style="margin-top: 1.5rem;">
-                            <label>Loot Declaration Output (Discord)</label>
+                            <label>Output for Discord:</label>
+                            <p>Copy to clipboard and post to <a href=:https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></p>
                             <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
                                 <textarea id="out-loot-declaration" class="out-session-text" style="width: 100%; height: 150px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                             </div>
@@ -304,7 +305,43 @@ extra_css:
                                 <button class="button" onclick="window.copyToClipboard('out-loot-declaration')">Copy to Clipboard</button>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="hgen-section" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+                            <h3>Use Hgenloot Bot</h3>
+                            <p>Please refer the <a href="https://discord.com/channels/308324031478890497/617838916929847315/1423099262845190196" target="_blank">This Patch Update</a> for the full explanation of the Hgenloot, but you can use the bot to roll for all of your loot, or partially (in combination with pre-determined loot, if applicable).</p>
+                            
+                            <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                                <div class="form-group">
+                                    <label>Predetermined Permanents</label>
+                                    <input type="number" id="inp-predet-perms" value="0" min="0" style="width: 100px;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Predetermined Consumables</label>
+                                    <input type="number" id="inp-predet-cons" value="0" min="0" style="width: 100px;">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>1. Copy this into #treasure-log:</label>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-hgen-declaration" class="out-session-text" style="width: 100%; height: 80px; padding: 1rem; background: #36393f; color: #dcddde; border: none; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                                <div style="text-align: right; margin-top: 0.5rem;">
+                                    <button class="button" onclick="window.copyToClipboard('out-hgen-declaration')">Copy to Clipboard</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 1.5rem;">
+                                <label>2. Reply to that message, and run this command:</label>
+                                <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                                    <textarea id="out-hgen-command" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                </div>
+                                <div style="text-align: right; margin-top: 0.5rem;">
+                                    <button class="button" onclick="window.copyToClipboard('out-hgen-command')">Copy to Clipboard</button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -461,7 +498,7 @@ extra_css:
                             <textarea id="inp-session-summary" class="table-input" rows="6"></textarea>
                         </div>
                         <div class="form-group" style="margin-bottom: 1.5rem;">
-                            <label>Session Notes (Private)</label>
+                            <label>Session Notes</label>
                             <textarea id="inp-session-notes" class="table-input" rows="3"></textarea>
                         </div>
                         <div class="form-group">

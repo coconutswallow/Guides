@@ -69,7 +69,9 @@ export function getFormData() {
             how_to_apply: val('inp-apply'),
             listing_url: val('inp-listing-url'), 
             lobby_url: val('inp-lobby-url'),     
-            loot_plan: val('inp-loot-plan') 
+            loot_plan: val('inp-loot-plan'),
+            predet_perms: val('inp-predet-perms'), // Added
+            predet_cons: val('inp-predet-cons')    // Added
         },
         players: Rows.getMasterRosterData(),
         dm: {
@@ -136,7 +138,9 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-apps-type', h.apps_type);
         setVal('inp-listing-url', h.listing_url);
         setVal('inp-lobby-url', h.lobby_url);
-        setVal('inp-loot-plan', h.loot_plan); 
+        setVal('inp-loot-plan', h.loot_plan);
+        setVal('inp-predet-perms', h.predet_perms || "0"); // Added
+        setVal('inp-predet-cons', h.predet_cons || "0");   // Added
         
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && Array.isArray(h.event_tags)) {
