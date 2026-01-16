@@ -7,17 +7,21 @@ import {
     saveAsTemplate, 
     loadSession, 
     fetchGameRules, 
-    fetchActiveEvents,
+    fetchActiveEvents, 
     fetchTemplates,
     deleteSession,
     fetchPlayerSubmissions 
 } from './data-manager.js';
+
+// --- NEW IMPORT: Correct relative path based on your tree ---
+import { checkAccess } from '../auth-check.js'; 
 
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
 
 let cachedGameRules = null; 
+let isFullDM = false; // <--- Store User Role
 
 // ==========================================
 // 1. Initialization
@@ -25,6 +29,16 @@ let cachedGameRules = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     cachedGameRules = await fetchGameRules();
+
+    // --- NEW: Check DM Role ---
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+        // Checks if user has the specific "Full DM" role string
+        // Note: checkAccess returns true/false
+        isFullDM = await checkAccess(user.id, 'Full DM');
+        console.log("User Role Check - Full DM:", isFullDM);
+    }
+    // --------------------------
 
     // Init UI Modules
     UI.initTabs(() => IO.generateOutput()); 
@@ -39,14 +53,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     initPlayerSetup();
     initPlayerSync();
 
-    // --- NEW: Update outputs immediately when specific URL fields are changed ---
     const bindOutput = (id) => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('input', () => IO.generateOutput());
     };
     bindOutput('inp-lobby-url');
     bindOutput('inp-listing-url');
-    // --------------------------------------------------------------------------
 
     // Dropdowns
     const rules = cachedGameRules;
@@ -56,66 +68,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(rules.options["Game Format"]) UI.fillDropdown('inp-format', rules.options["Game Format"]);
     }
     
-    // --- UPDATED: Tier Dropdown Initialization ---
+    // Tier Dropdown
     if (rules && rules.tier) {
         const tierSelect = document.getElementById('inp-tier');
         if (tierSelect) {
-            // Enable multi-select (already in HTML, but good safeguard)
             tierSelect.setAttribute('multiple', 'true');
-            
-            tierSelect.innerHTML = ''; // Clear existing
+            tierSelect.innerHTML = ''; 
             Object.keys(rules.tier).sort().forEach(key => {
                 const el = document.createElement('option');
-                el.value = key; // e.g., "Tier 1"
+                el.value = key; 
                 el.textContent = key;
                 tierSelect.appendChild(el);
             });
         }
     }
-    // ---------------------------------------------
     
     await initEventsDropdown(); 
     await initTemplateDropdown(); 
 
-    // Load Data or Defaults
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
 
     // Callbacks for dynamic rows
     const callbacks = {
-        onUpdate: updateSessionCalculations,
+        // Updated to include Loot Instructions hook
+        onUpdate: () => {
+            updateSessionCalculations();
+            updateLootInstructions(); 
+        },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
     
-    // Store callbacks globally/module-scope for Rows to use if needed
     window._sessionCallbacks = callbacks;
 
     if (sessionId) {
         await loadSessionData(sessionId, callbacks);
     } 
 
-    // Init Hours Listener (Central Logic)
     const hoursInput = document.getElementById('inp-session-total-hours');
     if(hoursInput) {
         hoursInput.addEventListener('input', () => {
             const val = parseFloat(hoursInput.value) || 0;
-            
-            // 5.5 Hour Limit Logic
             if (val > 5.5) {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
-                    // 1. Set current to 3
                     hoursInput.value = 3;
                     updateSessionCalculations();
-                    
-                    // 2. Trigger Copy (Next Part)
                     document.getElementById('chk-next-part').checked = true;
-                    // Default name increment
                     const currentName = document.getElementById('header-game-name').value;
                     const nextName = incrementPartName(currentName);
                     document.getElementById('inp-copy-name').value = nextName;
-                    
-                    // Open Modal
                     document.getElementById('modal-copy-game').showModal();
                 }
             } else {
@@ -125,6 +127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     setupCalculationTriggers(callbacks);
+    
+    // Initial Loot Update call
+    setTimeout(updateLootInstructions, 1000);
 });
 
 function setupCalculationTriggers(callbacks) {
@@ -134,8 +139,8 @@ function setupCalculationTriggers(callbacks) {
     const syncBtn = document.getElementById('btn-sync-roster');
     const addPlayerBtn = document.getElementById('btn-add-session-player');
 
-    if(dmLevel) dmLevel.addEventListener('input', updateSessionCalculations);
-    if(dmGames) dmGames.addEventListener('input', updateSessionCalculations);
+    if(dmLevel) dmLevel.addEventListener('input', callbacks.onUpdate);
+    if(dmGames) dmGames.addEventListener('input', callbacks.onUpdate);
     if(btnDMInc) btnDMInc.addEventListener('click', () => callbacks.onOpenModal(btnDMInc, null, true));
     
     if(syncBtn) syncBtn.addEventListener('click', () => {
@@ -214,7 +219,6 @@ function initPlayerSync() {
     const inpInvite = document.getElementById('inp-invite-link');
     const btnSync = document.getElementById('btn-sync-submissions');
 
-    // 1. Generate Link
     if (btnGenerate) {
         btnGenerate.addEventListener('click', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -229,7 +233,6 @@ function initPlayerSync() {
         });
     }
 
-    // 2. Copy Link
     if (btnCopy) {
         btnCopy.addEventListener('click', () => {
             if (!inpInvite || !inpInvite.value) return alert("Generate a link first.");
@@ -245,7 +248,6 @@ function initPlayerSync() {
         });
     }
 
-    // 3. Sync Data
     if (btnSync) {
         btnSync.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -256,14 +258,11 @@ function initPlayerSync() {
             if (!submissions || submissions.length === 0) {
                 return alert("No player submissions found for this session.");
             }
-
-            // Calls the new sync function in Rows (View 4 Logic)
             await Rows.syncMasterRosterFromSubmissions(submissions);
             alert(`Synced ${submissions.length} player(s) from submissions.`);
         });
     }
     
-    // Legacy support for View 6 sync (if button exists there)
     const btnSyncSession = document.getElementById('btn-sync-session');
     if(btnSyncSession) {
         btnSyncSession.addEventListener('click', async () => {
@@ -280,7 +279,7 @@ function initPlayerSync() {
 }
 
 // ==========================================
-// 3. Calculation Logic (Merged)
+// 3. Calculation Logic
 // ==========================================
 
 function calculateXP(level, hours, rules) {
@@ -304,10 +303,8 @@ function calculateDMRewards(dmLevel, hours, sessionApl, newHireCount, isJumpstar
     const rewards = { xp: 0, dtp: 0, gp: 0, loot: "1" };
     if (!rules) return rewards;
 
-    // XP
     rewards.xp = calculateXP(dmLevel, hours, rules);
 
-    // DTP
     let dtp = Math.floor(5 * hours) + (5 * newHireCount);
     if (rules['DM incentives']) {
         selectedIncentives.forEach(name => {
@@ -316,13 +313,11 @@ function calculateDMRewards(dmLevel, hours, sessionApl, newHireCount, isJumpstar
     }
     rewards.dtp = dtp;
 
-    // Gold (Jumpstart Only)
     if (isJumpstart) {
         const safeApl = Math.floor(sessionApl) || 1;
         rewards.gp = rules.gold_per_session_by_apl ? (rules.gold_per_session_by_apl[safeApl] || 0) : 0;
     }
 
-    // Loot
     let baseLoot = 1 + newHireCount;
     let lootStr = `${baseLoot}`;
     if (isJumpstart) {
@@ -338,11 +333,9 @@ function calculateDMRewards(dmLevel, hours, sessionApl, newHireCount, isJumpstar
 function updateSessionCalculations() {
     if (!cachedGameRules) return; 
     
-    // Target the session details view container specifically
     const container = document.getElementById('view-session-details');
     if(!container) return;
 
-    // 1. Calculate APL / Counts
     let totalLevel = 0;
     let playerCount = 0;
     let welcomeWagonCount = 0;
@@ -361,7 +354,6 @@ function updateSessionCalculations() {
     });
     const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
     
-    // 2. Tier & Max Gold
     let tier = 1;
     if (apl >= 17) tier = 4;
     else if (apl >= 11) tier = 3;
@@ -377,7 +369,6 @@ function updateSessionCalculations() {
     if(lblTier) lblTier.textContent = tier;
     if(lblGold) lblGold.textContent = maxGold;
 
-    // 3. Row Updates
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours').value) || 0;
     
     cards.forEach(card => {
@@ -403,7 +394,6 @@ function updateSessionCalculations() {
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
 
-    // 4. DM Calc
     const dmLevelInput = document.getElementById('out-dm-level');
     const dmGamesInput = document.getElementById('out-dm-games');
     
@@ -438,7 +428,74 @@ function updateSessionCalculations() {
     }
 }
 
-// ... (Rest of Copy/Template logic remains unchanged) ...
+// --- NEW: Dynamic Loot Instructions based on Role, Tier, Party ---
+function updateLootInstructions() {
+    const container = document.getElementById('out-loot-instructions');
+    if (!container) return;
+
+    // Grab stats from the setup tab (View 4)
+    // IMPORTANT: Make sure these IDs match session-rows.js logic
+    const tierEl = document.getElementById('setup-val-tier');
+    const partySizeEl = document.getElementById('setup-val-party-size');
+    
+    const tier = parseInt(tierEl ? tierEl.textContent : "1") || 1;
+    const partySize = parseInt(partySizeEl ? partySizeEl.textContent : "0") || 0;
+    
+    const halfParty = Math.floor(partySize / 2);
+    
+    let html = "";
+    
+    if (isFullDM) {
+        // --- FULL DM ---
+        html += `<strong>Full DM Detected (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
+
+        if (tier === 1) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+        } 
+        else if (tier === 2) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+        }
+        else if (tier === 3) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+        }
+        else if (tier >= 4) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> Add up to 1 T1 permanent or 2 slots worth of T1 consumables as either predetermined or from a roll at APL 4.`;
+        }
+
+        html += `<br><br><small>For Full DM: Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for multi-session loot rules.</small>`;
+    
+    } else {
+        // --- TRIAL DM ---
+        html += `<strong>Trial DM Detected (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
+        
+        if (tier === 1) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+        }
+        else if (tier === 2) {
+            html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
+            html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+        }
+        else {
+            // Tier 3+
+            html += `As a Trial DM, you must use the loot roll bot for Tier 3 or higher games.<br>`;
+            html += `Use the loot roll command instructions below to roll for loot.`;
+        }
+    }
+
+    container.innerHTML = html;
+}
+
 function initCopyGameLogic() {
     const btnCopy = document.getElementById('btn-copy-game');
     const modal = document.getElementById('modal-copy-game');
