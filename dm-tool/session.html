@@ -310,19 +310,19 @@ extra_css:
                             <h3>Use Hgenloot Bot</h3>
                             <p>Please refer the <a href="https://discord.com/channels/308324031478890497/617838916929847315/1423099262845190196" target="_blank">This Patch Update</a> for the full explanation of the Hgenloot, but you can use the bot to roll for all of your loot, or partially (in combination with pre-determined loot, if applicable).</p>
                             
-                            <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                            <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-direction: row; align-items: flex-end;">
                                 <div class="form-group">
                                     <label>Predetermined Permanents</label>
-                                    <input type="number" id="inp-predet-perms" value="0" min="0" style="width: 100px;">
+                                    <input type="number" id="inp-predet-perms" value="0" min="0" style="width: 180px;">
                                 </div>
                                 <div class="form-group">
                                     <label>Predetermined Consumables</label>
-                                    <input type="number" id="inp-predet-cons" value="0" min="0" style="width: 100px;">
+                                    <input type="number" id="inp-predet-cons" value="0" min="0" style="width: 180px;">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>1. Copy this into #treasure-log:</label>
+                                <label>1. Copy this into <a href=:https://discord.com/channels/308324031478890497/617808735770902718">#Treasure-Log</a></label>
                                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
                                     <textarea id="out-hgen-declaration" class="out-session-text" style="width: 100%; height: 80px; padding: 1rem; background: #36393f; color: #dcddde; border: none; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                                 </div>
@@ -332,12 +332,9 @@ extra_css:
                             </div>
 
                             <div class="form-group" style="margin-top: 1.5rem;">
-                                <label>2. Reply to that message, and run this command:</label>
+                                <label>2. Reply to that message, and run this command (note: copy-pasting won't work. Please type it manually):</label>
                                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
                                     <textarea id="out-hgen-command" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; font-family: monospace; box-sizing: border-box;" readonly></textarea>
-                                </div>
-                                <div style="text-align: right; margin-top: 0.5rem;">
-                                    <button class="button" onclick="window.copyToClipboard('out-hgen-command')">Copy to Clipboard</button>
                                 </div>
                             </div>
                         </div>
