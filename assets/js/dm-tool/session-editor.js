@@ -477,17 +477,17 @@ function updateLootInstructions() {
         if (tier === 1) {
             html += `You can pre-determine up to <strong>${partySize}</strong> Tier 1 loot items.<br>`;
             html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
         } 
         else if (tier === 2) {
             html += `You can pre-determine up to <strong>${partySize}</strong> Tier 2 or lower loot items.<br>`;
             html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
         }
         else if (tier === 3) {
             html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
             html += `Up to <strong>${halfParty}</strong> permanents are allowed.<br>`;
-            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0).`;
+            html += `<em>Bonus loot:</em> You can also select up to <strong>${halfParty}</strong> T0 items (up to only 1 T0 permanent).`;
         }
         else if (tier >= 4) {
             html += `You can pre-determine up to <strong>${partySize}</strong> Tier 3 or lower loot items.<br>`;
