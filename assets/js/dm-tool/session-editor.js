@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Session Hours "Next Part" Logic
     const hoursInput = document.getElementById('inp-session-total-hours');
     if(hoursInput) {
-        hoursInput.addEventListener('change', () => { // Changed to change to avoid popup while typing
+        hoursInput.addEventListener('change', () => { 
             const val = parseFloat(hoursInput.value) || 0;
             if (val > 5.5) {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");

@@ -50,9 +50,6 @@ export function updateMasterRosterStats() {
     if(elSize) elSize.textContent = rows.length; 
     if(elApl) elApl.textContent = apl;
     if(elTier) elTier.textContent = tier;
-
-    // Debugging log
-    console.log(`[Roster Stats] Count: ${rows.length}, APL: ${apl}, Tier: ${tier}`);
 }
 
 /**
@@ -407,75 +404,6 @@ export function applyPlayerSubmissions(submissions, callbacks) {
                  btn.dataset.incentives = JSON.stringify(p.incentives);
                  btn.innerText = p.incentives.length > 0 ? "+" : "+";
             }
-        }
-    });
-
-    if (callbacks && callbacks.onUpdate) callbacks.onUpdate();
-}
-
-export function syncSessionPlayersFromMaster(callbacks) {
-    const listContainer = document.getElementById('session-roster-list');
-    listContainer.innerHTML = ''; 
-    const sourceData = getMasterRosterData(); 
-    
-    // Also sync DM Data
-    const dmLvl = document.getElementById('inp-dm-level').value;
-    const dmGames = document.getElementById('inp-dm-games-count').value;
-    const dmChar = document.getElementById('inp-dm-char-name').value;
-    
-    document.getElementById('out-dm-level').value = dmLvl;
-    document.getElementById('out-dm-games').value = dmGames;
-    document.getElementById('out-dm-name').value = dmChar;
-
-    sourceData.forEach(p => {
-        addSessionPlayerRow(listContainer, p, callbacks);
-    });
-}
-
-/**
- * Applies submissions to Session Logs (View 6)
- */
-export function applyPlayerSubmissions(submissions, callbacks) {
-    const listContainer = document.getElementById('session-roster-list');
-    if (!listContainer) return;
-
-    const existingCards = Array.from(listContainer.querySelectorAll('.player-card'));
-
-    submissions.forEach(sub => {
-        const p = sub.payload || {};
-        const discordId = sub.discord_id || "";
-        
-        if (!discordId) return;
-
-        // Find existing card by Discord ID (Hidden Field)
-        const card = existingCards.find(c => {
-            const val = c.querySelector('.s-discord-id').value.trim().toLowerCase();
-            return val === discordId.trim().toLowerCase();
-        });
-
-        if (card) {
-            if (p.char_name) card.querySelector('.s-char-name').value = p.char_name;
-            if (p.level) card.querySelector('.s-level').value = p.level;
-            if (p.games) card.querySelector('.s-games').value = p.games;
-            if (p.loot) card.querySelector('.s-loot').value = p.loot;
-            if (p.items) card.querySelector('.s-items').value = p.items;
-            if (p.gold) card.querySelector('.s-gold').value = p.gold;
-            if (p.notes) card.querySelector('.s-notes').value = p.notes;
-            card.querySelector('.s-level').dispatchEvent(new Event('input'));
-        } else {
-            const newPlayerData = {
-                discord_id: discordId,
-                display_name: discordId, // Fallback, will be updated if sync happens
-                character_name: p.char_name,
-                level: p.level,
-                level_playing_as: p.level_as, 
-                games_count: p.games,
-                loot: p.loot,
-                items_used: p.items,
-                gold: p.gold,
-                notes: p.notes
-            };
-            addSessionPlayerRow(listContainer, newPlayerData, callbacks);
         }
     });
 
