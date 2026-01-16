@@ -365,9 +365,11 @@ extra_css:
 
                             <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.5rem;">
                                 <label>Additional DM Incentives</label>
-                                <p style="font-size:0.85em; color:var(--color-text-secondary); margin-bottom:0.5rem;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-                                <select id="inp-dm-incentives" multiple class="table-input" style="height: 100px;">
-                                    <option value="">Loading...</option>
+                                <p style="font-size:0.85em; color:var(--color-text-secondary); margin-bottom:0.5rem;">
+                                    Hold <strong>Ctrl</strong> (Windows) or <strong>Cmd</strong> (Mac) to select multiple options.
+                                </p>
+                                <select id="inp-dm-incentives" multiple class="table-input" style="height: 120px; padding: 5px;">
+                                    <option value="" disabled>Loading incentives...</option>
                                 </select>
                             </div>
 
@@ -386,13 +388,17 @@ extra_css:
                                 <label>2. Bot Command</label>
                                 <p class="instruction-text" style="margin-bottom: 0.5rem;">Reply to your declaration with this command:</p>
                                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
-                                    <textarea id="out-dm-loot-cmd" class="out-session-text" style="width: 100%; height: 80px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                                    <textarea id="out-dm-loot-cmd" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                                 </div>
                             </div>
 
                             <div id="wrapper-jumpstart-bonus" class="form-group" style="grid-column: 1 / -1; display:none; margin-top: 1.5rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                                <label>Jumpstart Bonus</label>
-                                <p class="instruction-text" style="margin-bottom: 0.5rem;">As a Jumpstart DM, you get an additional loot roll:</p>
+                                <label>3. Jumpstart Bonus</label>
+                                
+                                <p class="instruction-text" style="margin-bottom: 0.5rem; color: var(--color-primary); font-weight: bold;">
+                                    As a Jumpstart DM, you get an additional loot roll:
+                                </p>
+                                
                                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
                                     <textarea id="out-dm-jumpstart-cmd" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
                                 </div>
