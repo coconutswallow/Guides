@@ -33,6 +33,8 @@ export function updateSessionCalculations(rules) {
     
     // Calculate max gold based on Party APL
     const stats = sessionState.calculateStats();
+    const aplEl = document.getElementById('setup-val-apl');
+    const currentApl = parseInt(aplEl?.textContent) || 1;
     const maxGold = calculatorInstance.calculateMaxGold(stats.apl);
     const lblGold = container.querySelector('.val-max-gold');
     if (lblGold) lblGold.textContent = maxGold;

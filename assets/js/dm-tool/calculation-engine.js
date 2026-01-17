@@ -121,7 +121,7 @@ class CalculationEngine {
         if (!this.rules || !this.rules.gold_per_session_by_apl) return 0;
         
         const goldTable = this.rules.gold_per_session_by_apl;
-        // FIX: Ensure APL is treated as a valid key
+        // Ensure APL is a floored integer for table lookup
         const safeApl = Math.floor(parseFloat(apl) || 1);
         return goldTable[safeApl.toString()] || goldTable[safeApl] || 0;
     }
