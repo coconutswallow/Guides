@@ -96,97 +96,6 @@ function incrementGameString(val) {
     return (num + 1).toString();
 }
 
-function initCopyGameLogic() {
-    const btnCopy = document.getElementById('btn-copy-game');
-    const modal = document.getElementById('modal-copy-game');
-    const btnConfirm = document.getElementById('btn-confirm-copy');
-    
-    if(btnCopy) {
-        btnCopy.addEventListener('click', () => {
-            const currentName = document.getElementById('header-game-name').value;
-            
-            // Auto-check "Next Part" if duration was maxed (handled in sessionHours listener), 
-            // but we also default it to unchecked usually unless triggered by logic.
-            // Here we just set the name.
-            document.getElementById('inp-copy-name').value = incrementPartName(currentName);
-            modal.showModal();
-        });
-    }
-
-    if(btnConfirm) {
-        btnConfirm.addEventListener('click', async () => {
-            const newName = document.getElementById('inp-copy-name').value;
-            if(!newName) return alert("Please enter a name.");
-            
-            const isNextPart = document.getElementById('chk-next-part').checked;
-            const fullData = IO.getFormData();
-            
-            // 1. Update Title
-            fullData.header.title = newName; 
-            fullData.session_log.title = newName;
-            
-            // 2. Reset Session Specifics
-            fullData.session_log.hours = 3; 
-            fullData.session_log.notes = "";
-            fullData.session_log.summary = "";
-            fullData.session_log.dm_rewards.loot_selected = "";
-            fullData.session_log.dm_rewards.incentives = []; // Clear one-time incentives
-            
-            // 3. Increment Games Logic
-            if (isNextPart) {
-                // Increment Master Roster Players
-                if (fullData.players) {
-                    fullData.players.forEach(p => {
-                        p.games_count = incrementGameString(p.games_count);
-                    });
-                }
-                
-                // Increment DM
-                if (fullData.dm) {
-                    fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
-                }
-                
-                // Increment Session Log Players (if any are carried over)
-                if (fullData.session_log.players) {
-                    fullData.session_log.players.forEach(p => {
-                        p.games_count = incrementGameString(p.games_count);
-                        // Reset session specific player fields
-                        p.hours = 3;
-                        p.xp = "";
-                        p.dtp = "";
-                        p.gold = "";
-                        p.loot = "";
-                        p.items_used = "";
-                        p.notes = "";
-                        p.incentives = [];
-                    });
-                }
-                
-                // Update DM Rewards games count
-                fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
-            }
-            
-            const { data: { user } } = await supabase.auth.getUser();
-            if(!user) return alert("Not logged in");
-
-            try {
-                // Create new session entry
-                const newSession = await createSession(user.id, newName, false);
-                if(newSession) {
-                    // Save the modified data to the new session
-                    await saveSession(newSession.id, fullData, { title: newName });
-                    
-                    // Redirect to new session
-                    window.location.href = `session.html?id=${newSession.id}`;
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Error copying game.");
-            }
-        });
-    }
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
     await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
@@ -570,6 +479,10 @@ function initCopyGameLogic() {
     if(btnCopy) {
         btnCopy.addEventListener('click', () => {
             const currentName = document.getElementById('header-game-name').value;
+            
+            // Auto-check "Next Part" if duration was maxed (handled in sessionHours listener), 
+            // but we also default it to unchecked usually unless triggered by logic.
+            // Here we just set the name.
             document.getElementById('inp-copy-name').value = incrementPartName(currentName);
             modal.showModal();
         });
@@ -583,28 +496,62 @@ function initCopyGameLogic() {
             const isNextPart = document.getElementById('chk-next-part').checked;
             const fullData = IO.getFormData();
             
+            // 1. Update Title
             fullData.header.title = newName; 
-            fullData.session_log.hours = 3; 
-            
-            if (isNextPart) {
-                fullData.players.forEach(p => p.games_count = incrementGameString(p.games_count));
-                fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
-                fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
-                fullData.session_log.players.forEach(p => p.games_count = incrementGameString(p.games_count));
-            }
-            
             fullData.session_log.title = newName;
+            
+            // 2. Reset Session Specifics
+            fullData.session_log.hours = 3; 
             fullData.session_log.notes = "";
             fullData.session_log.summary = "";
             fullData.session_log.dm_rewards.loot_selected = "";
+            fullData.session_log.dm_rewards.incentives = []; // Clear one-time incentives
+            
+            // 3. Increment Games Logic
+            if (isNextPart) {
+                // Increment Master Roster Players
+                if (fullData.players) {
+                    fullData.players.forEach(p => {
+                        p.games_count = incrementGameString(p.games_count);
+                    });
+                }
+                
+                // Increment DM
+                if (fullData.dm) {
+                    fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
+                }
+                
+                // Increment Session Log Players (if any are carried over)
+                if (fullData.session_log.players) {
+                    fullData.session_log.players.forEach(p => {
+                        p.games_count = incrementGameString(p.games_count);
+                        // Reset session specific player fields
+                        p.hours = 3;
+                        p.xp = "";
+                        p.dtp = "";
+                        p.gold = "";
+                        p.loot = "";
+                        p.items_used = "";
+                        p.notes = "";
+                        p.incentives = [];
+                    });
+                }
+                
+                // Update DM Rewards games count
+                fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
+            }
             
             const { data: { user } } = await supabase.auth.getUser();
             if(!user) return alert("Not logged in");
 
             try {
+                // Create new session entry
                 const newSession = await createSession(user.id, newName, false);
                 if(newSession) {
+                    // Save the modified data to the new session
                     await saveSession(newSession.id, fullData, { title: newName });
+                    
+                    // Redirect to new session
                     window.location.href = `session.html?id=${newSession.id}`;
                 }
             } catch (e) {
