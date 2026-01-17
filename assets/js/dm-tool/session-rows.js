@@ -391,6 +391,10 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
             existingCard.querySelector('.s-char-name').value = masterPlayer.character_name;
             existingCard.querySelector('.s-level').value = masterPlayer.level_playing_as || masterPlayer.level;
             existingCard.querySelector('.s-games').value = masterPlayer.games_count;
+            
+            // FIX 1: Update the visual text in the header
+            const summaryText = masterPlayer.character_name ? `(${masterPlayer.character_name})` : '';
+            existingCard.querySelector('.player-summary-text').textContent = summaryText;
         } else {
             const newData = {
                 ...masterPlayer,

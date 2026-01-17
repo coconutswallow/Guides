@@ -170,7 +170,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Generate Session Log when navigating to that tab
             if (item.dataset.target === 'view-session-output') {
-                IO.generateSessionLogOutput();
+                // FIX 4A: Pass cachedDiscordId to the generator
+                IO.generateSessionLogOutput(cachedDiscordId);
             }
             
             // Generate MAL when navigating to MAL tab

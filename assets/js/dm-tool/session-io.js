@@ -466,7 +466,10 @@ export async function generateSessionLogOutput() {
     const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
     const dmLoot = data.session_log.dm_rewards.loot_selected || "";
     
-    let dmRewardsLine = `@${dmDisplayName} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
+    // FIX 4B: Use Discord ID if available, otherwise display name
+    const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${dmDisplayName}`;
+
+    let dmRewardsLine = `${dmIdString} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
     if (dmLoot) {
         dmRewardsLine += `, and ${dmLoot}`;
     }

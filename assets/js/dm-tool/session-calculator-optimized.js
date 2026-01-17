@@ -27,11 +27,12 @@ export function updateSessionCalculations(rules) {
     const container = document.getElementById('view-session-details');
     if (!container) return;
 
-    // Get session data from state
-    const sessionHours = parseFloat(sessionState.data.session_log.hours) || CALCULATIONS.DEFAULT_SESSION_HOURS;
-    const stats = sessionState.calculateStats();
+    // Get session hours directly from DOM to ensure freshness
+    const sessionHoursInput = document.getElementById('inp-session-total-hours');
+    const sessionHours = parseFloat(sessionHoursInput?.value) || 3;
     
-    // Calculate max gold
+    // Calculate max gold (relying on state for stats is fine here, assuming sync happened)
+    const stats = sessionState.calculateStats();
     const maxGold = calculatorInstance.calculateMaxGold(stats.apl);
     const lblGold = container.querySelector('.val-max-gold');
     if (lblGold) lblGold.textContent = maxGold;
@@ -39,8 +40,18 @@ export function updateSessionCalculations(rules) {
     // Process player cards
     const cards = container.querySelectorAll('.player-card');
     cards.forEach((card, index) => {
-        const player = sessionState.data.session_log.players[index];
-        if (!player) return;
+        // We construct a temporary player object from the DOM to ensure we calculate based on what is seen
+        const levelVal = card.querySelector('.s-level').value;
+        const forfeitXp = card.querySelector('.s-forfeit-xp').checked;
+        const incentivesBtn = card.querySelector('.s-incentives-btn');
+        const incentives = JSON.parse(incentivesBtn.dataset.incentives || '[]');
+
+        const player = {
+            level: levelVal,
+            forfeit_xp: forfeitXp,
+            incentives: incentives,
+            hours: card.querySelector('.s-hours').value
+        };
         
         // Validate and cap hours
         const hInput = card.querySelector('.s-hours');
@@ -72,7 +83,7 @@ export function updateSessionCalculations(rules) {
             }
         }
 
-        // Calculate rewards
+        // Calculate rewards - FIX 2: Ensure we pass the object with the level derived from DOM
         const rewards = calculatorInstance.calculatePlayerRewards(player, sessionHours);
         
         // Update DOM
@@ -83,8 +94,12 @@ export function updateSessionCalculations(rules) {
     // Calculate DM rewards
     const playerStats = calculatorInstance.calculatePlayerStats(sessionState.data.players);
     
+    // FIX 3: Get DM Level directly from Setup Input to ensure freshness
+    const dmLevelInput = document.getElementById('inp-dm-level');
+    const dmLevel = dmLevelInput ? dmLevelInput.value : (sessionState.data.dm.level || 1);
+
     const dmData = {
-        level: sessionState.data.dm.level,
+        level: dmLevel, 
         games_count: sessionState.data.dm.games_count,
         incentives: JSON.parse(
             document.getElementById('btn-dm-loot-incentives')?.dataset.incentives || '[]'
