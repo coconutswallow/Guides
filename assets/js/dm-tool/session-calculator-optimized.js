@@ -1,6 +1,4 @@
 // assets/js/dm-tool/session-calculator-optimized.js
-// Optimized calculation functions using state management
-// This is a bridge file for backward compatibility during migration
 
 import { sessionState } from './session-state.js';
 import CalculationEngine from './calculation-engine.js';
@@ -39,6 +37,10 @@ export function updateSessionCalculations(rules) {
 
     // Process player cards
     const cards = container.querySelectorAll('.player-card');
+    
+    // Create a live list of players from the DOM for DM calculations
+    const livePlayers = [];
+
     cards.forEach((card, index) => {
         // 1. Get Inputs
         const hInput = card.querySelector('.s-hours');
@@ -46,6 +48,7 @@ export function updateSessionCalculations(rules) {
         const forfeitInput = card.querySelector('.s-forfeit-xp');
         const incentivesBtn = card.querySelector('.s-incentives-btn');
         const gInput = card.querySelector('.s-gold');
+        const gamesInput = card.querySelector('.s-games'); // Get games count for DM stats
 
         // 2. Validate & Cap Hours
         let pHours = parseFloat(hInput.value) || 0;
@@ -59,17 +62,19 @@ export function updateSessionCalculations(rules) {
         }
 
         // 3. Construct Player Object for Calculator
-        // Ensure level is at least 1, otherwise lookup fails and returns 0 XP
         let pLevel = parseInt(levelInput.value) || 0;
         if (pLevel < 1) pLevel = 1;
 
         const playerObj = {
             level: pLevel,
-            hours: pHours, // Pass the numeric, capped hours
+            hours: pHours,
             forfeit_xp: forfeitInput ? forfeitInput.checked : false,
-            incentives: JSON.parse(incentivesBtn.dataset.incentives || '[]')
+            incentives: JSON.parse(incentivesBtn.dataset.incentives || '[]'),
+            games_count: gamesInput ? gamesInput.value : "0" // Capture games count
         };
         
+        livePlayers.push(playerObj); // Add to live list
+
         // 4. Validate Gold
         const playerGold = parseFloat(gInput.value) || 0;
         const isValid = calculatorInstance.validatePlayerGold(playerGold, maxGold);
@@ -84,7 +89,6 @@ export function updateSessionCalculations(rules) {
         }
 
         // 5. Calculate Rewards
-        // This will now look up XP based on pLevel and multiply by pHours
         const rewards = calculatorInstance.calculatePlayerRewards(playerObj, sessionHours);
         
         // 6. Update DOM
@@ -92,8 +96,8 @@ export function updateSessionCalculations(rules) {
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
 
-    // Calculate DM rewards
-    const playerStats = calculatorInstance.calculatePlayerStats(sessionState.data.players);
+    // Calculate DM rewards using the LIVE player list
+    const playerStats = calculatorInstance.calculatePlayerStats(livePlayers);
     
     // Get DM Level directly from Setup Input to ensure freshness
     const dmLevelInput = document.getElementById('inp-dm-level');
@@ -144,7 +148,6 @@ function syncDMFieldsToSessionTab() {
     }
 }
 
-// Export calculator instance getter for other modules
 export function getCalculator() {
     return calculatorInstance;
 }
