@@ -4,7 +4,6 @@ import { fetchMemberMap } from './data-manager.js';
 /* ===========================
    1. MASTER ROSTER (View 4)
    =========================== */
-// ... (Existing Master Roster functions: updateMasterRosterStats, addPlayerRowToMaster, getMasterRosterData, syncMasterRosterFromSubmissions - NO CHANGES) ...
 export function updateMasterRosterStats() {
     const rows = document.querySelectorAll('#roster-body .player-row');
     let totalLevel = 0;
@@ -52,17 +51,22 @@ export function addPlayerRowToMaster(data = {}) {
     
     // FIX: Games options now start at 1 instead of 0
     let gamesOptions = '';
-    for(let i=1; i<=10; i++) { // Changed from i=0 to i=1
+    for(let i=1; i<=10; i++) {
         const val = i.toString();
         const selected = (data.games_count === val) ? 'selected' : '';
         gamesOptions += `<option value="${val}" ${selected}>${val}</option>`;
     }
     gamesOptions += `<option value="10+" ${data.games_count === '10+' ? 'selected' : ''}>10+</option>`;
     
+    // FIX: Properly handle display_name vs discord_id
+    // If we have display_name, show that. Otherwise show discord_id
+    const displayValue = data.display_name || data.discord_id || '';
+    const idValue = data.discord_id || '';
+    
     tr.innerHTML = `
         <td>
-            <input type="text" class="table-input inp-player-display" placeholder="Player Name" value="${data.display_name || data.discord_id || ''}">
-            <input type="hidden" class="inp-discord-id" value="${data.discord_id || ''}">
+            <input type="text" class="table-input inp-player-display" placeholder="Player Discord Name" value="${displayValue}">
+            <input type="hidden" class="inp-discord-id" value="${idValue}">
         </td>
         <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
         <td><input type="number" class="table-input inp-level" placeholder="" value="${data.level || ''}"></td>
@@ -73,8 +77,14 @@ export function addPlayerRowToMaster(data = {}) {
     
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');
+    
+    // FIX: When user types a name manually, store it as discord_id initially
+    // The sync process will replace it with actual snowflake IDs
     nameInput.addEventListener('change', () => {
-        if(!idInput.value) idInput.value = nameInput.value; 
+        // Only update discord_id if it's empty
+        if(!idInput.value || idInput.value === nameInput.value) {
+            idInput.value = nameInput.value;
+        }
     });
 
     tr.querySelector('.btn-delete-row').addEventListener('click', () => {
@@ -99,9 +109,13 @@ export function getMasterRosterData() {
     const rows = document.querySelectorAll('#roster-body .player-row');
     const players = [];
     rows.forEach(row => {
+        const displayName = row.querySelector('.inp-player-display').value;
+        const discordId = row.querySelector('.inp-discord-id').value;
+        
         players.push({
-            discord_id: row.querySelector('.inp-discord-id').value,
-            display_name: row.querySelector('.inp-player-display').value,
+            // FIX: Store both discord_id and display_name
+            discord_id: discordId || displayName, // If no ID, use display name
+            display_name: displayName, // Always save what user entered
             character_name: row.querySelector('.inp-char-name').value,
             level: row.querySelector('.inp-level').value,
             level_playing_as: row.querySelector('.inp-level-play-as').value, 
@@ -117,6 +131,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 
     if (!submissions || submissions.length === 0) return;
 
+    // FIX: Fetch member directory mapping
     const discordIds = submissions.map(s => s.discord_id).filter(Boolean);
     const displayMap = await fetchMemberMap(discordIds);
 
@@ -125,6 +140,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
         const pid = sub.discord_id;
         if(!pid) return;
 
+        // FIX: Use mapped display name from member_directory
         const displayName = displayMap[pid] || pid;
 
         let foundRow = null;
@@ -135,7 +151,10 @@ export async function syncMasterRosterFromSubmissions(submissions) {
         });
 
         if (foundRow) {
-            foundRow.querySelector('.inp-player-display').value = displayName; 
+            // FIX: Update display name from member directory
+            foundRow.querySelector('.inp-player-display').value = displayName;
+            foundRow.querySelector('.inp-discord-id').value = pid; // Ensure ID is set
+            
             if (p.char_name) foundRow.querySelector('.inp-char-name').value = p.char_name;
             if (p.level) foundRow.querySelector('.inp-level').value = p.level;
             if (p.level_as) foundRow.querySelector('.inp-level-play-as').value = p.level_as;
@@ -160,19 +179,17 @@ export async function syncMasterRosterFromSubmissions(submissions) {
    2. SESSION PLAYER CARDS (View 6)
    =========================== */
 
-// Updated to accept suppressUpdate to prevent infinite loops during auto-sync
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, suppressUpdate = false) {
     if (!listContainer) return;
 
     const sessionTotalEl = document.getElementById('inp-session-total-hours');
     const sessionTotal = parseFloat(sessionTotalEl?.value) || 3;
 
-    // FIX: Default player hours to session total if not specified
     let rowHours;
     if (data.hours !== undefined && data.hours !== null && data.hours !== "") {
         rowHours = parseFloat(data.hours);
     } else {
-        rowHours = sessionTotal; // Default to session total
+        rowHours = sessionTotal;
     }
     
     const currentIncentives = data.incentives || [];
@@ -286,27 +303,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    // FIX: Hours input handling - sync with session hours changes
     const hInput = card.querySelector('.s-hours');
-    
-    // Listen for session hours changes
-    const sessionHoursInput = document.getElementById('inp-session-total-hours');
-    if (sessionHoursInput) {
-        const updateMaxHours = () => {
-            const newMax = parseFloat(sessionHoursInput.value) || 3;
-            hInput.setAttribute('max', newMax);
-            
-            // If current value exceeds new max, cap it
-            const currentVal = parseFloat(hInput.value) || 0;
-            if (currentVal > newMax) {
-                hInput.value = newMax;
-                if(callbacks.onUpdate) callbacks.onUpdate();
-            }
-        };
-        
-        sessionHoursInput.addEventListener('input', updateMaxHours);
-        sessionHoursInput.addEventListener('change', updateMaxHours);
-    }
     
     hInput.addEventListener('input', () => {
         const sessionMax = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
@@ -322,7 +319,6 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     });
     
     hInput.addEventListener('blur', () => {
-        // If empty on blur, default to session total
         if (!hInput.value || hInput.value.trim() === "") {
             hInput.value = document.getElementById('inp-session-total-hours')?.value || 3;
             if(callbacks.onUpdate) callbacks.onUpdate();
@@ -377,7 +373,6 @@ export function getSessionRosterData() {
     return players;
 }
 
-// Updated to accept suppressUpdate
 export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) {
     const listContainer = document.getElementById('session-roster-list');
     const masterData = getMasterRosterData(); 
@@ -401,7 +396,6 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
                 ...masterPlayer,
                 level: masterPlayer.level_playing_as || masterPlayer.level
             };
-            // Pass suppressUpdate to prevent infinite loop during onUpdate calls
             addSessionPlayerRow(listContainer, newData, callbacks, suppressUpdate);
         }
     });

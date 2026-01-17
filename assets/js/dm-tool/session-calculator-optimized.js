@@ -1,4 +1,4 @@
-// assets/js/dm-tool/session-calculations-optimized.js
+// assets/js/dm-tool/session-calculator-optimized.js
 // Optimized calculation functions using state management
 // This is a bridge file for backward compatibility during migration
 
