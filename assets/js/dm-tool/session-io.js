@@ -361,3 +361,189 @@ export function prepareTemplateData(originalData) {
     
     return data;
 }
+
+export async function generateSessionLogOutput() {
+    const getVal = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value : "";
+    };
+
+    const data = getFormData();
+    
+    // Header information
+    const gameName = getVal('header-game-name') || "Untitled";
+    const gameVersion = data.header.game_version || "N/A";
+    const gameFormat = data.header.game_type || "N/A";
+    const appsType = data.header.apps_type || "N/A";
+    const apl = data.header.apl || "N/A";
+    
+    // Calculate tier from session log players
+    const tierEl = document.getElementById('setup-val-tier');
+    const tier = tierEl ? tierEl.textContent : "1";
+    
+    const sessionHours = data.session_log.hours || 3;
+    const sessionSummary = data.session_log.summary || "";
+    const sessionNotes = data.session_log.notes || "";
+    const dmCollaborators = data.session_log.dm_collaborators || "";
+    
+    // Build player lines
+    let playerLines = [];
+    const players = data.session_log.players || [];
+    
+    players.forEach(player => {
+        let line = `- `;
+        
+        // Discord ID or Username
+        const discordId = player.discord_id || player.display_name || "Unknown";
+        if (discordId.match(/^\d+$/)) {
+            line += `<@${discordId}>`;
+        } else {
+            line += `@${discordId}`;
+        }
+        
+        // Character name and level
+        const charName = player.character_name || "Unknown";
+        const level = player.level || "1";
+        const levelPlayAs = player.level_playing_as;
+        
+        line += ` as ${charName} (${level}`;
+        if (levelPlayAs && levelPlayAs !== level) {
+            line += `, playing at level ${levelPlayAs}`;
+        }
+        line += `)`;
+        
+        // Gains
+        const xp = player.xp || "0";
+        const dtp = player.dtp || "0";
+        const gold = player.gold || "0";
+        
+        line += ` gains ${xp} XP, ${dtp} DTP, and ${gold} GP.`;
+        
+        // Loot
+        const loot = player.loot || "";
+        if (loot) {
+            line += ` They take ${loot}.`;
+        }
+        
+        // Items used and gold used
+        const itemsUsed = player.items_used || "";
+        const goldUsed = player.gold_used || "";
+        
+        if (itemsUsed || goldUsed) {
+            line += ` They used`;
+            if (itemsUsed) line += ` ${itemsUsed}`;
+            if (itemsUsed && goldUsed) line += ` and`;
+            if (goldUsed) line += ` ${goldUsed} GP`;
+            line += `.`;
+        }
+        
+        // Incentives
+        const incentives = player.incentives || [];
+        if (incentives.length > 0) {
+            line += ` Incentives: ${incentives.join(', ')}.`;
+        }
+        
+        // Character outcomes/notes
+        const notes = player.notes || "";
+        if (notes) {
+            line += ` Character Outcomes: ${notes}`;
+        }
+        
+        playerLines.push(line);
+    });
+    
+    // Build DM incentives list
+    let dmIncentivesList = [];
+    
+    // Calculate player stats
+    const newHires = players.filter(p => {
+        const games = p.games_count || "0";
+        return games !== "10+" && parseInt(games) <= 10;
+    }).length;
+    
+    const welcomeWagon = players.filter(p => p.games_count === "1").length;
+    
+    const dmGames = data.dm.games_count || "0";
+    const isJumpstart = dmGames !== "10+" && parseInt(dmGames) <= 10;
+    
+    if (newHires > 0) dmIncentivesList.push(`New Hires (${newHires})`);
+    if (welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon (${welcomeWagon})`);
+    if (isJumpstart) dmIncentivesList.push("Jumpstart DM");
+    
+    // Add bonus incentives
+    const dmIncentives = data.session_log.dm_rewards.incentives || [];
+    dmIncentivesList = dmIncentivesList.concat(dmIncentives);
+    
+    // DM Rewards
+    const dmDiscordId = getVal('out-dm-name') || "DM";
+    const dmCharName = data.dm.character_name || "DM Character";
+    const dmLevel = data.session_log.dm_rewards.level || data.dm.level || "1";
+    const dmXP = getVal('dm-res-xp') || "0";
+    const dmDTP = getVal('dm-res-dtp') || "0";
+    const dmGP = getVal('dm-res-gp') || "0";
+    const dmLoot = data.session_log.dm_rewards.loot_selected || "";
+    
+    let dmRewardsLine = ``;
+    if (dmDiscordId.match(/^\d+$/)) {
+        dmRewardsLine += `<@${dmDiscordId}>`;
+    } else {
+        dmRewardsLine += `@${dmDiscordId}`;
+    }
+    
+    dmRewardsLine += ` as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
+    if (dmLoot) {
+        dmRewardsLine += `, and ${dmLoot}`;
+    }
+    dmRewardsLine += `.`;
+    
+    // Build the full output
+    let output = `**Session Name:** ${gameName}\n`;
+    output += `**Game Version:** ${gameVersion}\n`;
+    output += `**Game Format:** ${gameFormat}\n`;
+    output += `**Application Format:** ${appsType}\n`;
+    output += `**APL and Tier:** APL ${apl}, Tier ${tier}\n`;
+    output += `**Hours Played:** ${sessionHours}\n`;
+    output += `**EXP, DTP, GP, Loot, and Resources Used:**\n`;
+    output += playerLines.join('\n') + '\n';
+    output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
+    output += `**DM Rewards:** ${dmRewardsLine}\n`;
+    
+    if (sessionNotes) {
+        output += `**Notes:**\n${sessionNotes}\n`;
+    }
+    
+    if (dmCollaborators) {
+        output += `**DM Collaborators:**\n${dmCollaborators}\n`;
+    }
+    
+    // Check character count
+    const currentLength = output.length;
+    const summarySection = `**Summary:**\n${sessionSummary}`;
+    
+    if (currentLength + summarySection.length > 999) {
+        // Output summary separately
+        const outText = document.getElementById('out-session-text');
+        const outSummary = document.getElementById('out-session-summary');
+        
+        if (outText) outText.value = output.trim();
+        
+        if (outSummary) {
+            outSummary.value = summarySection;
+            // Show the summary output field
+            const summaryWrapper = outSummary.closest('.discord-output-wrapper');
+            if (summaryWrapper) summaryWrapper.style.display = 'block';
+        }
+    } else {
+        // Include summary in main output
+        output += summarySection;
+        const outText = document.getElementById('out-session-text');
+        if (outText) outText.value = output.trim();
+        
+        // Hide summary output field
+        const outSummary = document.getElementById('out-session-summary');
+        if (outSummary) {
+            const summaryWrapper = outSummary.closest('.discord-output-wrapper');
+            if (summaryWrapper) summaryWrapper.style.display = 'none';
+        }
+    }
+}

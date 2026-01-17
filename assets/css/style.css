@@ -2082,6 +2082,7 @@ img + .image-caption {
     position: relative;
     margin-left: 0.4rem;
     vertical-align: middle;
+    z-index: 10; /* Higher than accordion header */
 }
 
 .help-icon {

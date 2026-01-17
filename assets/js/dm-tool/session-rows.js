@@ -50,8 +50,9 @@ export function addPlayerRowToMaster(data = {}) {
     const tr = document.createElement('tr');
     tr.className = 'player-row';
     
+    // FIX: Games options now start at 1 instead of 0
     let gamesOptions = '';
-    for(let i=0; i<=10; i++) {
+    for(let i=1; i<=10; i++) { // Changed from i=0 to i=1
         const val = i.toString();
         const selected = (data.games_count === val) ? 'selected' : '';
         gamesOptions += `<option value="${val}" ${selected}>${val}</option>`;
@@ -166,12 +167,12 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const sessionTotalEl = document.getElementById('inp-session-total-hours');
     const sessionTotal = parseFloat(sessionTotalEl?.value) || 3;
 
-    // Default player hours to session total if not specified
+    // FIX: Default player hours to session total if not specified
     let rowHours;
     if (data.hours !== undefined && data.hours !== null && data.hours !== "") {
         rowHours = parseFloat(data.hours);
     } else {
-        rowHours = sessionTotal;
+        rowHours = sessionTotal; // Default to session total
     }
     
     const currentIncentives = data.incentives || [];
@@ -200,7 +201,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
                 <input type="hidden" class="s-char-name" value="${data.character_name || ''}">
                 <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
                 <input type="hidden" class="s-level" value="${data.level || '0'}">
-                <input type="hidden" class="s-games" value="${data.games_count || '0'}">
+                <input type="hidden" class="s-games" value="${data.games_count || '1'}">
 
                 <div class="card-field w-20">
                     <label class="field-label">Hours</label>
@@ -285,10 +286,29 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    // Hours input handling with validation
+    // FIX: Hours input handling - sync with session hours changes
     const hInput = card.querySelector('.s-hours');
+    
+    // Listen for session hours changes
+    const sessionHoursInput = document.getElementById('inp-session-total-hours');
+    if (sessionHoursInput) {
+        const updateMaxHours = () => {
+            const newMax = parseFloat(sessionHoursInput.value) || 3;
+            hInput.setAttribute('max', newMax);
+            
+            // If current value exceeds new max, cap it
+            const currentVal = parseFloat(hInput.value) || 0;
+            if (currentVal > newMax) {
+                hInput.value = newMax;
+                if(callbacks.onUpdate) callbacks.onUpdate();
+            }
+        };
+        
+        sessionHoursInput.addEventListener('input', updateMaxHours);
+        sessionHoursInput.addEventListener('change', updateMaxHours);
+    }
+    
     hInput.addEventListener('input', () => {
-        // Validate: cannot exceed session total
         const sessionMax = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
         let val = parseFloat(hInput.value);
         

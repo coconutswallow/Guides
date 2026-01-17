@@ -1,6 +1,6 @@
 // assets/js/dm-tool/session-editor.js
 
-import { supabase } from '../supabaseClient.js'; 
+import { supabase } from '../assets/js/supabaseClient.js'; 
 import { 
     saveSession, 
     createSession,
@@ -11,13 +11,13 @@ import {
     fetchTemplates,
     deleteSession,
     fetchPlayerSubmissions 
-} from './data-manager.js';
+} from '../assets/js/dm-tool/data-manager.js';
 
-import { checkAccess } from '../auth-check.js'; 
+import { checkAccess } from '../assets/js/auth-check.js'; 
 
-import * as UI from './session-ui.js';
-import * as Rows from './session-rows.js';
-import * as IO from './session-io.js';
+import * as UI from '../assets/js/dm-tool/session-ui.js';
+import * as Rows from '../assets/js/dm-tool/session-rows.js';
+import * as IO from '../assets/js/dm-tool/session-io.js';
 
 // --- NEW IMPORTS ---
 import { updateSessionCalculations } from './session-calculations.js';
@@ -26,7 +26,7 @@ import {
     updateLootDeclaration, 
     updateHgenLogic, 
     updateDMLootLogic 
-} from './session-loot.js';
+} from '../assets/js/dm-tool/session-loot.js';
 
 let cachedGameRules = null; 
 let isFullDM = false; 

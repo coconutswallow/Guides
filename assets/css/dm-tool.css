@@ -706,6 +706,15 @@ dialog::backdrop {
     border-color: var(--color-border);
     color: var(--color-text);
 }
+[data-theme="dark"] .player-card-header {
+    color: var(--palette-bg-card-dark); /* Dark background color for text */
+}
+
+[data-theme="dark"] .player-card-title,
+[data-theme="dark"] .player-summary-text {
+    color: var(--palette-bg-card-dark);
+}
+
 
 /* Ensure read-only text is visible in dark mode */
 [data-theme="dark"] .readonly-input, 
@@ -746,6 +755,7 @@ dialog::backdrop {
     user-select: none;
     transition: background 0.2s;
     border-bottom: 1px solid transparent;
+    z-index: 1; /* Lower than help icons */
 }
 
 .accordion-header:hover {
