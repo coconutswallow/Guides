@@ -185,22 +185,50 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function setupCalculationTriggers(callbacks) {
-    // 1. Automatic Roster Sync on Tab Switch
+    // 1. Automatic Roster Sync on Tab Switch + Session Date Auto-fill
     const sidebarNav = document.getElementById('sidebar-nav');
     if (sidebarNav) {
         sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (item && item.dataset.target === 'view-session-details') {
                 Rows.syncSessionPlayersFromMaster(callbacks);
+                
+                // Auto-populate Session Date from Game Setup
+                const setupDateInput = document.getElementById('inp-start-datetime');
+                const sessionDateInput = document.getElementById('inp-session-date');
+                if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
+                    sessionDateInput.value = setupDateInput.value;
+                    
+                    // Update unix timestamp
+                    const tz = document.getElementById('inp-timezone')?.value;
+                    const unixVal = UI.toUnixTimestamp(setupDateInput.value, tz);
+                    const sessionUnixInput = document.getElementById('inp-session-unix');
+                    if (sessionUnixInput) sessionUnixInput.value = unixVal;
+                }
             }
         });
     }
 
-    // 2. Session Hours
+   // 2. Session Hours - Update all player hours when session hours change
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     if (sessionHoursInput) {
         sessionHoursInput.addEventListener('input', () => {
-             updateSessionCalculations(cachedGameRules);
+            const newSessionHours = parseFloat(sessionHoursInput.value) || 3;
+            
+            // Update all player cards that exceed the new max
+            const cards = document.querySelectorAll('#session-roster-list .player-card');
+            cards.forEach(card => {
+                const hInput = card.querySelector('.s-hours');
+                if (hInput) {
+                    const currentVal = parseFloat(hInput.value) || 0;
+                    // Cap to new max if exceeded
+                    if (currentVal > newSessionHours) {
+                        hInput.value = newSessionHours;
+                    }
+                }
+            });
+            
+            updateSessionCalculations(cachedGameRules);
         });
     }
 

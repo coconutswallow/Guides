@@ -58,7 +58,7 @@ export function updateSessionCalculations(rules) {
 
     // 1. Get Session Total Hours
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
-    const sessionTotalHours = parseFloat(sessionHoursInput.value) || 0;
+    const sessionTotalHours = parseFloat(sessionHoursInput?.value) || 0;
 
     // 2. Determine Max Gold
     const aplText = document.getElementById('setup-val-apl')?.textContent || "1";
@@ -88,17 +88,20 @@ export function updateSessionCalculations(rules) {
         if (gVal === "1") welcomeWagonCount++;
         if (gVal !== "10+" && !isNaN(gNum) && gNum <= 10) newHireCount++;
         
-        // Hours Logic
+        // Hours Logic - validate against session max
         const hInput = card.querySelector('.s-hours');
-        // BLUR FIX: We don't force default here anymore during typing. 
-        // We only use the current value for math.
         let pHours = parseFloat(hInput.value) || 0;
+        
+        // Ensure hours don't exceed session total
         if (pHours > sessionTotalHours) {
-            // Cap at max (optional UI choice, keeps math sane)
-            pHours = sessionTotalHours; 
-            // Only force input update if user exceeded max? 
-            // Or let them type? Let's leave value alone for typing feel, just cap math.
-            // hInput.value = pHours; 
+            pHours = sessionTotalHours;
+            hInput.value = pHours;
+        }
+        
+        // Ensure hours are non-negative
+        if (pHours < 0) {
+            pHours = 0;
+            hInput.value = 0;
         }
 
         // Gold Validation
@@ -126,9 +129,22 @@ export function updateSessionCalculations(rules) {
 
     // 4. Calculate DM Rewards
     const dmLevelSetup = document.getElementById('inp-dm-level');
+    const dmGamesSetup = document.getElementById('inp-dm-games-count');
     const dmNameSetup = document.getElementById('inp-dm-char-name');
     
-    if(dmNameSetup) document.getElementById('out-dm-name').value = dmNameSetup.value;
+    // Sync DM data to hidden fields in Session Details tab
+    if(dmNameSetup) {
+        const hiddenName = document.getElementById('out-dm-name');
+        if(hiddenName) hiddenName.value = dmNameSetup.value;
+    }
+    if(dmLevelSetup) {
+        const hiddenLevel = document.getElementById('out-dm-level');
+        if(hiddenLevel) hiddenLevel.value = dmLevelSetup.value;
+    }
+    if(dmGamesSetup) {
+        const hiddenGames = document.getElementById('out-dm-games');
+        if(hiddenGames) hiddenGames.value = dmGamesSetup.value;
+    }
     
     const dmLvl = parseFloat(dmLevelSetup ? dmLevelSetup.value : 0) || 0;
 

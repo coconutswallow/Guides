@@ -164,11 +164,12 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     if (!listContainer) return;
 
     const sessionTotalEl = document.getElementById('inp-session-total-hours');
-    const sessionTotal = sessionTotalEl ? sessionTotalEl.value : "0";
+    const sessionTotal = parseFloat(sessionTotalEl?.value) || 3;
 
+    // Default player hours to session total if not specified
     let rowHours;
     if (data.hours !== undefined && data.hours !== null && data.hours !== "") {
-        rowHours = data.hours;
+        rowHours = parseFloat(data.hours);
     } else {
         rowHours = sessionTotal;
     }
@@ -182,7 +183,6 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const card = document.createElement('div');
     card.className = 'player-card';
 
-    // UPDATED LAYOUT: Separate column for Forfeit XP
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -204,7 +204,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
 
                 <div class="card-field w-20">
                     <label class="field-label">Hours</label>
-                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" max="${sessionTotal}">
+                    <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" min="0" max="${sessionTotal}">
                 </div>
 
                 <div class="card-field w-25">
@@ -285,14 +285,26 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    // BLUR FIX: Hours
+    // Hours input handling with validation
     const hInput = card.querySelector('.s-hours');
     hInput.addEventListener('input', () => {
+        // Validate: cannot exceed session total
+        const sessionMax = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
+        let val = parseFloat(hInput.value);
+        
+        if (val > sessionMax) {
+            hInput.value = sessionMax;
+        } else if (val < 0) {
+            hInput.value = 0;
+        }
+        
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
+    
     hInput.addEventListener('blur', () => {
+        // If empty on blur, default to session total
         if (!hInput.value || hInput.value.trim() === "") {
-            hInput.value = document.getElementById('inp-session-total-hours').value || "0";
+            hInput.value = document.getElementById('inp-session-total-hours')?.value || 3;
             if(callbacks.onUpdate) callbacks.onUpdate();
         }
     });

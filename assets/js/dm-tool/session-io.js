@@ -165,13 +165,18 @@ export function populateForm(session, callbacks, options = {}) {
         }
     }
 
-    if (session.form_data.dm) {
-        const d = session.form_data.dm;
-        setVal('inp-dm-char-name', d.character_name);
-        setVal('inp-dm-level', d.level);
-        setVal('inp-dm-games-count', d.games_count);
-    }
+   if (session.form_data.dm) {
+    const d = session.form_data.dm;
+    setVal('inp-dm-char-name', d.character_name);
+    setVal('inp-dm-level', d.level);
+    setVal('inp-dm-games-count', d.games_count);
     
+    // Sync hidden DM fields in Session Details tab
+    setVal('out-dm-name', d.character_name);
+    setVal('out-dm-level', d.level);
+    setVal('out-dm-games', d.games_count);
+}
+
     const sLog = session.form_data.session_log;
     if (sLog) {
         setVal('inp-session-total-hours', sLog.hours || 0);
