@@ -31,7 +31,7 @@ export function updateSessionCalculations(rules) {
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     const sessionHours = parseFloat(sessionHoursInput?.value) || 3;
     
-    // Calculate max gold (relying on state for stats is fine here, assuming sync happened)
+    // Calculate max gold
     const stats = sessionState.calculateStats();
     const maxGold = calculatorInstance.calculateMaxGold(stats.apl);
     const lblGold = container.querySelector('.val-max-gold');
@@ -40,37 +40,37 @@ export function updateSessionCalculations(rules) {
     // Process player cards
     const cards = container.querySelectorAll('.player-card');
     cards.forEach((card, index) => {
-        // We construct a temporary player object from the DOM to ensure we calculate based on what is seen
-        const levelVal = card.querySelector('.s-level').value;
-        const forfeitXp = card.querySelector('.s-forfeit-xp').checked;
-        const incentivesBtn = card.querySelector('.s-incentives-btn');
-        const incentives = JSON.parse(incentivesBtn.dataset.incentives || '[]');
-
-        const player = {
-            level: levelVal,
-            forfeit_xp: forfeitXp,
-            incentives: incentives,
-            hours: card.querySelector('.s-hours').value
-        };
-        
-        // Validate and cap hours
+        // 1. Get Inputs
         const hInput = card.querySelector('.s-hours');
+        const levelInput = card.querySelector('.s-level');
+        const forfeitInput = card.querySelector('.s-forfeit-xp');
+        const incentivesBtn = card.querySelector('.s-incentives-btn');
+        const gInput = card.querySelector('.s-gold');
+
+        // 2. Validate & Cap Hours
         let pHours = parseFloat(hInput.value) || 0;
         
         if (pHours > sessionHours) {
             pHours = sessionHours;
             hInput.value = pHours;
-            player.hours = pHours;
-        }
-        
-        if (pHours < 0) {
+        } else if (pHours < 0) {
             pHours = 0;
             hInput.value = 0;
-            player.hours = 0;
         }
 
-        // Validate gold
-        const gInput = card.querySelector('.s-gold');
+        // 3. Construct Player Object for Calculator
+        // Ensure level is at least 1, otherwise lookup fails and returns 0 XP
+        let pLevel = parseInt(levelInput.value) || 0;
+        if (pLevel < 1) pLevel = 1;
+
+        const playerObj = {
+            level: pLevel,
+            hours: pHours, // Pass the numeric, capped hours
+            forfeit_xp: forfeitInput ? forfeitInput.checked : false,
+            incentives: JSON.parse(incentivesBtn.dataset.incentives || '[]')
+        };
+        
+        // 4. Validate Gold
         const playerGold = parseFloat(gInput.value) || 0;
         const isValid = calculatorInstance.validatePlayerGold(playerGold, maxGold);
         
@@ -83,10 +83,11 @@ export function updateSessionCalculations(rules) {
             }
         }
 
-        // Calculate rewards - FIX 2: Ensure we pass the object with the level derived from DOM
-        const rewards = calculatorInstance.calculatePlayerRewards(player, sessionHours);
+        // 5. Calculate Rewards
+        // This will now look up XP based on pLevel and multiply by pHours
+        const rewards = calculatorInstance.calculatePlayerRewards(playerObj, sessionHours);
         
-        // Update DOM
+        // 6. Update DOM
         card.querySelector('.s-xp').value = rewards.xp;
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
@@ -94,7 +95,7 @@ export function updateSessionCalculations(rules) {
     // Calculate DM rewards
     const playerStats = calculatorInstance.calculatePlayerStats(sessionState.data.players);
     
-    // FIX 3: Get DM Level directly from Setup Input to ensure freshness
+    // Get DM Level directly from Setup Input to ensure freshness
     const dmLevelInput = document.getElementById('inp-dm-level');
     const dmLevel = dmLevelInput ? dmLevelInput.value : (sessionState.data.dm.level || 1);
 

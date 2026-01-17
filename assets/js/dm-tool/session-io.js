@@ -353,7 +353,7 @@ export function prepareTemplateData(originalData) {
     return data;
 }
 
-export async function generateSessionLogOutput() {
+export async function generateSessionLogOutput(dmDiscordId) {
     const data = getFormData();
     
     // Header information
@@ -361,8 +361,7 @@ export async function generateSessionLogOutput() {
     const gameVersion = data.header.game_version || "N/A";
     const gameFormat = data.header.game_type || "N/A";
     
-    // FIX: Determine if this is session 1 or 2+
-    // Check if we already have session data logged (simple heuristic: if session notes exist)
+    // Check if we already have session data logged
     const sessionNotes = data.session_log.notes || "";
     const hasSessionData = sessionNotes.trim().length > 0;
     const appsType = hasSessionData ? "Prefilled" : (data.header.apps_type || "N/A");
@@ -466,7 +465,7 @@ export async function generateSessionLogOutput() {
     const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
     const dmLoot = data.session_log.dm_rewards.loot_selected || "";
     
-    // FIX 4B: Use Discord ID if available, otherwise display name
+    // FIX: Use Discord ID if available, otherwise display name
     const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${dmDisplayName}`;
 
     let dmRewardsLine = `${dmIdString} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
