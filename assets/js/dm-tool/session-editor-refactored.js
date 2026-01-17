@@ -181,6 +181,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     window._sessionCallbacks = callbacks;
 
+    if (domCache.sidebarNav) {
+        domCache.sidebarNav.addEventListener('click', (e) => {
+            const item = e.target.closest('.nav-item');
+            if (!item) return;
+            
+            // Trigger MAL update when navigating to MAL tab
+            if (item.dataset.target === 'view-mal-update') {
+                IO.generateMALUpdate();
+            }
+        });
+    }
+
     if (sessionId) {
         await loadSessionData(sessionId, callbacks);
     } 

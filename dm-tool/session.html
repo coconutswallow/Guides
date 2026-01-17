@@ -566,10 +566,14 @@ extra_css:
         </div>
 
         <div id="view-mal-update" class="view-section hidden-section">
-             <h2>MAL Update</h2>
-             <div class="card">
-                 <p><em>(Placeholder)</em></p>
-             </div>
+            <h2>MAL Update</h2>
+            <p class="instruction-text">Copy this tab-delimited row and paste it into your MAL spreadsheet.</p>
+            <div class="card">
+                <textarea id="out-mal-update" class="table-input" rows="3" readonly style="font-family: monospace;"></textarea>
+                <div style="margin-top: 0.5rem; text-align: right;">
+                    <button class="button" onclick="window.copyToClipboard('out-mal-update')">Copy to Clipboard</button>
+                </div>
+            </div>
         </div>
 
     </main>

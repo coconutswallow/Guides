@@ -712,7 +712,7 @@ dialog::backdrop {
 
 [data-theme="dark"] .player-card-title,
 [data-theme="dark"] .player-summary-text {
-    color: var(--palette-bg-card-dark);
+    color: var(--color-text);
 }
 
 

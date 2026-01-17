@@ -547,3 +547,25 @@ export async function generateSessionLogOutput() {
         }
     }
 }
+
+export function generateMALUpdate() {
+    const data = getFormData();
+    const sessionDate = document.getElementById('inp-session-date')?.value || '';
+    const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
+    
+    const gameName = data.header.title || 'Untitled';
+    const dmName = document.getElementById('inp-dm-char-name')?.value || 'DM';
+    const apl = data.header.apl || '1';
+    const dmXP = document.getElementById('dm-res-xp')?.value || '0';
+    const dmGP = document.getElementById('dm-res-gp')?.value || '0';
+    const dmDTP = document.getElementById('dm-res-dtp')?.value || '0';
+    const dmLoot = data.session_log.dm_rewards.loot_selected || '';
+    
+    // Tab-delimited format
+    const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;
+    
+    const outMAL = document.getElementById('out-mal-update');
+    if (outMAL) {
+        outMAL.value = malRow;
+    }
+}
