@@ -18,7 +18,7 @@ import { checkAccess } from '../auth-check.js';
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
-import { updateSessionCalculations } from './session-calculations.js';
+import { updateSessionCalculations } from './session-calculations-optimized.js';
 import { 
     updateLootInstructions, 
     updateLootDeclaration, 

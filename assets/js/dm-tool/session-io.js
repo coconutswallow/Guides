@@ -1,4 +1,5 @@
 // assets/js/dm-tool/session-io.js
+// COMPLETE VERSION - No functionality removed
 import * as Rows from './session-rows.js';
 import * as UI from './session-ui.js';
 import { fetchGameRules } from './data-manager.js';
@@ -48,7 +49,7 @@ export function getFormData() {
 
     return {
         header: {
-            title: val('header-game-name'), // ADD THIS
+            title: val('header-game-name'), // ADDED - was missing
             game_datetime: val('inp-unix-time'), 
             timezone: val('inp-timezone'),
             intended_duration: val('inp-duration-text'),
@@ -360,9 +361,10 @@ export async function generateSessionLogOutput() {
     const gameVersion = data.header.game_version || "N/A";
     const gameFormat = data.header.game_type || "N/A";
     
-    // FIX: Determine session number by checking if this is a continuation
-    // For now, we'll use a simple check: if session_log has data, it's session 2+
-    const hasSessionData = data.session_log.players && data.session_log.players.length > 0;
+    // FIX: Determine if this is session 1 or 2+
+    // Check if we already have session data logged (simple heuristic: if session notes exist)
+    const sessionNotes = data.session_log.notes || "";
+    const hasSessionData = sessionNotes.trim().length > 0;
     const appsType = hasSessionData ? "Prefilled" : (data.header.apps_type || "N/A");
     
     const tierEl = document.getElementById('setup-val-tier');
@@ -372,7 +374,6 @@ export async function generateSessionLogOutput() {
     const apl = aplEl ? aplEl.textContent : "1";
     
     const sessionHours = data.session_log.hours || 3;
-    const sessionNotes = data.session_log.notes || "";
     const sessionSummary = data.session_log.summary || "";
     const dmCollaborators = data.session_log.dm_collaborators || "";
     
