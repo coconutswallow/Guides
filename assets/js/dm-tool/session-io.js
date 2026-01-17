@@ -309,21 +309,19 @@ ${data.how_to_apply || 'Post your application below.'}`;
     const outSummary = document.getElementById('out-summary-text');
 
     if (fullListingText.length > 999) {
-        // Split detected: Show both textareas and split content
         if (outListing) outListing.value = listingTop;
         if (outSummary) outSummary.value = listingSummary + listingBottom;
         if (secondaryWrapper) {
             secondaryWrapper.classList.remove('d-none');
-            secondaryWrapper.style.display = "block"; // Ensure it's visible
+            secondaryWrapper.style.display = "block"; // Force display
         }
     } else {
-        // No split needed: Hide secondary and put everything in Part 1
         if (outListing) outListing.value = fullListingText;
+        if (outSummary) outSummary.value = ""; // Clear old data
         if (secondaryWrapper) {
             secondaryWrapper.classList.add('d-none');
-            secondaryWrapper.style.display = "none"; // Explicitly hide
+            secondaryWrapper.style.display = "none"; // Force hide
         }
-        if (outSummary) outSummary.value = ""; // Clear Part 2
     }
     
     // 6. AD/Ping Logic (Always remains as a single output)
@@ -410,100 +408,40 @@ export async function generateSessionLogOutput(dmDiscordId) {
     const players = data.session_log.players || [];
     
     players.forEach(player => {
-        let line = `- `;
+        let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${player.level || "1"}) gains ${player.xp || "0"} XP, ${player.dtp || "0"} DTP`;
         
-        // Discord ID or Username
-        const displayName = player.display_name || "Unknown";
-        line += `@${displayName}`;
-        
-        // Character name and level
-        const charName = player.character_name || "Unknown";
-        const level = player.level || "1";
-        
-        line += ` as ${charName} (${level})`;
-        
-        // Gains
-        const xp = player.xp || "0";
-        const dtp = player.dtp || "0";
-        const gold = player.gold || "0";
-        
-        line += ` gains ${xp} XP, ${dtp} DTP`;
-        
-        // Incentives (inside DTP)
-        const incentives = player.incentives || [];
-        if (incentives.length > 0) {
-            line += ` (incentives: ${incentives.join(', ')})`;
+        if (player.incentives?.length > 0) {
+            line += ` (incentives: ${player.incentives.join(', ')})`;
         }
         
-        line += `, and ${gold} GP.`;
+        line += `, and ${player.gold || "0"} GP.`;
+        if (player.loot) line += ` They take ${player.loot}.`;
         
-        // Loot
-        const loot = player.loot || "";
-        if (loot) {
-            line += ` They take ${loot}.`;
+        if (player.items_used || player.gold_used) {
+            let res = [];
+            if (player.items_used) res.push(player.items_used);
+            if (player.gold_used) res.push(`${player.gold_used} GP`);
+            line += ` They used ${res.join(' and ')}.`;
         }
         
-        // Resources used (items + gold)
-        const itemsUsed = player.items_used || "";
-        const goldUsed = player.gold_used || "";
-        
-        if (itemsUsed || goldUsed) {
-            let resourceParts = [];
-            if (itemsUsed) resourceParts.push(itemsUsed);
-            if (goldUsed) resourceParts.push(`${goldUsed} GP`);
-            line += ` They used ${resourceParts.join(' and ')}.`;
-        }
-        
-        // Character outcomes/notes
-        const notes = player.notes || "";
-        if (notes) {
-            line += ` ${notes}`;
-        }
-        
+        if (player.notes) line += ` ${player.notes}`;
         playerLines.push(line);
     });
     
-    // Build DM incentives list
-    let dmIncentivesList = [];
-    
-    // Calculate player stats
-    const newHires = players.filter(p => {
-        const games = p.games_count || "0";
-        return games !== "10+" && parseInt(games) <= 10;
-    }).length;
-    
-    const welcomeWagon = players.filter(p => p.games_count === "1").length;
-    
-    const dmGames = data.dm.games_count || "0";
-    const isJumpstart = dmGames !== "10+" && parseInt(dmGames) <= 10;
-    
-    if (isJumpstart) dmIncentivesList.push("Jumpstart");
-    if (newHires > 0) dmIncentivesList.push(`New Hires x${newHires}`);
-    if (welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${welcomeWagon}`);
-    
-    // Add bonus incentives
-    const dmIncentives = data.session_log.dm_rewards.incentives || [];
-    dmIncentivesList = dmIncentivesList.concat(dmIncentives);
-    
-    // DM Rewards
-    const dmDisplayName = data.dm.character_name || "DM";
+    // DM Rewards Line
     const dmCharName = data.dm.character_name || "DM Character";
     const dmLevel = data.session_log.dm_rewards.level || data.dm.level || "1";
     const dmXP = document.querySelector('.dm-res-xp')?.value || "0";
     const dmDTP = document.querySelector('.dm-res-dtp')?.value || "0";
     const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
     const dmLoot = data.session_log.dm_rewards.loot_selected || "";
-    
-    // FIX: Use Discord ID if available, otherwise display name
-    const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${dmDisplayName}`;
+    const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${data.dm.character_name || "DM"}`;
 
     let dmRewardsLine = `${dmIdString} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
-    if (dmLoot) {
-        dmRewardsLine += `, and ${dmLoot}`;
-    }
-    dmRewardsLine += `.`;
-    
-    // Build the full output
+    if (dmLoot) dmRewardsLine += `, and ${dmLoot}`;
+    dmRewardsLine += ".";
+
+    // --- CONSTRUCT PART 1 ---
     let output = `**Session Name:** ${gameName}\n`;
     output += `**Game Version:** ${gameVersion}\n`;
     output += `**Game Format:** ${gameFormat}\n`;
@@ -512,22 +450,48 @@ export async function generateSessionLogOutput(dmDiscordId) {
     output += `**Hours Played:** ${sessionHours}\n\n`;
     output += `**EXP, DTP, GP, Loot, and Resources Used:**\n`;
     output += playerLines.join('\n') + '\n\n';
+    
+    // Collect DM Incentives from logic
+    let dmIncentivesList = [];
+    const newHires = players.filter(p => (parseInt(p.games_count) || 0) <= 10).length;
+    const welcomeWagon = players.filter(p => p.games_count === "1").length;
+    if (data.dm.games_count !== "10+" && parseInt(data.dm.games_count) <= 10) dmIncentivesList.push("Jumpstart");
+    if (newHires > 0) dmIncentivesList.push(`New Hires x${newHires}`);
+    if (welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${welcomeWagon}`);
+    dmIncentivesList = dmIncentivesList.concat(data.session_log.dm_rewards.incentives || []);
+
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
     output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
     
-    if (dmCollaborators) {
-        output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
-    }
-    
-    if (sessionNotes) {
-        output += `**Notes:**\n${sessionNotes}\n\n`;
-    }
-    
-    output += `**Session Summary:**\n${sessionSummary}`;
-    
-    // Output to textarea
+    if (dmCollaborators) output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
+    if (sessionNotes) output += `**Notes:**\n${sessionNotes}\n\n`;
+
+    // --- SPLIT LOGIC ---
     const outText = document.getElementById('out-session-text');
-    if (outText) outText.value = output.trim();
+    const outSummary = document.getElementById('out-summary-text');
+    const secondaryWrapper = document.getElementById('secondary-output-wrapper');
+    const summaryHeader = `**Session Summary:**\n`;
+    const summaryContent = sessionSummary || 'N/A';
+    
+    const fullTextTotal = output + summaryHeader + summaryContent;
+
+    if (fullTextTotal.length > 999) {
+        // Split: Part 1 ends at Notes, Part 2 starts at Session Summary
+        if (outText) outText.value = output.trim();
+        if (outSummary) outSummary.value = summaryHeader + summaryContent;
+        if (secondaryWrapper) {
+            secondaryWrapper.classList.remove('d-none');
+            secondaryWrapper.style.display = "block"; // Explicitly force visibility
+        }
+    } else {
+        // No Split: Everything in Part 1, Hide Part 2
+        if (outText) outText.value = fullTextTotal.trim();
+        if (outSummary) outSummary.value = ""; 
+        if (secondaryWrapper) {
+            secondaryWrapper.classList.add('d-none');
+            secondaryWrapper.style.display = "none"; // Explicitly force hide
+        }
+    }
 }
 
 export function generateMALUpdate() {
