@@ -755,7 +755,7 @@ dialog::backdrop {
     user-select: none;
     transition: background 0.2s;
     border-bottom: 1px solid transparent;
-    z-index: 1; /* Lower than help icons */
+    z-index: 0; /* Lower than help icons */
 }
 
 .accordion-header:hover {
@@ -769,6 +769,10 @@ dialog::backdrop {
     font-weight: bold;
     color: var(--color-text);
     flex: 1;
+}
+
+.dm-val-jumpstart {
+    pointer-events: none; /* Make it truly read-only */
 }
 
 /* Chevron Icon */

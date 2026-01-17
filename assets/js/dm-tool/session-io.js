@@ -374,7 +374,11 @@ export async function generateSessionLogOutput() {
     const gameName = getVal('header-game-name') || "Untitled";
     const gameVersion = data.header.game_version || "N/A";
     const gameFormat = data.header.game_type || "N/A";
-    const appsType = data.header.apps_type || "N/A";
+    
+    // Application Format Logic: First session = actual type, session 2+ = "Prefilled"
+    const sessionNumber = 1; // TODO: Determine if this is session 1 or 2+
+    const appsType = sessionNumber === 1 ? (data.header.apps_type || "N/A") : "Prefilled";
+    
     const apl = data.header.apl || "N/A";
     
     // Calculate tier from session log players
@@ -382,8 +386,8 @@ export async function generateSessionLogOutput() {
     const tier = tierEl ? tierEl.textContent : "1";
     
     const sessionHours = data.session_log.hours || 3;
-    const sessionSummary = data.session_log.summary || "";
     const sessionNotes = data.session_log.notes || "";
+    const sessionSummary = data.session_log.summary || "";
     const dmCollaborators = data.session_log.dm_collaborators || "";
     
     // Build player lines
@@ -393,31 +397,30 @@ export async function generateSessionLogOutput() {
     players.forEach(player => {
         let line = `- `;
         
-        // Discord ID or Username
-        const discordId = player.discord_id || player.display_name || "Unknown";
-        if (discordId.match(/^\d+$/)) {
-            line += `<@${discordId}>`;
-        } else {
-            line += `@${discordId}`;
-        }
+        // Discord ID or Username - use display_name (which could be username or looked-up name)
+        const displayName = player.display_name || "Unknown";
+        line += `@${displayName}`;
         
         // Character name and level
         const charName = player.character_name || "Unknown";
         const level = player.level || "1";
-        const levelPlayAs = player.level_playing_as;
         
-        line += ` as ${charName} (${level}`;
-        if (levelPlayAs && levelPlayAs !== level) {
-            line += `, playing at level ${levelPlayAs}`;
-        }
-        line += `)`;
+        line += ` as ${charName} (${level})`;
         
         // Gains
         const xp = player.xp || "0";
         const dtp = player.dtp || "0";
         const gold = player.gold || "0";
         
-        line += ` gains ${xp} XP, ${dtp} DTP, and ${gold} GP.`;
+        line += ` gains ${xp} XP, ${dtp} DTP`;
+        
+        // Incentives (inside DTP)
+        const incentives = player.incentives || [];
+        if (incentives.length > 0) {
+            line += ` (incentives: ${incentives.join(', ')})`;
+        }
+        
+        line += `, and ${gold} GP.`;
         
         // Loot
         const loot = player.loot || "";
@@ -425,28 +428,21 @@ export async function generateSessionLogOutput() {
             line += ` They take ${loot}.`;
         }
         
-        // Items used and gold used
+        // Resources used (items + gold)
         const itemsUsed = player.items_used || "";
         const goldUsed = player.gold_used || "";
         
         if (itemsUsed || goldUsed) {
-            line += ` They used`;
-            if (itemsUsed) line += ` ${itemsUsed}`;
-            if (itemsUsed && goldUsed) line += ` and`;
-            if (goldUsed) line += ` ${goldUsed} GP`;
-            line += `.`;
-        }
-        
-        // Incentives
-        const incentives = player.incentives || [];
-        if (incentives.length > 0) {
-            line += ` Incentives: ${incentives.join(', ')}.`;
+            let resourceParts = [];
+            if (itemsUsed) resourceParts.push(itemsUsed);
+            if (goldUsed) resourceParts.push(`${goldUsed} GP`);
+            line += ` They used ${resourceParts.join(' and ')}.`;
         }
         
         // Character outcomes/notes
         const notes = player.notes || "";
         if (notes) {
-            line += ` Character Outcomes: ${notes}`;
+            line += ` ${notes}`;
         }
         
         playerLines.push(line);
@@ -466,16 +462,16 @@ export async function generateSessionLogOutput() {
     const dmGames = data.dm.games_count || "0";
     const isJumpstart = dmGames !== "10+" && parseInt(dmGames) <= 10;
     
-    if (newHires > 0) dmIncentivesList.push(`New Hires (${newHires})`);
-    if (welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon (${welcomeWagon})`);
-    if (isJumpstart) dmIncentivesList.push("Jumpstart DM");
+    if (isJumpstart) dmIncentivesList.push("Jumpstart");
+    if (newHires > 0) dmIncentivesList.push(`New Hires x${newHires}`);
+    if (welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${welcomeWagon}`);
     
     // Add bonus incentives
     const dmIncentives = data.session_log.dm_rewards.incentives || [];
     dmIncentivesList = dmIncentivesList.concat(dmIncentives);
     
     // DM Rewards
-    const dmDiscordId = getVal('out-dm-name') || "DM";
+    const dmDisplayName = data.dm.character_name || "DM"; // Use DM character name as display
     const dmCharName = data.dm.character_name || "DM Character";
     const dmLevel = data.session_log.dm_rewards.level || data.dm.level || "1";
     const dmXP = getVal('dm-res-xp') || "0";
@@ -483,14 +479,7 @@ export async function generateSessionLogOutput() {
     const dmGP = getVal('dm-res-gp') || "0";
     const dmLoot = data.session_log.dm_rewards.loot_selected || "";
     
-    let dmRewardsLine = ``;
-    if (dmDiscordId.match(/^\d+$/)) {
-        dmRewardsLine += `<@${dmDiscordId}>`;
-    } else {
-        dmRewardsLine += `@${dmDiscordId}`;
-    }
-    
-    dmRewardsLine += ` as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
+    let dmRewardsLine = `@${dmDisplayName} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
     if (dmLoot) {
         dmRewardsLine += `, and ${dmLoot}`;
     }
@@ -502,58 +491,36 @@ export async function generateSessionLogOutput() {
     output += `**Game Format:** ${gameFormat}\n`;
     output += `**Application Format:** ${appsType}\n`;
     output += `**APL and Tier:** APL ${apl}, Tier ${tier}\n`;
-    output += `**Hours Played:** ${sessionHours}\n`;
+    output += `**Hours Played:** ${sessionHours}\n\n`;
     output += `**EXP, DTP, GP, Loot, and Resources Used:**\n`;
-    output += playerLines.join('\n') + '\n';
+    output += playerLines.join('\n') + '\n\n';
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
-    output += `**DM Rewards:** ${dmRewardsLine}\n`;
+    output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
     
     if (sessionNotes) {
-        output += `**Notes:**\n${sessionNotes}\n`;
+        output += `**Notes:**\n${sessionNotes}\n\n`;
     }
     
     if (dmCollaborators) {
-        output += `**DM Collaborators:**\n${dmCollaborators}\n`;
+        output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
     }
     
-    // Check character count
-    const currentLength = output.length;
-    const summarySection = `**Summary:**\n${sessionSummary}`;
+    output += `**Session Summary:**\n${sessionSummary}`;
     
-    if (currentLength + summarySection.length > 999) {
-        // Output summary separately
-        const outText = document.getElementById('out-session-text');
-        const outSummary = document.getElementById('out-session-summary');
-        
-        if (outText) outText.value = output.trim();
-        
-        if (outSummary) {
-            outSummary.value = summarySection;
-            // Show the summary output field
-            const summaryWrapper = outSummary.closest('.discord-output-wrapper');
-            if (summaryWrapper) summaryWrapper.style.display = 'block';
-        }
-    } else {
-        // Include summary in main output
-        output += summarySection;
-        const outText = document.getElementById('out-session-text');
-        if (outText) outText.value = output.trim();
-        
-        // Hide summary output field
-        const outSummary = document.getElementById('out-session-summary');
-        if (outSummary) {
-            const summaryWrapper = outSummary.closest('.discord-output-wrapper');
-            if (summaryWrapper) summaryWrapper.style.display = 'none';
-        }
-    }
+    // Output to textarea
+    const outText = document.getElementById('out-session-text');
+    if (outText) outText.value = output.trim();
 }
+
+// Replace generateMALUpdate() in session-io.js (around line 400)
 
 export function generateMALUpdate() {
     const data = getFormData();
     const sessionDate = document.getElementById('inp-session-date')?.value || '';
     const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
     
-    const gameName = data.header.title || 'Untitled';
+    // FIX: Use header-game-name instead of data.header.title
+    const gameName = document.getElementById('header-game-name')?.value || 'Untitled';
     const dmName = document.getElementById('inp-dm-char-name')?.value || 'DM';
     const apl = data.header.apl || '1';
     const dmXP = document.getElementById('dm-res-xp')?.value || '0';
@@ -567,5 +534,41 @@ export function generateMALUpdate() {
     const outMAL = document.getElementById('out-mal-update');
     if (outMAL) {
         outMAL.value = malRow;
+    }
+}
+
+export function generateMALUpdate() {
+    const data = getFormData();
+    const sessionDate = document.getElementById('inp-session-date')?.value || '';
+    const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
+    
+    // FIX: Use header-game-name instead of data.header.title
+    const gameName = document.getElementById('header-game-name')?.value || 'Untitled';
+    const dmName = document.getElementById('inp-dm-char-name')?.value || 'DM';
+    const apl = data.header.apl || '1';
+    const dmXP = document.getElementById('dm-res-xp')?.value || '0';
+    const dmGP = document.getElementById('dm-res-gp')?.value || '0';
+    const dmDTP = document.getElementById('dm-res-dtp')?.value || '0';
+    const dmLoot = data.session_log.dm_rewards.loot_selected || '';
+    
+    // Tab-delimited format
+    const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;
+    
+    const outMAL = document.getElementById('out-mal-update');
+    if (outMAL) {
+        outMAL.value = malRow;
+    }
+}
+
+export function updateJumpstartDisplay() {
+    const dmGamesInput = document.getElementById('inp-dm-games-count');
+    const dmGamesVal = dmGamesInput ? dmGamesInput.value : "10+";
+    const dmGamesNum = parseInt(dmGamesVal) || 999;
+    const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
+    
+    // Update the Jumpstart field in Session Details tab
+    const jumpstartField = document.querySelector('.dm-val-jumpstart');
+    if (jumpstartField) {
+        jumpstartField.value = isJumpstart ? "Yes" : "No";
     }
 }
