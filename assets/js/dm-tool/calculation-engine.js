@@ -1,6 +1,9 @@
 // assets/js/dm-tool/calculation-engine.js
 // Granular calculation engine - only recalculates what changed
 
+// assets/js/dm-tool/calculation-engine.js
+// Granular calculation engine - only recalculates what changed
+
 class CalculationEngine {
     constructor(gameRules) {
         this.rules = gameRules;
@@ -65,7 +68,7 @@ class CalculationEngine {
         rewards.xp = this.calculateXP(dmLevel, sessionHours);
         if (dmData.forfeit_xp) rewards.xp = 0;
 
-        // DTP: base + new hires + incentives
+        // DTP: base + new hires (+5 per new hire) + incentives
         let dtp = Math.floor(5 * sessionHours) + (5 * newHires);
         
         if (this.rules['DM incentives'] && dmData.incentives) {
@@ -79,7 +82,7 @@ class CalculationEngine {
         }
         rewards.dtp = dtp;
 
-        // Gold
+        // Gold: Base + (1x Base * Welcome Wagon)
         const goldTable = this.rules.gold_per_session_by_apl;
         const baseGold = goldTable 
             ? (goldTable[playerStats.apl?.toString()] || goldTable[playerStats.apl] || 0) 
@@ -95,11 +98,16 @@ class CalculationEngine {
         let welcomeWagon = 0;
 
         players.forEach(player => {
-            const gamesVal = player.games_count;
-            const gamesNum = parseInt(gamesVal);
+            // Ensure strict string comparison as requested
+            const gamesVal = String(player.games_count);
 
-            if (gamesVal === "1") welcomeWagon++;
-            if (gamesVal !== "10+" && !isNaN(gamesNum) && gamesNum <= 10) {
+            // Welcome Wagon: games played = 1
+            if (gamesVal === "1") {
+                welcomeWagon++;
+            }
+
+            // New Hires: games played <> 10+
+            if (gamesVal !== "10+") {
                 newHires++;
             }
         });

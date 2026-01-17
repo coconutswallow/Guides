@@ -37,7 +37,7 @@ class SessionState {
             dm: {
                 character_name: '',
                 level: 0,
-                games_count: '0'
+                games_count: '1'
             },
             session_log: {
                 title: '',
