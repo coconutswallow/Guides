@@ -42,12 +42,13 @@ export function getFormData() {
             games_played: val('out-dm-games'),
             incentives: dmIncentives,
             loot_selected: val('dm-loot-selected'),
-            forfeit_xp: dmForfeitXp // Saved here
+            forfeit_xp: dmForfeitXp
         }
     };
 
     return {
         header: {
+            title: val('header-game-name'), // ADD THIS
             game_datetime: val('inp-unix-time'), 
             timezone: val('inp-timezone'),
             intended_duration: val('inp-duration-text'),
@@ -165,17 +166,17 @@ export function populateForm(session, callbacks, options = {}) {
         }
     }
 
-   if (session.form_data.dm) {
-    const d = session.form_data.dm;
-    setVal('inp-dm-char-name', d.character_name);
-    setVal('inp-dm-level', d.level);
-    setVal('inp-dm-games-count', d.games_count);
-    
-    // Sync hidden DM fields in Session Details tab
-    setVal('out-dm-name', d.character_name);
-    setVal('out-dm-level', d.level);
-    setVal('out-dm-games', d.games_count);
-}
+    if (session.form_data.dm) {
+        const d = session.form_data.dm;
+        setVal('inp-dm-char-name', d.character_name);
+        setVal('inp-dm-level', d.level);
+        setVal('inp-dm-games-count', d.games_count);
+        
+        // Sync hidden DM fields in Session Details tab
+        setVal('out-dm-name', d.character_name);
+        setVal('out-dm-level', d.level);
+        setVal('out-dm-games', d.games_count);
+    }
 
     const sLog = session.form_data.session_log;
     if (sLog) {
@@ -199,7 +200,6 @@ export function populateForm(session, callbacks, options = {}) {
             const dmForfeit = document.getElementById('chk-dm-forfeit-xp');
             if (dmForfeit) {
                 dmForfeit.checked = !!sLog.dm_rewards.forfeit_xp;
-                // Add listener here to ensure it updates calculations immediately upon change
                 dmForfeit.addEventListener('change', () => {
                    if(callbacks.onUpdate) callbacks.onUpdate();
                 });
@@ -327,17 +327,7 @@ ${data.game_description || ''}
 ${pingString}`;
 
     const outAd = document.getElementById('out-ad-text');
-    if(outAd) outAd.value = adText; 
-    
-    const outText = document.getElementById('out-session-text');
-    if(outText) {
-        const sTitle = getVal('header-game-name'); 
-        const sDate = getVal('inp-session-date'); 
-        const sNotes = getVal('inp-session-notes');
-        const sSummary = getVal('inp-session-summary');
-        
-        outText.value = `**${sTitle}**\n*${sDate}*\n\n**Summary:**\n${sSummary}\n\n**Notes:**\n${sNotes}`;
-    }
+    if(outAd) outAd.value = adText;
 }
 
 export function prepareTemplateData(originalData) {
@@ -363,27 +353,23 @@ export function prepareTemplateData(originalData) {
 }
 
 export async function generateSessionLogOutput() {
-    const getVal = (id) => {
-        const el = document.getElementById(id);
-        return el ? el.value : "";
-    };
-
     const data = getFormData();
     
     // Header information
-    const gameName = getVal('header-game-name') || "Untitled";
+    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
     const gameVersion = data.header.game_version || "N/A";
     const gameFormat = data.header.game_type || "N/A";
     
-    // Application Format Logic: First session = actual type, session 2+ = "Prefilled"
-    const sessionNumber = 1; // TODO: Determine if this is session 1 or 2+
-    const appsType = sessionNumber === 1 ? (data.header.apps_type || "N/A") : "Prefilled";
+    // FIX: Determine session number by checking if this is a continuation
+    // For now, we'll use a simple check: if session_log has data, it's session 2+
+    const hasSessionData = data.session_log.players && data.session_log.players.length > 0;
+    const appsType = hasSessionData ? "Prefilled" : (data.header.apps_type || "N/A");
     
-    const apl = data.header.apl || "N/A";
-    
-    // Calculate tier from session log players
     const tierEl = document.getElementById('setup-val-tier');
     const tier = tierEl ? tierEl.textContent : "1";
+    
+    const aplEl = document.getElementById('setup-val-apl');
+    const apl = aplEl ? aplEl.textContent : "1";
     
     const sessionHours = data.session_log.hours || 3;
     const sessionNotes = data.session_log.notes || "";
@@ -397,7 +383,7 @@ export async function generateSessionLogOutput() {
     players.forEach(player => {
         let line = `- `;
         
-        // Discord ID or Username - use display_name (which could be username or looked-up name)
+        // Discord ID or Username
         const displayName = player.display_name || "Unknown";
         line += `@${displayName}`;
         
@@ -471,12 +457,12 @@ export async function generateSessionLogOutput() {
     dmIncentivesList = dmIncentivesList.concat(dmIncentives);
     
     // DM Rewards
-    const dmDisplayName = data.dm.character_name || "DM"; // Use DM character name as display
+    const dmDisplayName = data.dm.character_name || "DM";
     const dmCharName = data.dm.character_name || "DM Character";
     const dmLevel = data.session_log.dm_rewards.level || data.dm.level || "1";
-    const dmXP = getVal('dm-res-xp') || "0";
-    const dmDTP = getVal('dm-res-dtp') || "0";
-    const dmGP = getVal('dm-res-gp') || "0";
+    const dmXP = document.querySelector('.dm-res-xp')?.value || "0";
+    const dmDTP = document.querySelector('.dm-res-dtp')?.value || "0";
+    const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
     const dmLoot = data.session_log.dm_rewards.loot_selected || "";
     
     let dmRewardsLine = `@${dmDisplayName} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
@@ -497,12 +483,12 @@ export async function generateSessionLogOutput() {
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
     output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
     
-    if (sessionNotes) {
-        output += `**Notes:**\n${sessionNotes}\n\n`;
-    }
-    
     if (dmCollaborators) {
         output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
+    }
+    
+    if (sessionNotes) {
+        output += `**Notes:**\n${sessionNotes}\n\n`;
     }
     
     output += `**Session Summary:**\n${sessionSummary}`;
@@ -512,44 +498,19 @@ export async function generateSessionLogOutput() {
     if (outText) outText.value = output.trim();
 }
 
-// Replace generateMALUpdate() in session-io.js (around line 400)
-
 export function generateMALUpdate() {
-    const data = getFormData();
     const sessionDate = document.getElementById('inp-session-date')?.value || '';
     const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
     
     // FIX: Use header-game-name instead of data.header.title
     const gameName = document.getElementById('header-game-name')?.value || 'Untitled';
     const dmName = document.getElementById('inp-dm-char-name')?.value || 'DM';
-    const apl = data.header.apl || '1';
-    const dmXP = document.getElementById('dm-res-xp')?.value || '0';
-    const dmGP = document.getElementById('dm-res-gp')?.value || '0';
-    const dmDTP = document.getElementById('dm-res-dtp')?.value || '0';
-    const dmLoot = data.session_log.dm_rewards.loot_selected || '';
-    
-    // Tab-delimited format
-    const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;
-    
-    const outMAL = document.getElementById('out-mal-update');
-    if (outMAL) {
-        outMAL.value = malRow;
-    }
-}
-
-export function generateMALUpdate() {
-    const data = getFormData();
-    const sessionDate = document.getElementById('inp-session-date')?.value || '';
-    const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
-    
-    // FIX: Use header-game-name instead of data.header.title
-    const gameName = document.getElementById('header-game-name')?.value || 'Untitled';
-    const dmName = document.getElementById('inp-dm-char-name')?.value || 'DM';
-    const apl = data.header.apl || '1';
-    const dmXP = document.getElementById('dm-res-xp')?.value || '0';
-    const dmGP = document.getElementById('dm-res-gp')?.value || '0';
-    const dmDTP = document.getElementById('dm-res-dtp')?.value || '0';
-    const dmLoot = data.session_log.dm_rewards.loot_selected || '';
+    const aplEl = document.getElementById('setup-val-apl');
+    const apl = aplEl ? aplEl.textContent : '1';
+    const dmXP = document.querySelector('.dm-res-xp')?.value || '0';
+    const dmGP = document.querySelector('.dm-res-gp')?.value || '0';
+    const dmDTP = document.querySelector('.dm-res-dtp')?.value || '0';
+    const dmLoot = document.getElementById('dm-loot-selected')?.value || '';
     
     // Tab-delimited format
     const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;

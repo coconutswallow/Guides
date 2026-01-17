@@ -843,3 +843,39 @@ dialog::backdrop {
     padding: 0.5rem 1rem;
     font-size: 0.9em;
 }
+
+.help-modal,
+.help-tooltip {
+    z-index: 10000 !important;
+}
+
+/* Ensure incentives modal is also high */
+#modal-incentives,
+#modal-save-template,
+#modal-copy-game {
+    z-index: 9999 !important;
+}
+
+/* Accordion cards should be lower */
+.accordion-card {
+    z-index: 1;
+    position: relative;
+}
+
+/* Session Details - Make Jumpstart visible */
+.dm-val-jumpstart {
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* Error state for gold validation */
+.card-field.error input {
+    border-color: #e74c3c !important;
+    background-color: rgba(231, 76, 60, 0.1) !important;
+}
+
+.card-field.error label::after {
+    content: " ⚠️";
+    color: #e74c3c;
+    font-size: 0.9em;
+}

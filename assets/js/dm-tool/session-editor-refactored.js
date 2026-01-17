@@ -1,5 +1,5 @@
-// assets/js/dm-tool/session-editor.js
-// OPTIMIZED VERSION - Direct drop-in replacement with performance improvements
+// assets/js/dm-tool/session-editor-refactored.js
+// FINAL VERSION with all fixes
 
 import { supabase } from '../supabaseClient.js'; 
 import { 
@@ -18,7 +18,7 @@ import { checkAccess } from '../auth-check.js';
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
-import { updateSessionCalculations } from '../../../test/session-calculations.js';
+import { updateSessionCalculations } from './session-calculations.js';
 import { 
     updateLootInstructions, 
     updateLootDeclaration, 
@@ -26,19 +26,14 @@ import {
     updateDMLootLogic 
 } from './session-loot.js';
 
-// ===== PERFORMANCE OPTIMIZATIONS =====
 let cachedGameRules = null; 
 let isFullDM = false; 
 let cachedDiscordId = "YOUR_ID";
 let updateDebounceTimer = null;
 
-// Cached DOM references (initialized once)
 const domCache = {};
-
-// Debounce delay constant
 const UPDATE_DEBOUNCE_MS = 100;
 
-// ===== HELPER FUNCTIONS =====
 async function cacheDiscordId() {
     try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -53,7 +48,6 @@ async function cacheDiscordId() {
     }
 }
 
-// Cache DOM elements once on init
 function cacheDOMElements() {
     domCache.sessionHoursInput = document.getElementById('inp-session-total-hours');
     domCache.rosterBody = document.getElementById('roster-body');
@@ -62,7 +56,6 @@ function cacheDOMElements() {
     domCache.dmGamesSetup = document.getElementById('inp-dm-games-count');
 }
 
-// Debounced update function - prevents excessive recalculations
 function scheduleUpdate(callback) {
     if (updateDebounceTimer) {
         clearTimeout(updateDebounceTimer);
@@ -91,30 +84,23 @@ function incrementGameString(val) {
     return (num + 1).toString();
 }
 
-// ==========================================
-// INITIALIZATION
-// ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
     await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
     
-    // Cache DOM elements
     cacheDOMElements();
 
-    // Check DM Role
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
         isFullDM = await checkAccess(user.id, 'Full DM');
         console.log("User Role Check - Full DM:", isFullDM);
     }
 
-    // Init UI Modules
     UI.initTabs(() => IO.generateOutput()); 
     UI.initTimezone();
     UI.initDateTimeConverter(); 
     UI.initAccordions();
     
-    // Init Modals with debounced callback
     UI.initIncentivesModal((ctx) => {
         scheduleUpdate(() => {
             updateSessionCalculations(cachedGameRules);
@@ -122,13 +108,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
     
-    // Helper Logic
     initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
 
-    // Output bindings
     const bindOutput = (id) => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('input', () => IO.generateOutput());
@@ -136,7 +120,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindOutput('inp-lobby-url');
     bindOutput('inp-listing-url');
 
-    // Dropdowns
     const rules = cachedGameRules;
     if(rules && rules.options) {
         if(rules.options["Game Version"]) UI.fillDropdown('inp-version', rules.options["Game Version"]);
@@ -144,7 +127,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(rules.options["Game Format"]) UI.fillDropdown('inp-format', rules.options["Game Format"]);
     }
     
-    // Tier Dropdown
     if (rules && rules.tier) {
         const tierSelect = document.getElementById('inp-tier');
         if (tierSelect) {
@@ -165,7 +147,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
 
-    // MAIN CALLBACK CONTROLLER (with debouncing)
     const callbacks = {
         onUpdate: () => {
             scheduleUpdate(() => {
@@ -174,6 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 updateLootDeclaration(cachedDiscordId); 
                 updateHgenLogic(cachedDiscordId);   
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
+                IO.updateJumpstartDisplay(); // FIX: Update jumpstart visibility
             });
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
@@ -186,7 +168,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const item = e.target.closest('.nav-item');
             if (!item) return;
             
-            // Trigger MAL update when navigating to MAL tab
+            // Generate Session Log when navigating to that tab
+            if (item.dataset.target === 'view-session-output') {
+                IO.generateSessionLogOutput();
+            }
+            
+            // Generate MAL when navigating to MAL tab
             if (item.dataset.target === 'view-mal-update') {
                 IO.generateMALUpdate();
             }
@@ -197,10 +184,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadSessionData(sessionId, callbacks);
     } 
 
-    // Session Hours "Next Part" Logic
+    // FIX: Session Hours logic - update all player hours when changed
     if(domCache.sessionHoursInput) {
         domCache.sessionHoursInput.addEventListener('change', () => { 
             const val = parseFloat(domCache.sessionHoursInput.value) || 0;
+            
+            // FIX: Update all player card hours to match session hours
+            const cards = document.querySelectorAll('#session-roster-list .player-card');
+            const newSessionHours = parseFloat(domCache.sessionHoursInput.value) || 3;
+            
+            cards.forEach(card => {
+                const hInput = card.querySelector('.s-hours');
+                if (hInput) {
+                    hInput.value = newSessionHours;
+                    hInput.setAttribute('max', newSessionHours);
+                }
+            });
+            
             if (val > 5.5) {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
@@ -220,7 +220,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setupCalculationTriggers(callbacks);
     
-    // Listeners for Loot Plan inputs (debounced)
     const lootPlanInput = document.getElementById('inp-loot-plan');
     if (lootPlanInput) {
         lootPlanInput.addEventListener('input', () => {
@@ -239,7 +238,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Listeners for Hgen inputs (debounced)
     ['inp-predet-perms', 'inp-predet-cons'].forEach(id => {
         const el = document.getElementById(id);
         if(el) {
@@ -249,27 +247,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
     
-    // Initial Update Trigger
     setTimeout(() => {
         callbacks.onUpdate();
     }, 500);
 });
 
 function setupCalculationTriggers(callbacks) {
-    // 1. Automatic Roster Sync on Tab Switch + Session Date Auto-fill
     if (domCache.sidebarNav) {
         domCache.sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (item && item.dataset.target === 'view-session-details') {
                 Rows.syncSessionPlayersFromMaster(callbacks);
                 
-                // Auto-populate Session Date from Game Setup
                 const setupDateInput = document.getElementById('inp-start-datetime');
                 const sessionDateInput = document.getElementById('inp-session-date');
                 if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
                     sessionDateInput.value = setupDateInput.value;
                     
-                    // Update unix timestamp
                     const tz = document.getElementById('inp-timezone')?.value;
                     const unixVal = UI.toUnixTimestamp(setupDateInput.value, tz);
                     const sessionUnixInput = document.getElementById('inp-session-unix');
@@ -279,30 +273,6 @@ function setupCalculationTriggers(callbacks) {
         });
     }
 
-    // 2. Session Hours - Update all player hours when session hours change (debounced)
-    if(domCache.sessionHoursInput) {
-        domCache.sessionHoursInput.addEventListener('input', () => {
-            scheduleUpdate(() => {
-                const newSessionHours = parseFloat(domCache.sessionHoursInput.value) || 3;
-                
-                // Update all player cards that exceed the new max
-                const cards = document.querySelectorAll('#session-roster-list .player-card');
-                cards.forEach(card => {
-                    const hInput = card.querySelector('.s-hours');
-                    if (hInput) {
-                        const currentVal = parseFloat(hInput.value) || 0;
-                        if (currentVal > newSessionHours) {
-                            hInput.value = newSessionHours;
-                        }
-                    }
-                });
-                
-                updateSessionCalculations(cachedGameRules);
-            });
-        });
-    }
-
-    // 3. DM Rewards & Sync (debounced)
     const dmLevel = document.getElementById('out-dm-level');
     const dmGames = document.getElementById('out-dm-games');
     const btnDMIncLoot = document.getElementById('btn-dm-loot-incentives');
@@ -339,7 +309,6 @@ function setupCalculationTriggers(callbacks) {
         });
     }
 
-    // Listeners for DM Loot Logic (debounced)
     if(domCache.dmLevelSetup) {
         domCache.dmLevelSetup.addEventListener('input', () => {
             scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
@@ -347,11 +316,13 @@ function setupCalculationTriggers(callbacks) {
     }
     if(domCache.dmGamesSetup) {
         domCache.dmGamesSetup.addEventListener('change', () => {
-            scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
+            scheduleUpdate(() => {
+                updateDMLootLogic(cachedDiscordId, cachedGameRules);
+                IO.updateJumpstartDisplay(); // FIX: Update on DM games change
+            });
         });
     }
     
-    // Trigger update on Roster changes (debounced)
     if (domCache.rosterBody) {
         domCache.rosterBody.addEventListener('change', () => {
             scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
@@ -367,9 +338,6 @@ function setupCalculationTriggers(callbacks) {
     }
 }
 
-// ==========================================
-// DATA LOADING & EVENTS
-// ==========================================
 async function loadSessionData(sessionId, callbacks) {
     try {
         const session = await loadSession(sessionId);
@@ -423,7 +391,6 @@ function initPlayerSetup() {
     }
 
     if (domCache.rosterBody) {
-        // Use event delegation for better performance
         domCache.rosterBody.addEventListener('input', (e) => {
             if (e.target.matches('.inp-level') || e.target.matches('.inp-level-play-as')) {
                 scheduleUpdate(() => window._sessionCallbacks.onUpdate());
