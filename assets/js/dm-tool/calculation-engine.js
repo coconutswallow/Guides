@@ -1,9 +1,6 @@
 // assets/js/dm-tool/calculation-engine.js
 // Granular calculation engine - only recalculates what changed
 
-// assets/js/dm-tool/calculation-engine.js
-// Granular calculation engine - only recalculates what changed
-
 class CalculationEngine {
     constructor(gameRules) {
         this.rules = gameRules;
@@ -82,11 +79,15 @@ class CalculationEngine {
         }
         rewards.dtp = dtp;
 
-        // Gold: Base + (1x Base * Welcome Wagon)
-        const goldTable = this.rules.gold_per_session_by_apl;
+        // Gold: Based on DM's Character Level (not APL) * (1 + Welcome Wagon)
+        const goldTable = this.rules.gold_per_session_by_apl; // Table name is same, but key is DM Level
+        
+        // FIX: Use DM Level for lookup, not APL
+        const lookupLevel = Math.floor(dmLevel); // Ensure integer for lookup
         const baseGold = goldTable 
-            ? (goldTable[playerStats.apl?.toString()] || goldTable[playerStats.apl] || 0) 
+            ? (goldTable[lookupLevel.toString()] || goldTable[lookupLevel] || 0) 
             : 0;
+            
         rewards.gp = baseGold * (1 + welcomeWagon);
 
         return rewards;
@@ -98,7 +99,7 @@ class CalculationEngine {
         let welcomeWagon = 0;
 
         players.forEach(player => {
-            // Ensure strict string comparison as requested
+            // Ensure strict string comparison
             const gamesVal = String(player.games_count);
 
             // Welcome Wagon: games played = 1
@@ -115,12 +116,14 @@ class CalculationEngine {
         return { newHires, welcomeWagon };
     }
 
-    // Calculate max gold for session
+    // Calculate max gold for session (Used for Player Validation based on APL)
     calculateMaxGold(apl) {
         if (!this.rules || !this.rules.gold_per_session_by_apl) return 0;
         
         const goldTable = this.rules.gold_per_session_by_apl;
-        return goldTable[apl?.toString()] || goldTable[apl] || 0;
+        // FIX: Ensure APL is treated as a valid key
+        const safeApl = Math.floor(parseFloat(apl) || 1);
+        return goldTable[safeApl.toString()] || goldTable[safeApl] || 0;
     }
 
     // Calculate DM loot rolls
@@ -140,7 +143,7 @@ class CalculationEngine {
         return totalRolls;
     }
 
-    // Validate player gold against max
+    // Validate player gold against max (Warning only)
     validatePlayerGold(playerGold, maxGold) {
         if (maxGold <= 0) return true; // No validation if max not set
         return parseFloat(playerGold) <= maxGold;

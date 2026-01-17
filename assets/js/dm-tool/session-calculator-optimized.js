@@ -1,4 +1,6 @@
 // assets/js/dm-tool/session-calculator-optimized.js
+// Optimized calculation functions using state management
+// This is a bridge file for backward compatibility during migration
 
 import { sessionState } from './session-state.js';
 import CalculationEngine from './calculation-engine.js';
@@ -29,7 +31,7 @@ export function updateSessionCalculations(rules) {
     const sessionHoursInput = document.getElementById('inp-session-total-hours');
     const sessionHours = parseFloat(sessionHoursInput?.value) || 3;
     
-    // Calculate max gold
+    // Calculate max gold based on Party APL
     const stats = sessionState.calculateStats();
     const maxGold = calculatorInstance.calculateMaxGold(stats.apl);
     const lblGold = container.querySelector('.val-max-gold');
@@ -48,7 +50,7 @@ export function updateSessionCalculations(rules) {
         const forfeitInput = card.querySelector('.s-forfeit-xp');
         const incentivesBtn = card.querySelector('.s-incentives-btn');
         const gInput = card.querySelector('.s-gold');
-        const gamesInput = card.querySelector('.s-games'); // Get games count for DM stats
+        const gamesInput = card.querySelector('.s-games'); 
 
         // 2. Validate & Cap Hours
         let pHours = parseFloat(hInput.value) || 0;
@@ -70,21 +72,28 @@ export function updateSessionCalculations(rules) {
             hours: pHours,
             forfeit_xp: forfeitInput ? forfeitInput.checked : false,
             incentives: JSON.parse(incentivesBtn.dataset.incentives || '[]'),
-            games_count: gamesInput ? gamesInput.value : "0" // Capture games count
+            games_count: gamesInput ? gamesInput.value : "0"
         };
         
-        livePlayers.push(playerObj); // Add to live list
+        livePlayers.push(playerObj);
 
-        // 4. Validate Gold
+        // 4. Validate Gold (Soft Warning)
         const playerGold = parseFloat(gInput.value) || 0;
         const isValid = calculatorInstance.validatePlayerGold(playerGold, maxGold);
         
         const goldWrapper = gInput.closest('.card-field');
         if (goldWrapper) {
-            if (isValid) {
-                goldWrapper.classList.remove('error');
+            // Clear both classes first
+            goldWrapper.classList.remove('error');
+            goldWrapper.classList.remove('warning');
+            
+            if (!isValid) {
+                // Apply warning class for soft validation
+                goldWrapper.classList.add('warning');
+                // Optional: You can add a title tooltip for context
+                gInput.title = `Exceeds recommended limit of ${maxGold} GP`;
             } else {
-                goldWrapper.classList.add('error');
+                gInput.title = "";
             }
         }
 

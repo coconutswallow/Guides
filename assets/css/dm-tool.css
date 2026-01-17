@@ -879,3 +879,12 @@ dialog::backdrop {
     color: #e74c3c;
     font-size: 0.9em;
 }
+
+/* Soft Validation Warning for Gold */
+.card-field.warning input {
+    border-color: #ffc107 !important; /* Amber/Yellow */
+    background-color: rgba(255, 193, 7, 0.1); /* Light Yellow tint */
+}
+.card-field.warning label {
+    color: #e0a800; /* Darker yellow for text readability */
+}
