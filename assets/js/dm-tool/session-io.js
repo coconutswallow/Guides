@@ -234,15 +234,19 @@ export async function generateOutput() {
         return el ? el.value : "";
     };
 
+    // 1. Data Collection
     const data = getFormData().header;
     const unixTime = getVal('inp-unix-time');
     const name = getVal('header-game-name') || "Untitled";
+    const sessionSummary = getVal('session-summary'); // New: Target for split logic
     
+    // 2. Time String Calculation
     let timeString = "TBD";
     if (unixTime && unixTime > 0) {
         timeString = `<t:${unixTime}:F>`;
     }
     
+    // 3. Tier and APL Logic
     let tierString = 'N/A';
     if (Array.isArray(data.tier) && data.tier.length > 0) {
         const sortedTiers = data.tier.sort((a, b) => {
@@ -262,7 +266,8 @@ export async function generateOutput() {
         tierString = data.tier;
     }
 
-    const listingText = `**Start Time:** ${timeString}
+    // 4. Construct Segments for Listing Output
+    const listingTop = `**Start Time:** ${timeString}
 **Name:** ${name}
 **Description:**
 ${data.game_description || 'N/A'}
@@ -281,9 +286,11 @@ ${data.game_description || 'N/A'}
 - **Environment Hazard Level:** N/A
 **Lobby:** ${data.lobby_url || 'N/A'}
 **Platform:** ${data.platform || 'N/A'}
-**Duration:** ${data.intended_duration || 'N/A'}
+**Duration:** ${data.intended_duration || 'N/A'}\n`;
 
-**House Rules:**
+    const listingSummary = `\n**Session Summary:**\n${sessionSummary || 'N/A'}\n`;
+
+    const listingBottom = `\n**House Rules:**
 ${data.house_rules || 'N/A'}
 
 **Notes:**
@@ -295,9 +302,22 @@ ${data.warnings || 'N/A'}
 **How to Apply:**
 ${data.how_to_apply || 'Post your application below.'}`;
 
+    // 5. Check 999 Character Limit and Update UI
+    const fullListingText = listingTop + listingSummary + listingBottom;
     const outListing = document.getElementById('out-listing-text');
-    if(outListing) outListing.value = listingText;
+    const secondaryWrapper = document.getElementById('secondary-output-wrapper');
+    const outSummary = document.getElementById('out-summary-text');
+
+    if (fullListingText.length > 999) {
+        if (outListing) outListing.value = listingTop;
+        if (outSummary) outSummary.value = listingSummary + listingBottom;
+        if (secondaryWrapper) secondaryWrapper.classList.remove('d-none');
+    } else {
+        if (outListing) outListing.value = fullListingText;
+        if (secondaryWrapper) secondaryWrapper.classList.add('d-none');
+    }
     
+    // 6. AD/Ping Logic (Always remains as a single output)
     const rules = await fetchGameRules();
     let pingString = "";
     
