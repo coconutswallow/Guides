@@ -27,6 +27,8 @@ export function updateMasterRosterStats() {
     });
 
     const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
+
+
     
     let tier = 1;
     if (apl >= 17) tier = 4;
@@ -36,6 +38,7 @@ export function updateMasterRosterStats() {
     const elSize = document.getElementById('setup-val-party-size');
     const elApl = document.getElementById('setup-val-apl');
     const elTier = document.getElementById('setup-val-tier');
+
 
     if(elSize) elSize.textContent = rows.length; 
     if(elApl) elApl.textContent = apl;
