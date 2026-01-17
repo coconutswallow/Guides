@@ -309,12 +309,21 @@ ${data.how_to_apply || 'Post your application below.'}`;
     const outSummary = document.getElementById('out-summary-text');
 
     if (fullListingText.length > 999) {
+        // Split detected: Show both textareas and split content
         if (outListing) outListing.value = listingTop;
         if (outSummary) outSummary.value = listingSummary + listingBottom;
-        if (secondaryWrapper) secondaryWrapper.classList.remove('d-none');
+        if (secondaryWrapper) {
+            secondaryWrapper.classList.remove('d-none');
+            secondaryWrapper.style.display = "block"; // Ensure it's visible
+        }
     } else {
+        // No split needed: Hide secondary and put everything in Part 1
         if (outListing) outListing.value = fullListingText;
-        if (secondaryWrapper) secondaryWrapper.classList.add('d-none');
+        if (secondaryWrapper) {
+            secondaryWrapper.classList.add('d-none');
+            secondaryWrapper.style.display = "none"; // Explicitly hide
+        }
+        if (outSummary) outSummary.value = ""; // Clear Part 2
     }
     
     // 6. AD/Ping Logic (Always remains as a single output)
