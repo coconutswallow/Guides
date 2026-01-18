@@ -206,7 +206,13 @@ class StateManager {
                 this.updateField('header', 'title', e.target.value);
             });
         }
-        
+
+        if (this.dom.dmCharName) {
+        this.dom.dmCharName.addEventListener('input', (e) => {
+            this.updateField('dm', 'character_name', e.target.value);
+            });
+        }
+            
         if (this.dom.sessionHours) {
             this.dom.sessionHours.addEventListener('input', (e) => {
                 this.updateField('session_log', 'hours', parseFloat(e.target.value) || 3);
@@ -242,12 +248,50 @@ class StateManager {
             this.updateField('header', 'predet_cons', parseInt(e.target.value) || 0);
             });
         }
+        if (this.dom.lobbyUrl) {
+        this.dom.lobbyUrl.addEventListener('input', (e) => {
+            this.updateField('header', 'lobby_url', e.target.value);
+            this.scheduleUpdate('outputs');
+            });
+        }
+        if (this.dom.listingUrl) {
+        this.dom.listingUrl.addEventListener('input', (e) => {
+            this.updateField('header', 'listing_url', e.target.value);
+            this.scheduleUpdate('outputs');
+            });
+        }
+        if (this.dom.tierSelect) {
+        this.dom.tierSelect.addEventListener('change', (e) => {
+            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
+            this.state.header.tier = selected;
+            this.scheduleUpdate('calculations');
+            this.scheduleUpdate('outputs');
+            });
+        }
+        if (this.dom.eventSelect) {
+        this.dom.eventSelect.addEventListener('change', (e) => {
+            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
+            this.state.header.event_tags = selected;
+            this.scheduleUpdate('outputs');
+            });
+        }
 
         if (this.dom.dmLootSelected) {
         this.dom.dmLootSelected.addEventListener('input', (e) => {
             this.updateField('session_log.dm_rewards', 'loot_selected', e.target.value);
             });
         }
+
+        // add more listeners as needed
+
+        // Game Name
+        if (this.dom.gameName) {
+            this.dom.gameName.addEventListener('input', (e) => {
+                this.updateField('header', 'title', e.target.value);
+            });
+        }
+
+        
         
     }
 
@@ -620,7 +664,29 @@ class StateManager {
             return "";
         }
     }
+    getPlayerStats() {
+    let newHires = 0;
+    let welcomeWagon = 0;
+
+    this.state.players.forEach(player => {
+        const gamesVal = String(player.games_count);
+
+        if (gamesVal === "1") {
+            welcomeWagon++;
+        }
+
+        if (gamesVal !== "10+") {
+            const num = parseInt(gamesVal);
+            if (!isNaN(num) && num <= 10) {
+                newHires++;
+            }
+        }
+        });
+
+        return { newHires, welcomeWagon };
+    }
 }
 
 // Export singleton instance
 export const stateManager = new StateManager();
+

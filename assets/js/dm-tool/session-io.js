@@ -1,255 +1,129 @@
 // assets/js/dm-tool/session-io.js
-// COMPLETE VERSION - No functionality removed
+/**
+ * MIGRATION ADAPTER - Step 2
+ * 
+ * This file provides BACKWARD-COMPATIBLE wrappers around the new StateManager.
+ * It maintains the EXACT same function signatures as session-io.js
+ * so existing code continues to work.
+ * 
+ * MIGRATION STRATEGY:
+ * 1. Keep this file alongside session-io.js
+ * 2. In session-editor-refactored.js, import from THIS file instead
+ * 3. Test thoroughly
+ * 4. Once verified, delete old session-io.js
+ * 
+ * This approach allows ZERO-DOWNTIME migration.
+ */
+
+import { stateManager } from './state-manager.js';
+import { fetchGameRules } from './data-manager.js';
 import * as Rows from './session-rows.js';
 import * as UI from './session-ui.js';
-import { fetchGameRules } from './data-manager.js';
+
+/**
+ * BACKWARD COMPATIBILITY LAYER
+ * These functions maintain exact same signatures as old session-io.js
+ */
 
 export function getFormData() {
-    const val = (id) => {
-        const el = document.getElementById(id);
-        return el ? el.value : "";
-    };
+    // Instead of querying DOM, get from state manager
+    const state = stateManager.getFullState();
     
-    const eventSelect = document.getElementById('inp-event');
-    const selectedEvents = eventSelect ? Array.from(eventSelect.selectedOptions).map(opt => opt.value) : [];
-    
-    const tierSelect = document.getElementById('inp-tier');
-    let selectedTiers = [];
-    if (tierSelect && tierSelect.selectedOptions) {
-        selectedTiers = Array.from(tierSelect.selectedOptions).map(opt => opt.value);
-    } else if (tierSelect) {
-        selectedTiers = tierSelect.value ? [tierSelect.value] : [];
-    }
-
-    const dmBtn = document.getElementById('btn-dm-loot-incentives');
-    const dmIncentives = JSON.parse(dmBtn ? dmBtn.dataset.incentives : '[]');
-
-    const hoursEl = document.getElementById('inp-session-total-hours');
-    const sessionHours = hoursEl ? hoursEl.value : 0;
-    
-    // DM Forfeit State
-    const dmForfeitXp = document.getElementById('chk-dm-forfeit-xp') ? document.getElementById('chk-dm-forfeit-xp').checked : false;
-
-    const sessionLog = {
-        title: val('header-game-name'), 
-        date_time: val('inp-session-unix'), 
-        hours: sessionHours, 
-        notes: val('inp-session-notes'),
-        summary: val('inp-session-summary'),
-        dm_collaborators: val('inp-dm-collab'),
-        players: Rows.getSessionRosterData(),
-        dm_rewards: {
-            level: val('out-dm-level'),
-            games_played: val('out-dm-games'),
-            incentives: dmIncentives,
-            loot_selected: val('dm-loot-selected'),
-            forfeit_xp: dmForfeitXp
-        }
-    };
-
+    // Format exactly as old version did
     return {
         header: {
-            title: val('header-game-name'), // ADDED - was missing
-            game_datetime: val('inp-unix-time'), 
-            timezone: val('inp-timezone'),
-            intended_duration: val('inp-duration-text'),
-            game_description: val('inp-description'), 
-            game_version: val('inp-version'),
-            game_type: val('inp-format'),
-            apps_type: val('inp-apps-type'),
-            platform: val('inp-platform'),
-            event_tags: selectedEvents, 
-            tier: selectedTiers,
-            apl: val('inp-apl'),
-            party_size: val('inp-party-size'),
-            tone: val('inp-tone'),
-            focus: val('inp-focus'),
-            encounter_difficulty: val('inp-diff-encounter'),
-            threat_level: val('inp-diff-threat'),
-            char_loss: val('inp-diff-loss'),
-            house_rules: val('inp-houserules'),
-            notes: val('inp-notes'),
-            warnings: val('inp-warnings'),
-            how_to_apply: val('inp-apply'),
-            listing_url: val('inp-listing-url'), 
-            lobby_url: val('inp-lobby-url'),     
-            loot_plan: val('inp-loot-plan'),
-            predet_perms: val('inp-predet-perms'),
-            predet_cons: val('inp-predet-cons')
+            title: state.header.title,
+            game_datetime: state.header.game_datetime,
+            timezone: state.header.timezone,
+            intended_duration: state.header.intended_duration,
+            game_description: state.header.game_description,
+            game_version: state.header.game_version,
+            game_type: state.header.game_type,
+            apps_type: state.header.apps_type,
+            platform: state.header.platform,
+            event_tags: state.header.event_tags,
+            tier: state.header.tier,
+            apl: state.header.apl,
+            party_size: state.header.party_size,
+            tone: state.header.tone,
+            focus: state.header.focus,
+            encounter_difficulty: state.header.encounter_difficulty,
+            threat_level: state.header.threat_level,
+            char_loss: state.header.char_loss,
+            house_rules: state.header.house_rules,
+            notes: state.header.notes,
+            warnings: state.header.warnings,
+            how_to_apply: state.header.how_to_apply,
+            listing_url: state.header.listing_url,
+            lobby_url: state.header.lobby_url,
+            loot_plan: state.header.loot_plan,
+            predet_perms: state.header.predet_perms,
+            predet_cons: state.header.predet_cons
         },
-        players: Rows.getMasterRosterData(),
-        dm: {
-            character_name: val('inp-dm-char-name'),
-            level: val('inp-dm-level'),
-            games_count: val('inp-dm-games-count')
-        },
-        session_log: sessionLog
+        players: Rows.getMasterRosterData(), // Still uses existing Rows module
+        dm: state.dm,
+        session_log: {
+            title: state.header.title,
+            date_time: state.session_log.date_time,
+            hours: state.session_log.hours,
+            notes: state.session_log.notes,
+            summary: state.session_log.summary,
+            dm_collaborators: state.session_log.dm_collaborators,
+            players: Rows.getSessionRosterData(), // Still uses existing Rows module
+            dm_rewards: state.session_log.dm_rewards
+        }
     };
 }
 
 export function populateForm(session, callbacks, options = {}) {
-    if(session.title && !options.keepTitle) {
-        const titleEl = document.getElementById('header-game-name');
-        if(titleEl) titleEl.value = session.title;
+    if (session.title && !options.keepTitle) {
+        stateManager.updateField('header', 'title', session.title);
     }
     
     if (!session.form_data) return;
     
-    const setVal = (id, val) => { 
-        const el = document.getElementById(id); 
-        if(el) {
-            el.value = val || ""; 
-            el.dispatchEvent(new Event('input', { bubbles: true }));
-            el.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-    };
-
-    if (session.form_data.header) {
-        const h = session.form_data.header;
-        setVal('inp-unix-time', h.game_datetime);
-        setVal('inp-timezone', h.timezone);
-        if(h.game_datetime && h.timezone) {
-            const dateStr = UI.unixToLocalIso(h.game_datetime, h.timezone);
-            setVal('inp-start-datetime', dateStr);
-        }
-        setVal('inp-format', h.game_type);
-        
-        const tierSelect = document.getElementById('inp-tier');
-        if (tierSelect) {
-            const values = Array.isArray(h.tier) ? h.tier : [h.tier];
-            if (tierSelect.tagName === 'SELECT' && tierSelect.options) {
-                Array.from(tierSelect.options).forEach(opt => {
-                    opt.selected = values.includes(opt.value);
-                });
-            } else {
-                tierSelect.value = values.join(', ');
-            }
-        }
-        
-        setVal('inp-apl', h.apl);
-        setVal('inp-party-size', h.party_size);
-        setVal('inp-duration-text', h.intended_duration);
-        setVal('inp-platform', h.platform);
-        setVal('inp-tone', h.tone);
-        setVal('inp-diff-encounter', h.encounter_difficulty);
-        setVal('inp-description', h.game_description);
-        setVal('inp-version', h.game_version);
-        setVal('inp-apps-type', h.apps_type);
-        setVal('inp-listing-url', h.listing_url);
-        setVal('inp-lobby-url', h.lobby_url);
-        setVal('inp-loot-plan', h.loot_plan);
-        setVal('inp-predet-perms', h.predet_perms || "0");
-        setVal('inp-predet-cons', h.predet_cons || "0");
-        
-        const eventSelect = document.getElementById('inp-event');
-        if (eventSelect && Array.isArray(h.event_tags)) {
-            Array.from(eventSelect.options).forEach(opt => {
-                opt.selected = h.event_tags.includes(opt.value);
-            });
-        }
-        
-        setVal('inp-focus', h.focus);
-        setVal('inp-diff-threat', h.threat_level);
-        setVal('inp-diff-loss', h.char_loss);
-        setVal('inp-houserules', h.house_rules);
-        setVal('inp-notes', h.notes);
-        setVal('inp-warnings', h.warnings);
-        setVal('inp-apply', h.how_to_apply);
-    }
-
-    const tbody = document.getElementById('roster-body');
-    if (tbody) {
-        tbody.innerHTML = ''; 
-        if (session.form_data.players && Array.isArray(session.form_data.players)) {
-            session.form_data.players.forEach(player => {
-                Rows.addPlayerRowToMaster(player);
-            });
-        }
-    }
-
-    if (session.form_data.dm) {
-        const d = session.form_data.dm;
-        setVal('inp-dm-char-name', d.character_name);
-        setVal('inp-dm-level', d.level);
-        setVal('inp-dm-games-count', d.games_count);
-        
-        // Sync hidden DM fields in Session Details tab
-        setVal('out-dm-name', d.character_name);
-        setVal('out-dm-level', d.level);
-        setVal('out-dm-games', d.games_count);
-    }
-
-    const sLog = session.form_data.session_log;
-    if (sLog) {
-        setVal('inp-session-total-hours', sLog.hours || 0);
-        setVal('inp-session-notes', sLog.notes);
-        setVal('inp-session-summary', sLog.summary);
-        setVal('inp-dm-collab', sLog.dm_collaborators);
-        
-        if(sLog.date_time) {
-            setVal('inp-session-unix', sLog.date_time);
-            const tz = document.getElementById('inp-timezone').value;
-            setVal('inp-session-date', UI.unixToLocalIso(sLog.date_time, tz));
-        }
-
-        if (sLog.dm_rewards) {
-            setVal('out-dm-level', sLog.dm_rewards.level);
-            setVal('out-dm-games', sLog.dm_rewards.games_played);
-            setVal('dm-loot-selected', sLog.dm_rewards.loot_selected);
-            
-            // Restore DM Forfeit XP
-            const dmForfeit = document.getElementById('chk-dm-forfeit-xp');
-            if (dmForfeit) {
-                dmForfeit.checked = !!sLog.dm_rewards.forfeit_xp;
-                dmForfeit.addEventListener('change', () => {
-                   if(callbacks.onUpdate) callbacks.onUpdate();
-                });
-            }
-            
-            const dmBtn = document.getElementById('btn-dm-loot-incentives');
-            const loadedInc = sLog.dm_rewards.incentives || [];
-            if(dmBtn) {
-                dmBtn.dataset.incentives = JSON.stringify(loadedInc);
-                dmBtn.innerText = loadedInc.length > 0 ? "Edit Incentives" : "Add Additional Incentives";
-                
-                const disp = document.getElementById('disp-dm-incentives');
-                if(disp) disp.value = loadedInc.join(', ');
-            }
-        }
-
-        const listContainer = document.getElementById('session-roster-list');
-        listContainer.innerHTML = '';
-        if(sLog.players) {
-            sLog.players.forEach(p => Rows.addSessionPlayerRow(listContainer, p, callbacks));
-        }
-    } 
+    // Load into state manager
+    stateManager.loadFromDB(session);
     
+    // Still need to populate roster tables (DOM-based components)
+    const tbody = document.getElementById('roster-body');
+    if (tbody && session.form_data.players) {
+        tbody.innerHTML = '';
+        session.form_data.players.forEach(player => {
+            Rows.addPlayerRowToMaster(player);
+        });
+    }
+    
+    // Populate session roster
+    const listContainer = document.getElementById('session-roster-list');
+    if (listContainer && session.form_data.session_log?.players) {
+        listContainer.innerHTML = '';
+        session.form_data.session_log.players.forEach(p => {
+            Rows.addSessionPlayerRow(listContainer, p, callbacks);
+        });
+    }
+    
+    // Trigger outputs
     generateOutput();
-    if(callbacks.onUpdate) callbacks.onUpdate();
+    if (callbacks.onUpdate) callbacks.onUpdate();
 }
 
 export async function generateOutput() {
-    const getVal = (id) => {
-        const el = document.getElementById(id);
-        return el ? el.value : "";
-    };
-
-    // 1. Data Collection
-    const data = getFormData().header;
-    const unixTime = getVal('inp-unix-time');
-    const name = getVal('header-game-name') || "Untitled";
-    const sessionSummary = getVal('session-summary'); // New: Target for split logic
+    const state = stateManager.getFullState();
+    const unixTime = state.header.game_datetime;
+    const gameName = state.header.title || "Untitled";
+    const sessionSummary = state.session_log.summary || "";
     
-    // 2. Time String Calculation
+    // Time String
     let timeString = "TBD";
     if (unixTime && unixTime > 0) {
         timeString = `<t:${unixTime}:F>`;
     }
     
-    // 3. Tier and APL Logic
+    // Tier String
     let tierString = 'N/A';
-    if (Array.isArray(data.tier) && data.tier.length > 0) {
-        const sortedTiers = data.tier.sort((a, b) => {
+    if (Array.isArray(state.header.tier) && state.header.tier.length > 0) {
+        const sortedTiers = state.header.tier.sort((a, b) => {
             const numA = parseInt(a.replace(/\D/g, '')) || 0;
             const numB = parseInt(b.replace(/\D/g, '')) || 0;
             return numA - numB;
@@ -262,80 +136,87 @@ export async function generateOutput() {
             const last = sortedTiers[sortedTiers.length - 1];
             tierString = `${first} to ${last}`;
         }
-    } else if (typeof data.tier === 'string' && data.tier) {
-        tierString = data.tier;
     }
 
-    // 4. Construct Segments for Listing Output
+    let eventsString = '';
+    if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
+        eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
+    }
+    
+    // Build listing text
     const listingTop = `**Start Time:** ${timeString}
-**Name:** ${name}
+**Name:** ${gameName}
+${eventsString}
 **Description:**
-${data.game_description || 'N/A'}
+${state.header.game_description || 'N/A'}
 
-**Version:** ${data.game_version || 'N/A'}
-**Format:** ${data.game_type || 'N/A'}
-**Tier and APL:** ${tierString} (${data.apl || 'N/A'})
-**Party Size:** ${data.party_size || 'N/A'}
-**Applications:** ${data.apps_type || 'N/A'}
-**Tone:** ${data.tone || 'N/A'}
-**Focus:** ${data.focus || 'N/A'}
+**Version:** ${state.header.game_version || 'N/A'}
+**Format:** ${state.header.game_type || 'N/A'}
+**Tier and APL:** ${tierString} (${state.header.apl || 'N/A'})
+**Party Size:** ${state.header.party_size || 'N/A'}
+**Applications:** ${state.header.apps_type || 'N/A'}
+**Tone:** ${state.header.tone || 'N/A'}
+**Focus:** ${state.header.focus || 'N/A'}
 **Difficulty:**
-- **Encounter Difficulty:** ${data.encounter_difficulty || 'N/A'}
-- **Chance of Character Loss:** ${data.char_loss || 'N/A'}
-- **Enemy Threat Level:** ${data.threat_level || 'N/A'}
+- **Encounter Difficulty:** ${state.header.encounter_difficulty || 'N/A'}
+- **Chance of Character Loss:** ${state.header.char_loss || 'N/A'}
+- **Enemy Threat Level:** ${state.header.threat_level || 'N/A'}
 - **Environment Hazard Level:** N/A
-**Lobby:** ${data.lobby_url || 'N/A'}
-**Platform:** ${data.platform || 'N/A'}
-**Duration:** ${data.intended_duration || 'N/A'}\n`;
+**Lobby:** ${state.header.lobby_url || 'N/A'}
+**Platform:** ${state.header.platform || 'N/A'}
+**Duration:** ${state.header.intended_duration || 'N/A'}\n`;
 
     const listingSummary = `\n**Session Summary:**\n${sessionSummary || 'N/A'}\n`;
-
+    
     const listingBottom = `\n**House Rules:**
-${data.house_rules || 'N/A'}
+${state.header.house_rules || 'N/A'}
 
 **Notes:**
-${data.notes || 'N/A'}
+${state.header.notes || 'N/A'}
 
 **Content Warnings:**
-${data.warnings || 'N/A'}
+${state.header.warnings || 'N/A'}
 
 **How to Apply:**
-${data.how_to_apply || 'Post your application below.'}`;
+${state.header.how_to_apply || 'Post your application below.'}`;
 
-    // 5. Check 999 Character Limit and Update UI
+    // Handle 999 character split
     const fullListingText = listingTop + listingSummary + listingBottom;
-    const outListing = document.getElementById('out-listing-text');
-    const secondaryWrapper = document.getElementById('secondary-output-wrapper');
-    const outSummary = document.getElementById('out-summary-text');
-
-    if (fullListingText.length > 999) {
-        if (outListing) outListing.value = listingTop;
-        if (outSummary) outSummary.value = listingSummary + listingBottom;
-        if (secondaryWrapper) {
-            secondaryWrapper.classList.remove('d-none');
-            secondaryWrapper.style.display = "block"; // Force display
-        }
-    } else {
-        if (outListing) outListing.value = fullListingText;
-        if (outSummary) outSummary.value = ""; // Clear old data
-        if (secondaryWrapper) {
-            secondaryWrapper.classList.add('d-none');
-            secondaryWrapper.style.display = "none"; // Force hide
+    
+    if (stateManager.dom.outListing) {
+        if (fullListingText.length > 999) {
+            stateManager.dom.outListing.value = listingTop;
+            if (stateManager.dom.outSummary) {
+                stateManager.dom.outSummary.value = listingSummary + listingBottom;
+            }
+            if (stateManager.dom.secondaryWrapper) {
+                stateManager.dom.secondaryWrapper.classList.remove('d-none');
+                stateManager.dom.secondaryWrapper.style.display = "block";
+            }
+        } else {
+            stateManager.dom.outListing.value = fullListingText;
+            if (stateManager.dom.outSummary) {
+                stateManager.dom.outSummary.value = "";
+            }
+            if (stateManager.dom.secondaryWrapper) {
+                stateManager.dom.secondaryWrapper.classList.add('d-none');
+                stateManager.dom.secondaryWrapper.style.display = "none";
+            }
         }
     }
     
-    // 6. AD/Ping Logic (Always remains as a single output)
+    // Generate Ad Text
     const rules = await fetchGameRules();
     let pingString = "";
     
-    if (rules && rules.tier && Array.isArray(data.tier)) {
+    if (rules && rules.tier && Array.isArray(state.header.tier)) {
         const pings = new Set();
-        data.tier.forEach(t => {
+        state.header.tier.forEach(t => {
             const tierData = rules.tier[t];
             if (tierData) {
-                if (data.game_type === "Voice") {
+                if (state.header.game_type === "Voice") {
                     if (tierData["voice ping"]) pings.add(tierData["voice ping"]);
-                } else if (data.game_type === "PBP" || data.game_type === "Live Text") {
+                } else if (state.header.game_type === "PBP" || state.header.game_type === "Live Text") {
                     if (tierData["PBP ping"]) pings.add(tierData["PBP ping"]);
                 }
             }
@@ -343,69 +224,68 @@ ${data.how_to_apply || 'Post your application below.'}`;
         if (pings.size > 0) pingString = Array.from(pings).join(' ');
     }
 
-    const adText = `**Game Name:** ${name}
-**Version and Format:** ${data.game_version} / ${data.game_type}
-**Tier and APL:** ${tierString} , APL ${data.apl || 'N/A'}
-**Start Time and Duration:** ${timeString} (${data.intended_duration || 'N/A'})
-**Listing:** ${data.listing_url || 'N/A'}
+    const adText = `**Game Name:** ${gameName}
+**Version and Format:** ${state.header.game_version} / ${state.header.game_type}
+**Tier and APL:** ${tierString} , APL ${state.header.apl || 'N/A'}
+**Start Time and Duration:** ${timeString} (${state.header.intended_duration || 'N/A'})
+**Listing:** ${state.header.listing_url || 'N/A'}
 
 **Description:**
-${data.game_description || ''}
+${state.header.game_description || ''}
 
 ${pingString}`;
 
-    const outAd = document.getElementById('out-ad-text');
-    if(outAd) outAd.value = adText;
+    if (stateManager.dom.outAd) {
+        stateManager.dom.outAd.value = adText;
+    }
 }
 
 export function prepareTemplateData(originalData) {
     const data = JSON.parse(JSON.stringify(originalData));
     
     if (data.header) {
-        data.header.game_datetime = null; 
-        data.header.listing_url = "";     
+        data.header.game_datetime = null;
+        data.header.listing_url = "";
     }
 
-    data.players = []; 
+    data.players = [];
     data.dm = { character_name: "", level: "", games_count: "0" };
-    data.session_log = { 
-        title: "", 
-        hours: 0, 
-        notes: "", 
-        summary: "", 
-        players: [], 
-        dm_rewards: {} 
+    data.session_log = {
+        title: "",
+        hours: 0,
+        notes: "",
+        summary: "",
+        players: [],
+        dm_rewards: {}
     };
     
     return data;
 }
 
 export async function generateSessionLogOutput(dmDiscordId) {
-    const data = getFormData();
+    const state = stateManager.getFullState();
+    const stats = stateManager.getStats();
     
-    // Header information
-    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
-    const gameVersion = data.header.game_version || "N/A";
-    const gameFormat = data.header.game_type || "N/A";
+    const gameName = state.header.title || "Untitled";
+    const gameVersion = state.header.game_version || "N/A";
+    const gameFormat = state.header.game_type || "N/A";
     
-    // Check if we already have session data logged
-    const sessionNotes = data.session_log.notes || "";
+    const sessionNotes = state.session_log.notes || "";
     const hasSessionData = sessionNotes.trim().length > 0;
-    const appsType = hasSessionData ? "Prefilled" : (data.header.apps_type || "N/A");
+    const appsType = hasSessionData ? "Prefilled" : (state.header.apps_type || "N/A");
     
-    const tierEl = document.getElementById('setup-val-tier');
-    const tier = tierEl ? tierEl.textContent : "1";
-    
-    const aplEl = document.getElementById('setup-val-apl');
-    const apl = aplEl ? aplEl.textContent : "1";
-    
-    const sessionHours = data.session_log.hours || 3;
-    const sessionSummary = data.session_log.summary || "";
-    const dmCollaborators = data.session_log.dm_collaborators || "";
+    const sessionHours = state.session_log.hours || 3;
+    const sessionSummary = state.session_log.summary || "";
+    const dmCollaborators = state.session_log.dm_collaborators || "";
+
+    let eventsString = '';
+    if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
+        eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
+    }
     
     // Build player lines
     let playerLines = [];
-    const players = data.session_log.players || [];
+    const players = Rows.getSessionRosterData(); // Still from Rows module
     
     players.forEach(player => {
         let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${player.level || "1"}) gains ${player.xp || "0"} XP, ${player.dtp || "0"} DTP`;
@@ -428,37 +308,38 @@ export async function generateSessionLogOutput(dmDiscordId) {
         playerLines.push(line);
     });
     
-    // DM Rewards Line
-    const dmCharName = data.dm.character_name || "DM Character";
-    const dmLevel = data.session_log.dm_rewards.level || data.dm.level || "1";
-    const dmXP = document.querySelector('.dm-res-xp')?.value || "0";
-    const dmDTP = document.querySelector('.dm-res-dtp')?.value || "0";
-    const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
-    const dmLoot = data.session_log.dm_rewards.loot_selected || "";
-    const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${data.dm.character_name || "DM"}`;
+    // DM Rewards
+    const dmCharName = state.dm.character_name || "DM Character";
+    const dmLevel = state.session_log.dm_rewards.level || state.dm.level || "1";
+    const dmXP = stateManager.dom.outDmLevel?.closest('.player-card-body')?.querySelector('.dm-res-xp')?.value || "0";
+    const dmDTP = stateManager.dom.outDmLevel?.closest('.player-card-body')?.querySelector('.dm-res-dtp')?.value || "0";
+    const dmGP = stateManager.dom.outDmLevel?.closest('.player-card-body')?.querySelector('.dm-res-gp')?.value || "0";
+    const dmLoot = state.session_log.dm_rewards.loot_selected || "";
+    const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${state.dm.character_name || "DM"}`;
 
     let dmRewardsLine = `${dmIdString} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
     if (dmLoot) dmRewardsLine += `, and ${dmLoot}`;
     dmRewardsLine += ".";
 
-    // --- CONSTRUCT PART 1 ---
+    // Build output
     let output = `**Session Name:** ${gameName}\n`;
     output += `**Game Version:** ${gameVersion}\n`;
     output += `**Game Format:** ${gameFormat}\n`;
     output += `**Application Format:** ${appsType}\n`;
-    output += `**APL and Tier:** APL ${apl}, Tier ${tier}\n`;
+    output += `**APL and Tier:** APL ${stats.apl}, Tier ${stats.tier}\n`;
     output += `**Hours Played:** ${sessionHours}\n\n`;
     output += `**EXP, DTP, GP, Loot, and Resources Used:**\n`;
     output += playerLines.join('\n') + '\n\n';
     
-    // Collect DM Incentives from logic
+    // DM Incentives
+    const playerStats = stateManager.getPlayerStats();
     let dmIncentivesList = [];
-    const newHires = players.filter(p => (parseInt(p.games_count) || 0) <= 10).length;
-    const welcomeWagon = players.filter(p => p.games_count === "1").length;
-    if (data.dm.games_count !== "10+" && parseInt(data.dm.games_count) <= 10) dmIncentivesList.push("Jumpstart");
-    if (newHires > 0) dmIncentivesList.push(`New Hires x${newHires}`);
-    if (welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${welcomeWagon}`);
-    dmIncentivesList = dmIncentivesList.concat(data.session_log.dm_rewards.incentives || []);
+    if (state.dm.games_count !== "10+" && parseInt(state.dm.games_count) <= 10) {
+        dmIncentivesList.push("Jumpstart");
+    }
+    if (playerStats.newHires > 0) dmIncentivesList.push(`New Hires x${playerStats.newHires}`);
+    if (playerStats.welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${playerStats.welcomeWagon}`);
+    dmIncentivesList = dmIncentivesList.concat(state.session_log.dm_rewards.incentives || []);
 
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
     output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
@@ -466,64 +347,61 @@ export async function generateSessionLogOutput(dmDiscordId) {
     if (dmCollaborators) output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
     if (sessionNotes) output += `**Notes:**\n${sessionNotes}\n\n`;
 
-    // --- SPLIT LOGIC ---
-    const outText = document.getElementById('out-session-text');
-    const outSummary = document.getElementById('out-summary-text');
-    const secondaryWrapper = document.getElementById('secondary-output-wrapper');
+    // Handle split
     const summaryHeader = `**Session Summary:**\n`;
     const summaryContent = sessionSummary || 'N/A';
-    
     const fullTextTotal = output + summaryHeader + summaryContent;
 
-    if (fullTextTotal.length > 999) {
-        // Split: Part 1 ends at Notes, Part 2 starts at Session Summary
-        if (outText) outText.value = output.trim();
-        if (outSummary) outSummary.value = summaryHeader + summaryContent;
-        if (secondaryWrapper) {
-            secondaryWrapper.classList.remove('d-none');
-            secondaryWrapper.style.display = "block"; // Explicitly force visibility
-        }
-    } else {
-        // No Split: Everything in Part 1, Hide Part 2
-        if (outText) outText.value = fullTextTotal.trim();
-        if (outSummary) outSummary.value = ""; 
-        if (secondaryWrapper) {
-            secondaryWrapper.classList.add('d-none');
-            secondaryWrapper.style.display = "none"; // Explicitly force hide
+    if (stateManager.dom.outSession) {
+        if (fullTextTotal.length > 999) {
+            stateManager.dom.outSession.value = output.trim();
+            if (stateManager.dom.outSummary) {
+                stateManager.dom.outSummary.value = summaryHeader + summaryContent;
+            }
+            if (stateManager.dom.secondaryWrapper) {
+                stateManager.dom.secondaryWrapper.classList.remove('d-none');
+                stateManager.dom.secondaryWrapper.style.display = "block";
+            }
+        } else {
+            stateManager.dom.outSession.value = fullTextTotal.trim();
+            if (stateManager.dom.outSummary) {
+                stateManager.dom.outSummary.value = "";
+            }
+            if (stateManager.dom.secondaryWrapper) {
+                stateManager.dom.secondaryWrapper.classList.add('d-none');
+                stateManager.dom.secondaryWrapper.style.display = "none";
+            }
         }
     }
 }
 
 export function generateMALUpdate() {
-    const sessionDate = document.getElementById('inp-session-date')?.value || '';
+    const state = stateManager.getFullState();
+    const stats = stateManager.getStats();
+    
+    const sessionDate = stateManager.dom.sessionDate?.value || '';
     const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
     
-    // FIX: Use header-game-name instead of data.header.title
-    const gameName = document.getElementById('header-game-name')?.value || 'Untitled';
-    const dmName = document.getElementById('inp-dm-char-name')?.value || 'DM';
-    const aplEl = document.getElementById('setup-val-apl');
-    const apl = aplEl ? aplEl.textContent : '1';
+    const gameName = state.header.title || 'Untitled';
+    const dmName = state.dm.character_name || 'DM';
     const dmXP = document.querySelector('.dm-res-xp')?.value || '0';
     const dmGP = document.querySelector('.dm-res-gp')?.value || '0';
     const dmDTP = document.querySelector('.dm-res-dtp')?.value || '0';
-    const dmLoot = document.getElementById('dm-loot-selected')?.value || '';
+    const dmLoot = state.session_log.dm_rewards.loot_selected || '';
     
-    // Tab-delimited format
-    const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;
+    const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${stats.apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;
     
-    const outMAL = document.getElementById('out-mal-update');
-    if (outMAL) {
-        outMAL.value = malRow;
+    if (stateManager.dom.outMAL) {
+        stateManager.dom.outMAL.value = malRow;
     }
 }
 
 export function updateJumpstartDisplay() {
-    const dmGamesInput = document.getElementById('inp-dm-games-count');
-    const dmGamesVal = dmGamesInput ? dmGamesInput.value : "10+";
+    const state = stateManager.getFullState();
+    const dmGamesVal = state.dm.games_count;
     const dmGamesNum = parseInt(dmGamesVal) || 999;
     const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
     
-    // Update the Jumpstart field in Session Details tab
     const jumpstartField = document.querySelector('.dm-val-jumpstart');
     if (jumpstartField) {
         jumpstartField.value = isJumpstart ? "Yes" : "No";

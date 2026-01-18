@@ -92,15 +92,18 @@ ${lootPlan}
 
 // Updates the Hgenloot Bot section (Declaration text AND Command)
 export function updateHgenLogic(discordId) {
-    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
-    const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
-    const apl = document.getElementById('setup-val-apl')?.textContent || "1";
+    const state = stateManager.getFullState();
+    const stats = stateManager.getStats();
     
-    const permsVal = parseInt(document.getElementById('inp-predet-perms')?.value || "0");
-    const consVal = parseInt(document.getElementById('inp-predet-cons')?.value || "0");
+    const gameName = state.header.title || "Untitled";
+    const partySize = stats.partySize || 0;
+    const apl = stats.apl || 1;
+    
+    // FIX: Get from state instead of DOM
+    const permsVal = parseInt(state.header.predet_perms) || 0;
+    const consVal = parseInt(state.header.predet_cons) || 0;
 
     // 1. Output the "Rolls Loot" Declaration text
-    // <id> rolls loot for [Game], Players: [N], APL: [N]
     const rollText = `<@${discordId}> rolls loot for ${gameName}, Number of Players: ${partySize}, APL: ${apl}`;
     
     const outDecl = document.getElementById('out-hgen-declaration');
@@ -109,7 +112,6 @@ export function updateHgenLogic(discordId) {
     }
 
     // 2. Output the Bot Command
-    // /hgenloot [players] [apl] {optional: perms} {optional: cons}
     let cmd = `/hgenloot ${partySize} ${apl}`;
     
     // Logic: If we have Cons, we MUST print Perms (even if 0) to keep the order.
@@ -120,7 +122,6 @@ export function updateHgenLogic(discordId) {
         cmd += ` ${permsVal}`;
     }
     
-    // Note: HTML id is 'out-hgen-command'
     const outCmd = document.getElementById('out-hgen-command');
     if(outCmd) {
         outCmd.value = cmd;
@@ -129,28 +130,18 @@ export function updateHgenLogic(discordId) {
 
 // Updates the DM Loot logic (View 5)
 export function updateDMLootLogic(discordId, gameRules) {
-    // 1. Calculate Roster Stats
-    const rows = document.querySelectorAll('#roster-body .player-row');
-    let newHires = 0;
-    let welcomeWagon = 0;
+    // FIX: Get player stats from state manager instead of DOM
+    const playerStats = stateManager.getPlayerStats();
+    const newHires = playerStats.newHires;
+    const welcomeWagon = playerStats.welcomeWagon;
 
-    rows.forEach(row => {
-        const gamesVal = row.querySelector('.inp-games-count').value;
-        const gamesNum = parseInt(gamesVal);
-        
-        if (gamesVal === "1") welcomeWagon++;
-        if (gamesVal !== "10+" && !isNaN(gamesNum) && gamesNum <= 10) {
-            newHires++;
-        }
-    });
-
-    // 2. DM Jumpstart Logic
-    const dmGamesInput = document.getElementById('inp-dm-games-count');
-    const dmGamesVal = dmGamesInput ? dmGamesInput.value : "10+";
+    // DM Jumpstart Logic
+    const state = stateManager.getFullState();
+    const dmGamesVal = state.dm.games_count;
     const dmGamesNum = parseInt(dmGamesVal) || 999;
     const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
 
-    // 3. Update UI Read-only fields
+    // Update UI Read-only fields
     const elNewHires = document.getElementById('loot-val-newhires');
     const elWelcome = document.getElementById('loot-val-welcome');
     const elJump = document.getElementById('loot-val-jumpstart');
@@ -159,7 +150,7 @@ export function updateDMLootLogic(discordId, gameRules) {
     if(elWelcome) elWelcome.value = welcomeWagon;
     if(elJump) elJump.value = isJumpstart ? "Yes" : "No";
 
-    // 4. Calculate Loot Rolls
+    // Calculate Loot Rolls
     let totalRolls = 1 + newHires;
     
     const btnDM = document.getElementById('btn-dm-loot-incentives');
@@ -177,10 +168,9 @@ export function updateDMLootLogic(discordId, gameRules) {
         });
     }
 
-    // 5. Generate Output Text
-    const gameName = document.getElementById('header-game-name').value || "Untitled Game";
-    const dmLvlInput = document.getElementById('inp-dm-level');
-    const dmLvl = dmLvlInput ? dmLvlInput.value : "0";
+    // Generate Output Text
+    const gameName = state.header.title || "Untitled Game";
+    const dmLvl = state.dm.level || "0";
     
     const incentiveStr = incentiveNames.length > 0 ? `, Incentives: ${incentiveNames.join(', ')}` : "";
     const declText = `<@${discordId}> rolls loot for Game **${gameName}**${incentiveStr}`;

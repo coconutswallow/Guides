@@ -2,9 +2,9 @@
 // Optimized calculation functions using state management
 // This is a bridge file for backward compatibility during migration
 
-import { sessionState } from './session-state.js';
-import CalculationEngine from './calculation-engine.js';
-import { CALCULATIONS } from './constants.js';
+import { sessionState } from '../assets/js/dm-tool/session-state.js';
+import CalculationEngine from '../assets/js/dm-tool/calculation-engine.js';
+import { CALCULATIONS } from '../assets/js/dm-tool/constants.js';
 
 let calculatorInstance = null;
 

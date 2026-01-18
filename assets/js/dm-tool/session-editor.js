@@ -18,8 +18,8 @@ import {
 import { checkAccess } from '../auth-check.js'; 
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
-import * as IO from './session-io-migrated.js';
-import { updateSessionCalculations } from './session-calculator-optimized.js';
+import * as IO from './session-io.js';
+import { updateSessionCalculations } from '../../../test/session-calculator-optimized.js';
 import { 
     updateLootInstructions, 
     updateLootDeclaration, 
@@ -101,6 +101,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     stateManager.init();
     console.log('✓ State Manager Ready');
 
+    // Initialize loot instructions
+    updateLootInstructions(isFullDM);
+
+    // Add forfeit XP event handling
+    const sessionRosterList = document.getElementById('session-roster-list');
+    if (sessionRosterList) {
+        sessionRosterList.addEventListener('change', (e) => {
+            if (e.target.matches('.s-forfeit-xp')) {
+                scheduleUpdate(() => {
+                    updateSessionCalculations(cachedGameRules);
+                });
+            }
+        });
+    }
+
     stateManager.onUpdate('calculations', (state) => {
         updateSessionCalculations(cachedGameRules);
     });
@@ -139,6 +154,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
+
+    // Save invite link to session metadata
+    const btnGenerate = document.getElementById('btn-generate-invite');
+    if (btnGenerate) {
+        const originalHandler = btnGenerate.onclick;
+        btnGenerate.addEventListener('click', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (!id) return;
+            
+            const inpInvite = document.getElementById('inp-invite-link');
+            if (inpInvite && inpInvite.value) {
+                // Save invite URL to session
+                try {
+                    await supabase
+                        .from('sessions')
+                        .update({ invite_url: inpInvite.value })
+                        .eq('id', id);
+                } catch (e) {
+                    console.warn('Could not save invite URL:', e);
+                }
+            }
+        });
+    }
+    // Load invite link if exists
+    async function loadInviteLink(sessionId) {
+        try {
+            const { data } = await supabase
+                .from('sessions')
+                .select('invite_url')
+                .eq('id', sessionId)
+                .single();
+            
+            if (data && data.invite_url) {
+                const inpInvite = document.getElementById('inp-invite-link');
+                if (inpInvite) inpInvite.value = data.invite_url;
+            }
+        } catch (e) {
+            console.warn('Could not load invite URL:', e);
+        }
+    }
 
     const bindOutput = (id) => {
         const el = document.getElementById(id);
