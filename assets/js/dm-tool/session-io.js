@@ -317,7 +317,16 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     players.forEach(player => {
         // FIX: Check for forfeit flag
         const xpStr = player.forfeit_xp ? "forfeits XP" : `gains ${player.xp || "0"} XP`;
-        let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${player.level || "1"}) ${xpStr}, ${player.dtp || "0"} DTP`;
+        
+        // Handle Level Display (Real vs Effective)
+        // If real_level exists and differs from effective level, show both.
+        // Otherwise just show effective level.
+        let levelDisplay = player.level || "1";
+        if (player.real_level && String(player.real_level) !== String(player.level)) {
+             levelDisplay = `${player.real_level}, playing at level ${player.level}`;
+        }
+        
+        let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${levelDisplay}) ${xpStr}, ${player.dtp || "0"} DTP`;
         
         if (player.incentives?.length > 0) {
             line += ` (incentives: ${player.incentives.join(', ')})`;

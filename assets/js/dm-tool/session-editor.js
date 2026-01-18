@@ -460,11 +460,19 @@ function updateSessionCalculations() {
     const stats = stateManager.getStats(); // Get APL
     const maxGold = calculationEngine.calculateMaxGold(stats.apl);
     
+    // --- FIX: Update the visual "Max Gold" Label ---
+    const elMaxGold = document.querySelector('.val-max-gold');
+    if (elMaxGold) {
+        elMaxGold.textContent = maxGold;
+    }
+    // ------------------------------------------------
+
     const cards = document.querySelectorAll('#session-roster-list .player-card');
     
     cards.forEach(card => {
         // Gather input data from the card
-        const levelInput = card.querySelector('.s-level');
+        const levelInput = card.querySelector('.s-level'); // Effective Level
+        const realLevelInput = card.querySelector('.s-real-level'); // Real Level
         const hoursInput = card.querySelector('.s-hours');
         const xpInput = card.querySelector('.s-xp');
         const dtpInput = card.querySelector('.s-dtp');
@@ -486,7 +494,8 @@ function updateSessionCalculations() {
         }
 
         const playerData = {
-            level: parseInt(levelInput.value) || 1,
+            // FIX: Use Real Level for XP calculation if available, else fallback to visual level
+            level: realLevelInput ? (parseInt(realLevelInput.value) || 1) : (parseInt(levelInput.value) || 1),
             hours: parseFloat(hoursInput.value) || 0,
             forfeit_xp: forfeitCheckbox ? forfeitCheckbox.checked : false,
             incentives: incentivesBtn ? JSON.parse(incentivesBtn.dataset.incentives || '[]') : []
@@ -662,6 +671,17 @@ function setupCalculationTriggers(callbacks) {
                 }, 100); 
             }
         });
+
+        // FIX: Sync state immediately on input to prevent APL flickering
+        domCache.rosterBody.addEventListener('input', (e) => {
+            // Update global state immediately from DOM so that calculateStats() is accurate
+            stateManager.state.players = Rows.getMasterRosterData();
+            
+            // Debounce the heavy lifting (UI updates)
+            scheduleUpdate(() => {
+                window._sessionCallbacks.onUpdate();
+            });
+        });
     }
 }
 
@@ -732,20 +752,9 @@ function initPlayerSetup() {
             });
         }); 
     }
-
-    if (domCache.rosterBody) {
-        domCache.rosterBody.addEventListener('input', (e) => {
-            if (e.target.matches('.inp-level') || e.target.matches('.inp-level-play-as')) {
-                scheduleUpdate(() => window._sessionCallbacks.onUpdate());
-            }
-        });
-
-        domCache.rosterBody.addEventListener('click', (e) => {
-            if (e.target.matches('.btn-delete-row')) {
-                scheduleUpdate(() => window._sessionCallbacks.onUpdate());
-            }
-        });
-    }
+    
+    // Note: The main 'input' listener for rosterBody is now in setupCalculationTriggers
+    // to handle state syncing.
 }
 
 function initPlayerSync() {

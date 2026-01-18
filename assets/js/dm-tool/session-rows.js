@@ -257,6 +257,10 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     // FIX: Properly read forfeit_xp from data (string or boolean)
     const isForfeit = data.forfeit_xp === true || data.forfeit_xp === "true";
 
+    // Data.level is the "Effective" level. data.real_level is the actual level.
+    // If real_level is missing, default to level.
+    const realLevel = data.real_level || data.level || '1';
+
     const card = document.createElement('div');
     card.className = 'player-card';
 
@@ -278,7 +282,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
                 <input type="hidden" class="s-char-name" value="${data.character_name || ''}">
                 <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
                 <input type="hidden" class="s-level" value="${data.level || '0'}">
-                <input type="hidden" class="s-games" value="${data.games_count || '1'}">
+                <input type="hidden" class="s-real-level" value="${realLevel}"> <input type="hidden" class="s-games" value="${data.games_count || '1'}">
                 <input type="hidden" class="s-display-name" value="${data.display_name || ''}">
 
                 <div class="card-field w-20">
@@ -427,6 +431,7 @@ export function getSessionRosterData() {
             character_name: card.querySelector('.s-char-name').value, 
             display_name: card.querySelector('.s-display-name')?.value || card.querySelector('.player-card-title').textContent,
             level: card.querySelector('.s-level').value,
+            real_level: card.querySelector('.s-real-level')?.value, // Save real level too
             games_count: card.querySelector('.s-games').value,
             
             hours: card.querySelector('.s-hours').value,
@@ -472,6 +477,11 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
             existingCard.querySelector('.player-card-title').textContent = masterPlayer.display_name;
             existingCard.querySelector('.s-char-name').value = masterPlayer.character_name;
             existingCard.querySelector('.s-level').value = masterPlayer.level_playing_as || masterPlayer.level;
+            
+            // Update Real Level (hidden field)
+            const realLevelField = existingCard.querySelector('.s-real-level');
+            if(realLevelField) realLevelField.value = masterPlayer.level;
+
             existingCard.querySelector('.s-games').value = masterPlayer.games_count;
             
             // FIX: Update display_name hidden field
@@ -489,7 +499,8 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
                 discord_id: masterPlayer.discord_id,
                 display_name: masterPlayer.display_name,
                 character_name: masterPlayer.character_name,
-                level: masterPlayer.level_playing_as || masterPlayer.level,
+                level: masterPlayer.level_playing_as || masterPlayer.level, // Effective Level
+                real_level: masterPlayer.level, // Real Level
                 games_count: masterPlayer.games_count,
                 forfeit_xp: false // Default to false for new players
             };
