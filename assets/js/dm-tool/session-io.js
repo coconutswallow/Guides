@@ -75,7 +75,7 @@ export function getFormData() {
             players: Rows.getSessionRosterData(),
             dm_rewards: state.session_log.dm_rewards
         }
-    }
+    };
 }
 
 export function populateForm(session, callbacks, options = {}) {
@@ -234,159 +234,11 @@ ${apply}
 
         adEl.value = adText;
     }
-
-    // 3. GENERATE LOGS IF AVAILABLE
-    // Call the session log generation directly here if needed, or rely on the tab switch listener
-}
-
-export function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
-    const state = getFormData();
-    const stats = stateManager.getStats();
-    
-    const gameName = state.header.title || "Untitled";
-    const gameVersion = state.header.game_version || "N/A";
-    const gameFormat = state.header.game_type || "N/A";
-    
-    const sessionNotes = state.session_log.notes || "";
-    const hasSessionData = sessionNotes.trim().length > 0 || state.session_log.players.length > 0;
-    const appsType = state.header.apps_type || "N/A";
-    
-    const sessionHours = state.session_log.hours || 3;
-    const sessionSummary = state.session_log.summary || "";
-    const dmCollaborators = state.session_log.dm_collaborators || "";
-
-    let eventsString = '';
-    if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
-        eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
-    }
-    
-    let playerLines = [];
-    const players = Rows.getSessionRosterData();
-    
-    players.forEach(player => {
-        let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${player.level || "1"}) gains ${player.xp || "0"} XP, ${player.dtp || "0"} DTP`;
-        
-        if (player.incentives?.length > 0) {
-            line += ` (incentives: ${player.incentives.join(', ')})`;
-        }
-        
-        line += `, and ${player.gold || "0"} GP.`;
-        if (player.loot) line += ` They take ${player.loot}.`;
-        
-        let res = [];
-        if (player.items_used) res.push(player.items_used);
-        if (player.gold_used) res.push(`${player.gold_used} GP`);
-        if (res.length > 0) line += ` They used ${res.join(' and ')}.`;
-        
-        if (player.notes) line += ` ${player.notes}`;
-        playerLines.push(line);
-    });
-    
-    const dmCharName = state.dm.character_name || "DM Character";
-    const dmLevel = state.session_log.dm_rewards.level || state.dm.level || "1";
-    
-    const dmXP = document.querySelector('.dm-res-xp')?.value || "0";
-    const dmDTP = document.querySelector('.dm-res-dtp')?.value || "0";
-    const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
-    
-    const dmLoot = state.session_log.dm_rewards.loot_selected || "";
-    const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${state.dm.character_name || "DM"}`;
-
-    let dmRewardsLine = `${dmIdString} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
-    if (dmLoot) dmRewardsLine += `, and ${dmLoot}`;
-    dmRewardsLine += ".";
-
-    let output = `**Session Name:** ${gameName}\n`;
-    output += eventsString;
-    output += `**Game Version:** ${gameVersion}\n`;
-    output += `**Game Format:** ${gameFormat}\n`;
-    output += `**Application Format:** ${appsType}\n`;
-    output += `**APL and Tier:** APL ${stats.apl}, Tier ${stats.tier}\n`;
-    output += `**Hours Played:** ${sessionHours}\n\n`;
-    output += `**EXP, DTP, GP, Loot, and Resources Used:**\n`;
-    output += playerLines.join('\n') + '\n\n';
-    
-    const playerStats = stateManager.getPlayerStats();
-    let dmIncentivesList = [];
-    const dmGamesNum = parseInt(state.dm.games_count);
-    if (state.dm.games_count !== "10+" && dmGamesNum <= 10) {
-        dmIncentivesList.push("Jumpstart");
-    }
-    if (playerStats.newHires > 0) dmIncentivesList.push(`New Hires x${playerStats.newHires}`);
-    if (playerStats.welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${playerStats.welcomeWagon}`);
-    
-    if (state.session_log.dm_rewards.incentives) {
-        dmIncentivesList = dmIncentivesList.concat(state.session_log.dm_rewards.incentives);
-    }
-
-    output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
-    output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
-    
-    // FIX: Add DM Collaboration
-    if (dmCollaborators) {
-        output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
-    }
-    
-    // FIX: Add Session Notes
-    if (sessionNotes) {
-        output += `**Notes:**\n${sessionNotes}\n\n`;
-    }
-
-    const summaryHeader = `**Session Summary:**\n`;
-    const summaryContent = sessionSummary || 'N/A';
-    const fullTextTotal = output + summaryHeader + summaryContent;
-
-    const outSession = document.getElementById('out-session-text');
-    if (outSession) outSession.value = fullTextTotal.trim();
-}
-
-// ... (Rest of file: generateMALUpdate, prepareTemplateData, etc.)
-export function generateMALUpdate(dmDisplayName) {
-    const state = stateManager.getFullState();
-    const stats = stateManager.getStats();
-    
-    const sessionDate = stateManager.dom.sessionDate?.value || '';
-    const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
-    
-    const gameName = state.header.title || 'Untitled';
-    const dmName = dmDisplayName || state.dm.character_name || 'DM';
-    const dmXP = document.querySelector('.dm-res-xp')?.value || '0';
-    const dmGP = document.querySelector('.dm-res-gp')?.value || '0';
-    const dmDTP = document.querySelector('.dm-res-dtp')?.value || '0';
-    const dmLoot = state.session_log.dm_rewards.loot_selected || '';
-    
-    const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${stats.apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;
-    
-    if (stateManager.dom.outMAL) {
-        stateManager.dom.outMAL.value = malRow;
-    }
-}
-
-export function prepareTemplateData(originalData) {
-    const data = JSON.parse(JSON.stringify(originalData));
-    if (data.header) {
-        data.header.game_datetime = null;
-        data.header.game_date_str = ""; 
-        data.header.listing_url = "";
-        data.header.lobby_url = ""; 
-    }
-    data.players = [];
-    data.dm = { character_name: "", level: "", games_count: "0" };
-    data.session_log = {
-        title: "",
-        hours: 0,
-        notes: "",
-        summary: "",
-        dm_collaborators: "",
-        players: [],
-        dm_rewards: {}
-    };
-    return data;
 }
 
 export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     // Force refresh state from DOM to ensure notes/collab are current
-    const state = getFormData(); // This gets the freshest data including notes/collab
+    const state = getFormData(); 
     const stats = stateManager.getStats();
     
     const gameName = state.header.title || "Untitled";
@@ -394,6 +246,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const gameFormat = state.header.game_type || "N/A";
     
     const sessionNotes = state.session_log.notes || "";
+    // Logic for Pre-filled vs Manual
     const hasSessionData = sessionNotes.trim().length > 0;
     const appsType = hasSessionData ? "Prefilled" : (state.header.apps_type || "N/A");
     
@@ -494,7 +347,6 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     }
 }
 
-// FIX: Added dmDisplayName parameter for MAL output
 export function generateMALUpdate(dmDisplayName) {
     const state = stateManager.getFullState();
     const stats = stateManager.getStats();
@@ -503,7 +355,6 @@ export function generateMALUpdate(dmDisplayName) {
     const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
     
     const gameName = state.header.title || 'Untitled';
-    // FIX: Use dmDisplayName instead of character_name
     const dmName = dmDisplayName || state.dm.character_name || 'DM';
     const dmXP = document.querySelector('.dm-res-xp')?.value || '0';
     const dmGP = document.querySelector('.dm-res-gp')?.value || '0';
@@ -515,6 +366,28 @@ export function generateMALUpdate(dmDisplayName) {
     if (stateManager.dom.outMAL) {
         stateManager.dom.outMAL.value = malRow;
     }
+}
+
+export function prepareTemplateData(originalData) {
+    const data = JSON.parse(JSON.stringify(originalData));
+    if (data.header) {
+        data.header.game_datetime = null;
+        data.header.game_date_str = ""; 
+        data.header.listing_url = "";
+        data.header.lobby_url = ""; 
+    }
+    data.players = [];
+    data.dm = { character_name: "", level: "", games_count: "0" };
+    data.session_log = {
+        title: "",
+        hours: 0,
+        notes: "",
+        summary: "",
+        dm_collaborators: "",
+        players: [],
+        dm_rewards: {}
+    };
+    return data;
 }
 
 export function updateJumpstartDisplay() {
