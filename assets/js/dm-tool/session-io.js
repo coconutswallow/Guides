@@ -1,5 +1,6 @@
 // assets/js/dm-tool/session-io.js
-// FIX 6: Session Log output with DM Collaboration and Session Notes properly ordered
+// FIX: Session Log output with Events, DM Collaboration, Session Notes
+// FIX: MAL output with display_name instead of character_name
 
 import { stateManager } from './state-manager.js';
 import { fetchGameRules } from './data-manager.js';
@@ -232,6 +233,7 @@ export function prepareTemplateData(originalData) {
     return data;
 }
 
+// FIX: Added dmDiscordId and dmDisplayName parameters
 export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const state = stateManager.getFullState();
     const stats = stateManager.getStats();
@@ -248,6 +250,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const sessionSummary = state.session_log.summary || "";
     const dmCollaborators = state.session_log.dm_collaborators || "";
 
+    // FIX: Build events string
     let eventsString = '';
     if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
         eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
@@ -292,8 +295,9 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     if (dmLoot) dmRewardsLine += `, and ${dmLoot}`;
     dmRewardsLine += ".";
 
+    // FIX: Build output with Events after Game Name
     let output = `**Session Name:** ${gameName}\n`;
-    output += eventsString;
+    output += eventsString; // Events follow the session name
     output += `**Game Version:** ${gameVersion}\n`;
     output += `**Game Format:** ${gameFormat}\n`;
     output += `**Application Format:** ${appsType}\n`;
@@ -312,19 +316,17 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     dmIncentivesList = dmIncentivesList.concat(state.session_log.dm_rewards.incentives || []);
 
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
-    output += `**DM Rewards:** ${dmRewardsLine}\n`;
+    output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
     
-    // FIX 6: Add DM Collaboration right after DM Rewards (before Notes)
-    if (dmCollaborators && dmCollaborators.trim()) {
-        output += `\n**DM Collaborators:**\n${dmCollaborators}\n`;
+    // FIX: Add DM Collaboration after DM Rewards
+    if (dmCollaborators) {
+        output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
     }
     
-    // FIX 6: Add Session Notes after DM Collaboration (before Summary)
-    if (sessionNotes && sessionNotes.trim()) {
-        output += `\n**Notes:**\n${sessionNotes}\n`;
+    // FIX: Add Session Notes after DM Collaboration
+    if (sessionNotes) {
+        output += `**Notes:**\n${sessionNotes}\n\n`;
     }
-    
-    output += '\n'; // Extra newline before summary
 
     const summaryHeader = `**Session Summary:**\n`;
     const summaryContent = sessionSummary || 'N/A';
@@ -353,6 +355,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     }
 }
 
+// FIX: Added dmDisplayName parameter for MAL output
 export function generateMALUpdate(dmDisplayName) {
     const state = stateManager.getFullState();
     const stats = stateManager.getStats();
@@ -361,6 +364,7 @@ export function generateMALUpdate(dmDisplayName) {
     const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
     
     const gameName = state.header.title || 'Untitled';
+    // FIX: Use dmDisplayName instead of character_name
     const dmName = dmDisplayName || state.dm.character_name || 'DM';
     const dmXP = document.querySelector('.dm-res-xp')?.value || '0';
     const dmGP = document.querySelector('.dm-res-gp')?.value || '0';

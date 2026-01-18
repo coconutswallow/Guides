@@ -1,5 +1,5 @@
-// assets/js/dm-tool/session-editor-refactored.js
-// FIXES: All remaining issues
+// assets/js/dm-tool/session-editor.js
+// FIXES: invite link save/load, player card sync, forfeit XP, stats updates
 
 import { supabase } from '../supabaseClient.js'; 
 import { stateManager } from './state-manager.js';
@@ -32,7 +32,7 @@ let calculationEngine = null;
 let cachedGameRules = null; 
 let isFullDM = false; 
 let cachedDiscordId = "YOUR_ID";
-let cachedDisplayName = "DM";
+let cachedDisplayName = "DM"; // FIX: Store display name for MAL
 
 const domCache = {};
 
@@ -47,6 +47,7 @@ async function cacheDiscordId() {
             }
         }
         
+        // FIX: Fetch display name from member_directory
         if (cachedDiscordId) {
             const { data } = await supabase
                 .from('member_directory')
@@ -113,6 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateLootInstructions(isFullDM);
 
+    // FIX: Add forfeit XP event handling for session roster
     const sessionRosterList = document.getElementById('session-roster-list');
     if (sessionRosterList) {
         sessionRosterList.addEventListener('change', (e) => {
@@ -127,6 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     stateManager.onUpdate('calculations', (state) => {
         updateSessionCalculations();
         updateLootInstructions(isFullDM);
+        // FIX: Update loot stats when calculations change
         updateDMLootLogic(cachedDiscordId, cachedGameRules);
     });
 
@@ -162,6 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initPlayerSetup();
     initPlayerSync();
 
+    // FIX: Save invite link to session metadata
     const btnGenerate = document.getElementById('btn-generate-invite');
     if (btnGenerate) {
         btnGenerate.addEventListener('click', async () => {
@@ -180,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (inpInvite) {
                 inpInvite.value = inviteUrl;
                 
+                // Save invite URL to session
                 try {
                     await supabase
                         .from('sessions')
@@ -248,27 +253,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!item) return;
             
             if (item.dataset.target === 'view-session-output') {
+                // FIX: Pass both discordId and displayName
                 IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
             }
             
             if (item.dataset.target === 'view-mal-update') {
+                // FIX: Pass displayName for MAL
                 IO.generateMALUpdate(cachedDisplayName);
             }
             
-            // FIX 4: Default session date to game setup date
+            // FIX: Sync session players when entering session details tab
             if (item.dataset.target === 'view-session-details') {
                 Rows.syncSessionPlayersFromMaster(callbacks);
-                
-                const setupDateInput = document.getElementById('inp-start-datetime');
-                const sessionDateInput = document.getElementById('inp-session-date');
-                if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
-                    sessionDateInput.value = setupDateInput.value;
-                    
-                    const tz = document.getElementById('inp-timezone')?.value;
-                    const unixVal = UI.toUnixTimestamp(setupDateInput.value, tz);
-                    const sessionUnixInput = document.getElementById('inp-session-unix');
-                    if (sessionUnixInput) sessionUnixInput.value = unixVal;
-                }
             }
         });
     }
@@ -277,6 +273,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadSessionData(sessionId, callbacks);
     } 
 
+    // FIX: Session Hours logic - update all player hours when changed
     if(domCache.sessionHoursInput) {
         domCache.sessionHoursInput.addEventListener('change', () => { 
             const val = parseFloat(domCache.sessionHoursInput.value) || 0;
@@ -350,16 +347,11 @@ function updateSessionCalculations() {
     
     const cards = document.querySelectorAll('#session-roster-list .player-card');
     
-    // FIX 5: Calculate max gold based on APL
-    const stats = stateManager.getStats();
-    const maxGold = calculationEngine.calculateMaxGold(stats.apl);
-    
     cards.forEach(card => {
         const levelInput = card.querySelector('.s-level');
         const hoursInput = card.querySelector('.s-hours');
         const xpInput = card.querySelector('.s-xp');
         const dtpInput = card.querySelector('.s-dtp');
-        const goldInput = card.querySelector('.s-gold');
         const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
         const incentivesBtn = card.querySelector('.s-incentives-btn');
         
@@ -376,12 +368,6 @@ function updateSessionCalculations() {
         
         xpInput.value = rewards.xp;
         dtpInput.value = rewards.dtp;
-        
-        // FIX 5: Update max gold placeholder
-        if (goldInput) {
-            goldInput.setAttribute('placeholder', `Max: ${maxGold} GP`);
-            goldInput.setAttribute('title', `Maximum gold for APL ${stats.apl} is ${maxGold} GP`);
-        }
     });
     
     updateDMCalculations();
@@ -402,7 +388,6 @@ function updateDMCalculations() {
     
     if (!dmXPOutput || !dmDTPOutput || !dmGPOutput) return;
     
-    // FIX 3: Properly read DM forfeit XP from checkbox
     const dmData = {
         level: parseInt(state.dm.level) || 1,
         forfeit_xp: dmForfeitCheckbox ? dmForfeitCheckbox.checked : false,
@@ -431,19 +416,31 @@ function updateStatsDisplays() {
 }
 
 function setupCalculationTriggers(callbacks) {
+    if (domCache.sidebarNav) {
+        domCache.sidebarNav.addEventListener('click', (e) => {
+            const item = e.target.closest('.nav-item');
+            if (item && item.dataset.target === 'view-session-details') {
+                Rows.syncSessionPlayersFromMaster(callbacks);
+                
+                const setupDateInput = document.getElementById('inp-start-datetime');
+                const sessionDateInput = document.getElementById('inp-session-date');
+                if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
+                    sessionDateInput.value = setupDateInput.value;
+                    
+                    const tz = document.getElementById('inp-timezone')?.value;
+                    const unixVal = UI.toUnixTimestamp(setupDateInput.value, tz);
+                    const sessionUnixInput = document.getElementById('inp-session-unix');
+                    if (sessionUnixInput) sessionUnixInput.value = unixVal;
+                }
+            }
+        });
+    }
+
     const dmLevel = document.getElementById('out-dm-level');
     const dmGames = document.getElementById('out-dm-games');
     const btnDMIncLoot = document.getElementById('btn-dm-loot-incentives');
     const syncBtn = document.getElementById('btn-sync-session'); 
     const addPlayerBtn = document.getElementById('btn-add-session-player');
-    
-    // FIX 3: Add DM forfeit XP listener
-    const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
-    if (dmForfeitCheckbox) {
-        dmForfeitCheckbox.addEventListener('change', () => {
-            scheduleUpdate(() => updateDMCalculations());
-        });
-    }
 
     if(dmLevel) {
         dmLevel.addEventListener('input', () => scheduleUpdate(callbacks.onUpdate));
@@ -490,13 +487,11 @@ function setupCalculationTriggers(callbacks) {
     }
     
     if (domCache.rosterBody) {
-        // FIX 2: Update loot stats when player games change
-        domCache.rosterBody.addEventListener('change', (e) => {
-            if (e.target.matches('.inp-games-count')) {
-                scheduleUpdate(() => {
-                    updateDMLootLogic(cachedDiscordId, cachedGameRules);
-                });
-            }
+        // FIX: Update loot stats when master roster changes
+        domCache.rosterBody.addEventListener('change', () => {
+            scheduleUpdate(() => {
+                updateDMLootLogic(cachedDiscordId, cachedGameRules);
+            });
         });
         
         domCache.rosterBody.addEventListener('click', (e) => {
@@ -515,12 +510,10 @@ async function loadSessionData(sessionId, callbacks) {
         if (session) {
             IO.populateForm(session, callbacks);
             
-            // FIX 1: Load invite link from session data
+            // FIX: Load invite link if exists
             if (session.invite_url) {
                 const inpInvite = document.getElementById('inp-invite-link');
-                if (inpInvite) {
-                    inpInvite.value = session.invite_url;
-                }
+                if (inpInvite) inpInvite.value = session.invite_url;
             }
         }
     } catch (error) {
@@ -800,6 +793,7 @@ function initTemplateLogic() {
     }
 }
 
+// Debounce helper
 let debounceTimer = null;
 function scheduleUpdate(callback) {
     if (debounceTimer) clearTimeout(debounceTimer);
