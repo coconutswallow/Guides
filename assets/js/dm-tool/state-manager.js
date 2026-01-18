@@ -224,8 +224,31 @@ class StateManager {
                 this.updateField('dm', 'games_count', e.target.value);
             });
         }
+
+        if (this.dom.lootPlan) {
+        this.dom.lootPlan.addEventListener('input', (e) => {
+            this.updateField('header', 'loot_plan', e.target.value);
+            });
+        }
+
+        if (this.dom.predetPerms) {
+        this.dom.predetPerms.addEventListener('input', (e) => {
+            this.updateField('header', 'predet_perms', parseInt(e.target.value) || 0);
+            });
+        }
         
-        // Add more as needed - this is the pattern
+        if (this.dom.predetCons) {
+        this.dom.predetCons.addEventListener('input', (e) => {
+            this.updateField('header', 'predet_cons', parseInt(e.target.value) || 0);
+            });
+        }
+
+        if (this.dom.dmLootSelected) {
+        this.dom.dmLootSelected.addEventListener('input', (e) => {
+            this.updateField('session_log.dm_rewards', 'loot_selected', e.target.value);
+            });
+        }
+        
     }
 
     /**
@@ -309,13 +332,37 @@ class StateManager {
      */
     
     updateField(section, field, value) {
-        if (!this.state[section]) {
-            console.warn(`Unknown state section: ${section}`);
-            return;
+        // Handle nested paths (e.g., 'session_log.dm_rewards')
+        if (section.includes('.')) {
+            const parts = section.split('.');
+            let target = this.state;
+            
+            // Navigate to nested object
+            for (let i = 0; i < parts.length - 1; i++) {
+                if (!target[parts[i]]) {
+                    console.warn(`Invalid state path: ${section}`);
+                    return;
+                }
+                target = target[parts[i]];
+            }
+            
+            const lastKey = parts[parts.length - 1];
+            if (!target[lastKey]) {
+                console.warn(`Unknown state section: ${section}`);
+                return;
+            }
+            
+            // Update the nested field
+            target[lastKey][field] = value;
+        } else {
+            // Original logic for top-level sections
+            if (!this.state[section]) {
+                console.warn(`Unknown state section: ${section}`);
+                return;
+            }
+            
+            this.state[section][field] = value;
         }
-        
-        // Update internal state
-        this.state[section][field] = value;
         
         // Sync to DOM if element exists
         const domKey = this.getDOMKeyForField(section, field);
@@ -333,7 +380,7 @@ class StateManager {
             this.scheduleUpdate('lootDeclaration');
         }
         
-        if (section === 'dm' || (section === 'header' && field === 'predet_perms')) {
+        if (section === 'dm' || (section === 'header' && ['predet_perms', 'predet_cons'].includes(field))) {
             this.scheduleUpdate('dmLoot');
         }
     }
@@ -448,7 +495,19 @@ class StateManager {
         if (this.dom.sessionHours) this.dom.sessionHours.value = this.state.session_log.hours || 3;
         if (this.dom.sessionNotes) this.dom.sessionNotes.value = this.state.session_log.notes || '';
         if (this.dom.sessionSummary) this.dom.sessionSummary.value = this.state.session_log.summary || '';
+
+        // Loot Plan fields
+        if (this.dom.lootPlan) this.dom.lootPlan.value = this.state.header.loot_plan || '';
+        if (this.dom.predetPerms) this.dom.predetPerms.value = this.state.header.predet_perms || 0;
+        if (this.dom.predetCons) this.dom.predetCons.value = this.state.header.predet_cons || 0;
+        if (this.dom.dmLootSelected) this.dom.dmLootSelected.value = this.state.session_log.dm_rewards.loot_selected || '';
         
+        // Also sync DM incentives button
+        if (this.dom.btnDmIncentives) {
+            const incentives = this.state.session_log.dm_rewards.incentives || [];
+            this.dom.btnDmIncentives.dataset.incentives = JSON.stringify(incentives);
+        }
+            
         // Multi-select fields require special handling
         if (this.dom.tierSelect && Array.isArray(this.state.header.tier)) {
             Array.from(this.dom.tierSelect.options).forEach(opt => {
@@ -529,12 +588,15 @@ class StateManager {
         const mapping = {
             'header.title': 'gameName',
             'header.intended_duration': 'durationText',
+            'header.loot_plan': 'lootPlan',
+            'header.predet_perms': 'predetPerms',
+            'header.predet_cons': 'predetCons',
             'dm.character_name': 'dmCharName',
             'dm.level': 'dmLevel',
             'dm.games_count': 'dmGamesCount',
             'session_log.hours': 'sessionHours',
-            'session_log.notes': 'sessionNotes'
-            // Add more mappings as needed
+            'session_log.notes': 'sessionNotes',
+            'session_log.dm_rewards.loot_selected': 'dmLootSelected'
         };
         
         return mapping[`${section}.${field}`];
