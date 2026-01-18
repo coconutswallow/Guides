@@ -1,7 +1,5 @@
 // assets/js/dm-tool/session-loot.js
 
-import { stateManager } from './state-manager.js';
-
 // Dynamic Loot Instructions based on Role, Tier, Party
 export function updateLootInstructions(isFullDM) {
     const container = document.getElementById('out-loot-instructions');
@@ -69,17 +67,19 @@ export function updateLootInstructions(isFullDM) {
 
 // Updates the "Loot Declaration" text area for Discord
 export function updateLootDeclaration(discordId) {
-    const state = stateManager.getFullState();
-    const stats = stateManager.getStats();
-    const gameName = state.header.title || "Untitled";
-    const lootPlan = state.header.loot_plan || "";
+    const gameName = document.getElementById('header-game-name')?.value || "Untitled";
     const partySize = document.getElementById('setup-val-party-size')?.textContent || "0";
     const apl = document.getElementById('setup-val-apl')?.textContent || "1";
     
-     const declareText = `<@${discordId}> declares loot for ${gameName}, Number of Players: ${stats.partySize}, APL: ${stats.apl}
-||
-${lootPlan}
-||`;
+    // The manually entered loot items
+    const lootPlan = document.getElementById('inp-loot-plan')?.value || "";
+    
+    // Declaration Format:
+    // <id> declares loot for [Game], Players: [N], APL: [N]
+    // ||
+    // [Items]
+    // ||
+    const declareText = `<@${discordId}> declares loot for ${gameName}, Number of Players: ${partySize}, APL: ${apl}\n||\n${lootPlan}\n||`;
 
     const out = document.getElementById('out-loot-declaration');
     if (out) {
