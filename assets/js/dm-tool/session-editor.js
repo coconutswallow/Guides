@@ -19,7 +19,7 @@ import { checkAccess } from '../auth-check.js';
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
-import { updateSessionCalculations } from '../../../test/session-calculator-optimized.js';
+import CalculationEngine from './calculation-engine.js';
 import { 
     updateLootInstructions, 
     updateLootDeclaration, 
@@ -27,6 +27,8 @@ import {
     updateDMLootLogic 
 } from './session-loot.js';
 
+
+let calculationEngine = null;
 let cachedGameRules = null; 
 let isFullDM = false; 
 let cachedDiscordId = "YOUR_ID";
@@ -92,6 +94,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     cachedGameRules = await fetchGameRules();
     
     cacheDOMElements();
+    // Initialize calculation engine
+    calculationEngine = new CalculationEngine(cachedGameRules);
 
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -110,14 +114,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         sessionRosterList.addEventListener('change', (e) => {
             if (e.target.matches('.s-forfeit-xp')) {
                 scheduleUpdate(() => {
-                    updateSessionCalculations(cachedGameRules);
+                    updateSessionCalculations();
                 });
             }
         });
     }
 
     stateManager.onUpdate('calculations', (state) => {
-        updateSessionCalculations(cachedGameRules);
+        updateSessionCalculations()
+        updateLootInstructions(isFullDM); // FIX: Update loot instructions when party changes
     });
 
     // Register loot updates
@@ -145,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     UI.initIncentivesModal((ctx) => {
         scheduleUpdate(() => {
-            updateSessionCalculations(cachedGameRules);
+            updateSessionCalculations()
             updateDMLootLogic(cachedDiscordId, cachedGameRules);
         });
     });
@@ -233,7 +238,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const callbacks = {
         onUpdate: () => {
             scheduleUpdate(() => {
-                updateSessionCalculations(cachedGameRules);
+                updateSessionCalculations()
                 updateLootInstructions(isFullDM);
                 updateLootDeclaration(cachedDiscordId); 
                 updateHgenLogic(cachedDiscordId);   
@@ -289,7 +294,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
                     domCache.sessionHoursInput.value = 3;
-                    updateSessionCalculations(cachedGameRules);
+                    updateSessionCalculations()
                     document.getElementById('chk-next-part').checked = true;
                     const currentName = document.getElementById('header-game-name').value;
                     const nextName = incrementPartName(currentName);
@@ -297,7 +302,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('modal-copy-game').showModal();
                 }
             } else {
-                updateSessionCalculations(cachedGameRules);
+                updateSessionCalculations()
             }
         });
     }
@@ -335,6 +340,90 @@ document.addEventListener('DOMContentLoaded', async () => {
         callbacks.onUpdate();
     }, 500);
 });
+
+function updateSessionCalculations() {
+    if (!calculationEngine) return;
+    
+    const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
+    
+    // Update all player cards
+    const cards = document.querySelectorAll('#session-roster-list .player-card');
+    
+    cards.forEach(card => {
+        const levelInput = card.querySelector('.s-level');
+        const hoursInput = card.querySelector('.s-hours');
+        const xpInput = card.querySelector('.s-xp');
+        const dtpInput = card.querySelector('.s-dtp');
+        const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
+        const incentivesBtn = card.querySelector('.s-incentives-btn');
+        
+        if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
+        
+        const playerData = {
+            level: parseInt(levelInput.value) || 1,
+            hours: parseFloat(hoursInput.value) || 0,
+            forfeit_xp: forfeitCheckbox ? forfeitCheckbox.checked : false,
+            incentives: incentivesBtn ? JSON.parse(incentivesBtn.dataset.incentives || '[]') : []
+        };
+        
+        // Use calculation engine
+        const rewards = calculationEngine.calculatePlayerRewards(playerData, sessionHours);
+        
+        // Update UI
+        xpInput.value = rewards.xp;
+        dtpInput.value = rewards.dtp;
+    });
+    
+    // Update DM rewards
+    updateDMCalculations();
+    
+    // Update stats displays
+    updateStatsDisplays();
+}
+
+function updateDMCalculations() {
+    if (!calculationEngine) return;
+    
+    const state = stateManager.getFullState();
+    const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
+    
+    const dmXPOutput = document.querySelector('.dm-res-xp');
+    const dmDTPOutput = document.querySelector('.dm-res-dtp');
+    const dmGPOutput = document.querySelector('.dm-res-gp');
+    const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
+    const dmIncentivesBtn = document.getElementById('btn-dm-loot-incentives');
+    
+    if (!dmXPOutput || !dmDTPOutput || !dmGPOutput) return;
+    
+    const dmData = {
+        level: parseInt(state.dm.level) || 1,
+        forfeit_xp: dmForfeitCheckbox ? dmForfeitCheckbox.checked : false,
+        incentives: dmIncentivesBtn ? JSON.parse(dmIncentivesBtn.dataset.incentives || '[]') : []
+    };
+    
+    // Get player stats from state manager
+    const playerStats = stateManager.getPlayerStats();
+    
+    // Use calculation engine
+    const rewards = calculationEngine.calculateDMRewards(dmData, sessionHours, playerStats);
+    
+    // Update UI
+    dmXPOutput.value = rewards.xp;
+    dmDTPOutput.value = rewards.dtp;
+    dmGPOutput.value = rewards.gp;
+}
+
+function updateStatsDisplays() {
+    const stats = stateManager.getStats();
+    
+    const elSize = document.getElementById('setup-val-party-size');
+    const elApl = document.getElementById('setup-val-apl');
+    const elTier = document.getElementById('setup-val-tier');
+    
+    if (elSize) elSize.textContent = stats.partySize;
+    if (elApl) elApl.textContent = stats.apl;
+    if (elTier) elTier.textContent = stats.tier;
+}
 
 function setupCalculationTriggers(callbacks) {
     if (domCache.sidebarNav) {

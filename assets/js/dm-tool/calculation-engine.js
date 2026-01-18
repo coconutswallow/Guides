@@ -14,7 +14,10 @@ class CalculationEngine {
     }
 
     // Calculate XP for a given level and hours
-    calculateXP(level, hours) {
+    calculateXP(level, hours, forfeitXP = false) {
+        // If forfeit, return 0 immediately
+        if (forfeitXP) return 0;
+        
         const cacheKey = `xp_${level}_${hours}`;
         if (this.cache.has(cacheKey)) {
             return this.cache.get(cacheKey);
@@ -36,16 +39,20 @@ class CalculationEngine {
         const level = parseFloat(player.level) || 1;
         const hours = Math.min(parseFloat(player.hours) || 0, sessionHours);
         
-        // Calculate XP
-        let xp = this.calculateXP(level, hours);
-        if (player.forfeit_xp) xp = 0;
+        // Calculate XP with forfeit check
+        const xp = this.calculateXP(level, hours, player.forfeit_xp);
 
         // Calculate DTP: base 5 per hour + incentives
         let dtp = Math.floor(5 * hours);
         
         if (this.rules && this.rules['player incentives'] && player.incentives) {
             player.incentives.forEach(name => {
-                dtp += (this.rules['player incentives'][name] || 0);
+                const bonus = this.rules['player incentives'][name];
+                if (typeof bonus === 'number') {
+                    dtp += bonus;
+                } else if (typeof bonus === 'object' && bonus.DTP) {
+                    dtp += bonus.DTP;
+                }
             });
         }
 
@@ -61,9 +68,8 @@ class CalculationEngine {
         const newHires = playerStats.newHires || 0;
         const welcomeWagon = playerStats.welcomeWagon || 0;
 
-        // XP
-        rewards.xp = this.calculateXP(dmLevel, sessionHours);
-        if (dmData.forfeit_xp) rewards.xp = 0;
+        // XP with forfeit check
+        rewards.xp = this.calculateXP(dmLevel, sessionHours, dmData.forfeit_xp);
 
         // DTP: base + new hires (+5 per new hire) + incentives
         let dtp = Math.floor(5 * sessionHours) + (5 * newHires);
@@ -80,10 +86,8 @@ class CalculationEngine {
         rewards.dtp = dtp;
 
         // Gold: Based on DM's Character Level (not APL) * (1 + Welcome Wagon)
-        const goldTable = this.rules.gold_per_session_by_apl; // Table name is same, but key is DM Level
-        
-        // FIX: Use DM Level for lookup, not APL
-        const lookupLevel = Math.floor(dmLevel); // Ensure integer for lookup
+        const goldTable = this.rules.gold_per_session_by_apl;
+        const lookupLevel = Math.floor(dmLevel);
         const baseGold = goldTable 
             ? (goldTable[lookupLevel.toString()] || goldTable[lookupLevel] || 0) 
             : 0;
@@ -99,7 +103,6 @@ class CalculationEngine {
         let welcomeWagon = 0;
 
         players.forEach(player => {
-            // Ensure strict string comparison
             const gamesVal = String(player.games_count);
 
             // Welcome Wagon: games played = 1
@@ -109,7 +112,10 @@ class CalculationEngine {
 
             // New Hires: games played <> 10+
             if (gamesVal !== "10+") {
-                newHires++;
+                const num = parseInt(gamesVal);
+                if (!isNaN(num) && num <= 10) {
+                    newHires++;
+                }
             }
         });
 
@@ -143,7 +149,7 @@ class CalculationEngine {
 
     // Validate player gold against max (Warning only)
     validatePlayerGold(playerGold, maxGold) {
-        if (maxGold <= 0) return true; // No validation if max not set
+        if (maxGold <= 0) return true;
         return parseFloat(playerGold) <= maxGold;
     }
 

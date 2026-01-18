@@ -7,18 +7,15 @@ export function updateLootInstructions(isFullDM) {
     const container = document.getElementById('out-loot-instructions');
     if (!container) return;
 
-    // Grab stats from the setup tab
-    const tierEl = document.getElementById('setup-val-tier');
-    const partySizeEl = document.getElementById('setup-val-party-size');
-    
-    const tier = parseInt(tierEl ? tierEl.textContent : "1") || 1;
-    const partySize = parseInt(partySizeEl ? partySizeEl.textContent : "0") || 0;
+    // FIX: Get stats from state manager instead of DOM
+    const stats = stateManager.getStats();
+    const tier = stats.tier || 1;
+    const partySize = stats.partySize || 0;
     const halfParty = Math.floor(partySize / 2);
     
     let html = "";
     
     if (isFullDM) {
-        // --- FULL DM ---
         html += `<strong>Full DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
 
         if (tier === 1) {
@@ -42,9 +39,7 @@ export function updateLootInstructions(isFullDM) {
             html += `<em>Bonus loot:</em> Add up to 1 T1 permanent or 2 slots worth of T1 consumables as either predetermined or from a roll at APL 4.`;
         }
         html += `<br><br><small>Please refer to the <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" target="_blank">DM Guide</a> for full loot rules.</small>`;
-    
     } else {
-        // --- TRIAL DM ---
         html += `<strong>Trial DM (Tier ${tier}, ${partySize} Players)</strong><br><br>`;
         
         if (tier === 1) {
