@@ -49,6 +49,7 @@ async function cacheDiscordId() {
     }
 }
 
+
 function cacheDOMElements() {
     domCache.sessionHoursInput = document.getElementById('inp-session-total-hours');
     domCache.rosterBody = document.getElementById('roster-body');
@@ -98,8 +99,7 @@ function incrementGameString(val) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    stateManager.init();
-    console.log('✓ State Manager Ready');
+    
     await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
     
@@ -110,7 +110,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         isFullDM = await checkAccess(user.id, 'Full DM');
         console.log("User Role Check - Full DM:", isFullDM);
     }
+    stateManager.init();
+    console.log('✓ State Manager Ready');
 
+    stateManager.onUpdate('calculations', (state) => {
+        updateSessionCalculations(cachedGameRules);
+    });
+
+    // Register loot updates
+    stateManager.onUpdate('lootDeclaration', (state) => {
+        updateLootDeclaration(cachedDiscordId);
+        updateHgenLogic(cachedDiscordId);
+    });
+
+    // Register DM loot updates
+    stateManager.onUpdate('dmLoot', (state) => {
+        updateDMLootLogic(cachedDiscordId, cachedGameRules);
+        IO.updateJumpstartDisplay();
+    });
+
+    // Register output updates
+    stateManager.onUpdate('outputs', (state) => {
+        IO.generateOutput();
+    });
+
+    
     UI.initTabs(() => IO.generateOutput()); 
     UI.initTimezone();
     UI.initDateTimeConverter(); 
