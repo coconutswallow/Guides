@@ -24,7 +24,7 @@ export function getFormData() {
             game_date_str: getVal('inp-start-datetime', ''),
             timezone: getVal('inp-timezone', state.header.timezone),
             intended_duration: getVal('inp-duration-text', state.header.intended_duration),
-            game_description: getVal('inp-description', state.header.game_description), // MATCHES HTML ID
+            game_description: getVal('inp-description', state.header.game_description),
             game_version: getVal('inp-version', state.header.game_version),
             game_type: getVal('inp-format', state.header.game_type),
             apps_type: getVal('inp-apps-type', state.header.apps_type),
@@ -40,7 +40,6 @@ export function getFormData() {
             threat_level: getVal('inp-diff-threat', state.header.threat_level),
             char_loss: getVal('inp-diff-loss', state.header.char_loss),
             
-            // FIXED IDS TO MATCH SESSION.HTML
             house_rules: getVal('inp-houserules', state.header.house_rules),
             notes: getVal('inp-notes', state.header.notes),
             warnings: getVal('inp-warnings', state.header.warnings),
@@ -64,7 +63,7 @@ export function getFormData() {
             date_time: getVal('inp-session-unix', state.session_log.date_time),
             hours: getVal('inp-session-total-hours', state.session_log.hours),
             notes: getVal('inp-session-notes', state.session_log.notes),
-            summary: getVal('session-summary', state.session_log.summary), // FIXED ID
+            summary: getVal('session-summary', state.session_log.summary),
             dm_collaborators: getVal('inp-dm-collab', state.session_log.dm_collaborators),
             players: Rows.getSessionRosterData(),
             dm_rewards: state.session_log.dm_rewards
@@ -102,7 +101,6 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-diff-threat', fd.header.threat_level);
         setVal('inp-diff-loss', fd.header.char_loss);
         
-        // FIXED IDS
         setVal('inp-houserules', fd.header.house_rules);
         setVal('inp-notes', fd.header.notes);
         setVal('inp-warnings', fd.header.warnings);
@@ -141,7 +139,7 @@ export function populateForm(session, callbacks, options = {}) {
     if (fd.session_log) {
         setVal('inp-session-total-hours', fd.session_log.hours);
         setVal('inp-session-notes', fd.session_log.notes);
-        setVal('session-summary', fd.session_log.summary); // FIXED ID
+        setVal('session-summary', fd.session_log.summary);
         setVal('inp-dm-collab', fd.session_log.dm_collaborators);
     }
     
@@ -254,7 +252,9 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const players = Rows.getSessionRosterData();
     
     players.forEach(player => {
-        let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${player.level || "1"}) gains ${player.xp || "0"} XP, ${player.dtp || "0"} DTP`;
+        // FIX: Check for forfeit flag
+        const xpStr = player.forfeit_xp ? "forfeits XP" : `gains ${player.xp || "0"} XP`;
+        let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${player.level || "1"}) ${xpStr}, ${player.dtp || "0"} DTP`;
         
         if (player.incentives?.length > 0) {
             line += ` (incentives: ${player.incentives.join(', ')})`;
@@ -283,7 +283,12 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const dmLoot = state.session_log.dm_rewards.loot_selected || "";
     const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${state.dm.character_name || "DM"}`;
 
-    let dmRewardsLine = `${dmIdString} as ${dmCharName} (${dmLevel}) gains ${dmXP} XP, ${dmDTP} DTP, ${dmGP} GP`;
+    // FIX: Check DM Forfeit Checkbox directly from DOM to be safe
+    const dmForfeitBox = document.getElementById('chk-dm-forfeit-xp');
+    const isDmForfeit = dmForfeitBox ? dmForfeitBox.checked : false;
+    const dmXpStr = isDmForfeit ? "forfeits XP" : `gains ${dmXP} XP`;
+
+    let dmRewardsLine = `${dmIdString} as ${dmCharName} (${dmLevel}) ${dmXpStr}, ${dmDTP} DTP, ${dmGP} GP`;
     if (dmLoot) dmRewardsLine += `, and ${dmLoot}`;
     dmRewardsLine += ".";
 
@@ -350,15 +355,22 @@ export function generateMALUpdate(dmDisplayName) {
 }
 
 export function prepareTemplateData(originalData) {
+    // Deep copy to ensure we don't modify the active form/state
     const data = JSON.parse(JSON.stringify(originalData));
+    
+    // Explicitly clear date fields for the template copy
     if (data.header) {
         data.header.game_datetime = null;
         data.header.game_date_str = ""; 
         data.header.listing_url = "";
         data.header.lobby_url = ""; 
     }
+    
+    // Reset players but keep the structure empty if needed, or clear them
     data.players = [];
     data.dm = { character_name: "", level: "", games_count: "0" };
+    
+    // Clear session log specific details
     data.session_log = {
         title: "",
         hours: 0,
@@ -368,6 +380,7 @@ export function prepareTemplateData(originalData) {
         players: [],
         dm_rewards: {}
     };
+    
     return data;
 }
 
