@@ -1,9 +1,3 @@
-// assets/js/dm-tool/state-manager.js
-/**
- * STATE MANAGER - Complete Rewrite
- * REPLACES: session-state.js
- */
-
 class StateManager {
     constructor() {
         // Internal state storage
@@ -18,8 +12,8 @@ class StateManager {
                 game_type: '',
                 apps_type: '',
                 platform: '',
-                event_tags: [], // Multi-select
-                tier: [],       // Multi-select
+                event_tags: [],
+                tier: [],
                 apl: '',
                 party_size: '',
                 tone: '',
@@ -61,18 +55,13 @@ class StateManager {
             }
         };
 
-        // DOM element cache
         this.dom = {};
-        
-        // Debounce timers
         this.debounceTimers = {
             calculations: null,
             lootDeclaration: null,
             outputs: null,
             dmLoot: null
         };
-        
-        // Update callbacks
         this.updateCallbacks = {
             calculations: [],
             lootDeclaration: [],
@@ -80,8 +69,6 @@ class StateManager {
             dmLoot: [],
             all: []
         };
-        
-        // Flags
         this.initialized = false;
     }
 
@@ -102,15 +89,15 @@ class StateManager {
         this.dom.timezone = document.getElementById('inp-timezone');
         this.dom.unixTime = document.getElementById('inp-unix-time');
         this.dom.durationText = document.getElementById('inp-duration-text');
-        this.dom.description = document.getElementById('inp-description');
+        this.dom.description = document.getElementById('inp-game-desc'); // FIXED ID
         this.dom.format = document.getElementById('inp-format');
         this.dom.version = document.getElementById('inp-version');
         this.dom.appsType = document.getElementById('inp-apps-type');
         this.dom.platform = document.getElementById('inp-platform');
-        this.dom.eventSelect = document.getElementById('inp-event'); // Multi-select
+        this.dom.eventSelect = document.getElementById('inp-event');
         
         // Setup Tab - Party Config
-        this.dom.tierSelect = document.getElementById('inp-tier'); // Multi-select
+        this.dom.tierSelect = document.getElementById('inp-tier');
         this.dom.apl = document.getElementById('inp-apl');
         this.dom.partySize = document.getElementById('inp-party-size');
         
@@ -121,11 +108,11 @@ class StateManager {
         this.dom.diffThreat = document.getElementById('inp-diff-threat');
         this.dom.diffLoss = document.getElementById('inp-diff-loss');
         
-        // Setup Tab - Details
-        this.dom.houseRules = document.getElementById('inp-houserules');
-        this.dom.notes = document.getElementById('inp-notes');
-        this.dom.warnings = document.getElementById('inp-warnings');
-        this.dom.howToApply = document.getElementById('inp-apply');
+        // Setup Tab - Details (FIXED IDs to match HTML/Session-Editor)
+        this.dom.houseRules = document.getElementById('inp-house-rules'); 
+        this.dom.notes = document.getElementById('inp-setup-notes'); 
+        this.dom.warnings = document.getElementById('inp-content-warnings'); 
+        this.dom.howToApply = document.getElementById('inp-how-to-apply'); 
         
         // Game Listing Tab
         this.dom.listingUrl = document.getElementById('inp-listing-url');
@@ -151,11 +138,6 @@ class StateManager {
         this.dom.dmCollab = document.getElementById('inp-dm-collab');
         this.dom.sessionRosterList = document.getElementById('session-roster-list');
         
-        // Stats Displays
-        this.dom.setupPartySize = document.getElementById('setup-val-party-size');
-        this.dom.setupApl = document.getElementById('setup-val-apl');
-        this.dom.setupTier = document.getElementById('setup-val-tier');
-        
         // DM Rewards
         this.dom.dmForfeitXp = document.getElementById('chk-dm-forfeit-xp');
         this.dom.dmLootSelected = document.getElementById('dm-loot-selected');
@@ -166,12 +148,6 @@ class StateManager {
         this.dom.outAd = document.getElementById('out-ad-text');
         this.dom.outSession = document.getElementById('out-session-text');
         this.dom.outSummary = document.getElementById('out-summary-text');
-        this.dom.secondaryWrapper = document.getElementById('secondary-output-wrapper');
-        this.dom.outLootDeclaration = document.getElementById('out-loot-declaration');
-        this.dom.outHgenDeclaration = document.getElementById('out-hgen-declaration');
-        this.dom.outHgenCommand = document.getElementById('out-hgen-command');
-        this.dom.outDmLootDecl = document.getElementById('out-dm-loot-decl');
-        this.dom.outDmLootCmd = document.getElementById('out-dm-loot-cmd');
         this.dom.outMAL = document.getElementById('out-mal-update');
     }
 
@@ -182,7 +158,16 @@ class StateManager {
             { el: this.dom.lobbyUrl, sect: 'header', field: 'lobby_url', update: ['outputs'] },
             { el: this.dom.listingUrl, sect: 'header', field: 'listing_url', update: ['outputs'] },
             { el: this.dom.dmCharName, sect: 'dm', field: 'character_name', update: ['outputs', 'dmLoot'] },
-            { el: this.dom.lootPlan, sect: 'header', field: 'loot_plan', update: ['lootDeclaration'] }
+            { el: this.dom.lootPlan, sect: 'header', field: 'loot_plan', update: ['lootDeclaration'] },
+            // Add missing Setup text areas
+            { el: this.dom.houseRules, sect: 'header', field: 'house_rules', update: ['outputs'] },
+            { el: this.dom.notes, sect: 'header', field: 'notes', update: ['outputs'] },
+            { el: this.dom.warnings, sect: 'header', field: 'warnings', update: ['outputs'] },
+            { el: this.dom.howToApply, sect: 'header', field: 'how_to_apply', update: ['outputs'] },
+            { el: this.dom.description, sect: 'header', field: 'game_description', update: ['outputs'] },
+            // Session Log Inputs
+            { el: this.dom.sessionNotes, sect: 'session_log', field: 'notes', update: ['outputs'] },
+            { el: this.dom.dmCollab, sect: 'session_log', field: 'dm_collaborators', update: ['outputs'] }
         ];
 
         textInputs.forEach(item => {
@@ -248,6 +233,14 @@ class StateManager {
                 this.updateField('session_log.dm_rewards', 'loot_selected', e.target.value);
             });
         }
+        if (this.dom.tierSelect) {
+            this.dom.tierSelect.addEventListener('change', () => {
+                const selected = Array.from(this.dom.tierSelect.selectedOptions).map(opt => opt.value);
+                this.updateField('header', 'tier', selected);
+                this.scheduleUpdate('outputs');
+                this.scheduleUpdate('lootDeclaration'); 
+            });
+        }
     }
 
     /**
@@ -287,8 +280,15 @@ class StateManager {
 
         this.state.players.forEach(player => {
             const gamesVal = String(player.games_count);
-            if (gamesVal === "1") welcomeWagon++;
-            if (gamesVal !== "10+") newHires++;
+            // Check specifically for "1"
+            if (gamesVal === "1") {
+                welcomeWagon++;
+            }
+            // Check specifically for not "10+" and <= 10
+            if (gamesVal !== "10+") {
+                const n = parseInt(gamesVal);
+                if(!isNaN(n) && n <= 10) newHires++;
+            }
         });
 
         return { newHires, welcomeWagon };
@@ -426,8 +426,11 @@ class StateManager {
             'header.title': 'gameName',
             'header.intended_duration': 'durationText',
             'header.loot_plan': 'lootPlan',
-            'header.predet_perms': 'predetPerms',
-            'header.predet_cons': 'predetCons',
+            'header.game_description': 'description',
+            'header.house_rules': 'houseRules',
+            'header.notes': 'notes',
+            'header.warnings': 'warnings',
+            'header.how_to_apply': 'howToApply',
             'header.listing_url': 'listingUrl',
             'header.lobby_url': 'lobbyUrl',
             'dm.character_name': 'dmCharName',
@@ -435,6 +438,7 @@ class StateManager {
             'dm.games_count': 'dmGamesCount',
             'session_log.hours': 'sessionHours',
             'session_log.notes': 'sessionNotes',
+            'session_log.dm_collaborators': 'dmCollab',
             'session_log.dm_rewards.loot_selected': 'dmLootSelected'
         };
         return mapping[`${section}.${field}`];

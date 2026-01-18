@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
     
-
+    
     updateLootInstructions(isFullDM);
 
     // FIX: Add forfeit XP event handling for session roster
@@ -185,8 +185,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const el = document.getElementById(id);
             if (el) {
                 el.addEventListener('input', () => {
-                    // Just triggering the debouncer to ensure logic runs if needed, 
-                    // or simply ensuring form is "dirty".
+                    // Triggers updates via stateManager implicitly 
+                    // or allows "Dirty" checking
                 });
             }
         });
@@ -194,7 +194,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindGeneralInputs([
         'inp-tone', 'inp-focus', 'inp-diff-encounter', 'inp-diff-threat', 'inp-diff-loss',
         'inp-house-rules', 'inp-setup-notes', 'inp-content-warnings', 'inp-how-to-apply',
-        'inp-lobby-url', 'inp-listing-url', 'inp-session-notes', 'inp-dm-collab', 'inp-session-summary'
+        'inp-lobby-url', 'inp-listing-url', 
+        'inp-session-notes', 'inp-dm-collab', 'inp-session-summary', 
+        'inp-game-desc' // Added Description
     ]);
 
     // FIX: Save invite link to session metadata
@@ -233,6 +235,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('input', () => IO.generateOutput());
     };
+    ['inp-lobby-url', 'inp-listing-url', 'inp-game-desc', 'inp-content-warnings', 'inp-house-rules', 'inp-how-to-apply'].forEach(bindOutput);
     bindOutput('inp-lobby-url');
     bindOutput('inp-listing-url');
 
@@ -371,7 +374,7 @@ function updateSessionCalculations() {
     if (!calculationEngine) return;
     
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
-    const stats = stateManager.getStats(); // Get APL
+    const stats = stateManager.getStats();
     const maxGold = calculationEngine.calculateMaxGold(stats.apl);
     
     const cards = document.querySelectorAll('#session-roster-list .player-card');
@@ -388,9 +391,9 @@ function updateSessionCalculations() {
         
         if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
         
-        // FIX: Max Gold Validation / Warning
+        // FIX: Max Gold Validation
         const currentGold = parseFloat(goldInput.value) || 0;
-        if (currentGold > maxGold) {
+        if (maxGold > 0 && currentGold > maxGold) {
             goldInput.style.borderColor = "#ff4444";
             goldInput.title = `Warning: Exceeds Max Gold for APL ${stats.apl} (${maxGold}gp)`;
         } else {
@@ -414,7 +417,8 @@ function updateSessionCalculations() {
     updateDMCalculations();
     updateStatsDisplays();
     
-    // FIX: Update Read-only Stats for New Hires / Welcome Wagon in Session View
+    /// FIX: Update Read-only Stats for New Hires / Welcome Wagon in Session View
+    // Ensure we are reading from current Roster DOM via StateManager
     const playerStats = stateManager.getPlayerStats();
     const elNewHires = document.getElementById('loot-val-newhires');
     const elWelcome = document.getElementById('loot-val-welcome');
@@ -433,6 +437,15 @@ function updateDMCalculations() {
     const dmGPOutput = document.querySelector('.dm-res-gp');
     const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
     const dmIncentivesBtn = document.getElementById('btn-dm-loot-incentives');
+
+    if (dmForfeitCheckbox) {
+        dmForfeitCheckbox.addEventListener('change', () => {
+            scheduleUpdate(() => {
+                updateDMCalculations(); // Explicit call
+                IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
+            });
+        });
+    }
     
     if (!dmXPOutput || !dmDTPOutput || !dmGPOutput) return;
     
