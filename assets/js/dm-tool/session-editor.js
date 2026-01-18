@@ -746,6 +746,7 @@ function initTemplateLogic() {
     const btnSaveGame = document.getElementById('btn-save-game');
     const btnSaveSetup = document.getElementById('btn-save-template-setup');
     const tmplSelect = document.getElementById('template-select');
+    const btnDelete = document.getElementById('btn-delete-template');
     
     if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
     
