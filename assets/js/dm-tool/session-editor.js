@@ -348,13 +348,22 @@ function updateSessionCalculations() {
     if (!calculationEngine) return;
     
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
+
+    // FIX 1: FORCE SYNC FROM DOM TO STATE
+    // This ensures stateManager has the latest roster data before calculating stats
+    stateManager.state.players = Rows.getMasterRosterData();
     const stats = stateManager.getStats(); 
+    
+    // Calculate APL and Max Gold
     const maxGold = calculationEngine.calculateMaxGold(stats.apl);
     
-    // FIX: Update Max Gold Display
+    // FIX 2: Update Max Gold Display
     const goldDisplay = document.querySelector('.val-max-gold');
     if(goldDisplay) goldDisplay.textContent = maxGold + ' gp';
     
+    // Debug log to verify APL and Max Gold
+    console.log(`Calc Debug: Party Size: ${stats.partySize}, APL: ${stats.apl}, Max Gold: ${maxGold}`);
+
     const cards = document.querySelectorAll('#session-roster-list .player-card');
     
     cards.forEach(card => {
@@ -392,8 +401,7 @@ function updateSessionCalculations() {
     updateDMCalculations();
     updateStatsDisplays();
     
-    // FIX: Update Read-only Stats for New Hires / Welcome Wagon in Session View
-    // Updates both Tabs 5 (IDs) and 6 (Classes)
+    // FIX 3: Update Read-only Stats for New Hires / Welcome Wagon
     const playerStats = stateManager.getPlayerStats();
     
     const setBoth = (id, cls, val) => {
@@ -465,8 +473,8 @@ function setupCalculationTriggers(callbacks) {
         });
     }
 
-    const dmLevel = document.getElementById('inp-dm-level'); // Fixed ID
-    const dmGames = document.getElementById('inp-dm-games-count'); // Fixed ID
+    const dmLevel = document.getElementById('inp-dm-level'); 
+    const dmGames = document.getElementById('inp-dm-games-count'); 
     const btnDMIncLoot = document.getElementById('btn-dm-loot-incentives');
     const syncBtn = document.getElementById('btn-sync-session'); 
     const addPlayerBtn = document.getElementById('btn-add-session-player');
@@ -614,7 +622,6 @@ function initPlayerSync() {
 }
 
 function initCopyGameLogic() {
-    // (Existing logic preserved, standard copy logic)
     const btnCopy = document.getElementById('btn-copy-game');
     const modal = document.getElementById('modal-copy-game');
     const btnConfirm = document.getElementById('btn-confirm-copy');
