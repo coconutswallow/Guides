@@ -2,6 +2,7 @@
 
 import { stateManager } from './state-manager.js';
 import * as Rows from './session-rows.js';
+import CalculationEngine from './calculation-engine.js';
 
 // Dynamic Loot Instructions based on Role, Tier, Party
 export function updateLootInstructions(isFullDM) {
