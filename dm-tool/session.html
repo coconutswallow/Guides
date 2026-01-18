@@ -345,7 +345,6 @@ extra_css:
                     </div>
                 </div>
 
-                <!-- Tab 5: DM Loot Determination Card - Updated with Loot Selected at bottom -->
                 <div class="card accordion-card" id="card-dm-loot">
                     <div class="accordion-header">
                         <span class="step-title">DM Loot Determination</span>
@@ -407,7 +406,6 @@ extra_css:
                         </div>
                         <p>Once you have rolled your loot, edit your original declaration post with "and selects:" and write the loot you chose from the loot pool (1 for normal loot, 1 for jumpstart if applicable).</p>
                         
-                        <!-- MOVED: Loot Selected Field -->
                         <div class="form-group" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <label class="field-label">Loot Selected</label>
                             <input type="text" id="dm-loot-selected" class="table-input" placeholder="Enter Loot Selected...">
@@ -417,8 +415,7 @@ extra_css:
             </div>
         </div>
 
-        <!-- Tab 6: Session Details - Updated Section -->
-<div id="view-session-details" class="view-section hidden-section">
+        <div id="view-session-details" class="view-section hidden-section">
     <h2 class="session-header-title">Session Details</h2>
     <p class="instruction-text">Log your actual session data here. The roster is automatically synced from the Setup tab.</p>
     
@@ -475,7 +472,6 @@ extra_css:
             </div>
             <div class="accordion-body">
                 <div class="player-card-body" style="padding:0;">
-                    <!-- Hidden fields to store DM data -->
                     <input type="hidden" id="out-dm-name">
                     <input type="hidden" id="out-dm-level">
                     <input type="hidden" id="out-dm-games">
@@ -614,12 +610,13 @@ extra_css:
     </div>
     
     <div class="form-group" style="margin: 1.5rem 0; width: 100%;">
-        <label class="checkbox-item" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
-            <input type="checkbox" id="chk-next-part" style="margin-top: 4px;">
-            <strong>Copy as Next Part?</strong>
-        </label>
-        <p style="font-size:0.9em; color:var(--color-text-secondary); margin-left:24px; margin-top: 4px; line-height: 1.4;">
-            If checked, this will increment the "Games Played" count for all players and the DM in the new record.
+        <div style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+            <input type="checkbox" id="chk-next-part" style="width: 18px; height: 18px; cursor:pointer;">
+            <label for="chk-next-part" style="margin:0; font-weight:600; cursor:pointer; font-size:1.1em;">Copy as Next Part?</label>
+        </div>
+        <p style="font-size:0.9em; color:var(--color-text-secondary); margin-left:28px; margin-top: 4px; line-height: 1.4;">
+            If checked, this will increment the "Games Played" count for all players and the DM in the new record<br>
+            and set Application Type to "Pre-filled".
         </p>
     </div>
 

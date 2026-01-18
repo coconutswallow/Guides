@@ -186,7 +186,6 @@ export async function generateOutput() {
 **Description:**
 ${state.header.game_description || "No description provided."}
 
-**Listing:** ${state.header.listing_url || "N/A"}
 **Lobby:** ${state.header.lobby_url || "N/A"}`;
         
         listingEl.value = listingText;
@@ -221,7 +220,7 @@ ${details}${warnings}${houseRules}
 ${state.header.game_description || "No description."}
 ${apply}
 **Game Listing:** ${state.header.listing_url || ""}
-**Lobby:** ${state.header.lobby_url || ""}`;
+`;
 
         adEl.value = adText;
     }
