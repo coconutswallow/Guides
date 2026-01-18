@@ -112,6 +112,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     stateManager.init();
     console.log('✓ State Manager Ready');
 
+    const callbacks = {
+        onUpdate: () => {
+            scheduleUpdate(() => {
+                updateSessionCalculations();
+                updateLootInstructions(isFullDM);
+                updateLootDeclaration(cachedDiscordId); 
+                updateHgenLogic(cachedDiscordId);   
+                updateDMLootLogic(cachedDiscordId, cachedGameRules);
+                IO.updateJumpstartDisplay();
+            });
+        },
+        onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
+    };
+    
+
     updateLootInstructions(isFullDM);
 
     // FIX: Add forfeit XP event handling for session roster
@@ -164,19 +179,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
-    const callbacks = {
-        onUpdate: () => {
-            scheduleUpdate(() => {
-                updateSessionCalculations();
-                updateLootInstructions(isFullDM);
-                updateLootDeclaration(cachedDiscordId); 
-                updateHgenLogic(cachedDiscordId);   
-                updateDMLootLogic(cachedDiscordId, cachedGameRules);
-                IO.updateJumpstartDisplay();
-            });
-        },
-        onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
-    };
     
     const bindGeneralInputs = (ids) => {
         ids.forEach(id => {

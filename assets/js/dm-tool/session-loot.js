@@ -1,6 +1,7 @@
 // assets/js/dm-tool/session-loot.js
 
 import { stateManager } from './state-manager.js';
+import * as Rows from './session-rows.js';
 
 // Dynamic Loot Instructions based on Role, Tier, Party
 export function updateLootInstructions(isFullDM) {
