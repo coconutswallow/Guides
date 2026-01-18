@@ -1,16 +1,10 @@
 // assets/js/dm-tool/state-manager.js
 /**
  * STATE MANAGER - Complete Rewrite
- * REPLACES: session-state.js (delete old file)
- * 
- * This is the single source of truth for all session data.
- * - Caches all DOM elements once on init
- * - Provides getters/setters that update both state AND DOM
- * - Implements proper debouncing per update type
- * - No more scattered DOM queries
- * 
- * Migration Note: This replaces the old session-state.js entirely.
- * The old file was never used and had incomplete implementation.
+ * FIXES:
+ * - Fixed duplicate getPlayerStats() method
+ * - Properly sync forfeit_xp to session players
+ * - Fixed new hires logic (should count players who aren't 10+)
  */
 
 class StateManager {
@@ -94,10 +88,6 @@ class StateManager {
         this.initialized = false;
     }
 
-    /**
-     * PHASE 1: INITIALIZATION
-     * Cache all DOM elements once
-     */
     init() {
         if (this.initialized) {
             console.warn('State manager already initialized');
@@ -198,9 +188,6 @@ class StateManager {
     }
 
     attachDOMListeners() {
-        // These listeners sync DOM -> State automatically
-        // We'll handle debouncing at the state update level
-        
         if (this.dom.gameName) {
             this.dom.gameName.addEventListener('input', (e) => {
                 this.updateField('header', 'title', e.target.value);
@@ -208,8 +195,8 @@ class StateManager {
         }
 
         if (this.dom.dmCharName) {
-        this.dom.dmCharName.addEventListener('input', (e) => {
-            this.updateField('dm', 'character_name', e.target.value);
+            this.dom.dmCharName.addEventListener('input', (e) => {
+                this.updateField('dm', 'character_name', e.target.value);
             });
         }
             
@@ -232,74 +219,69 @@ class StateManager {
         }
 
         if (this.dom.lootPlan) {
-        this.dom.lootPlan.addEventListener('input', (e) => {
-            this.updateField('header', 'loot_plan', e.target.value);
+            this.dom.lootPlan.addEventListener('input', (e) => {
+                this.updateField('header', 'loot_plan', e.target.value);
             });
         }
 
         if (this.dom.predetPerms) {
-        this.dom.predetPerms.addEventListener('input', (e) => {
-            this.updateField('header', 'predet_perms', parseInt(e.target.value) || 0);
+            this.dom.predetPerms.addEventListener('input', (e) => {
+                this.updateField('header', 'predet_perms', parseInt(e.target.value) || 0);
             });
         }
         
         if (this.dom.predetCons) {
-        this.dom.predetCons.addEventListener('input', (e) => {
-            this.updateField('header', 'predet_cons', parseInt(e.target.value) || 0);
+            this.dom.predetCons.addEventListener('input', (e) => {
+                this.updateField('header', 'predet_cons', parseInt(e.target.value) || 0);
             });
         }
+
         if (this.dom.lobbyUrl) {
-        this.dom.lobbyUrl.addEventListener('input', (e) => {
-            this.updateField('header', 'lobby_url', e.target.value);
-            this.scheduleUpdate('outputs');
+            this.dom.lobbyUrl.addEventListener('input', (e) => {
+                this.updateField('header', 'lobby_url', e.target.value);
+                this.scheduleUpdate('outputs');
             });
         }
+
         if (this.dom.listingUrl) {
-        this.dom.listingUrl.addEventListener('input', (e) => {
-            this.updateField('header', 'listing_url', e.target.value);
-            this.scheduleUpdate('outputs');
+            this.dom.listingUrl.addEventListener('input', (e) => {
+                this.updateField('header', 'listing_url', e.target.value);
+                this.scheduleUpdate('outputs');
             });
         }
+
         if (this.dom.tierSelect) {
-        this.dom.tierSelect.addEventListener('change', (e) => {
-            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
-            this.state.header.tier = selected;
-            this.scheduleUpdate('calculations');
-            this.scheduleUpdate('outputs');
+            this.dom.tierSelect.addEventListener('change', (e) => {
+                const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
+                this.state.header.tier = selected;
+                this.scheduleUpdate('calculations');
+                this.scheduleUpdate('outputs');
             });
         }
+
         if (this.dom.eventSelect) {
-        this.dom.eventSelect.addEventListener('change', (e) => {
-            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
-            this.state.header.event_tags = selected;
-            this.scheduleUpdate('outputs');
+            this.dom.eventSelect.addEventListener('change', (e) => {
+                const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
+                this.state.header.event_tags = selected;
+                this.scheduleUpdate('outputs');
             });
         }
 
         if (this.dom.dmLootSelected) {
-        this.dom.dmLootSelected.addEventListener('input', (e) => {
-            this.updateField('session_log.dm_rewards', 'loot_selected', e.target.value);
+            this.dom.dmLootSelected.addEventListener('input', (e) => {
+                this.updateField('session_log.dm_rewards', 'loot_selected', e.target.value);
             });
         }
 
-        // add more listeners as needed
-
-        // Game Name
-        if (this.dom.gameName) {
-            this.dom.gameName.addEventListener('input', (e) => {
-                this.updateField('header', 'title', e.target.value);
+        // FIX: Add DM forfeit XP listener
+        if (this.dom.dmForfeitXp) {
+            this.dom.dmForfeitXp.addEventListener('change', (e) => {
+                this.updateField('session_log.dm_rewards', 'forfeit_xp', e.target.checked);
+                this.scheduleUpdate('calculations');
             });
         }
-
-        
-        
     }
 
-    /**
-     * PHASE 2: STATE GETTERS
-     * Read from internal state (fast, no DOM queries)
-     */
-    
     getFullState() {
         return JSON.parse(JSON.stringify(this.state));
     }
@@ -320,9 +302,6 @@ class StateManager {
         return JSON.parse(JSON.stringify(this.state.session_log));
     }
     
-    /**
-     * Get derived/calculated values
-     */
     getStats() {
         let totalLevel = 0;
         let playerCount = 0;
@@ -350,6 +329,7 @@ class StateManager {
         };
     }
     
+    // FIX: Corrected getPlayerStats - removed duplicate, fixed new hires logic
     getPlayerStats() {
         let newHires = 0;
         let welcomeWagon = 0;
@@ -357,24 +337,23 @@ class StateManager {
         this.state.players.forEach(player => {
             const gamesVal = String(player.games_count);
 
+            // Welcome Wagon: games played = 1
             if (gamesVal === "1") {
                 welcomeWagon++;
             }
 
+            // New Hires: games played <> 10+ (all players who haven't maxed out)
             if (gamesVal !== "10+") {
-                newHires++;
+                const num = parseInt(gamesVal);
+                if (!isNaN(num) && num >= 1 && num <= 10) {
+                    newHires++;
+                }
             }
         });
 
         return { newHires, welcomeWagon };
     }
 
-    /**
-     * PHASE 3: STATE SETTERS
-     * Update internal state AND sync to DOM
-     * Triggers debounced callbacks
-     */
-    
     updateField(section, field, value) {
         // Handle nested paths (e.g., 'session_log.dm_rewards')
         if (section.includes('.')) {
@@ -472,18 +451,18 @@ class StateManager {
         const cards = this.dom.sessionRosterList?.querySelectorAll('.player-card');
         if (cards && cards[index]) {
             const input = cards[index].querySelector(`.s-${field}`);
-            if (input && input.value !== value) {
-                input.value = value;
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = value;
+                } else if (input.value !== value) {
+                    input.value = value;
+                }
             }
         }
         
         this.scheduleUpdate('calculations');
     }
 
-    /**
-     * PHASE 4: BULK OPERATIONS
-     */
-    
     loadFromDB(sessionData) {
         if (!sessionData.form_data) return;
         
@@ -546,6 +525,11 @@ class StateManager {
         if (this.dom.predetCons) this.dom.predetCons.value = this.state.header.predet_cons || 0;
         if (this.dom.dmLootSelected) this.dom.dmLootSelected.value = this.state.session_log.dm_rewards.loot_selected || '';
         
+        // FIX: Sync DM forfeit XP checkbox
+        if (this.dom.dmForfeitXp) {
+            this.dom.dmForfeitXp.checked = this.state.session_log.dm_rewards.forfeit_xp || false;
+        }
+        
         // Also sync DM incentives button
         if (this.dom.btnDmIncentives) {
             const incentives = this.state.session_log.dm_rewards.incentives || [];
@@ -566,10 +550,6 @@ class StateManager {
         }
     }
 
-    /**
-     * PHASE 5: UPDATE SCHEDULING (Proper Debouncing)
-     */
-    
     scheduleUpdate(updateType) {
         // Clear existing timer for this type
         if (this.debounceTimers[updateType]) {
@@ -611,10 +591,6 @@ class StateManager {
         this.executeUpdate('dmLoot');
     }
     
-    /**
-     * PHASE 6: CALLBACK REGISTRATION
-     */
-    
     onUpdate(updateType, callback) {
         if (!this.updateCallbacks[updateType]) {
             console.warn(`Unknown update type: ${updateType}`);
@@ -622,10 +598,6 @@ class StateManager {
         }
         this.updateCallbacks[updateType].push(callback);
     }
-    
-    /**
-     * UTILITY METHODS
-     */
     
     getDOMKeyForField(section, field) {
         // Map state fields to DOM cache keys
@@ -640,7 +612,8 @@ class StateManager {
             'dm.games_count': 'dmGamesCount',
             'session_log.hours': 'sessionHours',
             'session_log.notes': 'sessionNotes',
-            'session_log.dm_rewards.loot_selected': 'dmLootSelected'
+            'session_log.dm_rewards.loot_selected': 'dmLootSelected',
+            'session_log.dm_rewards.forfeit_xp': 'dmForfeitXp'
         };
         
         return mapping[`${section}.${field}`];
@@ -664,29 +637,7 @@ class StateManager {
             return "";
         }
     }
-    getPlayerStats() {
-    let newHires = 0;
-    let welcomeWagon = 0;
-
-    this.state.players.forEach(player => {
-        const gamesVal = String(player.games_count);
-
-        if (gamesVal === "1") {
-            welcomeWagon++;
-        }
-
-        if (gamesVal !== "10+") {
-            const num = parseInt(gamesVal);
-            if (!isNaN(num) && num <= 10) {
-                newHires++;
-            }
-        }
-        });
-
-        return { newHires, welcomeWagon };
-    }
 }
 
 // Export singleton instance
 export const stateManager = new StateManager();
-

@@ -359,6 +359,7 @@ function updateSessionCalculations() {
         
         if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
         
+        // FIX: Properly read forfeit XP state
         const playerData = {
             level: parseInt(levelInput.value) || 1,
             hours: parseFloat(hoursInput.value) || 0,
@@ -369,7 +370,7 @@ function updateSessionCalculations() {
         // Use calculation engine
         const rewards = calculationEngine.calculatePlayerRewards(playerData, sessionHours);
         
-        // Update UI
+        // FIX: Update UI with calculated values
         xpInput.value = rewards.xp;
         dtpInput.value = rewards.dtp;
     });
@@ -395,13 +396,14 @@ function updateDMCalculations() {
     
     if (!dmXPOutput || !dmDTPOutput || !dmGPOutput) return;
     
+    // FIX: Properly read DM forfeit XP state from checkbox
     const dmData = {
         level: parseInt(state.dm.level) || 1,
         forfeit_xp: dmForfeitCheckbox ? dmForfeitCheckbox.checked : false,
         incentives: dmIncentivesBtn ? JSON.parse(dmIncentivesBtn.dataset.incentives || '[]') : []
     };
     
-    // Get player stats from state manager
+    // FIX: Get player stats from state manager (this was working correctly)
     const playerStats = stateManager.getPlayerStats();
     
     // Use calculation engine
