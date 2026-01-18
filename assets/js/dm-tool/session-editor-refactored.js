@@ -30,10 +30,9 @@ import {
 let cachedGameRules = null; 
 let isFullDM = false; 
 let cachedDiscordId = "YOUR_ID";
-let updateDebounceTimer = null;
 
 const domCache = {};
-const UPDATE_DEBOUNCE_MS = 100;
+
 
 async function cacheDiscordId() {
     try {
@@ -56,17 +55,6 @@ function cacheDOMElements() {
     domCache.sidebarNav = document.getElementById('sidebar-nav');
     domCache.dmLevelSetup = document.getElementById('inp-dm-level');
     domCache.dmGamesSetup = document.getElementById('inp-dm-games-count');
-}
-
-function scheduleUpdate(callback) {
-    if (updateDebounceTimer) {
-        clearTimeout(updateDebounceTimer);
-    }
-    
-    updateDebounceTimer = setTimeout(() => {
-        callback();
-        updateDebounceTimer = null;
-    }, UPDATE_DEBOUNCE_MS);
 }
 
 function incrementPartName(name) {
