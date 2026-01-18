@@ -2,6 +2,7 @@
 // FINAL VERSION with all fixes
 
 import { supabase } from '../supabaseClient.js'; 
+import { stateManager } from './state-manager.js';
 import { 
     saveSession, 
     createSession,
@@ -17,7 +18,7 @@ import {
 import { checkAccess } from '../auth-check.js'; 
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
-import * as IO from './session-io.js';
+import * as IO from './session-io-migrated.js';
 import { updateSessionCalculations } from './session-calculator-optimized.js';
 import { 
     updateLootInstructions, 
@@ -97,6 +98,8 @@ function incrementGameString(val) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    stateManager.init();
+    console.log('✓ State Manager Ready');
     await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
     
