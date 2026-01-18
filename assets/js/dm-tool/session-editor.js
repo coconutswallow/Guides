@@ -164,7 +164,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
-
+    const callbacks = {
+        onUpdate: () => {
+            scheduleUpdate(() => {
+                updateSessionCalculations();
+                updateLootInstructions(isFullDM);
+                updateLootDeclaration(cachedDiscordId); 
+                updateHgenLogic(cachedDiscordId);   
+                updateDMLootLogic(cachedDiscordId, cachedGameRules);
+                IO.updateJumpstartDisplay();
+            });
+        },
+        onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
+    };
+    
     const bindGeneralInputs = (ids) => {
         ids.forEach(id => {
             const el = document.getElementById(id);
@@ -256,20 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Invite link is handled inside loadSessionData/IO.populateForm now
     }
 
-    const callbacks = {
-        onUpdate: () => {
-            scheduleUpdate(() => {
-                updateSessionCalculations();
-                updateLootInstructions(isFullDM);
-                updateLootDeclaration(cachedDiscordId); 
-                updateHgenLogic(cachedDiscordId);   
-                updateDMLootLogic(cachedDiscordId, cachedGameRules);
-                IO.updateJumpstartDisplay();
-            });
-        },
-        onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
-    };
-    
+        
     window._sessionCallbacks = callbacks;
 
     if (domCache.sidebarNav) {
