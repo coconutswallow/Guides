@@ -10,7 +10,6 @@
  * @module SessionRows
  */
 
-// FIX: Player card sync on initial load and proper forfeit XP handling
 import { fetchMemberMap } from './data-manager.js';
 
 /**
@@ -265,10 +264,11 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     card.className = 'player-card';
 
     // Construct Player Card HTML
+    // UPDATE: Removed text '▼' from step-icon span to prevent duplicate arrow
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
-                <span class="step-icon" style="transform:rotate(-90deg); transition:transform 0.2s;">▼</span>
+                <span class="step-icon" style="transform:rotate(-90deg); transition:transform 0.2s;"></span>
                 <span class="player-card-title">${data.display_name || 'Player'}</span>
                 <span class="player-summary-text" style="font-size:0.8em; color:rgba(255,255,255,0.8); font-weight:normal; margin-left:1rem;">
                     ${data.character_name ? `(${data.character_name})` : ''}
