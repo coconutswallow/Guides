@@ -125,16 +125,15 @@ export function updateHgenLogic(discordId) {
 
 // Updates the DM Loot logic (View 5)
 export function updateDMLootLogic(discordId, gameRules) {
-    // FIX: Get player stats from state manager instead of DOM
-    const playerStats = stateManager.getPlayerStats();
+    // FIX: Force a recalculation of player stats based on current DOM
+    // This ensures that if the user just changed "Games Played" in the roster,
+    // the stats reflect it immediately without waiting for a state save cycle.
+    const currentRoster = Rows.getMasterRosterData();
+    const calc = new CalculationEngine(gameRules);
+    const playerStats = calc.calculatePlayerStats(currentRoster);
+
     const newHires = playerStats.newHires;
     const welcomeWagon = playerStats.welcomeWagon;
-
-    // DM Jumpstart Logic
-    const state = stateManager.getFullState();
-    const dmGamesVal = state.dm.games_count;
-    const dmGamesNum = parseInt(dmGamesVal) || 999;
-    const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
 
     // Update UI Read-only fields
     const elNewHires = document.getElementById('loot-val-newhires');
@@ -143,6 +142,13 @@ export function updateDMLootLogic(discordId, gameRules) {
 
     if(elNewHires) elNewHires.value = newHires;
     if(elWelcome) elWelcome.value = welcomeWagon;
+    
+    // DM Jumpstart Logic
+    const state = stateManager.getFullState();
+    const dmGamesVal = state.dm.games_count;
+    const dmGamesNum = parseInt(dmGamesVal) || 999;
+    const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
+    
     if(elJump) elJump.value = isJumpstart ? "Yes" : "No";
 
     // Calculate Loot Rolls

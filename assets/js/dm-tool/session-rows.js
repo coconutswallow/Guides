@@ -69,6 +69,15 @@ export function addPlayerRowToMaster(data = {}) {
         <td><select class="table-input inp-games-count">${gamesOptions}</select></td>
         <td style="text-align:center;"><button class="button button-danger btn-sm btn-delete-row">&times;</button></td>
     `;
+
+    const gamesSelect = tr.querySelector('.inp-games-count');
+    if (gamesSelect) {
+        gamesSelect.addEventListener('change', () => {
+            if (window._sessionCallbacks && window._sessionCallbacks.onUpdate) {
+                window._sessionCallbacks.onUpdate();
+            }
+        });
+    }
     
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');

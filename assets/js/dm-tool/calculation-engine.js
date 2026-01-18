@@ -122,12 +122,17 @@ class CalculationEngine {
         return { newHires, welcomeWagon };
     }
 
-    // Calculate max gold for session (Used for Player Validation based on APL)
+    // FIX: Calculate max gold for session (Used for Player Validation based on APL)
     calculateMaxGold(apl) {
         if (!this.rules || !this.rules.gold_per_session_by_apl) return 0;
+        
         const goldTable = this.rules.gold_per_session_by_apl;
         const safeApl = Math.floor(parseFloat(apl) || 1);
-        return goldTable[safeApl.toString()] || goldTable[safeApl] || 0;
+        
+        // Handle case where keys might be strings "1" or numbers 1
+        const val = goldTable[safeApl.toString()] || goldTable[safeApl];
+        
+        return parseFloat(val) || 0;
     }
 
     // Calculate DM loot rolls

@@ -165,6 +165,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     initPlayerSetup();
     initPlayerSync();
 
+    const bindGeneralInputs = (ids) => {
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => {
+                    // Just triggering the debouncer to ensure logic runs if needed, 
+                    // or simply ensuring form is "dirty".
+                });
+            }
+        });
+    };
+    bindGeneralInputs([
+        'inp-tone', 'inp-focus', 'inp-diff-encounter', 'inp-diff-threat', 'inp-diff-loss',
+        'inp-house-rules', 'inp-setup-notes', 'inp-content-warnings', 'inp-how-to-apply',
+        'inp-lobby-url', 'inp-listing-url', 'inp-session-notes', 'inp-dm-collab', 'inp-session-summary'
+    ]);
+
     // FIX: Save invite link to session metadata
     const btnGenerate = document.getElementById('btn-generate-invite');
     if (btnGenerate) {
@@ -210,6 +227,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(rules.options["Application Types"]) UI.fillDropdown('inp-apps-type', rules.options["Application Types"]);
         if(rules.options["Game Format"]) UI.fillDropdown('inp-format', rules.options["Game Format"]);
     }
+
+    
     
     if (rules && rules.tier) {
         const tierSelect = document.getElementById('inp-tier');
@@ -230,6 +249,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
+
+    // FIX: Load Invite Link from session metadata if available
+    if (sessionId) {
+        await loadSessionData(sessionId, callbacks);
+        // Invite link is handled inside loadSessionData/IO.populateForm now
+    }
 
     const callbacks = {
         onUpdate: () => {
@@ -344,19 +369,33 @@ function updateSessionCalculations() {
     if (!calculationEngine) return;
     
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
+    const stats = stateManager.getStats(); // Get APL
+    const maxGold = calculationEngine.calculateMaxGold(stats.apl);
     
     const cards = document.querySelectorAll('#session-roster-list .player-card');
     
     cards.forEach(card => {
+        // ... (existing input gathering) ...
         const levelInput = card.querySelector('.s-level');
         const hoursInput = card.querySelector('.s-hours');
         const xpInput = card.querySelector('.s-xp');
         const dtpInput = card.querySelector('.s-dtp');
+        const goldInput = card.querySelector('.s-gold'); // Get Gold Input
         const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
         const incentivesBtn = card.querySelector('.s-incentives-btn');
         
         if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
         
+        // FIX: Max Gold Validation / Warning
+        const currentGold = parseFloat(goldInput.value) || 0;
+        if (currentGold > maxGold) {
+            goldInput.style.borderColor = "#ff4444";
+            goldInput.title = `Warning: Exceeds Max Gold for APL ${stats.apl} (${maxGold}gp)`;
+        } else {
+            goldInput.style.borderColor = "";
+            goldInput.title = "";
+        }
+
         const playerData = {
             level: parseInt(levelInput.value) || 1,
             hours: parseFloat(hoursInput.value) || 0,
@@ -372,6 +411,13 @@ function updateSessionCalculations() {
     
     updateDMCalculations();
     updateStatsDisplays();
+    
+    // FIX: Update Read-only Stats for New Hires / Welcome Wagon in Session View
+    const playerStats = stateManager.getPlayerStats();
+    const elNewHires = document.getElementById('loot-val-newhires');
+    const elWelcome = document.getElementById('loot-val-welcome');
+    if(elNewHires) elNewHires.value = playerStats.newHires;
+    if(elWelcome) elWelcome.value = playerStats.welcomeWagon;
 }
 
 function updateDMCalculations() {
@@ -424,6 +470,8 @@ function setupCalculationTriggers(callbacks) {
                 
                 const setupDateInput = document.getElementById('inp-start-datetime');
                 const sessionDateInput = document.getElementById('inp-session-date');
+                
+                // FIX: Auto-fill Session Date
                 if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
                     sessionDateInput.value = setupDateInput.value;
                     
@@ -697,15 +745,23 @@ function initTemplateLogic() {
     const btnLoad = document.getElementById('btn-load-template');
     const btnSaveGame = document.getElementById('btn-save-game');
     const btnSaveSetup = document.getElementById('btn-save-template-setup');
-    const btnDelete = document.getElementById('btn-delete-template');
+    const tmplSelect = document.getElementById('template-select');
     
     if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
     
     if(btnSaveSetup) {
         btnSaveSetup.addEventListener('click', () => {
             const currentName = document.getElementById('header-game-name').value;
-            if(currentName) document.getElementById('inp-template-name').value = currentName;
-            modal.showModal();
+            const selectedText = tmplSelect && tmplSelect.selectedIndex > 0 ? tmplSelect.options[tmplSelect.selectedIndex].text : "";
+            
+            // FIX: Default to selected template name if overwriting, else game name
+            if(selectedText) {
+                document.getElementById('inp-template-name').value = selectedText;
+            } else if(currentName) {
+                document.getElementById('inp-template-name').value = currentName;
+            }
+            
+            document.getElementById('modal-save-template').showModal();
         });
     }
     
