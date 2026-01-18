@@ -1,5 +1,5 @@
-// assets/js/dm-tool/session-editor-refactored.js
-// FINAL VERSION with all fixes
+// assets/js/dm-tool/session-editor.js
+// FIXES: invite link save/load, player card sync, forfeit XP, stats updates
 
 import { supabase } from '../supabaseClient.js'; 
 import { stateManager } from './state-manager.js';
@@ -32,6 +32,7 @@ let calculationEngine = null;
 let cachedGameRules = null; 
 let isFullDM = false; 
 let cachedDiscordId = "YOUR_ID";
+let cachedDisplayName = "DM"; // FIX: Store display name for MAL
 
 const domCache = {};
 
@@ -43,6 +44,19 @@ async function cacheDiscordId() {
             const identity = user.identities.find(i => i.provider === 'discord');
             if (identity && identity.id) {
                 cachedDiscordId = identity.id;
+            }
+        }
+        
+        // FIX: Fetch display name from member_directory
+        if (cachedDiscordId) {
+            const { data } = await supabase
+                .from('member_directory')
+                .select('display_name')
+                .eq('discord_id', cachedDiscordId)
+                .single();
+            
+            if (data && data.display_name) {
+                cachedDisplayName = data.display_name;
             }
         }
     } catch (e) {
@@ -62,27 +76,21 @@ function cacheDOMElements() {
 function incrementPartName(name) {
     if(!name) return "Session Part 2";
     
-    // Regex to find "Part X" at the end of the string (case insensitive)
     const match = name.match(/^(.*?)(\s?-?\s?Part\s?)(\d+)$/i);
     
     if(match) {
-        // match[1] = "Game Name"
-        // match[2] = " Part "
-        // match[3] = "1"
         const num = parseInt(match[3]) + 1;
         return `${match[1]}${match[2]}${num}`;
     }
     
-    // If no "Part X" found, append "Part 2"
     return `${name} Part 2`;
 }
 
-// Helper to increment "1" -> "2" ... "9" -> "10" -> "10+" -> "10+"
 function incrementGameString(val) {
     if (val === "10+") return "10+";
     const num = parseInt(val);
     
-    if (isNaN(num)) return "1"; // Default start
+    if (isNaN(num)) return "1";
     
     if (num >= 10) return "10+";
     return (num + 1).toString();
@@ -94,7 +102,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     cachedGameRules = await fetchGameRules();
     
     cacheDOMElements();
-    // Initialize calculation engine
     calculationEngine = new CalculationEngine(cachedGameRules);
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -105,10 +112,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     stateManager.init();
     console.log('✓ State Manager Ready');
 
-    // Initialize loot instructions
     updateLootInstructions(isFullDM);
 
-    // Add forfeit XP event handling
+    // FIX: Add forfeit XP event handling for session roster
     const sessionRosterList = document.getElementById('session-roster-list');
     if (sessionRosterList) {
         sessionRosterList.addEventListener('change', (e) => {
@@ -121,23 +127,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     stateManager.onUpdate('calculations', (state) => {
-        updateSessionCalculations()
-        updateLootInstructions(isFullDM); // FIX: Update loot instructions when party changes
+        updateSessionCalculations();
+        updateLootInstructions(isFullDM);
+        // FIX: Update loot stats when calculations change
+        updateDMLootLogic(cachedDiscordId, cachedGameRules);
     });
 
-    // Register loot updates
     stateManager.onUpdate('lootDeclaration', (state) => {
         updateLootDeclaration(cachedDiscordId);
         updateHgenLogic(cachedDiscordId);
     });
 
-    // Register DM loot updates
     stateManager.onUpdate('dmLoot', (state) => {
         updateDMLootLogic(cachedDiscordId, cachedGameRules);
         IO.updateJumpstartDisplay();
     });
 
-    // Register output updates
     stateManager.onUpdate('outputs', (state) => {
         IO.generateOutput();
     });
@@ -150,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     UI.initIncentivesModal((ctx) => {
         scheduleUpdate(() => {
-            updateSessionCalculations()
+            updateSessionCalculations();
             updateDMLootLogic(cachedDiscordId, cachedGameRules);
         });
     });
@@ -160,45 +165,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     initPlayerSetup();
     initPlayerSync();
 
-    // Save invite link to session metadata
+    // FIX: Save invite link to session metadata
     const btnGenerate = document.getElementById('btn-generate-invite');
     if (btnGenerate) {
-        const originalHandler = btnGenerate.onclick;
         btnGenerate.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
-            if (!id) return;
+            if (!id) {
+                alert("Please save the session first to generate a Session ID.");
+                return;
+            }
+            
+            const path = window.location.pathname;
+            const directory = path.substring(0, path.lastIndexOf('/'));
+            const inviteUrl = `${window.location.origin}${directory}/player-entry.html?session_id=${id}`;
             
             const inpInvite = document.getElementById('inp-invite-link');
-            if (inpInvite && inpInvite.value) {
+            if (inpInvite) {
+                inpInvite.value = inviteUrl;
+                
                 // Save invite URL to session
                 try {
                     await supabase
                         .from('sessions')
-                        .update({ invite_url: inpInvite.value })
+                        .update({ invite_url: inviteUrl })
                         .eq('id', id);
                 } catch (e) {
                     console.warn('Could not save invite URL:', e);
                 }
             }
         });
-    }
-    // Load invite link if exists
-    async function loadInviteLink(sessionId) {
-        try {
-            const { data } = await supabase
-                .from('sessions')
-                .select('invite_url')
-                .eq('id', sessionId)
-                .single();
-            
-            if (data && data.invite_url) {
-                const inpInvite = document.getElementById('inp-invite-link');
-                if (inpInvite) inpInvite.value = data.invite_url;
-            }
-        } catch (e) {
-            console.warn('Could not load invite URL:', e);
-        }
     }
 
     const bindOutput = (id) => {
@@ -238,12 +234,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const callbacks = {
         onUpdate: () => {
             scheduleUpdate(() => {
-                updateSessionCalculations()
+                updateSessionCalculations();
                 updateLootInstructions(isFullDM);
                 updateLootDeclaration(cachedDiscordId); 
                 updateHgenLogic(cachedDiscordId);   
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
-                IO.updateJumpstartDisplay(); // FIX: Update jumpstart visibility
+                IO.updateJumpstartDisplay();
             });
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
@@ -256,15 +252,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             const item = e.target.closest('.nav-item');
             if (!item) return;
             
-            // Generate Session Log when navigating to that tab
             if (item.dataset.target === 'view-session-output') {
-                // FIX 4A: Pass cachedDiscordId to the generator
-                IO.generateSessionLogOutput(cachedDiscordId);
+                // FIX: Pass both discordId and displayName
+                IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
             }
             
-            // Generate MAL when navigating to MAL tab
             if (item.dataset.target === 'view-mal-update') {
-                IO.generateMALUpdate();
+                // FIX: Pass displayName for MAL
+                IO.generateMALUpdate(cachedDisplayName);
+            }
+            
+            // FIX: Sync session players when entering session details tab
+            if (item.dataset.target === 'view-session-details') {
+                Rows.syncSessionPlayersFromMaster(callbacks);
             }
         });
     }
@@ -278,7 +278,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         domCache.sessionHoursInput.addEventListener('change', () => { 
             const val = parseFloat(domCache.sessionHoursInput.value) || 0;
             
-            // FIX: Update all player card hours to match session hours
             const cards = document.querySelectorAll('#session-roster-list .player-card');
             const newSessionHours = parseFloat(domCache.sessionHoursInput.value) || 3;
             
@@ -294,7 +293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
                     domCache.sessionHoursInput.value = 3;
-                    updateSessionCalculations()
+                    updateSessionCalculations();
                     document.getElementById('chk-next-part').checked = true;
                     const currentName = document.getElementById('header-game-name').value;
                     const nextName = incrementPartName(currentName);
@@ -302,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('modal-copy-game').showModal();
                 }
             } else {
-                updateSessionCalculations()
+                updateSessionCalculations();
             }
         });
     }
@@ -346,7 +345,6 @@ function updateSessionCalculations() {
     
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
     
-    // Update all player cards
     const cards = document.querySelectorAll('#session-roster-list .player-card');
     
     cards.forEach(card => {
@@ -359,7 +357,6 @@ function updateSessionCalculations() {
         
         if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
         
-        // FIX: Properly read forfeit XP state
         const playerData = {
             level: parseInt(levelInput.value) || 1,
             hours: parseFloat(hoursInput.value) || 0,
@@ -367,18 +364,13 @@ function updateSessionCalculations() {
             incentives: incentivesBtn ? JSON.parse(incentivesBtn.dataset.incentives || '[]') : []
         };
         
-        // Use calculation engine
         const rewards = calculationEngine.calculatePlayerRewards(playerData, sessionHours);
         
-        // FIX: Update UI with calculated values
         xpInput.value = rewards.xp;
         dtpInput.value = rewards.dtp;
     });
     
-    // Update DM rewards
     updateDMCalculations();
-    
-    // Update stats displays
     updateStatsDisplays();
 }
 
@@ -396,20 +388,16 @@ function updateDMCalculations() {
     
     if (!dmXPOutput || !dmDTPOutput || !dmGPOutput) return;
     
-    // FIX: Properly read DM forfeit XP state from checkbox
     const dmData = {
         level: parseInt(state.dm.level) || 1,
         forfeit_xp: dmForfeitCheckbox ? dmForfeitCheckbox.checked : false,
         incentives: dmIncentivesBtn ? JSON.parse(dmIncentivesBtn.dataset.incentives || '[]') : []
     };
     
-    // FIX: Get player stats from state manager (this was working correctly)
     const playerStats = stateManager.getPlayerStats();
     
-    // Use calculation engine
     const rewards = calculationEngine.calculateDMRewards(dmData, sessionHours, playerStats);
     
-    // Update UI
     dmXPOutput.value = rewards.xp;
     dmDTPOutput.value = rewards.dtp;
     dmGPOutput.value = rewards.gp;
@@ -493,14 +481,17 @@ function setupCalculationTriggers(callbacks) {
         domCache.dmGamesSetup.addEventListener('change', () => {
             scheduleUpdate(() => {
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
-                IO.updateJumpstartDisplay(); // FIX: Update on DM games change
+                IO.updateJumpstartDisplay();
             });
         });
     }
     
     if (domCache.rosterBody) {
+        // FIX: Update loot stats when master roster changes
         domCache.rosterBody.addEventListener('change', () => {
-            scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
+            scheduleUpdate(() => {
+                updateDMLootLogic(cachedDiscordId, cachedGameRules);
+            });
         });
         
         domCache.rosterBody.addEventListener('click', (e) => {
@@ -518,6 +509,12 @@ async function loadSessionData(sessionId, callbacks) {
         const session = await loadSession(sessionId);
         if (session) {
             IO.populateForm(session, callbacks);
+            
+            // FIX: Load invite link if exists
+            if (session.invite_url) {
+                const inpInvite = document.getElementById('inp-invite-link');
+                if (inpInvite) inpInvite.value = session.invite_url;
+            }
         }
     } catch (error) {
         console.error("Error loading session:", error);
@@ -581,24 +578,9 @@ function initPlayerSetup() {
 }
 
 function initPlayerSync() {
-    const btnGenerate = document.getElementById('btn-generate-invite');
     const btnCopy = document.getElementById('btn-copy-invite');
     const inpInvite = document.getElementById('inp-invite-link');
     const btnSync = document.getElementById('btn-sync-submissions');
-
-    if (btnGenerate) {
-        btnGenerate.addEventListener('click', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            if (!id) return alert("Please save the session first to generate a Session ID.");
-            
-            const path = window.location.pathname;
-            const directory = path.substring(0, path.lastIndexOf('/'));
-            const inviteUrl = `${window.location.origin}${directory}/player-entry.html?session_id=${id}`;
-            
-            if(inpInvite) inpInvite.value = inviteUrl;
-        });
-    }
 
     if (btnCopy) {
         btnCopy.addEventListener('click', () => {
@@ -641,10 +623,6 @@ function initCopyGameLogic() {
     if(btnCopy) {
         btnCopy.addEventListener('click', () => {
             const currentName = document.getElementById('header-game-name').value;
-            
-            // Auto-check "Next Part" if duration was maxed (handled in sessionHours listener), 
-            // but we also default it to unchecked usually unless triggered by logic.
-            // Here we just set the name.
             document.getElementById('inp-copy-name').value = incrementPartName(currentName);
             modal.showModal();
         });
@@ -658,36 +636,29 @@ function initCopyGameLogic() {
             const isNextPart = document.getElementById('chk-next-part').checked;
             const fullData = IO.getFormData();
             
-            // 1. Update Title
             fullData.header.title = newName; 
             fullData.session_log.title = newName;
             
-            // 2. Reset Session Specifics
             fullData.session_log.hours = 3; 
             fullData.session_log.notes = "";
             fullData.session_log.summary = "";
             fullData.session_log.dm_rewards.loot_selected = "";
-            fullData.session_log.dm_rewards.incentives = []; // Clear one-time incentives
+            fullData.session_log.dm_rewards.incentives = [];
             
-            // 3. Increment Games Logic
             if (isNextPart) {
-                // Increment Master Roster Players
                 if (fullData.players) {
                     fullData.players.forEach(p => {
                         p.games_count = incrementGameString(p.games_count);
                     });
                 }
                 
-                // Increment DM
                 if (fullData.dm) {
                     fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
                 }
                 
-                // Increment Session Log Players (if any are carried over)
                 if (fullData.session_log.players) {
                     fullData.session_log.players.forEach(p => {
                         p.games_count = incrementGameString(p.games_count);
-                        // Reset session specific player fields
                         p.hours = 3;
                         p.xp = "";
                         p.dtp = "";
@@ -699,7 +670,6 @@ function initCopyGameLogic() {
                     });
                 }
                 
-                // Update DM Rewards games count
                 fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
             }
             
@@ -707,13 +677,9 @@ function initCopyGameLogic() {
             if(!user) return alert("Not logged in");
 
             try {
-                // Create new session entry
                 const newSession = await createSession(user.id, newName, false);
                 if(newSession) {
-                    // Save the modified data to the new session
                     await saveSession(newSession.id, fullData, { title: newName });
-                    
-                    // Redirect to new session
                     window.location.href = `session.html?id=${newSession.id}`;
                 }
             } catch (e) {
@@ -825,4 +791,14 @@ function initTemplateLogic() {
             }
         });
     }
+}
+
+// Debounce helper
+let debounceTimer = null;
+function scheduleUpdate(callback) {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        callback();
+        debounceTimer = null;
+    }, 100);
 }

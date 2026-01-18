@@ -1,35 +1,15 @@
 // assets/js/dm-tool/session-io.js
-/**
- * MIGRATION ADAPTER - Step 2
- * 
- * This file provides BACKWARD-COMPATIBLE wrappers around the new StateManager.
- * It maintains the EXACT same function signatures as session-io.js
- * so existing code continues to work.
- * 
- * MIGRATION STRATEGY:
- * 1. Keep this file alongside session-io.js
- * 2. In session-editor-refactored.js, import from THIS file instead
- * 3. Test thoroughly
- * 4. Once verified, delete old session-io.js
- * 
- * This approach allows ZERO-DOWNTIME migration.
- */
+// FIX: Session Log output with Events, DM Collaboration, Session Notes
+// FIX: MAL output with display_name instead of character_name
 
 import { stateManager } from './state-manager.js';
 import { fetchGameRules } from './data-manager.js';
 import * as Rows from './session-rows.js';
 import * as UI from './session-ui.js';
 
-/**
- * BACKWARD COMPATIBILITY LAYER
- * These functions maintain exact same signatures as old session-io.js
- */
-
 export function getFormData() {
-    // Instead of querying DOM, get from state manager
     const state = stateManager.getFullState();
     
-    // Format exactly as old version did
     return {
         header: {
             title: state.header.title,
@@ -60,7 +40,7 @@ export function getFormData() {
             predet_perms: state.header.predet_perms,
             predet_cons: state.header.predet_cons
         },
-        players: Rows.getMasterRosterData(), // Still uses existing Rows module
+        players: Rows.getMasterRosterData(),
         dm: state.dm,
         session_log: {
             title: state.header.title,
@@ -69,7 +49,7 @@ export function getFormData() {
             notes: state.session_log.notes,
             summary: state.session_log.summary,
             dm_collaborators: state.session_log.dm_collaborators,
-            players: Rows.getSessionRosterData(), // Still uses existing Rows module
+            players: Rows.getSessionRosterData(),
             dm_rewards: state.session_log.dm_rewards
         }
     };
@@ -82,10 +62,8 @@ export function populateForm(session, callbacks, options = {}) {
     
     if (!session.form_data) return;
     
-    // Load into state manager
     stateManager.loadFromDB(session);
     
-    // Still need to populate roster tables (DOM-based components)
     const tbody = document.getElementById('roster-body');
     if (tbody && session.form_data.players) {
         tbody.innerHTML = '';
@@ -94,7 +72,6 @@ export function populateForm(session, callbacks, options = {}) {
         });
     }
     
-    // Populate session roster
     const listContainer = document.getElementById('session-roster-list');
     if (listContainer && session.form_data.session_log?.players) {
         listContainer.innerHTML = '';
@@ -103,7 +80,6 @@ export function populateForm(session, callbacks, options = {}) {
         });
     }
     
-    // Trigger outputs
     generateOutput();
     if (callbacks.onUpdate) callbacks.onUpdate();
 }
@@ -114,13 +90,11 @@ export async function generateOutput() {
     const gameName = state.header.title || "Untitled";
     const sessionSummary = state.session_log.summary || "";
     
-    // Time String
     let timeString = "TBD";
     if (unixTime && unixTime > 0) {
         timeString = `<t:${unixTime}:F>`;
     }
     
-    // Tier String
     let tierString = 'N/A';
     if (Array.isArray(state.header.tier) && state.header.tier.length > 0) {
         const sortedTiers = state.header.tier.sort((a, b) => {
@@ -143,7 +117,6 @@ export async function generateOutput() {
         eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
     }
     
-    // Build listing text
     const listingTop = `**Start Time:** ${timeString}
 **Name:** ${gameName}
 ${eventsString}
@@ -180,7 +153,6 @@ ${state.header.warnings || 'N/A'}
 **How to Apply:**
 ${state.header.how_to_apply || 'Post your application below.'}`;
 
-    // Handle 999 character split
     const fullListingText = listingTop + listingSummary + listingBottom;
     
     if (stateManager.dom.outListing) {
@@ -205,7 +177,6 @@ ${state.header.how_to_apply || 'Post your application below.'}`;
         }
     }
     
-    // Generate Ad Text
     const rules = await fetchGameRules();
     let pingString = "";
     
@@ -262,7 +233,8 @@ export function prepareTemplateData(originalData) {
     return data;
 }
 
-export async function generateSessionLogOutput(dmDiscordId) {
+// FIX: Added dmDiscordId and dmDisplayName parameters
+export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const state = stateManager.getFullState();
     const stats = stateManager.getStats();
     
@@ -278,14 +250,14 @@ export async function generateSessionLogOutput(dmDiscordId) {
     const sessionSummary = state.session_log.summary || "";
     const dmCollaborators = state.session_log.dm_collaborators || "";
 
+    // FIX: Build events string
     let eventsString = '';
     if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
         eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
     }
     
-    // Build player lines
     let playerLines = [];
-    const players = Rows.getSessionRosterData(); // Still from Rows module
+    const players = Rows.getSessionRosterData();
     
     players.forEach(player => {
         let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${player.level || "1"}) gains ${player.xp || "0"} XP, ${player.dtp || "0"} DTP`;
@@ -308,12 +280,14 @@ export async function generateSessionLogOutput(dmDiscordId) {
         playerLines.push(line);
     });
     
-    // DM Rewards
     const dmCharName = state.dm.character_name || "DM Character";
     const dmLevel = state.session_log.dm_rewards.level || state.dm.level || "1";
-    const dmXP = stateManager.dom.outDmLevel?.closest('.player-card-body')?.querySelector('.dm-res-xp')?.value || "0";
-    const dmDTP = stateManager.dom.outDmLevel?.closest('.player-card-body')?.querySelector('.dm-res-dtp')?.value || "0";
-    const dmGP = stateManager.dom.outDmLevel?.closest('.player-card-body')?.querySelector('.dm-res-gp')?.value || "0";
+    const dmXPOutput = document.querySelector('.dm-res-xp');
+    const dmDTPOutput = document.querySelector('.dm-res-dtp');
+    const dmGPOutput = document.querySelector('.dm-res-gp');
+    const dmXP = dmXPOutput?.value || "0";
+    const dmDTP = dmDTPOutput?.value || "0";
+    const dmGP = dmGPOutput?.value || "0";
     const dmLoot = state.session_log.dm_rewards.loot_selected || "";
     const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${state.dm.character_name || "DM"}`;
 
@@ -321,8 +295,9 @@ export async function generateSessionLogOutput(dmDiscordId) {
     if (dmLoot) dmRewardsLine += `, and ${dmLoot}`;
     dmRewardsLine += ".";
 
-    // Build output
+    // FIX: Build output with Events after Game Name
     let output = `**Session Name:** ${gameName}\n`;
+    output += eventsString; // Events follow the session name
     output += `**Game Version:** ${gameVersion}\n`;
     output += `**Game Format:** ${gameFormat}\n`;
     output += `**Application Format:** ${appsType}\n`;
@@ -331,7 +306,6 @@ export async function generateSessionLogOutput(dmDiscordId) {
     output += `**EXP, DTP, GP, Loot, and Resources Used:**\n`;
     output += playerLines.join('\n') + '\n\n';
     
-    // DM Incentives
     const playerStats = stateManager.getPlayerStats();
     let dmIncentivesList = [];
     if (state.dm.games_count !== "10+" && parseInt(state.dm.games_count) <= 10) {
@@ -344,10 +318,16 @@ export async function generateSessionLogOutput(dmDiscordId) {
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
     output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
     
-    if (dmCollaborators) output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
-    if (sessionNotes) output += `**Notes:**\n${sessionNotes}\n\n`;
+    // FIX: Add DM Collaboration after DM Rewards
+    if (dmCollaborators) {
+        output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
+    }
+    
+    // FIX: Add Session Notes after DM Collaboration
+    if (sessionNotes) {
+        output += `**Notes:**\n${sessionNotes}\n\n`;
+    }
 
-    // Handle split
     const summaryHeader = `**Session Summary:**\n`;
     const summaryContent = sessionSummary || 'N/A';
     const fullTextTotal = output + summaryHeader + summaryContent;
@@ -375,7 +355,8 @@ export async function generateSessionLogOutput(dmDiscordId) {
     }
 }
 
-export function generateMALUpdate() {
+// FIX: Added dmDisplayName parameter for MAL output
+export function generateMALUpdate(dmDisplayName) {
     const state = stateManager.getFullState();
     const stats = stateManager.getStats();
     
@@ -383,7 +364,8 @@ export function generateMALUpdate() {
     const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
     
     const gameName = state.header.title || 'Untitled';
-    const dmName = state.dm.character_name || 'DM';
+    // FIX: Use dmDisplayName instead of character_name
+    const dmName = dmDisplayName || state.dm.character_name || 'DM';
     const dmXP = document.querySelector('.dm-res-xp')?.value || '0';
     const dmGP = document.querySelector('.dm-res-gp')?.value || '0';
     const dmDTP = document.querySelector('.dm-res-dtp')?.value || '0';

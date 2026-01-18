@@ -1,9 +1,7 @@
 // assets/js/dm-tool/session-rows.js
+// FIX: Player card sync on initial load and proper forfeit XP handling
 import { fetchMemberMap } from './data-manager.js';
 
-/* ===========================
-   1. MASTER ROSTER (View 4)
-   =========================== */
 export function updateMasterRosterStats() {
     const rows = document.querySelectorAll('#roster-body .player-row');
     let totalLevel = 0;
@@ -27,8 +25,6 @@ export function updateMasterRosterStats() {
     });
 
     const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
-
-
     
     let tier = 1;
     if (apl >= 17) tier = 4;
@@ -38,7 +34,6 @@ export function updateMasterRosterStats() {
     const elSize = document.getElementById('setup-val-party-size');
     const elApl = document.getElementById('setup-val-apl');
     const elTier = document.getElementById('setup-val-tier');
-
 
     if(elSize) elSize.textContent = rows.length; 
     if(elApl) elApl.textContent = apl;
@@ -52,7 +47,6 @@ export function addPlayerRowToMaster(data = {}) {
     const tr = document.createElement('tr');
     tr.className = 'player-row';
     
-    // FIX: Games options now start at 1 instead of 0
     let gamesOptions = '';
     for(let i=1; i<=10; i++) {
         const val = i.toString();
@@ -61,8 +55,6 @@ export function addPlayerRowToMaster(data = {}) {
     }
     gamesOptions += `<option value="10+" ${data.games_count === '10+' ? 'selected' : ''}>10+</option>`;
     
-    // FIX: Properly handle display_name vs discord_id
-    // If we have display_name, show that. Otherwise show discord_id
     const displayValue = data.display_name || data.discord_id || '';
     const idValue = data.discord_id || '';
     
@@ -81,10 +73,7 @@ export function addPlayerRowToMaster(data = {}) {
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');
     
-    // FIX: When user types a name manually, store it as discord_id initially
-    // The sync process will replace it with actual snowflake IDs
     nameInput.addEventListener('change', () => {
-        // Only update discord_id if it's empty
         if(!idInput.value || idInput.value === nameInput.value) {
             idInput.value = nameInput.value;
         }
@@ -116,9 +105,8 @@ export function getMasterRosterData() {
         const discordId = row.querySelector('.inp-discord-id').value;
         
         players.push({
-            // FIX: Store both discord_id and display_name
-            discord_id: discordId || displayName, // If no ID, use display name
-            display_name: displayName, // Always save what user entered
+            discord_id: discordId || displayName,
+            display_name: displayName,
             character_name: row.querySelector('.inp-char-name').value,
             level: row.querySelector('.inp-level').value,
             level_playing_as: row.querySelector('.inp-level-play-as').value, 
@@ -134,7 +122,6 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 
     if (!submissions || submissions.length === 0) return;
 
-    // FIX: Fetch member directory mapping
     const discordIds = submissions.map(s => s.discord_id).filter(Boolean);
     const displayMap = await fetchMemberMap(discordIds);
 
@@ -143,7 +130,6 @@ export async function syncMasterRosterFromSubmissions(submissions) {
         const pid = sub.discord_id;
         if(!pid) return;
 
-        // FIX: Use mapped display name from member_directory
         const displayName = displayMap[pid] || pid;
 
         let foundRow = null;
@@ -154,9 +140,8 @@ export async function syncMasterRosterFromSubmissions(submissions) {
         });
 
         if (foundRow) {
-            // FIX: Update display name from member directory
             foundRow.querySelector('.inp-player-display').value = displayName;
-            foundRow.querySelector('.inp-discord-id').value = pid; // Ensure ID is set
+            foundRow.querySelector('.inp-discord-id').value = pid;
             
             if (p.char_name) foundRow.querySelector('.inp-char-name').value = p.char_name;
             if (p.level) foundRow.querySelector('.inp-level').value = p.level;
@@ -178,10 +163,6 @@ export async function syncMasterRosterFromSubmissions(submissions) {
     setTimeout(() => updateMasterRosterStats(), 100);
 }
 
-/* ===========================
-   2. SESSION PLAYER CARDS (View 6)
-   =========================== */
-
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, suppressUpdate = false) {
     if (!listContainer) return;
 
@@ -199,7 +180,8 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `+` : '+';
     
-    const isForfeit = !!data.forfeit_xp;
+    // FIX: Properly read forfeit_xp from data
+    const isForfeit = data.forfeit_xp === true || data.forfeit_xp === "true";
 
     const card = document.createElement('div');
     card.className = 'player-card';
@@ -207,7 +189,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
-                <span class="step-icon" style="transform:rotate(-90deg); transition:transform 0.2s;"></span>
+                <span class="step-icon" style="transform:rotate(-90deg); transition:transform 0.2s;">▼</span>
                 <span class="player-card-title">${data.display_name || 'Player'}</span>
                 <span class="player-summary-text" style="font-size:0.8em; color:rgba(255,255,255,0.8); font-weight:normal; margin-left:1rem;">
                     ${data.character_name ? `(${data.character_name})` : ''}
@@ -222,6 +204,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
                 <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
                 <input type="hidden" class="s-level" value="${data.level || '0'}">
                 <input type="hidden" class="s-games" value="${data.games_count || '1'}">
+                <input type="hidden" class="s-display-name" value="${data.display_name || ''}">
 
                 <div class="card-field w-20">
                     <label class="field-label">Hours</label>
@@ -230,7 +213,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
 
                 <div class="card-field w-25">
                     <label class="field-label">XP Earned</label>
-                    <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto">
+                    <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto" value="${data.xp || ''}">
                 </div>
 
                 <div class="card-field w-15" style="text-align:center;">
@@ -243,7 +226,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
                 <div class="card-field w-40">
                     <label class="field-label">DTP / Incentives</label>
                     <div class="dtp-wrapper">
-                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);">
+                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);" value="${data.dtp || ''}">
                         <button class="button button-secondary s-incentives-btn" data-incentives='${incentivesJson}' title="Select Player Incentives">${btnText}</button>
                     </div>
                 </div>
@@ -283,7 +266,6 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         </div>
     `;
 
-    // Collapsible Logic
     const header = card.querySelector('.player-card-header');
     const body = card.querySelector('.player-card-body');
     const icon = card.querySelector('.step-icon');
@@ -332,7 +314,9 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    card.querySelector('.s-forfeit-xp').addEventListener('change', () => {
+    // FIX: Ensure forfeit XP checkbox triggers update
+    const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
+    forfeitCheckbox.addEventListener('change', () => {
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
     
@@ -351,18 +335,20 @@ export function getSessionRosterData() {
     cards.forEach(card => {
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
-        const forfeitXp = card.querySelector('.s-forfeit-xp').checked;
+        // FIX: Properly read forfeit_xp checkbox state
+        const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
+        const forfeitXp = forfeitCheckbox ? forfeitCheckbox.checked : false;
 
         players.push({
             discord_id: card.querySelector('.s-discord-id').value,
             character_name: card.querySelector('.s-char-name').value, 
-            display_name: card.querySelector('.player-card-title').textContent,
+            display_name: card.querySelector('.s-display-name')?.value || card.querySelector('.player-card-title').textContent,
             level: card.querySelector('.s-level').value,
             games_count: card.querySelector('.s-games').value,
             
             hours: card.querySelector('.s-hours').value,
             xp: card.querySelector('.s-xp').value,
-            forfeit_xp: forfeitXp, 
+            forfeit_xp: forfeitXp,
             
             gold: card.querySelector('.s-gold').value,
             gold_used: card.querySelector('.s-gold-used').value,
@@ -376,6 +362,7 @@ export function getSessionRosterData() {
     return players;
 }
 
+// FIX: Improved sync logic to properly handle all cases
 export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) {
     const listContainer = document.getElementById('session-roster-list');
     const masterData = getMasterRosterData(); 
@@ -390,23 +377,36 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
         const existingCard = sessionCards.find(c => c.querySelector('.s-discord-id').value === pid);
 
         if (existingCard) {
+            // Update existing card
             existingCard.querySelector('.player-card-title').textContent = masterPlayer.display_name;
             existingCard.querySelector('.s-char-name').value = masterPlayer.character_name;
             existingCard.querySelector('.s-level').value = masterPlayer.level_playing_as || masterPlayer.level;
             existingCard.querySelector('.s-games').value = masterPlayer.games_count;
             
-            // FIX 1: Update the visual text in the header
+            // FIX: Update display_name hidden field
+            const displayNameField = existingCard.querySelector('.s-display-name');
+            if (displayNameField) {
+                displayNameField.value = masterPlayer.display_name;
+            }
+            
+            // Update the visual text in the header
             const summaryText = masterPlayer.character_name ? `(${masterPlayer.character_name})` : '';
             existingCard.querySelector('.player-summary-text').textContent = summaryText;
         } else {
+            // Add new card
             const newData = {
-                ...masterPlayer,
-                level: masterPlayer.level_playing_as || masterPlayer.level
+                discord_id: masterPlayer.discord_id,
+                display_name: masterPlayer.display_name,
+                character_name: masterPlayer.character_name,
+                level: masterPlayer.level_playing_as || masterPlayer.level,
+                games_count: masterPlayer.games_count,
+                forfeit_xp: false // Default to false for new players
             };
             addSessionPlayerRow(listContainer, newData, callbacks, suppressUpdate);
         }
     });
 
+    // Remove cards for players no longer in master
     sessionCards.forEach(card => {
         const cid = card.querySelector('.s-discord-id').value;
         if (!processedIds.has(cid)) {
