@@ -1,7 +1,29 @@
 // assets/js/dm-tool/session-rows.js
+
+/**
+ * @file session-rows.js
+ * @description Manages the creation, synchronization, and data scraping of Player Rows.
+ * This module handles two distinct types of rows:
+ * 1. Master Roster Rows (Table rows used in the planning phase).
+ * 2. Session Player Cards (Detailed cards used in the log/results phase).
+ * It also handles the calculation of Party Stats (APL, Tier) based on these rows.
+ * @module SessionRows
+ */
+
 // FIX: Player card sync on initial load and proper forfeit XP handling
 import { fetchMemberMap } from './data-manager.js';
 
+/**
+ * Recalculates Party Size, APL (Average Party Level), and Tier based on the Master Roster.
+ * Updates the corresponding DOM elements in the Setup/Header section.
+ * * Logic:
+ * - Uses "Level Playing As" if set; otherwise uses "Character Level".
+ * - Tier thresholds: 
+ * - Tier 1: APL < 5
+ * - Tier 2: 5 <= APL < 11
+ * - Tier 3: 11 <= APL < 17
+ * - Tier 4: APL >= 17
+ */
 export function updateMasterRosterStats() {
     const rows = document.querySelectorAll('#roster-body .player-row');
     let totalLevel = 0;
@@ -16,6 +38,7 @@ export function updateMasterRosterStats() {
         const lvlRaw = parseFloat(elLvl.value) || 0;
         const lvlPlayAsRaw = parseFloat(elPlayAs.value) || 0;
         
+        // Use "Play As" level override if present, otherwise use actual level
         const effectiveLevel = lvlPlayAsRaw > 0 ? lvlPlayAsRaw : lvlRaw;
 
         if (effectiveLevel > 0) {
@@ -24,8 +47,10 @@ export function updateMasterRosterStats() {
         }
     });
 
+    // standard rounding for APL
     const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
     
+    // Determine Tier based on APL
     let tier = 1;
     if (apl >= 17) tier = 4;
     else if (apl >= 11) tier = 3;
@@ -40,6 +65,18 @@ export function updateMasterRosterStats() {
     if(elTier) elTier.textContent = tier;
 }
 
+/**
+ * Adds a new player row to the Master Roster table (Planning Tab).
+ * Creates input fields for Discord Name, Character Name, Level, Play As, and Games Count.
+ * Attaches event listeners for live updates of stats.
+ * * @param {Object} data - Initial data to populate the row.
+ * @param {string} [data.discord_id] - Discord ID.
+ * @param {string} [data.display_name] - Discord Display Name.
+ * @param {string} [data.character_name] - Character Name.
+ * @param {string|number} [data.level] - Character Level.
+ * @param {string|number} [data.level_playing_as] - Level override.
+ * @param {string} [data.games_count] - Number of games played (1-10 or 10+).
+ */
 export function addPlayerRowToMaster(data = {}) {
     const tbody = document.getElementById('roster-body');
     if(!tbody) return;
@@ -47,6 +84,7 @@ export function addPlayerRowToMaster(data = {}) {
     const tr = document.createElement('tr');
     tr.className = 'player-row';
     
+    // Build options for Games Count dropdown
     let gamesOptions = '';
     for(let i=1; i<=10; i++) {
         const val = i.toString();
@@ -70,6 +108,7 @@ export function addPlayerRowToMaster(data = {}) {
         <td style="text-align:center;"><button class="button button-danger btn-sm btn-delete-row">&times;</button></td>
     `;
 
+    // Trigger global update callback on games count change (affects incentives)
     const gamesSelect = tr.querySelector('.inp-games-count');
     if (gamesSelect) {
         gamesSelect.addEventListener('change', () => {
@@ -82,6 +121,7 @@ export function addPlayerRowToMaster(data = {}) {
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');
     
+    // Sync ID with Name if ID is missing (fallback)
     nameInput.addEventListener('change', () => {
         if(!idInput.value || idInput.value === nameInput.value) {
             idInput.value = nameInput.value;
@@ -96,6 +136,7 @@ export function addPlayerRowToMaster(data = {}) {
     const lvlInput = tr.querySelector('.inp-level');
     const playAsInput = tr.querySelector('.inp-level-play-as');
     
+    // Recalculate APL/Tier whenever levels change
     [lvlInput, playAsInput].forEach(inp => {
         inp.addEventListener('input', updateMasterRosterStats);
         inp.addEventListener('change', updateMasterRosterStats);
@@ -103,9 +144,15 @@ export function addPlayerRowToMaster(data = {}) {
     });
 
     tbody.appendChild(tr);
+    // Brief delay to ensure DOM insertion before calculation
     setTimeout(() => updateMasterRosterStats(), 50);
 }
 
+/**
+ * Scrapes the Master Roster table to retrieve current player data.
+ * Used to save state or sync to the session log.
+ * * @returns {Array<Object>} Array of player objects (Planning phase data).
+ */
 export function getMasterRosterData() {
     const rows = document.querySelectorAll('#roster-body .player-row');
     const players = [];
@@ -125,12 +172,19 @@ export function getMasterRosterData() {
     return players;
 }
 
+/**
+ * Updates the Master Roster based on external submissions (e.g., from Sign-up bot).
+ * - Matches existing players by Discord ID to update their data.
+ * - Creates new rows for players not yet in the roster.
+ * * @param {Array<Object>} submissions - Array of submission objects.
+ */
 export async function syncMasterRosterFromSubmissions(submissions) {
     const tbody = document.getElementById('roster-body');
     if (!tbody) return;
 
     if (!submissions || submissions.length === 0) return;
 
+    // Fetch nicknames for IDs
     const discordIds = submissions.map(s => s.discord_id).filter(Boolean);
     const displayMap = await fetchMemberMap(discordIds);
 
@@ -149,6 +203,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
         });
 
         if (foundRow) {
+            // Update existing row
             foundRow.querySelector('.inp-player-display').value = displayName;
             foundRow.querySelector('.inp-discord-id').value = pid;
             
@@ -157,6 +212,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
             if (p.level_as) foundRow.querySelector('.inp-level-play-as').value = p.level_as;
             if (p.games) foundRow.querySelector('.inp-games-count').value = p.games;
         } else {
+            // Add new row
             const newData = {
                 discord_id: pid,
                 display_name: displayName,
@@ -172,9 +228,18 @@ export async function syncMasterRosterFromSubmissions(submissions) {
     setTimeout(() => updateMasterRosterStats(), 100);
 }
 
+/**
+ * Adds a detailed Player Card to the Session Log/Results list.
+ * This card includes fields for Hours, XP, Gold, DTP, Loot, and Logs.
+ * * @param {HTMLElement} listContainer - The DOM container for the cards.
+ * @param {Object} data - Player data to populate.
+ * @param {Object} callbacks - Callback functions (e.g., onUpdate, onOpenModal).
+ * @param {boolean} [suppressUpdate=false] - If true, skips the immediate `onUpdate` trigger.
+ */
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, suppressUpdate = false) {
     if (!listContainer) return;
 
+    // Default to session total hours if player hours are undefined
     const sessionTotalEl = document.getElementById('inp-session-total-hours');
     const sessionTotal = parseFloat(sessionTotalEl?.value) || 3;
 
@@ -189,12 +254,13 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `+` : '+';
     
-    // FIX: Properly read forfeit_xp from data
+    // FIX: Properly read forfeit_xp from data (string or boolean)
     const isForfeit = data.forfeit_xp === true || data.forfeit_xp === "true";
 
     const card = document.createElement('div');
     card.className = 'player-card';
 
+    // Construct Player Card HTML
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -279,6 +345,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const body = card.querySelector('.player-card-body');
     const icon = card.querySelector('.step-icon');
 
+    // Accordion toggle logic
     header.addEventListener('click', (e) => {
         if(e.target.closest('.btn-delete-card')) return;
         
@@ -299,6 +366,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
 
     const hInput = card.querySelector('.s-hours');
     
+    // Validate Hours input
     hInput.addEventListener('input', () => {
         const sessionMax = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
         let val = parseFloat(hInput.value);
@@ -312,6 +380,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
     
+    // Reset empty hours to Default
     hInput.addEventListener('blur', () => {
         if (!hInput.value || hInput.value.trim() === "") {
             hInput.value = document.getElementById('inp-session-total-hours')?.value || 3;
@@ -338,6 +407,11 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     if(callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
 }
 
+/**
+ * Scrapes all Session Player Cards to retrieve the final result data.
+ * Used for generating the text log and updating the DB.
+ * * @returns {Array<Object>} Array of result objects (Hours, XP, Gold, Loot, etc).
+ */
 export function getSessionRosterData() {
     const cards = document.querySelectorAll('#session-roster-list .player-card');
     const players = [];
@@ -371,6 +445,14 @@ export function getSessionRosterData() {
     return players;
 }
 
+/**
+ * Synchronizes the Session Roster (Results) with the Master Roster (Planning).
+ * - Updates existing cards if player details (Name, Level) changed.
+ * - Adds new cards for players added to the Master Roster.
+ * - Removes cards for players removed from the Master Roster.
+ * * @param {Object} callbacks - Callbacks for updates.
+ * @param {boolean} [suppressUpdate=false] - Whether to suppress the update trigger.
+ */
 // FIX: Improved sync logic to properly handle all cases
 export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) {
     const listContainer = document.getElementById('session-roster-list');
@@ -426,6 +508,12 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
     if(callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
 }
 
+/**
+ * Applies submitted data (from a session report submission) to existing Session Cards.
+ * Updates fields like Loot, Items Used, Gold Used, and Notes.
+ * * @param {Array<Object>} submissions - Array of submission objects.
+ * @param {Object} callbacks - Callbacks for updates.
+ */
 export function applyPlayerSubmissions(submissions, callbacks) {
     const listContainer = document.getElementById('session-roster-list');
     if (!listContainer) return;
@@ -438,6 +526,7 @@ export function applyPlayerSubmissions(submissions, callbacks) {
         
         if (!discordId) return;
 
+        // Match submission to card by Discord ID
         const card = existingCards.find(c => {
             const val = c.querySelector('.s-discord-id').value.trim().toLowerCase();
             return val === discordId.trim().toLowerCase();

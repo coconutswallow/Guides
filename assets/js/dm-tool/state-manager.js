@@ -1,9 +1,26 @@
 // assets/js/dm-tool/state-manager.js
 
+/**
+ * @file state-manager.js
+ * @description Centralized State Management for the DM Tool.
+ * This class acts as the "Single Source of Truth" for the application. It manages:
+ * 1. The internal data model (State).
+ * 2. Caching of DOM elements for performance.
+ * 3. Event listeners that bind DOM inputs to State updates.
+ * 4. A Pub/Sub (Observer) system to trigger UI updates when state changes.
+ * @module StateManager
+ */
+
 class StateManager {
+    /**
+     * Initializes the State Manager.
+     * Sets up the default empty state structure matching the form requirements.
+     */
     constructor() {
         // Internal state storage
+        // This structure mirrors the database schema and form requirements.
         this.state = {
+            // 1. Game Metadata (Planning Phase)
             header: {
                 title: '',
                 game_datetime: null,
@@ -33,12 +50,15 @@ class StateManager {
                 predet_perms: 0,
                 predet_cons: 0
             },
+            // 2. Roster Data
             players: [],
+            // 3. DM Details
             dm: {
                 character_name: '',
                 level: 0,
                 games_count: '1'
             },
+            // 4. Session Logs (Post-Game Phase)
             session_log: {
                 title: '',
                 date_time: null,
@@ -57,12 +77,17 @@ class StateManager {
             }
         };
 
-        this.dom = {};
-        this.debounceTimers = {};
+        this.dom = {}; // Cache for DOM elements
+        this.debounceTimers = {}; // Timers for debouncing updates
+        // Subscription channels for different types of updates
         this.updateCallbacks = { calculations: [], lootDeclaration: [], outputs: [], dmLoot: [], all: [] };
         this.initialized = false;
     }
 
+    /**
+     * Entry point for the State Manager.
+     * Ensures initialization happens only once.
+     */
     init() {
         if (this.initialized) return;
         this.cacheDOMElements();
@@ -71,6 +96,10 @@ class StateManager {
         console.log('✓ State Manager Initialized');
     }
 
+    /**
+     * Caches references to DOM elements to avoid repeated `document.getElementById` calls.
+     * Stores references in `this.dom`.
+     */
     cacheDOMElements() {
         // Header
         this.dom.gameName = document.getElementById('header-game-name');
@@ -142,6 +171,11 @@ class StateManager {
         this.dom.outMAL = document.getElementById('out-mal-update');
     }
 
+    /**
+     * Attaches event listeners to cached DOM elements.
+     * When inputs change, it updates the State and triggers relevant callbacks.
+     * Uses a mapping array to handle repetitive text input logic cleanly.
+     */
     attachDOMListeners() {
         const textInputs = [
             { el: this.dom.gameName, sect: 'header', field: 'title', update: ['outputs', 'lootDeclaration'] },
@@ -170,7 +204,7 @@ class StateManager {
             }
         });
 
-        // Other listeners
+        // Other listeners (Selects / Multi-Selects)
         if (this.dom.tierSelect) {
             this.dom.tierSelect.addEventListener('change', () => {
                 const selected = Array.from(this.dom.tierSelect.selectedOptions).map(opt => opt.value);
@@ -221,10 +255,17 @@ class StateManager {
         }
     }
 
-    // Get current full state
+    /**
+     * Returns a deep copy of the current state.
+     * Prevents accidental direct mutation of the state object by consumers.
+     * @returns {Object} Complete state object.
+     */
     getFullState() { return JSON.parse(JSON.stringify(this.state)); }
     
-    // Stats Helper
+    /**
+     * Calculates derived statistics based on the current player roster.
+     * @returns {Object} { partySize, apl, tier, playerCount }
+     */
     getStats() {
         let totalLevel = 0;
         let playerCount = 0;
@@ -239,6 +280,7 @@ class StateManager {
 
         const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
         
+        // Calculate Tier based on APL thresholds
         let tier = 1;
         if (apl >= 17) tier = 4;
         else if (apl >= 11) tier = 3;
@@ -247,7 +289,10 @@ class StateManager {
         return { partySize: this.state.players.length, apl, tier, playerCount };
     }
     
-    // Player Stats Helper (New Hires/Welcome)
+    /**
+     * Calculates roster statistics specifically for DM Incentives (New Hires/Welcome Wagon).
+     * @returns {Object} { newHires, welcomeWagon } counts.
+     */
     getPlayerStats() {
         let newHires = 0;
         let welcomeWagon = 0;
@@ -264,8 +309,16 @@ class StateManager {
         return { newHires, welcomeWagon };
     }
 
+    /**
+     * Updates a specific field in the state and syncs the DOM if necessary.
+     * Supports dot notation for nested fields (e.g. 'session_log.dm_rewards').
+     * @param {string} section - State section key or dot path.
+     * @param {string} field - Field key.
+     * @param {*} value - New value.
+     */
     updateField(section, field, value) {
         if (section.includes('.')) {
+            // Handle nested paths
             const parts = section.split('.');
             let target = this.state;
             for (let i = 0; i < parts.length - 1; i++) target = target[parts[i]];
@@ -274,7 +327,7 @@ class StateManager {
             this.state[section][field] = value;
         }
         
-        // Sync to DOM if different
+        // Sync to DOM if the update didn't originate from the DOM
         const domKey = this.getDOMKeyForField(section, field);
         if (domKey && this.dom[domKey]) {
             if (this.dom[domKey].value !== value) {
@@ -283,6 +336,10 @@ class StateManager {
         }
     }
     
+    /**
+     * Hydrates the state from a database object (e.g. loading a saved session).
+     * @param {Object} sessionData - Data retrieved from DB.
+     */
     loadFromDB(sessionData) {
         if (!sessionData.form_data) return;
         if (sessionData.form_data.header) Object.assign(this.state.header, sessionData.form_data.header);
@@ -292,11 +349,20 @@ class StateManager {
         this.syncAllToDOM();
     }
     
+    /**
+     * Triggers a visual sync of state to DOM elements.
+     * (Note: Detailed form population is handled by session-io.js/populateForm).
+     */
     syncAllToDOM() {
         // Sync Logic handled in session-io populateForm usually, 
         // but can be reinforced here if needed.
     }
 
+    /**
+     * Schedules a debounced update for a specific channel.
+     * Prevents expensive operations (text generation) from running on every keystroke.
+     * @param {string} updateType - The channel name (e.g., 'outputs', 'calculations').
+     */
     scheduleUpdate(updateType) {
         if (this.debounceTimers[updateType]) clearTimeout(this.debounceTimers[updateType]);
         this.debounceTimers[updateType] = setTimeout(() => {
@@ -305,15 +371,31 @@ class StateManager {
         }, 100);
     }
     
+    /**
+     * Executes all registered callbacks for a specific update channel.
+     * @param {string} updateType - The channel name.
+     */
     executeUpdate(updateType) {
         (this.updateCallbacks[updateType] || []).forEach(cb => { try { cb(this); } catch (e) { console.error(e); } });
         (this.updateCallbacks.all || []).forEach(cb => { try { cb(this, updateType); } catch (e) { console.error(e); } });
     }
     
+    /**
+     * Subscribes a callback function to a specific update channel.
+     * @param {string} updateType - The channel to listen to.
+     * @param {Function} callback - The function to run when the channel updates.
+     */
     onUpdate(updateType, callback) {
         if (this.updateCallbacks[updateType]) this.updateCallbacks[updateType].push(callback);
     }
     
+    /**
+     * Helper to map state keys to cached DOM element keys.
+     * Enables automatic two-way binding.
+     * @param {string} section - State section.
+     * @param {string} field - State field.
+     * @returns {string|undefined} The key in `this.dom` or undefined.
+     */
     getDOMKeyForField(section, field) {
         const mapping = {
             'header.title': 'gameName',
@@ -340,4 +422,5 @@ class StateManager {
     }
 }
 
+// Export a singleton instance
 export const stateManager = new StateManager();

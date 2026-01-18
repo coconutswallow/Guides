@@ -1,18 +1,45 @@
 // assets/js/dm-tool/session-ui.js
 
+/**
+ * @file session-ui.js
+ * @description Manages User Interface interactions for the Session Editor.
+ * This module handles:
+ * 1. Date and Time conversions (ISO strings <-> Unix Timestamps).
+ * 2. Accordion expansion and field validation.
+ * 3. Tab navigation and view switching.
+ * 4. Dynamic dropdown population (Timezones).
+ * 5. Modal management for selecting game incentives.
+ * @module SessionUI
+ */
+
+/** * Temporary state storage for the currently open Incentives Modal.
+ * Stores references to the triggering button and context (DM vs Player)
+ * so the save handler knows where to write the data back.
+ * @type {Object|null}
+ */
 let activeIncentiveRowData = null;
 
 /* ===========================
    1. UTILITIES
    =========================== */
 
+/**
+ * Converts a date string and timezone into a Unix Timestamp (seconds).
+ * Handles timezone offsets manually via Intl.DateTimeFormat to ensure accuracy across browsers.
+ * * @param {string} dateStr - The ISO date string (e.g., "2024-01-01T12:00").
+ * @param {string} timeZone - The IANA timezone identifier (e.g., "America/New_York").
+ * @returns {number} Unix timestamp in seconds.
+ */
 export function toUnixTimestamp(dateStr, timeZone) {
     if (!dateStr) return 0;
+    // If no timezone is provided, assume local browser time
     if (!timeZone) return Math.floor(new Date(dateStr).getTime() / 1000);
 
+    // Append 'Z' to treat input as UTC base for calculation, then adjust offset
     const utcDate = new Date(dateStr + 'Z');
     
     try {
+        // Extract the specific offset for the given timezone and date
         const fmt = new Intl.DateTimeFormat('en-US', {
             timeZone: timeZone,
             timeZoneName: 'longOffset'
@@ -21,8 +48,10 @@ export function toUnixTimestamp(dateStr, timeZone) {
         const parts = fmt.formatToParts(utcDate);
         const offsetStr = parts.find(p => p.type === 'timeZoneName').value; 
 
+        // Handle GMT case (no offset)
         if (offsetStr === 'GMT') return Math.floor(utcDate.getTime() / 1000);
 
+        // Parse offset string (e.g., "GMT-05:00" or "GMT+1")
         const match = offsetStr.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
         if (!match) return Math.floor(utcDate.getTime() / 1000); 
 
@@ -31,6 +60,7 @@ export function toUnixTimestamp(dateStr, timeZone) {
         const minutes = parseInt(match[3] || '0', 10);
         const offsetMs = (hours * 60 + minutes) * 60 * 1000 * sign;
 
+        // Apply inverse offset to get the correct timestamp
         return Math.floor((utcDate.getTime() - offsetMs) / 1000);
     } catch (e) {
         console.warn("Date conversion fallback", e);
@@ -38,9 +68,16 @@ export function toUnixTimestamp(dateStr, timeZone) {
     }
 }
 
+/**
+ * Converts a Unix Timestamp to a local ISO string formatted for `datetime-local` inputs.
+ * * @param {number} unixSeconds - Unix timestamp in seconds.
+ * @param {string} timeZone - The IANA timezone identifier.
+ * @returns {string} Formatted string "YYYY-MM-DDTHH:mm".
+ */
 export function unixToLocalIso(unixSeconds, timeZone) {
     try {
         const date = new Date(unixSeconds * 1000);
+        // Use Canadian English locale for consistent YYYY-MM-DD format
         const fmt = new Intl.DateTimeFormat('en-CA', {
             timeZone: timeZone,
             year: 'numeric', month: '2-digit', day: '2-digit',
@@ -58,6 +95,13 @@ export function unixToLocalIso(unixSeconds, timeZone) {
 /* ===========================
    2. ACCORDION & VALIDATION
    =========================== */
+
+/**
+ * Initializes UI Accordions.
+ * - Adds click listeners to toggle open/closed states.
+ * - Attaches validation listeners to required fields within accordions.
+ * - Sets up a poller to validate fields updated programmatically (e.g., date pickers).
+ */
 export function initAccordions() {
     const headers = document.querySelectorAll('.accordion-header');
     headers.forEach(header => {
@@ -69,6 +113,7 @@ export function initAccordions() {
         });
     });
 
+    // Real-time validation for required inputs
     const inputs = document.querySelectorAll('[data-required="true"]');
     inputs.forEach(input => {
         const handler = () => validateCard(input.closest('.accordion-card'));
@@ -77,8 +122,10 @@ export function initAccordions() {
         input.addEventListener('blur', handler);
     });
     
+    // Initial validation pass
     document.querySelectorAll('.accordion-card').forEach(validateCard);
 
+    // Polling mechanism for inputs that are modified by external JS (e.g., md-trigger)
     setInterval(() => {
         const mdInputs = document.querySelectorAll('.md-trigger');
         mdInputs.forEach(input => {
@@ -92,6 +139,12 @@ export function initAccordions() {
     }, 1000); 
 }
 
+/**
+ * Validates a specific accordion card.
+ * Checks all child inputs with `data-required="true"`.
+ * Adds/removes the 'completed' CSS class based on validation status.
+ * * @param {HTMLElement} card - The accordion card element.
+ */
 function validateCard(card) {
     if(!card) return;
     const reqFields = card.querySelectorAll('[data-required="true"]');
@@ -106,6 +159,12 @@ function validateCard(card) {
 /* ===========================
    3. TABS & VISIBILITY
    =========================== */
+
+/**
+ * Initializes Sidebar Navigation Tabs.
+ * Handles view switching between Setup, Rosters, Logs, and Output.
+ * * @param {Function} [outputCallback] - Optional callback to run when switching to an Output tab (triggers text generation).
+ */
 export function initTabs(outputCallback) {
     const sidebarNav = document.getElementById('sidebar-nav');
     if (sidebarNav) {
@@ -113,15 +172,19 @@ export function initTabs(outputCallback) {
             const item = e.target.closest('.nav-item');
             if (!item) return;
 
+            // Update Active State
             document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
             item.classList.add('active');
 
+            // Hide all sections
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
 
+            // Show target section
             const targetId = item.dataset.target;
             const targetEl = document.getElementById(targetId);
             if(targetEl) {
                 targetEl.classList.remove('hidden-section');
+                // Trigger content generation if switching to an Output tab
                 if(targetId === 'view-game-listing' && outputCallback) outputCallback();
                 if(targetId === 'view-game-ad' && outputCallback) outputCallback();
                 if(targetId === 'view-session-output' && outputCallback) outputCallback();
@@ -133,6 +196,11 @@ export function initTabs(outputCallback) {
 /* ===========================
    4. DATE & TIME
    =========================== */
+
+/**
+ * Binds the Date and Timezone inputs to the hidden Unix timestamp field.
+ * Ensures that whenever the visual date or timezone changes, the logic-friendly timestamp is updated.
+ */
 export function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
     const tzSelect = document.getElementById('inp-timezone');
@@ -151,6 +219,11 @@ export function initDateTimeConverter() {
     tzSelect.addEventListener('change', updateUnix);
 }
 
+/**
+ * Populates the Timezone dropdown.
+ * Attempts to detect the user's local timezone for default selection.
+ * Uses `Intl.supportedValuesOf` to get a valid list of IANA timezones.
+ */
 export function initTimezone() {
     const tzSelect = document.getElementById('inp-timezone');
     if(!tzSelect) return;
@@ -158,6 +231,7 @@ export function initTimezone() {
     const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     tzSelect.innerHTML = '';
     
+    // Fallback list if browser doesn't support supportedValuesOf
     let timezones = Intl.supportedValuesOf ? Intl.supportedValuesOf('timeZone') : ["UTC", "America/New_York"];
     if (!timezones.includes(userTz)) timezones.push(userTz);
     
@@ -173,6 +247,12 @@ export function initTimezone() {
 /* ===========================
    5. DROPDOWNS & MODALS
    =========================== */
+
+/**
+ * Helper to populate a simple HTML Select element with an array of string options.
+ * * @param {string} id - The DOM ID of the select element.
+ * @param {Array<string>} options - Array of string values to populate.
+ */
 export function fillDropdown(id, options) {
     const select = document.getElementById(id);
     if (!select) return;
@@ -185,6 +265,10 @@ export function fillDropdown(id, options) {
     });
 }
 
+/**
+ * Initializes the Incentives Modal logic (Cancel/Save buttons).
+ * * @param {Function} saveCallback - Callback to execute after saving (usually to refresh state).
+ */
 export function initIncentivesModal(saveCallback) {
     const modal = document.getElementById('modal-incentives');
     const btnCancel = document.getElementById('btn-cancel-incentives');
@@ -192,6 +276,7 @@ export function initIncentivesModal(saveCallback) {
     
     if(btnCancel) btnCancel.addEventListener('click', () => { activeIncentiveRowData = null; modal.close(); });
     
+    // Clone button to strip existing listeners (prevents multiple bindings if init called twice)
     if(btnSave) {
         const newBtn = btnSave.cloneNode(true);
         btnSave.parentNode.replaceChild(newBtn, btnSave);
@@ -199,6 +284,14 @@ export function initIncentivesModal(saveCallback) {
     }
 }
 
+/**
+ * Opens the Incentives selection modal.
+ * dynamically populates checkboxes based on the Game Rules provided.
+ * * @param {HTMLElement} buttonEl - The button that triggered the modal (used to store result dataset).
+ * @param {number|null} viewContext - Index/ID context for the update (passed to callback).
+ * @param {boolean} isDM - True if opening for DM incentives, False for Player incentives.
+ * @param {Object} gameRules - The rules object containing incentive definitions.
+ */
 export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
     activeIncentiveRowData = { button: buttonEl, viewContext: viewContext, isDM: isDM };
     const modal = document.getElementById('modal-incentives');
@@ -206,10 +299,12 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
     const msgContainer = document.getElementById('incentives-message');
     listContainer.innerHTML = ''; 
 
+    // Retrieve currently selected incentives from button dataset
     const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
     let hasIncentives = false;
     const sourceKey = isDM ? 'DM incentives' : 'player incentives';
 
+    // Build Checkbox List from Rules
     if (gameRules && gameRules[sourceKey]) {
         const entries = Object.entries(gameRules[sourceKey]);
         if (entries.length > 0) {
@@ -225,7 +320,8 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
                 
                 label.appendChild(checkbox);
                 
-                // UPDATED: Handle Object vs Number values
+                // UPDATED: Handle Object vs Number values in Game Rules
+                // Some incentives are simple numbers (DTP), others are objects (DTP + Loot Rolls)
                 let desc = "";
                 if (typeof val === 'number') {
                     desc = ` (+${val} DTP)`;
@@ -248,12 +344,18 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
     modal.showModal();
 }
 
+/**
+ * Internal handler for the Modal's "Save" button.
+ * Collects checked values, updates the source button's dataset/text, and triggers the callback.
+ * * @param {Function} saveCallback - The external callback to update state.
+ */
 function saveIncentivesInternal(saveCallback) {
     if (!activeIncentiveRowData) return;
     const modal = document.getElementById('modal-incentives');
     const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
     const selected = Array.from(checkboxes).map(cb => cb.value);
     
+    // Update the button that opened the modal
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
     
@@ -276,6 +378,7 @@ function saveIncentivesInternal(saveCallback) {
         }
     }
     
+    // Execute state update callback
     if(saveCallback) saveCallback(activeIncentiveRowData.viewContext);
     
     activeIncentiveRowData = null;

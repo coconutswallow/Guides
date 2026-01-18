@@ -1,9 +1,24 @@
 // assets/js/dm-tool/session-state.js
+
+/**
+ * @file session-state.js
+ * @description Centralized State Management for the DM Tool.
+ * This class acts as the "Single Source of Truth" for the session editor.
+ * It manages the internal data representation of the game session, caches DOM references
+ * to improve performance, and implements an Observer pattern to notify the UI when data changes.
+ * @module SessionState
+ */
+
 // Centralized state management - eliminates scattered DOM queries
 
 class SessionState {
+    /**
+     * Initializes the SessionState with default empty values.
+     * The state object mirrors the database schema and form structure.
+     */
     constructor() {
         this.data = {
+            // 1. Header Information (Game Metadata)
             header: {
                 title: '',
                 game_datetime: null,
@@ -33,12 +48,15 @@ class SessionState {
                 predet_perms: 0,
                 predet_cons: 0
             },
+            // 2. Master Roster (Planning Phase)
             players: [],
+            // 3. DM Details
             dm: {
                 character_name: '',
                 level: 0,
                 games_count: '1'
             },
+            // 4. Session Logs (Post-Game Phase)
             session_log: {
                 title: '',
                 date_time: null,
@@ -57,12 +75,15 @@ class SessionState {
             }
         };
         
-        // Cache DOM references once
+        // Cache DOM references once to avoid repeated document.getElementById calls
         this.dom = {};
         this.listeners = [];
     }
 
-    // Initialize DOM cache - called once on page load
+    /**
+     * Caches all relevant DOM elements into the `this.dom` object.
+     * Should be called once immediately after the page DOM is loaded.
+     */
     cacheDOMElements() {
         this.dom = {
             // Header
@@ -129,7 +150,13 @@ class SessionState {
         };
     }
 
-    // Update a specific field and trigger recalculation
+    /**
+     * Updates a specific field within a section of the state.
+     * Triggers change notification.
+     * @param {string} section - The top-level key (e.g., 'header', 'dm').
+     * @param {string} field - The specific property to update.
+     * @param {*} value - The new value.
+     */
     updateField(section, field, value) {
         if (this.data[section]) {
             this.data[section][field] = value;
@@ -137,7 +164,11 @@ class SessionState {
         }
     }
 
-    // Bulk update multiple fields
+    /**
+     * Performs a bulk update on multiple fields within a specific section.
+     * Useful for initializing forms or applying templates.
+     * @param {Object} updates - Object map where keys are sections and values are objects of fields to update.
+     */
     updateFields(updates) {
         Object.entries(updates).forEach(([section, fields]) => {
             if (this.data[section]) {
@@ -147,12 +178,20 @@ class SessionState {
         this.notifyChange('bulk');
     }
 
-    // Get current state
+    /**
+     * Returns a deep copy of the current state.
+     * Prevents external code from mutating the state directly by reference.
+     * @returns {Object} The complete state object.
+     */
     getState() {
         return JSON.parse(JSON.stringify(this.data));
     }
 
-    // Load state from DB
+    /**
+     * Loads a full state object (usually from the Database) into the internal store.
+     * Merges the incoming data structure with the existing schema.
+     * @param {Object} sessionData - The raw session object from the DB.
+     */
     loadState(sessionData) {
         if (!sessionData.form_data) return;
         
@@ -172,22 +211,36 @@ class SessionState {
         this.notifyChange('load');
     }
 
-    // Register change listener
+    /**
+     * Registers a callback function to be executed when the state changes.
+     * Part of the Observer pattern.
+     * @param {Function} callback - Function to execute on change.
+     */
     onChange(callback) {
         this.listeners.push(callback);
     }
 
-    // Notify all listeners
+    /**
+     * Notifies all registered listeners that a change has occurred.
+     * @param {string} context - A description of what changed (for debugging/filtering).
+     */
     notifyChange(context) {
         this.listeners.forEach(cb => cb(context));
     }
 
-    // Calculate derived stats (APL, Tier, etc.)
+    /**
+     * Calculates derived statistics based on the current player roster.
+     * Logic:
+     * - APL (Average Party Level) = Round(Total Levels / Player Count).
+     * - Tier is determined by APL thresholds (1-4, 5-10, 11-16, 17+).
+     * @returns {Object} { partySize, apl, tier, playerCount }
+     */
     calculateStats() {
         let totalLevel = 0;
         let playerCount = 0;
 
         this.data.players.forEach(player => {
+            // "Play As" level takes precedence over character level
             const effectiveLevel = parseFloat(player.level_playing_as || player.level) || 0;
             if (effectiveLevel > 0) {
                 totalLevel += effectiveLevel;
@@ -197,6 +250,7 @@ class SessionState {
 
         const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
         
+        // Determine Tier based on APL
         let tier = 1;
         if (apl >= 17) tier = 4;
         else if (apl >= 11) tier = 3;
@@ -210,7 +264,11 @@ class SessionState {
         };
     }
 
-    // Get session players with derived data
+    /**
+     * Retrieves session players with additional calculated context.
+     * Specifically adds `maxHours` from the session log to assist with UI validation.
+     * @returns {Array<Object>} List of session player objects.
+     */
     getSessionPlayers() {
         const sessionHours = parseFloat(this.data.session_log.hours) || 3;
         
@@ -220,7 +278,12 @@ class SessionState {
         }));
     }
 
-    // Update a single player
+    /**
+     * Updates a specific field for a player in the Master Roster.
+     * @param {number} index - Index of the player in `data.players`.
+     * @param {string} field - Field key to update.
+     * @param {*} value - New value.
+     */
     updatePlayer(index, field, value) {
         if (this.data.players[index]) {
             this.data.players[index][field] = value;
@@ -228,7 +291,12 @@ class SessionState {
         }
     }
 
-    // Update session player
+    /**
+     * Updates a specific field for a player in the Session Log.
+     * @param {number} index - Index of the player in `data.session_log.players`.
+     * @param {string} field - Field key to update.
+     * @param {*} value - New value.
+     */
     updateSessionPlayer(index, field, value) {
         if (this.data.session_log.players[index]) {
             this.data.session_log.players[index][field] = value;
@@ -236,19 +304,31 @@ class SessionState {
         }
     }
 
-    // Add player
+    /**
+     * Adds a new player to the Master Roster.
+     * @param {Object} playerData - The player object to add.
+     */
     addPlayer(playerData) {
         this.data.players.push(playerData);
         this.notifyChange('player_added');
     }
 
-    // Remove player
+    /**
+     * Removes a player from the Master Roster by index.
+     * @param {number} index - Index of the player to remove.
+     */
     removePlayer(index) {
         this.data.players.splice(index, 1);
         this.notifyChange('player_removed');
     }
 
-    // Sync session players from master roster
+    /**
+     * Synchronizes the Session Log players with the Master Roster players.
+     * - Adds new players from Master to Session Log (with default empty result fields).
+     * - Updates existing players' core info (Name, Level) in Session Log.
+     * - Removes players from Session Log if they no longer exist in Master Roster.
+     * Matching is performed based on `discord_id`.
+     */
     syncSessionPlayers() {
         const masterPlayers = this.data.players;
         const sessionPlayers = this.data.session_log.players;
@@ -260,13 +340,13 @@ class SessionState {
             const existing = sessionPlayers.find(s => s.discord_id === master.discord_id);
             
             if (existing) {
-                // Update core fields only
+                // Update core fields only, preserve session-specific data (loot, xp, etc.)
                 existing.display_name = master.display_name;
                 existing.character_name = master.character_name;
                 existing.level = master.level_playing_as || master.level;
                 existing.games_count = master.games_count;
             } else {
-                // Add new player
+                // Add new player to log with default empty result fields
                 sessionPlayers.push({
                     discord_id: master.discord_id,
                     display_name: master.display_name,
@@ -287,7 +367,7 @@ class SessionState {
             }
         });
 
-        // Remove players no longer in master
+        // Remove players no longer in master roster
         this.data.session_log.players = sessionPlayers.filter(
             s => processedIds.has(s.discord_id)
         );
@@ -296,5 +376,5 @@ class SessionState {
     }
 }
 
-// Create singleton instance
+// Create singleton instance to ensure global state consistency
 export const sessionState = new SessionState();

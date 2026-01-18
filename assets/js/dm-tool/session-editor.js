@@ -1,5 +1,16 @@
 // assets/js/dm-tool/session-editor.js
-// FIXES: invite link save/load, player card sync, forfeit XP, stats updates, copy logic
+
+/**
+ * @fileoverview Main controller for the DM Tool Session Editor.
+ * * This module orchestrates the interaction between the UI, the State Manager, 
+ * the Calculation Engine, and the Data Layer (Supabase).
+ * * Key Responsibilities:
+ * 1. Initialization: Loading session data, game rules, and templates.
+ * 2. Event Binding: connecting UI inputs to StateManager updates.
+ * 3. Calculation Orchestration: Triggering math updates when inputs change.
+ * 4. Persistence: Saving/Loading sessions and templates via DataManager.
+ * * @module SessionEditor
+ */
 
 import { supabase } from '../supabaseClient.js'; 
 import { stateManager } from './state-manager.js';
@@ -28,26 +39,46 @@ import {
 } from './session-loot.js';
 
 
-let calculationEngine = null;
-let cachedGameRules = null; 
-let isFullDM = false; 
-let cachedDiscordId = "YOUR_ID";
-let cachedDisplayName = "DM"; // FIX: Store display name for MAL
+// --- Global State & Cache ---
 
+/** @type {CalculationEngine|null} Instance of the calculation logic engine */
+let calculationEngine = null;
+
+/** @type {Object|null} Cached copy of the game rules (XP tables, gold limits, etc.) */
+let cachedGameRules = null; 
+
+/** @type {boolean} Flag indicating if the current user has "Full DM" privileges */
+let isFullDM = false; 
+
+/** @type {string} Current user's Discord ID (used for mentions/tracking) */
+let cachedDiscordId = "YOUR_ID";
+
+/** @type {string} Current user's Display Name (used for MAL output) */
+let cachedDisplayName = "DM"; 
+
+/** * DOM Element Cache to reduce repeated `getElementById` calls for static elements.
+ * @type {Object<string, HTMLElement>}
+ */
 const domCache = {};
 
 
+/**
+ * Fetches and caches the current user's Discord ID and Display Name from Supabase.
+ * This is critical for generating correct discord mentions and MAL exports.
+ * @async
+ */
 async function cacheDiscordId() {
     try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user && user.identities) {
+            // Extract Discord ID from auth identities
             const identity = user.identities.find(i => i.provider === 'discord');
             if (identity && identity.id) {
                 cachedDiscordId = identity.id;
             }
         }
         
-        // FIX: Fetch display name from member_directory
+        // Fetch display name from the directory to ensure it matches server nickname
         if (cachedDiscordId) {
             const { data } = await supabase
                 .from('member_directory')
@@ -65,6 +96,10 @@ async function cacheDiscordId() {
 }
 
 
+/**
+ * Caches frequently used static DOM elements into `domCache`.
+ * Called once during initialization.
+ */
 function cacheDOMElements() {
     domCache.sessionHoursInput = document.getElementById('inp-session-total-hours');
     domCache.rosterBody = document.getElementById('roster-body');
@@ -73,9 +108,18 @@ function cacheDOMElements() {
     domCache.dmGamesSetup = document.getElementById('inp-dm-games-count');
 }
 
+/**
+ * Generates the name for the next session part.
+ * Logic:
+ * - "Session Name" -> "Session Name Part 2"
+ * - "Session Name Part 2" -> "Session Name Part 3"
+ * * @param {string} name - The current session name.
+ * @returns {string} The incremented name.
+ */
 function incrementPartName(name) {
     if(!name) return "Session Part 2";
     
+    // Regex matches "Name", optional " - Part ", and the number
     const match = name.match(/^(.*?)(\s?-?\s?Part\s?)(\d+)$/i);
     
     if(match) {
@@ -86,6 +130,12 @@ function incrementPartName(name) {
     return `${name} Part 2`;
 }
 
+/**
+ * Increments the "Games Played" count string.
+ * Handles the specific logic where "10" becomes "10+".
+ * * @param {string} val - Current games count value.
+ * @returns {string} Incremented value as string.
+ */
 function incrementGameString(val) {
     if (val === "10+") return "10+";
     const num = parseInt(val);
@@ -96,22 +146,34 @@ function incrementGameString(val) {
     return (num + 1).toString();
 }
 
+/* ==========================================================================
+   INITIALIZATION
+   ========================================================================== */
+
 document.addEventListener('DOMContentLoaded', async () => {
     
+    // 1. Initialize User & Rules Data
     await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
     
+    // 2. Initialize Engines & Cache
     cacheDOMElements();
     calculationEngine = new CalculationEngine(cachedGameRules);
 
+    // 3. Check User Roles
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
         isFullDM = await checkAccess(user.id, 'Full DM');
         console.log("User Role Check - Full DM:", isFullDM);
     }
+
+    // 4. Initialize State Manager
     stateManager.init();
     console.log('✓ State Manager Ready');
 
+    /** * Define Global Callbacks for interactions.
+     * These allow UI components (like Rows) to trigger main controller logic without circular dependencies.
+     */
     const callbacks = {
         onUpdate: () => {
             scheduleUpdate(() => {
@@ -127,9 +189,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     
 
+    // 5. Initial UI Updates
     updateLootInstructions(isFullDM);
 
-    // FIX: Add forfeit XP event handling for session roster
+    // --- Event Listener: Forfeit XP Checkbox in Session Roster ---
+    // Uses delegation on the roster list container
     const sessionRosterList = document.getElementById('session-roster-list');
     if (sessionRosterList) {
         sessionRosterList.addEventListener('change', (e) => {
@@ -141,10 +205,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // --- State Manager Subscribers ---
+    // Connects internal state changes to specific update logic
     stateManager.onUpdate('calculations', (state) => {
         updateSessionCalculations();
         updateLootInstructions(isFullDM);
-        // FIX: Update loot stats when calculations change
         updateDMLootLogic(cachedDiscordId, cachedGameRules);
     });
 
@@ -163,11 +228,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     
+    // 6. Initialize UI Components
     UI.initTabs(() => IO.generateOutput()); 
     UI.initTimezone();
     UI.initDateTimeConverter(); 
     UI.initAccordions();
     
+    // Initialize Incentives Modal with save callback
     UI.initIncentivesModal((ctx) => {
         scheduleUpdate(() => {
             updateSessionCalculations();
@@ -175,11 +242,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
     
+    // 7. Initialize Logic Controllers
     initCopyGameLogic();
     initTemplateLogic(); 
     initPlayerSetup();
     initPlayerSync();
     
+    // Bind generic inputs for dirty checking / state updates
     const bindGeneralInputs = (ids) => {
         ids.forEach(id => {
             const el = document.getElementById(id);
@@ -197,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         'inp-lobby-url', 'inp-listing-url', 'inp-session-notes', 'inp-dm-collab', 'inp-session-summary'
     ]);
 
-    // FIX: Save invite link to session metadata
+    // --- Feature: Player Invite Link Generation ---
     const btnGenerate = document.getElementById('btn-generate-invite');
     if (btnGenerate) {
         btnGenerate.addEventListener('click', async () => {
@@ -216,7 +285,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (inpInvite) {
                 inpInvite.value = inviteUrl;
                 
-                // Save invite URL to session
+                // Save invite URL to session metadata immediately
                 try {
                     await supabase
                         .from('sessions')
@@ -229,6 +298,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Bind specific inputs that should trigger immediate output generation
     const bindOutput = (id) => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('input', () => IO.generateOutput());
@@ -236,6 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindOutput('inp-lobby-url');
     bindOutput('inp-listing-url');
 
+    // 8. Populate Dropdowns from Game Rules
     const rules = cachedGameRules;
     if(rules && rules.options) {
         if(rules.options["Game Version"]) UI.fillDropdown('inp-version', rules.options["Game Version"]);
@@ -243,8 +314,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(rules.options["Game Format"]) UI.fillDropdown('inp-format', rules.options["Game Format"]);
     }
 
-    
-    
     if (rules && rules.tier) {
         const tierSelect = document.getElementById('inp-tier');
         if (tierSelect) {
@@ -262,49 +331,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initEventsDropdown(); 
     await initTemplateDropdown(); 
 
+    // 9. Load Session Data (if ID present)
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
 
-    // FIX: Load Invite Link from session metadata if available
     if (sessionId) {
         await loadSessionData(sessionId, callbacks);
-        // Invite link is handled inside loadSessionData/IO.populateForm now
     }
 
-        
+    // Export callbacks to window for legacy access if needed
     window._sessionCallbacks = callbacks;
 
+    // 10. Sidebar Navigation Event Listener
     if (domCache.sidebarNav) {
         domCache.sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (!item) return;
             
+            // Generate Session Log when that tab is clicked
             if (item.dataset.target === 'view-session-output') {
-                // FIX: Pass both discordId and displayName
                 IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
             }
             
+            // Generate MAL when that tab is clicked
             if (item.dataset.target === 'view-mal-update') {
-                // FIX: Pass displayName for MAL
                 IO.generateMALUpdate(cachedDisplayName);
             }
             
-            // FIX: Sync session players when entering session details tab
+            // Force Sync Roster -> Session when entering Session Details
             if (item.dataset.target === 'view-session-details') {
                 Rows.syncSessionPlayersFromMaster(callbacks);
             }
         });
     }
 
+    // Handle session loading logic if ID was provided
     if (sessionId) {
         await loadSessionData(sessionId, callbacks);
     } 
 
-    // FIX: Session Hours logic - update all player hours when changed
+    // --- Feature: Session Duration Logic ---
+    // Automatically updates player hours and suggests splitting sessions if duration > 5.5h
     if(domCache.sessionHoursInput) {
         domCache.sessionHoursInput.addEventListener('change', () => { 
             const val = parseFloat(domCache.sessionHoursInput.value) || 0;
             
+            // Update max hours on all player cards
             const cards = document.querySelectorAll('#session-roster-list .player-card');
             const newSessionHours = parseFloat(domCache.sessionHoursInput.value) || 3;
             
@@ -316,11 +388,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
             
+            // Trigger "Next Part" modal if long session
             if (val > 5.5) {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
                 if(proceed) {
+                    // Reset current session to standard length
                     domCache.sessionHoursInput.value = 3;
                     updateSessionCalculations();
+                    
+                    // Pre-fill modal
                     document.getElementById('chk-next-part').checked = true;
                     const currentName = document.getElementById('header-game-name').value;
                     const nextName = incrementPartName(currentName);
@@ -335,6 +411,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setupCalculationTriggers(callbacks);
     
+    // Bind specific inputs for Loot Plan
     const lootPlanInput = document.getElementById('inp-loot-plan');
     if (lootPlanInput) {
         lootPlanInput.addEventListener('input', () => {
@@ -362,11 +439,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
     
+    // Initial calculation run
     setTimeout(() => {
         callbacks.onUpdate();
     }, 500);
 });
 
+/* ==========================================================================
+   CALCULATION LOGIC
+   ========================================================================== */
+
+/**
+ * Main calculation loop for Player Rewards.
+ * Syncs roster stats, checks gold limits, and updates each player card's XP/DTP.
+ */
 function updateSessionCalculations() {
     if (!calculationEngine) return;
     
@@ -377,7 +463,7 @@ function updateSessionCalculations() {
     const cards = document.querySelectorAll('#session-roster-list .player-card');
     
     cards.forEach(card => {
-        // ... (existing input gathering) ...
+        // Gather input data from the card
         const levelInput = card.querySelector('.s-level');
         const hoursInput = card.querySelector('.s-hours');
         const xpInput = card.querySelector('.s-xp');
@@ -388,7 +474,8 @@ function updateSessionCalculations() {
         
         if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
         
-        // FIX: Max Gold Validation / Warning
+        // --- Max Gold Validation / Warning ---
+        // Visually warn user if they award more gold than the table allows
         const currentGold = parseFloat(goldInput.value) || 0;
         if (currentGold > maxGold) {
             goldInput.style.borderColor = "#ff4444";
@@ -405,16 +492,20 @@ function updateSessionCalculations() {
             incentives: incentivesBtn ? JSON.parse(incentivesBtn.dataset.incentives || '[]') : []
         };
         
+        // Run Calculation
         const rewards = calculationEngine.calculatePlayerRewards(playerData, sessionHours);
         
+        // Update DOM
         xpInput.value = rewards.xp;
         dtpInput.value = rewards.dtp;
     });
     
+    // Trigger downstream updates
     updateDMCalculations();
     updateStatsDisplays();
     
-    // FIX: Update Read-only Stats for New Hires / Welcome Wagon in Session View
+    // Update Read-only Stats for New Hires / Welcome Wagon in Session View
+    // This is required here to ensure Session View is visually in sync with Loot View
     const playerStats = stateManager.getPlayerStats();
     const elNewHires = document.getElementById('loot-val-newhires');
     const elWelcome = document.getElementById('loot-val-welcome');
@@ -422,6 +513,10 @@ function updateSessionCalculations() {
     if(elWelcome) elWelcome.value = playerStats.welcomeWagon;
 }
 
+/**
+ * Main calculation loop for DM Rewards.
+ * Updates XP, GP, DTP based on DM Level, Games Played, and Incentives.
+ */
 function updateDMCalculations() {
     if (!calculationEngine) return;
     
@@ -446,11 +541,15 @@ function updateDMCalculations() {
     
     const rewards = calculationEngine.calculateDMRewards(dmData, sessionHours, playerStats);
     
+    // Update DOM
     dmXPOutput.value = rewards.xp;
     dmDTPOutput.value = rewards.dtp;
     dmGPOutput.value = rewards.gp;
 }
 
+/**
+ * Updates the visual statistics bar (Party Size, APL, Tier) on the UI.
+ */
 function updateStatsDisplays() {
     const stats = stateManager.getStats();
     
@@ -463,17 +562,23 @@ function updateStatsDisplays() {
     if (elTier) elTier.textContent = stats.tier;
 }
 
+/**
+ * Binds various UI triggers to the update callbacks.
+ * This sets up the reactive behavior for the DM Level, Games Count, Roster changes, etc.
+ * @param {Object} callbacks - Object containing `onUpdate` function.
+ */
 function setupCalculationTriggers(callbacks) {
+    // Listener for Sidebar Navigation (Syncing Roster on Tab Change)
     if (domCache.sidebarNav) {
         domCache.sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (item && item.dataset.target === 'view-session-details') {
                 Rows.syncSessionPlayersFromMaster(callbacks);
                 
+                // Auto-fill Session Date from Setup Date if Session Date is empty
                 const setupDateInput = document.getElementById('inp-start-datetime');
                 const sessionDateInput = document.getElementById('inp-session-date');
                 
-                // FIX: Auto-fill Session Date
                 if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
                     sessionDateInput.value = setupDateInput.value;
                     
@@ -492,6 +597,7 @@ function setupCalculationTriggers(callbacks) {
     const syncBtn = document.getElementById('btn-sync-session'); 
     const addPlayerBtn = document.getElementById('btn-add-session-player');
 
+    // DM inputs triggers
     if(dmLevel) {
         dmLevel.addEventListener('input', () => scheduleUpdate(callbacks.onUpdate));
     }
@@ -499,10 +605,12 @@ function setupCalculationTriggers(callbacks) {
         dmGames.addEventListener('input', () => scheduleUpdate(callbacks.onUpdate));
     }
     
+    // Modal trigger
     if(btnDMIncLoot) {
         btnDMIncLoot.addEventListener('click', () => callbacks.onOpenModal(btnDMIncLoot, null, true));
     }
     
+    // Sync Button
     if(syncBtn) {
         syncBtn.addEventListener('click', async () => {
              const urlParams = new URLSearchParams(window.location.search);
@@ -516,12 +624,14 @@ function setupCalculationTriggers(callbacks) {
         });
     }
 
+    // Manual Add Player Button
     if(addPlayerBtn) {
         addPlayerBtn.addEventListener('click', () => {
             Rows.addSessionPlayerRow(document.getElementById('session-roster-list'), {}, callbacks);
         });
     }
 
+    // DM Setup inputs triggers
     if(domCache.dmLevelSetup) {
         domCache.dmLevelSetup.addEventListener('input', () => {
             scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
@@ -536,8 +646,8 @@ function setupCalculationTriggers(callbacks) {
         });
     }
     
+    // Roster Body triggers (for updating loot stats when master roster changes)
     if (domCache.rosterBody) {
-        // FIX: Update loot stats when master roster changes
         domCache.rosterBody.addEventListener('change', () => {
             scheduleUpdate(() => {
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
@@ -546,6 +656,7 @@ function setupCalculationTriggers(callbacks) {
         
         domCache.rosterBody.addEventListener('click', (e) => {
             if (e.target.matches('.btn-delete-row')) {
+                // Short delay to allow DOM removal to complete before recalculating
                 setTimeout(() => {
                     scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
                 }, 100); 
@@ -554,13 +665,19 @@ function setupCalculationTriggers(callbacks) {
     }
 }
 
+/**
+ * Loads session data from Supabase via DataManager and populates the form via SessionIO.
+ * @async
+ * @param {string} sessionId - The UUID of the session to load.
+ * @param {Object} callbacks - Callback object for UI updates.
+ */
 async function loadSessionData(sessionId, callbacks) {
     try {
         const session = await loadSession(sessionId);
         if (session) {
             IO.populateForm(session, callbacks);
             
-            // FIX: Load invite link if exists
+            // Load invite link if present in DB
             if (session.invite_url) {
                 const inpInvite = document.getElementById('inp-invite-link');
                 if (inpInvite) inpInvite.value = session.invite_url;
@@ -570,6 +687,10 @@ async function loadSessionData(sessionId, callbacks) {
         console.error("Error loading session:", error);
     }
 }
+
+/* ==========================================================================
+   UI SETUP HELPERS
+   ========================================================================== */
 
 async function initEventsDropdown() {
     const events = await fetchActiveEvents();
@@ -665,6 +786,14 @@ function initPlayerSync() {
     }
 }
 
+/**
+ * Initializes logic for the "Copy / Next Part" Modal.
+ * Logic:
+ * 1. Opens modal via button.
+ * 2. On confirm, creates new session via Supabase.
+ * 3. Applies logic (increments part number, games played, resets hours).
+ * 4. Saves new session and redirects user.
+ */
 function initCopyGameLogic() {
     const btnCopy = document.getElementById('btn-copy-game');
     const modal = document.getElementById('modal-copy-game');
@@ -686,9 +815,11 @@ function initCopyGameLogic() {
             const isNextPart = document.getElementById('chk-next-part').checked;
             const fullData = IO.getFormData();
             
+            // Prepare new session data
             fullData.header.title = newName; 
             fullData.session_log.title = newName;
             
+            // Reset log data
             fullData.session_log.hours = 3; 
             fullData.session_log.notes = "";
             fullData.session_log.summary = "";
@@ -696,19 +827,22 @@ function initCopyGameLogic() {
             fullData.session_log.dm_rewards.incentives = [];
             
             if (isNextPart) {
-                // FIX: Set Application Type to "Pre-filled"
+                // FIX: Set Application Type to "Pre-filled" for next part
                 fullData.header.apps_type = "Pre-filled";
 
+                // Increment Player Games
                 if (fullData.players) {
                     fullData.players.forEach(p => {
                         p.games_count = incrementGameString(p.games_count);
                     });
                 }
                 
+                // Increment DM Games
                 if (fullData.dm) {
                     fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
                 }
                 
+                // Reset/Increment Session Player Data
                 if (fullData.session_log.players) {
                     fullData.session_log.players.forEach(p => {
                         p.games_count = incrementGameString(p.games_count);
@@ -743,6 +877,9 @@ function initCopyGameLogic() {
     }
 }
 
+/**
+ * Initializes logic for Saving/Loading Templates.
+ */
 function initTemplateLogic() {
     const modal = document.getElementById('modal-save-template');
     const btnOpen = document.getElementById('btn-open-save-template');
@@ -855,7 +992,10 @@ function initTemplateLogic() {
     }
 }
 
-// Debounce helper
+/**
+ * Debounce helper to prevent excessive calculations during rapid input.
+ * @param {Function} callback - The function to execute.
+ */
 let debounceTimer = null;
 function scheduleUpdate(callback) {
     if (debounceTimer) clearTimeout(debounceTimer);
