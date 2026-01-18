@@ -1,9 +1,7 @@
 // assets/js/dm-tool/session-io.js
 
 import { stateManager } from './state-manager.js';
-import { fetchGameRules } from './data-manager.js';
 import * as Rows from './session-rows.js';
-import * as UI from './session-ui.js';
 
 // Helper to safely set value
 const setVal = (id, val) => {
@@ -12,10 +10,6 @@ const setVal = (id, val) => {
 };
 
 export function getFormData() {
-    // Force update state from DOM for fields that might not be bound perfectly
-    const dom = stateManager.dom || {}; 
-    
-    // Helper to get value from DOM or fallback to state
     const getVal = (id, stateVal) => {
         const el = document.getElementById(id);
         return el ? el.value : stateVal;
@@ -30,7 +24,7 @@ export function getFormData() {
             game_date_str: getVal('inp-start-datetime', ''),
             timezone: getVal('inp-timezone', state.header.timezone),
             intended_duration: getVal('inp-duration-text', state.header.intended_duration),
-            game_description: getVal('inp-game-desc', state.header.game_description), 
+            game_description: getVal('inp-description', state.header.game_description), // MATCHES HTML ID
             game_version: getVal('inp-version', state.header.game_version),
             game_type: getVal('inp-format', state.header.game_type),
             apps_type: getVal('inp-apps-type', state.header.apps_type),
@@ -46,11 +40,11 @@ export function getFormData() {
             threat_level: getVal('inp-diff-threat', state.header.threat_level),
             char_loss: getVal('inp-diff-loss', state.header.char_loss),
             
-            // Corrected IDs for Setup Rules
-            house_rules: getVal('inp-house-rules', state.header.house_rules),
-            notes: getVal('inp-setup-notes', state.header.notes),
-            warnings: getVal('inp-content-warnings', state.header.warnings),
-            how_to_apply: getVal('inp-how-to-apply', state.header.how_to_apply),
+            // FIXED IDS TO MATCH SESSION.HTML
+            house_rules: getVal('inp-houserules', state.header.house_rules),
+            notes: getVal('inp-notes', state.header.notes),
+            warnings: getVal('inp-warnings', state.header.warnings),
+            how_to_apply: getVal('inp-apply', state.header.how_to_apply),
             
             listing_url: getVal('inp-listing-url', state.header.listing_url),
             lobby_url: getVal('inp-lobby-url', state.header.lobby_url),
@@ -70,7 +64,7 @@ export function getFormData() {
             date_time: getVal('inp-session-unix', state.session_log.date_time),
             hours: getVal('inp-session-total-hours', state.session_log.hours),
             notes: getVal('inp-session-notes', state.session_log.notes),
-            summary: getVal('inp-session-summary', state.session_log.summary),
+            summary: getVal('session-summary', state.session_log.summary), // FIXED ID
             dm_collaborators: getVal('inp-dm-collab', state.session_log.dm_collaborators),
             players: Rows.getSessionRosterData(),
             dm_rewards: state.session_log.dm_rewards
@@ -95,7 +89,7 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-timezone', fd.header.timezone);
         setVal('inp-unix-time', fd.header.game_datetime);
         setVal('inp-duration-text', fd.header.intended_duration);
-        setVal('inp-game-desc', fd.header.game_description);
+        setVal('inp-description', fd.header.game_description);
 
         setVal('inp-version', fd.header.game_version);
         setVal('inp-format', fd.header.game_type);
@@ -108,11 +102,11 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-diff-threat', fd.header.threat_level);
         setVal('inp-diff-loss', fd.header.char_loss);
         
-        // Corrected IDs for Setup Rules
-        setVal('inp-house-rules', fd.header.house_rules);
-        setVal('inp-setup-notes', fd.header.notes);
-        setVal('inp-content-warnings', fd.header.warnings);
-        setVal('inp-how-to-apply', fd.header.how_to_apply);
+        // FIXED IDS
+        setVal('inp-houserules', fd.header.house_rules);
+        setVal('inp-notes', fd.header.notes);
+        setVal('inp-warnings', fd.header.warnings);
+        setVal('inp-apply', fd.header.how_to_apply);
         
         setVal('inp-listing-url', fd.header.listing_url);
         setVal('inp-lobby-url', fd.header.lobby_url);
@@ -130,7 +124,6 @@ export function populateForm(session, callbacks, options = {}) {
             }
         }
         
-        // Trigger multi-select event
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && fd.header.event_tags) {
              Array.from(eventSelect.options).forEach(opt => {
@@ -148,7 +141,7 @@ export function populateForm(session, callbacks, options = {}) {
     if (fd.session_log) {
         setVal('inp-session-total-hours', fd.session_log.hours);
         setVal('inp-session-notes', fd.session_log.notes);
-        setVal('inp-session-summary', fd.session_log.summary);
+        setVal('session-summary', fd.session_log.summary); // FIXED ID
         setVal('inp-dm-collab', fd.session_log.dm_collaborators);
     }
     
@@ -237,8 +230,7 @@ ${apply}
 }
 
 export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
-    // Force refresh state from DOM to ensure notes/collab are current
-    const state = getFormData(); 
+    const state = getFormData();
     const stats = stateManager.getStats();
     
     const gameName = state.header.title || "Untitled";
@@ -246,7 +238,6 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const gameFormat = state.header.game_type || "N/A";
     
     const sessionNotes = state.session_log.notes || "";
-    // Logic for Pre-filled vs Manual
     const hasSessionData = sessionNotes.trim().length > 0;
     const appsType = hasSessionData ? "Prefilled" : (state.header.apps_type || "N/A");
     
@@ -286,11 +277,9 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const dmCharName = state.dm.character_name || "DM Character";
     const dmLevel = state.session_log.dm_rewards.level || state.dm.level || "1";
     
-    // Get live values for DM rewards
     const dmXP = document.querySelector('.dm-res-xp')?.value || "0";
     const dmDTP = document.querySelector('.dm-res-dtp')?.value || "0";
     const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
-    
     const dmLoot = state.session_log.dm_rewards.loot_selected || "";
     const dmIdString = dmDiscordId ? `<@${dmDiscordId}>` : `@${state.dm.character_name || "DM"}`;
 
@@ -316,7 +305,6 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     if (playerStats.newHires > 0) dmIncentivesList.push(`New Hires x${playerStats.newHires}`);
     if (playerStats.welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${playerStats.welcomeWagon}`);
     
-    // Add manual incentives
     if (state.session_log.dm_rewards.incentives) {
         dmIncentivesList = dmIncentivesList.concat(state.session_log.dm_rewards.incentives);
     }
@@ -324,15 +312,8 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
     output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
     
-    // FIX: Add DM Collaboration
-    if (dmCollaborators) {
-        output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
-    }
-    
-    // FIX: Add Session Notes
-    if (sessionNotes) {
-        output += `**Notes:**\n${sessionNotes}\n\n`;
-    }
+    if (dmCollaborators) output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
+    if (sessionNotes) output += `**Notes:**\n${sessionNotes}\n\n`;
 
     const summaryHeader = `**Session Summary:**\n`;
     const summaryContent = sessionSummary || 'N/A';
@@ -340,7 +321,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
 
     if (stateManager.dom.outSession) {
         stateManager.dom.outSession.value = fullTextTotal.trim();
-        // Also update summary box if split view exists
+        // Update secondary output if it exists (split view)
         if (stateManager.dom.outSummary) {
              stateManager.dom.outSummary.value = (fullTextTotal.length > 999) ? summaryHeader + summaryContent : "";
         }

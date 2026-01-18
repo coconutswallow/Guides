@@ -1,3 +1,5 @@
+// assets/js/dm-tool/state-manager.js
+
 class StateManager {
     constructor() {
         // Internal state storage
@@ -56,19 +58,8 @@ class StateManager {
         };
 
         this.dom = {};
-        this.debounceTimers = {
-            calculations: null,
-            lootDeclaration: null,
-            outputs: null,
-            dmLoot: null
-        };
-        this.updateCallbacks = {
-            calculations: [],
-            lootDeclaration: [],
-            outputs: [],
-            dmLoot: [],
-            all: []
-        };
+        this.debounceTimers = {};
+        this.updateCallbacks = { calculations: [], lootDeclaration: [], outputs: [], dmLoot: [], all: [] };
         this.initialized = false;
     }
 
@@ -89,7 +80,7 @@ class StateManager {
         this.dom.timezone = document.getElementById('inp-timezone');
         this.dom.unixTime = document.getElementById('inp-unix-time');
         this.dom.durationText = document.getElementById('inp-duration-text');
-        this.dom.description = document.getElementById('inp-game-desc'); // FIXED ID
+        this.dom.description = document.getElementById('inp-description'); 
         this.dom.format = document.getElementById('inp-format');
         this.dom.version = document.getElementById('inp-version');
         this.dom.appsType = document.getElementById('inp-apps-type');
@@ -108,11 +99,11 @@ class StateManager {
         this.dom.diffThreat = document.getElementById('inp-diff-threat');
         this.dom.diffLoss = document.getElementById('inp-diff-loss');
         
-        // Setup Tab - Details (FIXED IDs to match HTML/Session-Editor)
-        this.dom.houseRules = document.getElementById('inp-house-rules'); 
-        this.dom.notes = document.getElementById('inp-setup-notes'); 
-        this.dom.warnings = document.getElementById('inp-content-warnings'); 
-        this.dom.howToApply = document.getElementById('inp-how-to-apply'); 
+        // Setup Tab - Details (FIXED IDs to match session.html)
+        this.dom.houseRules = document.getElementById('inp-houserules'); 
+        this.dom.notes = document.getElementById('inp-notes'); 
+        this.dom.warnings = document.getElementById('inp-warnings'); 
+        this.dom.howToApply = document.getElementById('inp-apply'); 
         
         // Game Listing Tab
         this.dom.listingUrl = document.getElementById('inp-listing-url');
@@ -134,7 +125,7 @@ class StateManager {
         this.dom.sessionDate = document.getElementById('inp-session-date');
         this.dom.sessionUnix = document.getElementById('inp-session-unix');
         this.dom.sessionNotes = document.getElementById('inp-session-notes');
-        this.dom.sessionSummary = document.getElementById('inp-session-summary');
+        this.dom.sessionSummary = document.getElementById('session-summary'); // FIXED ID
         this.dom.dmCollab = document.getElementById('inp-dm-collab');
         this.dom.sessionRosterList = document.getElementById('session-roster-list');
         
@@ -152,14 +143,13 @@ class StateManager {
     }
 
     attachDOMListeners() {
-        // --- 1. Header & Text Inputs ---
         const textInputs = [
             { el: this.dom.gameName, sect: 'header', field: 'title', update: ['outputs', 'lootDeclaration'] },
             { el: this.dom.lobbyUrl, sect: 'header', field: 'lobby_url', update: ['outputs'] },
             { el: this.dom.listingUrl, sect: 'header', field: 'listing_url', update: ['outputs'] },
             { el: this.dom.dmCharName, sect: 'dm', field: 'character_name', update: ['outputs', 'dmLoot'] },
             { el: this.dom.lootPlan, sect: 'header', field: 'loot_plan', update: ['lootDeclaration'] },
-            // Add missing Setup text areas
+            // Setup Tab text areas
             { el: this.dom.houseRules, sect: 'header', field: 'house_rules', update: ['outputs'] },
             { el: this.dom.notes, sect: 'header', field: 'notes', update: ['outputs'] },
             { el: this.dom.warnings, sect: 'header', field: 'warnings', update: ['outputs'] },
@@ -167,7 +157,8 @@ class StateManager {
             { el: this.dom.description, sect: 'header', field: 'game_description', update: ['outputs'] },
             // Session Log Inputs
             { el: this.dom.sessionNotes, sect: 'session_log', field: 'notes', update: ['outputs'] },
-            { el: this.dom.dmCollab, sect: 'session_log', field: 'dm_collaborators', update: ['outputs'] }
+            { el: this.dom.dmCollab, sect: 'session_log', field: 'dm_collaborators', update: ['outputs'] },
+            { el: this.dom.sessionSummary, sect: 'session_log', field: 'summary', update: ['outputs'] }
         ];
 
         textInputs.forEach(item => {
@@ -179,60 +170,7 @@ class StateManager {
             }
         });
 
-        // --- 2. Multi-Selects (Tier, Events) ---
-        if (this.dom.tierSelect) {
-            this.dom.tierSelect.addEventListener('change', () => {
-                const selected = Array.from(this.dom.tierSelect.selectedOptions).map(opt => opt.value);
-                this.updateField('header', 'tier', selected);
-                this.scheduleUpdate('outputs');
-                this.scheduleUpdate('lootDeclaration'); // Updates "Trial/Full DM" instructions
-            });
-        }
-
-        if (this.dom.eventSelect) {
-            this.dom.eventSelect.addEventListener('change', () => {
-                const selected = Array.from(this.dom.eventSelect.selectedOptions).map(opt => opt.value);
-                this.updateField('header', 'event_tags', selected);
-                this.scheduleUpdate('outputs');
-            });
-        }
-
-        // --- 3. Numeric / Special Inputs ---
-        if (this.dom.sessionHours) {
-            this.dom.sessionHours.addEventListener('input', (e) => {
-                this.updateField('session_log', 'hours', parseFloat(e.target.value) || 3);
-            });
-        }
-        
-        if (this.dom.dmLevel) {
-            this.dom.dmLevel.addEventListener('input', (e) => {
-                this.updateField('dm', 'level', e.target.value);
-            });
-        }
-        
-        if (this.dom.dmGamesCount) {
-            this.dom.dmGamesCount.addEventListener('change', (e) => {
-                this.updateField('dm', 'games_count', e.target.value);
-            });
-        }
-
-        if (this.dom.predetPerms) {
-            this.dom.predetPerms.addEventListener('input', (e) => {
-                this.updateField('header', 'predet_perms', parseInt(e.target.value) || 0);
-            });
-        }
-        
-        if (this.dom.predetCons) {
-            this.dom.predetCons.addEventListener('input', (e) => {
-                this.updateField('header', 'predet_cons', parseInt(e.target.value) || 0);
-            });
-        }
-
-        if (this.dom.dmLootSelected) {
-            this.dom.dmLootSelected.addEventListener('input', (e) => {
-                this.updateField('session_log.dm_rewards', 'loot_selected', e.target.value);
-            });
-        }
+        // Other listeners
         if (this.dom.tierSelect) {
             this.dom.tierSelect.addEventListener('change', () => {
                 const selected = Array.from(this.dom.tierSelect.selectedOptions).map(opt => opt.value);
@@ -241,17 +179,52 @@ class StateManager {
                 this.scheduleUpdate('lootDeclaration'); 
             });
         }
+        
+        if (this.dom.eventSelect) {
+            this.dom.eventSelect.addEventListener('change', () => {
+                const selected = Array.from(this.dom.eventSelect.selectedOptions).map(opt => opt.value);
+                this.updateField('header', 'event_tags', selected);
+                this.scheduleUpdate('outputs');
+            });
+        }
+        
+        // Numeric inputs
+        const numInputs = [
+            { el: this.dom.sessionHours, sect: 'session_log', field: 'hours', update: ['calculations', 'outputs'] },
+            { el: this.dom.dmLevel, sect: 'dm', field: 'level', update: ['dmLoot', 'outputs'] },
+            { el: this.dom.predetPerms, sect: 'header', field: 'predet_perms', update: ['lootDeclaration'] },
+            { el: this.dom.predetCons, sect: 'header', field: 'predet_cons', update: ['lootDeclaration'] }
+        ];
+
+        numInputs.forEach(item => {
+            if(item.el) {
+                item.el.addEventListener('input', (e) => {
+                     // Handle float/int logic if needed, or store as string
+                     this.updateField(item.sect, item.field, e.target.value);
+                     if(item.update) item.update.forEach(u => this.scheduleUpdate(u));
+                });
+            }
+        });
+
+        if (this.dom.dmGamesCount) {
+            this.dom.dmGamesCount.addEventListener('change', (e) => {
+                this.updateField('dm', 'games_count', e.target.value);
+                this.scheduleUpdate('dmLoot');
+            });
+        }
+        
+        if (this.dom.dmLootSelected) {
+            this.dom.dmLootSelected.addEventListener('input', (e) => {
+                this.updateField('session_log.dm_rewards', 'loot_selected', e.target.value);
+                this.scheduleUpdate('outputs');
+            });
+        }
     }
 
-    /**
-     * STATE GETTERS
-     */
+    // Get current full state
     getFullState() { return JSON.parse(JSON.stringify(this.state)); }
-    getHeader() { return { ...this.state.header }; }
-    getPlayers() { return [...this.state.players]; }
-    getDM() { return { ...this.state.dm }; }
-    getSessionLog() { return JSON.parse(JSON.stringify(this.state.session_log)); }
     
+    // Stats Helper
     getStats() {
         let totalLevel = 0;
         let playerCount = 0;
@@ -274,29 +247,23 @@ class StateManager {
         return { partySize: this.state.players.length, apl, tier, playerCount };
     }
     
+    // Player Stats Helper (New Hires/Welcome)
     getPlayerStats() {
         let newHires = 0;
         let welcomeWagon = 0;
 
         this.state.players.forEach(player => {
             const gamesVal = String(player.games_count);
-            // Check specifically for "1"
-            if (gamesVal === "1") {
-                welcomeWagon++;
-            }
-            // Check specifically for not "10+" and <= 10
+            if (gamesVal === "1") welcomeWagon++;
             if (gamesVal !== "10+") {
-                const n = parseInt(gamesVal);
-                if(!isNaN(n) && n <= 10) newHires++;
+                 const n = parseInt(gamesVal);
+                 if(!isNaN(n) && n <= 10) newHires++;
             }
         });
 
         return { newHires, welcomeWagon };
     }
 
-    /**
-     * STATE SETTERS
-     */
     updateField(section, field, value) {
         if (section.includes('.')) {
             const parts = section.split('.');
@@ -307,99 +274,29 @@ class StateManager {
             this.state[section][field] = value;
         }
         
-        // Sync to DOM
+        // Sync to DOM if different
         const domKey = this.getDOMKeyForField(section, field);
         if (domKey && this.dom[domKey]) {
             if (this.dom[domKey].value !== value) {
                 this.dom[domKey].value = value;
             }
         }
-        
-        this.scheduleUpdate('calculations');
-        
-        if (section === 'header' && ['title', 'loot_plan'].includes(field)) this.scheduleUpdate('lootDeclaration');
-        if (section === 'dm' || ['predet_perms', 'predet_cons'].includes(field)) this.scheduleUpdate('dmLoot');
     }
     
-    updatePlayer(index, field, value) {
-        if (!this.state.players[index]) return;
-        this.state.players[index][field] = value;
-        this.scheduleUpdate('calculations');
-        this.scheduleUpdate('dmLoot');
-    }
-    
-    addPlayer(playerData) {
-        this.state.players.push(playerData);
-        this.scheduleUpdate('calculations');
-    }
-    
-    removePlayer(index) {
-        this.state.players.splice(index, 1);
-        this.scheduleUpdate('calculations');
-    }
-
-    /**
-     * BULK OPERATIONS
-     */
     loadFromDB(sessionData) {
         if (!sessionData.form_data) return;
         if (sessionData.form_data.header) Object.assign(this.state.header, sessionData.form_data.header);
         if (sessionData.form_data.players) this.state.players = [...sessionData.form_data.players];
         if (sessionData.form_data.dm) Object.assign(this.state.dm, sessionData.form_data.dm);
         if (sessionData.form_data.session_log) Object.assign(this.state.session_log, sessionData.form_data.session_log);
-        
         this.syncAllToDOM();
-        this.triggerAllUpdates();
     }
     
     syncAllToDOM() {
-        // Text Fields
-        const fields = [
-            { el: this.dom.gameName, val: this.state.header.title },
-            { el: this.dom.startDateTime, val: this.unixToLocalISO(this.state.header.game_datetime, this.state.header.timezone) },
-            { el: this.dom.timezone, val: this.state.header.timezone },
-            { el: this.dom.durationText, val: this.state.header.intended_duration },
-            { el: this.dom.description, val: this.state.header.game_description },
-            { el: this.dom.format, val: this.state.header.game_type },
-            { el: this.dom.version, val: this.state.header.game_version },
-            { el: this.dom.appsType, val: this.state.header.apps_type },
-            { el: this.dom.platform, val: this.state.header.platform },
-            { el: this.dom.apl, val: this.state.header.apl },
-            { el: this.dom.partySize, val: this.state.header.party_size },
-            { el: this.dom.listingUrl, val: this.state.header.listing_url },
-            { el: this.dom.lobbyUrl, val: this.state.header.lobby_url },
-            { el: this.dom.lootPlan, val: this.state.header.loot_plan },
-            { el: this.dom.dmCharName, val: this.state.dm.character_name },
-            { el: this.dom.dmLevel, val: this.state.dm.level },
-            { el: this.dom.dmGamesCount, val: this.state.dm.games_count },
-            { el: this.dom.predetPerms, val: this.state.header.predet_perms },
-            { el: this.dom.predetCons, val: this.state.header.predet_cons }
-        ];
-
-        fields.forEach(f => { if(f.el) f.el.value = f.val || ''; });
-
-        // Multi-selects
-        if (this.dom.tierSelect && Array.isArray(this.state.header.tier)) {
-            Array.from(this.dom.tierSelect.options).forEach(opt => {
-                opt.selected = this.state.header.tier.includes(opt.value);
-            });
-        }
-        
-        if (this.dom.eventSelect && Array.isArray(this.state.header.event_tags)) {
-            Array.from(this.dom.eventSelect.options).forEach(opt => {
-                opt.selected = this.state.header.event_tags.includes(opt.value);
-            });
-        }
-        
-        if (this.dom.btnDmIncentives) {
-            const incentives = this.state.session_log.dm_rewards.incentives || [];
-            this.dom.btnDmIncentives.dataset.incentives = JSON.stringify(incentives);
-        }
+        // Sync Logic handled in session-io populateForm usually, 
+        // but can be reinforced here if needed.
     }
 
-    /**
-     * UPDATE SCHEDULING
-     */
     scheduleUpdate(updateType) {
         if (this.debounceTimers[updateType]) clearTimeout(this.debounceTimers[updateType]);
         this.debounceTimers[updateType] = setTimeout(() => {
@@ -413,10 +310,6 @@ class StateManager {
         (this.updateCallbacks.all || []).forEach(cb => { try { cb(this, updateType); } catch (e) { console.error(e); } });
     }
     
-    triggerAllUpdates() {
-        ['calculations', 'lootDeclaration', 'outputs', 'dmLoot'].forEach(t => this.executeUpdate(t));
-    }
-    
     onUpdate(updateType, callback) {
         if (this.updateCallbacks[updateType]) this.updateCallbacks[updateType].push(callback);
     }
@@ -427,10 +320,12 @@ class StateManager {
             'header.intended_duration': 'durationText',
             'header.loot_plan': 'lootPlan',
             'header.game_description': 'description',
+            // Corrected IDs
             'header.house_rules': 'houseRules',
             'header.notes': 'notes',
             'header.warnings': 'warnings',
             'header.how_to_apply': 'howToApply',
+            
             'header.listing_url': 'listingUrl',
             'header.lobby_url': 'lobbyUrl',
             'dm.character_name': 'dmCharName',
@@ -438,25 +333,10 @@ class StateManager {
             'dm.games_count': 'dmGamesCount',
             'session_log.hours': 'sessionHours',
             'session_log.notes': 'sessionNotes',
-            'session_log.dm_collaborators': 'dmCollab',
+            'session_log.summary': 'sessionSummary',
             'session_log.dm_rewards.loot_selected': 'dmLootSelected'
         };
         return mapping[`${section}.${field}`];
-    }
-    
-    unixToLocalISO(unixSeconds, timeZone) {
-        if (!unixSeconds) return '';
-        try {
-            const date = new Date(unixSeconds * 1000);
-            const fmt = new Intl.DateTimeFormat('en-CA', {
-                timeZone: timeZone,
-                year: 'numeric', month: '2-digit', day: '2-digit',
-                hour: '2-digit', minute: '2-digit', hour12: false
-            });
-            const parts = fmt.formatToParts(date);
-            const get = (t) => parts.find(p => p.type === t).value;
-            return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
-        } catch(e) { return ""; }
     }
 }
 
