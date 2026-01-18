@@ -5,6 +5,7 @@
 import { sessionState } from './session-state.js';
 import CalculationEngine from './calculation-engine.js';
 import { CALCULATIONS } from './constants.js';
+import { stateManager } from './state-manager.js';
 
 let calculatorInstance = null;
 
@@ -28,14 +29,20 @@ export function updateSessionCalculations(rules) {
     if (!container) return;
 
     // Get session hours directly from DOM to ensure freshness
-    const sessionHoursInput = document.getElementById('inp-session-total-hours');
-    const sessionHours = parseFloat(sessionHoursInput?.value) || 3;
+    // const sessionHoursInput = document.getElementById('inp-session-total-hours');
+    // const sessionHours = parseFloat(sessionHoursInput?.value) || 3;
     
+    const state = stateManager.getFullState();
+    const sessionTotalHours = state.session_log.hours;
+    const stats = stateManager.getStats(); // APL, Tier calculated
+    const playerStats = stateManager.getPlayerStats(); // New hires, welcome wagon
+
+    const maxGold = calculatorInstance.calculateMaxGold(stats.apl);
+
+
     // Calculate max gold based on Party APL
-    const stats = sessionState.calculateStats();
     const aplEl = document.getElementById('setup-val-apl');
     const partyApl = parseInt(aplEl?.textContent) || 1;
-    const maxGold = calculatorInstance.calculateMaxGold(partyApl);
     const lblGold = container.querySelector('.val-max-gold');
     if (lblGold) lblGold.textContent = maxGold;
 
@@ -106,9 +113,6 @@ export function updateSessionCalculations(rules) {
         card.querySelector('.s-xp').value = rewards.xp;
         card.querySelector('.s-dtp').value = rewards.dtp;
     });
-
-    // Calculate DM rewards using the LIVE player list
-    const playerStats = calculatorInstance.calculatePlayerStats(livePlayers);
     
     // Get DM Level directly from Setup Input to ensure freshness
     const dmLevelInput = document.getElementById('inp-dm-level');
