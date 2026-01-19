@@ -305,6 +305,10 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const sessionSummary = state.session_log.summary || "";
     const dmCollaborators = state.session_log.dm_collaborators || "";
 
+    // Get session ID from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('id') || 'N/A';
+
     let eventsString = '';
     if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
         eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
@@ -396,6 +400,9 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     
     if (dmCollaborators) output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
     if (sessionNotes) output += `**Notes:**\n${sessionNotes}\n\n`;
+
+    // Add Session UUID tracker line before summary
+    output += `|| DM Tool Tracker: ${sessionId} ||\n\n`;
 
     const summaryHeader = `**Session Summary:**\n`;
     const summaryContent = sessionSummary || 'N/A';
