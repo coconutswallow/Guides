@@ -225,18 +225,39 @@ export async function generateOutput() {
     // 1. GAME LISTING OUTPUT
     const listingEl = document.getElementById('out-listing-text');
     if (listingEl) {
-        const stats = stateManager.getStats();
         // Discord timestamp formatting
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
         const relative = state.header.game_datetime ? `<t:${state.header.game_datetime}:R>` : "";
-        const tierStr = (state.header.tier && state.header.tier.length) ? state.header.tier.join(', ') : stats.tier;
+        
+        // FIX: Get tier from multi-select in Game Setup
+        let tierStr = "N/A";
+        if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
+            // Sort tiers numerically and create range display
+            const sortedTiers = state.header.tier.sort((a, b) => {
+                const numA = parseInt(a.replace('Tier ', ''));
+                const numB = parseInt(b.replace('Tier ', ''));
+                return numA - numB;
+            });
+            
+            if (sortedTiers.length === 1) {
+                tierStr = sortedTiers[0];
+            } else {
+                // Create range like "Tier 1 to Tier 3"
+                tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
+            }
+        }
+        
+        // FIX: Get party size and APL directly from Game Setup fields
+        const partySize = state.header.party_size || "N/A";
+        const apl = state.header.apl || "N/A";
+        
         const events = (state.header.event_tags && state.header.event_tags.length) ? ` **[${state.header.event_tags.join(', ')}]**` : "";
 
         const listingText = `**Game:** ${state.header.title}${events}
 **Time:** ${dateStr} (${relative})
 **Format:** ${state.header.game_type || "N/A"}
 **Platform:** ${state.header.platform || "Foundry VTT"}
-**Players:** ${stats.partySize} (APL ${stats.apl})
+**Players:** ${partySize} (APL ${apl})
 **Tier:** ${tierStr}
 **Application:** ${state.header.apps_type || "N/A"}
 **Description:**
@@ -252,7 +273,22 @@ ${state.header.game_description || "No description provided."}
     if (adEl) {
         const stats = stateManager.getStats();
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
-        const tierStr = (state.header.tier && state.header.tier.length) ? state.header.tier.join(', ') : stats.tier;
+        
+        // FIX: Get tier from multi-select in Game Setup (same logic as above)
+        let tierStr = "N/A";
+        if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
+            const sortedTiers = state.header.tier.sort((a, b) => {
+                const numA = parseInt(a.replace('Tier ', ''));
+                const numB = parseInt(b.replace('Tier ', ''));
+                return numA - numB;
+            });
+            
+            if (sortedTiers.length === 1) {
+                tierStr = sortedTiers[0];
+            } else {
+                tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
+            }
+        }
         
         let details = "";
         if (state.header.tone) details += `**Tone:** ${state.header.tone}\n`;
