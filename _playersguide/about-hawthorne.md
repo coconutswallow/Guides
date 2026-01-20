@@ -39,13 +39,13 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
 
     // --- 1. CONFIGURATION ---
-    const mapWidth = 4096;
-    const mapHeight = 2918;
+    const mapWidth = 1251;
+    const mapHeight = 859;
     const mapUrl = "{{ '/assets/images/faerun-map.png' | relative_url }}";
     
     // --- ZOOM SETTINGS ---
     // Format: [Y-Coordinate, X-Coordinate]
-    const initialCenter = [1848, 1339]; 
+    const initialCenter = [841,226]; 
     const initialZoom = 1; 
 
     // FILTER SETTINGS: 'all' or 'home_only'
