@@ -189,6 +189,8 @@ class StateManager {
             { el: this.dom.warnings, sect: 'header', field: 'warnings', update: ['outputs'] },
             { el: this.dom.howToApply, sect: 'header', field: 'how_to_apply', update: ['outputs'] },
             { el: this.dom.description, sect: 'header', field: 'game_description', update: ['outputs'] },
+            { el: this.dom.apl, sect: 'header', field: 'apl', update: ['outputs'] },
+            { el: this.dom.partySize, sect: 'header', field: 'party_size', update: ['outputs'] }
             // Session Log Inputs
             { el: this.dom.sessionNotes, sect: 'session_log', field: 'notes', update: ['outputs'] },
             { el: this.dom.dmCollab, sect: 'session_log', field: 'dm_collaborators', update: ['outputs'] },
@@ -407,6 +409,8 @@ class StateManager {
             'header.notes': 'notes',
             'header.warnings': 'warnings',
             'header.how_to_apply': 'howToApply',
+            'header.apl': 'apl',
+            'header.party_size': 'partySize',
             
             'header.listing_url': 'listingUrl',
             'header.lobby_url': 'lobbyUrl',
