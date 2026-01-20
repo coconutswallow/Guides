@@ -190,7 +190,7 @@ class StateManager {
             { el: this.dom.howToApply, sect: 'header', field: 'how_to_apply', update: ['outputs'] },
             { el: this.dom.description, sect: 'header', field: 'game_description', update: ['outputs'] },
             { el: this.dom.apl, sect: 'header', field: 'apl', update: ['outputs'] },
-            { el: this.dom.partySize, sect: 'header', field: 'party_size', update: ['outputs'] }
+            { el: this.dom.partySize, sect: 'header', field: 'party_size', update: ['outputs'] },
             // Session Log Inputs
             { el: this.dom.sessionNotes, sect: 'session_log', field: 'notes', update: ['outputs'] },
             { el: this.dom.dmCollab, sect: 'session_log', field: 'dm_collaborators', update: ['outputs'] },
