@@ -45,8 +45,8 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     
     // --- ZOOM SETTINGS ---
     // Format: [Y-Coordinate, X-Coordinate]
-    const initialCenter = [841,226]; 
-    const initialZoom = 1; 
+    const initialCenter = [541,226]; 
+    const initialZoom = 0; 
 
     // FILTER SETTINGS: 'all' or 'home_only'
     const filterMode = 'home_only'; 
