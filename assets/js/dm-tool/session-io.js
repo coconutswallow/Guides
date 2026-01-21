@@ -222,81 +222,104 @@ export function populateForm(session, callbacks, options = {}) {
 export async function generateOutput() {
     const state = getFormData();
     
-    // Shared tier calculation
-    let tierStr = "N/A";
-    if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
-        const sortedTiers = state.header.tier.sort((a, b) => {
-            const numA = parseInt(a.replace('Tier ', ''));
-            const numB = parseInt(b.replace('Tier ', ''));
-            return numA - numB;
-        });
-        
-        if (sortedTiers.length === 1) {
-            tierStr = sortedTiers[0];
-        } else {
-            tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
-        }
-    }
-    
-    // Shared APL
-    const apl = state.header.apl || "N/A";
-    
-    // Shared events
-    let eventsString = '';
-    if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
-        eventsString = `**Events:** ${state.header.event_tags.join(', ')}\n`;
-    }
-    
-    // 1. GAME LISTING OUTPUT (Short format for scheduling)
+    // 1. GAME LISTING OUTPUT
     const listingEl = document.getElementById('out-listing-text');
     if (listingEl) {
+        // Discord timestamp formatting
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
-        const relative = state.header.game_datetime ? `<t:${state.header.game_datetime}:R>` : "";
-        const partySize = state.header.party_size || "N/A";
-
-        const listingText = `**Game:** ${state.header.title}
-${eventsString}**Time:** ${dateStr} (${relative})
-**Format:** ${state.header.game_type || "N/A"}
-**Platform:** ${state.header.platform || "Foundry VTT"}
-**Players:** ${partySize} (APL ${apl})
-**Tier:** ${tierStr}
-**Application:** ${state.header.apps_type || "N/A"}
-**Description:**
-${state.header.game_description || "No description provided."}
-
-**Lobby:** ${state.header.lobby_url || "N/A"}`;
         
-        listingEl.value = listingText;
-    }
-
-    // 2. GAME ADVERTISEMENT OUTPUT (Long format for LFG)
-    const adEl = document.getElementById('out-ad-text');
-    if (adEl) {
-        const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
+        // FIX: Get tier from multi-select in Game Setup
+        let tierStr = "N/A";
+        if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
+            // Sort tiers numerically and create range display
+            const sortedTiers = state.header.tier.sort((a, b) => {
+                const numA = parseInt(a.replace('Tier ', ''));
+                const numB = parseInt(b.replace('Tier ', ''));
+                return numA - numB;
+            });
+            
+            if (sortedTiers.length === 1) {
+                tierStr = sortedTiers[0];
+            } else {
+                // Create range like "Tier 1 to Tier 3"
+                tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
+            }
+        }
+        
+        // FIX: Get APL directly from Game Setup fields
+        const apl = state.header.apl || "N/A";
+        
+        let eventsString = '';
+        if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
+            eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
+        }
         
         let details = "";
         if (state.header.tone) details += `**Tone:** ${state.header.tone}\n`;
         if (state.header.focus) details += `**Focus:** ${state.header.focus}\n`;
         if (state.header.encounter_difficulty) details += `**Encounter Difficulty:** ${state.header.encounter_difficulty}\n`;
-        if (state.header.threat_level) details += `**Threat Level:** ${state.header.threat_level}\n`;
-        if (state.header.char_loss) details += `**Character Loss:** ${state.header.char_loss}\n`;
+        if (state.header.threat_level) details += `**Enemy Threat Level:** ${state.header.threat_level}\n`;
+        if (state.header.char_loss) details += `**Chance of Character Loss:** ${state.header.char_loss}\n`;
         
-        let warnings = state.header.warnings ? `\n**Content Warnings:**\n${state.header.warnings}\n` : "";
-        let houseRules = state.header.house_rules ? `\n**House Rules:**\n${state.header.house_rules}\n` : "";
-        let apply = state.header.how_to_apply ? `\n**How to Apply:**\n${state.header.how_to_apply}\n` : "";
+        let warnings = state.header.warnings ? `**Content Warnings:**\n${state.header.warnings}\n\n` : "";
+        let houseRules = state.header.house_rules ? `**House Rules:**\n${state.header.house_rules}\n\n` : "";
+        let apply = state.header.how_to_apply ? `**How to Apply:**\n${state.header.how_to_apply}\n\n` : "";
 
-        const adText = `**${state.header.title}**
-${dateStr}
+        const listingText = `**Game Name:** ${state.header.title}
+${eventsString}**Date & Time:** ${dateStr}
 
-**Tier:** ${tierStr} | **APL:** ${apl}
-**Platform:** ${state.header.platform || "Foundry VTT"}
-
-${details}${warnings}${houseRules}
 **Description:**
-${state.header.game_description || "No description."}
-${apply}
-**Game Listing:** ${state.header.listing_url || ""}
-`;
+${state.header.game_description || "No description provided."}
+
+**Applications:** ${state.header.apps_type || "N/A"}
+**Tier:** ${tierStr}  **APL:** ${apl}
+**Platform:** ${state.header.platform || "Foundry VTT"}
+${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_url || "N/A"}`;
+        
+        listingEl.value = listingText;
+    }
+
+    // 2. GAME ADVERTISEMENT OUTPUT
+    const adEl = document.getElementById('out-ad-text');
+    if (adEl) {
+        const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
+        const relative = state.header.game_datetime ? `<t:${state.header.game_datetime}:R>` : "";
+        
+        // FIX: Get tier from multi-select in Game Setup (same logic as above)
+        let tierStr = "N/A";
+        if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
+            const sortedTiers = state.header.tier.sort((a, b) => {
+                const numA = parseInt(a.replace('Tier ', ''));
+                const numB = parseInt(b.replace('Tier ', ''));
+                return numA - numB;
+            });
+            
+            if (sortedTiers.length === 1) {
+                tierStr = sortedTiers[0];
+            } else {
+                tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
+            }
+        }
+        
+        // FIX: Get party size and APL directly from Game Setup field
+        const partySize = state.header.party_size || "N/A";
+        const apl = state.header.apl || "N/A";
+        
+        let eventsString = '';
+        if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
+            eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
+        }
+
+        const adText = `**Game:** ${state.header.title}
+${eventsString}**Time:** ${dateStr} (${relative})
+**Format:** ${state.header.game_type || "N/A"}
+**Players:** ${partySize}
+**Tier:** ${tierStr}  **APL:** ${apl}
+**Applications:** ${state.header.apps_type || "N/A"}
+**Description:**
+${state.header.game_description || "No description provided."}
+
+**Game Listing:** ${state.header.listing_url || "N/A"}`;
 
         adEl.value = adText;
     }
