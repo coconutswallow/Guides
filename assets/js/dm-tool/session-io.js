@@ -276,6 +276,7 @@ ${state.header.game_description || "No description provided."}
     if (adEl) {
         const stats = stateManager.getStats();
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
+        const apl = state.header.apl || "N/A";
         
         // FIX: Get tier from multi-select in Game Setup (same logic as above)
         let tierStr = "N/A";
@@ -307,7 +308,7 @@ ${state.header.game_description || "No description provided."}
         const adText = `**${state.header.title}**
 ${dateStr}
 
-**Tier:** ${tierStr} | **APL:** ${stats.apl}
+**Tier:** ${tierStr} | **APL:** ${apl}
 **Platform:** ${state.header.platform || "Foundry VTT"}
 
 ${details}${warnings}${houseRules}
