@@ -253,11 +253,11 @@ export async function generateOutput() {
         
         let eventsString = '';
         if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
-            eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
+            eventsString = `**Events:** ${state.header.event_tags.join(', ')}\n`;
         }
 
-        const listingText = `**Game:** ${state.header.title}${eventsLine}
-**Time:** ${dateStr} (${relative})
+        const listingText = `**Game:** ${state.header.title}
+${eventsString}**Time:** ${dateStr} (${relative})
 **Format:** ${state.header.game_type || "N/A"}
 **Platform:** ${state.header.platform || "Foundry VTT"}
 **Players:** ${partySize} (APL ${apl})
@@ -274,9 +274,7 @@ ${state.header.game_description || "No description provided."}
     // 2. GAME ADVERTISEMENT OUTPUT
     const adEl = document.getElementById('out-ad-text');
     if (adEl) {
-        const stats = stateManager.getStats();
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
-        const apl = state.header.apl || "N/A";
         
         // FIX: Get tier from multi-select in Game Setup (same logic as above)
         let tierStr = "N/A";
@@ -293,6 +291,9 @@ ${state.header.game_description || "No description provided."}
                 tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
             }
         }
+        
+        // FIX: Get APL directly from Game Setup field
+        const apl = state.header.apl || "N/A";
         
         let details = "";
         if (state.header.tone) details += `**Tone:** ${state.header.tone}\n`;
