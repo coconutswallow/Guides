@@ -43,13 +43,11 @@ extra_css:
                 <p>This tool is intended to make it easy for you to DM in the Hawthorne Server from initial game listing to logging your session. </p>
                 <p>For new DMs, it provides a guided step-by-step workflow; for experienced DMs, you can save/load templates to spin up a game in a couple of minutes:</p>
                 <ul>
-                    <li><strong>Game Setup: </strong> Setup your game details for the Game Listing and Ad buttons to copy to clipboard.</li>
-                    <li><strong>Templates: </strong> Save templates to quickly load your game setup.</li>
-                    <li><strong>Loot & Incentive Calculations: </strong> Manage loot rolls and incentives for players and yourself</li>
-                    <li><strong>Session Details: </strong> Create the session log details to post to #session-log</li>
-                    <li><strong>MAL: </strong> Copy-Paste your session details into your MAL</li>
-                    <li><strong>Multi-session support: </strong> Function to create a copy for next session and auto-updates games played stats for incentive calculations</li>
-                    <li><strong>Player Input Pages: </strong> Don't want to log all of the player data yourself? Send them a link and let them update it for you!</li>
+                    <li><strong>Game Setup (Steps 1-3): </strong> Setup your game details, then copy the Game Listing and Game Ad to discord to post your game and recruit players.</li>
+                    <li><strong>Player Setup (Step 4): </strong> Once you've selected your players, update their details in Step 4.  You can manually enter their data, or send them a link to update their details themselves.</li>
+                    <li><strong>Plan / Declare Loot (Step 5) </strong> Anytime before the end of the session, plan and declare loot (for both the party and yourself)</li>
+                    <li><strong>Session Details (Step 6-7): </strong> Create the session log details to post to #session-log</li>
+                    <li><strong>MAL: (Step 8) </strong> Copy-Paste your session details into your MAL</li>
                 </ul>
             </div>
         </div>
@@ -136,7 +134,7 @@ extra_css:
                                     <label>Tier (multi-select)<span class="req">*</span></label>
                                     <select id="inp-tier" multiple data-required="true" style="height: 100px;"></select>
                                 </div>
-                                <div class="form-group flex-grow"><label>APL <span class="req">*</span></label><input type="text" id="inp-apl" placeholder="e.g. APL 8" data-required="true"></div>
+                                <div class="form-group flex-grow"><label>APL <span class="req">*</span></label><input type="text" id="inp-apl" placeholder="8" data-required="true"></div>
                                 <div class="form-group flex-grow"><label>Party Size <span class="req">*</span></label><input type="text" id="inp-party-size" value="5" data-required="true"></div>
                             </div>
                         </div>

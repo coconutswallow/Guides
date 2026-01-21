@@ -251,9 +251,12 @@ export async function generateOutput() {
         const partySize = state.header.party_size || "N/A";
         const apl = state.header.apl || "N/A";
         
-        const events = (state.header.event_tags && state.header.event_tags.length) ? ` **[${state.header.event_tags.join(', ')}]**` : "";
+        let eventsString = '';
+        if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
+            eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
+        }
 
-        const listingText = `**Game:** ${state.header.title}${events}
+        const listingText = `**Game:** ${state.header.title}${eventsLine}
 **Time:** ${dateStr} (${relative})
 **Format:** ${state.header.game_type || "N/A"}
 **Platform:** ${state.header.platform || "Foundry VTT"}
