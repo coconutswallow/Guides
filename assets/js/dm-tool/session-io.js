@@ -222,39 +222,37 @@ export function populateForm(session, callbacks, options = {}) {
 export async function generateOutput() {
     const state = getFormData();
     
-    // 1. GAME LISTING OUTPUT
+    // Shared tier calculation
+    let tierStr = "N/A";
+    if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
+        const sortedTiers = state.header.tier.sort((a, b) => {
+            const numA = parseInt(a.replace('Tier ', ''));
+            const numB = parseInt(b.replace('Tier ', ''));
+            return numA - numB;
+        });
+        
+        if (sortedTiers.length === 1) {
+            tierStr = sortedTiers[0];
+        } else {
+            tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
+        }
+    }
+    
+    // Shared APL
+    const apl = state.header.apl || "N/A";
+    
+    // Shared events
+    let eventsString = '';
+    if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
+        eventsString = `**Events:** ${state.header.event_tags.join(', ')}\n`;
+    }
+    
+    // 1. GAME LISTING OUTPUT (Short format for scheduling)
     const listingEl = document.getElementById('out-listing-text');
     if (listingEl) {
-        // Discord timestamp formatting
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
         const relative = state.header.game_datetime ? `<t:${state.header.game_datetime}:R>` : "";
-        
-        // FIX: Get tier from multi-select in Game Setup
-        let tierStr = "N/A";
-        if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
-            // Sort tiers numerically and create range display
-            const sortedTiers = state.header.tier.sort((a, b) => {
-                const numA = parseInt(a.replace('Tier ', ''));
-                const numB = parseInt(b.replace('Tier ', ''));
-                return numA - numB;
-            });
-            
-            if (sortedTiers.length === 1) {
-                tierStr = sortedTiers[0];
-            } else {
-                // Create range like "Tier 1 to Tier 3"
-                tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
-            }
-        }
-        
-        // FIX: Get party size and APL directly from Game Setup fields
         const partySize = state.header.party_size || "N/A";
-        const apl = state.header.apl || "N/A";
-        
-        let eventsString = '';
-        if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
-            eventsString = `**Events:** ${state.header.event_tags.join(', ')}\n`;
-        }
 
         const listingText = `**Game:** ${state.header.title}
 ${eventsString}**Time:** ${dateStr} (${relative})
@@ -271,29 +269,10 @@ ${state.header.game_description || "No description provided."}
         listingEl.value = listingText;
     }
 
-    // 2. GAME ADVERTISEMENT OUTPUT
+    // 2. GAME ADVERTISEMENT OUTPUT (Long format for LFG)
     const adEl = document.getElementById('out-ad-text');
     if (adEl) {
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
-        
-        // FIX: Get tier from multi-select in Game Setup (same logic as above)
-        let tierStr = "N/A";
-        if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
-            const sortedTiers = state.header.tier.sort((a, b) => {
-                const numA = parseInt(a.replace('Tier ', ''));
-                const numB = parseInt(b.replace('Tier ', ''));
-                return numA - numB;
-            });
-            
-            if (sortedTiers.length === 1) {
-                tierStr = sortedTiers[0];
-            } else {
-                tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
-            }
-        }
-        
-        // FIX: Get APL directly from Game Setup field
-        const apl = state.header.apl || "N/A";
         
         let details = "";
         if (state.header.tone) details += `**Tone:** ${state.header.tone}\n`;
