@@ -161,10 +161,13 @@ title: Map Editor
     margin: 0.25rem 0;
     color: var(--color-text-main);
 }
-
 #map-editor-widget {
-    min-height: 600px;
-    height: 600px;
+    /* No height set here - let the global map.css aspect-ratio handle it */
+    width: 100%;
+    /* Optional: Cap the width so it doesn't get too tall on huge screens */
+    max-width: 1000px; 
+    margin: 0 auto; /* Center it */
+    
     border: 2px solid var(--color-border-medium);
     border-radius: var(--radius-md);
     position: relative;

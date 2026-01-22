@@ -1,47 +1,52 @@
 /* ============================================
-   Map Component Styles - Simplified 16:9
+   Map Component Styles (Corrected)
    ============================================ */
 
 /* 1. Base Container */
-.map-component-wrapper {
+.map-component-wrapper,
+[data-map-component] {
     position: relative;
-    /* Force standard 16:9 Aspect Ratio */
-    aspect-ratio: 16 / 9;
-    width: 100%;
-    /* Let the aspect-ratio handle the height */
-    height: auto !important; 
+    width: 100% !important;
+    
+    /* Enforce 16:9 Aspect Ratio */
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
     
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     overflow: hidden;
-    margin: 1.5em 0;
+    margin: 1.5em 0 !important;
     box-shadow: var(--shadow-sm);
     z-index: 1;
 }
 
 /* 2. CRITICAL FIX: Reset Image Styles inside Map */
-/* This prevents the "Pin Drift" by removing the margins your doc theme adds */
+/* We reset margins (fixes drift) but DO NOT touch width/height (fixes rendering) */
 .doc-body .leaflet-container img,
-.leaflet-container img {
+.leaflet-container img,
+.leaflet-image-layer {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
-    max-width: none !important;
-    max-height: none !important;
     box-shadow: none !important;
     background: transparent !important;
+    border-radius: 0 !important;
+    
+    /* DO NOT force width/height to auto - Leaflet must control this! */
+    max-width: none !important;
+    max-height: none !important;
 }
 
 /* 3. Ensure Leaflet Fills the Container */
 .leaflet-container {
     width: 100% !important;
     height: 100% !important;
-    font-family: var(--font-body);
     z-index: 1;
+    background: #f0f0f0; /* Light placeholder while loading */
 }
 
-/* 4. Map UI Elements (Titles, Popups, etc) */
+/* 4. Map Typography */
 .map-component-title {
     font-family: var(--font-header);
     color: var(--color-primary);
@@ -49,18 +54,18 @@
     margin-bottom: 0.5rem;
 }
 
-/* Popup Form Styling */
+/* 5. Editor Popup Form */
 .pin-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    min-width: 260px;
+    gap: 8px;
+    min-width: 250px;
 }
 
 .pin-form input[type="text"], 
 .pin-form textarea {
-    padding: 8px;
-    border: 1px solid var(--color-border);
+    padding: 6px;
+    border: 1px solid #ccc;
     width: 100%;
     box-sizing: border-box;
 }
@@ -72,15 +77,6 @@
     border: none;
     padding: 6px 12px;
     cursor: pointer;
-    font-weight: bold;
     margin-top: 5px;
     border-radius: 4px;
 }
-
-.pin-form button:hover {
-    background-color: var(--color-secondary);
-}
-
-/* Error/Loading States */
-.error { padding: 2rem; color: red; text-align: center; }
-.loading { padding: 2rem; text-align: center; color: #666; }
