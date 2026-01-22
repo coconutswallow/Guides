@@ -1,79 +1,364 @@
 /**
-* Creates anchor links for all headings (h1, h2, etc.) on the page that have an ID.
-*  
-* Wait for the browser to finish parsing the HTML document before running the script.
- * This ensures that all the heading elements we want to select are available (in the DOM).
- * 'DOMContentLoaded' is a reliable event for this, as it doesn't wait for images or CSS.
- * 
- * Location: \assets\js\heading-links.js
+ * map-widget.js
+ * Using standard positive Y coordinates (top=0, bottom=height)
+ * This prevents vertical drift during zoom operations
  */
-document.addEventListener('DOMContentLoaded', function() {
-  
-  // Find all heading elements (h1, h2, etc.) that have an 'id' attribute.
-  // We specifically need the 'id' because that's what we use to create the anchor link.
-  const headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
-  
-  // Loop through each of the heading elements found on the page.
-  headings.forEach(heading => {
-    
-    // Create a new anchor (<a>) element in memory. This element doesn't
-    // exist on the page yet; it's just an object.
-    const link = document.createElement('a');
-    
-    // Add a CSS class to the link. This is how you can style the link
-    // using your CSS file (e.g., to make it a '#' symbol, hide it until hover, etc.).
-    link.className = 'heading-link';
-    
-    // Set the link's 'href' attribute to be a "hash link"
-    // that points to the heading's own ID.
-    // This is what makes it a functional anchor link.
-    link.href = '#' + heading.id;
-    
-    // Add an 'aria-label' for accessibility. This text will be read by
-    // screen readers to help users with visual impairments understand
-    // what this (often visual-only) link does.
-    link.setAttribute('aria-label', 'Link to this section');
-    
-    /**
-     * --- Optional Feature: Copy link to clipboard ---
-     *
-     * This adds a "click" event listener to the link. When a user clicks it,
-     * we will copy the full, absolute URL to their clipboard.
-     */
-    link.addEventListener('click', function(e) {
-      
-      // Stop the browser's default behavior for this click.
-      // Normally, clicking this link would just jump the page to the anchor.
-      // We want to *prevent* that jump and run our custom "copy" logic instead.
-      e.preventDefault();
-      
-      // Build the complete URL.
-      // - window.location.origin: "https://www.example.com"
-      // - window.location.pathname: "/my-cool-page"
-      // - '#' + heading.id: "#my-section-title"
-      // Result: "https://www.example.com/my-cool-page#my-section-title"
-      const fullUrl = window.location.origin + window.location.pathname + '#' + heading.id;
-      
-      // Use the modern, asynchronous Clipboard API to write the URL text.
-      // This returns a "Promise", so we use .then() to run code after it succeeds.
-      navigator.clipboard.writeText(fullUrl).then(() => {
+
+import { supabase } from './supabaseClient.js';
+
+class MapComponent {
+    constructor(container) {
+        this.container = container;
+        this.mapId = container.dataset.mapId;
+        this.mapName = container.dataset.mapName;
+        this.isEditable = container.dataset.editable === 'true';
+        this.map = null;
+        this.currentMapData = null;
+        this.markers = new Map();
         
-        // This is a great place to show a small "Copied!" tooltip or notification
-        // to the user. For this example, we'll just log to the console.
-        console.log('Link copied!');
-      }).catch(err => {
-        // It's always good practice to handle potential errors.
-        // For example, the user might have denied clipboard permissions.
-        console.error('Failed to copy link: ', err);
-      });
+        this.init();
+    }
+
+    async init() {
+        // Ensure container is fully rendered before Leaflet touches it
+        // Check width only - height might be 0 initially and get set by CSS
+        if (!this.container || this.container.offsetWidth === 0) {
+            setTimeout(() => this.init(), 100);
+            return;
+        }
+
+        try {
+            if (this.mapId) {
+                await this.loadMapById(this.mapId);
+            } else if (this.mapName) {
+                await this.loadMapByName(this.mapName);
+            } else {
+                this.renderError("No map ID or name provided.");
+            }
+        } catch (err) {
+            console.error("Initialization error:", err);
+            this.renderError("Failed to initialize map.");
+        }
+    }
+
+    async loadMapById(id) {
+        const { data, error } = await supabase
+            .from('location_maps')
+            .select('*')
+            .eq('id', id)
+            .single();
+        if (error) throw error;
+        this.renderMap(data);
+    }
+
+    async loadMapByName(name) {
+        const { data, error } = await supabase
+            .from('location_maps')
+            .select('*')
+            .eq('name', name)
+            .single();
+        if (error) throw error;
+        this.renderMap(data);
+    }
+
+    renderMap(mapData) {
+        this.currentMapData = mapData;
+        this.container.innerHTML = ''; 
+
+        const w = mapData.width;
+        const h = mapData.height;
+        const aspectRatio = w / h;
+
+        console.log(`Map dimensions: ${w} × ${h}, aspect ratio: ${aspectRatio.toFixed(2)}:1`);
+
+        // Set aspect ratio as CSS variable and height
+        this.container.style.setProperty('--map-aspect-ratio', `${w} / ${h}`);
+        this.container.style.height = mapData.display_height || '600px';
+        
+        console.log(`Container size: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
+
+        // Use standard image coordinate bounds
+        const bounds = [[0, 0], [h, w]];
+
+        // Create a custom CRS with a fixed transformation scale
+        const customCRS = L.extend({}, L.CRS.Simple, {
+            transformation: new L.Transformation(1, 0, 1, 0)
+        });
+
+        this.map = L.map(this.container.id, {
+            crs: customCRS,
+            minZoom: -3,
+            maxZoom: 2,
+            maxBounds: bounds,
+            maxBoundsViscosity: 1.0,
+            attributionControl: false,
+            zoomSnap: 0.25,
+            zoomDelta: 0.25,
+            zoomAnimation: false,
+            markerZoomAnimation: false,
+            trackResize: true
+        });
+
+        // Create the image overlay with exact bounds
+        const imageOverlay = L.imageOverlay(mapData.map_file_url, bounds, {
+            crossOrigin: true,
+            interactive: true
+        }).addTo(this.map);
+
+        // Wait for image to load before setting view
+        const img = imageOverlay.getElement();
+        if (img) {
+            img.onload = () => {
+                console.log('Image loaded, setting view');
+                this.setInitialView(mapData, bounds);
+            };
+            // If image is already cached
+            if (img.complete) {
+                this.setInitialView(mapData, bounds);
+            }
+        } else {
+            this.setInitialView(mapData, bounds);
+        }
+
+        // Add zoom end listener to force marker position recalculation
+        this.map.on('zoomend', () => {
+            this.map.eachLayer((layer) => {
+                if (layer instanceof L.Marker) {
+                    layer.update();
+                }
+            });
+        });
+
+        // Load pins
+        this.loadLocations();
+
+        // Add editor controls if needed
+        if (this.isEditable) {
+            this.setupEditorControls();
+        }
+    }
+
+    setInitialView(mapData, bounds) {
+        // Set initial view
+        if (mapData.initial_x !== null && mapData.initial_y !== null) {
+            this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0, {
+                animate: false
+            });
+        } else {
+            this.map.fitBounds(bounds, {
+                animate: false
+            });
+        }
+
+        // Force recalculation after a delay to ensure container is stable
+        setTimeout(() => {
+            if (this.map) {
+                this.map.invalidateSize({
+                    animate: false
+                });
+                console.log(`Map invalidated. Container: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
+            }
+        }, 100);
+    }
+
+    async loadLocations() {
+        console.log('Loading locations for map ID:', this.currentMapData.id);
+        
+        const { data, error } = await supabase
+            .from('locations')
+            .select('*')
+            .eq('map_id', this.currentMapData.id);
+
+        if (error) {
+            console.error("Error loading pins:", error);
+            return;
+        }
+        
+        console.log('Locations loaded:', data?.length || 0, 'pins');
+        
+        if (!data || data.length === 0) {
+            console.warn('No locations found for this map');
+            return;
+        }
+        
+        data.forEach(loc => {
+            console.log('Adding marker:', loc.name, `at [${loc.y}, ${loc.x}]`);
+            this.addMarker(loc);
+        });
+        
+        console.log('All markers added. Total markers on map:', this.markers.size);
+    }
+
+    addMarker(location) {
+        const x = parseFloat(location.x);
+        let y = parseFloat(location.y);
+
+        // BACKWARD COMPATIBILITY: Convert old negative Y coords to positive
+        // If you have legacy pins saved with negative Y, this will fix them on display
+        if (y < 0) {
+            console.warn(`Converting legacy negative Y coordinate for "${location.name}": ${y} → ${Math.abs(y)}`);
+            y = Math.abs(y);
+        }
+
+        const marker = L.marker([y, x]).addTo(this.map);
+        
+        let popupContent = `
+            <div class="location-display">
+                <h3 class="map-component-title">${location.name}</h3>
+                ${location.description ? `<p>${location.description}</p>` : ''}
+                ${location.link_url ? `<a href="${location.link_url}" target="_blank">View Details</a>` : ''}
+                ${location.is_home ? `<p style="color: #f39c12; font-weight: bold;">🏠 Home Location</p>` : ''}
+            </div>
+        `;
+
+        if (this.isEditable) {
+            popupContent += `
+                <hr>
+                <button class="delete-btn" onclick="window.mapComponents['${this.container.id}'].deletePin(${location.id})">Delete Pin</button>
+            `;
+        }
+
+        marker.bindPopup(popupContent);
+        this.markers.set(location.id, marker);
+    }
+
+    setupEditorControls() {
+        this.map.on('contextmenu', (e) => {
+            const { lat, lng } = e.latlng;
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`
+                    <div class="pin-form">
+                        <label>Location Name*</label>
+                        <input type="text" id="new-pin-name" placeholder="Enter location name">
+                        
+                        <label>Description</label>
+                        <textarea id="new-pin-description" rows="3" placeholder="Optional description"></textarea>
+                        
+                        <label>Link URL</label>
+                        <input type="text" id="new-pin-link" placeholder="https://example.com">
+                        
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="new-pin-home" style="width: auto; margin: 0;">
+                            <span>Set as Home Location</span>
+                        </label>
+                        
+                        <button onclick="window.mapComponents['${this.container.id}'].savePin(${lat}, ${lng})">Save Pin</button>
+                    </div>
+                `).openOn(this.map);
+        });
+
+        // Add a "Save View" button for Staff
+        const saveViewBtn = L.control({ position: 'topright' });
+        saveViewBtn.onAdd = () => {
+            const btn = L.DomUtil.create('button', 'save-view-btn');
+            btn.innerHTML = '💾 Set Default View';
+            btn.style.padding = '8px';
+            btn.style.cursor = 'pointer';
+            btn.style.backgroundColor = '#3498db';
+            btn.style.color = 'white';
+            btn.style.border = 'none';
+            btn.style.borderRadius = '4px';
+            btn.style.fontWeight = 'bold';
+            btn.onclick = () => this.saveCurrentView();
+            return btn;
+        };
+        saveViewBtn.addTo(this.map);
+
+        // Add a "Show Current Coords" button for debugging
+        const coordsBtn = L.control({ position: 'bottomleft' });
+        coordsBtn.onAdd = () => {
+            const container = L.DomUtil.create('div', 'coords-display');
+            container.style.padding = '5px 10px';
+            container.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            container.style.borderRadius = '4px';
+            container.style.fontSize = '12px';
+            container.innerHTML = 'Center: [0, 0] Zoom: 0';
+            
+            this.map.on('moveend zoomend', () => {
+                const center = this.map.getCenter();
+                const zoom = this.map.getZoom();
+                container.innerHTML = `Center: [${center.lat.toFixed(1)}, ${center.lng.toFixed(1)}] Zoom: ${zoom.toFixed(1)}`;
+            });
+            
+            return container;
+        };
+        coordsBtn.addTo(this.map);
+    }
+
+    async savePin(lat, lng) {
+        const name = document.getElementById('new-pin-name').value.trim();
+        const description = document.getElementById('new-pin-description').value.trim();
+        const link = document.getElementById('new-pin-link').value.trim();
+        const isHome = document.getElementById('new-pin-home').checked;
+        
+        if (!name) {
+            alert('Please enter a location name');
+            return;
+        }
+        
+        // Build the insert object
+        const pinData = {
+            map_id: this.currentMapData.id,
+            name: name,
+            x: lng,  // X is straightforward
+            y: lat   // Y is already negative from our coordinate system
+        };
+        
+        // Add optional fields only if they have values
+        if (description) pinData.description = description;
+        if (link) pinData.link_url = link;
+        if (isHome) pinData.is_home = isHome;
+        
+        const { data, error } = await supabase
+            .from('locations')
+            .insert([pinData])
+            .select();
+
+        if (error) return alert(error.message);
+        this.addMarker(data[0]);
+        this.map.closePopup();
+    }
+
+    async saveCurrentView() {
+        const center = this.map.getCenter();
+        const zoom = this.map.getZoom();
+
+        const { error } = await supabase
+            .from('location_maps')
+            .update({
+                initial_x: center.lng,
+                initial_y: center.lat,  // Store as-is (will be negative)
+                initial_zoom: zoom
+            })
+            .eq('id', this.currentMapData.id);
+
+        if (error) {
+            alert("Error saving view: " + error.message);
+        } else {
+            alert(`Default view saved!\nCenter: [${center.lat.toFixed(1)}, ${center.lng.toFixed(1)}]\nZoom: ${zoom.toFixed(1)}`);
+        }
+    }
+
+    async deletePin(id) {
+        if (!confirm("Delete this pin?")) return;
+        const { error } = await supabase.from('locations').delete().eq('id', id);
+        if (error) return alert(error.message);
+        
+        this.map.removeLayer(this.markers.get(id));
+        this.markers.delete(id);
+    }
+
+    renderError(msg) {
+        this.container.innerHTML = `<div class="error" style="display:block">${msg}</div>`;
+    }
+}
+
+window.mapComponents = window.mapComponents || {};
+export function initMapComponents() {
+    document.querySelectorAll('[data-map-component]').forEach(el => {
+        if (!window.mapComponents[el.id]) {
+            window.mapComponents[el.id] = new MapComponent(el);
+        }
     });
-    
-    // Finally, take the 'link' object we created in memory and
-    // add it to the actual page. We "append" it as the last child
-    // *inside* the heading element.
-    //
-    // Before: <h2 id="my-section">My Section</h2>
-    // After:  <h2 id="my-section">My Section<a class="heading-link" ...></a></h2>
-    heading.appendChild(link);
-  });
-});
+}

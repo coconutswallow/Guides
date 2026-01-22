@@ -183,7 +183,62 @@
 
 [data-theme="dark"] .pin-form input[type="text"],
 [data-theme="dark"] .pin-form textarea {
-    b/* ============================================
+    background-color: var(--color-bg-medium);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .location-display p {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .location-display hr {
+    border-top-color: var(--color-border);
+}
+
+/* 8. Leaflet Control Buttons (Save View, Coords Display) */
+.save-view-btn {
+    background-color: var(--color-primary) !important;
+    color: var(--color-btn-text) !important;
+    border: 2px solid var(--color-border) !important;
+    box-shadow: var(--shadow-sm) !important;
+    font-family: var(--font-header) !important;
+    font-weight: 600 !important;
+}
+
+.save-view-btn:hover {
+    background-color: var(--color-secondary) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.coords-display {
+    background-color: var(--color-bg-light) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+    box-shadow: var(--shadow-sm) !important;
+    font-family: var(--font-body) !important;
+}
+
+[data-theme="dark"] .coords-display {
+    background-color: var(--color-bg-medium) !important;
+    color: var(--color-text) !important;
+}
+
+/* 9. Optional: Dark Leaflet Popups */
+/* Uncomment to make popups dark-themed */
+/*
+[data-theme="dark"] .leaflet-popup-content-wrapper,
+[data-theme="dark"] .leaflet-popup-tip {
+    background: var(--color-bg-medium) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border);
+}
+
+[data-theme="dark"] .leaflet-popup-content-wrapper .pin-form label,
+[data-theme="dark"] .leaflet-popup-content-wrapper .location-display p {
+    color: var(--color-text) !important;
+}
+*//* ============================================
    Map Component Styles (Aligned with style.css)
    ============================================ */
 
