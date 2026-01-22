@@ -64,19 +64,34 @@ class MapComponent {
     renderMap(mapData) {
         this.currentMapData = mapData;
         this.container.innerHTML = ''; 
-        this.container.style.height = mapData.display_height || '600px';
 
         const w = mapData.width;
         const h = mapData.height;
+        const aspectRatio = w / h;
 
-        console.log(`Map dimensions: ${w} × ${h}, aspect ratio: ${(w/h).toFixed(2)}:1`);
-        console.log(`Container size: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
+        console.log(`Map dimensions: ${w} × ${h}, aspect ratio: ${aspectRatio.toFixed(2)}:1`);
+
+        // Set aspect ratio as CSS variable
+        this.container.style.setProperty('--map-aspect-ratio', `${w} / ${h}`);
+        
+        // Only set height if browser doesn't support aspect-ratio
+        // This allows CSS aspect-ratio to control the height instead
+        if (!CSS.supports('aspect-ratio', '1')) {
+            this.container.style.height = mapData.display_height || '600px';
+        } else {
+            // Remove any height constraint to let aspect-ratio work
+            this.container.style.height = 'auto';
+        }
+        
+        // Force a reflow to ensure container has calculated dimensions
+        setTimeout(() => {
+            console.log(`Container size after aspect-ratio: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
+        }, 100);
 
         // Use standard image coordinate bounds
         const bounds = [[0, 0], [h, w]];
 
         // Create a custom CRS with a fixed transformation scale
-        // This prevents coordinate drift during zoom by using a consistent scale factor
         const customCRS = L.extend({}, L.CRS.Simple, {
             transformation: new L.Transformation(1, 0, 1, 0)
         });
@@ -92,7 +107,6 @@ class MapComponent {
             zoomDelta: 0.25,
             zoomAnimation: false,
             markerZoomAnimation: false,
-            // Force re-render on zoom end to fix any drift
             trackResize: true
         });
 
