@@ -71,8 +71,15 @@ class MapComponent {
 
         console.log(`Map dimensions: ${w} × ${h}, aspect ratio: ${aspectRatio.toFixed(2)}:1`);
 
+        // Calculate the proper height based on container width and map aspect ratio
+        const containerWidth = this.container.offsetWidth;
+        const calculatedHeight = Math.round(containerWidth / aspectRatio);
+
+        console.log(`Setting container height to ${calculatedHeight}px (width: ${containerWidth}px, ratio: ${aspectRatio.toFixed(2)})`);
+        
         // Set aspect ratio as CSS variable
-        this.container.style.setProperty('--map-aspect-ratio', `${w} / ${h}`);
+        // Set explicit height to match aspect ratio
+        this.container.style.height = `${calculatedHeight}px`;
         
         // Only set height if browser doesn't support aspect-ratio
         // This allows CSS aspect-ratio to control the height instead
