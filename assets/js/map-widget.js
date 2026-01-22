@@ -1,5 +1,6 @@
 /**
- * map-widget.js (Fixed Coordinates Version)
+ * map-widget.js
+ * Restored "Old Version" Logic + Aspect Ratio Fix
  */
 import { supabase } from './supabaseClient.js';
 
@@ -13,26 +14,25 @@ class MapComponent {
         this.currentMapData = null;
         this.markers = new Map();
         
-        // ResizeObserver ensures map matches container even if CSS changes late
-        this.resizeObserver = new ResizeObserver(() => {
-            if (this.map) {
-                this.map.invalidateSize();
-            }
-        });
-        
         this.init();
     }
 
     async init() {
         if (!this.container) return;
-        this.resizeObserver.observe(this.container);
+        
+        // Wait slightly for container to be ready
+        if (this.container.offsetWidth === 0) {
+            setTimeout(() => this.init(), 100);
+            return;
+        }
 
         try {
             if (this.mapId) await this.loadMapById(this.mapId);
             else if (this.mapName) await this.loadMapByName(this.mapName);
-        } catch (e) {
-            console.error(e);
-            this.container.innerHTML = `<div class="error">Map Error: ${e.message}</div>`;
+            else this.renderError("No map ID provided.");
+        } catch (err) {
+            console.error("Init Error:", err);
+            this.renderError("Map failed to load.");
         }
     }
 
@@ -52,45 +52,39 @@ class MapComponent {
         this.currentMapData = mapData;
         this.container.innerHTML = ''; 
 
-        // 1. Define bounds matches Image dimensions [Height, Width]
-        // For your image: [2250, 4000]
-        const h = mapData.height;
+        // CRITICAL FIX: Set container aspect ratio to match image dimensions exactly.
+        // This prevents the "Squashing" that causes vertical pin drift.
+        if (mapData.width && mapData.height) {
+            this.container.style.aspectRatio = `${mapData.width} / ${mapData.height}`;
+            this.container.style.height = 'auto'; // Let width drive the height
+        } else {
+            this.container.style.height = '600px'; // Fallback only if no dims
+        }
+
         const w = mapData.width;
-        const bounds = [[0, 0], [h, w]];
+        const h = mapData.height;
 
-        // 2. CRITICAL FIX: Restore Custom Transformation
-        // This maps (0,0) to Top-Left and aligns 1 Lat unit to 1 Pixel Down
-        const customCRS = L.extend({}, L.CRS.Simple, {
-            transformation: new L.Transformation(1, 0, 1, 0)
-        });
+        // "Old Version" Logic: Top-Left is (0,0), Bottom-Right is (-Height, Width)
+        // Lat (Y) goes negative (down), Lng (X) goes positive (right)
+        const bounds = [[-h, 0], [0, w]]; 
 
-        // 3. Initialize Map
-        this.map = L.map(this.container, {
-            crs: customCRS,          // Use the fixed coordinate system
-            minZoom: -3,
-            maxZoom: 2,
+        this.map = L.map(this.container.id, {
+            crs: L.CRS.Simple,
+            minZoom: -2,
             maxBounds: bounds,
             maxBoundsViscosity: 1.0,
             attributionControl: false,
-            zoomControl: false       // We add it manually to control position
+            zoomControl: false // We add manual zoom if needed
         });
 
-        // 4. Add Image Overlay
-        const overlay = L.imageOverlay(mapData.map_file_url, bounds).addTo(this.map);
-
-        // 5. Force fit
+        L.imageOverlay(mapData.map_file_url, bounds).addTo(this.map);
         this.map.fitBounds(bounds);
 
-        // 6. Wait for image to load, then snap fit again
-        // This ensures exact alignment even if image loads slowly
-        const img = overlay.getElement();
-        if (img) {
-            const snap = () => {
-                this.map.invalidateSize();
-                this.map.fitBounds(bounds);
-            };
-            img.onload = snap;
-        }
+        // Force a resize check to sync coordinates
+        setTimeout(() => {
+            this.map.invalidateSize();
+            this.map.fitBounds(bounds);
+        }, 100);
 
         this.loadLocations();
 
@@ -104,76 +98,81 @@ class MapComponent {
         if (data) data.forEach(loc => this.addMarker(loc));
     }
 
-    addMarker(loc) {
-        // [y, x] is [lat, lng]
-        // Coordinates are positive integers (0 to 4000/2250)
-        const marker = L.marker([loc.y, loc.x]).addTo(this.map);
+    addMarker(location) {
+        const y = parseFloat(location.y);
+        const x = parseFloat(location.x);
+
+        // Logic: Inputs are usually positive pixels (0 to Height). 
+        // We flip Y to negative to match Leaflet's CRS.Simple logic.
+        const lat = y > 0 ? -y : y;
+        const lng = x;
+
+        const marker = L.marker([lat, lng]).addTo(this.map);
         
-        let content = `<div class="location-display"><b>${loc.name}</b>`;
-        if (loc.description) content += `<p>${loc.description}</p>`;
-        if (loc.link_url) content += `<a href="${loc.link_url}" target="_blank">Link</a>`;
+        let popupContent = `
+            <div class="location-display">
+                <h3>${location.name}</h3>
+                ${location.description ? `<p>${location.description}</p>` : ''}
+                ${location.link_url ? `<a href="${location.link_url}" target="_blank">Link</a>` : ''}
+            </div>
+        `;
+
         if (this.isEditable) {
-            content += `<hr><button class="delete-btn" onclick="window.mapComponents['${this.container.id}'].deletePin(${loc.id})">Delete</button>`;
+            popupContent += `
+                <hr>
+                <button class="delete-btn" onclick="window.mapComponents['${this.container.id}'].deletePin(${location.id})">Delete Pin</button>
+            `;
         }
-        content += `</div>`;
-        
-        marker.bindPopup(content);
-        marker._dbId = loc.id;
-        this.markers.set(loc.id, marker);
+
+        marker.bindPopup(popupContent);
+        this.markers.set(location.id, marker);
     }
 
     setupEditorControls() {
         this.map.on('contextmenu', (e) => {
             const { lat, lng } = e.latlng;
-            // Round coordinates to prevent weird decimals
-            const y = Math.round(lat);
-            const x = Math.round(lng);
-            
-            const content = `
-                <div class="pin-form">
-                    <label>Name</label>
-                    <input type="text" id="new-pin-name">
-                    <label>Description</label>
-                    <textarea id="new-pin-desc"></textarea>
-                    <label>Link</label>
-                    <input type="text" id="new-pin-link">
-                    <button onclick="window.mapComponents['${this.container.id}'].savePin(${y}, ${x})">Save Pin</button>
-                </div>
-            `;
-            L.popup().setLatLng(e.latlng).setContent(content).openOn(this.map);
+            // Convert negative Latitude back to positive pixel Y for saving
+            const saveY = Math.abs(lat); 
+            const saveX = lng;
+
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`
+                    <div class="pin-form">
+                        <label>Name</label><input type="text" id="new-pin-name">
+                        <button onclick="window.mapComponents['${this.container.id}'].savePin(${saveY}, ${saveX})">Save Pin</button>
+                    </div>
+                `).openOn(this.map);
         });
     }
 
-    async savePin(lat, lng) {
+    async savePin(y, x) {
         const name = document.getElementById('new-pin-name').value;
-        const desc = document.getElementById('new-pin-desc').value;
-        const link = document.getElementById('new-pin-link').value;
-        
-        if (!name) return alert("Name required");
+        if(!name) return;
 
-        const { data, error } = await supabase.from('locations').insert([{
-            map_id: this.currentMapData.id,
-            name: name,
-            description: desc,
-            link_url: link,
-            x: lng, // x is longitude (width)
-            y: lat  // y is latitude (height)
+        const { data, error } = await supabase.from('locations').insert([{ 
+            map_id: this.currentMapData.id, 
+            name: name, 
+            x: x, 
+            y: y 
         }]).select();
 
-        if (error) alert(error.message);
-        else {
-            this.addMarker(data[0]);
-            this.map.closePopup();
-        }
+        if (error) return alert(error.message);
+        this.addMarker(data[0]);
+        this.map.closePopup();
     }
 
     async deletePin(id) {
-        if (!confirm("Delete pin?")) return;
+        if (!confirm("Delete?")) return;
         const { error } = await supabase.from('locations').delete().eq('id', id);
         if (!error) {
-            const marker = this.markers.get(id);
-            if (marker) this.map.removeLayer(marker);
+            this.map.removeLayer(this.markers.get(id));
+            this.markers.delete(id);
         }
+    }
+
+    renderError(msg) {
+        this.container.innerHTML = `<div class="error" style="display:block">${msg}</div>`;
     }
 }
 

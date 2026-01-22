@@ -1,82 +1,76 @@
-/* ============================================
-   Map Component Styles (Corrected)
-   ============================================ */
+/* map.css - Restored with Safety Fixes */
 
 /* 1. Base Container */
-.map-component-wrapper,
-[data-map-component] {
+.map-component-wrapper {
     position: relative;
-    width: 100% !important;
-    
-    /* Enforce 16:9 Aspect Ratio */
-    aspect-ratio: 16 / 9 !important;
-    height: auto !important;
-    
-    background-color: var(--color-bg-light);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    margin: 1.5em 0 !important;
-    box-shadow: var(--shadow-sm);
+    /* Removed fixed borders/shadows here to let individual maps handle it */
+    background: #1a1a1a;
+    width: 100%;
+}
+
+/* 2. Map Instance */
+.map-component-wrapper .leaflet-container {
+    background: #000;
+    width: 100%;
+    height: 100%;
     z-index: 1;
 }
 
-/* 2. CRITICAL FIX: Reset Image Styles inside Map */
-/* We reset margins (fixes drift) but DO NOT touch width/height (fixes rendering) */
-.doc-body .leaflet-container img,
-.leaflet-container img,
-.leaflet-image-layer {
+/* 3. CRITICAL: Prevent Site Theme from breaking Map Alignment */
+/* This resets margins on the map tiles so they align with pins perfectly */
+.leaflet-container img, 
+.leaflet-image-layer,
+.leaflet-pane img {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    border-radius: 0 !important;
-    
-    /* DO NOT force width/height to auto - Leaflet must control this! */
     max-width: none !important;
     max-height: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 
-/* 3. Ensure Leaflet Fills the Container */
-.leaflet-container {
-    width: 100% !important;
-    height: 100% !important;
-    z-index: 1;
-    background: #f0f0f0; /* Light placeholder while loading */
+/* 4. Popups & Forms (Your original styling) */
+.leaflet-popup-content-wrapper {
+    border-radius: 4px;
+    padding: 0;
 }
 
-/* 4. Map Typography */
-.map-component-title {
-    font-family: var(--font-header);
-    color: var(--color-primary);
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+.leaflet-popup-content {
+    margin: 10px;
+    line-height: 1.4;
 }
 
-/* 5. Editor Popup Form */
 .pin-form {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-width: 250px;
+    min-width: 200px;
 }
 
-.pin-form input[type="text"], 
-.pin-form textarea {
-    padding: 6px;
+.pin-form input {
+    padding: 5px;
     border: 1px solid #ccc;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 .pin-form button,
 .location-display button {
-    background-color: var(--color-primary);
+    background: #58180D;
     color: white;
     border: none;
     padding: 6px 12px;
     cursor: pointer;
-    margin-top: 5px;
     border-radius: 4px;
+    margin-top: 5px;
+}
+
+.location-display h3 {
+    margin: 0 0 5px 0;
+    color: #58180D;
+}
+
+.error {
+    color: red;
+    padding: 20px;
+    text-align: center;
 }
