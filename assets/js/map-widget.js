@@ -1,6 +1,7 @@
 /**
  * map-widget.js
  * Optimized for Top-Left (0,0) coordinates to prevent Vertical Drift
+ * Anchor: Top-Left [0,0] | Bottom-Right [-height, width]
  */
 
 import { supabase } from './supabaseClient.js';
@@ -13,13 +14,13 @@ class MapComponent {
         this.isEditable = container.dataset.editable === 'true';
         this.map = null;
         this.currentMapData = null;
-        this.markers = new Map(); // Using a Map object for easier management
+        this.markers = new Map();
         
         this.init();
     }
 
     async init() {
-        // Fix for "offsetWidth" error: ensure container is ready
+        // Ensure container is fully rendered before Leaflet touches it
         if (!this.container || this.container.offsetWidth === 0) {
             setTimeout(() => this.init(), 100);
             return;
@@ -67,15 +68,16 @@ class MapComponent {
         const w = mapData.width;
         const h = mapData.height;
 
-        // THE VERTICAL DRIFT KILLER: 
-        // We set the coordinate system so [0,0] is top-left and [-h, w] is bottom-right.
+        // THE VERTICAL DRIFT KILLER:
+        // By making H negative, [0,0] is locked to the top-left corner of the container.
         const bounds = [[-h, 0], [0, w]]; 
 
         this.map = L.map(this.container.id, {
             crs: L.CRS.Simple,
             minZoom: -2,
             maxBounds: bounds,
-            maxBoundsViscosity: 1.0,
+            maxBoundsViscosity: 1.0, // Hard lock to image edges
+            zoomSnap: 0.1,           // Smoother zooming/centering
             attributionControl: false
         });
 
@@ -84,13 +86,15 @@ class MapComponent {
             interactive: true
         }).addTo(this.map);
 
+        // DATABASE CENTERING FIX:
+        // Force initial_y to be negative to match the coordinate system
         if (mapData.initial_x !== null && mapData.initial_y !== null) {
-            this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0);
+            const centerY = mapData.initial_y > 0 ? -mapData.initial_y : mapData.initial_y;
+            this.map.setView([centerY, mapData.initial_x], mapData.initial_zoom || 0);
         } else {
             this.map.fitBounds(bounds);
         }
 
-        // Fixed: loadLocations is now correctly scoped
         this.loadLocations();
 
         if (this.isEditable) {
@@ -109,11 +113,13 @@ class MapComponent {
     }
 
     addMarker(location) {
-        const y = parseFloat(location.y);
         const x = parseFloat(location.x);
+        let y = parseFloat(location.y);
 
-        // Map relative position: ensures Y is always negative for Top-Down logic
-        const marker = L.marker([y > 0 ? -y : y, x]).addTo(this.map);
+        // Standardize Y to negative for consistent top-down placement
+        const correctedY = y > 0 ? -y : y;
+
+        const marker = L.marker([correctedY, x]).addTo(this.map);
         
         let popupContent = `
             <div class="location-display">
@@ -124,7 +130,10 @@ class MapComponent {
         `;
 
         if (this.isEditable) {
-            popupContent += `<button class="delete-btn" onclick="window.mapComponents['${this.container.id}'].deletePin(${location.id})">Delete</button>`;
+            popupContent += `
+                <hr>
+                <button class="delete-btn" onclick="window.mapComponents['${this.container.id}'].deletePin(${location.id})">Delete Pin</button>
+            `;
         }
 
         marker.bindPopup(popupContent);
@@ -138,11 +147,24 @@ class MapComponent {
                 .setLatLng(e.latlng)
                 .setContent(`
                     <div class="pin-form">
-                        <label>Name</label><input type="text" id="new-pin-name">
+                        <label>Location Name</label>
+                        <input type="text" id="new-pin-name">
                         <button onclick="window.mapComponents['${this.container.id}'].savePin(${lat}, ${lng})">Save Pin</button>
                     </div>
                 `).openOn(this.map);
         });
+
+        // Add a "Save View" button for Staff
+        const saveViewBtn = L.control({ position: 'topright' });
+        saveViewBtn.onAdd = () => {
+            const btn = L.DomUtil.create('button', 'save-view-btn');
+            btn.innerHTML = '💾 Set Default View';
+            btn.style.padding = '8px';
+            btn.style.cursor = 'pointer';
+            btn.onclick = () => this.saveCurrentView();
+            return btn;
+        };
+        saveViewBtn.addTo(this.map);
     }
 
     async savePin(lat, lng) {
@@ -155,6 +177,23 @@ class MapComponent {
         if (error) return alert(error.message);
         this.addMarker(data[0]);
         this.map.closePopup();
+    }
+
+    async saveCurrentView() {
+        const center = this.map.getCenter();
+        const zoom = this.map.getZoom();
+
+        const { error } = await supabase
+            .from('location_maps')
+            .update({
+                initial_x: center.lng,
+                initial_y: center.lat,
+                initial_zoom: zoom
+            })
+            .eq('id', this.currentMapData.id);
+
+        if (error) alert("Error saving view: " + error.message);
+        else alert("Default view saved!");
     }
 
     async deletePin(id) {
