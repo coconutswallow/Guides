@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <div id="{{ include.id | default: 'map-widget' }}" 
      data-map-component
      {% if include.name %}data-map-name="{{ include.name }}"{% endif %}
@@ -6,4 +10,18 @@
      data-height="{{ include.height | default: '500px' }}">
 </div>
 
-<script type="module" src="{{ '/assets/js/map-widget.js' | relative_url }}"></script>
+<script type="module">
+    import { initMapComponents } from "{{ '/assets/js/map-widget.js' | relative_url }}";
+    
+    // We wrap this in a check to ensure Leaflet (L) is ready
+    function startWidget() {
+        if (typeof L !== 'undefined') {
+            initMapComponents();
+        } else {
+            console.log("Waiting for Leaflet...");
+            setTimeout(startWidget, 50);
+        }
+    }
+    
+    startWidget();
+</script>
