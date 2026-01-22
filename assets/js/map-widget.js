@@ -103,13 +103,31 @@ class MapComponent {
     }
 
     async loadLocations() {
+        console.log('Loading locations for map ID:', this.currentMapData.id);
+        
         const { data, error } = await supabase
             .from('locations')
             .select('*')
             .eq('map_id', this.currentMapData.id);
 
-        if (error) return console.error("Error loading pins:", error);
-        data.forEach(loc => this.addMarker(loc));
+        if (error) {
+            console.error("Error loading pins:", error);
+            return;
+        }
+        
+        console.log('Locations loaded:', data?.length || 0, 'pins');
+        
+        if (!data || data.length === 0) {
+            console.warn('No locations found for this map');
+            return;
+        }
+        
+        data.forEach(loc => {
+            console.log('Adding marker:', loc.name, `at [${loc.y}, ${loc.x}]`);
+            this.addMarker(loc);
+        });
+        
+        console.log('All markers added. Total markers on map:', this.markers.size);
     }
 
     addMarker(location) {

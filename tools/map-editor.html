@@ -164,14 +164,17 @@ title: Map Editor
 
 #map-editor-widget {
     min-height: 600px;
+    height: 600px;
     border: 2px solid var(--color-border-medium);
     border-radius: var(--radius-md);
+    position: relative;
 }
 
-.loading-spinner {
-    text-align: center;
-    padding: 2rem;
-    color: var(--color-text-muted);
+#map-editor-widget .loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 </style>
 
@@ -321,9 +324,13 @@ title: Map Editor
         }
 
         try {
+            showStatus('Loading map...', 'info');
+            
             // Get the map data from the option's dataset
             const selectedOption = ui.mapSelect.options[ui.mapSelect.selectedIndex];
             const mapData = JSON.parse(selectedOption.dataset.mapData);
+            
+            console.log('Loading map:', mapData);
 
             // Update map info display
             ui.mapInfo.style.display = 'block';
@@ -336,26 +343,50 @@ title: Map Editor
             document.getElementById('info-default').textContent = defaultView;
 
             // Get pin count
-            const { count } = await supabase
+            const { data: locations, count, error: countError } = await supabase
                 .from('locations')
-                .select('*', { count: 'exact', head: true })
+                .select('*', { count: 'exact' })
                 .eq('map_id', selectedId);
+            
+            if (countError) {
+                console.error('Error loading pin count:', countError);
+            } else {
+                console.log('Found pins:', count, locations);
+            }
             
             document.getElementById('info-pins').textContent = count || 0;
 
-            // Set up the widget attributes
-            ui.mapWidget.dataset.mapId = selectedId;
-            ui.mapWidget.dataset.editable = 'true';
-            ui.mapWidget.innerHTML = ''; // Clear loading message
-
-            // Initialize the map component
+            // Clean up existing map instance if it exists
             if (window.mapComponents && window.mapComponents['map-editor-widget']) {
-                // If a map instance already exists, we need to reinitialize
+                const existingWidget = window.mapComponents['map-editor-widget'];
+                if (existingWidget.map) {
+                    existingWidget.map.remove(); // Properly remove Leaflet map
+                }
                 delete window.mapComponents['map-editor-widget'];
             }
+
+            // Clear and reset the widget container
+            ui.mapWidget.innerHTML = '';
+            ui.mapWidget.dataset.mapId = selectedId;
+            ui.mapWidget.dataset.editable = 'true';
             
-            initMapComponents();
-            showStatus(`Map "${mapData.name}" loaded successfully`, 'success');
+            console.log('Initializing map widget with ID:', selectedId);
+            
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                initMapComponents();
+                
+                // Verify the map was created
+                setTimeout(() => {
+                    if (window.mapComponents && window.mapComponents['map-editor-widget']) {
+                        console.log('Map widget initialized successfully');
+                        showStatus(`Map "${mapData.name}" loaded with ${count || 0} pins`, 'success');
+                    } else {
+                        console.error('Map widget failed to initialize');
+                        showStatus('Map widget failed to initialize', 'error');
+                    }
+                }, 500);
+            }, 100);
 
         } catch (error) {
             console.error('Error loading map:', error);
@@ -410,6 +441,7 @@ title: Map Editor
     ui.editorInterface.style.display = 'none';
 </script>
 
-<!-- Include Leaflet CSS for the map widget -->
+<!-- Include Leaflet CSS and Map Component Styles -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="{{ '/assets/css/map.css' | relative_url }}" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
