@@ -1,0 +1,9 @@
+<div id="{{ include.id | default: 'map-widget' }}" 
+     data-map-component
+     {% if include.name %}data-map-name="{{ include.name }}"{% endif %}
+     {% if include.map_id %}data-map-id="{{ include.map_id }}"{% endif %}
+     data-editable="{{ include.editable | default: 'false' }}"
+     data-height="{{ include.height | default: '500px' }}">
+</div>
+
+<script type="module" src="{{ '../assets/js/map-widget.js' | relative_url }}"></script>

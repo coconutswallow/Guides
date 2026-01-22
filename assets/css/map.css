@@ -1,0 +1,104 @@
+/* ============================================
+   Map Component Styles (Aligned with style.css)
+   ============================================ */
+
+/* 1. Base Container Styling */
+.map-component-wrapper {
+    position: relative;
+    border: 1px solid var(--color-border-medium); /* Aligned with site borders */
+    background-color: var(--color-bg-dark);        /* Using site dark background */
+    box-shadow: var(--shadow-sm);                  /* Using site standard shadow */
+    border-radius: var(--radius-md);               /* Using site standard radius */
+    overflow: hidden;
+}
+
+/* 2. Map Typography & Info */
+.map-component-title {
+    font-family: var(--font-primary);
+    color: var(--color-text-emphasis);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.map-info {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    margin-bottom: 1rem;
+}
+
+/* 3. Feedback States (Error/Loading) */
+.error {
+    background: var(--color-danger-bg, #5a1a1a); /* Fallback to safety if danger-bg not defined */
+    color: var(--color-danger-text, #ffaaaa);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-danger-border);
+    margin-bottom: 1rem;
+}
+
+.loading {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lg);
+}
+
+/* 4. Popup Forms (Aligned with Hawthorne Guild Inputs) */
+.pin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 220px;
+    color: var(--color-text-main); /* Popups usually have white backgrounds in Leaflet */
+}
+
+.pin-form label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333; /* Leaflet popup text usually needs high contrast */
+    margin-bottom: -5px;
+}
+
+.pin-form input, 
+.pin-form textarea {
+    padding: 8px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-sm);
+    background-color: #fff; 
+    color: #333;
+    font-family: var(--font-primary);
+}
+
+/* 5. Buttons (Aligned with site-wide button styles) */
+.pin-form button, 
+.location-display button {
+    background-color: var(--color-accent); /* Using site accent color */
+    color: var(--color-bg-light);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-family: var(--font-primary);
+    transition: filter 0.2s ease;
+}
+
+.pin-form button:hover, 
+.location-display button:hover {
+    filter: brightness(1.2); /* Standard hover effect for Guild site */
+}
+
+.pin-form button.delete-btn, 
+.location-display button.delete-btn {
+    background-color: #c0392b; /* Standard red for destructive actions */
+}
+
+/* 6. Leaflet Popup Customization to match Dark Theme */
+/* Optional: Uncomment if you want the popup itself to be dark */
+/*
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background: var(--color-bg-medium) !important;
+    color: var(--color-text-main) !important;
+    border: 1px solid var(--color-border-light);
+}
+*/
