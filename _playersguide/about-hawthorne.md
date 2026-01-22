@@ -37,9 +37,7 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
     scrolling="no">
 </iframe>
 
-<span class="image-caption">Zoomable Map of Faerûn showing the location of Hawthorne...</span>
-
-<span class="image-caption">Zoomable Map of Faerûn showing the location of Hawthorne.  Map of Faerun by Wizards of the Coast, map edited with Hawthorne location by @salah_ad_din</span>
+<span class="image-caption">Zoomable Map of Faerûn showing the location of Hawthorne.  Map of Faerun by Wizards of the Coast, edited with Hawthorne location by @salah_ad_din</span>
 
 ## Hawthorne Guild Rules
 
@@ -64,25 +62,5 @@ Flagrant or repeated violations of the guild’s code of conduct can be grounds 
 >
 > In addition to the guild rules above, please also ensure you have fully read and agree to the [Server Rules](/Guides/rules/server-rules)
 
-<style>
-    /* NEW: Responsive Map Styles */
-    .responsive-map-frame {
-        width: 100%;
-        border: none; 
-        border-radius: 8px; 
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        
-        /* Desktop Default: Cinematic Widescreen */
-        aspect-ratio: 16 / 9;
-    }
 
-    /* Mobile Override (Phone screens) */
-    @media (max-width: 768px) {
-        .responsive-map-frame {
-            /* On phones, make it square so it's tall enough to touch/drag */
-            aspect-ratio: 1 / 1; 
-            /* Or use a fixed height if you prefer: height: 500px; */
-        }
-    }
-</style>
 
