@@ -1,50 +1,47 @@
 /* ============================================
-   Map Component Styles (Aligned with style.css)
+   Map Component Styles - Simplified 16:9
    ============================================ */
 
-/* 1. Base Container Styling */
+/* 1. Base Container */
 .map-component-wrapper {
     position: relative;
-    border: 1px solid var(--color-border);
+    /* Force standard 16:9 Aspect Ratio */
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    /* Let the aspect-ratio handle the height */
+    height: auto !important; 
+    
     background-color: var(--color-bg-light);
-    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     overflow: hidden;
-    /* Ensure the container respects JS inline height */
-    box-sizing: border-box; 
-}
-
-/* CRITICAL: Override doc-body constraints for map containers */
-/* Height is now set by JavaScript to match aspect ratio exactly */
-.doc-body [data-map-component],
-[data-map-component] {
-    max-width: 100% !important;
-    width: 100% !important;
-    border-radius: 0 !important;
-    box-shadow: var(--shadow-sm) !important;
-    margin: 1.5em 0 !important;
-    min-width: 0 !important;
-}
-
-.doc-body .leaflet-container img,
-.leaflet-container img {
-    max-width: none !important;     /* Allow tiles/overlay to be full size */
-    max-height: none !important;    /* Allow tiles/overlay to be full size */
-    margin: 0 !important;           /* REMOVE the 1.5em margin causing drift */
-    padding: 0 !important;
-    border-radius: 0 !important;    /* Remove rounded corners from tiles */
-    box-shadow: none !important;    /* Remove shadow from tiles */
-    background: none !important;
-}
-
-/* Ensure Leaflet containers fill their parent */
-.leaflet-container {
-    width: 100% !important;
-    height: 100% !important;
+    margin: 1.5em 0;
+    box-shadow: var(--shadow-sm);
     z-index: 1;
 }
 
-/* 2. Map Typography & Info */
+/* 2. CRITICAL FIX: Reset Image Styles inside Map */
+/* This prevents the "Pin Drift" by removing the margins your doc theme adds */
+.doc-body .leaflet-container img,
+.leaflet-container img {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    max-width: none !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* 3. Ensure Leaflet Fills the Container */
+.leaflet-container {
+    width: 100% !important;
+    height: 100% !important;
+    font-family: var(--font-body);
+    z-index: 1;
+}
+
+/* 4. Map UI Elements (Titles, Popups, etc) */
 .map-component-title {
     font-family: var(--font-header);
     color: var(--color-primary);
@@ -52,178 +49,38 @@
     margin-bottom: 0.5rem;
 }
 
-.map-info {
-    color: var(--color-text-secondary);
-    font-size: 0.9em;
-    margin-bottom: 1rem;
-}
-
-/* 3. Feedback States (Error/Loading) */
-.error {
-    background: var(--color-alert-danger-bg);
-    color: var(--color-text);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--color-alert-danger-border);
-    margin-bottom: 1rem;
-}
-
-.loading {
-    text-align: center;
-    padding: var(--spacing-xl);
-    color: var(--color-text-secondary);
-    font-size: 1.1em;
-}
-
-/* 4. Popup Forms (Aligned with Hawthorne Guild Inputs) */
+/* Popup Form Styling */
 .pin-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
     min-width: 260px;
-    max-width: 320px;
-    color: var(--color-text);
-}
-
-.pin-form label {
-    font-size: 12px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: -5px;
 }
 
 .pin-form input[type="text"], 
 .pin-form textarea {
     padding: 8px;
     border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background-color: #fff; 
-    color: #333;
-    font-family: var(--font-body);
-    font-size: 13px;
     width: 100%;
     box-sizing: border-box;
 }
 
-.pin-form textarea {
-    resize: vertical;
-    min-height: 60px;
-}
-
-.pin-form input[type="checkbox"] {
-    cursor: pointer;
-}
-
-/* 5. Buttons (Aligned with site-wide button styles) */
-.pin-form button, 
+.pin-form button,
 .location-display button {
     background-color: var(--color-primary);
-    color: var(--color-btn-text);
+    color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 6px 12px;
     cursor: pointer;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    font-family: var(--font-header);
-    transition: all 0.2s ease;
+    font-weight: bold;
     margin-top: 5px;
-    text-transform: uppercase;
-    font-size: 0.9em;
-    letter-spacing: 0.5px;
+    border-radius: 4px;
 }
 
-.pin-form button:hover, 
-.location-display button:hover {
+.pin-form button:hover {
     background-color: var(--color-secondary);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
 }
 
-.pin-form button.delete-btn, 
-.location-display button.delete-btn {
-    background-color: var(--color-alert-danger-border);
-}
-
-.location-display button.delete-btn:hover {
-    background-color: var(--palette-alert-danger-action-hover);
-}
-
-/* 6. Location Display in Popups */
-.location-display {
-    max-width: 300px;
-}
-
-.location-display p {
-    margin: 0.5rem 0;
-    color: #333;
-    line-height: 1.4;
-}
-
-.location-display a {
-    color: var(--color-secondary);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.location-display a:hover {
-    text-decoration: underline;
-    color: var(--color-primary);
-}
-
-.location-display hr {
-    margin: 10px 0;
-    border: none;
-    border-top: 1px solid #ddd;
-}
-
-/* 7. Dark Mode Adjustments */
-[data-theme="dark"] .pin-form {
-    color: var(--color-text);
-}
-
-[data-theme="dark"] .pin-form label {
-    color: var(--color-text);
-}
-
-[data-theme="dark"] .pin-form input[type="text"],
-[data-theme="dark"] .pin-form textarea {
-    background-color: var(--color-bg-medium);
-    color: var(--color-text);
-    border-color: var(--color-border);
-}
-
-[data-theme="dark"] .location-display p {
-    color: var(--color-text);
-}
-
-[data-theme="dark"] .location-display hr {
-    border-top-color: var(--color-border);
-}
-
-/* 8. Leaflet Control Buttons (Save View, Coords Display) */
-.save-view-btn {
-    background-color: var(--color-primary) !important;
-    color: var(--color-btn-text) !important;
-    border: 2px solid var(--color-border) !important;
-    box-shadow: var(--shadow-sm) !important;
-    font-family: var(--font-header) !important;
-    font-weight: 600 !important;
-}
-
-.save-view-btn:hover {
-    background-color: var(--color-secondary) !important;
-    box-shadow: var(--shadow-md) !important;
-}
-
-.coords-display {
-    background-color: var(--color-bg-light) !important;
-    color: var(--color-text) !important;
-    border: 1px solid var(--color-border) !important;
-    box-shadow: var(--shadow-sm) !important;
-    font-family: var(--font-body) !important;
-}
-
-[data-theme="dark"] .coords-display {
-    background-color: var(--color-bg-medium) !important;
-    color: var(--color-text) !important;
-}
+/* Error/Loading States */
+.error { padding: 2rem; color: red; text-align: center; }
+.loading { padding: 2rem; text-align: center; color: #666; }

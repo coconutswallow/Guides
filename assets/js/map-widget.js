@@ -1,7 +1,5 @@
 /**
- * map-widget.js
- * Using standard positive Y coordinates (top=0, bottom=height)
- * This prevents vertical drift during zoom operations
+ * map-widget.js (Simplified 16:9 Version)
  */
 
 import { supabase } from './supabaseClient.js';
@@ -20,12 +18,7 @@ class MapComponent {
     }
 
     async init() {
-        // Ensure container is fully rendered before Leaflet touches it
-        // Check width only - height might be 0 initially and get set by CSS
-        if (!this.container || this.container.offsetWidth === 0) {
-            setTimeout(() => this.init(), 100);
-            return;
-        }
+        if (!this.container) return;
 
         try {
             if (this.mapId) {
@@ -63,27 +56,17 @@ class MapComponent {
 
     renderMap(mapData) {
         this.currentMapData = mapData;
+        
+        // CLEANUP: Reset container but DO NOT set height manually.
+        // CSS aspect-ratio: 16/9 handles the size.
         this.container.innerHTML = ''; 
-
-        const w = mapData.width;
-        const h = mapData.height;
-        const aspectRatio = w / h;
-
-        console.log(`Map dimensions: ${w} × ${h}, aspect ratio: ${aspectRatio.toFixed(2)}:1`);
-
-        // Calculate the proper height based on container width and map aspect ratio
-        const containerWidth = this.container.offsetWidth;
-        const calculatedHeight = Math.round(containerWidth / aspectRatio);
-        
-        console.log(`Setting container height to ${calculatedHeight}px (width: ${containerWidth}px, ratio: ${aspectRatio.toFixed(2)})`);
-        
-        // Set explicit height to match aspect ratio
-        this.container.style.height = `${calculatedHeight}px`;
         
         // Use standard image coordinate bounds
+        const w = mapData.width;
+        const h = mapData.height;
         const bounds = [[0, 0], [h, w]];
 
-        // Create a custom CRS with a fixed transformation scale
+        // Create Map
         const customCRS = L.extend({}, L.CRS.Simple, {
             transformation: new L.Transformation(1, 0, 1, 0)
         });
@@ -97,111 +80,67 @@ class MapComponent {
             attributionControl: false,
             zoomSnap: 0.25,
             zoomDelta: 0.25,
-            zoomAnimation: false,
-            markerZoomAnimation: false,
-            trackResize: true
+            zoomAnimation: false       // Disable animation to prevent jitter
         });
 
-        // Create the image overlay with exact bounds
+        // Add Image Overlay
         const imageOverlay = L.imageOverlay(mapData.map_file_url, bounds, {
-            crossOrigin: true,
             interactive: true
         }).addTo(this.map);
 
-        // Wait for image to load before setting view
+        // Force a resize check once image is loaded to ensure it fits the CSS box
         const img = imageOverlay.getElement();
         if (img) {
-            img.onload = () => {
-                console.log('Image loaded, setting view');
+            const updateLayout = () => {
+                this.map.invalidateSize();
                 this.setInitialView(mapData, bounds);
             };
-            // If image is already cached
-            if (img.complete) {
-                this.setInitialView(mapData, bounds);
-            }
+            
+            img.onload = updateLayout;
+            if (img.complete) updateLayout();
         } else {
             this.setInitialView(mapData, bounds);
         }
 
-        // Add zoom end listener to force marker position recalculation
+        // Fix marker positions on zoom
         this.map.on('zoomend', () => {
             this.map.eachLayer((layer) => {
-                if (layer instanceof L.Marker) {
-                    layer.update();
-                }
+                if (layer instanceof L.Marker) layer.update();
             });
         });
 
-        // Load pins
         this.loadLocations();
 
-        // Add editor controls if needed
         if (this.isEditable) {
             this.setupEditorControls();
         }
     }
 
     setInitialView(mapData, bounds) {
-        // Set initial view
         if (mapData.initial_x !== null && mapData.initial_y !== null) {
-            this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0, {
-                animate: false
-            });
+            this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0, { animate: false });
         } else {
-            this.map.fitBounds(bounds, {
-                animate: false
-            });
+            this.map.fitBounds(bounds, { animate: false });
         }
-
-        // Force recalculation after a delay to ensure container is stable
-        setTimeout(() => {
-            if (this.map) {
-                this.map.invalidateSize({
-                    animate: false
-                });
-                console.log(`Map invalidated. Container: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
-            }
-        }, 100);
     }
 
     async loadLocations() {
-        console.log('Loading locations for map ID:', this.currentMapData.id);
-        
         const { data, error } = await supabase
             .from('locations')
             .select('*')
             .eq('map_id', this.currentMapData.id);
 
-        if (error) {
-            console.error("Error loading pins:", error);
-            return;
-        }
+        if (error || !data) return;
         
-        console.log('Locations loaded:', data?.length || 0, 'pins');
-        
-        if (!data || data.length === 0) {
-            console.warn('No locations found for this map');
-            return;
-        }
-        
-        data.forEach(loc => {
-            console.log('Adding marker:', loc.name, `at [${loc.y}, ${loc.x}]`);
-            this.addMarker(loc);
-        });
-        
-        console.log('All markers added. Total markers on map:', this.markers.size);
+        data.forEach(loc => this.addMarker(loc));
     }
 
     addMarker(location) {
         const x = parseFloat(location.x);
         let y = parseFloat(location.y);
 
-        // BACKWARD COMPATIBILITY: Convert old negative Y coords to positive
-        // If you have legacy pins saved with negative Y, this will fix them on display
-        if (y < 0) {
-            console.warn(`Converting legacy negative Y coordinate for "${location.name}": ${y} → ${Math.abs(y)}`);
-            y = Math.abs(y);
-        }
+        // Legacy fix for negative coordinates
+        if (y < 0) y = Math.abs(y);
 
         const marker = L.marker([y, x]).addTo(this.map);
         
@@ -210,7 +149,6 @@ class MapComponent {
                 <h3 class="map-component-title">${location.name}</h3>
                 ${location.description ? `<p>${location.description}</p>` : ''}
                 ${location.link_url ? `<a href="${location.link_url}" target="_blank">View Details</a>` : ''}
-                ${location.is_home ? `<p style="color: #f39c12; font-weight: bold;">🏠 Home Location</p>` : ''}
             </div>
         `;
 
@@ -233,60 +171,28 @@ class MapComponent {
                 .setContent(`
                     <div class="pin-form">
                         <label>Location Name*</label>
-                        <input type="text" id="new-pin-name" placeholder="Enter location name">
-                        
+                        <input type="text" id="new-pin-name" placeholder="Name">
                         <label>Description</label>
-                        <textarea id="new-pin-description" rows="3" placeholder="Optional description"></textarea>
-                        
+                        <textarea id="new-pin-description" rows="2"></textarea>
                         <label>Link URL</label>
-                        <input type="text" id="new-pin-link" placeholder="https://example.com">
-                        
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" id="new-pin-home" style="width: auto; margin: 0;">
-                            <span>Set as Home Location</span>
-                        </label>
-                        
+                        <input type="text" id="new-pin-link">
+                        <label><input type="checkbox" id="new-pin-home"> Set Home</label>
                         <button onclick="window.mapComponents['${this.container.id}'].savePin(${lat}, ${lng})">Save Pin</button>
                     </div>
                 `).openOn(this.map);
         });
 
-        // Add a "Save View" button for Staff
+        // Save View Button
         const saveViewBtn = L.control({ position: 'topright' });
         saveViewBtn.onAdd = () => {
             const btn = L.DomUtil.create('button', 'save-view-btn');
             btn.innerHTML = '💾 Set Default View';
-            btn.style.padding = '8px';
+            btn.style.padding = '5px 10px';
             btn.style.cursor = 'pointer';
-            btn.style.backgroundColor = '#3498db';
-            btn.style.color = 'white';
-            btn.style.border = 'none';
-            btn.style.borderRadius = '4px';
-            btn.style.fontWeight = 'bold';
             btn.onclick = () => this.saveCurrentView();
             return btn;
         };
         saveViewBtn.addTo(this.map);
-
-        // Add a "Show Current Coords" button for debugging
-        const coordsBtn = L.control({ position: 'bottomleft' });
-        coordsBtn.onAdd = () => {
-            const container = L.DomUtil.create('div', 'coords-display');
-            container.style.padding = '5px 10px';
-            container.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-            container.style.borderRadius = '4px';
-            container.style.fontSize = '12px';
-            container.innerHTML = 'Center: [0, 0] Zoom: 0';
-            
-            this.map.on('moveend zoomend', () => {
-                const center = this.map.getCenter();
-                const zoom = this.map.getZoom();
-                container.innerHTML = `Center: [${center.lat.toFixed(1)}, ${center.lng.toFixed(1)}] Zoom: ${zoom.toFixed(1)}`;
-            });
-            
-            return container;
-        };
-        coordsBtn.addTo(this.map);
     }
 
     async savePin(lat, lng) {
@@ -295,30 +201,21 @@ class MapComponent {
         const link = document.getElementById('new-pin-link').value.trim();
         const isHome = document.getElementById('new-pin-home').checked;
         
-        if (!name) {
-            alert('Please enter a location name');
-            return;
-        }
+        if (!name) return alert('Name required');
         
-        // Build the insert object
         const pinData = {
             map_id: this.currentMapData.id,
             name: name,
-            x: lng,  // X is straightforward
-            y: lat   // Y is already negative from our coordinate system
+            x: lng,
+            y: lat,
+            description: description || null,
+            link_url: link || null,
+            is_home: isHome
         };
         
-        // Add optional fields only if they have values
-        if (description) pinData.description = description;
-        if (link) pinData.link_url = link;
-        if (isHome) pinData.is_home = isHome;
-        
-        const { data, error } = await supabase
-            .from('locations')
-            .insert([pinData])
-            .select();
-
+        const { data, error } = await supabase.from('locations').insert([pinData]).select();
         if (error) return alert(error.message);
+        
         this.addMarker(data[0]);
         this.map.closePopup();
     }
@@ -326,34 +223,25 @@ class MapComponent {
     async saveCurrentView() {
         const center = this.map.getCenter();
         const zoom = this.map.getZoom();
-
         const { error } = await supabase
             .from('location_maps')
-            .update({
-                initial_x: center.lng,
-                initial_y: center.lat,  // Store as-is (will be negative)
-                initial_zoom: zoom
-            })
+            .update({ initial_x: center.lng, initial_y: center.lat, initial_zoom: zoom })
             .eq('id', this.currentMapData.id);
 
-        if (error) {
-            alert("Error saving view: " + error.message);
-        } else {
-            alert(`Default view saved!\nCenter: [${center.lat.toFixed(1)}, ${center.lng.toFixed(1)}]\nZoom: ${zoom.toFixed(1)}`);
-        }
+        if (error) alert("Error: " + error.message);
+        else alert("Default view saved.");
     }
 
     async deletePin(id) {
         if (!confirm("Delete this pin?")) return;
         const { error } = await supabase.from('locations').delete().eq('id', id);
         if (error) return alert(error.message);
-        
         this.map.removeLayer(this.markers.get(id));
         this.markers.delete(id);
     }
 
     renderError(msg) {
-        this.container.innerHTML = `<div class="error" style="display:block">${msg}</div>`;
+        this.container.innerHTML = `<div class="error">${msg}</div>`;
     }
 }
 
