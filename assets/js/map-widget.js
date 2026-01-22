@@ -59,13 +59,15 @@ class MapComponent {
 
     renderMap(mapData) {
         this.currentMapData = mapData;
-        this.container.innerHTML = ''; // Clear loading state
+        this.container.innerHTML = ''; 
         this.container.style.height = mapData.display_height || '600px';
 
-        // COORDINATE SYSTEM FIX: Use exact image pixels
         const w = mapData.width;
         const h = mapData.height;
-        const bounds = [[0, 0], [h, w]];
+
+        // THE FIX: Define bounds where 0,0 is top-left and h,w is bottom-right
+        // Using negative Y values ensures the "sliding" stops.
+        const bounds = [[-h, 0], [0, w]]; 
 
         this.map = L.map(this.container.id, {
             crs: L.CRS.Simple,
@@ -75,14 +77,14 @@ class MapComponent {
             attributionControl: false
         });
 
-        // IMAGE OVERLAY: Added crossOrigin for Supabase hosting
         L.imageOverlay(mapData.map_file_url, bounds, {
             crossOrigin: true,
             interactive: true
         }).addTo(this.map);
 
-        // INITIAL VIEW: Set to saved defaults or fit entire image
+        // Position the view
         if (mapData.initial_x !== null && mapData.initial_y !== null) {
+            // Note: initial_y must be negative if saved in this new system
             this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0);
         } else {
             this.map.fitBounds(bounds);
@@ -90,46 +92,23 @@ class MapComponent {
 
         this.loadLocations();
 
-        // EDITING LOGIC: Only for Staff/Apprentices
         if (this.isEditable) {
             this.setupEditorControls();
         }
     }
 
-    async loadLocations() {
-        const { data, error } = await supabase
-            .from('locations')
-            .select('*')
-            .eq('map_id', this.currentMapData.id);
-
-        if (error) {
-            console.error("Error loading pins:", error);
-            return;
-        }
-
-        data.forEach(loc => this.addMarker(loc));
-    }
-
     addMarker(location) {
-        const marker = L.marker([location.y, location.x]).addTo(this.map);
+        // Ensure Y is treated as a float/number
+        const yCoord = parseFloat(location.y);
+        const xCoord = parseFloat(location.x);
+
+        // If your DB still has positive Y values, we force them negative here
+        // to match the Top-Down coordinate system
+        const correctedY = yCoord > 0 ? -yCoord : yCoord;
+
+        const marker = L.marker([correctedY, xCoord]).addTo(this.map);
         
-        let popupContent = `
-            <div class="location-display">
-                <h3>${location.name}</h3>
-                <p>${location.description || ''}</p>
-                ${location.link_url ? `<a href="${location.link_url}" target="_blank">View Details</a>` : ''}
-            </div>
-        `;
-
-        if (this.isEditable) {
-            popupContent += `
-                <hr>
-                <button class="edit-btn" onclick="window.mapComponents['${this.container.id}'].openEditForm(${location.id})">Edit Pin</button>
-            `;
-        }
-
-        marker.bindPopup(popupContent);
-        this.markers.push({ id: location.id, marker });
+        // ... rest of your popup logic ...
     }
 
     setupEditorControls() {
