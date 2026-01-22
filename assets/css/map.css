@@ -5,10 +5,222 @@
 /* 1. Base Container Styling */
 .map-component-wrapper {
     position: relative;
-    border: 1px solid var(--color-border-medium); /* Aligned with site borders */
-    background-color: var(--color-bg-dark);        /* Using site dark background */
-    box-shadow: var(--shadow-sm);                  /* Using site standard shadow */
-    border-radius: var(--radius-md);               /* Using site standard radius */
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-light);
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+/* 2. Map Typography & Info */
+.map-component-title {
+    font-family: var(--font-header);
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.map-info {
+    color: var(--color-text-secondary);
+    font-size: 0.9em;
+    margin-bottom: 1rem;
+}
+
+/* 3. Feedback States (Error/Loading) */
+.error {
+    background: var(--color-alert-danger-bg);
+    color: var(--color-text);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-alert-danger-border);
+    margin-bottom: 1rem;
+}
+
+.loading {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--color-text-secondary);
+    font-size: 1.1em;
+}
+
+/* 4. Popup Forms (Aligned with Hawthorne Guild Inputs) */
+.pin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 260px;
+    max-width: 320px;
+    color: var(--color-text);
+}
+
+.pin-form label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: -5px;
+}
+
+.pin-form input[type="text"], 
+.pin-form textarea {
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: #fff; 
+    color: #333;
+    font-family: var(--font-body);
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pin-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.pin-form input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* 5. Buttons (Aligned with site-wide button styles) */
+.pin-form button, 
+.location-display button {
+    background-color: var(--color-primary);
+    color: var(--color-btn-text);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-family: var(--font-header);
+    transition: all 0.2s ease;
+    margin-top: 5px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+}
+
+.pin-form button:hover, 
+.location-display button:hover {
+    background-color: var(--color-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.pin-form button.delete-btn, 
+.location-display button.delete-btn {
+    background-color: var(--color-alert-danger-border);
+}
+
+.location-display button.delete-btn:hover {
+    background-color: var(--palette-alert-danger-action-hover);
+}
+
+/* 6. Location Display in Popups */
+.location-display {
+    max-width: 300px;
+}
+
+.location-display p {
+    margin: 0.5rem 0;
+    color: #333;
+    line-height: 1.4;
+}
+
+.location-display a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.location-display a:hover {
+    text-decoration: underline;
+    color: var(--color-primary);
+}
+
+.location-display hr {
+    margin: 10px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+/* 7. Dark Mode Adjustments */
+[data-theme="dark"] .pin-form {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .pin-form label {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .pin-form input[type="text"],
+[data-theme="dark"] .pin-form textarea {
+    background-color: var(--color-bg-medium);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .location-display p {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .location-display hr {
+    border-top-color: var(--color-border);
+}
+
+/* 8. Leaflet Control Buttons (Save View, Coords Display) */
+.save-view-btn {
+    background-color: var(--color-primary) !important;
+    color: var(--color-btn-text) !important;
+    border: 2px solid var(--color-border) !important;
+    box-shadow: var(--shadow-sm) !important;
+    font-family: var(--font-header) !important;
+    font-weight: 600 !important;
+}
+
+.save-view-btn:hover {
+    background-color: var(--color-secondary) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.coords-display {
+    background-color: var(--color-bg-light) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+    box-shadow: var(--shadow-sm) !important;
+    font-family: var(--font-body) !important;
+}
+
+[data-theme="dark"] .coords-display {
+    background-color: var(--color-bg-medium) !important;
+    color: var(--color-text) !important;
+}
+
+/* 9. Optional: Dark Leaflet Popups */
+/* Uncomment to make popups dark-themed */
+/*
+[data-theme="dark"] .leaflet-popup-content-wrapper,
+[data-theme="dark"] .leaflet-popup-tip {
+    background: var(--color-bg-medium) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border);
+}
+
+[data-theme="dark"] .leaflet-popup-content-wrapper .pin-form label,
+[data-theme="dark"] .leaflet-popup-content-wrapper .location-display p {
+    color: var(--color-text) !important;
+}
+*//* ============================================
+   Map Component Styles (Aligned with style.css)
+   ============================================ */
+
+/* 1. Base Container Styling */
+.map-component-wrapper {
+    position: relative;
+    border: 1px solid var(--color-border-medium);
+    background-color: var(--color-bg-dark);
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-md);
     overflow: hidden;
 }
 
@@ -28,7 +240,7 @@
 
 /* 3. Feedback States (Error/Loading) */
 .error {
-    background: var(--color-danger-bg, #5a1a1a); /* Fallback to safety if danger-bg not defined */
+    background: var(--color-danger-bg, #5a1a1a);
     color: var(--color-danger-text, #ffaaaa);
     padding: var(--spacing-md);
     border-radius: var(--radius-sm);
@@ -48,18 +260,19 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    min-width: 220px;
-    color: var(--color-text-main); /* Popups usually have white backgrounds in Leaflet */
+    min-width: 260px;
+    max-width: 320px;
+    color: var(--color-text-main);
 }
 
 .pin-form label {
     font-size: 12px;
     font-weight: bold;
-    color: #333; /* Leaflet popup text usually needs high contrast */
+    color: #333;
     margin-bottom: -5px;
 }
 
-.pin-form input, 
+.pin-form input[type="text"], 
 .pin-form textarea {
     padding: 8px;
     border: 1px solid var(--color-border-medium);
@@ -67,12 +280,24 @@
     background-color: #fff; 
     color: #333;
     font-family: var(--font-primary);
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pin-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.pin-form input[type="checkbox"] {
+    cursor: pointer;
 }
 
 /* 5. Buttons (Aligned with site-wide button styles) */
 .pin-form button, 
 .location-display button {
-    background-color: var(--color-accent); /* Using site accent color */
+    background-color: var(--color-accent);
     color: var(--color-bg-light);
     border: none;
     padding: 8px 16px;
@@ -81,19 +306,51 @@
     font-weight: 600;
     font-family: var(--font-primary);
     transition: filter 0.2s ease;
+    margin-top: 5px;
 }
 
 .pin-form button:hover, 
 .location-display button:hover {
-    filter: brightness(1.2); /* Standard hover effect for Guild site */
+    filter: brightness(1.2);
 }
 
 .pin-form button.delete-btn, 
 .location-display button.delete-btn {
-    background-color: #c0392b; /* Standard red for destructive actions */
+    background-color: #c0392b;
 }
 
-/* 6. Leaflet Popup Customization to match Dark Theme */
+.location-display button.delete-btn:hover {
+    background-color: #a93226;
+}
+
+/* 6. Location Display in Popups */
+.location-display {
+    max-width: 300px;
+}
+
+.location-display p {
+    margin: 0.5rem 0;
+    color: #333;
+    line-height: 1.4;
+}
+
+.location-display a {
+    color: var(--color-accent, #3498db);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.location-display a:hover {
+    text-decoration: underline;
+}
+
+.location-display hr {
+    margin: 10px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+/* 7. Leaflet Popup Customization to match Dark Theme */
 /* Optional: Uncomment if you want the popup itself to be dark */
 /*
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {

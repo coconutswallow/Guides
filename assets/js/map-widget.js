@@ -1,7 +1,7 @@
 /**
  * map-widget.js
- * Optimized for Top-Left (0,0) coordinates to prevent Vertical Drift
- * Anchor: Top-Left [0,0] | Bottom-Right [-height, width]
+ * Using standard positive Y coordinates (top=0, bottom=height)
+ * This prevents vertical drift during zoom operations
  */
 
 import { supabase } from './supabaseClient.js';
@@ -68,16 +68,18 @@ class MapComponent {
         const w = mapData.width;
         const h = mapData.height;
 
-        // THE VERTICAL DRIFT KILLER:
-        // By making H negative, [0,0] is locked to the top-left corner of the container.
-        const bounds = [[-h, 0], [0, w]]; 
+        // CRITICAL: Use a consistent coordinate system
+        // Top-left is [0, 0], bottom-right is [h, w]
+        // This matches typical image coordinates (y increases downward)
+        const bounds = [[0, 0], [h, w]]; 
 
         this.map = L.map(this.container.id, {
             crs: L.CRS.Simple,
-            minZoom: -2,
+            minZoom: -3,
+            maxZoom: 2,
             maxBounds: bounds,
-            maxBoundsViscosity: 1.0, // Hard lock to image edges
-            zoomSnap: 0.1,           // Smoother zooming/centering
+            maxBoundsViscosity: 1.0,
+            zoomSnap: 0.1,
             attributionControl: false
         });
 
@@ -86,11 +88,9 @@ class MapComponent {
             interactive: true
         }).addTo(this.map);
 
-        // DATABASE CENTERING FIX:
-        // Force initial_y to be negative to match the coordinate system
+        // Set initial view
         if (mapData.initial_x !== null && mapData.initial_y !== null) {
-            const centerY = mapData.initial_y > 0 ? -mapData.initial_y : mapData.initial_y;
-            this.map.setView([centerY, mapData.initial_x], mapData.initial_zoom || 0);
+            this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0);
         } else {
             this.map.fitBounds(bounds);
         }
@@ -134,15 +134,15 @@ class MapComponent {
         const x = parseFloat(location.x);
         const y = parseFloat(location.y);
 
-        // CONSISTENCY FIX: Always store Y as negative in DB, use as-is
-        // No more conditional flipping - just use the raw value
+        // Use coordinates as-is - no flipping needed
         const marker = L.marker([y, x]).addTo(this.map);
         
         let popupContent = `
             <div class="location-display">
                 <h3 class="map-component-title">${location.name}</h3>
-                <p>${location.description || ''}</p>
+                ${location.description ? `<p>${location.description}</p>` : ''}
                 ${location.link_url ? `<a href="${location.link_url}" target="_blank">View Details</a>` : ''}
+                ${location.is_home ? `<p style="color: #f39c12; font-weight: bold;">🏠 Home Location</p>` : ''}
             </div>
         `;
 
@@ -164,8 +164,20 @@ class MapComponent {
                 .setLatLng(e.latlng)
                 .setContent(`
                     <div class="pin-form">
-                        <label>Location Name</label>
-                        <input type="text" id="new-pin-name">
+                        <label>Location Name*</label>
+                        <input type="text" id="new-pin-name" placeholder="Enter location name">
+                        
+                        <label>Description</label>
+                        <textarea id="new-pin-description" rows="3" placeholder="Optional description"></textarea>
+                        
+                        <label>Link URL</label>
+                        <input type="text" id="new-pin-link" placeholder="https://example.com">
+                        
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="new-pin-home" style="width: auto; margin: 0;">
+                            <span>Set as Home Location</span>
+                        </label>
+                        
                         <button onclick="window.mapComponents['${this.container.id}'].savePin(${lat}, ${lng})">Save Pin</button>
                     </div>
                 `).openOn(this.map);
@@ -210,18 +222,32 @@ class MapComponent {
     }
 
     async savePin(lat, lng) {
-        const name = document.getElementById('new-pin-name').value;
+        const name = document.getElementById('new-pin-name').value.trim();
+        const description = document.getElementById('new-pin-description').value.trim();
+        const link = document.getElementById('new-pin-link').value.trim();
+        const isHome = document.getElementById('new-pin-home').checked;
         
-        // CONSISTENCY FIX: Save coordinates exactly as Leaflet gives them
-        // Since our coordinate system has negative Y, store lat as-is
+        if (!name) {
+            alert('Please enter a location name');
+            return;
+        }
+        
+        // Build the insert object
+        const pinData = {
+            map_id: this.currentMapData.id,
+            name: name,
+            x: lng,  // X is straightforward
+            y: lat   // Y is already negative from our coordinate system
+        };
+        
+        // Add optional fields only if they have values
+        if (description) pinData.description = description;
+        if (link) pinData.link_url = link;
+        if (isHome) pinData.is_home = isHome;
+        
         const { data, error } = await supabase
             .from('locations')
-            .insert([{ 
-                map_id: this.currentMapData.id, 
-                name, 
-                x: lng,  // X is straightforward
-                y: lat   // Y is already negative from our coordinate system
-            }])
+            .insert([pinData])
             .select();
 
         if (error) return alert(error.message);
