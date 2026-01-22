@@ -244,3 +244,31 @@ select:hover {
     image-rendering: -webkit-optimize-contrast; /* Keeps map text sharp */
     image-rendering: crisp-edges;
 }
+
+/* ==========================================================================
+   CRITICAL FIX: Reset Doc Theme Styles for Map Images
+   ========================================================================== */
+
+/* 1. Reset the "Ghost Margin" that causes pin drift */
+.doc-body .leaflet-container img,
+.leaflet-container img,
+.leaflet-image-layer {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    
+    /* 2. Un-squash the map (Leaflet controls size, not CSS) */
+    max-width: none !important;
+    max-height: none !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* 3. Ensure the container has a solid background to hide loading gaps */
+.map-component-wrapper {
+    background-color: #1a1a1a; 
+}
