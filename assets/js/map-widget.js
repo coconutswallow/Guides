@@ -21,7 +21,8 @@ class MapComponent {
 
     async init() {
         // Ensure container is fully rendered before Leaflet touches it
-        if (!this.container || this.container.offsetWidth === 0 || this.container.offsetHeight === 0) {
+        // Check width only - height might be 0 initially and get set by CSS
+        if (!this.container || this.container.offsetWidth === 0) {
             setTimeout(() => this.init(), 100);
             return;
         }
@@ -95,17 +96,21 @@ class MapComponent {
             this.map.fitBounds(bounds);
         }
 
-        // Force Leaflet to recalculate map size after a brief delay
-        // This prevents rendering issues when container size isn't stable
-        setTimeout(() => {
-            this.map.invalidateSize();
-        }, 250);
-
+        // Load pins first
         this.loadLocations();
 
+        // Add editor controls if needed
         if (this.isEditable) {
             this.setupEditorControls();
         }
+
+        // Force Leaflet to recalculate map size after everything is loaded
+        // This prevents rendering issues when container size isn't stable
+        setTimeout(() => {
+            if (this.map) {
+                this.map.invalidateSize();
+            }
+        }, 500);
     }
 
     async loadLocations() {
