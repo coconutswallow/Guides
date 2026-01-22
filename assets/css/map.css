@@ -12,6 +12,191 @@
     overflow: hidden;
 }
 
+/* CRITICAL: Force map containers to maintain aspect ratio */
+.doc-body [data-map-component],
+[data-map-component] {
+    max-width: 100% !important;
+    width: 100% !important;
+    /* Use aspect-ratio to maintain map proportions */
+    aspect-ratio: var(--map-aspect-ratio, 16 / 10) !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    box-shadow: var(--shadow-sm) !important;
+    margin: 1.5em 0 !important;
+    min-width: 0 !important;
+}
+
+/* Fallback for browsers that don't support aspect-ratio */
+@supports not (aspect-ratio: 1) {
+    .doc-body [data-map-component],
+    [data-map-component] {
+        height: 600px !important;
+    }
+}
+
+/* Ensure Leaflet containers maintain stable dimensions */
+.leaflet-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 2. Map Typography & Info */
+.map-component-title {
+    font-family: var(--font-header);
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.map-info {
+    color: var(--color-text-secondary);
+    font-size: 0.9em;
+    margin-bottom: 1rem;
+}
+
+/* 3. Feedback States (Error/Loading) */
+.error {
+    background: var(--color-alert-danger-bg);
+    color: var(--color-text);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-alert-danger-border);
+    margin-bottom: 1rem;
+}
+
+.loading {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--color-text-secondary);
+    font-size: 1.1em;
+}
+
+/* 4. Popup Forms (Aligned with Hawthorne Guild Inputs) */
+.pin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 260px;
+    max-width: 320px;
+    color: var(--color-text);
+}
+
+.pin-form label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: -5px;
+}
+
+.pin-form input[type="text"], 
+.pin-form textarea {
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: #fff; 
+    color: #333;
+    font-family: var(--font-body);
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pin-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.pin-form input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* 5. Buttons (Aligned with site-wide button styles) */
+.pin-form button, 
+.location-display button {
+    background-color: var(--color-primary);
+    color: var(--color-btn-text);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-family: var(--font-header);
+    transition: all 0.2s ease;
+    margin-top: 5px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+}
+
+.pin-form button:hover, 
+.location-display button:hover {
+    background-color: var(--color-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.pin-form button.delete-btn, 
+.location-display button.delete-btn {
+    background-color: var(--color-alert-danger-border);
+}
+
+.location-display button.delete-btn:hover {
+    background-color: var(--palette-alert-danger-action-hover);
+}
+
+/* 6. Location Display in Popups */
+.location-display {
+    max-width: 300px;
+}
+
+.location-display p {
+    margin: 0.5rem 0;
+    color: #333;
+    line-height: 1.4;
+}
+
+.location-display a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.location-display a:hover {
+    text-decoration: underline;
+    color: var(--color-primary);
+}
+
+.location-display hr {
+    margin: 10px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+/* 7. Dark Mode Adjustments */
+[data-theme="dark"] .pin-form {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .pin-form label {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .pin-form input[type="text"],
+[data-theme="dark"] .pin-form textarea {
+    b/* ============================================
+   Map Component Styles (Aligned with style.css)
+   ============================================ */
+
+/* 1. Base Container Styling */
+.map-component-wrapper {
+    position: relative;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-light);
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
 /* CRITICAL: Override doc-body constraints for map containers */
 .doc-body [data-map-component],
 [data-map-component] {
