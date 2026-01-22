@@ -69,6 +69,9 @@ class MapComponent {
         const w = mapData.width;
         const h = mapData.height;
 
+        console.log(`Map dimensions: ${w} × ${h}, aspect ratio: ${(w/h).toFixed(2)}:1`);
+        console.log(`Container size: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
+
         // CRITICAL: Use a consistent coordinate system
         // Top-left is [0, 0], bottom-right is [h, w]
         // This matches typical image coordinates (y increases downward)
@@ -81,6 +84,8 @@ class MapComponent {
             maxBounds: bounds,
             maxBoundsViscosity: 1.0,
             zoomSnap: 0.1,
+            zoomDelta: 0.5,
+            wheelPxPerZoomLevel: 120,
             attributionControl: false
         });
 
@@ -109,6 +114,7 @@ class MapComponent {
         setTimeout(() => {
             if (this.map) {
                 this.map.invalidateSize();
+                console.log(`Map invalidated. New container: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
             }
         }, 500);
     }
