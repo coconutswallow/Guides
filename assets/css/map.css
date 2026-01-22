@@ -24,8 +24,17 @@
     box-shadow: var(--shadow-sm) !important;
     margin: 1.5em 0 !important;
     min-width: 0 !important;
-    /* DO NOT set height or aspect-ratio here with !important */
-    /* allowing JS to calculate the exact pixel height prevents pin drift */
+}
+
+.doc-body .leaflet-container img,
+.leaflet-container img {
+    max-width: none !important;     /* Allow tiles/overlay to be full size */
+    max-height: none !important;    /* Allow tiles/overlay to be full size */
+    margin: 0 !important;           /* REMOVE the 1.5em margin causing drift */
+    padding: 0 !important;
+    border-radius: 0 !important;    /* Remove rounded corners from tiles */
+    box-shadow: none !important;    /* Remove shadow from tiles */
+    background: none !important;
 }
 
 /* Ensure Leaflet containers fill their parent */
