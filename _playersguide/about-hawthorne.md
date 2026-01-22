@@ -31,11 +31,13 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 ### Hawthorne Location on Faerun's Sword Coast
 
 <iframe 
-    src="/map-viewer.html?map=Hawthorne-Location" 
+    src="{{ '/maps/map-viewer.html' | relative_url }}?map=Hawthorne-Location" 
     style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"
     title="Hawthorne Map"
     scrolling="no">
 </iframe>
+
+<span class="image-caption">Zoomable Map of Faerûn showing the location of Hawthorne...</span>
 
 <span class="image-caption">Zoomable Map of Faerûn showing the location of Hawthorne.  Map of Faerun by Wizards of the Coast, map edited with Hawthorne location by @salah_ad_din</span>
 
