@@ -104,3 +104,18 @@ Flagrant or repeated violations of the guild’s code of conduct can be grounds 
 > **IMPORTANT**
 >
 > In addition to the guild rules above, please also ensure you have fully read and agree to the [Server Rules](/Guides/rules/server-rules)
+
+<script>
+setTimeout(() => {
+    const mapEl = document.getElementById('faerun-map');
+    const computed = window.getComputedStyle(mapEl);
+    console.log('=== MAP CONTAINER COMPUTED STYLES ===');
+    console.log('Width:', computed.width);
+    console.log('Height:', computed.height);
+    console.log('Display:', computed.display);
+    console.log('Position:', computed.position);
+    console.log('Transform:', computed.transform);
+    console.log('Parent:', mapEl.parentElement.className);
+    console.log('Parent computed width:', window.getComputedStyle(mapEl.parentElement).width);
+}, 1000);
+</script>
