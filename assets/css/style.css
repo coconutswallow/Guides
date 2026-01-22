@@ -2285,3 +2285,21 @@ img + .image-caption {
     display: block;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
 }
+
+/* Responsive Iframe Container */
+.responsive-map-frame {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    
+    /* Default: Cinematic Widescreen */
+    aspect-ratio: 16 / 9;
+}
+
+@media (max-width: 768px) {
+    .responsive-map-frame {
+        /* Mobile: Make it square for easier dragging */
+        aspect-ratio: 1 / 1;
+    }
+}
