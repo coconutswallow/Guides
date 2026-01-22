@@ -30,57 +30,14 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
 
 ### Hawthorne Location on Faerun's Sword Coast
 
-{% include map-widget.html name="Hawthorne-Location" id="faerun-map" %}
+<iframe 
+    src="/map-viewer.html?map=Hawthorne-Location" 
+    style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"
+    title="Hawthorne Map"
+    scrolling="no">
+</iframe>
 
 <span class="image-caption">Zoomable Map of Faerûn showing the location of Hawthorne.  Map of Faerun by Wizards of the Coast, map edited with Hawthorne location by @salah_ad_din</span>
-
-
-<style>
-    /* Dark background overlay */
-    .modal-overlay {
-        display: none; /* Hidden by default */
-        position: fixed;
-        z-index: 10000; /* Sit on top of everything including header */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.85); /* Black w/ opacity */
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        backdrop-filter: blur(5px);
-    }
-
-    /* The image container box */
-    .modal-content {
-        background-color: var(--color-bg-light);
-        padding: 15px;
-        border-radius: 4px;
-        max-width: 90%;
-        max-height: 90vh;
-        overflow-y: auto;
-        position: relative;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-
-    /* The Close Button (X) */
-    .close-btn {
-        position: absolute;
-        top: 5px;
-        right: 15px;
-        color: var(--color-text-secondary);
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        line-height: 1;
-    }
-
-    .close-btn:hover {
-        color: var(--color-primary);
-    }
-</style>
-
 
 ## Hawthorne Guild Rules
 
@@ -105,17 +62,3 @@ Flagrant or repeated violations of the guild’s code of conduct can be grounds 
 >
 > In addition to the guild rules above, please also ensure you have fully read and agree to the [Server Rules](/Guides/rules/server-rules)
 
-<script>
-setTimeout(() => {
-    const mapEl = document.getElementById('faerun-map');
-    const computed = window.getComputedStyle(mapEl);
-    console.log('=== MAP CONTAINER COMPUTED STYLES ===');
-    console.log('Width:', computed.width);
-    console.log('Height:', computed.height);
-    console.log('Display:', computed.display);
-    console.log('Position:', computed.position);
-    console.log('Transform:', computed.transform);
-    console.log('Parent:', mapEl.parentElement.className);
-    console.log('Parent computed width:', window.getComputedStyle(mapEl.parentElement).width);
-}, 1000);
-</script>

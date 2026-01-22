@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Viewer</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #1a1a1a; }
+        #map-container { width: 100%; height: 100%; }
+        
+        /* Your existing popup styles */
+        .location-display h3 { margin: 0 0 5px 0; color: #58180D; font-family: sans-serif; }
+        .location-display p { margin: 0; font-family: sans-serif; font-size: 14px; }
+        .location-display a { color: #58180D; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="map-container" 
+         data-map-component 
+         data-map-name=""> </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script type="module">
+        import { initMapComponents } from '../assets/js/map-widget.js';
+
+        // Get map name from URL parameter (e.g., map-viewer.html?map=Hawthorne-Location)
+        const urlParams = new URLSearchParams(window.location.search);
+        const mapName = urlParams.get('map');
+        const mapId = urlParams.get('id');
+
+        const container = document.getElementById('map-container');
+        
+        if (mapName) container.dataset.mapName = mapName;
+        if (mapId) container.dataset.mapId = mapId;
+
+        // Initialize
+        initMapComponents();
+    </script>
+
+</body>
+</html>
