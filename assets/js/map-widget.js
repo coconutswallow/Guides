@@ -21,7 +21,7 @@ class MapComponent {
 
     async init() {
         // Ensure container is fully rendered before Leaflet touches it
-        if (!this.container || this.container.offsetWidth === 0) {
+        if (!this.container || this.container.offsetWidth === 0 || this.container.offsetHeight === 0) {
             setTimeout(() => this.init(), 100);
             return;
         }
@@ -95,6 +95,12 @@ class MapComponent {
             this.map.fitBounds(bounds);
         }
 
+        // Force Leaflet to recalculate map size after a brief delay
+        // This prevents rendering issues when container size isn't stable
+        setTimeout(() => {
+            this.map.invalidateSize();
+        }, 250);
+
         this.loadLocations();
 
         if (this.isEditable) {
@@ -132,9 +138,15 @@ class MapComponent {
 
     addMarker(location) {
         const x = parseFloat(location.x);
-        const y = parseFloat(location.y);
+        let y = parseFloat(location.y);
 
-        // Use coordinates as-is - no flipping needed
+        // BACKWARD COMPATIBILITY: Convert old negative Y coords to positive
+        // If you have legacy pins saved with negative Y, this will fix them on display
+        if (y < 0) {
+            console.warn(`Converting legacy negative Y coordinate for "${location.name}": ${y} → ${Math.abs(y)}`);
+            y = Math.abs(y);
+        }
+
         const marker = L.marker([y, x]).addTo(this.map);
         
         let popupContent = `
