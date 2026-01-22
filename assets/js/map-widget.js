@@ -1,7 +1,6 @@
 /**
  * map-widget.js
- * Integrated Map Component for Hawthorne Guild
- * Handles: Simple CRS (Pixels), Staff Roles, and Vertical Drift Fixes
+ * Optimized for Top-Left (0,0) coordinates to prevent Vertical Drift
  */
 
 import { supabase } from './supabaseClient.js';
@@ -14,14 +13,19 @@ class MapComponent {
         this.isEditable = container.dataset.editable === 'true';
         this.map = null;
         this.currentMapData = null;
-        this.markers = [];
+        this.markers = new Map(); // Using a Map object for easier management
         
         this.init();
     }
 
     async init() {
+        // Fix for "offsetWidth" error: ensure container is ready
+        if (!this.container || this.container.offsetWidth === 0) {
+            setTimeout(() => this.init(), 100);
+            return;
+        }
+
         try {
-            // 1. Fetch Map Data
             if (this.mapId) {
                 await this.loadMapById(this.mapId);
             } else if (this.mapName) {
@@ -41,7 +45,6 @@ class MapComponent {
             .select('*')
             .eq('id', id)
             .single();
-        
         if (error) throw error;
         this.renderMap(data);
     }
@@ -52,7 +55,6 @@ class MapComponent {
             .select('*')
             .eq('name', name)
             .single();
-        
         if (error) throw error;
         this.renderMap(data);
     }
@@ -65,8 +67,8 @@ class MapComponent {
         const w = mapData.width;
         const h = mapData.height;
 
-        // THE FIX: Define bounds where 0,0 is top-left and h,w is bottom-right
-        // Using negative Y values ensures the "sliding" stops.
+        // THE VERTICAL DRIFT KILLER: 
+        // We set the coordinate system so [0,0] is top-left and [-h, w] is bottom-right.
         const bounds = [[-h, 0], [0, w]]; 
 
         this.map = L.map(this.container.id, {
@@ -82,14 +84,13 @@ class MapComponent {
             interactive: true
         }).addTo(this.map);
 
-        // Position the view
         if (mapData.initial_x !== null && mapData.initial_y !== null) {
-            // Note: initial_y must be negative if saved in this new system
             this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0);
         } else {
             this.map.fitBounds(bounds);
         }
 
+        // Fixed: loadLocations is now correctly scoped
         this.loadLocations();
 
         if (this.isEditable) {
@@ -97,114 +98,82 @@ class MapComponent {
         }
     }
 
+    async loadLocations() {
+        const { data, error } = await supabase
+            .from('locations')
+            .select('*')
+            .eq('map_id', this.currentMapData.id);
+
+        if (error) return console.error("Error loading pins:", error);
+        data.forEach(loc => this.addMarker(loc));
+    }
+
     addMarker(location) {
-        // Ensure Y is treated as a float/number
-        const yCoord = parseFloat(location.y);
-        const xCoord = parseFloat(location.x);
+        const y = parseFloat(location.y);
+        const x = parseFloat(location.x);
 
-        // If your DB still has positive Y values, we force them negative here
-        // to match the Top-Down coordinate system
-        const correctedY = yCoord > 0 ? -yCoord : yCoord;
-
-        const marker = L.marker([correctedY, xCoord]).addTo(this.map);
+        // Map relative position: ensures Y is always negative for Top-Down logic
+        const marker = L.marker([y > 0 ? -y : y, x]).addTo(this.map);
         
-        // ... rest of your popup logic ...
+        let popupContent = `
+            <div class="location-display">
+                <h3 class="map-component-title">${location.name}</h3>
+                <p>${location.description || ''}</p>
+                ${location.link_url ? `<a href="${location.link_url}" target="_blank">View Details</a>` : ''}
+            </div>
+        `;
+
+        if (this.isEditable) {
+            popupContent += `<button class="delete-btn" onclick="window.mapComponents['${this.container.id}'].deletePin(${location.id})">Delete</button>`;
+        }
+
+        marker.bindPopup(popupContent);
+        this.markers.set(location.id, marker);
     }
 
     setupEditorControls() {
-        // Right click to drop a new pin
         this.map.on('contextmenu', (e) => {
             const { lat, lng } = e.latlng;
-            this.showNewPinForm(lat, lng);
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`
+                    <div class="pin-form">
+                        <label>Name</label><input type="text" id="new-pin-name">
+                        <button onclick="window.mapComponents['${this.container.id}'].savePin(${lat}, ${lng})">Save Pin</button>
+                    </div>
+                `).openOn(this.map);
         });
-
-        // Add a "Save View" button to the UI
-        const saveViewBtn = L.control({ position: 'topright' });
-        saveViewBtn.onAdd = () => {
-            const btn = L.DomUtil.create('button', 'save-view-btn');
-            btn.innerHTML = '💾 Save Default View';
-            btn.onclick = () => this.saveCurrentView();
-            return btn;
-        };
-        saveViewBtn.addTo(this.map);
-    }
-
-    showNewPinForm(lat, lng) {
-        const popup = L.popup()
-            .setLatLng([lat, lng])
-            .setContent(`
-                <div class="pin-form">
-                    <label>Location Name</label>
-                    <input type="text" id="new-pin-name" placeholder="Marketplace...">
-                    <label>Description</label>
-                    <textarea id="new-pin-desc"></textarea>
-                    <button onclick="window.mapComponents['${this.container.id}'].savePin(${lat}, ${lng})">Create Pin</button>
-                </div>
-            `)
-            .openOn(this.map);
     }
 
     async savePin(lat, lng) {
         const name = document.getElementById('new-pin-name').value;
-        const desc = document.getElementById('new-pin-desc').value;
-
         const { data, error } = await supabase
             .from('locations')
-            .insert([{
-                map_id: this.currentMapData.id,
-                name: name,
-                x: lng,
-                y: lat,
-                description: desc
-            }])
+            .insert([{ map_id: this.currentMapData.id, name, x: lng, y: lat }])
             .select();
 
-        if (error) {
-            if (error.code === '23505') {
-                alert("A location with this name already exists on this map.");
-            } else if (error.code === '42501') {
-                alert("Permission Denied: Only Staff or Staff Apprentices can create pins.");
-            } else {
-                alert("Error saving pin: " + error.message);
-            }
-            return;
-        }
-
+        if (error) return alert(error.message);
         this.addMarker(data[0]);
         this.map.closePopup();
     }
 
-    async saveCurrentView() {
-        const center = this.map.getCenter();
-        const zoom = this.map.getZoom();
-
-        const { error } = await supabase
-            .from('location_maps')
-            .update({
-                initial_x: center.lng,
-                initial_y: center.lat,
-                initial_zoom: zoom
-            })
-            .eq('id', this.currentMapData.id);
-
-        if (error) {
-            alert("Permission Denied: Only Staff can set the default view.");
-        } else {
-            alert("Default view updated!");
-        }
+    async deletePin(id) {
+        if (!confirm("Delete this pin?")) return;
+        const { error } = await supabase.from('locations').delete().eq('id', id);
+        if (error) return alert(error.message);
+        
+        this.map.removeLayer(this.markers.get(id));
+        this.markers.delete(id);
     }
 
     renderError(msg) {
-        this.container.innerHTML = `<div class="error">${msg}</div>`;
+        this.container.innerHTML = `<div class="error" style="display:block">${msg}</div>`;
     }
 }
 
-// Registry and Initialization
-window.mapComponents = {};
-
+window.mapComponents = window.mapComponents || {};
 export function initMapComponents() {
-    const elements = document.querySelectorAll('[data-map-component]');
-    elements.forEach(el => {
+    document.querySelectorAll('[data-map-component]').forEach(el => {
         if (!window.mapComponents[el.id]) {
             window.mapComponents[el.id] = new MapComponent(el);
         }
