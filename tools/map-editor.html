@@ -1,0 +1,415 @@
+---
+layout: default
+title: Map Editor
+---
+
+<style>
+.editor-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border-medium);
+}
+
+.editor-header h1 {
+    margin: 0;
+    color: var(--color-text-emphasis);
+}
+
+.editor-controls {
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.control-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.control-group label {
+    font-weight: 600;
+    color: var(--color-text-main);
+    min-width: 120px;
+}
+
+.control-group select,
+.control-group input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-main);
+    font-family: var(--font-primary);
+}
+
+.control-group button {
+    padding: 0.5rem 1.5rem;
+    background-color: var(--color-accent);
+    color: var(--color-bg-light);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.2s ease;
+}
+
+.control-group button:hover {
+    filter: brightness(1.2);
+}
+
+.control-group button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status-message {
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.status-info {
+    background-color: #2c5aa0;
+    color: white;
+    border-left: 4px solid #1e3a6b;
+}
+
+.status-success {
+    background-color: #27ae60;
+    color: white;
+    border-left: 4px solid #1e8449;
+}
+
+.status-error {
+    background-color: var(--color-danger-bg, #5a1a1a);
+    color: var(--color-danger-text, #ffaaaa);
+    border-left: 4px solid var(--color-danger-border);
+}
+
+.status-warning {
+    background-color: #f39c12;
+    color: white;
+    border-left: 4px solid #d68910;
+}
+
+.access-denied {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--color-bg-light);
+    border: 2px solid var(--color-danger-border, #c0392b);
+    border-radius: var(--radius-md);
+    margin-top: 2rem;
+}
+
+.access-denied h2 {
+    color: var(--color-danger-text, #c0392b);
+    margin-bottom: 1rem;
+}
+
+.map-info-display {
+    background-color: var(--color-bg-medium);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    font-size: 0.9em;
+}
+
+.map-info-display p {
+    margin: 0.25rem 0;
+    color: var(--color-text-secondary);
+}
+
+.map-info-display strong {
+    color: var(--color-text-emphasis);
+}
+
+.instructions {
+    background-color: var(--color-bg-medium);
+    border-left: 4px solid var(--color-accent);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-sm);
+}
+
+.instructions h3 {
+    margin-top: 0;
+    color: var(--color-text-emphasis);
+}
+
+.instructions ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.instructions li {
+    margin: 0.25rem 0;
+    color: var(--color-text-main);
+}
+
+#map-editor-widget {
+    min-height: 600px;
+    border: 2px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-muted);
+}
+</style>
+
+<div class="editor-container">
+    <div class="editor-header">
+        <h1>🗺️ Map Editor</h1>
+        {% include auth-header.html %}
+    </div>
+
+    <!-- Access Denied Message (hidden by default) -->
+    <div id="access-denied" class="access-denied" style="display: none;">
+        <h2>⛔ Access Denied</h2>
+        <p>You need to be logged in with Staff or Staff Apprentice permissions to use the Map Editor.</p>
+        <p>Please log in with an authorized account.</p>
+    </div>
+
+    <!-- Editor Interface (hidden until auth check passes) -->
+    <div id="editor-interface" style="display: none;">
+        
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>📝 How to Use the Map Editor</h3>
+            <ul>
+                <li><strong>Select a Map:</strong> Choose a map from the dropdown to begin editing</li>
+                <li><strong>Add Pins:</strong> Right-click on the map to place a new location pin</li>
+                <li><strong>Delete Pins:</strong> Click on a pin and use the "Delete Pin" button in the popup</li>
+                <li><strong>Set Default View:</strong> Pan and zoom to your desired starting view, then click "💾 Set Default View"</li>
+                <li><strong>Current Coordinates:</strong> Watch the bottom-left corner to see your current position and zoom level</li>
+            </ul>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="status-container"></div>
+
+        <!-- Map Selection Controls -->
+        <div class="editor-controls">
+            <div class="control-group">
+                <label for="map-select">Select Map:</label>
+                <select id="map-select">
+                    <option value="">-- Loading Maps --</option>
+                </select>
+                <button id="refresh-maps-btn" title="Refresh map list">🔄 Refresh</button>
+            </div>
+
+            <!-- Map Info Display -->
+            <div id="map-info" class="map-info-display" style="display: none;">
+                <p><strong>Map Name:</strong> <span id="info-name"></span></p>
+                <p><strong>Dimensions:</strong> <span id="info-dimensions"></span></p>
+                <p><strong>Current Default View:</strong> <span id="info-default"></span></p>
+                <p><strong>Pin Count:</strong> <span id="info-pins"></span></p>
+            </div>
+        </div>
+
+        <!-- Map Widget Container -->
+        <div id="map-editor-widget" 
+             data-map-component
+             data-editable="true">
+            <div class="loading-spinner">Select a map to begin editing...</div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
+    import { checkAccess } from "{{ '/assets/js/auth-check.js' | relative_url }}";
+    import { initMapComponents } from "{{ '/assets/js/map-widget.js' | relative_url }}";
+
+    let currentUser = null;
+    let availableMaps = [];
+    let currentMapWidget = null;
+
+    const ui = {
+        accessDenied: document.getElementById('access-denied'),
+        editorInterface: document.getElementById('editor-interface'),
+        mapSelect: document.getElementById('map-select'),
+        refreshBtn: document.getElementById('refresh-maps-btn'),
+        statusContainer: document.getElementById('status-container'),
+        mapInfo: document.getElementById('map-info'),
+        mapWidget: document.getElementById('map-editor-widget')
+    };
+
+    /**
+     * Display a status message
+     */
+    function showStatus(message, type = 'info') {
+        const statusEl = document.createElement('div');
+        statusEl.className = `status-message status-${type}`;
+        statusEl.textContent = message;
+        ui.statusContainer.innerHTML = '';
+        ui.statusContainer.appendChild(statusEl);
+
+        // Auto-remove after 5 seconds for success/info messages
+        if (type === 'success' || type === 'info') {
+            setTimeout(() => statusEl.remove(), 5000);
+        }
+    }
+
+    /**
+     * Load available maps from database
+     */
+    async function loadMaps() {
+        try {
+            const { data, error } = await supabase
+                .from('location_maps')
+                .select('id, name, width, height, initial_x, initial_y, initial_zoom')
+                .order('name');
+
+            if (error) throw error;
+
+            availableMaps = data || [];
+            populateMapDropdown();
+            
+            if (availableMaps.length === 0) {
+                showStatus('No maps found in database', 'warning');
+            }
+        } catch (error) {
+            console.error('Error loading maps:', error);
+            showStatus('Failed to load maps: ' + error.message, 'error');
+        }
+    }
+
+    /**
+     * Populate the map selection dropdown
+     */
+    function populateMapDropdown() {
+        ui.mapSelect.innerHTML = '<option value="">-- Select a Map --</option>';
+        
+        availableMaps.forEach(map => {
+            const option = document.createElement('option');
+            option.value = map.id;
+            option.textContent = map.name;
+            option.dataset.mapData = JSON.stringify(map);
+            ui.mapSelect.appendChild(option);
+        });
+    }
+
+    /**
+     * Load and display the selected map
+     */
+    async function loadSelectedMap() {
+        const selectedId = ui.mapSelect.value;
+        
+        if (!selectedId) {
+            ui.mapWidget.innerHTML = '<div class="loading-spinner">Select a map to begin editing...</div>';
+            ui.mapInfo.style.display = 'none';
+            return;
+        }
+
+        try {
+            // Get the map data from the option's dataset
+            const selectedOption = ui.mapSelect.options[ui.mapSelect.selectedIndex];
+            const mapData = JSON.parse(selectedOption.dataset.mapData);
+
+            // Update map info display
+            ui.mapInfo.style.display = 'block';
+            document.getElementById('info-name').textContent = mapData.name;
+            document.getElementById('info-dimensions').textContent = `${mapData.width} × ${mapData.height}`;
+            
+            const defaultView = (mapData.initial_x !== null && mapData.initial_y !== null) 
+                ? `[${mapData.initial_y.toFixed(1)}, ${mapData.initial_x.toFixed(1)}] @ zoom ${mapData.initial_zoom || 0}`
+                : 'Not set (using fit bounds)';
+            document.getElementById('info-default').textContent = defaultView;
+
+            // Get pin count
+            const { count } = await supabase
+                .from('locations')
+                .select('*', { count: 'exact', head: true })
+                .eq('map_id', selectedId);
+            
+            document.getElementById('info-pins').textContent = count || 0;
+
+            // Set up the widget attributes
+            ui.mapWidget.dataset.mapId = selectedId;
+            ui.mapWidget.dataset.editable = 'true';
+            ui.mapWidget.innerHTML = ''; // Clear loading message
+
+            // Initialize the map component
+            if (window.mapComponents && window.mapComponents['map-editor-widget']) {
+                // If a map instance already exists, we need to reinitialize
+                delete window.mapComponents['map-editor-widget'];
+            }
+            
+            initMapComponents();
+            showStatus(`Map "${mapData.name}" loaded successfully`, 'success');
+
+        } catch (error) {
+            console.error('Error loading map:', error);
+            showStatus('Failed to load map: ' + error.message, 'error');
+        }
+    }
+
+    /**
+     * Handle page authentication
+     * This function is called by auth-header.html after auth state changes
+     */
+    window.handlePageAuth = async function(user) {
+        currentUser = user;
+
+        if (!user) {
+            // Not logged in
+            ui.accessDenied.style.display = 'block';
+            ui.editorInterface.style.display = 'none';
+            return;
+        }
+
+        // Check if user has required roles
+        const hasAccess = await checkAccess(user.id, ['Staff', 'Staff Apprentice']);
+
+        if (!hasAccess) {
+            // Logged in but no permission
+            ui.accessDenied.style.display = 'block';
+            ui.editorInterface.style.display = 'none';
+            showStatus('You do not have permission to access the Map Editor', 'error');
+            return;
+        }
+
+        // Has access - show editor
+        ui.accessDenied.style.display = 'none';
+        ui.editorInterface.style.display = 'block';
+        showStatus('Welcome to the Map Editor! Select a map to begin.', 'info');
+        
+        // Load available maps
+        await loadMaps();
+    };
+
+    // Event Listeners
+    ui.mapSelect.addEventListener('change', loadSelectedMap);
+    ui.refreshBtn.addEventListener('click', async () => {
+        showStatus('Refreshing map list...', 'info');
+        await loadMaps();
+        showStatus('Map list refreshed', 'success');
+    });
+
+    // Initial state: show loading until auth check completes
+    ui.accessDenied.style.display = 'none';
+    ui.editorInterface.style.display = 'none';
+</script>
+
+<!-- Include Leaflet CSS for the map widget -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

@@ -114,12 +114,11 @@ class MapComponent {
 
     addMarker(location) {
         const x = parseFloat(location.x);
-        let y = parseFloat(location.y);
+        const y = parseFloat(location.y);
 
-        // Standardize Y to negative for consistent top-down placement
-        const correctedY = y > 0 ? -y : y;
-
-        const marker = L.marker([correctedY, x]).addTo(this.map);
+        // CONSISTENCY FIX: Always store Y as negative in DB, use as-is
+        // No more conditional flipping - just use the raw value
+        const marker = L.marker([y, x]).addTo(this.map);
         
         let popupContent = `
             <div class="location-display">
@@ -161,17 +160,50 @@ class MapComponent {
             btn.innerHTML = '💾 Set Default View';
             btn.style.padding = '8px';
             btn.style.cursor = 'pointer';
+            btn.style.backgroundColor = '#3498db';
+            btn.style.color = 'white';
+            btn.style.border = 'none';
+            btn.style.borderRadius = '4px';
+            btn.style.fontWeight = 'bold';
             btn.onclick = () => this.saveCurrentView();
             return btn;
         };
         saveViewBtn.addTo(this.map);
+
+        // Add a "Show Current Coords" button for debugging
+        const coordsBtn = L.control({ position: 'bottomleft' });
+        coordsBtn.onAdd = () => {
+            const container = L.DomUtil.create('div', 'coords-display');
+            container.style.padding = '5px 10px';
+            container.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            container.style.borderRadius = '4px';
+            container.style.fontSize = '12px';
+            container.innerHTML = 'Center: [0, 0] Zoom: 0';
+            
+            this.map.on('moveend zoomend', () => {
+                const center = this.map.getCenter();
+                const zoom = this.map.getZoom();
+                container.innerHTML = `Center: [${center.lat.toFixed(1)}, ${center.lng.toFixed(1)}] Zoom: ${zoom.toFixed(1)}`;
+            });
+            
+            return container;
+        };
+        coordsBtn.addTo(this.map);
     }
 
     async savePin(lat, lng) {
         const name = document.getElementById('new-pin-name').value;
+        
+        // CONSISTENCY FIX: Save coordinates exactly as Leaflet gives them
+        // Since our coordinate system has negative Y, store lat as-is
         const { data, error } = await supabase
             .from('locations')
-            .insert([{ map_id: this.currentMapData.id, name, x: lng, y: lat }])
+            .insert([{ 
+                map_id: this.currentMapData.id, 
+                name, 
+                x: lng,  // X is straightforward
+                y: lat   // Y is already negative from our coordinate system
+            }])
             .select();
 
         if (error) return alert(error.message);
@@ -187,13 +219,16 @@ class MapComponent {
             .from('location_maps')
             .update({
                 initial_x: center.lng,
-                initial_y: center.lat,
+                initial_y: center.lat,  // Store as-is (will be negative)
                 initial_zoom: zoom
             })
             .eq('id', this.currentMapData.id);
 
-        if (error) alert("Error saving view: " + error.message);
-        else alert("Default view saved!");
+        if (error) {
+            alert("Error saving view: " + error.message);
+        } else {
+            alert(`Default view saved!\nCenter: [${center.lat.toFixed(1)}, ${center.lng.toFixed(1)}]\nZoom: ${zoom.toFixed(1)}`);
+        }
     }
 
     async deletePin(id) {
