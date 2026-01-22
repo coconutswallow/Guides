@@ -72,51 +72,90 @@ class MapComponent {
         console.log(`Map dimensions: ${w} × ${h}, aspect ratio: ${(w/h).toFixed(2)}:1`);
         console.log(`Container size: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
 
-        // CRITICAL: Use a consistent coordinate system
-        // Top-left is [0, 0], bottom-right is [h, w]
-        // This matches typical image coordinates (y increases downward)
-        const bounds = [[0, 0], [h, w]]; 
+        // Use standard image coordinate bounds
+        const bounds = [[0, 0], [h, w]];
+
+        // Create a custom CRS with a fixed transformation scale
+        // This prevents coordinate drift during zoom by using a consistent scale factor
+        const customCRS = L.extend({}, L.CRS.Simple, {
+            transformation: new L.Transformation(1, 0, 1, 0)
+        });
 
         this.map = L.map(this.container.id, {
-            crs: L.CRS.Simple,
+            crs: customCRS,
             minZoom: -3,
             maxZoom: 2,
             maxBounds: bounds,
             maxBoundsViscosity: 1.0,
-            zoomSnap: 0.1,
-            zoomDelta: 0.5,
-            wheelPxPerZoomLevel: 120,
-            attributionControl: false
+            attributionControl: false,
+            zoomSnap: 0.25,
+            zoomDelta: 0.25,
+            zoomAnimation: false,
+            markerZoomAnimation: false,
+            // Force re-render on zoom end to fix any drift
+            trackResize: true
         });
 
-        L.imageOverlay(mapData.map_file_url, bounds, {
+        // Create the image overlay with exact bounds
+        const imageOverlay = L.imageOverlay(mapData.map_file_url, bounds, {
             crossOrigin: true,
             interactive: true
         }).addTo(this.map);
 
-        // Set initial view
-        if (mapData.initial_x !== null && mapData.initial_y !== null) {
-            this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0);
+        // Wait for image to load before setting view
+        const img = imageOverlay.getElement();
+        if (img) {
+            img.onload = () => {
+                console.log('Image loaded, setting view');
+                this.setInitialView(mapData, bounds);
+            };
+            // If image is already cached
+            if (img.complete) {
+                this.setInitialView(mapData, bounds);
+            }
         } else {
-            this.map.fitBounds(bounds);
+            this.setInitialView(mapData, bounds);
         }
 
-        // Load pins first
+        // Add zoom end listener to force marker position recalculation
+        this.map.on('zoomend', () => {
+            this.map.eachLayer((layer) => {
+                if (layer instanceof L.Marker) {
+                    layer.update();
+                }
+            });
+        });
+
+        // Load pins
         this.loadLocations();
 
         // Add editor controls if needed
         if (this.isEditable) {
             this.setupEditorControls();
         }
+    }
 
-        // Force Leaflet to recalculate map size after everything is loaded
-        // This prevents rendering issues when container size isn't stable
+    setInitialView(mapData, bounds) {
+        // Set initial view
+        if (mapData.initial_x !== null && mapData.initial_y !== null) {
+            this.map.setView([mapData.initial_y, mapData.initial_x], mapData.initial_zoom || 0, {
+                animate: false
+            });
+        } else {
+            this.map.fitBounds(bounds, {
+                animate: false
+            });
+        }
+
+        // Force recalculation after a delay to ensure container is stable
         setTimeout(() => {
             if (this.map) {
-                this.map.invalidateSize();
-                console.log(`Map invalidated. New container: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
+                this.map.invalidateSize({
+                    animate: false
+                });
+                console.log(`Map invalidated. Container: ${this.container.offsetWidth} × ${this.container.offsetHeight}`);
             }
-        }, 500);
+        }, 100);
     }
 
     async loadLocations() {
