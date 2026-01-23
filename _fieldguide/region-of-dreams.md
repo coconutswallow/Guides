@@ -166,7 +166,7 @@ The sleeper then wakes up the next day without feeling rested and must succeed o
 Moreover, a whole group of people sleeping during a dreamstorm could experience the same dream, which often results in mass hysteria and widespread paranoia.  Within the Realms, such occurence is often attributed to a dark omen or an augury of impending doom.
 
 
-# The Dreamheart
+## The Dreamheart
   
 The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
 
@@ -182,7 +182,7 @@ A Dreamheart Tempest is a violent winding storm of chaotic raw energy which is h
 Like any storm, each Dreamheart Tempest has an eye. A traveler can visit the Eye of a Dreamheart Tempest, but each visitor comes away with a completely different understanding of what hides within the Eye. Some meet deities, others find long-dead loved ones, and others achieve unparalleled personal insight. Of course, these meetings are more akin to visions or illusions rather than an actual meeting, but that isn't perfectly clear to the visitors of the Eye.
 
 
-# Demiplane of Nightmares
+## Demiplane of Nightmares
 
 Although it is called the Region of Dreams, the dreamscapes within it sometimes contain vile creatures, landscapes and images, charged with dark emotions. Sometimes, these elements rampage from dreamscape to dreamscape, giving rise to terrible nightmares. Whether these nightmares originate from dreamers’ dark thoughts or have been birthed by the near presence of the Demiplane of Nightmares is unclear, but one thing remains certain: the Demiplane of Nightmares is a place where one’s darkest thoughts and fears become reality. 
 
@@ -212,7 +212,7 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 
 ---
 
-# References
+## References
 This document is an adaptation of various materials regarding the Region of Dreams made for our server and serves as canon for server play. Here is a list of the various
 documentation that has been used to inspire and create this document.
 
@@ -231,7 +231,7 @@ documentation that has been used to inspire and create this document.
 
 ---
 
-# Credits
+## Credits
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 

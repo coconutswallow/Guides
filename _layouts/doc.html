@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!content || !tocContainer) return;
     
     // 1. Generate Table of Contents
-    const headers = content.querySelectorAll('h2, h3');
+    const headers = content.querySelectorAll('h2, h3, h4');
     if (headers.length === 0) return;
     
     const toc = document.createElement('ul');
