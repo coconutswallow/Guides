@@ -2,6 +2,94 @@
 * Location: \assets\css\faq.css
 */
 
+/* ============================================
+   FAQ LAYOUT - Sidebar + Content Grid
+   ============================================ */
+.faq-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   SIDEBAR NAVIGATION
+   ============================================ */
+.faq-sidebar {
+  position: relative;
+}
+
+.sticky-wrapper {
+  position: sticky;
+  top: 120px;
+}
+
+.nav-header {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  font-family: var(--font-header);
+}
+
+.category-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-nav li {
+  margin-bottom: 0.25rem;
+}
+
+.category-nav a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  border-left: 3px solid transparent;
+}
+
+.category-nav a:hover {
+  background: var(--color-table-hover);
+  color: var(--color-primary);
+  border-left-color: var(--color-secondary);
+}
+
+.category-nav a.active {
+  background: linear-gradient(90deg, var(--palette-bg-hover-light) 0%, transparent 100%);
+  color: var(--color-primary);
+  font-weight: 600;
+  border-left-color: var(--color-primary);
+}
+
+[data-theme="dark"] .category-nav a.active {
+  background: linear-gradient(90deg, var(--palette-bg-row-dark) 0%, transparent 100%);
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+.faq-content {
+  min-width: 0;
+}
+
+.faq-content h1 {
+  margin-top: 0;
+  font-family: var(--font-header);
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================
+   SEARCH CONTROLS
+   ============================================ */
 .faq-controls {
   padding: 1.5em;
   background: var(--color-bg-light);
@@ -17,9 +105,21 @@
   border: 2px solid var(--color-border);
   background: var(--color-bg-page);
   color: var(--color-text);
-  margin-bottom: 1em;
+  border-radius: var(--border-radius);
+  transition: border-color 0.2s;
+  font-family: var(--font-body);
 }
 
+.faq-controls .filter-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.faq-controls .filter-input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+/* Legacy filter buttons (if still used) */
 .faq-filters button {
   padding: 0.5em 1em;
   margin-right: 0.5em;
@@ -36,32 +136,124 @@
   color: var(--color-btn-text);
 }
 
+/* ============================================
+   CATEGORY GROUPS
+   ============================================ */
+.faq-category-group {
+  margin-bottom: 3rem;
+  scroll-margin-top: 120px;
+}
+
+.category-header {
+  font-size: 1.75rem;
+  font-family: var(--font-header);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--color-primary);
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================
+   FAQ ITEMS
+   ============================================ */
 .faq-item {
   background: var(--color-bg-light);
-  border: none;
+  border: 2px solid var(--color-border);
   border-left: 4px solid var(--color-primary);
-  padding: 1em 1.5em;
-  margin-bottom: 1em;
+  padding: 1.5em;
+  margin-bottom: 1.5em;
   border-radius: var(--border-radius);
+  transition: all 0.2s;
+}
+
+.faq-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
 }
 
 .faq-item h4 {
   color: var(--color-primary);
-  font-family: var(--font-body);
+  font-family: var(--font-header);
   font-weight: 700;
-  font-size: 1.1em;
-  margin: 0 0 0.25em 0;
+  font-size: 1.2em;
+  margin: 0 0 1em 0;
 }
 
 .faq-item p {
-  margin: 0;
+  margin: 0.5rem 0;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.faq-item ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.faq-item li {
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.faq-item a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.faq-item a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.faq-item code {
+  background: var(--color-bg-medium);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
 }
 
 .faq-item-category {
   font-size: 0.6rem;
   font-weight: 600;
-  color: #6a737d;
+  color: var(--color-text-secondary);
   margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+/* ============================================
+   DARK MODE ADJUSTMENTS
+   ============================================ */
+[data-theme="dark"] .faq-item {
+  background: var(--color-bg-light);
+  border-color: var(--color-border);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+  .faq-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .faq-sidebar {
+    display: none;
+  }
+  
+  .faq-category-group {
+    scroll-margin-top: 80px;
+  }
+  
+  .faq-controls {
+    padding: 1em;
+  }
+  
+  .faq-item {
+    padding: 1em;
+  }
 }
