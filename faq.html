@@ -25,7 +25,19 @@ extra_css:
   {% endunless %}
 {% endfor %}
 
-<div class="faq-layout" x-data='{ "searchTerm": "" }'>
+<div class="faq-layout" x-data='{ 
+  "searchTerm": "",
+  categoryHasVisibleItems(categoryId) {
+    if (this.searchTerm === "") return true;
+    const category = document.getElementById(categoryId);
+    if (!category) return false;
+    const items = category.querySelectorAll(".faq-item");
+    return Array.from(items).some(item => {
+      const text = item.textContent.toLowerCase();
+      return text.includes(this.searchTerm.toLowerCase());
+    });
+  }
+}'>
 
   <aside class="faq-sidebar">
     <div class="sticky-wrapper">
@@ -62,10 +74,7 @@ extra_css:
         <div 
           id="category-{{ category | slugify }}" 
           class="faq-category-group"
-          x-data="{ hasVisibleItems: true }"
-          x-init="$nextTick(() => { hasVisibleItems = $el.querySelectorAll('.faq-item[x-show]:not([style*=none])').length > 0 })"
-          x-effect="hasVisibleItems = Array.from($el.querySelectorAll('.faq-item')).some(item => item.style.display !== 'none')"
-          x-show="hasVisibleItems"
+          x-show="categoryHasVisibleItems('category-{{ category | slugify }}')"
         >
           <h2 class="category-header">{{ category }}</h2>
           
