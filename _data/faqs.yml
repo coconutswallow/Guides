@@ -141,7 +141,7 @@
 - question: How do I craft items?
   category: Downtime
   answer: |-
-    The full Crafting rules are here, but the basics are that you must have a bastion with the right facility, the required tool proficiency, proficiency in the Arcana skill, and the ability to cast any spells yourself that the item can cast.
+    The full Crafting rules are [here](playersguide/downtime/#crafting), but the basics are that you must have a bastion with the right facility, the required tool proficiency, proficiency in the Arcana skill, and the ability to cast any spells yourself that the item can cast.
 - question: Who do I ask if I have an issue with my MAL?
   category: MAL
   answer: |-
