@@ -93,7 +93,6 @@ The passage between dreamscapes happens gradually. As the traveler approaches th
 
 When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the nearest dreamscape.
 
----
 
 ## Reaching the Region of Dreams
 
@@ -166,7 +165,6 @@ The sleeper then wakes up the next day without feeling rested and must succeed o
 
 Moreover, a whole group of people sleeping during a dreamstorm could experience the same dream, which often results in mass hysteria and widespread paranoia.  Within the Realms, such occurence is often attributed to a dark omen or an augury of impending doom.
 
----
 
 # The Dreamheart
   
@@ -183,7 +181,6 @@ A Dreamheart Tempest is a violent winding storm of chaotic raw energy which is h
 
 Like any storm, each Dreamheart Tempest has an eye. A traveler can visit the Eye of a Dreamheart Tempest, but each visitor comes away with a completely different understanding of what hides within the Eye. Some meet deities, others find long-dead loved ones, and others achieve unparalleled personal insight. Of course, these meetings are more akin to visions or illusions rather than an actual meeting, but that isn't perfectly clear to the visitors of the Eye.
 
----
 
 # Demiplane of Nightmares
 
