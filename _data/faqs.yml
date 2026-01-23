@@ -1,172 +1,172 @@
-  - question: What is the Hawthorne Guild?
-    category: General
-    answer: |-
-      This server is a D&D 5e server where all games take place in a shared persistent world set in the Forgotten Realms and broader D&D multiverse. Player characters are adventurers in the Hawthorne Guild, an adventurer's guild based out of the Sword Coast, and head out on various adventures as ran by DMs. Adventure events and characters are persistent, with characters accruing XP, wealth, and loot between games, and starting at either level 3 or level 5. 
+- question: What is the Hawthorne Guild?
+  category: General
+  answer: |-
+    This server is a D&D 5e server where all games take place in a shared persistent world set in the Forgotten Realms and broader D&D multiverse. Player characters are adventurers in the Hawthorne Guild, an adventurer's guild based out of the Sword Coast, and head out on various adventures as ran by DMs. Adventure events and characters are persistent, with characters accruing XP, wealth, and loot between games, and starting at either level 3 or level 5. 
 
-      While not exactly that, it is similar to what some folks call a "Westmarches server." In essence, you can create characters that participate in adventures ran by various DMs, with character progression and adventure events persisting between games. You can think of it as akin to an MMO, adventuring alongside various fellow players under various DMs, and able to participate in varying storylines DMs tell here. 
+    While not exactly that, it is similar to what some folks call a "Westmarches server." In essence, you can create characters that participate in adventures ran by various DMs, with character progression and adventure events persisting between games. You can think of it as akin to an MMO, adventuring alongside various fellow players under various DMs, and able to participate in varying storylines DMs tell here. 
 
-      Most games are oneshots set in the same shared, connected game world, though there are also open multisessions, open campaigns, and traditional closed campaigns as well. We typically average around 6 games a day across various time zones, with games posted in our [**#⁠game-advertisement**](https://discord.com/channels/308324031478890497/343396172293210112) and [⁠**#game-listings**](https://discord.com/channels/308324031478890497/1366924010255814768) channel.
-  - question: Does the server play D&D 2014 or 2024 Games?
-    category: Types of Games
-    answer: |-
-      There's a number of DMs that run 2014 games and there's a fair amount of older 2014 PCs among more tenured server members here. However, folks typically are curious and interested to try out the new options, so 2024 games are statistically more prevalent overall. To clarify and bear in mind as well, 2014 PCs can play without issue in either 2014 or 2024 games.
-  - question: Can a 2024 character use any 2014 class / subclass / race / feat?
-    category: Character Creation
-    answer: |-
-      If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: 
+    Most games are oneshots set in the same shared, connected game world, though there are also open multisessions, open campaigns, and traditional closed campaigns as well. We typically average around 6 games a day across various time zones, with games posted in our [**#⁠game-advertisement**](https://discord.com/channels/308324031478890497/343396172293210112) and [⁠**#game-listings**](https://discord.com/channels/308324031478890497/1366924010255814768) channel.
+- question: Does the server play D&D 2014 or 2024 Games?
+  category: Games
+  answer: |-
+    There's a number of DMs that run 2014 games and there's a fair amount of older 2014 PCs among more tenured server members here. However, folks typically are curious and interested to try out the new options, so 2024 games are statistically more prevalent overall. To clarify and bear in mind as well, 2014 PCs can play without issue in either 2014 or 2024 games.
+- question: Can a 2024 character use any 2014 class / subclass / race / feat?
+  category: Character Creation
+  answer: |-
+    If there is no 2024 version of it you may use the 2014 version, otherwise you must use the 2024 version.  For example: 
 
-       * 2024 Cleric, 2014 Twilight Domain - Permitted,  
-       * 2024 Cleric, 2014 Life Domain - Not Permitted
-  - question: Do I need to have played games to be a DM on the server?
-    category: DM
-    answer: |-
-      You can apply to be a DM without having played a game yet, you just have to make a request in **#⁠player-requests** to PR and Auditors to check in with you after submitting the form. However, playing a few games first if possible is recommended to get to know folks and the server.
-  - question: What are the AC and the Allowed Content?
-    category: General
-    answer: |-
-      They are one in the same, and the single most helpful document on the server.  The AC has basically all of the information as to what is allowed on the server, mechanics-wise.  <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Link to Allowed Content</a>
-  - question: Do I need to get my character approved?
-    category: Character Creation
-    answer: |-
-      No, we operate on the honor system here! But you can post it in the **#Character-Discussion** channel to get it double checked if you’d like!
-  - question: The DM asked me if I am a New Hire or a Welcome Wagon. What do those mean?
-    category: General
-    answer: |-
-      The DM is checking to see if you have completed your first 10 games in Hawthorne. As long as you are on your first 10 games, you're a new hire. Bear in mind, any session that goes longer than 6 hours will count as multiple games.
-  - question: Do I roll for stats?
-    category: Character Creation
-    answer: |-
-      No, here we use point buy (27 points). [Point Buy Calculator](https://chicken-dinner.com/5e/5e-point-buy.html)
-  - question: What's server stance on use of AI images for characters?
-    category: Rules
-    answer: |-
-      The server takes no official stance on AI generated images. Players and DMs are allowed to use it in their own games and for their characters. Some players and DMs prefer not to play in games where AI generated images are present, which is typically indicated in a game ad. We do also have and promote several active Artists in our community, the nature of whose work is obviously entangled with the existence of AI generated images.
-  - question: Can a new character buy equipment?
-    category: Character Creation
-    answer: |-
-      Yes, you can buy anything listed under the Equipment Tab of the [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857).
-  - question: What level do characters start on the server?
-    category: Character Creation
-    answer: |-
-      Characters start at level 3 or level 5.  There is **no limit to the number of characters** you create, so you can create a level 3 **and** a level 5 character (or more...).  See Player's Guide for [character creation](/Guides/playersguide/character-creation/).
-  - question: How do I become a DM on the server?
-    category: DM
-    answer: |-
-      Fill in a [DM Registration form](https://docs.google.com/forms/d/e/1FAIpQLSeSJFrWH_ZFCBa_TndvhqhJsNDtVoKb4hAt7X2v07D-4lLTbw/viewform?usp=sf_link)
-  - question: how do I subscribe / unsubscribe from a role to control what I get pinged for?
-    category: General
-    answer: |-
-      You can manage your ping subscriptions in [*#role-select*](https://discord.com/channels/308324031478890497/1333187518576726098)
-  - question: In what timezones are the games run
-    category: Applying to Games
-    answer: |-
-      We have DMs from around the world!  There is a large population of North American-based DMs, but also DMs in Asia and Europe.  Games are typically advertised using a timestamp that automatically is converted to your own timezone.
-  - question: I am completely new to DND. Is there somewhere I can learn before playing?
-    category: General
-    answer: |-
-      There are semi-regular New Player Workshops, run by the Community Guides team.  Those frequently go over basic D&D stuff.  Additionally, you can ask in [#Rules Discussion](https://discord.com/channels/308324031478890497/617821067477778452) if you have a couple of specific questions.  Aside from that, reading the [Free Rules](https://www.dndbeyond.com/srd) for the version you intend to play is a fantastic start.
-  - question: The listings ask for a token. Where do I make one?
-    category: Applying to Games
-    answer: |-
-      You can find many throughout the internet.  You can use any you like, but here are a couple of the more common ones:  [Heroic Token](https://heroictoken.com/) or  [Roll Advantage](https://rolladvantage.com/tokenstamp/)
-  - question: What platforms are used for playing here?
-    category: Applying to Games
-    answer: |-
-      Primarily, Voice games use Roll20, Foundry, and AboveVTT.  Play-by-Post games are typically run using Avrae.
-  - question: I do not have the DDB books, how do I add an item that is paywalled?
-    category: Character Creation
-    answer: |-
-      In the pins in the [#Character Discussion channel](https://discord.com/channels/308324031478890497/617820317389160471) are several links.  Bear in mind that all campaigns have some amount of homebrew that is of the creator’s own making and is not server allowed.  Before grabbing a homebrew thing from any of these areas, check on the Allowed Content to ensure it is permitted.
-  - question: How do I get into a game?
-    category: Applying to Games
-    answer: |-
-      Getting into a game includes putting up an application in a game listing which can be found in Game Listing Channel. Your best bet is to find games in game advertisements however as not all listings are open games (i.e games that are open to everyone, as there are prefilled games for story purposes and etc.)
-  - question: I keep seeing “tiers” everywhere, or mentions of “T1/2/3/4”. What does that mean? How do I know which tier my character is?
-    category: Applying to Games
-    answer: |-
-      Tiers are mostly used to categorise games and decide rewards and difficulty of quests. Here are the character tiers: 
+     * 2024 Cleric, 2014 Twilight Domain - Permitted,  
+     * 2024 Cleric, 2014 Life Domain - Not Permitted
+- question: Do I need to have played games to be a DM on the server?
+  category: DM
+  answer: |-
+    You can apply to be a DM without having played a game yet, you just have to make a request in **#⁠player-requests** to PR and Auditors to check in with you after submitting the form. However, playing a few games first if possible is recommended to get to know folks and the server.
+- question: What are the AC and the Allowed Content?
+  category: General
+  answer: |-
+    They are one in the same, and the single most helpful document on the server.  The AC has basically all of the information as to what is allowed on the server, mechanics-wise.  <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Link to Allowed Content</a>
+- question: Do I need to get my character approved?
+  category: Character Creation
+  answer: |-
+    No, we operate on the honor system here! But you can post it in the **#Character-Discussion** channel to get it double checked if you’d like!
+- question: The DM asked me if I am a New Hire or a Welcome Wagon. What do those mean?
+  category: General
+  answer: |-
+    The DM is checking to see if you have completed your first 10 games in Hawthorne. As long as you are on your first 10 games, you're a new hire. Bear in mind, any session that goes longer than 6 hours will count as multiple games.
+- question: Do I roll for stats?
+  category: Character Creation
+  answer: |-
+    No, here we use point buy (27 points). [Point Buy Calculator](https://chicken-dinner.com/5e/5e-point-buy.html)
+- question: What's server stance on use of AI images for characters?
+  category: Rules
+  answer: |-
+    The server takes no official stance on AI generated images. Players and DMs are allowed to use it in their own games and for their characters. Some players and DMs prefer not to play in games where AI generated images are present, which is typically indicated in a game ad. We do also have and promote several active Artists in our community, the nature of whose work is obviously entangled with the existence of AI generated images.
+- question: Can a new character buy equipment?
+  category: Character Creation
+  answer: |-
+    Yes, you can buy anything listed under the Equipment Tab of the [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857).
+- question: What level do characters start on the server?
+  category: Character Creation
+  answer: |-
+    Characters start at level 3 or level 5.  There is **no limit to the number of characters** you create, so you can create a level 3 **and** a level 5 character (or more...).  See Player's Guide for [character creation](/Guides/playersguide/character-creation/).
+- question: How do I become a DM on the server?
+  category: DM
+  answer: |-
+    Fill in a [DM Registration form](https://docs.google.com/forms/d/e/1FAIpQLSeSJFrWH_ZFCBa_TndvhqhJsNDtVoKb4hAt7X2v07D-4lLTbw/viewform?usp=sf_link)
+- question: how do I subscribe / unsubscribe from a role to control what I get pinged for?
+  category: General
+  answer: |-
+    You can manage your ping subscriptions in [*#role-select*](https://discord.com/channels/308324031478890497/1333187518576726098)
+- question: In what timezones are the games run
+  category: Games
+  answer: |-
+    We have DMs from around the world!  There is a large population of North American-based DMs, but also DMs in Asia and Europe.  Games are typically advertised using a timestamp that automatically is converted to your own timezone.
+- question: I am completely new to DND. Is there somewhere I can learn before playing?
+  category: General
+  answer: |-
+    There are semi-regular New Player Workshops, run by the Community Guides team.  Those frequently go over basic D&D stuff.  Additionally, you can ask in [#Rules Discussion](https://discord.com/channels/308324031478890497/617821067477778452) if you have a couple of specific questions.  Aside from that, reading the [Free Rules](https://www.dndbeyond.com/srd) for the version you intend to play is a fantastic start.
+- question: The listings ask for a token. Where do I make one?
+  category: Games
+  answer: |-
+    You can find many throughout the internet.  You can use any you like, but here are a couple of the more common ones:  [Heroic Token](https://heroictoken.com/) or  [Roll Advantage](https://rolladvantage.com/tokenstamp/)
+- question: What platforms are used for playing here?
+  category: Games
+  answer: |-
+    Primarily, Voice games use Roll20, Foundry, and AboveVTT.  Play-by-Post games are typically run using Avrae.
+- question: I do not have the DDB books, how do I add an item that is paywalled?
+  category: Character Creation
+  answer: |-
+    In the pins in the [#Character Discussion channel](https://discord.com/channels/308324031478890497/617820317389160471) are several links.  Bear in mind that all campaigns have some amount of homebrew that is of the creator’s own making and is not server allowed.  Before grabbing a homebrew thing from any of these areas, check on the Allowed Content to ensure it is permitted.
+- question: How do I get into a game?
+  category: Games
+  answer: |-
+    Getting into a game includes putting up an application in a game listing which can be found in Game Listing Channel. Your best bet is to find games in game advertisements however as not all listings are open games (i.e games that are open to everyone, as there are prefilled games for story purposes and etc.)
+- question: I keep seeing “tiers” everywhere, or mentions of “T1/2/3/4”. What does that mean? How do I know which tier my character is?
+  category: Games
+  answer: |-
+    Tiers are mostly used to categorise games and decide rewards and difficulty of quests. Here are the character tiers: 
 
-       * T1 Lvl 5 and below 
-       * T2 Lvl 6 to 10 
-       * T3 Lvl 11 to 15 
-       * T4 Lvl 16 to 20
-  - question: What happens if my character dies?
-    category: Playing Games
-    answer: |-
-      There are methods of revival, and you may also make a new character. If you are worried about character loss, do ask the DM before playing, as they will know whether losing your character will be likely or otherwise in their session.
-  - question: I thought I’d be able to play in a regular campaign with the same team. Are these campaigns run on the server too?
-    category: Types of Games
-    answer: |-
-      They are indeed! But they are rare and you might need to establish a rapport with DMs to get into one, reason being that losing players in a westmarch server isnt a issue with 1 shots but losing a established PC in a campaign is quite a problem, furthermore having a rapport with the DM and other players will make the game fun for a long time, after all you will be seeing each other regularly!
-  - question: I have applied to many games and haven’t gotten in any. Is there anything I am doing wrong?
-    category: Applying to Games
-    answer: |-
-      The community has a ratio of more active players to active DMs, as a result, being picked for games isn't guaranteed. In the meantime, although this doesn't guarantee getting a game, interacting with the community outside of games can help establish a positive relationship for both your PC and yourself, which certainly does not hurt your chances!
-  - question: I want to have a specific kind of session run for my character. Where do I ask about it?
-    category: Applying to Games
-    answer: |-
-      There are a few methods for this. The best method is to let DMs who you have played with learn about your character’s motivations and why you want that session run. Should they be convinced or inspired will be the biggest factors to having such a session come to life.
-  - question: The DM said my character is softlocked/hardlocked for the sessions. What does that mean?
-    category: Applying to Games
-    answer: |-
-      Softlock = Can play in other games, however what you applied with into the session will not change, ie your lvl 6 character will be a lvl 6 character even if you hit lvl 13 outside of the sessions where they are softlocked.   Hardlock = Cannot play in any game apart from these sessions.
-  - question: I wanna play a character with a mechanical change or quirk that is not mentioned in AC. How do I go about getting one?
-    category: Rules
-    answer: |-
-      We would suggest heading to the rules team and asking what needs to be done to get this mechanical change or quirk. Do remember that cosmetics changes for flavor is totally fine!
-  - question: What is PBP? How does it work?
-    category: Types of Games
-    answer: |-
-      Play by post. Its done by text channels on our server, you would play it like a voice game except you now express your character’s actions in text!
-  - question: I’ve noticed this server has homebrew. Is there a way I can add my own homebrew into the server?
-    category: Rules
-    answer: |-
-      No
-  - question: What is a MAL?
-    category: MAL
-    answer: |-
-      Master Adventure Log, you may count it as a diary for the players in Hawthorne. It records your sessions, items, and downtime activities.  See [Your MAL](https://hawthorneguild.github.io/Guides/playersguide/your-mal/)
-  - question: How do I access my MAL?
-    category: MAL
-    answer: |-
-      You will be sent your MAL through email once you get your adventurer tag. If you can not find it in your inbox then check your spam folder. If it is not in your spam folder contact PR and they will resolve it.
-  - question: My character leveled up in this session. Does that mean it’s instantly official?
-    category: Playing Games
-    answer: |-
-      No, until the session log is posted and you’ve logged it in your MAL, the XP, GP, DTP and loot gain is not official, and does not carry over to your next game.
-  - question: How do I buy items?
-    category: Downtime
-    answer: |-
-      You can buy items from NPCs if the item is on the Equipment tab of the AC and doesn’t say you can’t.  Items on the Loot Tab exclusively are only able to be obtained 3 ways: Drops from playing in or running a session; Trade from another player; Crafting the item.
-  - question: How do I craft items?
-    category: Downtime
-    answer: |-
-      The full Crafting rules are here, but the basics are that you must have a bastion with the right facility, the required tool proficiency, proficiency in the Arcana skill, and the ability to cast any spells yourself that the item can cast.
-  - question: Who do I ask if I have an issue with my MAL?
-    category: MAL
-    answer: |-
-      Depending on the issue, you can ask either the Auditors in [Auditors Corner](https://discord.com/channels/308324031478890497/617821516054265861) or the Player Relations team in [#PR Couch](https://discord.com/channels/308324031478890497/719671742141956157).
-  - question: Who do I ask if I have an issue with character creation?
-    category: Character Creation
-    answer: |-
-      The community as a whole is very helpful here, you can ask in [#Character Discussion channel](https://discord.com/channels/308324031478890497/617820317389160471).
-  - question: Who do I ask if a situation is making me uncomfortable?
-    category: Support
-    answer: |-
-      Ping the Player Relations team either in the thread where you are currently or in the [#PR Couch](https://discord.com/channels/308324031478890497/719671742141956157) channel to get in contact with us right away.  Alternatively, you can submit an Incident Report, found [here](https://docs.google.com/forms/d/e/1FAIpQLSfAKWb9rl_w2IRZ6zXKJZ42Kez3C4aTZtwkfTjhSUWuciKwHw/viewform?usp=sf_link).  Depending on your situation and comfort level, you are welcome to do either, or both, as you feel necessary.
-  - question: How do I know if a situation is enough to warrant an Incident Report?
-    category: Support
-    answer: |-
-      If something makes you uncomfortable on the server, then it is more than enough to be a reason to reach out to PR. All genuine concerns are taken seriously and addressed accordingly.  When in doubt, let us make the call on how to handle it.
-  - question: What is the DMXP and GP?
-    category: DM
-    answer: |-
-      ![DMXP](assets/images/DMXPGP.png)  
-      
-      The table can be found in the [DM's Guide](https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing)
-  - question: Can I spectate Games
-    category: Playing Games
-    answer: |-
-      Most games on the server are open to spectators, if they aren't the DM will list it in multiple places (including the lobby header.)  Typically, spectators observe the following courtesies for the DM and the game: 
-      - mute your discord input, so you're prevented from accidentally interrupting the game with a sudden loud noise or something falling on your push to talk setup. 
-      - change your discord nickname to include a **z** at the beginning, so you appear last in the lobby, allowing the DM to at-a-glance know you're a spectator and not to confuse you for a player while running a challenge or initiative
+     * T1 Lvl 5 and below 
+     * T2 Lvl 6 to 10 
+     * T3 Lvl 11 to 15 
+     * T4 Lvl 16 to 20
+- question: What happens if my character dies?
+  category: Games
+  answer: |-
+    There are methods of revival, and you may also make a new character. If you are worried about character loss, do ask the DM before playing, as they will know whether losing your character will be likely or otherwise in their session.
+- question: I thought I’d be able to play in a regular campaign with the same team. Are these campaigns run on the server too?
+  category: Games
+  answer: |-
+    They are indeed! But they are rare and you might need to establish a rapport with DMs to get into one, reason being that losing players in a westmarch server isnt a issue with 1 shots but losing a established PC in a campaign is quite a problem, furthermore having a rapport with the DM and other players will make the game fun for a long time, after all you will be seeing each other regularly!
+- question: I have applied to many games and haven’t gotten in any. Is there anything I am doing wrong?
+  category: Games
+  answer: |-
+    The community has a ratio of more active players to active DMs, as a result, being picked for games isn't guaranteed. In the meantime, although this doesn't guarantee getting a game, interacting with the community outside of games can help establish a positive relationship for both your PC and yourself, which certainly does not hurt your chances!
+- question: I want to have a specific kind of session run for my character. Where do I ask about it?
+  category: Games
+  answer: |-
+    There are a few methods for this. The best method is to let DMs who you have played with learn about your character’s motivations and why you want that session run. Should they be convinced or inspired will be the biggest factors to having such a session come to life.
+- question: The DM said my character is softlocked/hardlocked for the sessions. What does that mean?
+  category: Games
+  answer: |-
+    Softlock = Can play in other games, however what you applied with into the session will not change, ie your lvl 6 character will be a lvl 6 character even if you hit lvl 13 outside of the sessions where they are softlocked.   Hardlock = Cannot play in any game apart from these sessions.
+- question: I wanna play a character with a mechanical change or quirk that is not mentioned in AC. How do I go about getting one?
+  category: Rules
+  answer: |-
+    We would suggest heading to the rules team and asking what needs to be done to get this mechanical change or quirk. Do remember that cosmetics changes for flavor is totally fine!
+- question: What is PBP? How does it work?
+  category: Games
+  answer: |-
+    Play by post. Its done by text channels on our server, you would play it like a voice game except you now express your character’s actions in text!
+- question: I’ve noticed this server has homebrew. Is there a way I can add my own homebrew into the server?
+  category: Rules
+  answer: |-
+    No
+- question: What is a MAL?
+  category: MAL
+  answer: |-
+    Master Adventure Log, you may count it as a diary for the players in Hawthorne. It records your sessions, items, and downtime activities.  See [Your MAL](https://hawthorneguild.github.io/Guides/playersguide/your-mal/)
+- question: How do I access my MAL?
+  category: MAL
+  answer: |-
+    You will be sent your MAL through email once you get your adventurer tag. If you can not find it in your inbox then check your spam folder. If it is not in your spam folder contact PR and they will resolve it.
+- question: My character leveled up in this session. Does that mean it’s instantly official?
+  category: Games
+  answer: |-
+    No, until the session log is posted and you’ve logged it in your MAL, the XP, GP, DTP and loot gain is not official, and does not carry over to your next game.
+- question: How do I buy items?
+  category: Downtime
+  answer: |-
+    You can buy items from NPCs if the item is on the Equipment tab of the AC and doesn’t say you can’t.  Items on the Loot Tab exclusively are only able to be obtained 3 ways: Drops from playing in or running a session; Trade from another player; Crafting the item.
+- question: How do I craft items?
+  category: Downtime
+  answer: |-
+    The full Crafting rules are here, but the basics are that you must have a bastion with the right facility, the required tool proficiency, proficiency in the Arcana skill, and the ability to cast any spells yourself that the item can cast.
+- question: Who do I ask if I have an issue with my MAL?
+  category: MAL
+  answer: |-
+    Depending on the issue, you can ask either the Auditors in [Auditors Corner](https://discord.com/channels/308324031478890497/617821516054265861) or the Player Relations team in [#PR Couch](https://discord.com/channels/308324031478890497/719671742141956157).
+- question: Who do I ask if I have an issue with character creation?
+  category: Character Creation
+  answer: |-
+    The community as a whole is very helpful here, you can ask in [#Character Discussion channel](https://discord.com/channels/308324031478890497/617820317389160471).
+- question: Who do I ask if a situation is making me uncomfortable?
+  category: Support
+  answer: |-
+    Ping the Player Relations team either in the thread where you are currently or in the [#PR Couch](https://discord.com/channels/308324031478890497/719671742141956157) channel to get in contact with us right away.  Alternatively, you can submit an Incident Report, found [here](https://docs.google.com/forms/d/e/1FAIpQLSfAKWb9rl_w2IRZ6zXKJZ42Kez3C4aTZtwkfTjhSUWuciKwHw/viewform?usp=sf_link).  Depending on your situation and comfort level, you are welcome to do either, or both, as you feel necessary.
+- question: How do I know if a situation is enough to warrant an Incident Report?
+  category: Support
+  answer: |-
+    If something makes you uncomfortable on the server, then it is more than enough to be a reason to reach out to PR. All genuine concerns are taken seriously and addressed accordingly.  When in doubt, let us make the call on how to handle it.
+- question: What is the DMXP and GP?
+  category: DM
+  answer: |-
+    ![DMXP](assets/images/DMXPGP.png)  
+
+    The table can be found in the [DM's Guide](https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing)
+- question: Can I spectate Games
+  category: Games
+  answer: |-
+    Most games on the server are open to spectators, if they aren't the DM will list it in multiple places (including the lobby header.)  Typically, spectators observe the following courtesies for the DM and the game: 
+    - mute your discord input, so you're prevented from accidentally interrupting the game with a sudden loud noise or something falling on your push to talk setup. 
+    - change your discord nickname to include a **z** at the beginning, so you appear last in the lobby, allowing the DM to at-a-glance know you're a spectator and not to confuse you for a player while running a challenge or initiative

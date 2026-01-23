@@ -9,7 +9,7 @@ extra_css:
 {% assign categories = site.data.faqs | map: "category" | uniq %}
 
 <!-- Define category sort order -->
-{% assign category_order = "General,Character Creation,Applying to Games,Playing Games,Types of Games,Downtime,MAL,DM,Rules,Support" | split: "," %}
+{% assign category_order = "General,Character Creation,MAL, Games,Downtime,DM,Rules,Support" | split: "," %}
 
 <!-- Sort categories by defined order -->
 {% assign sorted_categories = "" | split: "" %}
@@ -29,7 +29,7 @@ extra_css:
 
   <aside class="faq-sidebar">
     <div class="sticky-wrapper">
-      <h4 class="nav-header">FAQ Categories</h4>
+      <h4 class="nav-header">Categories</h4>
       
       <nav class="category-nav">
         <ul>
@@ -59,7 +59,14 @@ extra_css:
       {% for category in sorted_categories %}
         {% assign category_items = site.data.faqs | where: "category", category %}
         
-        <div id="category-{{ category | slugify }}" class="faq-category-group">
+        <div 
+          id="category-{{ category | slugify }}" 
+          class="faq-category-group"
+          x-data="{ hasVisibleItems: true }"
+          x-init="$nextTick(() => { hasVisibleItems = $el.querySelectorAll('.faq-item[x-show]:not([style*=none])').length > 0 })"
+          x-effect="hasVisibleItems = Array.from($el.querySelectorAll('.faq-item')).some(item => item.style.display !== 'none')"
+          x-show="hasVisibleItems"
+        >
           <h2 class="category-header">{{ category }}</h2>
           
           {% for item in category_items %}
