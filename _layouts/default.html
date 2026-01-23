@@ -28,8 +28,9 @@ extra_css:                                 # specific CSS files to load just for
     <title>{{ page.title | default: site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}"> 
-	<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}"><link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
-    <script src="{{ '/assets/js/heading-links.js' | relative_url }}"></script>
+	<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
+    <script type="module" src="{{ '/assets/js/heading-links.js' | relative_url }}"></script>
 
     
     <link rel="icon" type="image/png" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">

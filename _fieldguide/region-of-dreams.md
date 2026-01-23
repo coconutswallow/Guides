@@ -212,7 +212,7 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 
 ---
 
-### References
+# References
 This document is an adaptation of various materials regarding the Region of Dreams made for our server and serves as canon for server play. Here is a list of the various
 documentation that has been used to inspire and create this document.
 
@@ -231,7 +231,7 @@ documentation that has been used to inspire and create this document.
 
 ---
 
-## Credits
+# Credits
 
 > *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
