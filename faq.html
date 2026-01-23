@@ -9,7 +9,7 @@ extra_css:
 {% assign categories = site.data.faqs | map: "category" | uniq %}
 
 <!-- Define category sort order -->
-{% assign category_order = "General,Character Creation,MAL, Games,Downtime,DM,Rules,Support" | split: "," %}
+{% assign category_order = "General,Character Creation,MAL,Games,Downtime,DM,Rules,Support" | split: "," %}
 
 <!-- Sort categories by defined order -->
 {% assign sorted_categories = "" | split: "" %}
