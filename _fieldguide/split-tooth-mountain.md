@@ -2,6 +2,7 @@
 layout: doc
 title: "Split Tooth Mountain"
 order: 12
+toc: true
 background_image: https://cdna.artstation.com/p/assets/images/images/030/025/982/large/martin-hatala-landscape-walking-mautain.jpg?1599383196
 ---
 

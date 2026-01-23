@@ -2,6 +2,7 @@
 layout: doc
 title: "Region of Dreams"
 order: 10
+toc: true
 background_image: https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001
 ---
 
@@ -229,8 +230,7 @@ documentation that has been used to inspire and create this document.
 * McArtor, Mike. "Diaboli." Dragon 327. Paizo, January 2005. pp. 62 - 65.
 
 ***D&D 5th edition***
-* Crawford, Jeremy, et al. Eberron: Rising from the Last War.
-* Wizards of the Coast, 2019. pp. 29 - 31, 229, 305 - 307.
+* Crawford, Jeremy, et al. Eberron: Rising from the Last War.  Wizards of the Coast, 2019. pp. 29 - 31, 229, 305 - 307.
 
 ---
 

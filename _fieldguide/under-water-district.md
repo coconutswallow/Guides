@@ -2,6 +2,7 @@
 layout: doc
 title: "The Underwater District, Sultan Rezzo's Palace, and the Plane of Water"
 order: 14
+toc: true
 background_image: https://cdnb.artstation.com/p/assets/images/images/073/869/737/large/shoonyah-depth-abstract-464-an1-5k.jpg?1710692214
 
 ---
