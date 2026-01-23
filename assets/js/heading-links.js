@@ -2,7 +2,6 @@
  * heading-links.js
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Select headers within the doc-body container
     const headers = document.querySelectorAll('.doc-body h2, .doc-body h3, .doc-body h4');
 
     headers.forEach(header => {
@@ -14,20 +13,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const anchor = document.createElement('a');
-        anchor.className = 'header-link'; // This class is targetted by our CSS
+        anchor.className = 'header-link';
         anchor.href = '#' + header.id;
-        anchor.innerHTML = '🔗'; 
-        anchor.ariaHidden = 'true';
+        anchor.setAttribute('aria-hidden', 'true');
+        
+        // Use a span for finer control over the icon size/scaling
+        anchor.innerHTML = '<span class="header-link-icon">🔗</span>';
 
-        // Click-to-copy logic
         anchor.addEventListener('click', (e) => {
             e.preventDefault();
             const fullUrl = window.location.origin + window.location.pathname + window.location.search + '#' + header.id;
             
             navigator.clipboard.writeText(fullUrl).then(() => {
-                const originalText = anchor.innerHTML;
-                anchor.innerHTML = '✅';
-                setTimeout(() => { anchor.innerHTML = originalText; }, 2000);
+                const icon = anchor.querySelector('.header-link-icon');
+                const originalText = icon.innerHTML;
+                icon.innerHTML = '✅';
+                setTimeout(() => { icon.innerHTML = originalText; }, 2000);
                 window.history.pushState(null, null, '#' + header.id);
             });
         });
