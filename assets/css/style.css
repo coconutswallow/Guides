@@ -521,8 +521,8 @@ hr {
 /* Heading anchor links */
 .heading-link {
   opacity: 0;
-  margin-left: 0.5rem;
-  font-size: 0.6em;
+  margin-left: 0.3rem;
+  font-size: 0.4em;
   text-decoration: none;
   transition: opacity 0.2s;
 }
