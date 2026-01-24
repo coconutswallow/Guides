@@ -1,7 +1,7 @@
 # Site settings
 title: "Hawthorne Guild"
 description: "Comprehensive guide for the Hawthorne D&D Guild"
-baseurl: "/Guides"
+baseurl: ""
 url: "https://coconutguides.netlify.app/"
 
 # Collections for different guide sections
