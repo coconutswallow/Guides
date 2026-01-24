@@ -167,7 +167,7 @@ export async function renderMonsterDetail(container, params) {
 
                     <div class="statblock-creator">
                        <p style="margin: 0.2em 0;">
-                          <strong>Created by:</strong> ${escapeHTML(monster.creator_name) || 'Unknown'} ${monster.creator_notes ? `(${escapeHTML(monster.creator_notes)})` : ''}
+                          <strong>Created by:</strong> ${escapeHTML(monster.creator) || 'Unknown'} ${monster.creator_notes ? `(${escapeHTML(monster.creator_notes)})` : ''}
                        </p>
                        <p style="margin: 0.2em 0;">
                            <strong>Usage:</strong> ${monster.usage || 'Unknown'}

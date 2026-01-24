@@ -6,9 +6,10 @@
 import { supabase } from '../supabaseClient.js';
 
 export async function getMonsters() {
+    // UPDATED: Added 'creator' to select list
     let { data, error } = await supabase
         .from('monsters')
-        .select('name, slug, species, cr, image_url, row_id, size, usage, alignment, creator_discord_id')
+        .select('name, slug, species, cr, image_url, row_id, size, usage, alignment, creator_discord_id, creator')
         .eq('is_live', true)
         .order('name');
     
@@ -21,9 +22,10 @@ export async function getMonsters() {
 
 export async function getMonsterBySlug(slug) {
     // 1. Fetch Monster
+    // UPDATED: Added 'creator' to select list
     let { data: monster, error } = await supabase
         .from('monsters')
-        .select('*, creator_discord_id::text') 
+        .select('*, creator_discord_id::text, creator') 
         .eq('slug', slug)
         .eq('is_live', true)
         .single();
@@ -42,25 +44,13 @@ export async function getMonsterBySlug(slug) {
 
     monster.features = features || [];
 
-    // 3. Fetch Creator Name
-    if (monster.creator_discord_id) {
-        const { data: user } = await supabase
-            .from('member_directory')
-            .select('display_name')
-            .eq('discord_id', monster.creator_discord_id)
-            .single();
-
-        if (user) {
-            monster.creator_name = user.display_name;
-        } else {
-            monster.creator_name = "Unknown";
-        }
-    }
+    // REMOVED: Step 3 (Fetch Creator Name) is deleted. 
+    // The 'monster' object now already contains the 'creator' field from Step 1.
 
     return monster;
 }
 
-// Ensure this function is OUTSIDE the braces of the functions above
+// ... existing getMonsterLookups function remains unchanged ...
 export async function getMonsterLookups() {
     let { data, error } = await supabase
         .from('lookups')
@@ -73,7 +63,6 @@ export async function getMonsterLookups() {
         return null;
     }
 
-    // Handle case where data might be returned as a JSON string or an object
     if (typeof data.data === 'string') {
         return JSON.parse(data.data);
     }
