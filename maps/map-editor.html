@@ -162,15 +162,29 @@ title: Map Editor
     color: var(--color-text-main);
 }
 #map-editor-widget {
-    /* No height set here - let the global map.css aspect-ratio handle it */
     width: 100%;
-    /* Optional: Cap the width so it doesn't get too tall on huge screens */
-    max-width: 1000px; 
-    margin: 0 auto; /* Center it */
+    /* 21 / 9 ≈ 2.33 aspect ratio */
+    aspect-ratio: 21 / 9; 
     
+    /* Fallback for older browsers (pre-2021) */
+    @supports not (aspect-ratio: 21 / 9) {
+        height: 0;
+        padding-bottom: 42.85%; /* (9 / 21) * 100 */
+    }
+
+    max-width: 1200px; /* Slightly wider than before to suit 21:9 */
+    margin: 0 auto;
     border: 2px solid var(--color-border-medium);
     border-radius: var(--radius-md);
     position: relative;
+    background: #000; /* Prevent flash of white before map loads */
+    overflow: hidden;
+}
+
+/* Ensure the Leaflet container fills the aspect-ratio box */
+#map-editor-widget .leaflet-container {
+    height: 100% !important;
+    width: 100% !important;
 }
 
 #map-editor-widget .loading-spinner {
