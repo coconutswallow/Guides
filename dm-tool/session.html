@@ -292,12 +292,11 @@ extra_css:
                             <span style="color: var(--color-text-secondary);">Loading instructions...</span>
                         </div>
 
-                        <p class="instruction-text">You can choose to pre-determine loot (select appropriate loot from the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632">Allowed Content</a>, according to the rules above), use the ***HGENLOOT*** bot to roll for loot, or a combination of both.</p>
+                        <p class="instruction-text">You can choose to pre-determine loot (select appropriate loot from the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632">Allowed Content</a>, according to the rules above), use the <b><i>>HGENLOOT</i></b> bot to roll for loot, or a combination of both.</p>
 
                         <div class="form-group" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <label>Pre-determined Player Loot</label>
-                            <p class="instruction-text">If you choose to pre-determine (select your own loot from the AC), Use the form below to help you declare your selected loot.</p>
-                            <p class="instruction-text">Enter your pre-determined loot below (one item per line). This will automatically format the Discord declaration below.</p>
+                            <p class="instruction-text">If you choose to pre-determine (select your own loot from the AC), Use the form below to help you declare your selected loot.  Enter your pre-determined loot below (one item per line). This will automatically format the Discord declaration below.</p>
                             <textarea id="inp-loot-plan" class="table-input" rows="6" placeholder="* Item 1&#10;* Item 2"></textarea>
                         </div>
 
@@ -315,7 +314,7 @@ extra_css:
                         <div class="hgen-section" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <h4>Hgenloot Bot</h4>
                             <p> You can also use the bot to randomly roll loot if you do not wish to select the treasures yourself.</p>
-                            <p>Please refer the <a href="https://discord.com/channels/308324031478890497/617838916929847315/1423099262845190196" target="_blank">This Patch Update</a> for the full explanation of the Hgenloot, but you can use the bot to roll for all of your loot, or partially (in combination with pre-determined loot, if applicable).</p>
+                            <p>Please refer the <a href="https://discord.com/channels/308324031478890497/617838916929847315/1423099262845190196" target="_blank">Bot Patch Update</a> for the full explanation of the Hgenloot bot.  You can use the bot to roll for all of your loot, or partially (in combination with pre-determined loot, if applicable).  If in combination, enter the number of predetermine permanents and/or consumables below.</p>
                             
                             <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-direction: row; align-items: flex-end;">
                                 <div class="form-group">
@@ -352,6 +351,7 @@ extra_css:
                 <div class="card accordion-card" id="card-dm-loot">
                     <div class="accordion-header">
                         <span class="step-title">DM Loot Determination</span>
+                        <p class="instruction-text">The base DM loot is 1 rolled loot item based on your DMPC's level.  You can increase the number of loot slots (choices to pick from) with incentives, primarily by choosing New Hires (players with less than 10 games) and Welcome Wagon (a player's first game).  There maybe additional incentives based on events on the server, which you can choose with the "Additional Incentives" button below.</p>
                         <span class="step-icon"></span>
                     </div>
                     <div class="accordion-body">
@@ -401,7 +401,7 @@ extra_css:
                             <div id="wrapper-jumpstart-bonus" class="form-group" style="grid-column: 1 / -1; display:none; margin-top: 1.5rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
                                 <label>3. Jumpstart Bonus</label>
                                 
-                                <p>As a Jumpstart DM, you get an additional loot roll (type this command):</p>
+                                <p>As a Jumpstart DM (DMing your first 10 games on the server), you get an additional loot roll (type this command):</p>
                                 
                                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
                                     <textarea id="out-dm-jumpstart-cmd" class="out-session-text" style="width: 100%; height: 60px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
