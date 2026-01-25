@@ -3,13 +3,63 @@ layout: default
 title: Map Editor
 ---
 
+<!--
+    map-editor.html
+    
+    OVERVIEW:
+    Administrative interface for editing location maps and pins.
+    Provides a dropdown to select maps, displays map info, and enables
+    full pin editing capabilities through the MapComponent widget.
+    
+    KEY FEATURES:
+    - Role-based access control (Staff and Staff Apprentice only)
+    - Map selection dropdown with automatic refresh
+    - Live map statistics (dimensions, default view, pin count)
+    - Full editing controls (add/delete pins, set default view)
+    - Status messaging for user feedback
+    - Responsive design with 21:9 aspect ratio map display
+    
+    ARCHITECTURE:
+    1. Auth Check → Shows/hides interface based on user role
+    2. Map Loading → Fetches all maps from database
+    3. Map Selection → User picks a map from dropdown
+    4. Widget Initialization → Creates editable MapComponent
+    5. Real-time Updates → Changes reflected immediately
+    
+    SECURITY:
+    - Requires authentication via auth-header.html
+    - Checks user roles via checkAccess() function
+    - Database operations require Supabase RLS policies
+    
+    DEPENDENCIES:
+    - Leaflet.js 1.9.4
+    - Supabase client
+    - map-widget.js module
+    - auth-check.js module
+    - auth-header.html include
+    - map.css stylesheet
+-->
+
 <style>
+/* ============================================================================
+   LAYOUT STYLES
+   ============================================================================ */
+
+/**
+ * Main editor container
+ * Centers content and provides consistent padding
+ */
 .editor-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
 }
 
+/**
+ * Header section
+ * Contains title and authentication controls
+ * Flexbox layout for space-between alignment
+ */
 .editor-header {
     display: flex;
     justify-content: space-between;
@@ -24,6 +74,14 @@ title: Map Editor
     color: var(--color-text-emphasis);
 }
 
+/* ============================================================================
+   CONTROL PANEL STYLES
+   ============================================================================ */
+
+/**
+ * Control panel container
+ * Houses map selection dropdown and settings
+ */
 .editor-controls {
     background-color: var(--color-bg-light);
     border: 1px solid var(--color-border-medium);
@@ -33,6 +91,10 @@ title: Map Editor
     box-shadow: var(--shadow-sm);
 }
 
+/**
+ * Individual control row
+ * Flexbox layout for label + input alignment
+ */
 .control-group {
     display: flex;
     gap: 1rem;
@@ -43,7 +105,7 @@ title: Map Editor
 .control-group label {
     font-weight: 600;
     color: var(--color-text-main);
-    min-width: 120px;
+    min-width: 120px; /* Aligns all inputs vertically */
 }
 
 .control-group select,
@@ -57,6 +119,10 @@ title: Map Editor
     font-family: var(--font-primary);
 }
 
+/**
+ * Action buttons
+ * Styled with accent color and hover effects
+ */
 .control-group button {
     padding: 0.5rem 1.5rem;
     background-color: var(--color-accent);
@@ -69,7 +135,7 @@ title: Map Editor
 }
 
 .control-group button:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.2); /* Brightens on hover */
 }
 
 .control-group button:disabled {
@@ -77,6 +143,14 @@ title: Map Editor
     cursor: not-allowed;
 }
 
+/* ============================================================================
+   STATUS MESSAGE STYLES
+   ============================================================================ */
+
+/**
+ * Base status message styling
+ * Different colors for different message types
+ */
 .status-message {
     padding: 1rem;
     border-radius: var(--radius-sm);
@@ -84,30 +158,42 @@ title: Map Editor
     font-weight: 500;
 }
 
+/* Info messages (blue) */
 .status-info {
     background-color: #2c5aa0;
     color: white;
     border-left: 4px solid #1e3a6b;
 }
 
+/* Success messages (green) */
 .status-success {
     background-color: #27ae60;
     color: white;
     border-left: 4px solid #1e8449;
 }
 
+/* Error messages (red) */
 .status-error {
     background-color: var(--color-danger-bg, #5a1a1a);
     color: var(--color-danger-text, #ffaaaa);
     border-left: 4px solid var(--color-danger-border);
 }
 
+/* Warning messages (orange) */
 .status-warning {
     background-color: #f39c12;
     color: white;
     border-left: 4px solid #d68910;
 }
 
+/* ============================================================================
+   ACCESS CONTROL STYLES
+   ============================================================================ */
+
+/**
+ * Access denied message
+ * Shown when user lacks required permissions
+ */
 .access-denied {
     text-align: center;
     padding: 3rem;
@@ -122,6 +208,14 @@ title: Map Editor
     margin-bottom: 1rem;
 }
 
+/* ============================================================================
+   MAP INFO DISPLAY STYLES
+   ============================================================================ */
+
+/**
+ * Map information panel
+ * Shows metadata about selected map
+ */
 .map-info-display {
     background-color: var(--color-bg-medium);
     padding: 1rem;
@@ -139,6 +233,14 @@ title: Map Editor
     color: var(--color-text-emphasis);
 }
 
+/* ============================================================================
+   INSTRUCTIONS PANEL STYLES
+   ============================================================================ */
+
+/**
+ * User instructions panel
+ * Helps users understand how to use the editor
+ */
 .instructions {
     background-color: var(--color-bg-medium);
     border-left: 4px solid var(--color-accent);
@@ -161,32 +263,56 @@ title: Map Editor
     margin: 0.25rem 0;
     color: var(--color-text-main);
 }
+
+/* ============================================================================
+   MAP WIDGET CONTAINER STYLES
+   ============================================================================ */
+
+/**
+ * Map widget container with 21:9 aspect ratio
+ * 
+ * ASPECT RATIO EXPLANATION:
+ * - 21:9 is an ultrawide format (≈2.33:1)
+ * - Common in modern displays and cinematic content
+ * - Provides horizontal space for wide maps
+ * 
+ * IMPLEMENTATION:
+ * - Modern browsers: aspect-ratio property
+ * - Fallback: padding-bottom percentage trick
+ *   (9/21 * 100 = 42.85%)
+ */
 #map-editor-widget {
     width: 100%;
-    /* 21 / 9 ≈ 2.33 aspect ratio */
-    aspect-ratio: 21 / 9; 
+    aspect-ratio: 21 / 9; /* Modern approach */
     
-    /* Fallback for older browsers (pre-2021) */
+    /* Fallback for browsers before ~2021 */
     @supports not (aspect-ratio: 21 / 9) {
         height: 0;
         padding-bottom: 42.85%; /* (9 / 21) * 100 */
     }
 
-    max-width: 1200px; /* Slightly wider than before to suit 21:9 */
+    max-width: 1200px;
     margin: 0 auto;
     border: 2px solid var(--color-border-medium);
     border-radius: var(--radius-md);
     position: relative;
-    background: #000; /* Prevent flash of white before map loads */
+    background: #000; /* Prevents white flash during load */
     overflow: hidden;
 }
 
-/* Ensure the Leaflet container fills the aspect-ratio box */
+/**
+ * Ensure Leaflet container fills the aspect ratio box
+ * Important for proper map display
+ */
 #map-editor-widget .leaflet-container {
     height: 100% !important;
     width: 100% !important;
 }
 
+/**
+ * Loading state indicator
+ * Centered within container
+ */
 #map-editor-widget .loading-spinner {
     position: absolute;
     top: 50%;
@@ -196,24 +322,35 @@ title: Map Editor
 </style>
 
 <div class="editor-container">
+    <!-- ========================================================================
+         HEADER SECTION
+         Contains title and authentication UI
+         ======================================================================== -->
     <div class="editor-header">
         <h1>🗺️ Map Editor</h1>
         {% include auth-header.html %}
     </div>
 
-    <!-- Access Denied Message (hidden by default) -->
+    <!-- ========================================================================
+         ACCESS DENIED MESSAGE
+         Shown when user is not authenticated or lacks permissions
+         Hidden by default, shown by JavaScript if needed
+         ======================================================================== -->
     <div id="access-denied" class="access-denied" style="display: none;">
         <h2>⛔ Access Denied</h2>
         <p>You need to be logged in with Staff or Staff Apprentice permissions to use the Map Editor.</p>
         <p>Please log in with an authorized account.</p>
     </div>
 
-    <!-- Editor Interface (hidden until auth check passes) -->
+    <!-- ========================================================================
+         EDITOR INTERFACE
+         Main editing UI, hidden until authentication succeeds
+         ======================================================================== -->
     <div id="editor-interface" style="display: none;">
         
-        <!-- Instructions -->
+        <!-- Instructions Panel -->
         <div class="instructions">
-            <h3>📝 How to Use the Map Editor</h3>
+            <h3>📍 How to Use the Map Editor</h3>
             <ul>
                 <li><strong>Select a Map:</strong> Choose a map from the dropdown to begin editing</li>
                 <li><strong>Add Pins:</strong> Right-click on the map to place a new location pin</li>
@@ -223,7 +360,7 @@ title: Map Editor
             </ul>
         </div>
 
-        <!-- Status Messages -->
+        <!-- Status Messages Container (populated by JavaScript) -->
         <div id="status-container"></div>
 
         <!-- Map Selection Controls -->
@@ -236,7 +373,7 @@ title: Map Editor
                 <button id="refresh-maps-btn" title="Refresh map list">🔄 Refresh</button>
             </div>
 
-            <!-- Map Info Display -->
+            <!-- Map Info Display (shown after map selection) -->
             <div id="map-info" class="map-info-display" style="display: none;">
                 <p><strong>Map Name:</strong> <span id="info-name"></span></p>
                 <p><strong>Dimensions:</strong> <span id="info-dimensions"></span></p>
@@ -254,15 +391,43 @@ title: Map Editor
     </div>
 </div>
 
+<!-- ============================================================================
+     JAVASCRIPT MODULE
+     Handles authentication, map loading, and widget management
+     ============================================================================ -->
 <script type="module">
+    // Import required modules
     import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
     import { checkAccess } from "{{ '/assets/js/auth-check.js' | relative_url }}";
     import { initMapComponents } from "{{ '/assets/js/map-widget.js' | relative_url }}";
 
+    // ========================================================================
+    // STATE MANAGEMENT
+    // ========================================================================
+    
+    /**
+     * Current authenticated user object
+     * Null if not logged in
+     */
     let currentUser = null;
+    
+    /**
+     * Array of available maps from database
+     * Populated by loadMaps()
+     */
     let availableMaps = [];
+    
+    /**
+     * Reference to current MapComponent instance
+     * Used for cleanup when switching maps
+     */
     let currentMapWidget = null;
 
+    // ========================================================================
+    // UI ELEMENT REFERENCES
+    // Cache DOM elements for performance
+    // ========================================================================
+    
     const ui = {
         accessDenied: document.getElementById('access-denied'),
         editorInterface: document.getElementById('editor-interface'),
@@ -273,24 +438,57 @@ title: Map Editor
         mapWidget: document.getElementById('map-editor-widget')
     };
 
+    // ========================================================================
+    // UI FEEDBACK FUNCTIONS
+    // ========================================================================
+    
     /**
-     * Display a status message
+     * Display a status message to the user
+     * 
+     * MESSAGE TYPES:
+     * - info: General information (blue)
+     * - success: Operation completed (green)
+     * - warning: Caution needed (orange)
+     * - error: Something failed (red)
+     * 
+     * AUTO-DISMISS:
+     * Info and success messages auto-remove after 5 seconds
+     * Warning and error messages stay until next status
+     * 
+     * @param {string} message - Message text to display
+     * @param {string} type - Message type (info|success|warning|error)
      */
     function showStatus(message, type = 'info') {
         const statusEl = document.createElement('div');
         statusEl.className = `status-message status-${type}`;
         statusEl.textContent = message;
+        
+        // Replace any existing status message
         ui.statusContainer.innerHTML = '';
         ui.statusContainer.appendChild(statusEl);
 
-        // Auto-remove after 5 seconds for success/info messages
+        // Auto-remove positive messages after 5 seconds
         if (type === 'success' || type === 'info') {
             setTimeout(() => statusEl.remove(), 5000);
         }
     }
 
+    // ========================================================================
+    // MAP LOADING FUNCTIONS
+    // ========================================================================
+    
     /**
-     * Load available maps from database
+     * Load all available maps from database
+     * 
+     * QUERY DETAILS:
+     * - Table: location_maps
+     * - Fields: id, name, width, height, initial_x, initial_y, initial_zoom
+     * - Order: Alphabetically by name
+     * 
+     * UPDATES:
+     * - Populates availableMaps array
+     * - Calls populateMapDropdown() to update UI
+     * - Shows warning if no maps found
      */
     async function loadMaps() {
         try {
@@ -315,6 +513,15 @@ title: Map Editor
 
     /**
      * Populate the map selection dropdown
+     * 
+     * IMPLEMENTATION:
+     * - Clears existing options
+     * - Adds default "Select a Map" option
+     * - Creates option for each map with data attribute
+     * 
+     * DATA STORAGE:
+     * Map data is stored in option.dataset.mapData as JSON
+     * This avoids additional database queries when selecting
      */
     function populateMapDropdown() {
         ui.mapSelect.innerHTML = '<option value="">-- Select a Map --</option>';
@@ -323,17 +530,39 @@ title: Map Editor
             const option = document.createElement('option');
             option.value = map.id;
             option.textContent = map.name;
+            // Store complete map data for quick access
             option.dataset.mapData = JSON.stringify(map);
             ui.mapSelect.appendChild(option);
         });
     }
 
+    // ========================================================================
+    // MAP WIDGET MANAGEMENT
+    // ========================================================================
+    
     /**
-     * Load and display the selected map
+     * Load and display the selected map in the editor
+     * 
+     * PROCESS:
+     * 1. Get selected map ID from dropdown
+     * 2. If empty, show placeholder and hide info
+     * 3. Fetch map data (from cached option.dataset)
+     * 4. Query pin count from locations table
+     * 5. Update info panel with map details
+     * 6. Clean up any existing map instance
+     * 7. Initialize new MapComponent in editable mode
+     * 
+     * CLEANUP:
+     * Properly removes old Leaflet map instance to prevent
+     * memory leaks and multiple event handlers
+     * 
+     * TIMING:
+     * Uses setTimeout to ensure DOM is ready for Leaflet
      */
     async function loadSelectedMap() {
         const selectedId = ui.mapSelect.value;
         
+        // No map selected - show placeholder
         if (!selectedId) {
             ui.mapWidget.innerHTML = '<div class="loading-spinner">Select a map to begin editing...</div>';
             ui.mapInfo.style.display = 'none';
@@ -343,23 +572,30 @@ title: Map Editor
         try {
             showStatus('Loading map...', 'info');
             
-            // Get the map data from the option's dataset
+            // Get cached map data from dropdown option
             const selectedOption = ui.mapSelect.options[ui.mapSelect.selectedIndex];
             const mapData = JSON.parse(selectedOption.dataset.mapData);
             
             console.log('Loading map:', mapData);
 
-            // Update map info display
+            // ================================================================
+            // Update Map Info Panel
+            // ================================================================
+            
             ui.mapInfo.style.display = 'block';
             document.getElementById('info-name').textContent = mapData.name;
             document.getElementById('info-dimensions').textContent = `${mapData.width} × ${mapData.height}`;
             
+            // Format default view info
             const defaultView = (mapData.initial_x !== null && mapData.initial_y !== null) 
                 ? `[${mapData.initial_y.toFixed(1)}, ${mapData.initial_x.toFixed(1)}] @ zoom ${mapData.initial_zoom || 0}`
                 : 'Not set (using fit bounds)';
             document.getElementById('info-default').textContent = defaultView;
 
-            // Get pin count
+            // ================================================================
+            // Get Pin Count
+            // ================================================================
+            
             const { data: locations, count, error: countError } = await supabase
                 .from('locations')
                 .select('*', { count: 'exact' })
@@ -373,27 +609,34 @@ title: Map Editor
             
             document.getElementById('info-pins').textContent = count || 0;
 
-            // Clean up existing map instance if it exists
+            // ================================================================
+            // Clean Up Existing Map Instance
+            // ================================================================
+            
             if (window.mapComponents && window.mapComponents['map-editor-widget']) {
                 const existingWidget = window.mapComponents['map-editor-widget'];
                 if (existingWidget.map) {
-                    existingWidget.map.remove(); // Properly remove Leaflet map
+                    existingWidget.map.remove(); // Properly dispose Leaflet map
                 }
                 delete window.mapComponents['map-editor-widget'];
             }
 
-            // Clear and reset the widget container
+            // ================================================================
+            // Initialize New Map Widget
+            // ================================================================
+            
+            // Reset container and set data attributes
             ui.mapWidget.innerHTML = '';
             ui.mapWidget.dataset.mapId = selectedId;
             ui.mapWidget.dataset.editable = 'true';
             
             console.log('Initializing map widget with ID:', selectedId);
             
-            // Small delay to ensure DOM is ready
+            // Small delay ensures DOM is fully ready
             setTimeout(() => {
                 initMapComponents();
                 
-                // Verify the map was created
+                // Verify initialization after brief delay
                 setTimeout(() => {
                     if (window.mapComponents && window.mapComponents['map-editor-widget']) {
                         console.log('Map widget initialized successfully');
@@ -411,54 +654,126 @@ title: Map Editor
         }
     }
 
+    // ========================================================================
+    // AUTHENTICATION HANDLER
+    // ========================================================================
+    
     /**
-     * Handle page authentication
-     * This function is called by auth-header.html after auth state changes
+     * Handle page authentication state
+     * 
+     * CALLED BY:
+     * auth-header.html after determining authentication state
+     * 
+     * ACCESS CONTROL:
+     * - Not logged in → Show access denied
+     * - Logged in but no permission → Show access denied with message
+     * - Has required role → Show editor interface
+     * 
+     * REQUIRED ROLES:
+     * - Staff
+     * - Staff Apprentice
+     * 
+     * @param {Object|null} user - Authenticated user object or null
      */
     window.handlePageAuth = async function(user) {
         currentUser = user;
 
         if (!user) {
-            // Not logged in
+            // Not authenticated
             ui.accessDenied.style.display = 'block';
             ui.editorInterface.style.display = 'none';
             return;
         }
 
-        // Check if user has required roles
+        // Check user permissions
         const hasAccess = await checkAccess(user.id, ['Staff', 'Staff Apprentice']);
 
         if (!hasAccess) {
-            // Logged in but no permission
+            // Authenticated but insufficient permissions
             ui.accessDenied.style.display = 'block';
             ui.editorInterface.style.display = 'none';
             showStatus('You do not have permission to access the Map Editor', 'error');
             return;
         }
 
-        // Has access - show editor
+        // User has access - show editor
         ui.accessDenied.style.display = 'none';
         ui.editorInterface.style.display = 'block';
         showStatus('Welcome to the Map Editor! Select a map to begin.', 'info');
         
-        // Load available maps
+        // Load available maps from database
         await loadMaps();
     };
 
-    // Event Listeners
+    // ========================================================================
+    // EVENT LISTENERS
+    // ========================================================================
+    
+    /**
+     * Map selection change handler
+     * Loads the newly selected map into the editor
+     */
     ui.mapSelect.addEventListener('change', loadSelectedMap);
+    
+    /**
+     * Refresh button handler
+     * Reloads map list from database
+     */
     ui.refreshBtn.addEventListener('click', async () => {
         showStatus('Refreshing map list...', 'info');
         await loadMaps();
         showStatus('Map list refreshed', 'success');
     });
 
-    // Initial state: show loading until auth check completes
+    // ========================================================================
+    // INITIAL STATE
+    // Hide all content until auth check completes
+    // ========================================================================
+    
     ui.accessDenied.style.display = 'none';
     ui.editorInterface.style.display = 'none';
 </script>
 
-<!-- Include Leaflet CSS and Map Component Styles -->
+<!-- ============================================================================
+     EXTERNAL DEPENDENCIES
+     ============================================================================ -->
+
+<!-- Leaflet CSS - Provides base map styling -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Custom Map Styles - Additional styling for popups, controls, etc. -->
 <link rel="stylesheet" href="{{ '/assets/css/map.css' | relative_url }}" />
+
+<!-- Leaflet JavaScript - Core mapping library -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!--
+    NOTES:
+    
+    1. Database Schema Requirements:
+       - location_maps table with proper columns
+       - locations table with foreign key to location_maps
+       - RLS policies to protect data
+    
+    2. Authentication Setup:
+       - auth-header.html must call handlePageAuth(user)
+       - checkAccess() must be implemented in auth-check.js
+       - Supabase auth must be configured
+    
+    3. Performance Considerations:
+       - Map data is cached in dropdown options
+       - Pin count is queried separately (not cached)
+       - Old map instances are properly cleaned up
+       - DOM updates use small delays for Leaflet compatibility
+    
+    4. User Experience:
+       - Status messages provide feedback for all operations
+       - Loading states prevent confusion
+       - Instructions panel helps new users
+       - Map info panel provides context
+    
+    5. Error Handling:
+       - All async operations are try-catch wrapped
+       - Errors are logged to console and shown to user
+       - Graceful fallbacks for missing data
+-->
