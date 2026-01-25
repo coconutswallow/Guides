@@ -55,6 +55,8 @@ extra_css:
         <div id="view-game-setup" class="view-section hidden-section">
             <h2>Game Setup</h2>
             <p class="instruction-text">The first step is to create a game listing and game ad.  Fill in the information on this tab, and use tabs 2 and 3 to create those postings in discord.  Don't forget to save!</p>
+            <p class="instruction-text"><strong>Hint:</strong>You can save as a template so that these settings can be re-loaded for future games/sessions.</p>
+            
             
             <div class="card" style="border-left: 4px solid var(--color-primary); margin-bottom: 2rem;">
                 <h3 class="card-title" style="font-size: 1rem;">Templates</h3>
@@ -180,8 +182,8 @@ extra_css:
 
         <div id="view-game-listing" class="view-section hidden-section">
             <h2>Game Posting to #Game-Listings</h2>
-            <p class="instruction-text">If you have a lobby already, copy the lobby link below (<a href="https://discord.com/channels/308324031478890497/1404082758342676651">instructions on how to create a lobby</a>). Otherwise use "TBD" and update the lobby later.  Review the game listing below, click the "copy to clipboard" button, then post this in <a href="https://discord.com/channels/308324031478890497/1366924010255814768">#game-listings</a></p>
-            <p class="instruction-text">Note: the listing text below is editable for last minute edits, but will not be saved. If you need to make updates, do it before you post.</p>
+            <p class="instruction-text">If you have a lobby already, copy the lobby link below (<a href="https://discord.com/channels/308324031478890497/1404082758342676651">instructions on how to create a lobby</a>). Otherwise use "TBD" and update the lobby later when you have one setup.</p>  
+            <p class="instruction-text">Review the game listing below, click the "copy to clipboard" button, then post this in <a href="https://discord.com/channels/308324031478890497/1366924010255814768">#game-listings</a></p>
                 <div class="card">
                 <div class="form-group" style="margin-bottom: 2rem;">
                     <label>Game Lobby URL</label>
@@ -275,7 +277,7 @@ extra_css:
 
         <div id="view-loot-plan" class="view-section hidden-section">
             <h2>Plan / Declare Loot</h2>
-            <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.  <b>>Note:</b> you can declare loot at any time (up to the end of the session).</p>
+            <p class="instruction-text">This tab will help you plan and declare player and DM loot rewards for this session.  <b>Note:</b> you can declare loot at any time (up to the end of the session).</p>
             
             <div class="accordion-group">
                 <div class="card accordion-card open">
@@ -292,6 +294,7 @@ extra_css:
 
                         <div class="form-group" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <label>Pre-determined Player Loot</label>
+                            <p class="instruction-text">If you choose to pre-determine (select your own loot from the AC), Use the form below to help you declare your selected loot.</p>
                             <p class="instruction-text">Enter your pre-determined loot below (one item per line). This will automatically format the Discord declaration below.</p>
                             <textarea id="inp-loot-plan" class="table-input" rows="6" placeholder="* Item 1&#10;* Item 2"></textarea>
                         </div>
@@ -309,6 +312,7 @@ extra_css:
 
                         <div class="hgen-section" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <h4>Hgenloot Bot</h4>
+                            <p> You can also use the bot to randomly roll loot if you do not wish to select the treasures yourself.</p>
                             <p>Please refer the <a href="https://discord.com/channels/308324031478890497/617838916929847315/1423099262845190196" target="_blank">This Patch Update</a> for the full explanation of the Hgenloot, but you can use the bot to roll for all of your loot, or partially (in combination with pre-determined loot, if applicable).</p>
                             
                             <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-direction: row; align-items: flex-end;">
@@ -551,6 +555,7 @@ extra_css:
 
         <div id="view-session-output" class="view-section hidden-section">
             <h2>Session Log</h2>
+            <p class="instruction-text">Copy the session-log below and past it in <a href="https://discord.com/channels/308324031478890497/343418646300852225">#session-logs</a></p>
             
             <div class="card" style="margin-bottom: 2rem;">
                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
