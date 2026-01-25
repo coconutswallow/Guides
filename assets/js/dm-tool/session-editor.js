@@ -599,6 +599,29 @@ function setupCalculationTriggers(callbacks) {
             }
         });
     }
+    const setupDateInput = document.getElementById('inp-start-datetime');
+    
+    if (setupDateInput) {
+        setupDateInput.addEventListener('input', () => {
+            const sessionDateInput = document.getElementById('inp-session-date');
+            const sessionUnixInput = document.getElementById('inp-session-unix');
+            const tzInput = document.getElementById('inp-timezone');
+
+            // Only update if the session date is currently empty
+            if (sessionDateInput && !sessionDateInput.value) {
+                
+                // 1. Copy the visual date string
+                sessionDateInput.value = setupDateInput.value;
+
+                // 2. Calculate and update the hidden Unix timestamp
+                if (sessionUnixInput && tzInput) {
+                    // We use the UI utility you already have available
+                    const unixVal = UI.toUnixTimestamp(setupDateInput.value, tzInput.value);
+                    sessionUnixInput.value = unixVal;
+                }
+            }
+        });
+    }
 
     const dmLevel = document.getElementById('out-dm-level');
     const dmGames = document.getElementById('out-dm-games');
