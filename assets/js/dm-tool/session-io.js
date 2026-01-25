@@ -126,10 +126,14 @@ export function populateForm(session, callbacks, options = {}) {
     // --- UI Restoration: Header Fields ---
     if (fd.header) {
         setVal('inp-start-datetime', fd.header.game_date_str);
-        setVal('inp-timezone', fd.header.timezone);
         setVal('inp-unix-time', fd.header.game_datetime);
         setVal('inp-duration-text', fd.header.intended_duration);
         setVal('inp-description', fd.header.game_description);
+
+        if (fd.header.timezone) {
+            setVal('inp-timezone', fd.header.timezone);
+        }
+        setVal('inp-unix-time', fd.header.game_datetime);
 
         setVal('inp-version', fd.header.game_version);
         setVal('inp-format', fd.header.game_type);
