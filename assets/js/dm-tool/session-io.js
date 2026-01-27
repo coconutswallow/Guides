@@ -276,7 +276,7 @@ ${eventsString}**Date & Time:** ${dateStr}
 ${state.header.game_description || "No description provided."}
 
 **Applications:** ${state.header.apps_type || "N/A"}
-**Tier:** ${tierStr}  **APL:** ${apl}
+**Tier:** ${tierStr}  **APL:** ${apl}  **Players:** ${state.header.party_size || "0"}
 **Platform:** ${state.header.platform || "Foundry VTT"}
 ${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_url || "N/A"}`;
         
