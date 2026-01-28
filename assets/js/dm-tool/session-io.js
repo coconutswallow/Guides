@@ -511,7 +511,15 @@ export function prepareTemplateData(originalData) {
         summary: "",
         dm_collaborators: "",
         players: [],
-        dm_rewards: {}
+        dm_rewards: {
+            level: 0,
+            games_played: '0',
+            incentives: [],
+            loot_selected: '',
+            forfeit_xp: false
+        },
+        dm_loot_links: '',
+        session_log_links: ''
     };
     
     return data;
