@@ -173,6 +173,20 @@ const TAB_ORDER = [
     'view-records'
 ];
 
+const TAB_NAMES = {
+    'view-start': 'Start',
+    'view-game-setup': 'Setup',
+    'view-game-listing': 'Listing',
+    'view-game-ad': 'Game Ad',
+    'view-player-setup': 'Roster',
+    'view-loot-plan': 'Loot',
+    'view-session-lobby': 'Lobby',
+    'view-session-details': 'Details',
+    'view-session-output': 'Log',
+    'view-mal-update': 'MAL',
+    'view-records': 'Records'
+};
+
 /* ===========================
    3. TABS & VISIBILITY
    =========================== */
@@ -197,23 +211,19 @@ export function initTabs(outputCallback) {
 
     if (btnPrev && btnNext) {
         btnPrev.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent accidental form submissions
+            e.preventDefault(); 
+            e.stopPropagation();
             navigateMobileStep(-1, outputCallback);
         });
         btnNext.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             navigateMobileStep(1, outputCallback);
         });
     }
     
-    // Initialize buttons for the starting view
-    // Safety check: find which view is actually visible/active on load
-    const activeItem = document.querySelector('#sidebar-nav .nav-item.active');
-    if (activeItem) {
-        updateMobileButtons(activeItem.dataset.target);
-    } else {
-        updateMobileButtons('view-start');
-    }
+    // Initialize buttons
+    updateMobileButtons('view-start');
 }
 
 /**
@@ -222,7 +232,8 @@ export function initTabs(outputCallback) {
 function switchTab(targetId, outputCallback) {
     // Update Sidebar Active State
     document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => {
-        n.classList.toggle('active', n.dataset.target === targetId);
+        const isActive = n.dataset.target === targetId;
+        n.classList.toggle('active', isActive);
     });
 
     // Hide all sections
@@ -233,10 +244,9 @@ function switchTab(targetId, outputCallback) {
     if(targetEl) {
         targetEl.classList.remove('hidden-section');
         
-        // Mobile-specific updates
         updateMobileButtons(targetId);
         
-        // Auto-close sidebar on mobile if open
+        // Auto-close sidebar on mobile
         const sidebar = document.getElementById('sidebar-nav');
         const overlay = document.getElementById('mobile-overlay');
         if (sidebar && sidebar.classList.contains('active')) {
@@ -244,13 +254,11 @@ function switchTab(targetId, outputCallback) {
             if (overlay) overlay.classList.remove('active');
         }
 
-        // Trigger Output Generation Callback
         handleOutputGeneration(targetId, outputCallback);
         
-        // Scroll to top
         const main = document.querySelector('.editor-main');
         if(main) main.scrollTop = 0;
-        window.scrollTo(0, 0); // For mobile body scroll
+        window.scrollTo(0, 0); 
     }
 }
 
@@ -258,18 +266,25 @@ function switchTab(targetId, outputCallback) {
  * Handles the logic for moving Next (+1) or Prev (-1) in the sequence.
  */
 function navigateMobileStep(direction, outputCallback) {
-    // Find current active tab from DOM state
-    let activeItem = document.querySelector('#sidebar-nav .nav-item.active');
+    // Determine current index based on visible section or active sidebar item
+    let currentIndex = 0;
     
-    // Fallback if no active class found (start at 0)
-    let currentId = activeItem ? activeItem.dataset.target : 'view-start';
-    let currentIndex = TAB_ORDER.indexOf(currentId);
+    // Check which view is currently NOT hidden
+    const visibleSection = document.querySelector('.view-section:not(.hidden-section)');
+    if (visibleSection) {
+        currentIndex = TAB_ORDER.indexOf(visibleSection.id);
+    } else {
+        // Fallback to sidebar state
+        const activeItem = document.querySelector('#sidebar-nav .nav-item.active');
+        if (activeItem) {
+            currentIndex = TAB_ORDER.indexOf(activeItem.dataset.target);
+        }
+    }
 
     if (currentIndex === -1) currentIndex = 0;
 
     const newIndex = currentIndex + direction;
 
-    // Boundary checks
     if (newIndex >= 0 && newIndex < TAB_ORDER.length) {
         switchTab(TAB_ORDER[newIndex], outputCallback);
     }
@@ -281,34 +296,29 @@ function navigateMobileStep(direction, outputCallback) {
 function updateMobileButtons(currentId) {
     const btnPrev = document.getElementById('btn-mobile-prev');
     const btnNext = document.getElementById('btn-mobile-next');
-    const indicator = document.getElementById('mobile-step-text');
     
     if (!btnPrev || !btnNext) return;
 
     const index = TAB_ORDER.indexOf(currentId);
     
-    // Update Indicator Text
-    const activeNavItem = document.querySelector(`#sidebar-nav .nav-item[data-target="${currentId}"]`);
-    if (activeNavItem && indicator) {
-        indicator.innerText = activeNavItem.innerText; 
-    }
-
-    // Prev Button State
+    // 1. Previous Button
     if (index <= 0) {
-        btnPrev.disabled = true;
-        btnPrev.style.opacity = '0.5';
+        // Hide "Back" on the first step
+        btnPrev.style.visibility = 'hidden';
     } else {
+        btnPrev.style.visibility = 'visible';
         btnPrev.disabled = false;
-        btnPrev.style.opacity = '1';
+        const prevName = TAB_NAMES[TAB_ORDER[index - 1]] || "Back";
+        btnPrev.innerHTML = `<span class="nav-arrow">‹</span> <span class="nav-label">${prevName}</span>`;
     }
 
-    // Next Button State
+    // 2. Next Button
     if (index >= TAB_ORDER.length - 1) {
-        btnNext.disabled = true;
         btnNext.innerHTML = `<span class="nav-label">Finish</span>`;
     } else {
         btnNext.disabled = false;
-        btnNext.innerHTML = `<span class="nav-label">Next</span> <span class="nav-arrow">›</span>`;
+        const nextName = TAB_NAMES[TAB_ORDER[index + 1]] || "Next";
+        btnNext.innerHTML = `<span class="nav-label">${nextName}</span> <span class="nav-arrow">›</span>`;
     }
 }
 

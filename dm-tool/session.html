@@ -21,7 +21,7 @@ extra_css:
         .editor-header { 
             flex-wrap: wrap; 
             gap: 10px; 
-            padding: 15px; 
+            padding: 10px; 
             align-items: center; 
             height: auto;
             min-height: auto;
@@ -45,16 +45,23 @@ extra_css:
         
         .header-inputs { order: 1; flex: 1; min-width: 150px; }
         
-        /* Force actions to new line and ensure they take up space */
+        /* HEADER ACTIONS GRID */
         .header-actions { 
             order: 2; 
             width: 100%; 
-            justify-content: space-between; 
             margin-top: 15px; 
             padding-top: 15px; 
             border-top: 1px solid var(--color-border); 
-            position: relative; /* Ensure it is in flow */
+            position: relative;
+            /* Grid System */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            justify-content: stretch;
         }
+        
+        /* Hide Status Text on Mobile */
+        #save-status { display: none; }
         
         /* SIDEBAR (Off-canvas) */
         .editor-container { 
@@ -831,12 +838,12 @@ extra_css:
 </div>
 
 <div class="mobile-nav-footer">
-    <button id="btn-mobile-prev" class="nav-btn prev-link">
+    <button type="button" id="btn-mobile-prev" class="nav-btn prev-link">
         <span class="nav-arrow">‹</span>
         <span class="nav-label">Back</span>
     </button>
     <div class="mobile-step-indicator" id="mobile-step-text">0. Start</div>
-    <button id="btn-mobile-next" class="nav-btn next-link">
+    <button type="button" id="btn-mobile-next" class="nav-btn next-link">
         <span class="nav-label">Next</span>
         <span class="nav-arrow">›</span>
     </button>
