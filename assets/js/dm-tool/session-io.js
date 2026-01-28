@@ -289,7 +289,7 @@ ${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_u
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
         const relative = state.header.game_datetime ? `<t:${state.header.game_datetime}:R>` : "";
         
-        // FIX: Get tier from multi-select in Game Setup (same logic as above)
+        // Get tier from multi-select in Game Setup (same logic as above)
         let tierStr = "N/A";
         if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
             const sortedTiers = state.header.tier.sort((a, b) => {
@@ -305,7 +305,7 @@ ${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_u
             }
         }
         
-        // FIX: Get party size and APL directly from Game Setup field
+        // Get party size and APL directly from Game Setup field
         const partySize = state.header.party_size || "N/A";
         const apl = state.header.apl || "N/A";
         
@@ -533,8 +533,7 @@ export function generateMALUpdate(dmDisplayName) {
  * * @param {Object} originalData - The source session data.
  * @returns {Object} A sanitized data object for template creation.
  */
-export function prepareTemplateData(originalData) {
-    // Deep copy to ensure we don't modify the active form/state
+// Deep copy to ensure we don't modify the active form/state
     const data = JSON.parse(JSON.stringify(originalData));
     
     // Explicitly clear date fields for the template copy
@@ -542,7 +541,9 @@ export function prepareTemplateData(originalData) {
         data.header.game_datetime = null;
         data.header.game_date_str = ""; 
         data.header.listing_url = "";
-        data.header.lobby_url = ""; 
+        
+        // UPDATE: Commented out to preserve the Lobby URL in templates
+        // data.header.lobby_url = ""; 
     }
     
     // Reset players but keep the structure empty if needed, or clear them
