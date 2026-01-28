@@ -354,6 +354,11 @@ extra_css:
                                 </div>
                                 <img src="../assets/images/hgenloot.png" alt="Hgenloot Bot">
                             </div>
+                            
+                            <div class="form-group" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+                                <label>Optional: Save links to your Player Loot roll/declaration discord messages here:</label>
+                                <textarea id="inp-player-loot-links" class="table-input" rows="3" placeholder="Paste Discord message links here..."></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -423,6 +428,11 @@ extra_css:
                         <div class="form-group" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                             <label class="field-label">Loot Selected</label>
                             <input type="text" id="dm-loot-selected" class="table-input" placeholder="Enter Loot Selected...">
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+                            <label>Optional: Save links to your DMLoot roll/declaration discord messages here:</label>
+                            <textarea id="inp-dm-loot-links" class="table-input" rows="2" placeholder="Paste Discord message links here..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -607,6 +617,23 @@ extra_css:
                     <button class="button" onclick="window.copyToClipboard('out-session-text')">Copy to Clipboard</button>
                 </div>
             </div>
+            
+            <div class="card" style="margin-bottom: 2rem;">
+                <div class="form-group">
+                    <label>Optional: Save links to your session-log discord messages here:</label>
+                    <textarea id="inp-session-log-links" class="table-input" rows="2" placeholder="Paste Discord message links here..."></textarea>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Session Summary for your players:</h3>
+                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                    <textarea id="out-player-summary" class="out-session-text" style="width: 100%; height: 300px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                </div>
+                <div style="margin-top: 0.5rem; text-align: right;">
+                    <button class="button" onclick="window.copyToClipboard('out-player-summary')">Copy to Clipboard</button>
+                </div>
+            </div>
 
             <div id="secondary-output-wrapper" class="card d-none" style="display:none;">
                 <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
@@ -639,9 +666,36 @@ extra_css:
 
         <div id="view-records" class="view-section hidden-section">
             <h2>Record Keeping</h2>
-            <p class="instruction-text">Record keeping content coming soon...</p>
+            <p class="instruction-text">A summary of your generated links and logs for your personal records.</p>
             <div class="card">
-                <p>This section will contain record keeping functionality.</p>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Game Listing</label>
+                    <input type="text" id="rec-listing-link" class="table-input readonly-input" readonly>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Game Ad</label>
+                    <input type="text" id="rec-ad-link" class="table-input readonly-input" readonly>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Session Lobby</label>
+                    <input type="text" id="rec-lobby-link" class="table-input readonly-input" readonly>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Player Treasure Log(s)</label>
+                    <textarea id="rec-player-loot-links" class="table-input readonly-input" rows="3" readonly></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>DM Treasure Log(s)</label>
+                    <textarea id="rec-dm-loot-links" class="table-input readonly-input" rows="2" readonly></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>DM Collaboration Log</label>
+                    <input type="text" id="rec-dm-collab-link" class="table-input readonly-input" readonly>
+                </div>
+                 <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Session Log</label>
+                    <textarea id="rec-session-log-links" class="table-input readonly-input" rows="2" readonly></textarea>
+                </div>
             </div>
         </div>
 
