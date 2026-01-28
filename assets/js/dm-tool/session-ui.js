@@ -176,9 +176,6 @@ const TAB_ORDER = [
 /* ===========================
    3. TABS & VISIBILITY
    =========================== */
-/* ===========================
-   3. TABS & VISIBILITY
-   =========================== */
 
 /**
  * Initializes Sidebar Navigation & Mobile Wizard Buttons.
@@ -199,12 +196,24 @@ export function initTabs(outputCallback) {
     const btnNext = document.getElementById('btn-mobile-next');
 
     if (btnPrev && btnNext) {
-        btnPrev.addEventListener('click', () => navigateMobileStep(-1, outputCallback));
-        btnNext.addEventListener('click', () => navigateMobileStep(1, outputCallback));
+        btnPrev.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent accidental form submissions
+            navigateMobileStep(-1, outputCallback);
+        });
+        btnNext.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateMobileStep(1, outputCallback);
+        });
     }
     
     // Initialize buttons for the starting view
-    updateMobileButtons('view-start');
+    // Safety check: find which view is actually visible/active on load
+    const activeItem = document.querySelector('#sidebar-nav .nav-item.active');
+    if (activeItem) {
+        updateMobileButtons(activeItem.dataset.target);
+    } else {
+        updateMobileButtons('view-start');
+    }
 }
 
 /**
@@ -249,14 +258,14 @@ function switchTab(targetId, outputCallback) {
  * Handles the logic for moving Next (+1) or Prev (-1) in the sequence.
  */
 function navigateMobileStep(direction, outputCallback) {
-    // Find current active tab
-    const activeItem = document.querySelector('#sidebar-nav .nav-item.active');
-    if (!activeItem) return;
+    // Find current active tab from DOM state
+    let activeItem = document.querySelector('#sidebar-nav .nav-item.active');
+    
+    // Fallback if no active class found (start at 0)
+    let currentId = activeItem ? activeItem.dataset.target : 'view-start';
+    let currentIndex = TAB_ORDER.indexOf(currentId);
 
-    const currentId = activeItem.dataset.target;
-    const currentIndex = TAB_ORDER.indexOf(currentId);
-
-    if (currentIndex === -1) return;
+    if (currentIndex === -1) currentIndex = 0;
 
     const newIndex = currentIndex + direction;
 
@@ -278,18 +287,16 @@ function updateMobileButtons(currentId) {
 
     const index = TAB_ORDER.indexOf(currentId);
     
-    // Update Indicator Text (e.g., "1. Game Setup")
+    // Update Indicator Text
     const activeNavItem = document.querySelector(`#sidebar-nav .nav-item[data-target="${currentId}"]`);
     if (activeNavItem && indicator) {
-        // Strip the number prefix for cleaner mobile display if needed, 
-        // or just show the whole text. Let's show "Step X: [Name]"
         indicator.innerText = activeNavItem.innerText; 
     }
 
     // Prev Button State
     if (index <= 0) {
         btnPrev.disabled = true;
-        btnPrev.style.opacity = '0.3';
+        btnPrev.style.opacity = '0.5';
     } else {
         btnPrev.disabled = false;
         btnPrev.style.opacity = '1';
@@ -298,10 +305,10 @@ function updateMobileButtons(currentId) {
     // Next Button State
     if (index >= TAB_ORDER.length - 1) {
         btnNext.disabled = true;
-        btnNext.innerText = "Finish";
+        btnNext.innerHTML = `<span class="nav-label">Finish</span>`;
     } else {
         btnNext.disabled = false;
-        btnNext.innerText = "Next →";
+        btnNext.innerHTML = `<span class="nav-label">Next</span> <span class="nav-arrow">›</span>`;
     }
 }
 

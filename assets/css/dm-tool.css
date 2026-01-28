@@ -69,6 +69,8 @@ body {
         background: var(--color-bg-light); 
         position: relative;
         z-index: 100;
+        /* Force spacing below header elements so they don't visually overlap */
+        margin-bottom: 20px;
     }
     
     .editor-main {
@@ -76,6 +78,8 @@ body {
         height: auto;
         overflow: visible;
         padding: 10px;
+        /* Ensure bottom padding for the fixed footer */
+        padding-bottom: 80px !important;
     }
 }
 
@@ -954,28 +958,45 @@ dialog::backdrop {
         box-shadow: 0 -4px 10px rgba(0,0,0,0.3);
     }
 
-    /* 2. Style the buttons */
-    .nav-btn {
-        background-color: var(--color-bg-light);
-        color: var(--color-text);
-        border: 1px solid var(--color-border);
-        padding: 10px 15px;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 0.95rem;
+    /* 2. Style the buttons to look like doc.html links */
+    .nav-btn.prev-link, 
+    .nav-btn.next-link {
+        /* Reset button specific styles first */
+        appearance: none;
+        -webkit-appearance: none;
+        
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.75em 1.5em;
+        background: var(--color-bg-light);
+        border: 2px solid var(--color-border);
+        border-radius: 4px; /* Hardcoded match if var missing */
+        text-decoration: none;
+        color: var(--color-primary);
+        transition: all 0.2s;
+        font-family: var(--font-header);
+        text-transform: uppercase;
+        font-size: 0.9em;
+        max-width: 45%;
         cursor: pointer;
         min-width: 90px;
-        transition: background 0.2s;
+        justify-content: center;
     }
 
-    .nav-btn:active {
+    /* Active/Hover States */
+    .nav-btn.prev-link:active, 
+    .nav-btn.next-link:active {
         background-color: var(--color-primary);
         color: white;
+        transform: translateY(2px);
     }
 
     .nav-btn:disabled {
         opacity: 0.3;
         pointer-events: none;
+        border-color: var(--color-border);
+        background: var(--color-bg-light);
     }
 
     /* 3. Center Text */
@@ -990,9 +1011,10 @@ dialog::backdrop {
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
-    /* 4. Add padding to main content so footer doesn't cover inputs */
-    .editor-main {
-        padding-bottom: 80px !important; 
+    
+    .nav-arrow {
+        font-weight: bold;
+        font-size: 1.2em;
+        line-height: 1;
     }
 }
