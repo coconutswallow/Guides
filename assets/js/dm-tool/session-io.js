@@ -327,6 +327,33 @@ ${state.header.game_description || "No description provided."}
 
         adEl.value = adText;
     }
+
+    // 3. SESSION LOBBY OUTPUT
+    const lobbyEl = document.getElementById('out-session-lobby');
+    if (lobbyEl) {
+        const listingUrl = document.getElementById('inp-game-listing-url')?.value || state.header.listing_url || "N/A";
+        
+        // Get player Discord names from roster
+        const playerMentions = [];
+        if (state.players && Array.isArray(state.players)) {
+            state.players.forEach(player => {
+                const discordName = player.display_name || player.discord_id || '';
+                if (discordName) {
+                    // Ensure it starts with @ for Discord mentions
+                    const mention = discordName.startsWith('@') ? discordName : `@${discordName}`;
+                    playerMentions.push(mention);
+                }
+            });
+        }
+        
+        const playerMentionList = playerMentions.length > 0 ? playerMentions.join(' ') : '(No players added yet)';
+        
+        const lobbyText = `This lobby is for the game corresponding to the following listing: ${listingUrl}
+
+${playerMentionList}`;
+        
+        lobbyEl.value = lobbyText;
+    }
 }
 
 /**

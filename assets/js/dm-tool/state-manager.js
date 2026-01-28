@@ -46,6 +46,9 @@ class StateManager {
                 how_to_apply: '',
                 listing_url: '',
                 lobby_url: '',
+                game_listing_url: '', // For Session Lobby
+                dm_collab_link: '', // DM Collaboration Link
+                dm_collaborators: '', // DM Collaborators list
                 loot_plan: '',
                 predet_perms: 0,
                 predet_cons: 0
@@ -138,6 +141,13 @@ class StateManager {
         this.dom.listingUrl = document.getElementById('inp-listing-url');
         this.dom.lobbyUrl = document.getElementById('inp-lobby-url');
         
+        // Session Lobby Tab
+        this.dom.gameListingUrl = document.getElementById('inp-game-listing-url');
+        
+        // DM Collaborators
+        this.dom.dmCollabLink = document.getElementById('inp-dm-collab-link');
+        this.dom.dmCollaborators = document.getElementById('inp-dm-collaborators');
+        
         // Loot Plan Tab
         this.dom.lootPlan = document.getElementById('inp-loot-plan');
         this.dom.predetPerms = document.getElementById('inp-predet-perms');
@@ -181,6 +191,9 @@ class StateManager {
             { el: this.dom.gameName, sect: 'header', field: 'title', update: ['outputs', 'lootDeclaration'] },
             { el: this.dom.lobbyUrl, sect: 'header', field: 'lobby_url', update: ['outputs'] },
             { el: this.dom.listingUrl, sect: 'header', field: 'listing_url', update: ['outputs'] },
+            { el: this.dom.gameListingUrl, sect: 'header', field: 'game_listing_url', update: ['outputs'] },
+            { el: this.dom.dmCollabLink, sect: 'header', field: 'dm_collab_link', update: ['outputs'] },
+            { el: this.dom.dmCollaborators, sect: 'header', field: 'dm_collaborators', update: ['outputs'] },
             { el: this.dom.dmCharName, sect: 'dm', field: 'character_name', update: ['outputs', 'dmLoot'] },
             { el: this.dom.lootPlan, sect: 'header', field: 'loot_plan', update: ['lootDeclaration'] },
             // Setup Tab text areas

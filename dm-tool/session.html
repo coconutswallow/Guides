@@ -180,7 +180,7 @@ extra_css:
 
         <div id="view-game-listing" class="view-section hidden-section">
             <h2>Game Posting to #Game-Listings</h2>
-            <p class="instruction-text">If you have a lobby already, copy the lobby link below (<a href="https://discord.com/channels/308324031478890497/1404082758342676651">instructions on how to create a lobby</a>). Otherwise use "TBD" and update the lobby later when you have one setup.</p>  
+            <p class="instruction-text">If you use a permanent session lobby, copy the link to your lobby below.  If you don't, leave it blank and we'll create it in Step 6.</p>  
             <p class="instruction-text">Review the game listing below, click the "copy to clipboard" button, then post this in <a href="https://discord.com/channels/308324031478890497/1366924010255814768">#game-listings</a></p>
                 <div class="card">
                 <div class="form-group" style="margin-bottom: 2rem;">
@@ -269,6 +269,18 @@ extra_css:
                     <div class="form-group flex-grow"><label>DM Character Name</label><input type="text" id="inp-dm-char-name" placeholder="Character Name"></div>
                     <div class="form-group" style="width: 100px;"><label>DM PC Level</label><input type="number" id="inp-dm-level" placeholder="Lvl"></div>
                     <div class="form-group" style="width: 140px;"><label>Games DM'ed on Server</label><select id="inp-dm-games-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="10+">10+</option></select></div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 2rem;">
+                <h3 class="card-title">DM Collaborators</h3>
+                <div class="form-group">
+                    <label>DM Collaboration Link</label>
+                    <input type="text" id="inp-dm-collab-link" placeholder="Enter collaboration link (e.g., Google Doc, Discord thread)">
+                </div>
+                <div class="form-group">
+                    <label>DM Collaborators {% include help-icon.html text="Enter Discord names of collaborating DMs. One per line or comma-separated (e.g., @DMName1, @DMName2)" %}</label>
+                    <textarea id="inp-dm-collaborators" class="table-input" rows="3" placeholder="@DMName1&#10;@DMName2&#10;or: @DMName1, @DMName2, @DMName3"></textarea>
                 </div>
             </div>
         </div>
@@ -419,11 +431,27 @@ extra_css:
 
         <div id="view-session-lobby" class="view-section hidden-section">
             <h2>Session Lobby</h2>
-            <p class="instruction-text">Session lobby content coming soon...</p>
+            <p class="instruction-text">Create your session lobby message to ping all players and direct them to the game listing.</p>
+            
             <div class="card">
-                <p>This section will contain the session lobby functionality.</p>
+                <div class="form-group">
+                    <label>Game Listing URL {% include help-icon.html text="Paste the URL to your game listing (e.g., Discord message link)" %}</label>
+                    <input type="text" id="inp-game-listing-url" placeholder="https://discord.com/channels/...">
+                </div>
+
+                <div class="form-group" style="margin-top: 2rem;">
+                    <label>Session Lobby Output:</label>
+                    <p class="instruction-text">Copy this message and post it to your session lobby channel to notify all players.</p>
+                    <div class="discord-output-wrapper" style="border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;">
+                        <textarea id="out-session-lobby" class="out-session-text" style="width: 100%; height: 150px; padding: 1rem; background: #36393f; color: #dcddde; border: none; resize: vertical; font-family: monospace; box-sizing: border-box;" readonly></textarea>
+                    </div>
+                    <div style="margin-top: 0.5rem; text-align: right;">
+                        <button class="button" onclick="window.copyToClipboard('out-session-lobby')">Copy to Clipboard</button>
+                    </div>
+                </div>
             </div>
         </div>
+
 
 
         <div id="view-session-details" class="view-section hidden-section">

@@ -305,6 +305,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     bindOutput('inp-lobby-url');
     bindOutput('inp-listing-url');
+    bindOutput('inp-game-listing-url'); // Session Lobby URL
+    bindOutput('inp-dm-collab-link'); // DM Collaboration Link
+    bindOutput('inp-dm-collaborators'); // DM Collaborators
 
     // 8. Populate Dropdowns from Game Rules
     const rules = cachedGameRules;

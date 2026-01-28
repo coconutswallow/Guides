@@ -120,13 +120,32 @@ export function addPlayerRowToMaster(data = {}) {
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');
     
-    // Sync ID with Name if ID is missing (fallback)
+    // Validate that Discord names start with @ and sync ID with Name if ID is missing
     nameInput.addEventListener('change', () => {
+        let value = nameInput.value.trim();
+        
+        // If user entered a Discord name manually (not from sync), ensure it starts with @
+        if (value && !value.startsWith('@')) {
+            value = '@' + value;
+            nameInput.value = value;
+        }
+        
         if(!idInput.value || idInput.value === nameInput.value) {
-            idInput.value = nameInput.value;
+            idInput.value = value;
         }
     });
-
+    
+    // Also validate on blur
+    nameInput.addEventListener('blur', () => {
+        let value = nameInput.value.trim();
+        if (value && !value.startsWith('@')) {
+            value = '@' + value;
+            nameInput.value = value;
+            if(!idInput.value || idInput.value === nameInput.value.replace('@', '')) {
+                idInput.value = value;
+            }
+        }
+    });
     tr.querySelector('.btn-delete-row').addEventListener('click', () => {
         tr.remove();
         updateMasterRosterStats(); 
