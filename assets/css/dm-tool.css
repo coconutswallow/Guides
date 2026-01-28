@@ -22,7 +22,7 @@ body {
     padding-top: var(--header-height-buffer);
 }
 
-/* Editor Layout Calculation */
+/* Editor Layout Calculation (Desktop) */
 .editor-container {
     display: flex;
     height: calc(100vh - var(--editor-header-height) - var(--header-height-buffer)); 
@@ -42,29 +42,40 @@ body {
 /* --- MOBILE RESPONSIVE OVERRIDES --- */
 @media (max-width: 768px) {
     :root {
-        /* Increase top buffer to push tool below the site's main header */
-        --header-height-buffer: 110px; 
-        /* Allow editor header to grow since buttons wrap */
-        --editor-header-height: auto; 
+        /* Increase buffer significantly to clear the site's main nav bar */
+        --header-height-buffer: 80px; 
+    }
+
+    body {
+        /* On mobile, let the body grow naturally; no fixed height */
+        height: auto;
+        overflow-y: auto;
     }
 
     .editor-container {
-        /* Recalculate height for mobile flow */
-        height: calc(100vh - var(--header-height-buffer));
-        flex-direction: column; 
+        /* Disable the complex calc height on mobile. Just stack it. */
+        height: auto;
+        display: block; 
+        overflow: visible;
     }
 
     .editor-header {
-        /* Ensure it sits below the site header */
-        position: relative;
+        /* Allow header to wrap and push content down */
         height: auto; 
-        min-height: 60px;
+        min-height: 70px;
+        flex-wrap: wrap;
+        padding: 10px;
+        /* Ensure background covers content underneath */
+        background: var(--color-bg-light); 
+        position: relative;
+        z-index: 100;
     }
     
     .editor-main {
-        /* Ensure scrolling happens inside main on mobile */
-        flex: 1;
-        overflow-y: auto;
+        /* Remove internal scrolling on mobile; use body scroll */
+        height: auto;
+        overflow: visible;
+        padding: 10px;
     }
 }
 
