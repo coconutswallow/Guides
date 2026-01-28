@@ -188,11 +188,21 @@ export function initTabs(outputCallback) {
                 // Trigger content generation if switching to an Output tab
                 if(targetId === 'view-game-listing' && outputCallback) outputCallback();
                 if(targetId === 'view-game-ad' && outputCallback) outputCallback();
+
+                if(targetId === 'view-session-lobby') {
+                    const lobbyUrlVal = document.getElementById('inp-lobby-url')?.value;
+                    const sessionLobbyInput = document.getElementById('inp-game-listing-url'); // Note: ID name in Tab 6 is confusingly 'inp-game-listing-url'
+                    
+                    if(lobbyUrlVal && sessionLobbyInput && !sessionLobbyInput.value) {
+                        sessionLobbyInput.value = lobbyUrlVal;
+                    }
+
+                    if(outputCallback) outputCallback();
+                }
                 
                 // UPDATE: Trigger generation for Session Lobby (Tab 6) so player lists update immediately
                 if(targetId === 'view-session-lobby' && outputCallback) outputCallback();
                 
-                if(targetId === 'view-session-output' && outputCallback) outputCallback();
             }
         });
     }
