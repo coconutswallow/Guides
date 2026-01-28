@@ -377,7 +377,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
              levelDisplay = `${player.real_level}, playing at level ${player.level}`;
         }
         
-        let line = `- @${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${levelDisplay}) ${xpStr}, ${player.dtp || "0"} DTP`;
+        let line = `- ${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${levelDisplay}) ${xpStr}, ${player.dtp || "0"} DTP`;
         
         if (player.incentives?.length > 0) {
             line += ` (incentives: ${player.incentives.join(', ')})`;
