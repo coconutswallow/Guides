@@ -1,5 +1,3 @@
-// assets/js/dm-tool/session-io.js
-
 /**
  * @file session-io.js
  * @description Handles Data Input/Output operations for the DM Tool.
@@ -221,7 +219,8 @@ export function populateForm(session, callbacks, options = {}) {
  * Generates the text outputs for Discord:
  * 1. Game Listing (Short format for scheduling channels).
  * 2. Game Advertisement (Long format for LFG channels).
- * * Populates `out-listing-text` and `out-ad-text` textareas.
+ * 3. Session Lobby Output.
+ * * Populates textareas in various tabs.
  */
 export async function generateOutput() {
     const state = getFormData();
@@ -328,15 +327,10 @@ ${state.header.game_description || "No description provided."}
         adEl.value = adText;
     }
 
-    export async function generateOutput() {
-    const state = getFormData();
-    
-    // ... [Sections 1 & 2 skipped] ...
-
     // 3. SESSION LOBBY OUTPUT
     const lobbyEl = document.getElementById('out-session-lobby');
     if (lobbyEl) {
-        // UPDATE: Added fallback to state.header.lobby_url (Tab 2) if listing_url is missing
+        // Fallback to state.header.lobby_url if listing_url is missing
         const listingUrl = document.getElementById('inp-game-listing-url')?.value 
             || state.header.listing_url 
             || state.header.lobby_url 
@@ -371,7 +365,7 @@ ${playerMentionList}`;
  * * @param {string} dmDiscordId - The Discord ID of the DM (for mentioning).
  * @param {string} dmDisplayName - The display name of the DM.
  */
-export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
+export function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const state = getFormData();
     const stats = stateManager.getStats();
     
@@ -533,7 +527,8 @@ export function generateMALUpdate(dmDisplayName) {
  * * @param {Object} originalData - The source session data.
  * @returns {Object} A sanitized data object for template creation.
  */
-// Deep copy to ensure we don't modify the active form/state
+export function prepareTemplateData(originalData) {
+    // Deep copy to ensure we don't modify the active form/state
     const data = JSON.parse(JSON.stringify(originalData));
     
     // Explicitly clear date fields for the template copy
