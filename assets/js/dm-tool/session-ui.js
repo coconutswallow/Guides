@@ -188,6 +188,7 @@ export function initTabs(outputCallback) {
                 if(targetId === 'view-game-listing' && outputCallback) outputCallback();
                 if(targetId === 'view-game-ad' && outputCallback) outputCallback();
                 if(targetId === 'view-session-output' && outputCallback) outputCallback();
+                if(targetId === 'view-session-lobby' && outputCallback) outputCallback();
             }
         });
     }

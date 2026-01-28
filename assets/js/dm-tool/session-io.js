@@ -232,7 +232,7 @@ export async function generateOutput() {
         // Discord timestamp formatting
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
         
-        // FIX: Get tier from multi-select in Game Setup
+        // Get tier from multi-select in Game Setup
         let tierStr = "N/A";
         if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
             // Sort tiers numerically and create range display
@@ -250,7 +250,7 @@ export async function generateOutput() {
             }
         }
         
-        // FIX: Get APL directly from Game Setup fields
+        // Get APL directly from Game Setup fields
         const apl = state.header.apl || "N/A";
         
         let eventsString = '';
@@ -328,10 +328,19 @@ ${state.header.game_description || "No description provided."}
         adEl.value = adText;
     }
 
+    export async function generateOutput() {
+    const state = getFormData();
+    
+    // ... [Sections 1 & 2 skipped] ...
+
     // 3. SESSION LOBBY OUTPUT
     const lobbyEl = document.getElementById('out-session-lobby');
     if (lobbyEl) {
-        const listingUrl = document.getElementById('inp-game-listing-url')?.value || state.header.listing_url || "N/A";
+        // UPDATE: Added fallback to state.header.lobby_url (Tab 2) if listing_url is missing
+        const listingUrl = document.getElementById('inp-game-listing-url')?.value 
+            || state.header.listing_url 
+            || state.header.lobby_url 
+            || "N/A";
         
         // Get player Discord names from roster
         const playerMentions = [];
