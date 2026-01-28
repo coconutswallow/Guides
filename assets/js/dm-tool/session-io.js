@@ -458,7 +458,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     // Generate "Session Summary for your players"
     const playerSummaryEl = document.getElementById('out-player-summary');
     if (playerSummaryEl) {
-        let pSummary = `Game Name: ${gameName}, APL ${stats.apl}\n\n`;
+        let pSummary = `${gameName}, APL ${stats.apl}\n\n`;
         pSummary += playerLines.join('\n');
         playerSummaryEl.value = pSummary;
     }

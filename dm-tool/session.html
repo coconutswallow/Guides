@@ -279,8 +279,8 @@ extra_css:
                     <input type="text" id="inp-dm-collab-link" placeholder="Enter collaboration link">
                 </div>
                 <div class="form-group">
-                    <label>DM Collaborators {% include help-icon.html text="Enter Discord names of collaborating DMs. One per line or comma-separated (e.g., @DMName1, @DMName2)" %}</label>
-                    <textarea id="inp-dm-collaborators" class="table-input" rows="3" placeholder="@DMName1&#10;@DMName2&#10;or: @DMName1, @DMName2, @DMName3"></textarea>
+                    <label>DM Collaborators {% include help-icon.html text="Enter Discord names of collaborating DM(s). If more than 1, please separate each with a comma (e.g. @DMName1, @DMName2)" %}</label>
+                    <textarea id="inp-dm-collaborators" class="table-input" rows="3" placeholder="@DMName1, @DMName2, @DMName3"></textarea>
                 </div>
             </div>
         </div>
@@ -668,34 +668,44 @@ extra_css:
             <h2>Record Keeping</h2>
             <p class="instruction-text">A summary of your generated links and logs for your personal records.</p>
             <div class="card">
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label>Game Listing</label>
-                    <input type="text" id="rec-listing-link" class="table-input readonly-input" readonly>
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label>Game Ad</label>
-                    <input type="text" id="rec-ad-link" class="table-input readonly-input" readonly>
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label>Session Lobby</label>
-                    <input type="text" id="rec-lobby-link" class="table-input readonly-input" readonly>
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label>Player Treasure Log(s)</label>
-                    <textarea id="rec-player-loot-links" class="table-input readonly-input" rows="3" readonly></textarea>
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label>DM Treasure Log(s)</label>
-                    <textarea id="rec-dm-loot-links" class="table-input readonly-input" rows="2" readonly></textarea>
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label>DM Collaboration Log</label>
-                    <input type="text" id="rec-dm-collab-link" class="table-input readonly-input" readonly>
-                </div>
-                 <div class="form-group" style="margin-bottom: 1rem;">
-                    <label>Session Log</label>
-                    <textarea id="rec-session-log-links" class="table-input readonly-input" rows="2" readonly></textarea>
-                </div>
+                <table class="roster-table" style="width:100%; border-collapse: separate; border-spacing: 0 10px;">
+                    <thead>
+                        <tr style="text-align:left;">
+                            <th style="width: 25%; padding: 8px;">Record Type</th>
+                            <th style="width: 75%; padding: 8px;">Link / Content</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Game Listing</td>
+                            <td><input type="text" id="rec-listing-link" class="table-input readonly-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Game Ad</td>
+                            <td><input type="text" id="rec-ad-link" class="table-input readonly-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Session Lobby</td>
+                            <td><input type="text" id="rec-lobby-link" class="table-input readonly-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Player Treasure Log(s)</td>
+                            <td><textarea id="rec-player-loot-links" class="table-input readonly-input" rows="3" readonly></textarea></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">DM Treasure Log(s)</td>
+                            <td><textarea id="rec-dm-loot-links" class="table-input readonly-input" rows="2" readonly></textarea></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">DM Collaboration Log</td>
+                            <td><input type="text" id="rec-dm-collab-link" class="table-input readonly-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Session Log</td>
+                            <td><textarea id="rec-session-log-links" class="table-input readonly-input" rows="2" readonly></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
