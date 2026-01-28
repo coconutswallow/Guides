@@ -1038,3 +1038,108 @@ dialog::backdrop {
         line-height: 1;
     }
 }
+/* ============================
+   12. WORKFLOW DIAGRAM (CSS RENDER)
+   ============================ */
+.workflow-diagram {
+    display: grid;
+    grid-template-columns: 140px 240px 1fr;
+    gap: 15px 30px;
+    align-items: center; /* Vertically center phases */
+    margin: 2rem 0;
+    font-family: var(--font-body);
+}
+
+.wf-phase {
+    font-weight: bold;
+    text-align: right;
+    font-size: 1.1em;
+    color: var(--color-text);
+    padding-right: 10px;
+}
+
+.wf-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wf-step {
+    background-color: #f4eadd; /* Beige from image */
+    border: 1px solid #d4c4b0;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 0.95em;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .wf-step {
+    background-color: var(--color-bg-medium);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+.wf-desc {
+    position: relative;
+    padding-left: 25px;
+    color: var(--color-text-secondary);
+    font-size: 0.95em;
+    line-height: 1.5;
+    /* Create the bracket look with a border */
+    border-left: 3px solid var(--color-primary); 
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+}
+
+/* Optional: Add little horizontal ticks to the bracket */
+.wf-desc::before, .wf-desc::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 8px;
+    height: 3px;
+    background-color: var(--color-primary);
+}
+.wf-desc::before { top: 0; }
+.wf-desc::after { bottom: 0; }
+
+/* --- RESPONSIVE WORKFLOW --- */
+@media (max-width: 768px) {
+    .workflow-diagram {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .wf-phase {
+        text-align: left;
+        border-bottom: 2px solid var(--color-border);
+        padding-bottom: 5px;
+        margin-top: 15px;
+        color: var(--color-primary);
+    }
+    
+    /* Hide empty phases on mobile */
+    .wf-phase:empty { display: none; }
+
+    .wf-steps {
+        width: 100%;
+    }
+
+    .wf-desc {
+        padding-left: 15px;
+        border-left-width: 4px;
+        margin-bottom: 10px;
+        /* Remove brackets on mobile, just keep left border bar */
+    }
+    .wf-desc::before, .wf-desc::after {
+        display: none;
+    }
+}
