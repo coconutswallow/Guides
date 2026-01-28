@@ -377,7 +377,13 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
              levelDisplay = `${player.real_level}, playing at level ${player.level}`;
         }
         
-        let line = `- ${player.display_name || "Unknown"} as ${player.character_name || "Unknown"} (${levelDisplay}) ${xpStr}, ${player.dtp || "0"} DTP`;
+        // INTELLIGENT NAME DISPLAY
+        let playerReference = player.display_name || "Unknown";
+        if (player.discord_id && /^\d+$/.test(player.discord_id)) {
+            playerReference = `<@${player.discord_id}>`;
+        }
+
+        let line = `- ${playerReference} as ${player.character_name || "Unknown"} (${levelDisplay}) ${xpStr}, ${player.dtp || "0"} DTP`;
         
         if (player.incentives?.length > 0) {
             line += ` (incentives: ${player.incentives.join(', ')})`;

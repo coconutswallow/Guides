@@ -164,6 +164,7 @@ title: Player Session Entry
 
                 <form id="player-form">
                     <input type="hidden" id="p-discord-id">
+                    <input type="hidden" id="p-display-name">
                     
                     <div style="text-align: center; margin-bottom: 1rem; font-size: 0.9em; color: var(--color-primary);">
                         Playing as: <strong id="current-player-display">Loading...</strong>
@@ -316,6 +317,7 @@ title: Player Session Entry
         const formSection = document.getElementById('form-section');
         const currentPlayer = document.getElementById('current-player-display');
         const discordIdInput = document.getElementById('p-discord-id');
+        const displayNameInput = document.getElementById('p-display-name');
 
         if (user) {
             // === AUTHENTICATED STATE ===
@@ -342,6 +344,7 @@ title: Player Session Entry
 
                 currentPlayer.textContent = `${userData.display_name} (Verified)`;
                 discordIdInput.value = userData.discord_id;
+                displayNameInput.value = userData.display_name;
 
                 // Load existing data AFTER fetching incentives to ensure checkboxes exist
                 setTimeout(() => {
@@ -472,7 +475,7 @@ title: Player Session Entry
         if(p.games) document.getElementById('p-games').value = p.games;
         if(p.loot) document.getElementById('p-loot').value = p.loot;
         if(p.gold) document.getElementById('p-gold').value = p.gold;
-        if(p.gold_used) document.getElementById('p-gold-used').value = p.gold_used; // NEW
+        if(p.gold_used) document.getElementById('p-gold-used').value = p.gold_used;
         if(p.items) document.getElementById('p-items').value = p.items;
         if(p.notes) document.getElementById('p-notes').value = p.notes;
         
@@ -489,6 +492,7 @@ title: Player Session Entry
 
     document.getElementById('btn-submit').addEventListener('click', async () => {
         const discordId = document.getElementById('p-discord-id').value;
+        const displayName = document.getElementById('p-display-name').value;
         
         if (!discordId) {
             alert("Error: Missing verified identity. Please refresh.");
@@ -522,13 +526,14 @@ title: Player Session Entry
         });
 
         const payload = {
+            display_name: displayName,
             char_name: document.getElementById('p-char-name').value,
             level: level,
             level_as: levelAs, // Can be null now
             games: document.getElementById('p-games').value,
             loot: document.getElementById('p-loot').value,
             gold: document.getElementById('p-gold').value,
-            gold_used: document.getElementById('p-gold-used').value, // NEW
+            gold_used: document.getElementById('p-gold-used').value, 
             items: document.getElementById('p-items').value,
             incentives: selectedIncentives,
             notes: document.getElementById('p-notes').value

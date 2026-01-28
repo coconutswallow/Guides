@@ -14,14 +14,6 @@ import { fetchMemberMap } from './data-manager.js';
 
 /**
  * Recalculates Party Size, APL (Average Party Level), and Tier based on the Master Roster.
- * Updates the corresponding DOM elements in the Setup/Header section.
- * * Logic:
- * - Uses "Level Playing As" if set; otherwise uses "Character Level".
- * - Tier thresholds: 
- * - Tier 1: APL < 5
- * - Tier 2: 5 <= APL < 11
- * - Tier 3: 11 <= APL < 17
- * - Tier 4: APL >= 17
  */
 export function updateMasterRosterStats() {
     const rows = document.querySelectorAll('#roster-body .player-row');
@@ -37,7 +29,6 @@ export function updateMasterRosterStats() {
         const lvlRaw = parseFloat(elLvl.value) || 0;
         const lvlPlayAsRaw = parseFloat(elPlayAs.value) || 0;
         
-        // Use "Play As" level override if present, otherwise use actual level
         const effectiveLevel = lvlPlayAsRaw > 0 ? lvlPlayAsRaw : lvlRaw;
 
         if (effectiveLevel > 0) {
@@ -46,10 +37,8 @@ export function updateMasterRosterStats() {
         }
     });
 
-    // standard rounding for APL
     const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
     
-    // Determine Tier based on APL
     let tier = 1;
     if (apl >= 17) tier = 4;
     else if (apl >= 11) tier = 3;
@@ -66,15 +55,6 @@ export function updateMasterRosterStats() {
 
 /**
  * Adds a new player row to the Master Roster table (Planning Tab).
- * Creates input fields for Discord Name, Character Name, Level, Play As, and Games Count.
- * Attaches event listeners for live updates of stats.
- * * @param {Object} data - Initial data to populate the row.
- * @param {string} [data.discord_id] - Discord ID.
- * @param {string} [data.display_name] - Discord Display Name.
- * @param {string} [data.character_name] - Character Name.
- * @param {string|number} [data.level] - Character Level.
- * @param {string|number} [data.level_playing_as] - Level override.
- * @param {string} [data.games_count] - Number of games played (1-10 or 10+).
  */
 export function addPlayerRowToMaster(data = {}) {
     const tbody = document.getElementById('roster-body');
@@ -83,7 +63,6 @@ export function addPlayerRowToMaster(data = {}) {
     const tr = document.createElement('tr');
     tr.className = 'player-row';
     
-    // Build options for Games Count dropdown
     let gamesOptions = '';
     for(let i=1; i<=10; i++) {
         const val = i.toString();
@@ -97,7 +76,7 @@ export function addPlayerRowToMaster(data = {}) {
     
     tr.innerHTML = `
         <td>
-            <input type="text" class="table-input inp-player-display" placeholder="Player Discord Name" value="${displayValue}">
+            <input type="text" class="table-input inp-player-display" placeholder="Player Name (@Name)" value="${displayValue}">
             <input type="hidden" class="inp-discord-id" value="${idValue}">
         </td>
         <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
@@ -107,7 +86,6 @@ export function addPlayerRowToMaster(data = {}) {
         <td style="text-align:center;"><button class="button button-danger btn-sm btn-delete-row">&times;</button></td>
     `;
 
-    // Trigger global update callback on games count change (affects incentives)
     const gamesSelect = tr.querySelector('.inp-games-count');
     if (gamesSelect) {
         gamesSelect.addEventListener('change', () => {
@@ -120,32 +98,31 @@ export function addPlayerRowToMaster(data = {}) {
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');
     
-    // Validate that Discord names start with @ and sync ID with Name if ID is missing
+    const syncId = () => {
+        let value = nameInput.value.trim();
+        // Only if we don't have a valid numeric ID (i.e. we are in manual mode)
+        // do we treat the text input as the ID.
+        if (!idInput.value || !/^\d+$/.test(idInput.value)) {
+             idInput.value = value;
+        }
+    };
+
     nameInput.addEventListener('change', () => {
         let value = nameInput.value.trim();
-        
-        // If user entered a Discord name manually (not from sync), ensure it starts with @
-        if (value && !value.startsWith('@')) {
-            value = '@' + value;
-            nameInput.value = value;
+        if (value && !value.startsWith('@') && !/^\d+$/.test(value)) { 
+            nameInput.value = '@' + value;
         }
-        
-        if(!idInput.value || idInput.value === nameInput.value) {
-            idInput.value = value;
-        }
+        syncId();
     });
     
-    // Also validate on blur
     nameInput.addEventListener('blur', () => {
         let value = nameInput.value.trim();
-        if (value && !value.startsWith('@')) {
-            value = '@' + value;
-            nameInput.value = value;
-            if(!idInput.value || idInput.value === nameInput.value.replace('@', '')) {
-                idInput.value = value;
-            }
+        if (value && !value.startsWith('@') && !/^\d+$/.test(value)) {
+            nameInput.value = '@' + value;
         }
+        syncId();
     });
+
     tr.querySelector('.btn-delete-row').addEventListener('click', () => {
         tr.remove();
         updateMasterRosterStats(); 
@@ -154,7 +131,6 @@ export function addPlayerRowToMaster(data = {}) {
     const lvlInput = tr.querySelector('.inp-level');
     const playAsInput = tr.querySelector('.inp-level-play-as');
     
-    // Recalculate APL/Tier whenever levels change
     [lvlInput, playAsInput].forEach(inp => {
         inp.addEventListener('input', updateMasterRosterStats);
         inp.addEventListener('change', updateMasterRosterStats);
@@ -162,14 +138,11 @@ export function addPlayerRowToMaster(data = {}) {
     });
 
     tbody.appendChild(tr);
-    // Brief delay to ensure DOM insertion before calculation
     setTimeout(() => updateMasterRosterStats(), 50);
 }
 
 /**
  * Scrapes the Master Roster table to retrieve current player data.
- * Used to save state or sync to the session log.
- * * @returns {Array<Object>} Array of player objects (Planning phase data).
  */
 export function getMasterRosterData() {
     const rows = document.querySelectorAll('#roster-body .player-row');
@@ -178,8 +151,11 @@ export function getMasterRosterData() {
         const displayName = row.querySelector('.inp-player-display').value;
         const discordId = row.querySelector('.inp-discord-id').value;
         
+        // If discord_id is empty, fallback to display name (manual entry case)
+        const finalId = discordId || displayName;
+
         players.push({
-            discord_id: discordId || displayName,
+            discord_id: finalId,
             display_name: displayName,
             character_name: row.querySelector('.inp-char-name').value,
             level: row.querySelector('.inp-level').value,
@@ -194,7 +170,6 @@ export function getMasterRosterData() {
  * Updates the Master Roster based on external submissions (e.g., from Sign-up bot).
  * - Matches existing players by Discord ID to update their data.
  * - Creates new rows for players not yet in the roster.
- * * @param {Array<Object>} submissions - Array of submission objects.
  */
 export async function syncMasterRosterFromSubmissions(submissions) {
     const tbody = document.getElementById('roster-body');
@@ -202,22 +177,35 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 
     if (!submissions || submissions.length === 0) return;
 
-    // Fetch nicknames for IDs
+    // Fetch nicknames for IDs from the discord_users table (Best Effort)
     const discordIds = submissions.map(s => s.discord_id).filter(Boolean);
-    const displayMap = await fetchMemberMap(discordIds);
+    let displayMap = {};
+    try {
+        displayMap = await fetchMemberMap(discordIds);
+    } catch(e) {
+        console.warn("Could not fetch member map (likely RLS)", e);
+    }
 
     submissions.forEach(sub => {
         const p = sub.payload || {};
         const pid = sub.discord_id;
         if(!pid) return;
 
-        const displayName = displayMap[pid] || pid;
+        // Resolve display name: Payload Name -> Map lookup -> Discord ID
+        let displayName = p.display_name || displayMap[pid] || p.char_name || pid;
+        
+        // If it looks like a name (not a number) and lacks @, add it
+        if (isNaN(displayName) && !displayName.startsWith('@')) {
+            displayName = '@' + displayName;
+        }
 
         let foundRow = null;
         const rows = tbody.querySelectorAll('.player-row');
         rows.forEach(r => {
             const rid = r.querySelector('.inp-discord-id').value;
-            if(rid === pid) foundRow = r;
+            if(rid === pid) {
+                foundRow = r;
+            }
         });
 
         if (foundRow) {
@@ -248,16 +236,10 @@ export async function syncMasterRosterFromSubmissions(submissions) {
 
 /**
  * Adds a detailed Player Card to the Session Log/Results list.
- * This card includes fields for Hours, XP, Gold, DTP, Loot, and Logs.
- * * @param {HTMLElement} listContainer - The DOM container for the cards.
- * @param {Object} data - Player data to populate.
- * @param {Object} callbacks - Callback functions (e.g., onUpdate, onOpenModal).
- * @param {boolean} [suppressUpdate=false] - If true, skips the immediate `onUpdate` trigger.
  */
 export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, suppressUpdate = false) {
     if (!listContainer) return;
 
-    // Default to session total hours if player hours are undefined
     const sessionTotalEl = document.getElementById('inp-session-total-hours');
     const sessionTotal = parseFloat(sessionTotalEl?.value) || 3;
 
@@ -272,23 +254,17 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `+` : '+';
     
-    // FIX: Properly read forfeit_xp from data (string or boolean)
     const isForfeit = data.forfeit_xp === true || data.forfeit_xp === "true";
-
-    // Data.level is the "Effective" level. data.real_level is the actual level.
-    // If real_level is missing, default to level.
     const realLevel = data.real_level || data.level || '1';
 
     const card = document.createElement('div');
     card.className = 'player-card';
 
-    // Construct Player Card HTML
-    // UPDATE: Removed text '▼' from step-icon span to prevent duplicate arrow
     card.innerHTML = `
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
                 <span class="step-icon" style="transform:rotate(-90deg); transition:transform 0.2s;"></span>
-                <span class="player-card-title">${data.display_name || 'Player'}</span>
+                <span class="player-card-title">${data.display_name || data.discord_id || 'Player'}</span>
                 <span class="player-summary-text" style="font-size:0.8em; color:rgba(255,255,255,0.8); font-weight:normal; margin-left:1rem;">
                     ${data.character_name ? `(${data.character_name})` : ''}
                 </span>
@@ -301,7 +277,8 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
                 <input type="hidden" class="s-char-name" value="${data.character_name || ''}">
                 <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
                 <input type="hidden" class="s-level" value="${data.level || '0'}">
-                <input type="hidden" class="s-real-level" value="${realLevel}"> <input type="hidden" class="s-games" value="${data.games_count || '1'}">
+                <input type="hidden" class="s-real-level" value="${realLevel}"> 
+                <input type="hidden" class="s-games" value="${data.games_count || '1'}">
                 <input type="hidden" class="s-display-name" value="${data.display_name || ''}">
 
                 <div class="card-field w-20">
@@ -368,10 +345,8 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const body = card.querySelector('.player-card-body');
     const icon = card.querySelector('.step-icon');
 
-    // Accordion toggle logic
     header.addEventListener('click', (e) => {
         if(e.target.closest('.btn-delete-card')) return;
-        
         const isHidden = body.style.display === 'none';
         if(isHidden) {
             body.style.display = 'flex';
@@ -389,7 +364,6 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
 
     const hInput = card.querySelector('.s-hours');
     
-    // Validate Hours input
     hInput.addEventListener('input', () => {
         const sessionMax = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
         let val = parseFloat(hInput.value);
@@ -403,7 +377,6 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
     
-    // Reset empty hours to Default
     hInput.addEventListener('blur', () => {
         if (!hInput.value || hInput.value.trim() === "") {
             hInput.value = document.getElementById('inp-session-total-hours')?.value || 3;
@@ -415,7 +388,6 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         if(callbacks.onUpdate) callbacks.onUpdate();
     });
 
-    // FIX: Ensure forfeit XP checkbox triggers update
     const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
     forfeitCheckbox.addEventListener('change', () => {
         if(callbacks.onUpdate) callbacks.onUpdate();
@@ -432,8 +404,6 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
 
 /**
  * Scrapes all Session Player Cards to retrieve the final result data.
- * Used for generating the text log and updating the DB.
- * * @returns {Array<Object>} Array of result objects (Hours, XP, Gold, Loot, etc).
  */
 export function getSessionRosterData() {
     const cards = document.querySelectorAll('#session-roster-list .player-card');
@@ -441,7 +411,6 @@ export function getSessionRosterData() {
     cards.forEach(card => {
         const btn = card.querySelector('.s-incentives-btn');
         const incentives = JSON.parse(btn.dataset.incentives || '[]');
-        // FIX: Properly read forfeit_xp checkbox state
         const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
         const forfeitXp = forfeitCheckbox ? forfeitCheckbox.checked : false;
 
@@ -450,7 +419,7 @@ export function getSessionRosterData() {
             character_name: card.querySelector('.s-char-name').value, 
             display_name: card.querySelector('.s-display-name')?.value || card.querySelector('.player-card-title').textContent,
             level: card.querySelector('.s-level').value,
-            real_level: card.querySelector('.s-real-level')?.value, // Save real level too
+            real_level: card.querySelector('.s-real-level')?.value, 
             games_count: card.querySelector('.s-games').value,
             
             hours: card.querySelector('.s-hours').value,
@@ -471,13 +440,7 @@ export function getSessionRosterData() {
 
 /**
  * Synchronizes the Session Roster (Results) with the Master Roster (Planning).
- * - Updates existing cards if player details (Name, Level) changed.
- * - Adds new cards for players added to the Master Roster.
- * - Removes cards for players removed from the Master Roster.
- * * @param {Object} callbacks - Callbacks for updates.
- * @param {boolean} [suppressUpdate=false] - Whether to suppress the update trigger.
  */
-// FIX: Improved sync logic to properly handle all cases
 export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) {
     const listContainer = document.getElementById('session-roster-list');
     const masterData = getMasterRosterData(); 
@@ -489,27 +452,23 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
         const pid = masterPlayer.discord_id;
         processedIds.add(pid);
 
+        // Find existing card by matching ID
         const existingCard = sessionCards.find(c => c.querySelector('.s-discord-id').value === pid);
 
         if (existingCard) {
-            // Update existing card
+            // Update existing card details
             existingCard.querySelector('.player-card-title').textContent = masterPlayer.display_name;
             existingCard.querySelector('.s-char-name').value = masterPlayer.character_name;
             existingCard.querySelector('.s-level').value = masterPlayer.level_playing_as || masterPlayer.level;
             
-            // Update Real Level (hidden field)
             const realLevelField = existingCard.querySelector('.s-real-level');
             if(realLevelField) realLevelField.value = masterPlayer.level;
 
             existingCard.querySelector('.s-games').value = masterPlayer.games_count;
             
-            // FIX: Update display_name hidden field
             const displayNameField = existingCard.querySelector('.s-display-name');
-            if (displayNameField) {
-                displayNameField.value = masterPlayer.display_name;
-            }
+            if (displayNameField) displayNameField.value = masterPlayer.display_name;
             
-            // Update the visual text in the header
             const summaryText = masterPlayer.character_name ? `(${masterPlayer.character_name})` : '';
             existingCard.querySelector('.player-summary-text').textContent = summaryText;
         } else {
@@ -518,10 +477,10 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
                 discord_id: masterPlayer.discord_id,
                 display_name: masterPlayer.display_name,
                 character_name: masterPlayer.character_name,
-                level: masterPlayer.level_playing_as || masterPlayer.level, // Effective Level
+                level: masterPlayer.level_playing_as || masterPlayer.level, 
                 real_level: masterPlayer.level, // Real Level
                 games_count: masterPlayer.games_count,
-                forfeit_xp: false // Default to false for new players
+                forfeit_xp: false 
             };
             addSessionPlayerRow(listContainer, newData, callbacks, suppressUpdate);
         }
@@ -540,9 +499,6 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
 
 /**
  * Applies submitted data (from a session report submission) to existing Session Cards.
- * Updates fields like Loot, Items Used, Gold Used, and Notes.
- * * @param {Array<Object>} submissions - Array of submission objects.
- * @param {Object} callbacks - Callbacks for updates.
  */
 export function applyPlayerSubmissions(submissions, callbacks) {
     const listContainer = document.getElementById('session-roster-list');
