@@ -155,56 +155,176 @@ function validateCard(card) {
     if(allValid) card.classList.add('completed');
     else card.classList.remove('completed');
 }
+/* ===========================
+   TAB DEFINITIONS
+   =========================== */
+// Define the logical order of tabs for the "Next/Prev" buttons
+const TAB_ORDER = [
+    'view-start',
+    'view-game-setup',
+    'view-game-listing',
+    'view-game-ad',
+    'view-player-setup',
+    'view-loot-plan',
+    'view-session-lobby',
+    'view-session-details',
+    'view-session-output',
+    'view-mal-update',
+    'view-records'
+];
 
+/* ===========================
+   3. TABS & VISIBILITY
+   =========================== */
 /* ===========================
    3. TABS & VISIBILITY
    =========================== */
 
 /**
- * Initializes Sidebar Navigation Tabs.
- * Handles view switching between Setup, Rosters, Logs, and Output.
- * * @param {Function} [outputCallback] - Optional callback to run when switching to an Output tab (triggers text generation).
+ * Initializes Sidebar Navigation & Mobile Wizard Buttons.
  */
 export function initTabs(outputCallback) {
+    // 1. Sidebar Click Handler
     const sidebarNav = document.getElementById('sidebar-nav');
     if (sidebarNav) {
         sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (!item) return;
-
-            // Update Active State
-            document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-
-            // Hide all sections
-            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
-
-            // Show target section
-            const targetId = item.dataset.target;
-            const targetEl = document.getElementById(targetId);
-            if(targetEl) {
-                targetEl.classList.remove('hidden-section');
-                
-                // Trigger content generation if switching to an Output tab
-                if(targetId === 'view-game-listing' && outputCallback) outputCallback();
-                if(targetId === 'view-game-ad' && outputCallback) outputCallback();
-
-                if(targetId === 'view-session-lobby') {
-                    const lobbyUrlVal = document.getElementById('inp-lobby-url')?.value;
-                    const sessionLobbyInput = document.getElementById('inp-game-listing-url'); // Note: ID name in Tab 6 is confusingly 'inp-game-listing-url'
-                    
-                    if(lobbyUrlVal && sessionLobbyInput && !sessionLobbyInput.value) {
-                        sessionLobbyInput.value = lobbyUrlVal;
-                    }
-
-                    if(outputCallback) outputCallback();
-                }
-                
-                // UPDATE: Trigger generation for Session Lobby (Tab 6) so player lists update immediately
-                if(targetId === 'view-session-lobby' && outputCallback) outputCallback();
-                
-            }
+            switchTab(item.dataset.target, outputCallback);
         });
+    }
+
+    // 2. Mobile "Next/Prev" Button Handlers
+    const btnPrev = document.getElementById('btn-mobile-prev');
+    const btnNext = document.getElementById('btn-mobile-next');
+
+    if (btnPrev && btnNext) {
+        btnPrev.addEventListener('click', () => navigateMobileStep(-1, outputCallback));
+        btnNext.addEventListener('click', () => navigateMobileStep(1, outputCallback));
+    }
+    
+    // Initialize buttons for the starting view
+    updateMobileButtons('view-start');
+}
+
+/**
+ * Core function to switch tabs (used by both Sidebar and Mobile Buttons).
+ */
+function switchTab(targetId, outputCallback) {
+    // Update Sidebar Active State
+    document.querySelectorAll('#sidebar-nav .nav-item').forEach(n => {
+        n.classList.toggle('active', n.dataset.target === targetId);
+    });
+
+    // Hide all sections
+    document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden-section'));
+
+    // Show target section
+    const targetEl = document.getElementById(targetId);
+    if(targetEl) {
+        targetEl.classList.remove('hidden-section');
+        
+        // Mobile-specific updates
+        updateMobileButtons(targetId);
+        
+        // Auto-close sidebar on mobile if open
+        const sidebar = document.getElementById('sidebar-nav');
+        const overlay = document.getElementById('mobile-overlay');
+        if (sidebar && sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+        }
+
+        // Trigger Output Generation Callback
+        handleOutputGeneration(targetId, outputCallback);
+        
+        // Scroll to top
+        const main = document.querySelector('.editor-main');
+        if(main) main.scrollTop = 0;
+        window.scrollTo(0, 0); // For mobile body scroll
+    }
+}
+
+/**
+ * Handles the logic for moving Next (+1) or Prev (-1) in the sequence.
+ */
+function navigateMobileStep(direction, outputCallback) {
+    // Find current active tab
+    const activeItem = document.querySelector('#sidebar-nav .nav-item.active');
+    if (!activeItem) return;
+
+    const currentId = activeItem.dataset.target;
+    const currentIndex = TAB_ORDER.indexOf(currentId);
+
+    if (currentIndex === -1) return;
+
+    const newIndex = currentIndex + direction;
+
+    // Boundary checks
+    if (newIndex >= 0 && newIndex < TAB_ORDER.length) {
+        switchTab(TAB_ORDER[newIndex], outputCallback);
+    }
+}
+
+/**
+ * Updates the text and disabled state of the Mobile Buttons based on current step.
+ */
+function updateMobileButtons(currentId) {
+    const btnPrev = document.getElementById('btn-mobile-prev');
+    const btnNext = document.getElementById('btn-mobile-next');
+    const indicator = document.getElementById('mobile-step-text');
+    
+    if (!btnPrev || !btnNext) return;
+
+    const index = TAB_ORDER.indexOf(currentId);
+    
+    // Update Indicator Text (e.g., "1. Game Setup")
+    const activeNavItem = document.querySelector(`#sidebar-nav .nav-item[data-target="${currentId}"]`);
+    if (activeNavItem && indicator) {
+        // Strip the number prefix for cleaner mobile display if needed, 
+        // or just show the whole text. Let's show "Step X: [Name]"
+        indicator.innerText = activeNavItem.innerText; 
+    }
+
+    // Prev Button State
+    if (index <= 0) {
+        btnPrev.disabled = true;
+        btnPrev.style.opacity = '0.3';
+    } else {
+        btnPrev.disabled = false;
+        btnPrev.style.opacity = '1';
+    }
+
+    // Next Button State
+    if (index >= TAB_ORDER.length - 1) {
+        btnNext.disabled = true;
+        btnNext.innerText = "Finish";
+    } else {
+        btnNext.disabled = false;
+        btnNext.innerText = "Next →";
+    }
+}
+
+/**
+ * Helper to trigger callbacks when specific tabs are opened.
+ */
+function handleOutputGeneration(targetId, outputCallback) {
+    if (!outputCallback) return;
+
+    if (targetId === 'view-game-listing' || 
+        targetId === 'view-game-ad' || 
+        targetId === 'view-session-output') {
+        outputCallback();
+    }
+
+    if (targetId === 'view-session-lobby') {
+        // Auto-fill logic specific to this tab
+        const lobbyUrlVal = document.getElementById('inp-lobby-url')?.value;
+        const sessionLobbyInput = document.getElementById('inp-game-listing-url'); 
+        if(lobbyUrlVal && sessionLobbyInput && !sessionLobbyInput.value) {
+            sessionLobbyInput.value = lobbyUrlVal;
+        }
+        outputCallback();
     }
 }
 

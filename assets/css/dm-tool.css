@@ -928,3 +928,71 @@ dialog::backdrop {
 .card-field.warning label {
     color: #e0a800; /* Darker yellow for text readability */
 }
+
+/* ============================
+   11. MOBILE WIZARD NAVIGATION
+   ============================ */
+.mobile-nav-footer {
+    display: none; /* Hidden on desktop */
+}
+
+/* Mobile Overrides */
+@media (max-width: 768px) {
+    /* 1. Show the footer fixed at bottom */
+    .mobile-nav-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--color-bg-medium); /* Dark background */
+        border-top: 1px solid var(--color-primary);
+        padding: 10px 15px;
+        z-index: 9999; /* On top of everything */
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* 2. Style the buttons */
+    .nav-btn {
+        background-color: var(--color-bg-light);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        min-width: 90px;
+        transition: background 0.2s;
+    }
+
+    .nav-btn:active {
+        background-color: var(--color-primary);
+        color: white;
+    }
+
+    .nav-btn:disabled {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    /* 3. Center Text */
+    .mobile-step-indicator {
+        font-size: 0.85rem;
+        color: var(--color-text-secondary);
+        font-weight: bold;
+        text-transform: uppercase;
+        max-width: 120px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 4. Add padding to main content so footer doesn't cover inputs */
+    .editor-main {
+        padding-bottom: 80px !important; 
+    }
+}
