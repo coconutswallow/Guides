@@ -2,25 +2,20 @@ import { ATTRIBUTES, POINT_COSTS } from './rework-constants.js';
 import { getState } from './state-manager.js';
 import { calculatePointBuyCost } from './rework-calculations.js';
 
-// ==========================================
-// 1. DATA SCRAPING (DOM -> Object)
-// ==========================================
-
 export function scrapeColumn(colId) {
     const getV = (id) => document.getElementById(id)?.value || "";
     
-    // 1. Attributes
+    // Attributes
     const attrs = {}; 
     ATTRIBUTES.forEach(a => attrs[a] = getV(`attr-${colId}-${a}`));
 
-    // 2. Modifiers
+    // Modifiers
     const rMods = {};
     document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => rMods[s.dataset.attr] = s.value);
-    
     const oMods = {};
     document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => oMods[s.dataset.attr] = s.value);
 
-    // 3. Classes
+    // Classes
     const classes = [];
     document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
         classes.push({
@@ -31,41 +26,38 @@ export function scrapeColumn(colId) {
         });
     });
 
-    // 4. Feats / ASIs
+    // Feats
     const feats = [];
     document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
         const mods = {};
         c.querySelectorAll('select[data-attr]').forEach(s => mods[s.dataset.attr] = s.value);
         
         const features = [];
-        const featureTypes = c.querySelectorAll('.feat-feature-type');
-        const featureNames = c.querySelectorAll('.feat-feature-name');
-        
-        featureTypes.forEach((typeSelect, i) => {
+        c.querySelectorAll('.feat-feature-type').forEach((t, i) => {
             features.push({
-                type: typeSelect.value,
-                name: featureNames[i]?.value || ""
+                type: t.value,
+                name: c.querySelectorAll('.feat-feature-name')[i]?.value || ""
             });
         });
-        
-        // Extract source class and level from card title
-        const titleText = c.querySelector('.card-title')?.innerText || "Unknown";
-        const sourceClass = titleText.split(' - ')[0];
-        const lvlMatch = titleText.match(/Lvl (\d+)/);
-        
+
+        // Safe extraction of source and level
+        const titleText = c.querySelector('.card-title')?.innerText || "";
+        const source = titleText.split(' - ')[0] || "Unknown";
+        const lvl = titleText.match(/Lvl (\d+)/)?.[1] || "";
+
         feats.push({
             name: c.querySelector('.feat-name')?.value || "",
             mods: mods,
             features: features,
-            source: sourceClass,
-            lvl: lvlMatch ? lvlMatch[1] : ""
+            source: source,
+            lvl: lvl
         });
     });
 
-    // 5. Generic Features (Race/Origin)
-    const getFeatures = (containerId) => {
+    // Helper to scrape feature rows (Race/Origin)
+    const scrapeFeatures = (cid) => {
         const arr = [];
-        document.querySelectorAll(`#${containerId} .feature-row`).forEach(row => {
+        document.querySelectorAll(`#${cid} .feature-row`).forEach(row => {
             arr.push({
                 type: row.querySelector('.feature-type')?.value || "none",
                 name: row.querySelector('.feature-name')?.value || ""
@@ -77,54 +69,45 @@ export function scrapeColumn(colId) {
     return { 
         name: getV(`name-${colId}`), 
         race: getV(`race-${colId}`), 
-        race_features: getFeatures(`race-features-container-${colId}`),
+        race_features: scrapeFeatures(`race-features-container-${colId}`),
         bg: getV(`bg-${colId}`), 
-        origin_features: getFeatures(`origin-features-container-${colId}`),
+        origin_features: scrapeFeatures(`origin-features-container-${colId}`),
         origin_feat: getV(`orig-feat-${colId}`), 
-        origin_feat_features: getFeatures(`origin-feat-features-container-${colId}`),
+        origin_feat_features: scrapeFeatures(`origin-feat-features-container-${colId}`),
         attributes: attrs, 
         race_mods: rMods, 
         origin_mods: oMods, 
         classes, 
-        feats 
+        feats
     };
 }
-
-// ==========================================
-// 2. DATA POPULATION (Object -> DOM)
-// ==========================================
 
 export function populateColumn(colId, data) {
     if (!data) return;
     const setV = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ""; };
 
-    // Basic Fields
     setV(`name-${colId}`, data.name);
     setV(`race-${colId}`, data.race);
     setV(`bg-${colId}`, data.bg);
     setV(`orig-feat-${colId}`, data.origin_feat);
 
-    // Attributes
     ATTRIBUTES.forEach(a => setV(`attr-${colId}-${a}`, data.attributes?.[a] || "10"));
     updatePointBuyDisplay(colId);
 
-    // Mods
     document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => s.value = data.race_mods?.[s.dataset.attr] || "0");
     document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => s.value = data.origin_mods?.[s.dataset.attr] || "0");
 
-    // Helper to populate feature rows
-    const fillFeatures = (containerId, featData) => {
-        // First ensure enough rows exist
-        renderFeatureRows(containerId, 4); // Default to 4
-        
-        const rows = document.querySelectorAll(`#${containerId} .feature-row`);
-        if (featData) {
-            featData.forEach((f, i) => {
+    // Helper to robustly restore feature rows
+    const fillFeatures = (cid, feats) => {
+        renderFeatureRows(cid, 4); // Reset to default
+        const rows = document.querySelectorAll(`#${cid} .feature-row`);
+        if (feats) {
+            feats.forEach((f, i) => {
                 if (rows[i]) {
-                    const typeSel = rows[i].querySelector('.feature-type');
-                    const nameInp = rows[i].querySelector('.feature-name');
-                    if (typeSel) typeSel.value = f.type || "none";
-                    if (nameInp) nameInp.value = f.name || "";
+                    const t = rows[i].querySelector('.feature-type');
+                    const n = rows[i].querySelector('.feature-name');
+                    if (t) t.value = f.type || "none";
+                    if (n) n.value = f.name || "";
                 }
             });
         }
@@ -134,25 +117,18 @@ export function populateColumn(colId, data) {
     fillFeatures(`origin-features-container-${colId}`, data.origin_features);
     fillFeatures(`origin-feat-features-container-${colId}`, data.origin_feat_features);
 
-    // Classes
     const container = document.getElementById(`classes-container-${colId}`);
-    container.innerHTML = ""; // Clear existing
+    container.innerHTML = "";
     if (data.classes && data.classes.length > 0) {
         data.classes.forEach(c => addClassRow(colId, c));
     } else {
-        addClassRow(colId); // Default empty row
+        addClassRow(colId);
     }
-
-    // Feats (Regenerate based on classes, then fill data)
-    generateFeatCards(colId, data.feats);
 }
-
-// ==========================================
-// 3. UI RENDERERS & LOGIC
-// ==========================================
 
 export function renderBaseAttributes(colId) {
     const container = document.getElementById(`attrs-container-${colId}`);
+    if(!container) return;
     
     const generateOptions = (selectedValue) => {
         let optionsHtml = '';
@@ -168,20 +144,9 @@ export function renderBaseAttributes(colId) {
     <table class="stat-table">
         <thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead>
         <tbody>
-            <tr>
-                ${ATTRIBUTES.map(a => `
-                    <td>
-                        <select id="attr-${colId}-${a}" class="text-input" 
-                            style="width: 100%; padding: 4px; text-align: center;" 
-                            onchange="window.calculatePointBuy('${colId}')">
-                            ${generateOptions(10)}
-                        </select>
-                    </td>
-                `).join('')}
-            </tr>
+            <tr>${ATTRIBUTES.map(a => `<td><select id="attr-${colId}-${a}" class="text-input" style="width: 100%;" onchange="window.calculatePointBuy('${colId}')">${generateOptions(10)}</select></td>`).join('')}</tr>
         </tbody>
     </table>`;
-    
     updatePointBuyDisplay(colId);
 }
 
@@ -191,54 +156,52 @@ export function updatePointBuyDisplay(colId) {
         const el = document.getElementById(`attr-${colId}-${a}`);
         if(el) attrs[a] = el.value;
     });
-    
     const spent = calculatePointBuyCost(attrs);
-    const remaining = 27 - spent;
-    
     const display = document.getElementById(`points-${colId}`);
     if(display) {
-        display.innerText = `${remaining} / 27 Pts`;
-        display.style.color = remaining < 0 ? '#e74c3c' : (remaining === 0 ? '#2ecc71' : '#f39c12');
+        display.innerText = `${27 - spent} / 27 Pts`;
+        display.style.color = (27 - spent) < 0 ? '#e74c3c' : (27 - spent === 0 ? '#2ecc71' : '#f39c12');
     }
 }
 
 export function renderFeatureRows(containerId, count = 4) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    
-    let html = '';
-    for (let i = 0; i < count; i++) {
-        html += `
-            <div class="feature-row" style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px;">
-                <select class="text-input feature-type">
-                    <option value="none">None</option>
-                    <option value="language">Language</option>
-                    <option value="skill">Skill</option>
-                    <option value="tool proficiency">Tool Proficiency</option>
-                </select>
-                <input type="text" class="text-input feature-name" placeholder="Feature Name">
-            </div>
-        `;
-    }
-    container.innerHTML = html;
+    container.innerHTML = Array(count).fill(0).map(() => `
+        <div class="feature-row" style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px;">
+            <select class="text-input feature-type">
+                <option value="none">None</option>
+                <option value="language">Language</option>
+                <option value="skill">Skill</option>
+                <option value="tool proficiency">Tool Proficiency</option>
+            </select>
+            <input type="text" class="text-input feature-name" placeholder="Feature Name">
+        </div>`).join('');
 }
 
-// --- Class & Feat Logic ---
+export function removeClassRow(btn) {
+    const block = btn.closest('.class-block');
+    const container = block.parentElement;
+    const colId = container.id.replace('classes-container-', '');
+    // Save feats before deleting so we don't lose data in other rows
+    const savedFeats = saveFeatState(colId);
+    block.remove();
+    generateFeatCards(colId, savedFeats);
+}
 
+// Helper needed by removeClassRow and addClassRow
 function saveFeatState(colId) {
     const feats = [];
     document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
         const mods = {};
         c.querySelectorAll('select[data-attr]').forEach(s => mods[s.dataset.attr] = s.value);
-        
         const features = [];
         c.querySelectorAll('.feat-feature-type').forEach((t, i) => {
             features.push({
-                type: t.value,
+                type: t.value, 
                 name: c.querySelectorAll('.feat-feature-name')[i]?.value || ""
             });
         });
-
         feats.push({
             name: c.querySelector('.feat-name')?.value || "",
             mods: mods,
@@ -246,16 +209,6 @@ function saveFeatState(colId) {
         });
     });
     return feats;
-}
-
-export function removeClassRow(btn) {
-    const block = btn.closest('.class-block');
-    const container = block.parentElement;
-    const colId = container.id.replace('classes-container-', '');
-
-    const savedFeats = saveFeatState(colId);
-    block.remove();
-    generateFeatCards(colId, savedFeats);
 }
 
 export function addClassRow(colId, init = null) {
@@ -278,44 +231,40 @@ export function addClassRow(colId, init = null) {
     const cS = block.querySelector('.class-select');
     const sS = block.querySelector('.subclass-select');
     const lI = block.querySelector('.level-input');
-
+    
     const characterData = getState().characterData || [];
 
-    const updC = (val) => {
+    const updC = () => {
         cS.innerHTML = '<option value="">Class</option>'; 
         cS.disabled = !vS.value;
+        if(!vS.value) return;
         const classes = [...new Set(characterData.filter(i => i.version == vS.value).map(i => i.class))];
-        classes.forEach(c => {
-            const opt = document.createElement('option'); opt.value = c; opt.innerText = c;
-            if (c === val) opt.selected = true;
-            cS.appendChild(opt);
-        });
+        classes.forEach(c => cS.innerHTML += `<option value="${c}">${c}</option>`);
     };
 
-    const updS = (val) => {
+    const updS = () => {
         sS.innerHTML = '<option value="">Subclass</option>'; 
         sS.disabled = !cS.value;
+        if(!cS.value) return;
         const subs = characterData.filter(i => i.version == vS.value && i.class == cS.value);
-        subs.forEach(s => {
-            const opt = document.createElement('option'); opt.value = s.subclass; opt.innerText = s.subclass || 'None';
-            if (s.subclass === val) opt.selected = true;
-            sS.appendChild(opt);
-        });
+        subs.forEach(s => sS.innerHTML += `<option value="${s.subclass}">${s.subclass || 'None'}</option>`);
     };
 
-    const updateAndRegen = () => {
-        const savedState = saveFeatState(colId);
-        generateFeatCards(colId, savedState);
+    const regen = () => {
+        const saved = saveFeatState(colId);
+        generateFeatCards(colId, saved);
     };
 
-    vS.onchange = () => { updC(); updateAndRegen(); };
-    cS.onchange = () => { updS(); updateAndRegen(); };
-    lI.oninput = () => updateAndRegen();
-
+    vS.onchange = () => { updC(); regen(); };
+    cS.onchange = () => { updS(); regen(); };
+    lI.oninput = () => regen();
+    
     if (init) { 
         vS.value = init.version; 
-        updC(init.class); 
-        updS(init.subclass); 
+        updC(); 
+        cS.value = init.class; 
+        updS(); 
+        sS.value = init.subclass; 
         lI.value = init.level; 
     }
 }
@@ -324,15 +273,7 @@ export function generateFeatCards(colId, saved = null) {
     const container = document.getElementById(`feats-container-${colId}`);
     container.innerHTML = ''; 
     let idx = 0;
-    
-    // Safety check: ensure lookups are loaded
-    const characterData = getState().characterData;
-    if (!characterData || characterData.length === 0) {
-        // If data isn't loaded yet, we can't generate cards correctly.
-        // In a real scenario, we might want to trigger a load or retry, 
-        // but for now, we just return to avoid crashing.
-        return; 
-    }
+    const characterData = getState().characterData || [];
 
     document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
         const ver = b.querySelector('.version-select').value;
@@ -380,17 +321,14 @@ export function generateFeatCards(colId, saved = null) {
             
             container.appendChild(card);
 
-            // Restore saved data
             if (saved && saved[idx]) {
                 const s = saved[idx];
                 const nameInp = card.querySelector('.feat-name');
                 if (nameInp) nameInp.value = s.name || "";
-                
                 ATTRIBUTES.forEach(a => {
                     const sel = card.querySelector(`select[data-attr="${a}"]`);
                     if (sel) sel.value = s.mods?.[a] || "0";
                 });
-
                 if (s.features) {
                     const types = card.querySelectorAll('.feat-feature-type');
                     const names = card.querySelectorAll('.feat-feature-name');
@@ -405,10 +343,6 @@ export function generateFeatCards(colId, saved = null) {
     });
 }
 
-// ==========================================
-// 4. COST TABLE UI
-// ==========================================
-
 export function addCostRow(change, count, dtp, gold) {
     const tbody = document.getElementById('cost-table-body');
     const row = document.createElement('tr');
@@ -417,16 +351,12 @@ export function addCostRow(change, count, dtp, gold) {
         <td><input type="number" class="text-input cost-num-changes" value="${count}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
         <td><input type="number" class="text-input cost-dtp" value="${dtp}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
         <td><input type="number" class="text-input cost-gold" value="${gold}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
-        <td><button type="button" class="button" onclick="window.deleteCostRow(this)" style="background-color: #c0392b; color: #fff; padding: 4px 8px;">×</button></td>
-    `;
+        <td><button type="button" class="button" onclick="window.deleteCostRow(this)" style="background-color: #c0392b; color: #fff; padding: 4px 8px;">×</button></td>`;
     tbody.appendChild(row);
 }
 
-// ==========================================
-// 5. OUTPUT GENERATION
-// ==========================================
-
-export function generateOutputString(oldC, newC, costInfo, notes) {
+export function generateOutputString(oldC, newC, cost, notes) {
+    // Replicates the buildB function from rework-old
     const buildB = (c) => {
         const clean = (s) => (s || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
         const classLine = c.classes.map(cl => {
@@ -451,12 +381,7 @@ export function generateOutputString(oldC, newC, costInfo, notes) {
         c.feats.forEach(f => {
             let m = []; 
             ATTRIBUTES.forEach(a => { if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
-
-            const sourceClassData = c.classes.find(cl => cl.class === f.source);
-            const cleanSubName = sourceClassData ? clean(sourceClassData.subclass) : "";
-            const subPart = (cleanSubName && cleanSubName !== 'None') ? ` ${cleanSubName}` : "";
-
-            featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source}${subPart} (${f.lvl}))`);
+            featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source} (${f.lvl}))`);
         });
 
         return `Name: ${c.name}
@@ -473,11 +398,8 @@ Background: ${c.bg}`;
     };
 
     const discordId = document.getElementById('manual-discord-id').value || "Unknown";
-    const reworkId = getState().currentReworkId || "Not Saved Yet";
-
     return `\`\`\`
 __***Character Change Request***__
-
 **Requestor:** @${discordId} as ${oldC.name} (${oldC.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)})
 
 **Old Character**
@@ -487,11 +409,8 @@ ${buildB(oldC)}
 ${buildB(newC)}
 
 **Details**
-Cost: ${costInfo}
+Cost: ${cost}
 Notes: ${notes}
-
-**Rework UUID:** ${reworkId}
-(Load this ID in the Rework Tool to view details)
 \`\`\`
 <@&474659626193780751> <@&554463237924716545>`;
 }

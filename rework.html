@@ -17,38 +17,26 @@ title: Character Rework Tool
     <div id="tab-input" class="tab-content active">
 
         <div class="control-bar" id="controls-area">
-            
             <div class="control-group">
                 <label class="input-label" style="margin-bottom:0;">Discord ID:</label>
                 <input type="text" id="manual-discord-id" class="text-input" style="width: 150px;" placeholder="username">
             </div>
 
             <div class="control-group" id="logged-in-controls" style="flex-grow: 1;">
-                <button class="button action-btn btn-save" onclick="window.saveRework()">
-                    Save
-                </button>
-                
+                <button class="button action-btn btn-save" onclick="window.saveRework()">Save</button>
                 <select id="load-rework-select" class="load-select" onchange="window.loadSelectedRework()">
                     <option value="">-- Load My Saved Rework --</option>
                 </select>
-
-                <button class="button action-btn btn-load" onclick="window.loadExternalId()">
-                    Load UUID
-                </button>
-
-                <button class="button action-btn btn-delete" onclick="window.deleteRework()" style="background-color: #c0392b; color: #fff; margin-left: auto;">
-                    Delete
-                </button>
+                <button class="button action-btn btn-load" onclick="window.loadExternalId()">Load UUID</button>
+                <button class="button action-btn btn-delete" onclick="window.deleteRework()" style="background-color: #c0392b; color: #fff; margin-left: auto;">Delete</button>
             </div>
             
             <input type="hidden" id="current-rework-id" value="">
         </div>
 
         <div class="respec-container">
-            
             <div class="char-column" id="col-original">
                 <h2 class="column-header">Original Character</h2>
-                
                 <div class="card">
                     <h3 class="card-title">Character Info</h3>
                     <div class="origin-grid">
@@ -73,19 +61,7 @@ title: Character Rework Tool
                     <div class="input-group">
                         <label class="input-label">Racial Bonuses</label>
                         <div id="race-mod-container-original">
-                            <table class="stat-table">
-                                <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
-                                <tbody>
-                                    <tr>
-                                        <td><select class="mod-select-race" data-col="original" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="original" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="original" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="original" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="original" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="original" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <table class="stat-table"><thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead><tbody><tr><td><select class="mod-select-race" data-col="original" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="original" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="original" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="original" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="original" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="original" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td></tr></tbody></table>
                         </div>
                     </div>
                     <div class="input-group">
@@ -107,29 +83,11 @@ title: Character Rework Tool
                     <div class="input-group">
                         <label class="input-label">Origin Feat</label>
                         <input type="text" class="text-input" id="orig-feat-original" placeholder="Feat Name">
-                        
-                        <div class="field-header-row" style="margin-top:10px;">
-                            <label class="input-label" style="font-size:0.8em">Origin Feat Modifiers</label>
-                        </div>
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label" style="font-size:0.8em">Origin Feat Modifiers</label></div>
                         <div id="origin-mod-container-original">
-                             <table class="stat-table">
-                                <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
-                                <tbody>
-                                    <tr>
-                                        <td><select class="mod-select-origin" data-col="original" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="original" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="original" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="original" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="original" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="original" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <table class="stat-table"><thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead><tbody><tr><td><select class="mod-select-origin" data-col="original" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="original" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="original" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="original" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="original" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="original" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td></tr></tbody></table>
                         </div>
-
-                        <div class="field-header-row" style="margin-top:10px;">
-                            <label class="input-label" style="font-size:0.8em">Origin Feat Features</label>
-                        </div>
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label" style="font-size:0.8em">Origin Feat Features</label></div>
                         <div id="origin-feat-features-container-original"></div>
                     </div>
                 </div>
@@ -139,28 +97,20 @@ title: Character Rework Tool
                     <div id="classes-container-original"></div>
                     <button type="button" class="button button-secondary" onclick="window.addClassRow('original')">+ Add Class</button>
                 </div>
-                
                 <div id="feats-container-original"></div>
             </div>
 
             <div class="char-column" id="col-new">
                 <h2 class="column-header">New Character</h2>
-                
                 <div class="card">
                     <h3 class="card-title">Character Info</h3>
                     <div class="origin-grid">
                         <div class="input-group">
-                            <div class="field-header-row">
-                                <label class="input-label">Character Name</label>
-                                <button type="button" class="copy-link" onclick="window.copyValue('name-original', 'name-new')">Copy</button>
-                            </div>
+                            <div class="field-header-row"><label class="input-label">Character Name</label><button type="button" class="copy-link" onclick="window.copyValue('name-original', 'name-new')">Copy</button></div>
                             <input type="text" class="text-input" id="name-new" placeholder="Name">
                         </div>
                         <div class="input-group">
-                            <div class="field-header-row">
-                                <label class="input-label">Base Attributes</label>
-                                <button type="button" class="copy-link" onclick="window.copyAttributes()">Copy</button>
-                            </div>
+                            <div class="field-header-row"><label class="input-label">Base Attributes</label><button type="button" class="copy-link" onclick="window.copyAttributes()">Copy</button></div>
                             <div id="attrs-container-new"></div>
                             <div id="points-new" class="points-display">27 / 27 Pts</div>
                         </div>
@@ -170,38 +120,17 @@ title: Character Rework Tool
                 <div class="card">
                     <h3 class="card-title">Race/Species</h3>
                     <div class="input-group">
-                        <div class="field-header-row">
-                            <label class="input-label">Race/Species</label>
-                            <button type="button" class="copy-link" onclick="window.copyValue('race-original', 'race-new')">Copy</button>
-                        </div>
+                        <div class="field-header-row"><label class="input-label">Race/Species</label><button type="button" class="copy-link" onclick="window.copyValue('race-original', 'race-new')">Copy</button></div>
                         <input type="text" class="text-input" id="race-new" placeholder="Race Details">
                     </div>
                     <div class="input-group">
-                        <div class="field-header-row">
-                            <label class="input-label">Racial Bonuses</label>
-                            <button type="button" class="copy-link" onclick="window.copyMods('race')">Copy</button>
-                        </div>
+                        <div class="field-header-row"><label class="input-label">Racial Bonuses</label><button type="button" class="copy-link" onclick="window.copyMods('race')">Copy</button></div>
                         <div id="race-mod-container-new">
-                             <table class="stat-table">
-                                <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
-                                <tbody>
-                                    <tr>
-                                        <td><select class="mod-select-race" data-col="new" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="new" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="new" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="new" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="new" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-race" data-col="new" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <table class="stat-table"><thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead><tbody><tr><td><select class="mod-select-race" data-col="new" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="new" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="new" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="new" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="new" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-race" data-col="new" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td></tr></tbody></table>
                         </div>
                     </div>
                     <div class="input-group">
-                        <div class="field-header-row">
-                            <label class="input-label">Racial Features</label>
-                            <button type="button" class="copy-link" onclick="window.copyFeatures('race')">Copy</button>
-                        </div>
+                        <div class="field-header-row"><label class="input-label">Racial Features</label><button type="button" class="copy-link" onclick="window.copyFeatures('race')">Copy</button></div>
                         <div id="race-features-container-new"></div>
                     </div>
                 </div>
@@ -209,50 +138,21 @@ title: Character Rework Tool
                 <div class="card">
                     <h3 class="card-title">Origin (Background)</h3>
                     <div class="input-group">
-                        <div class="field-header-row">
-                            <label class="input-label">Origin Name</label>
-                            <button type="button" class="copy-link" onclick="window.copyValue('bg-original', 'bg-new')">Copy</button>
-                        </div>
+                        <div class="field-header-row"><label class="input-label">Origin Name</label><button type="button" class="copy-link" onclick="window.copyValue('bg-original', 'bg-new')">Copy</button></div>
                         <input type="text" class="text-input" id="bg-new" placeholder="e.g. Acolyte">
                     </div>
                     <div class="input-group">
-                        <div class="field-header-row">
-                            <label class="input-label">Origin Features</label>
-                            <button type="button" class="copy-link" onclick="window.copyFeatures('origin')">Copy</button>
-                        </div>
+                        <div class="field-header-row"><label class="input-label">Origin Features</label><button type="button" class="copy-link" onclick="window.copyFeatures('origin')">Copy</button></div>
                         <div id="origin-features-container-new"></div>
                     </div>
                     <div class="input-group">
-                        <div class="field-header-row">
-                            <label class="input-label">Origin Feat</label>
-                            <button type="button" class="copy-link" onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy</button>
-                        </div>
+                        <div class="field-header-row"><label class="input-label">Origin Feat</label><button type="button" class="copy-link" onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy</button></div>
                         <input type="text" class="text-input" id="orig-feat-new" placeholder="Feat Name">
-                        
-                        <div class="field-header-row" style="margin-top:10px;">
-                            <label class="input-label" style="font-size:0.8em">Origin Feat Modifiers</label>
-                            <button type="button" class="copy-link" onclick="window.copyMods('origin')">Copy</button>
-                        </div>
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label" style="font-size:0.8em">Origin Feat Modifiers</label><button type="button" class="copy-link" onclick="window.copyMods('origin')">Copy</button></div>
                         <div id="origin-mod-container-new">
-                            <table class="stat-table">
-                                <thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead>
-                                <tbody>
-                                    <tr>
-                                        <td><select class="mod-select-origin" data-col="new" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="new" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="new" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="new" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="new" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                        <td><select class="mod-select-origin" data-col="new" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <table class="stat-table"><thead><tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr></thead><tbody><tr><td><select class="mod-select-origin" data-col="new" data-attr="STR"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="new" data-attr="DEX"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="new" data-attr="CON"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="new" data-attr="INT"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="new" data-attr="WIS"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td><td><select class="mod-select-origin" data-col="new" data-attr="CHA"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td></tr></tbody></table>
                         </div>
-
-                        <div class="field-header-row" style="margin-top:10px;">
-                            <label class="input-label" style="font-size:0.8em">Origin Feat Features</label>
-                            <button type="button" class="copy-link" onclick="window.copyFeatures('origin-feat')">Copy</button>
-                        </div>
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label" style="font-size:0.8em">Origin Feat Features</label><button type="button" class="copy-link" onclick="window.copyFeatures('origin-feat')">Copy</button></div>
                         <div id="origin-feat-features-container-new"></div>
                     </div>
                 </div>
@@ -262,7 +162,6 @@ title: Character Rework Tool
                     <div id="classes-container-new"></div>
                     <button type="button" class="button button-secondary" onclick="window.addClassRow('new')">+ Add Class</button>
                 </div>
-
                 <div id="feats-container-new"></div>
             </div>
         </div>
@@ -270,7 +169,6 @@ title: Character Rework Tool
 
     <div id="tab-cost" class="tab-content">
         <h2 class="column-header">Cost Calculations</h2>
-        
         <div class="card">
             <h3 class="card-title" onclick="window.toggleAccordion('cost-info')" style="cursor: pointer; user-select: none;">
                 <span id="cost-info-icon">▼</span> Cost Calculations
@@ -305,16 +203,9 @@ title: Character Rework Tool
             
             <table class="stat-table" id="cost-table" style="margin-bottom: 10px;">
                 <thead>
-                    <tr>
-                        <th style="width: 50%;">Change</th>
-                        <th style="width: 15%;"># of Changes</th>
-                        <th style="width: 15%;">DTP Cost</th>
-                        <th style="width: 15%;">Gold Cost</th>
-                        <th style="width: 5%;"></th>
-                    </tr>
+                    <tr><th style="width: 50%;">Change</th><th style="width: 15%;"># of Changes</th><th style="width: 15%;">DTP Cost</th><th style="width: 15%;">Gold Cost</th><th style="width: 5%;"></th></tr>
                 </thead>
-                <tbody id="cost-table-body">
-                    </tbody>
+                <tbody id="cost-table-body"></tbody>
             </table>
             
             <button type="button" class="button button-secondary" onclick="window.addCostRow()">+ Add Manual Row</button>
@@ -328,19 +219,14 @@ title: Character Rework Tool
         
         <div class="card">
             <h3 class="card-title">Rework Details</h3>
-            <input type="text" id="rework-cost" class="text-input" placeholder="GP/DTP Costs (Manual override)">
-            <textarea id="rework-notes" class="notes-area" placeholder="Notes for auditors (e.g., 'Swapping subclass due to errata')"></textarea>
+            <input type="text" id="rework-cost" class="text-input" placeholder="GP/DTP Costs">
+            <textarea id="rework-notes" class="notes-area" placeholder="Notes for auditors"></textarea>
         </div>
     </div>
 
     <div id="tab-output" class="tab-content">
         <h2 class="column-header">Rework Request Form</h2>
-        
-        {% include discord-output.html 
-            id="output-text" 
-            channel_name="#Character-Rework-Log" 
-            channel_url="https://discord.com/channels/308324031478890497/1094052066898518057" 
-        %}
+        {% include discord-output.html id="output-text" channel_name="#Character-Rework-Log" channel_url="https://discord.com/channels/308324031478890497/1094052066898518057" %}
     </div>
 </div>
 

@@ -1,13 +1,4 @@
-import { 
-    ATTRIBUTES, 
-    POINT_COSTS, 
-    ALACARTE_TIERS, 
-    REWORK_TYPES 
-} from './rework-constants.js';
-
-// ==========================================
-// 1. BASIC CALCULATIONS
-// ==========================================
+import { ATTRIBUTES, POINT_COSTS, ALACARTE_TIERS, REWORK_TYPES } from './rework-constants.js';
 
 export function calculatePointBuyCost(attributesObj) {
     let spent = 0;
@@ -24,55 +15,56 @@ export function getTotalLevel(classes) {
 }
 
 export function getAlacarteRates(level) {
-    // Find the tier where the level falls between min and max
     const tier = ALACARTE_TIERS.find(t => level >= t.min && level <= t.max);
     return tier || { gold: 0, dtp: 0 };
 }
 
-// ==========================================
-// 2. MAIN COST LOGIC
-// ==========================================
+// Helper to match the logic in rework-old for comparing feature arrays
+function areFeaturesEqual(arr1, arr2) {
+    const list1 = arr1 || [];
+    const list2 = arr2 || [];
+    const len = Math.max(list1.length, list2.length);
+    
+    for (let i = 0; i < len; i++) {
+        const f1 = list1[i] || { type: 'none', name: '' };
+        const f2 = list2[i] || { type: 'none', name: '' };
+        if (f1.type !== f2.type || f1.name !== f2.name) return false;
+    }
+    return true;
+}
 
-/**
- * Compares old and new character data to determine rework costs.
- * @param {string} type - The rework type ID (e.g., 'alacarte', 't2-checkpoint')
- * @param {object} oldChar - Scraped object of the original character
- * @param {object} newChar - Scraped object of the new character
- * @returns {object} { isValid: boolean, error: string, costs: Array }
- */
+// Helper to check mods (STR/DEX/etc)
+function areModsEqual(m1, m2) {
+    const mod1 = m1 || {};
+    const mod2 = m2 || {};
+    for (const a of ATTRIBUTES) {
+        if ((mod1[a] || '0') !== (mod2[a] || '0')) return false;
+    }
+    return true;
+}
+
 export function computeReworkCosts(type, oldChar, newChar) {
     const costs = [];
     const origLevel = getTotalLevel(oldChar.classes || []);
     const newLevel = getTotalLevel(newChar.classes || []);
     
-    // Helpers
+    // Helper for 2014/2024 check
     const hasVer = (classes, v) => classes && classes.some(c => c.version === v);
 
-    // ------------------------------------------
-    // Type 1: Level 5 or Below (Free)
-    // ------------------------------------------
     if (type === REWORK_TYPES.LEVEL_5_BELOW) {
-        if (origLevel > 5 || newLevel > 5) {
-            return { isValid: false, error: "Both characters must be level 5 or below for this rework type." };
-        }
+        if (origLevel > 5 || newLevel > 5) return { isValid: false, error: "Both characters must be level 5 or below." };
         costs.push({ change: 'Level 5 or Below Free Rework', count: 0, dtp: 0, gold: 0 });
         return { isValid: true, costs };
     }
 
-    // ------------------------------------------
-    // Type 2: 2024 Update (Free)
-    // ------------------------------------------
     if (type === REWORK_TYPES.UPDATE_2024) {
         if (!hasVer(oldChar.classes, '2014') || !hasVer(newChar.classes, '2024')) {
-            return { isValid: false, error: "2024 Update requires the Original character to have 2014 classes and the New character to have 2024 classes." };
+            return { isValid: false, error: "Requires Original to have 2014 classes and New to have 2024 classes." };
         }
         costs.push({ change: '2024 Update', count: 0, dtp: 0, gold: 0 });
         return { isValid: true, costs };
     }
 
-    // ------------------------------------------
-    // Type 3: Checkpoints (Fixed Cost)
-    // ------------------------------------------
     if (type === REWORK_TYPES.T2_CHECKPOINT) {
         if (origLevel < 6 || origLevel > 10) return { isValid: false, error: "Original must be Tier 2 (level 6-10)." };
         if (newLevel < 1 || newLevel > 5) return { isValid: false, error: "New must be Tier 1 (level 1-5)." };
@@ -94,147 +86,81 @@ export function computeReworkCosts(type, oldChar, newChar) {
         return { isValid: true, costs };
     }
 
-    // ------------------------------------------
-    // Type 4: A-la-carte (Calculated Cost)
-    // ------------------------------------------
     if (type === REWORK_TYPES.ALACARTE) {
         const rates = getAlacarteRates(origLevel);
+        if (rates.gold === 0 && rates.dtp === 0) return { isValid: false, error: "A-la-carte available for levels 6+ only." };
         
-        if (rates.gold === 0 && rates.dtp === 0) {
-            return { isValid: false, error: "A-la-carte rework is only available for characters level 6 and above." };
-        }
-        
-        // A. Name Change
+        // A. Name
         if (oldChar.name !== newChar.name && oldChar.name && newChar.name) {
             costs.push({ change: `Character name change: ${oldChar.name} → ${newChar.name}`, count: 2 });
         }
         
-        // B. Attributes Change
+        // B. Attributes
         const changedAttrs = ATTRIBUTES.filter(a => oldChar.attributes[a] !== newChar.attributes[a]);
         if (changedAttrs.length > 0) {
             costs.push({ change: `Starting ability score changes: ${changedAttrs.join(', ')}`, count: 2 });
         }
         
-        // C. Race Section Comparison
+        // C. Race
         let raceChanged = false;
-        if (oldChar.race !== newChar.race) {
-            raceChanged = true;
-        } else {
-            // Compare Mods
-            if (!areModsEqual(oldChar.race_mods, newChar.race_mods)) raceChanged = true;
-            // Compare Features
-            if (!areFeaturesEqual(oldChar.race_features, newChar.race_features)) raceChanged = true;
-        }
-        if (raceChanged) {
-            costs.push({ change: `Race/Species section changed`, count: 1 });
-        }
+        if (oldChar.race !== newChar.race) raceChanged = true;
+        if (!areModsEqual(oldChar.race_mods, newChar.race_mods)) raceChanged = true;
+        if (!areFeaturesEqual(oldChar.race_features, newChar.race_features)) raceChanged = true;
+        if (raceChanged) costs.push({ change: `Race/Species section changed`, count: 1 });
         
-        // D. Background/Origin Section Comparison
+        // D. Origin
         let originChanged = false;
-        if (oldChar.bg !== newChar.bg) {
+        if (oldChar.bg !== newChar.bg) originChanged = true;
+        if (!areFeaturesEqual(oldChar.origin_features, newChar.origin_features)) originChanged = true;
+        if (oldChar.origin_feat !== newChar.origin_feat) {
             originChanged = true;
-        } else {
-            // Compare Features
-            if (!areFeaturesEqual(oldChar.origin_features, newChar.origin_features)) originChanged = true;
-            
-            // Compare Origin Feat + its internals
-            if (oldChar.origin_feat !== newChar.origin_feat) {
-                originChanged = true;
-            } else if (oldChar.origin_feat) {
-                if (!areModsEqual(oldChar.origin_mods, newChar.origin_mods)) originChanged = true;
-                if (!areFeaturesEqual(oldChar.origin_feat_features, newChar.origin_feat_features)) originChanged = true;
-            }
+        } else if (oldChar.origin_feat) {
+            if (!areModsEqual(oldChar.origin_mods, newChar.origin_mods)) originChanged = true;
+            if (!areFeaturesEqual(oldChar.origin_feat_features, newChar.origin_feat_features)) originChanged = true;
         }
-        if (originChanged) {
-            costs.push({ change: `Origin/Background section changed`, count: 1 });
-        }
+        if (originChanged) costs.push({ change: `Origin/Background section changed`, count: 1 });
         
-        // E. Feat/ASI Comparison
-        const featChanges = calculateFeatChanges(oldChar.feats, newChar.feats);
-        featChanges.forEach(fc => costs.push(fc));
+        // E. Feats (Logic from old file refactored)
+        const oldFeats = (oldChar.feats || []).filter(f => f.name);
+        const newFeats = (newChar.feats || []).filter(f => f.name);
+        
+        const oldFeatMap = {};
+        oldFeats.forEach(f => {
+            const key = `${f.source}-${f.name}`;
+            if (!oldFeatMap[key]) oldFeatMap[key] = [];
+            oldFeatMap[key].push({ ...f, _matched: false });
+        });
+        
+        newFeats.forEach(newFeat => {
+            const key = `${newFeat.source}-${newFeat.name}`;
+            const potentialMatches = oldFeatMap[key] || [];
+            
+            // Find matched
+            const matchIndex = potentialMatches.findIndex(pm => !pm._matched);
+            
+            if (matchIndex === -1) {
+                // New feat
+                costs.push({ change: `Feat added: ${newFeat.name} (${newFeat.source})`, count: 1 });
+            } else {
+                // Matched feat, check internals
+                const match = potentialMatches[matchIndex];
+                match._matched = true;
+                
+                let detailsChanged = false;
+                if (!areModsEqual(match.mods, newFeat.mods)) detailsChanged = true;
+                if (!areFeaturesEqual(match.features, newFeat.features)) detailsChanged = true;
+                
+                if (detailsChanged) {
+                    costs.push({ change: `Feat modified: ${newFeat.name} (${newFeat.source})`, count: 1 });
+                }
+            }
+        });
 
-        // Map counts to gold/dtp
         return { 
             isValid: true, 
-            costs: costs.map(c => ({ 
-                ...c, 
-                dtp: c.count * rates.dtp, 
-                gold: c.count * rates.gold 
-            })) 
+            costs: costs.map(c => ({ ...c, dtp: c.count * rates.dtp, gold: c.count * rates.gold })) 
         };
     }
 
     return { isValid: false, error: "Please select a valid rework type." };
-}
-
-// ==========================================
-// 3. COMPARISON UTILITIES
-// ==========================================
-
-function areModsEqual(mods1, mods2) {
-    if (!mods1 && !mods2) return true;
-    if (!mods1 || !mods2) return false;
-    
-    for (const attr of ATTRIBUTES) {
-        if ((mods1[attr] || '0') !== (mods2[attr] || '0')) return false;
-    }
-    return true;
-}
-
-function areFeaturesEqual(arr1, arr2) {
-    const list1 = arr1 || [];
-    const list2 = arr2 || [];
-    
-    // Filter out empty rows before comparing
-    const clean1 = list1.filter(f => f.type !== 'none' || f.name !== '');
-    const clean2 = list2.filter(f => f.type !== 'none' || f.name !== '');
-
-    if (clean1.length !== clean2.length) return false;
-
-    for (let i = 0; i < clean1.length; i++) {
-        if (clean1[i].type !== clean2[i].type) return false;
-        if (clean1[i].name !== clean2[i].name) return false;
-    }
-    return true;
-}
-
-function calculateFeatChanges(oldFeats = [], newFeats = []) {
-    const changes = [];
-    const cleanOld = oldFeats.filter(f => f.name);
-    const cleanNew = newFeats.filter(f => f.name);
-
-    // Map old feats by "SourceClass-FeatName" to track usage
-    const oldFeatMap = {};
-    cleanOld.forEach(f => {
-        const key = `${f.source}-${f.name}`;
-        if (!oldFeatMap[key]) oldFeatMap[key] = [];
-        oldFeatMap[key].push({ data: f, matched: false });
-    });
-
-    cleanNew.forEach(newFeat => {
-        const key = `${newFeat.source}-${newFeat.name}`;
-        const potentialMatches = oldFeatMap[key] || [];
-        
-        // Try to find an unmatched original feat
-        const matchIndex = potentialMatches.findIndex(pm => !pm.matched);
-
-        if (matchIndex === -1) {
-            // No match found -> New Feat
-            changes.push({ change: `Feat added: ${newFeat.name} (${newFeat.source})`, count: 1 });
-        } else {
-            // Match found -> Check if internal details changed
-            const match = potentialMatches[matchIndex];
-            match.matched = true; // Mark as used
-            
-            let detailsChanged = false;
-            if (!areModsEqual(match.data.mods, newFeat.mods)) detailsChanged = true;
-            if (!areFeaturesEqual(match.data.features, newFeat.features)) detailsChanged = true;
-
-            if (detailsChanged) {
-                changes.push({ change: `Feat modified: ${newFeat.name} (${newFeat.source})`, count: 1 });
-            }
-        }
-    });
-
-    return changes;
 }
