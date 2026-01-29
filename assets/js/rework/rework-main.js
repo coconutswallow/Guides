@@ -150,28 +150,9 @@ window.saveRework = async () => {
     try {
         const oldC = scrapeColumn('original');
         const newC = scrapeColumn('new');
-        const costRows = [];
         
-        document.querySelectorAll('#cost-table-body tr').forEach(r => {
-            const changeEl = r.querySelector('.cost-change');
-            const numEl = r.querySelector('.cost-num-changes');
-            const dtpEl = r.querySelector('.cost-dtp');
-            const goldEl = r.querySelector('.cost-gold');
-            
-            costRows.push({
-                change: changeEl?.value || "",
-                numChanges: parseInt(numEl?.value) || 0,
-                dtpCost: parseInt(dtpEl?.value) || 0,
-                goldCost: parseInt(goldEl?.value) || 0
-            });
-        });
-        
-        // Store non-schema fields in new_character meta
-        newC._rework_meta = { 
-            rework_type: document.getElementById('rework-type')?.value || "", 
-            cost_rows: costRows 
-        };
-        
+        // ... (keep your costRows scraping logic here) ...
+
         const payload = {
             discord_id: document.getElementById('manual-discord-id')?.value || "Unknown",
             character_name: oldC.name,
@@ -182,18 +163,72 @@ window.saveRework = async () => {
         };
 
         const res = await saveReworkToDb(payload);
-        const currentIdEl = document.getElementById('current-rework-id');
-        if (currentIdEl) currentIdEl.value = res.id;
         
+        // Update the UI with the new ID
+        const currentIdEl = document.getElementById('current-rework-id');
+        if (currentIdEl) {
+            currentIdEl.value = res.id;
+            currentIdEl.type = "text"; // Make it visible if it was hidden
+            currentIdEl.style.display = "inline-block";
+            currentIdEl.readOnly = true;
+        }
+        
+        // Update URL and Refresh Dropdown
         const u = new URL(window.location); 
         u.searchParams.set('id', res.id); 
         window.history.pushState({}, '', u);
         
-        alert("Rework Saved! ID: " + res.id); 
+        alert("Rework Saved! UUID: " + res.id); 
         await window.fetchReworks();
     } catch(e) { 
         console.error("Save error:", e);
         alert("Error saving: " + e.message); 
+    }
+};
+
+// --- Load Logic ---
+// This handles the actual data population
+async function performLoad(id) {
+    if (!id) return;
+    try {
+        const d = await loadReworkById(id);
+        
+        // UI Updates
+        document.getElementById('current-rework-id').value = d.id;
+        document.getElementById('manual-discord-id').value = d.discord_id || "";
+        document.getElementById('rework-cost').value = d.cost || "";
+        document.getElementById('rework-notes').value = d.notes || "";
+        
+        const meta = d.new_character?._rework_meta || {};
+        if (document.getElementById('rework-type')) {
+            document.getElementById('rework-type').value = meta.rework_type || "";
+        }
+        
+        const tbody = document.getElementById('cost-table-body');
+        if (tbody) {
+            tbody.innerHTML = '';
+            (meta.cost_rows || []).forEach(r => addCostRow(r.change, r.numChanges, r.dtpCost, r.goldCost));
+        }
+        
+        populateColumn('original', d.old_character);
+        populateColumn('new', d.new_character);
+        window.updateTotalCost();
+    } catch(e) {
+        alert("Load failed: " + e.message);
+    }
+}
+
+// Triggered by "Load UUID" button
+window.loadExternalId = async () => {
+    const id = prompt("Enter UUID:");
+    if (id) await performLoad(id);
+};
+
+// Triggered by Dropdown onchange
+window.loadSelectedRework = async () => {
+    const sel = document.getElementById('load-rework-select');
+    if (sel && sel.value) {
+        await performLoad(sel.value);
     }
 };
 

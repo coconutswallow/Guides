@@ -31,7 +31,10 @@ title: Character Rework Tool
                 <button class="button action-btn btn-delete" onclick="window.deleteRework()" style="background-color: #c0392b; color: #fff; margin-left: auto;">Delete</button>
             </div>
             
-            <input type="hidden" id="current-rework-id" value="">
+            <div class="control-group">
+                <label class="input-label">Current UUID:</label>
+                <input type="text" id="current-rework-id" value="" readonly placeholder="Not Saved" style="width: 250px; background: #eee;">
+            </div>
         </div>
 
         <div class="respec-container">
