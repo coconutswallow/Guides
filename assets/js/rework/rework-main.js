@@ -19,7 +19,7 @@ window.switchTab = (t) => {
 // --- UUID Clipboard Helper ---
 window.copyUuid = () => {
     const uuidEl = document.getElementById('current-rework-id');
-    if (!uuidEl || !uuidEl.value) {
+    if (!uuidEl || !uuidEl.value || uuidEl.value === "Not Saved") {
         alert("No UUID to copy!");
         return;
     }
@@ -98,7 +98,32 @@ window.updateTotalCost = () => {
     }
 };
 
-// --- Save / Load / Delete Logic ---
+// --- Save / Load / Delete Logic (FIXED SCOPE) ---
+
+// Attached to window so it can be called by loadExternalId and loadSelectedRework
+window.performLoad = async (id) => {
+    if (!id) return;
+    try {
+        const d = await loadReworkById(id);
+        
+        // Update UI Fields
+        document.getElementById('current-rework-id').value = d.id;
+        document.getElementById('manual-discord-id').value = d.discord_id || "";
+        document.getElementById('rework-cost').value = d.cost || "";
+        document.getElementById('rework-notes').value = d.notes || "";
+        
+        // Populate character data
+        populateColumn('original', d.old_character);
+        populateColumn('new', d.new_character);
+        
+        // Refresh calculations
+        window.calculateCosts();
+    } catch(e) {
+        console.error("Load failed:", e);
+        alert("Load failed: " + e.message);
+    }
+};
+
 window.saveRework = async () => {
     try {
         const oldC = scrapeColumn('original');
@@ -114,8 +139,11 @@ window.saveRework = async () => {
         };
 
         const res = await saveReworkToDb(payload);
+        
+        // Ensure ID is visible in the UUID input
         document.getElementById('current-rework-id').value = res.id;
         
+        // Update URL for easy sharing
         const u = new URL(window.location); 
         u.searchParams.set('id', res.id); 
         window.history.pushState({}, '', u);
@@ -128,32 +156,14 @@ window.saveRework = async () => {
     }
 };
 
-async function performLoad(id) {
-    if (!id) return;
-    try {
-        const d = await loadReworkById(id);
-        document.getElementById('current-rework-id').value = d.id;
-        document.getElementById('manual-discord-id').value = d.discord_id || "";
-        document.getElementById('rework-cost').value = d.cost || "";
-        document.getElementById('rework-notes').value = d.notes || "";
-        
-        populateColumn('original', d.old_character);
-        populateColumn('new', d.new_character);
-        
-        window.calculateCosts();
-    } catch(e) {
-        alert("Load failed: " + e.message);
-    }
-}
-
 window.loadExternalId = async () => {
     const id = prompt("Enter UUID:");
-    if (id) await performLoad(id);
+    if (id) await window.performLoad(id);
 };
 
 window.loadSelectedRework = async () => {
     const sel = document.getElementById('load-rework-select');
-    if (sel && sel.value) await performLoad(sel.value);
+    if (sel && sel.value) await window.performLoad(sel.value);
 };
 
 window.deleteRework = async () => {
@@ -169,6 +179,7 @@ window.deleteRework = async () => {
         alert("Rework deleted successfully"); 
         await window.fetchReworks();
     } catch (e) { 
+        console.error("Delete error:", e);
         alert("Delete failed: " + e.message); 
     }
 };
@@ -179,22 +190,31 @@ window.generateOutput = () => {
     document.getElementById('output-text').value = generateOutputString(scrapeColumn('original'), scrapeColumn('new'), cost, notes);
 };
 
-// --- Initialization ---
+// --- App Initialization ---
 async function initApp() {
-    ['original', 'new'].forEach(col => {
-        renderBaseAttributes(col);
-        renderFeatureRows(`race-features-container-${col}`, 4);
-        renderFeatureRows(`origin-features-container-${col}`, 4);
-        renderFeatureRows(`origin-feat-features-container-${col}`, 4);
-    });
-    await initCharacterData();
-    const urlId = new URLSearchParams(window.location.search).get('id');
-    if (urlId) {
-        await performLoad(urlId);
-    } else {
-        ['original', 'new'].forEach(col => addClassRow(col));
+    try {
+        ['original', 'new'].forEach(col => {
+            renderBaseAttributes(col);
+            renderFeatureRows(`race-features-container-${col}`, 4);
+            renderFeatureRows(`origin-features-container-${col}`, 4);
+            renderFeatureRows(`origin-feat-features-container-${col}`, 4);
+        });
+
+        await initCharacterData();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlId = urlParams.get('id');
+
+        if (urlId) {
+            await window.performLoad(urlId);
+        } else {
+            ['original', 'new'].forEach(col => addClassRow(col));
+        }
+
+        await window.fetchReworks();
+    } catch (error) {
+        console.error("Initialization error:", error);
     }
-    await window.fetchReworks();
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
