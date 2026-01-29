@@ -4,7 +4,7 @@ import {
     addClassRow, removeClassRow, addCostRow, generateOutputString, 
     updatePointBuyDisplay as refreshPoints, generateFeatCards
 } from "./rework-ui.js";
-import { computeReworkCosts } from "./rework-calculations.js";
+import { computeReworkCosts, getTotalLevel, getAlacarteRates } from "./rework-calculations.js";
 import { ATTRIBUTES } from "./rework-constants.js";
 
 // --- Window Bindings (Events) ---
@@ -67,27 +67,12 @@ window.copyFeatures = (type) => {
     });
 };
 
-// Cost Logic bindings
+// --- Cost Logic & Summary Handling ---
+
 window.addCostRow = () => addCostRow("", 0, 0, 0);
 window.deleteCostRow = (btn) => { 
     btn.closest('tr')?.remove(); 
     window.updateTotalCost(); 
-};
-
-window.updateTotalCost = () => {
-    let ch = 0, dtp = 0, gold = 0;
-    document.querySelectorAll('#cost-table-body tr').forEach(r => {
-        ch += parseInt(r.querySelector('.cost-num-changes')?.value) || 0;
-        dtp += parseInt(r.querySelector('.cost-dtp')?.value) || 0;
-        gold += parseInt(r.querySelector('.cost-gold')?.value) || 0;
-    });
-    const set = (id, v) => { 
-        const el = document.getElementById(id);
-        if (el) el.innerText = v;
-    };
-    set('total-changes', ch); 
-    set('total-dtp', dtp); 
-    set('total-gold', gold);
 };
 
 window.calculateCosts = () => {
@@ -96,20 +81,75 @@ window.calculateCosts = () => {
     
     const type = typeEl.value;
     const result = computeReworkCosts(type, scrapeColumn('original'), scrapeColumn('new'));
-    
     const err = document.getElementById('cost-error');
     const tbody = document.getElementById('cost-table-body');
-    if (!err || !tbody) return;
+    const thead = document.querySelector('#cost-table thead tr');
     
     if (!result.isValid) {
         err.style.display = 'block'; 
         err.innerText = result.error; 
         return;
     }
+    
     err.style.display = 'none';
     tbody.innerHTML = '';
-    result.costs.forEach(c => addCostRow(c.change, c.count, c.dtp, c.gold));
-    window.updateTotalCost();
+
+    // Switch table headers based on whether it's a flat rate or per-change basis
+    if (result.isFixed) {
+        thead.innerHTML = `<th style="width: 70%;">Rework Type</th><th style="width: 15%;">DTP Cost</th><th style="width: 15%;">Gold Cost</th>`;
+    } else {
+        thead.innerHTML = `<th style="width: 70%;">Change Description</th><th style="width: 30%;"># of Changes</th>`;
+    }
+
+    result.costs.forEach(c => {
+        const row = document.createElement('tr');
+        if (result.isFixed) {
+            row.innerHTML = `<td>${c.change}</td><td>${c.dtp}</td><td>${c.gold} GP</td>`;
+        } else {
+            row.innerHTML = `<td>${c.change}</td><td><input type="number" class="text-input cost-num-changes" value="${c.count}" onchange="window.updateTotalCost()"></td>`;
+        }
+        tbody.appendChild(row);
+    });
+
+    if (result.isFixed) {
+        window.updateFixedSummary(result.costs[0].dtp, result.costs[0].gold);
+    } else {
+        window.updateAlacarteSummary(result.rates);
+    }
+};
+
+window.updateFixedSummary = (dtp, gold) => {
+    document.getElementById('total-changes').innerText = "-";
+    document.getElementById('total-dtp').innerText = dtp;
+    document.getElementById('total-gold').innerText = gold;
+    document.getElementById('rework-cost').value = `${gold} GP / ${dtp} DTP`;
+};
+
+window.updateAlacarteSummary = (rates) => {
+    let totalChanges = 0;
+    document.querySelectorAll('.cost-num-changes').forEach(input => {
+        totalChanges += parseInt(input.value) || 0;
+    });
+    
+    const totalGold = totalChanges * (rates?.gold || 0);
+    const totalDtp = totalChanges * (rates?.dtp || 0);
+
+    document.getElementById('total-changes').innerText = totalChanges;
+    document.getElementById('total-dtp').innerText = `${totalDtp} (${totalChanges} chg × ${rates?.dtp || 0} DTP)`;
+    document.getElementById('total-gold').innerText = `${totalGold} GP (${totalChanges} chg × ${rates?.gold || 0} GP)`;
+    document.getElementById('rework-cost').value = `${totalGold} GP / ${totalDtp} DTP`;
+};
+
+window.updateTotalCost = () => {
+    const type = document.getElementById('rework-type').value;
+    if (type === 'alacarte') {
+        const origLevel = getTotalLevel(scrapeColumn('original'));
+        const rates = getAlacarteRates(origLevel);
+        window.updateAlacarteSummary(rates);
+    } else {
+        // For fixed reworks, re-running calculateCosts is safest to ensure level ranges still match
+        window.calculateCosts();
+    }
 };
 
 window.generateOutput = () => {
@@ -127,7 +167,8 @@ window.generateOutput = () => {
     outputEl.value = out;
 };
 
-// DB Bindings
+// --- DB & State Persistence ---
+
 window.fetchReworks = async () => {
     try {
         const data = await fetchMyReworks();
@@ -151,8 +192,6 @@ window.saveRework = async () => {
         const oldC = scrapeColumn('original');
         const newC = scrapeColumn('new');
         
-        // ... (keep your costRows scraping logic here) ...
-
         const payload = {
             discord_id: document.getElementById('manual-discord-id')?.value || "Unknown",
             character_name: oldC.name,
@@ -164,16 +203,11 @@ window.saveRework = async () => {
 
         const res = await saveReworkToDb(payload);
         
-        // Update the UI with the new ID
         const currentIdEl = document.getElementById('current-rework-id');
         if (currentIdEl) {
             currentIdEl.value = res.id;
-            currentIdEl.type = "text"; // Make it visible if it was hidden
-            currentIdEl.style.display = "inline-block";
-            currentIdEl.readOnly = true;
         }
         
-        // Update URL and Refresh Dropdown
         const u = new URL(window.location); 
         u.searchParams.set('id', res.id); 
         window.history.pushState({}, '', u);
@@ -186,116 +220,46 @@ window.saveRework = async () => {
     }
 };
 
-// --- Load Logic ---
-// This handles the actual data population
 async function performLoad(id) {
     if (!id) return;
     try {
         const d = await loadReworkById(id);
         
-        // UI Updates
         document.getElementById('current-rework-id').value = d.id;
         document.getElementById('manual-discord-id').value = d.discord_id || "";
         document.getElementById('rework-cost').value = d.cost || "";
         document.getElementById('rework-notes').value = d.notes || "";
         
-        const meta = d.new_character?._rework_meta || {};
-        if (document.getElementById('rework-type')) {
-            document.getElementById('rework-type').value = meta.rework_type || "";
-        }
-        
-        const tbody = document.getElementById('cost-table-body');
-        if (tbody) {
-            tbody.innerHTML = '';
-            (meta.cost_rows || []).forEach(r => addCostRow(r.change, r.numChanges, r.dtpCost, r.goldCost));
-        }
-        
         populateColumn('original', d.old_character);
         populateColumn('new', d.new_character);
-        window.updateTotalCost();
+        
+        // Refresh calculation display
+        window.calculateCosts();
     } catch(e) {
         alert("Load failed: " + e.message);
     }
 }
 
-// Triggered by "Load UUID" button
 window.loadExternalId = async () => {
     const id = prompt("Enter UUID:");
     if (id) await performLoad(id);
 };
 
-// Triggered by Dropdown onchange
 window.loadSelectedRework = async () => {
     const sel = document.getElementById('load-rework-select');
-    if (sel && sel.value) {
-        await performLoad(sel.value);
-    }
-};
-
-window.loadExternalId = async (id) => {
-    if(!id) {
-        id = prompt("Enter UUID:");
-    }
-    if(!id) return;
-    
-    try {
-        const d = await loadReworkById(id);
-        
-        const currentIdEl = document.getElementById('current-rework-id');
-        const discordIdEl = document.getElementById('manual-discord-id');
-        const costEl = document.getElementById('rework-cost');
-        const notesEl = document.getElementById('rework-notes');
-        const typeEl = document.getElementById('rework-type');
-        const tbody = document.getElementById('cost-table-body');
-        
-        if (currentIdEl) currentIdEl.value = d.id;
-        if (discordIdEl) discordIdEl.value = d.discord_id || "";
-        if (costEl) costEl.value = d.cost || "";
-        if (notesEl) notesEl.value = d.notes || "";
-        
-        const meta = d.new_character?._rework_meta || {};
-        const costRows = meta.cost_rows || [];
-        
-        if (typeEl) typeEl.value = meta.rework_type || "";
-        if (tbody) {
-            tbody.innerHTML = '';
-            costRows.forEach(r => addCostRow(r.change, r.numChanges || 0, r.dtpCost || 0, r.goldCost || 0));
-        }
-        
-        populateColumn('original', d.old_character);
-        populateColumn('new', d.new_character);
-        window.updateTotalCost();
-    } catch(e) { 
-        console.error("Load error:", e);
-        alert("Load failed: " + e.message); 
-    }
-};
-
-window.loadSelectedRework = () => {
-    const sel = document.getElementById('load-rework-select');
-    if (sel && sel.value) {
-        window.loadExternalId(sel.value);
-    }
+    if (sel && sel.value) await performLoad(sel.value);
 };
 
 window.deleteRework = async () => {
     const sel = document.getElementById('load-rework-select');
-    if (!sel) return;
-    
-    const id = sel.value;
-    if(!id) {
+    if (!sel || !sel.value) {
         alert("Please select a rework first.");
         return;
     }
-    
     if(!confirm("Are you sure you want to delete this rework?")) return;
-    
     try {
-        await deleteReworkById(id);
-        const currentIdEl = document.getElementById('current-rework-id');
-        if(currentIdEl && currentIdEl.value == id) {
-            currentIdEl.value = "";
-        }
+        await deleteReworkById(sel.value);
+        document.getElementById('current-rework-id').value = "";
         alert("Rework deleted successfully"); 
         await window.fetchReworks();
     } catch (e) { 
@@ -304,52 +268,37 @@ window.deleteRework = async () => {
     }
 };
 
-async function initApp() {
-    console.log("Initializing Rework Tool...");
+// --- App Initialization ---
 
+async function initApp() {
     try {
-        // 1. Initialize Static UI (No data dependency)
+        // Initialize UI containers
         ['original', 'new'].forEach(col => {
             renderBaseAttributes(col);
             renderFeatureRows(`race-features-container-${col}`, 4);
             renderFeatureRows(`origin-features-container-${col}`, 4);
             renderFeatureRows(`origin-feat-features-container-${col}`, 4);
-            // Removed addClassRow from here to prevent "dead" cards
         });
 
-        // 2. Load Data from Supabase
-        // This must complete so getState().characterData is populated
         await initCharacterData();
 
-        // 3. Handle URL loading OR Default State
         const urlParams = new URLSearchParams(window.location.search);
         const urlId = urlParams.get('id');
 
         if (urlId) {
-            // loadExternalId calls populateColumn, which handles its own addClassRow
-            await window.loadExternalId(urlId);
+            await performLoad(urlId);
         } else {
-            // Fresh start: Add exactly ONE row per column now that data is ready
-            ['original', 'new'].forEach(col => {
-                addClassRow(col);
-            });
+            ['original', 'new'].forEach(col => addClassRow(col));
         }
 
-        // 4. Final UI Polishing
         await window.fetchReworks();
-        const controls = document.getElementById('logged-in-controls');
-        if(controls) controls.style.display = 'flex';
-        
-        console.log("✓ Rework Tool initialized successfully");
     } catch (error) {
-        console.error("✗ Initialization error:", error);
+        console.error("Initialization error:", error);
     }
 }
 
-// Wait for DOM to be ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
 } else {
-    // DOM already loaded
     initApp();
 }
