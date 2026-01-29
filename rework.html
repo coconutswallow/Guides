@@ -34,15 +34,23 @@ title: Character Rework Tool
                 <label class="input-label">Rework ID:</label>
                 <div style="display: flex; gap: 5px;">
                     <input type="text" id="current-rework-id" value="" readonly placeholder="Not Saved" style="width: 250px; background: #eee;">
-                    <button class="button action-btn" onclick="window.copyUuid()" style="background-color: #34495e; color: white;">Copy</button>
+                    <button class="button action-btn" onclick="window.copyUuid()" style="background-color: #34495e; color: white;">Copy-to-Clipboard</button>
                     <button class="button action-btn btn-load" onclick="window.loadExternalId()">Load Rework using an ID</button>
                 </div>
             </div>
         </div>
 
+        <div style="margin: 15px 0; padding: 12px; background-color: #f0f8ff; border-left: 4px solid #3498db; font-size: 0.9em; line-height: 1.6;">
+            <p style="margin: 0 0 8px 0;"><strong>Note:</strong></p>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li>The saves to the dropdown are only on this device (saved in your browser's local storage)</li>
+                <li>Use the Rework ID to share this rework with another user (e.g. with an auditor to review the details)</li>
+            </ul>
+        </div>
+
         <div class="card" style="margin-bottom: 20px;">
             <h3 class="card-title">Rework Type</h3>
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 0;">
                 <label class="input-label">Select Rework Type</label>
                 <select id="rework-type" class="text-input" onchange="window.calculateCosts()">
                     <option value="">-- Select Rework Type --</option>
@@ -54,16 +62,6 @@ title: Character Rework Tool
                     <option value="story">Story Rework</option>
                     <option value="alacarte">A-la-carte Rework</option>
                 </select>
-            </div>
-            <div id="rework-type-info" style="line-height: 1.6; font-size: 0.9em; color: #555;">
-                <p style="margin-bottom: 10px;">Costs are based on the type of change:</p>
-                <ul style="margin-left: 20px; margin-bottom: 0;">
-                    <li>2024 Update Rework (0 cost)</li>
-                    <li>Any rework before level 6 (0 cost)</li>
-                    <li>Checkpoint Rework (cost based on tier)</li>
-                    <li>Story Rework (cost based on tier)</li>
-                    <li>A-la-carte Rework (cost on a per-change basis)</li>
-                </ul>
             </div>
         </div>
 
@@ -207,16 +205,36 @@ title: Character Rework Tool
                 <span id="cost-info-icon">▼</span> Cost Information
             </h3>
             <div id="cost-info-content" style="margin-bottom: 20px; line-height: 1.6;">
-                <p style="margin-bottom: 10px;">The costs are automatically calculated based on the Rework Type selected in the Input tab and the changes between your Original and New characters.</p>
+                <p style="margin-bottom: 10px;"><strong>Costs are based on the type of change:</strong></p>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li><strong>2024 Update Rework</strong> (0 cost)</li>
+                    <li><strong>Any rework before level 6</strong> (0 cost)</li>
+                    <li><strong>Checkpoint Rework</strong> (cost based on tier)</li>
+                    <li><strong>Story Rework</strong> (cost based on tier)</li>
+                    <li><strong>A-la-carte Rework</strong> (cost on a per-change basis)
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Changing 1 class level, your race/species (including racial features and ASIs), background (including features, proficiencies, and/or ASIs) and changing a feat or ASI all cost <strong>1 change each</strong></li>
+                            <li>Changing a language known or tool or skill proficiency independent of other changes costs <strong>1 change</strong></li>
+                            <li>Changing a subclass costs <strong>1 change per class level</strong> that adds a subclass feature. (You aren't charged for a subclass change added as a result of a class level change)</li>
+                            <li>Changing starting ability scores, or changing the character to a different person, costs <strong>2 changes</strong></li>
+                            <li><strong>Changing from 2014 to 2024</strong> costs <strong>1 change</strong>. You must change your species, class, subclass, feats, and all other character options to their 2024 equivalent unless that option has not been reprinted. Your starting ASIs from your species are replaced with ASIs of your choice from your background, which can be customized as written in Appendix A of the Player Guidelines.</li>
+                            <li><strong>Changing from 2024 to 2014</strong> costs <strong>1 change</strong>. You must change your species, class, subclass, feats, and all other character options to their 2014 equivalent. If there is no 2014 equivalent for a character option, you must choose an eligible 2014 option instead. This does not incur any additional costs.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p style="margin-bottom: 10px;">Please refer to the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=578254116#gid=578254116" target="_blank" style="color: #3498db;">Allowed Content</a> for details.</p>
+                <p style="margin-bottom: 0; padding: 10px; background-color: #fff3cd; border-left: 4px solid #ffc107;"><strong>Note:</strong> The calculations below are only a "draft". It is your responsibility to make sure the costs are correct and make updates as required.</p>
             </div>
+        </div>
+        
+        <div class="card">
+            <h3 class="card-title">Cost Breakdown</h3>
             
             <div id="cost-error" style="display: none; padding: 10px; background-color: #fee; border: 1px solid #c00; border-radius: 4px; margin-bottom: 15px; color: #c00;"></div>
             
-            <h4 style="margin-top: 20px; margin-bottom: 10px;">Cost Breakdown</h4>
-            
             <table class="stat-table" id="cost-table" style="margin-bottom: 10px;">
                 <thead>
-                    <tr><th style="width: 50%;">Change</th><th style="width: 15%;"># of Changes</th><th style="width: 15%;">DTP Cost</th><th style="width: 15%;">Gold Cost</th><th style="width: 5%;"></th></tr>
+                    <tr><th style="text-align: left;">Detailed Change Description</th><th style="width: 120px;"># Changes</th><th style="width: 5%;"></th></tr>
                 </thead>
                 <tbody id="cost-table-body"></tbody>
             </table>

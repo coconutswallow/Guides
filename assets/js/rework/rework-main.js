@@ -9,11 +9,101 @@ import { ATTRIBUTES } from "./rework-constants.js";
 
 // --- Tab & Navigation ---
 window.switchTab = (t) => {
+    const currentTab = document.querySelector('.tab-content.active')?.id;
+    
+    // Validate when leaving Input tab
+    if (currentTab === 'tab-input' && t !== 'input') {
+        const validationError = window.validateReworkType();
+        if (validationError) {
+            alert(validationError);
+            return; // Don't switch tabs if validation fails
+        }
+    }
+    
     document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
     document.querySelector(`button[onclick*="'${t}'"]`)?.classList.add('active');
     document.getElementById(`tab-${t}`)?.classList.add('active');
     if (t === 'output') window.generateOutput();
     if (t === 'cost') window.calculateCosts();
+};
+
+// --- Accordion Toggle ---
+window.toggleAccordion = (id) => {
+    const content = document.getElementById(`${id}-content`);
+    const icon = document.getElementById(`${id}-icon`);
+    if (content && icon) {
+        const isVisible = content.style.display !== 'none';
+        content.style.display = isVisible ? 'none' : 'block';
+        icon.textContent = isVisible ? '▶' : '▼';
+    }
+};
+
+// --- Rework Type Validation ---
+window.validateReworkType = () => {
+    const type = document.getElementById('rework-type')?.value;
+    if (!type) return null; // No validation if type not selected
+    
+    const oldChar = scrapeColumn('original');
+    const newChar = scrapeColumn('new');
+    const origLevel = getTotalLevel(oldChar.classes || []);
+    const newLevel = getTotalLevel(newChar.classes || []);
+    
+    const allMatchVer = (classes, v) => classes && classes.length > 0 && classes.every(c => c.version === v);
+    
+    // Level 5 or Below validation
+    if (type === 'level-5-below') {
+        if (origLevel > 5) return "Level 5 or Below Rework: Original character must be level 5 or below.";
+        if (newLevel > 5) return "Level 5 or Below Rework: New character must be level 5 or below.";
+    }
+    
+    // 2024 Update validation
+    if (type === '2024-update') {
+        if (!allMatchVer(oldChar.classes, '2014')) {
+            return "2024 Update Rework: All Original character classes must be 2014 version.";
+        }
+        if (!allMatchVer(newChar.classes, '2024')) {
+            return "2024 Update Rework: All New character classes must be 2024 version.";
+        }
+    }
+    
+    // T2 Checkpoint validation
+    if (type === 't2-checkpoint') {
+        if (origLevel < 5 || origLevel > 10) {
+            return "T2 Checkpoint Rework: Original character must be level 5-10 (Tier 2).";
+        }
+        if (newLevel < 1 || newLevel > 4) {
+            return "T2 Checkpoint Rework: New character must be level 1-4 (Tier 1).";
+        }
+    }
+    
+    // T3 Checkpoint validation
+    if (type === 't3-checkpoint') {
+        if (origLevel < 11 || origLevel > 16) {
+            return "T3 Checkpoint Rework: Original character must be level 11-16 (Tier 3).";
+        }
+        if (newLevel < 5 || newLevel > 10) {
+            return "T3 Checkpoint Rework: New character must be level 5-10 (Tier 2).";
+        }
+    }
+    
+    // T4 Checkpoint validation
+    if (type === 't4-checkpoint') {
+        if (origLevel < 17 || origLevel > 20) {
+            return "T4 Checkpoint Rework: Original character must be level 17-20 (Tier 4).";
+        }
+        if (newLevel < 11 || newLevel > 16) {
+            return "T4 Checkpoint Rework: New character must be level 11-16 (Tier 3).";
+        }
+    }
+    
+    // Story Rework validation
+    if (type === 'story') {
+        if (newLevel > origLevel) {
+            return "Story Rework: New character level cannot exceed original character level.";
+        }
+    }
+    
+    return null; // No errors
 };
 
 // --- UUID Clipboard Helper ---
@@ -58,7 +148,8 @@ window.calculateCosts = () => {
         if (result.isFixed) {
             row.innerHTML = `<td style="text-align: left;">${c.change}</td><td>${c.dtp}</td><td>${c.gold} GP</td><td></td>`;
         } else {
-            row.innerHTML = `<td style="text-align: left; font-size: 0.85em; color: #444;">${c.change}</td>
+            // Make description editable for both auto-generated and manual rows
+            row.innerHTML = `<td style="text-align: left;"><input type="text" class="text-input cost-change" value="${c.change}" style="width: 100%; font-size: 0.85em;"></td>
                              <td><input type="number" class="text-input cost-num-changes" value="${c.count}" onchange="window.updateTotalCost()"></td>
                              <td><button type="button" class="button" onclick="window.deleteCostRow(this)" style="background-color: #c0392b; color: #fff; padding: 4px 8px;">×</button></td>`;
         }
@@ -100,7 +191,7 @@ window.updateTotalCost = () => {
 };
 
 // --- Manual Row Bindings [RESTORED] ---
-window.addCostRow = () => addCostRow("", 0, 0, 0);
+window.addCostRow = () => addCostRow("", 0);
 window.deleteCostRow = (btn) => { 
     btn.closest('tr')?.remove(); 
     window.updateTotalCost(); 

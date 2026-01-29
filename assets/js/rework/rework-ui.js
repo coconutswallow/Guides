@@ -344,16 +344,15 @@ export function generateFeatCards(colId, saved = null) {
     });
 }
 // --- Cost Row & Output Logic ---
-export function addCostRow(change, count, dtp, gold) {
+export function addCostRow(change = "", count = 0) {
     const tbody = document.getElementById('cost-table-body');
     const row = document.createElement('tr');
     row.innerHTML = `
         <td><input type="text" class="text-input cost-change" value="${change}" style="width: 100%;"></td>
         <td><input type="number" class="text-input cost-num-changes" value="${count}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
-        <td><input type="number" class="text-input cost-dtp" value="${dtp}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
-        <td><input type="number" class="text-input cost-gold" value="${gold}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
         <td><button type="button" class="button" onclick="window.deleteCostRow(this)" style="background-color: #c0392b; color: #fff; padding: 4px 8px;">×</button></td>`;
     tbody.appendChild(row);
+    window.updateTotalCost();
 }
 
 // rework-ui.js updates
@@ -404,6 +403,7 @@ export function generateOutputString(oldC, newC, cost, notes, calcResult) {
     }
 
     const oldLevel = getTotalLevel(oldC.classes);
+    const reworkId = document.getElementById('current-rework-id')?.value || "Not Saved";
 
     return `\`\`\`
 __***Character Change Request***__
@@ -421,6 +421,8 @@ Notes: ${notes}
 
 __***Change Log***__
 ${logs.join('\n')}
+
+**Rework ID:** ${reworkId}
 \`\`\`
 <@&474659626193780751> <@&554463237924716545>`;
 }
