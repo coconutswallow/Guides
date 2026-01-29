@@ -373,12 +373,21 @@ export function generateOutputString(oldC, newC, cost, notes) {
         return `**Level:** ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}\n**Class:** ${classLine}\n**Race:** ${c.race}\n**Attributes:** ${ATTRIBUTES.map(a => c.attributes[a]).join('/')}\n**Feats:** ${featChoices.join(', ') || 'None'}`;
     };
 
-    // Get Rework Type Label
     const typeSelect = document.getElementById('rework-type');
-    const typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || "Not Selected";
+    const typeValue = typeSelect.value;
+    let typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || "Not Selected";
+
+    // Dynamic Label for Story Reworks in Output
+    if (typeValue === 'story') {
+        const origLevel = oldC.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0);
+        if (origLevel >= 17) typeLabel = "T4 Story Rework";
+        else if (origLevel >= 11) typeLabel = "T3 Story Rework";
+        else if (origLevel >= 5) typeLabel = "T2 Story Rework";
+        else typeLabel = "Level 5 or Below Story Rework";
+    }
 
     const logs = [];
-    logs.push(`**Rework Type:** ${typeLabel}`); // Added Rework Type to Log
+    logs.push(`**Rework Type:** ${typeLabel}`);
     logs.push(`---`);
 
     if (oldC.name !== newC.name) logs.push(`- Name: ${oldC.name} → ${newC.name}`);

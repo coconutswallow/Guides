@@ -66,21 +66,35 @@ export function computeReworkCosts(type, oldChar, newChar) {
         [REWORK_TYPES.T3_CHECKPOINT]: { oMin: 11, oMax: 16, nMin: 5, nMax: 10 },
         [REWORK_TYPES.T4_CHECKPOINT]: { oMin: 17, oMax: 20, nMin: 11, nMax: 16 }
     };
-
     // --- Story Rework Logic ---
     if (type === REWORK_TYPES.STORY) {
+        // Validation: New level cannot exceed original level
         if (newLevel > origLevel) {
-            return { isValid: false, error: "New level cannot be higher than the original level for a Story Rework." };
+            return { isValid: false, error: "Story Rework: New level cannot exceed original level." };
         }
+        
+        // Determine Tier based on original character level
+        let tierLabel = "";
+        if (origLevel >= 5 && origLevel <= 10) tierLabel = "T2 Story Rework";
+        else if (origLevel >= 11 && origLevel <= 16) tierLabel = "T3 Story Rework";
+        else if (origLevel >= 17 && origLevel <= 20) tierLabel = "T4 Story Rework";
+        else if (origLevel < 5) tierLabel = "Level 5 or Below Story Rework (Free)";
+        else return { isValid: false, error: "Invalid level for Story Rework." };
+
         const rates = getAlacarteRates(origLevel);
+        
+        // If level 5 or below, cost is 0; otherwise, standard tier rate
+        const finalGold = origLevel <= 5 ? 0 : rates.gold;
+        const finalDtp = origLevel <= 5 ? 0 : rates.dtp;
+
         return { 
             isValid: true, 
             isFixed: true, 
             costs: [{ 
-                change: 'Story Rework', 
+                change: tierLabel, 
                 count: 1, 
-                dtp: rates.dtp, 
-                gold: rates.gold 
+                dtp: finalDtp, 
+                gold: finalGold 
             }] 
         };
     }
