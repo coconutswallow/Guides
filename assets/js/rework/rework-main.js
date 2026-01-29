@@ -288,6 +288,10 @@ async function initApp() {
         console.log("Loading character data...");
         await initCharacterData();
 
+        ['original', 'new'].forEach(col => {
+            addClassRow(col); 
+        })
+
         // 3. Populate history
         console.log("Fetching saved reworks...");
         await window.fetchReworks();
