@@ -2,7 +2,7 @@ import { initCharacterData, fetchMyReworks, saveReworkToDb, loadReworkById, dele
 import { 
     scrapeColumn, populateColumn, renderBaseAttributes, renderFeatureRows, 
     addClassRow, removeClassRow, addCostRow, generateOutputString, 
-    updatePointBuyDisplay as refreshPoints
+    updatePointBuyDisplay as refreshPoints, generateFeatCards // Added this import
 } from "./rework-ui.js";
 import { computeReworkCosts, getTotalLevel, getAlacarteRates } from "./rework-calculations.js";
 import { ATTRIBUTES } from "./rework-constants.js";
