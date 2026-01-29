@@ -15,6 +15,7 @@ title: Character Rework Tool
 
     <div class="tab-nav">
         <button class="tab-btn active" onclick="window.switchTab('input')">Input</button>
+        <button class="tab-btn" onclick="window.switchTab('cost')">Cost Calculations</button>
         <button class="tab-btn" onclick="window.switchTab('output')">Output</button>
     </div>
 
@@ -91,6 +92,9 @@ title: Character Rework Tool
                             <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
                                     style="font-size:0.8em">Origin Feat Modifiers</label></div>
                             <div id="origin-mod-container-original"></div>
+                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                    style="font-size:0.8em">Proficiencies and Skills</label></div>
+                            <textarea class="text-input" id="orig-feat-prof-original" placeholder="List proficiencies and skills gained from this feat" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -151,6 +155,10 @@ title: Character Rework Tool
                                     style="font-size:0.8em">Origin Feat Modifiers</label><button type="button"
                                     class="copy-link" onclick="window.copyMods('origin')">Copy</button></div>
                             <div id="origin-mod-container-new"></div>
+                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                    style="font-size:0.8em">Proficiencies and Skills</label><button type="button"
+                                    class="copy-link" onclick="window.copyValue('orig-feat-prof-original', 'orig-feat-prof-new')">Copy</button></div>
+                            <textarea class="text-input" id="orig-feat-prof-new" placeholder="List proficiencies and skills gained from this feat" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -163,8 +171,12 @@ title: Character Rework Tool
                 <div id="feats-container-new"></div>
             </div>
         </div>
+    </div>
 
-        <div class="card" style="margin-top: 2rem;">
+    <div id="tab-cost" class="tab-content">
+        <h2 class="column-header">Cost Calculations</h2>
+        
+        <div class="card">
             <h3 class="card-title">Rework Details</h3>
             <input type="text" id="rework-cost" class="text-input" placeholder="GP/DTP Costs">
             <textarea id="rework-notes" class="notes-area" style="min-height:100px;"
@@ -338,6 +350,7 @@ title: Character Rework Tool
         setV(`race-${colId}`, data.race);
         setV(`bg-${colId}`, data.bg);
         setV(`orig-feat-${colId}`, data.origin_feat);
+        setV(`orig-feat-prof-${colId}`, data.origin_feat_prof);
 
         ATTRIBUTES.forEach(a => setV(`attr-${colId}-${a}`, data.attributes?.[a] || "10"));
 
@@ -379,13 +392,14 @@ title: Character Rework Tool
             feats.push({
                 name: c.querySelector('.text-input').value,
                 mods: mods,
+                prof: c.querySelector('.feat-prof')?.value || "",
                 // Using 'source' to match generateOutput's expectations
                 source: c.querySelector('.card-title').innerText.split(' - ')[0],
                 lvl: c.querySelector('.card-title').innerText.match(/Lvl (\d+)/)?.[1] || ""
             });
         });
 
-        return { name: getV(`name-${colId}`), race: getV(`race-${colId}`), bg: getV(`bg-${colId}`), origin_feat: getV(`orig-feat-${colId}`), attributes: attrs, race_mods: rMods, origin_mods: oMods, classes, feats };
+        return { name: getV(`name-${colId}`), race: getV(`race-${colId}`), bg: getV(`bg-${colId}`), origin_feat: getV(`orig-feat-${colId}`), origin_feat_prof: getV(`orig-feat-prof-${colId}`), attributes: attrs, race_mods: rMods, origin_mods: oMods, classes, feats };
     };
 
     window.generateOutput = () => {
@@ -574,13 +588,19 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
                             <tr>${ATTRIBUTES.map(a => `<td><select data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}
                             </tr>
                         </tbody>
-                    </table>`;
+                    </table>
+                    <div style="margin-top: 10px;">
+                        <label class="input-label" style="font-size:0.8em">Proficiencies and Skills</label>
+                        <textarea class="text-input feat-prof" placeholder="List proficiencies and skills gained from this feat" rows="3"></textarea>
+                    </div>`;
                 
                 container.appendChild(card);
 
                 // Restore saved data if it exists for this index
                 if (saved && saved[idx]) {
                     card.querySelector('.text-input').value = saved[idx].name || "";
+                    const profTextarea = card.querySelector('.feat-prof');
+                    if (profTextarea) profTextarea.value = saved[idx].prof || "";
                     ATTRIBUTES.forEach(a => {
                         const sel = card.querySelector(`select[data-attr="${a}"]`);
                         if (sel) sel.value = saved[idx].mods?.[a] || "0";
