@@ -1,52 +1,26 @@
-import { ATTRIBUTES, POINT_COSTS, ALACARTE_TIERS, REWORK_TYPES } from './rework-constants.js';
-import { getState } from './state-manager.js';
-
-export function calculatePointBuyCost(attributesObj) {
-    let spent = 0;
-    ATTRIBUTES.forEach(a => {
-        const val = parseInt(attributesObj[a]) || 8;
-        spent += POINT_COSTS[val] || 0;
-    });
-    return spent;
-}
-
-export function getTotalLevel(classes) {
-    if (!classes || !Array.isArray(classes)) return 0;
-    return classes.reduce((sum, c) => sum + (parseInt(c.level) || 0), 0);
-}
-
-export function getAlacarteRates(level) {
-    const tier = ALACARTE_TIERS.find(t => level >= t.min && level <= t.max);
-    return tier || { gold: 0, dtp: 0 };
-}
-
-function areModsEqual(m1, m2) {
-    const mod1 = m1 || {};
-    const mod2 = m2 || {};
-    for (const a of ATTRIBUTES) {
-        if ((mod1[a] || '0') !== (mod2[a] || '0')) return false;
-    }
-    return true;
-}
-
-function areFeaturesEqual(arr1, arr2) {
-    const list1 = arr1 || [];
-    const list2 = arr2 || [];
-    if (list1.length !== list2.length) return false;
-    for (let i = 0; i < list1.length; i++) {
-        const f1 = list1[i] || { type: 'none', name: '' };
-        const f2 = list2[i] || { type: 'none', name: '' };
-        if (f1.type !== f2.type || f1.name !== f2.name) return false;
-    }
-    return true;
-}
-
 export function computeReworkCosts(type, oldChar, newChar) {
     const costs = [];
     const origLevel = getTotalLevel(oldChar.classes || []);
     const newLevel = getTotalLevel(newChar.classes || []);
+    const characterData = getState().characterData || []; // Ensure data is accessible for class checks
     
-    // --- Checkpoint Rework Logic ---
+    const allMatchVer = (classes, v) => classes && classes.length > 0 && classes.every(c => c.version === v);
+
+    // --- 1. Level 5 or Below Free Rework ---
+    if (type === REWORK_TYPES.LEVEL_5_BELOW) {
+        if (origLevel > 5 || newLevel > 5) return { isValid: false, error: "Both characters must be level 5 or below." };
+        return { isValid: true, isFixed: true, costs: [{ change: 'Level 5 or Below Free Rework', count: 0, dtp: 0, gold: 0 }] };
+    }
+
+    // --- 2. 2024 Update Rework ---
+    if (type === REWORK_TYPES.UPDATE_2024) {
+        if (!allMatchVer(oldChar.classes, '2014') || !allMatchVer(newChar.classes, '2024')) {
+            return { isValid: false, error: "Requires all Original to be 2014 and all New to be 2024." };
+        }
+        return { isValid: true, isFixed: true, costs: [{ change: '2024 Update Rework', count: 0, dtp: 0, gold: 0 }] };
+    }
+
+    // --- 3. Checkpoint Rework Logic ---
     const checkpoints = {
         [REWORK_TYPES.T2_CHECKPOINT]: { oMin: 5, oMax: 10, nMin: 1, nMax: 4, tier: 'T2' },
         [REWORK_TYPES.T3_CHECKPOINT]: { oMin: 11, oMax: 16, nMin: 5, nMax: 10, tier: 'T3' },
@@ -56,13 +30,13 @@ export function computeReworkCosts(type, oldChar, newChar) {
     if (checkpoints[type]) {
         const t = checkpoints[type];
         if (origLevel < t.oMin || origLevel > t.oMax || newLevel < t.nMin || newLevel > t.nMax) {
-            return { isValid: false, error: `Invalid Level Range for Checkpoint.` };
+            return { isValid: false, error: `Invalid Level Range for ${t.tier} Checkpoint.` };
         }
         const rates = TIER_FIXED_COSTS[t.tier];
         return { isValid: true, isFixed: true, costs: [{ change: `${t.tier} Checkpoint`, count: 1, dtp: rates.dtp, gold: rates.gold }] };
     }
 
-    // --- Story Rework Logic ---
+    // --- 4. Story Rework Logic ---
     if (type === REWORK_TYPES.STORY) {
         if (newLevel > origLevel) {
             return { isValid: false, error: "Story Rework: New level cannot exceed original level." };
@@ -81,16 +55,7 @@ export function computeReworkCosts(type, oldChar, newChar) {
         }
     }
 
-    if (checkpoints[type]) {
-        const t = checkpoints[type];
-        if (origLevel < t.oMin || origLevel > t.oMax || newLevel < t.nMin || newLevel > t.nMax) {
-            return { isValid: false, error: `Invalid Level Range for ${type.replace('-', ' ').toUpperCase()}.` };
-        }
-        const rates = getAlacarteRates(origLevel);
-        return { isValid: true, isFixed: true, costs: [{ change: `${type.toUpperCase()} Checkpoint`, count: 1, dtp: rates.dtp, gold: rates.gold }] };
-    }
-
-    // --- A-la-carte Logic ---
+    // --- 5. A-la-carte Logic ---
     if (type === REWORK_TYPES.ALACARTE) {
         const rates = getAlacarteRates(origLevel);
         if (rates.gold === 0 && rates.dtp === 0) return { isValid: false, error: "A-la-carte available for levels 6+ only." };
