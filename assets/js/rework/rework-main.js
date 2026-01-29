@@ -98,25 +98,44 @@ window.updateTotalCost = () => {
     }
 };
 
-// --- Save / Load / Delete Logic (FIXED SCOPE) ---
+// --- UI Row Management Bindings ---
+window.addClassRow = (col) => addClassRow(col);
+window.removeClassRow = (btn) => removeClassRow(btn);
+window.calculatePointBuy = (colId) => refreshPoints(colId);
 
-// Attached to window so it can be called by loadExternalId and loadSelectedRework
+// --- Save / Load / Delete Logic ---
+
+// This updates the dropdown list in the UI
+window.fetchReworks = async () => {
+    try {
+        const data = await fetchMyReworks();
+        const sel = document.getElementById('load-rework-select');
+        if (!sel) return;
+        
+        sel.innerHTML = '<option value="">-- Load My Saved Rework --</option>';
+        data.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.id;
+            opt.innerText = `${r.character_name || "Unnamed"} (${new Date(r.updated_at).toLocaleDateString()})`;
+            sel.appendChild(opt);
+        });
+    } catch (e) {
+        console.error("Error fetching UI list:", e);
+    }
+};
+
 window.performLoad = async (id) => {
     if (!id) return;
     try {
         const d = await loadReworkById(id);
-        
-        // Update UI Fields
         document.getElementById('current-rework-id').value = d.id;
         document.getElementById('manual-discord-id').value = d.discord_id || "";
         document.getElementById('rework-cost').value = d.cost || "";
         document.getElementById('rework-notes').value = d.notes || "";
         
-        // Populate character data
         populateColumn('original', d.old_character);
         populateColumn('new', d.new_character);
         
-        // Refresh calculations
         window.calculateCosts();
     } catch(e) {
         console.error("Load failed:", e);
@@ -139,17 +158,14 @@ window.saveRework = async () => {
         };
 
         const res = await saveReworkToDb(payload);
-        
-        // Ensure ID is visible in the UUID input
         document.getElementById('current-rework-id').value = res.id;
         
-        // Update URL for easy sharing
         const u = new URL(window.location); 
         u.searchParams.set('id', res.id); 
         window.history.pushState({}, '', u);
         
         alert("Rework Saved! UUID: " + res.id); 
-        await window.fetchReworks();
+        await window.fetchReworks(); // This ensures the dropdown updates after saving
     } catch(e) { 
         console.error("Save error:", e);
         alert("Error saving: " + e.message); 
