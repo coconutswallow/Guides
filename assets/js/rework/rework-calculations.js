@@ -45,58 +45,40 @@ export function computeReworkCosts(type, oldChar, newChar) {
     const costs = [];
     const origLevel = getTotalLevel(oldChar.classes || []);
     const newLevel = getTotalLevel(newChar.classes || []);
-    const characterData = getState().characterData || [];
-    const allMatchVer = (classes, v) => classes && classes.length > 0 && classes.every(c => c.version === v);
-
-    // --- Fixed/Free Rework Types ---
-    if (type === REWORK_TYPES.LEVEL_5_BELOW) {
-        if (origLevel > 5 || newLevel > 5) return { isValid: false, error: "Both characters must be level 5 or below." };
-        return { isValid: true, isFixed: true, costs: [{ change: 'Level 5 or Below Free Rework', count: 0, dtp: 0, gold: 0 }] };
-    }
-
-    if (type === REWORK_TYPES.UPDATE_2024) {
-        if (!allMatchVer(oldChar.classes, '2014') || !allMatchVer(newChar.classes, '2024')) {
-            return { isValid: false, error: "Requires all Original to be 2014 and all New to be 2024." };
-        }
-        return { isValid: true, isFixed: true, costs: [{ change: '2024 Update Rework', count: 0, dtp: 0, gold: 0 }] };
-    }
-
+    
+    // --- Checkpoint Rework Logic ---
     const checkpoints = {
-        [REWORK_TYPES.T2_CHECKPOINT]: { oMin: 5, oMax: 10, nMin: 1, nMax: 4 },
-        [REWORK_TYPES.T3_CHECKPOINT]: { oMin: 11, oMax: 16, nMin: 5, nMax: 10 },
-        [REWORK_TYPES.T4_CHECKPOINT]: { oMin: 17, oMax: 20, nMin: 11, nMax: 16 }
+        [REWORK_TYPES.T2_CHECKPOINT]: { oMin: 5, oMax: 10, nMin: 1, nMax: 4, tier: 'T2' },
+        [REWORK_TYPES.T3_CHECKPOINT]: { oMin: 11, oMax: 16, nMin: 5, nMax: 10, tier: 'T3' },
+        [REWORK_TYPES.T4_CHECKPOINT]: { oMin: 17, oMax: 20, nMin: 11, nMax: 16, tier: 'T4' }
     };
+
+    if (checkpoints[type]) {
+        const t = checkpoints[type];
+        if (origLevel < t.oMin || origLevel > t.oMax || newLevel < t.nMin || newLevel > t.nMax) {
+            return { isValid: false, error: `Invalid Level Range for Checkpoint.` };
+        }
+        const rates = TIER_FIXED_COSTS[t.tier];
+        return { isValid: true, isFixed: true, costs: [{ change: `${t.tier} Checkpoint`, count: 1, dtp: rates.dtp, gold: rates.gold }] };
+    }
+
     // --- Story Rework Logic ---
     if (type === REWORK_TYPES.STORY) {
-        // Validation: New level cannot exceed original level
         if (newLevel > origLevel) {
             return { isValid: false, error: "Story Rework: New level cannot exceed original level." };
         }
         
-        // Determine Tier based on original character level
-        let tierLabel = "";
-        if (origLevel >= 5 && origLevel <= 10) tierLabel = "T2 Story Rework";
-        else if (origLevel >= 11 && origLevel <= 16) tierLabel = "T3 Story Rework";
-        else if (origLevel >= 17 && origLevel <= 20) tierLabel = "T4 Story Rework";
-        else if (origLevel < 5) tierLabel = "Level 5 or Below Story Rework (Free)";
-        else return { isValid: false, error: "Invalid level for Story Rework." };
-
-        const rates = getAlacarteRates(origLevel);
+        let tier = "";
+        if (origLevel >= 17) tier = "T4";
+        else if (origLevel >= 11) tier = "T3";
+        else if (origLevel >= 5) tier = "T2";
         
-        // If level 5 or below, cost is 0; otherwise, standard tier rate
-        const finalGold = origLevel <= 5 ? 0 : rates.gold;
-        const finalDtp = origLevel <= 5 ? 0 : rates.dtp;
-
-        return { 
-            isValid: true, 
-            isFixed: true, 
-            costs: [{ 
-                change: tierLabel, 
-                count: 1, 
-                dtp: finalDtp, 
-                gold: finalGold 
-            }] 
-        };
+        if (tier) {
+            const rates = TIER_FIXED_COSTS[tier];
+            return { isValid: true, isFixed: true, costs: [{ change: `${tier} Story Rework`, count: 1, dtp: rates.dtp, gold: rates.gold }] };
+        } else {
+            return { isValid: true, isFixed: true, costs: [{ change: 'Level 5 or Below Story Rework', count: 0, dtp: 0, gold: 0 }] };
+        }
     }
 
     if (checkpoints[type]) {

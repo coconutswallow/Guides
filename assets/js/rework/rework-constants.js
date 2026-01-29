@@ -2,6 +2,13 @@ export const ATTRIBUTES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 
 export const POINT_COSTS = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 };
 
+// Fixed costs for Checkpoint and Story Reworks
+export const TIER_FIXED_COSTS = {
+    T2: { gold: 820, dtp: 150 },
+    T3: { gold: 2400, dtp: 180 },
+    T4: { gold: 4250, dtp: 260 }
+};
+
 export const ALACARTE_TIERS = [
     { min: 1, max: 5, gold: 0, dtp: 0 },
     { min: 6, max: 6, gold: 160, dtp: 30 },
@@ -21,5 +28,5 @@ export const REWORK_TYPES = {
     T3_CHECKPOINT: 't3-checkpoint',
     T4_CHECKPOINT: 't4-checkpoint',
     ALACARTE: 'alacarte',
-    STORY: 'story' 
+    STORY: 'story'
 };
