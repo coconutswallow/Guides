@@ -107,7 +107,10 @@ window.deleteCostRow = (btn) => {
 };
 
 window.addClassRow = (col) => addClassRow(col);
-window.removeClassRow = (btn) => removeClassRow(btn);
+window.removeClassRow = (btn) => { 
+    removeClassRow(btn); 
+    window.calculateCosts(); 
+};
 window.calculatePointBuy = (colId) => refreshPoints(colId);
 
 // --- Save / Load / Delete Logic ---
@@ -132,6 +135,7 @@ window.performLoad = async (id) => {
         const d = await loadReworkById(id);
         document.getElementById('current-rework-id').value = d.id;
         document.getElementById('manual-discord-id').value = d.discord_id || "";
+        document.getElementById('rework-type').value = d.rework_type || "";
         document.getElementById('rework-cost').value = d.cost || "";
         document.getElementById('rework-notes').value = d.notes || "";
         
@@ -154,14 +158,21 @@ window.saveRework = async () => {
         }
 
         const oldC = scrapeColumn('original');
+        const newC = scrapeColumn('new');
         const payload = {
             discord_id: discordId,
             character_name: oldC.name,
-            // ... (remaining payload fields)
+            old_character: oldC,
+            new_character: newC,
+            rework_type: document.getElementById('rework-type')?.value || "",
+            cost: document.getElementById('rework-cost')?.value || "",
+            notes: document.getElementById('rework-notes')?.value || ""
         };
 
         const res = await saveReworkToDb(payload);
-        // ... (remaining save logic)
+        document.getElementById('current-rework-id').value = res.id;
+        alert(`Rework saved successfully! ID: ${res.id}`);
+        await window.fetchReworks();
     } catch(e) { alert(e.message); }
 };
 

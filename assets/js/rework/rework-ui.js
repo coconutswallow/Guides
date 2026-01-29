@@ -1,6 +1,6 @@
 import { ATTRIBUTES, POINT_COSTS } from './rework-constants.js';
 import { getState } from './state-manager.js';
-import { calculatePointBuyCost } from './rework-calculations.js';
+import { calculatePointBuyCost, getTotalLevel } from './rework-calculations.js';
 
 // --- Scrape & Populate logic ---
 export function scrapeColumn(colId) {
@@ -251,6 +251,7 @@ export function addClassRow(colId, init = null) {
     const regen = () => {
         const saved = saveFeatState(colId);
         generateFeatCards(colId, saved);
+        if (window.calculateCosts) window.calculateCosts();
     };
 
     vS.onchange = () => { updC(); regen(); };

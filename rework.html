@@ -27,16 +27,43 @@ title: Character Rework Tool
                 <select id="load-rework-select" class="load-select" onchange="window.loadSelectedRework()">
                     <option value="">-- Load My Saved Rework --</option>
                 </select>
-                <button class="button action-btn btn-load" onclick="window.loadExternalId()">Load UUID</button>
-                <button class="button action-btn btn-delete" onclick="window.deleteRework()" style="background-color: #c0392b; color: #fff; margin-left: auto;">Delete</button>
+                <button class="button action-btn btn-delete" onclick="window.deleteRework()" style="background-color: #c0392b; color: #fff;">Delete</button>
             </div>
             
             <div class="control-group">
-                <label class="input-label">Current UUID:</label>
+                <label class="input-label">Rework ID:</label>
                 <div style="display: flex; gap: 5px;">
                     <input type="text" id="current-rework-id" value="" readonly placeholder="Not Saved" style="width: 250px; background: #eee;">
                     <button class="button action-btn" onclick="window.copyUuid()" style="background-color: #34495e; color: white;">Copy</button>
+                    <button class="button action-btn btn-load" onclick="window.loadExternalId()">Load Rework using an ID</button>
                 </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px;">
+            <h3 class="card-title">Rework Type</h3>
+            <div style="margin-bottom: 15px;">
+                <label class="input-label">Select Rework Type</label>
+                <select id="rework-type" class="text-input" onchange="window.calculateCosts()">
+                    <option value="">-- Select Rework Type --</option>
+                    <option value="2024-update">2024 Update Rework</option>
+                    <option value="level-5-below">Level 5 or below Rework</option>
+                    <option value="t2-checkpoint">T2 Checkpoint Rework</option>
+                    <option value="t3-checkpoint">T3 Checkpoint Rework</option>
+                    <option value="t4-checkpoint">T4 Checkpoint Rework</option>
+                    <option value="story">Story Rework</option>
+                    <option value="alacarte">A-la-carte Rework</option>
+                </select>
+            </div>
+            <div id="rework-type-info" style="line-height: 1.6; font-size: 0.9em; color: #555;">
+                <p style="margin-bottom: 10px;">Costs are based on the type of change:</p>
+                <ul style="margin-left: 20px; margin-bottom: 0;">
+                    <li>2024 Update Rework (0 cost)</li>
+                    <li>Any rework before level 6 (0 cost)</li>
+                    <li>Checkpoint Rework (cost based on tier)</li>
+                    <li>Story Rework (cost based on tier)</li>
+                    <li>A-la-carte Rework (cost on a per-change basis)</li>
+                </ul>
             </div>
         </div>
 
@@ -177,36 +204,15 @@ title: Character Rework Tool
         <h2 class="column-header">Cost Calculations</h2>
         <div class="card">
             <h3 class="card-title" onclick="window.toggleAccordion('cost-info')" style="cursor: pointer; user-select: none;">
-                <span id="cost-info-icon">▼</span> Cost Calculations
+                <span id="cost-info-icon">▼</span> Cost Information
             </h3>
             <div id="cost-info-content" style="margin-bottom: 20px; line-height: 1.6;">
-                <p style="margin-bottom: 10px;">Costs are based on the type of change:</p>
-                <ul style="margin-left: 20px; margin-bottom: 15px;">
-                    <li>2024 Update Rework (0 cost)</li>
-                    <li>Any rework before level 6 (0 cost)</li>
-                    <li>Checkpoint Rework (cost based on tier)</li>
-                    <li>A-la-carte Rework (cost on a per-change basis)</li>
-                </ul>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-                <label class="input-label">Rework Type</label>
-                <select id="rework-type" class="text-input" onchange="window.calculateCosts()">
-                    <option value="">-- Select Rework Type --</option>
-                    <option value="2024-update">2024 Update Rework</option>
-                    <option value="level-5-below">Level 5 or below Rework</option>
-                    <option value="t2-checkpoint">T2 Checkpoint Rework</option>
-                    <option value="t3-checkpoint">T3 Checkpoint Rework</option>
-                    <option value="t4-checkpoint">T4 Checkpoint Rework</option>
-                    <option value="story">Story Rework</option>
-                    <option value="alacarte">A-la-carte Rework</option>
-                </select>
+                <p style="margin-bottom: 10px;">The costs are automatically calculated based on the Rework Type selected in the Input tab and the changes between your Original and New characters.</p>
             </div>
             
             <div id="cost-error" style="display: none; padding: 10px; background-color: #fee; border: 1px solid #c00; border-radius: 4px; margin-bottom: 15px; color: #c00;"></div>
             
-            <h4 style="margin-top: 20px; margin-bottom: 10px;">Cost Calculation</h4>
-            <button type="button" class="button button-secondary" onclick="window.calculateCosts()" style="margin-bottom: 10px;">Calculate Costs</button>
+            <h4 style="margin-top: 20px; margin-bottom: 10px;">Cost Breakdown</h4>
             
             <table class="stat-table" id="cost-table" style="margin-bottom: 10px;">
                 <thead>
