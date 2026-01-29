@@ -269,52 +269,45 @@ window.deleteRework = async () => {
     }
 };
 
-// Initialize app
 async function initApp() {
     console.log("Initializing Rework Tool...");
 
     try {
-        // 1. Initialize UI Elements
+        // 1. Initialize Static UI (No data dependency)
         ['original', 'new'].forEach(col => {
-            console.log(`Rendering UI for column: ${col}`);
             renderBaseAttributes(col);
             renderFeatureRows(`race-features-container-${col}`, 4);
             renderFeatureRows(`origin-features-container-${col}`, 4);
             renderFeatureRows(`origin-feat-features-container-${col}`, 4);
-            addClassRow(col); 
+            // Removed addClassRow from here to prevent "dead" cards
         });
 
         // 2. Load Data from Supabase
-        console.log("Loading character data...");
+        // This must complete so getState().characterData is populated
         await initCharacterData();
 
-        ['original', 'new'].forEach(col => {
-            addClassRow(col); 
-        })
-
-        // 3. Populate history
-        console.log("Fetching saved reworks...");
-        await window.fetchReworks();
-
-        // 4. Check URL for ID parameter
+        // 3. Handle URL loading OR Default State
         const urlParams = new URLSearchParams(window.location.search);
         const urlId = urlParams.get('id');
+
         if (urlId) {
-            console.log("Loading rework from URL:", urlId);
+            // loadExternalId calls populateColumn, which handles its own addClassRow
             await window.loadExternalId(urlId);
+        } else {
+            // Fresh start: Add exactly ONE row per column now that data is ready
+            ['original', 'new'].forEach(col => {
+                addClassRow(col);
+            });
         }
 
-        // 5. Show controls
+        // 4. Final UI Polishing
+        await window.fetchReworks();
         const controls = document.getElementById('logged-in-controls');
-        if(controls) {
-            controls.style.display = 'flex';
-            console.log("Controls shown");
-        }
+        if(controls) controls.style.display = 'flex';
         
         console.log("✓ Rework Tool initialized successfully");
     } catch (error) {
         console.error("✗ Initialization error:", error);
-        alert("Failed to initialize: " + error.message);
     }
 }
 
