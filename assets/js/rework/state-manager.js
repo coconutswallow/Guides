@@ -3,6 +3,7 @@ import { supabase } from "../supabaseClient.js";
 const state = {
     characterData: [],
     currentReworkId: null,
+    loadedCharacterName: null, // Tracks the name of the rework loaded from DB
     savedReworkIds: [] 
 };
 
@@ -88,6 +89,7 @@ export async function loadReworkById(id) {
     const { data, error } = await supabase.from('rework').select('*').eq('id', id).single();
     if (error) throw error;
     state.currentReworkId = data.id;
+    state.loadedCharacterName = data.character_name; // Store name on load
     addLocalId(data.id);
     return data;
 }
@@ -95,18 +97,23 @@ export async function loadReworkById(id) {
 export async function saveReworkToDb(payload) {
     payload.updated_at = new Date().toISOString();
     const currentId = state.currentReworkId;
-    let result;
+    // Check if the name has changed since loading
+    const nameChanged = state.loadedCharacterName && payload.character_name !== state.loadedCharacterName;
 
-    if (currentId) {
+    let result;
+    if (currentId && !nameChanged) {
+        // Update existing if name is the same
         const { data, error } = await supabase.from('rework').update(payload).eq('id', currentId).select();
         if (error) throw error;
         result = data[0];
     } else {
+        // Insert new entry if it's a new rework or the name changed
         const { data, error } = await supabase.from('rework').insert([payload]).select();
         if (error) throw error;
         result = data[0];
     }
     state.currentReworkId = result.id;
+    state.loadedCharacterName = result.character_name;
     addLocalId(result.id);
     return result;
 }

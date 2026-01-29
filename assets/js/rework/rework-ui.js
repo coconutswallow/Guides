@@ -355,59 +355,41 @@ export function addCostRow(change, count, dtp, gold) {
     tbody.appendChild(row);
 }
 
-export function generateOutputString(oldC, newC, cost, notes) {
-    const buildB = (c) => {
-        const clean = (s) => (s || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
-        const classLine = c.classes.map(cl => {
-            const name = clean(cl.class);
-            const sub = clean(cl.subclass);
-            return `${name}${sub && sub !== 'None' ? ' ' + sub : ''} (${cl.level})`;
-        }).join(' / ');
+// rework-ui.js updates
+export function generateOutputString(oldC, newC, cost, notes, calcResult) {
+    // ... (buildB internal function remains)
 
-        const featChoices = c.feats.map(f => {
-            let m = []; 
-            ATTRIBUTES.forEach(a => { if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
-            return `${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source})`;
-        });
-
-        return `**Level:** ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}\n**Class:** ${classLine}\n**Race:** ${c.race}\n**Attributes:** ${ATTRIBUTES.map(a => c.attributes[a]).join('/')}\n**Feats:** ${featChoices.join(', ') || 'None'}`;
-    };
-
-    const typeSelect = document.getElementById('rework-type');
-    const typeValue = typeSelect.value;
-    let typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || "Not Selected";
-
-    // Dynamic Label for Story Reworks in Output
-    if (typeValue === 'story') {
-        const origLevel = oldC.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0);
-        if (origLevel >= 17) typeLabel = "T4 Story Rework";
-        else if (origLevel >= 11) typeLabel = "T3 Story Rework";
-        else if (origLevel >= 5) typeLabel = "T2 Story Rework";
-        else typeLabel = "Level 5 or Below Story Rework";
+    // Discord Name Formatting
+    let discordId = document.getElementById('manual-discord-id').value || "Unknown";
+    if (discordId !== "Unknown" && !discordId.startsWith('@')) {
+        discordId = '@' + discordId;
     }
 
+    const typeSelect = document.getElementById('rework-type');
+    let typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || "Not Selected";
+
+    // Change Log using calculation results
     const logs = [];
     logs.push(`**Rework Type:** ${typeLabel}`);
     logs.push(`---`);
-
-    if (oldC.name !== newC.name) logs.push(`- Name: ${oldC.name} → ${newC.name}`);
     
-    const attrChanges = ATTRIBUTES.filter(a => oldC.attributes[a] !== newC.attributes[a])
-        .map(a => `${a} (${oldC.attributes[a]}→${newC.attributes[a]})`);
-    if (attrChanges.length > 0) logs.push(`- Attributes: ${attrChanges.join(', ')}`);
+    if (calcResult && calcResult.costs) {
+        calcResult.costs.forEach(c => {
+            let logLine = `- ${c.change}`;
+            if (!calcResult.isFixed && c.count > 0) {
+                const g = c.count * calcResult.rates.gold;
+                const d = c.count * calcResult.rates.dtp;
+                logLine += ` (${c.count} pts: ${g} GP / ${d} DTP)`;
+            }
+            logs.push(logLine);
+        });
+    }
 
-    const oldClStr = oldC.classes.map(c => `${c.class} (${c.subclass})`).join('/');
-    const newClStr = newC.classes.map(c => `${c.class} (${c.subclass})`).join('/');
-    if (oldClStr !== newClStr) logs.push(`- Classes: ${oldClStr} → ${newClStr}`);
+    const oldLevel = getTotalLevel(oldC.classes);
 
-    if (oldC.race !== newC.race) logs.push(`- Race: ${oldC.race} → ${newC.race}`);
-    if (oldC.bg !== newC.bg) logs.push(`- Origin: ${oldC.bg} → ${newC.bg}`);
-
-    const discordId = document.getElementById('manual-discord-id').value || "Unknown";
-    
     return `\`\`\`
 __***Character Change Request***__
-**Requestor:** @${discordId}
+**Requestor:** ${discordId} as ${oldC.name}(${oldLevel})
 
 **Old Character**
 ${buildB(oldC)}

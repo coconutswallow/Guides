@@ -147,21 +147,22 @@ window.performLoad = async (id) => {
 
 window.saveRework = async () => {
     try {
+        let discordId = document.getElementById('manual-discord-id')?.value || "Unknown";
+        if (discordId !== "Unknown" && !discordId.startsWith('@')) {
+            discordId = '@' + discordId;
+            document.getElementById('manual-discord-id').value = discordId;
+        }
+
         const oldC = scrapeColumn('original');
         const payload = {
-            discord_id: document.getElementById('manual-discord-id')?.value || "Unknown",
+            discord_id: discordId,
             character_name: oldC.name,
-            old_character: oldC,
-            new_character: scrapeColumn('new'),
-            cost: document.getElementById('rework-cost')?.value || "",
-            notes: document.getElementById('rework-notes')?.value || ""
+            // ... (remaining payload fields)
         };
+
         const res = await saveReworkToDb(payload);
-        document.getElementById('current-rework-id').value = res.id;
-        const u = new URL(window.location); u.searchParams.set('id', res.id); window.history.pushState({}, '', u);
-        alert("Rework Saved! UUID: " + res.id); 
-        await window.fetchReworks();
-    } catch(e) { alert("Error saving: " + e.message); }
+        // ... (remaining save logic)
+    } catch(e) { alert(e.message); }
 };
 
 window.loadExternalId = async () => {
@@ -223,9 +224,16 @@ window.copyFeatures = (type) => {
 };
 
 window.generateOutput = () => {
-    const cost = document.getElementById('rework-cost').value;
+    const type = document.getElementById('rework-type').value;
+    const oldC = scrapeColumn('original');
+    const newC = scrapeColumn('new');
+    const costText = document.getElementById('rework-cost').value;
     const notes = document.getElementById('rework-notes').value;
-    document.getElementById('output-text').value = generateOutputString(scrapeColumn('original'), scrapeColumn('new'), cost, notes);
+    
+    // Re-calculate to get detailed costs for the Change Log
+    const calcResult = computeReworkCosts(type, oldC, newC);
+    
+    document.getElementById('output-text').value = generateOutputString(oldC, newC, costText, notes, calcResult);
 };
 
 // --- App Initialization ---

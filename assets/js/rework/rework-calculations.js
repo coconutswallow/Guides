@@ -140,11 +140,14 @@ export function computeReworkCosts(type, oldChar, newChar) {
 
         if (buildChanged) {
             let featCardCount = 0;
-            newClasses.forEach(cl => {
-                let data = characterData.find(r => r.version === cl.version && r.class === cl.class && r.subclass === cl.subclass) 
-                           || characterData.find(r => r.version === cl.version && r.class === cl.class);
-                const milestones = data?.ASI || [4, 8, 12, 16, 19];
-                featCardCount += milestones.filter(m => m <= (parseInt(cl.level) || 0)).length;
+            newChar.classes.forEach(cl => {
+                let data = characterData.find(r => r.version === cl.version && r.class === cl.class && r.subclass === cl.subclass) || characterData.find(r => r.version === cl.version && r.class === cl.class);
+                featCardCount += (data?.ASI || [4, 8, 12, 16, 19]).filter(m => m <= (parseInt(cl.level) || 0)).length;
+            });
+            // Updated description to include the card count for clarity
+            costs.push({ 
+                change: `Class/Level Shift: ${oldClStr} → ${newClStr} (${featCardCount} feat cards affected)`, 
+                count: featCardCount 
             });
             costs.push({ 
                 change: `Class/Level Shift: ${oldStr} → ${newStr}`, 
