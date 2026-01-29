@@ -128,14 +128,24 @@ window.performLoad = async (id) => {
     if (!id) return;
     try {
         const d = await loadReworkById(id);
+        
+        // 1. Update basic UI metadata
         document.getElementById('current-rework-id').value = d.id;
         document.getElementById('manual-discord-id').value = d.discord_id || "";
         document.getElementById('rework-cost').value = d.cost || "";
         document.getElementById('rework-notes').value = d.notes || "";
         
+        // 2. Populate character columns 
+        // Note: populateColumn handles the class rows and race/origin data
         populateColumn('original', d.old_character);
         populateColumn('new', d.new_character);
         
+        // 3. FORCE FEAT GENERATION: Pass the saved feats specifically
+        // We do this after populateColumn has finished building the class row DOM
+        generateFeatCards('original', d.old_character.feats);
+        generateFeatCards('new', d.new_character.feats);
+        
+        // 4. Final calculation refresh
         window.calculateCosts();
     } catch(e) {
         console.error("Load failed:", e);
@@ -222,8 +232,10 @@ async function initApp() {
         const urlId = urlParams.get('id');
 
         if (urlId) {
+            // Use the fixed window version
             await window.performLoad(urlId);
         } else {
+            // Default empty state
             ['original', 'new'].forEach(col => addClassRow(col));
         }
 
