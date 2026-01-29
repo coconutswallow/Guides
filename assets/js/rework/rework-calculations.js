@@ -61,7 +61,6 @@ export function computeReworkCosts(type, oldChar, newChar) {
         return { isValid: true, isFixed: true, costs: [{ change: '2024 Update Rework', count: 0, dtp: 0, gold: 0 }] };
     }
 
-    // --- Checkpoint Rework Logic ---
     const checkpoints = {
         [REWORK_TYPES.T2_CHECKPOINT]: { oMin: 5, oMax: 10, nMin: 1, nMax: 4 },
         [REWORK_TYPES.T3_CHECKPOINT]: { oMin: 11, oMax: 16, nMin: 5, nMax: 10 },
@@ -70,14 +69,8 @@ export function computeReworkCosts(type, oldChar, newChar) {
 
     if (checkpoints[type]) {
         const t = checkpoints[type];
-        const isOrigValid = origLevel >= t.oMin && origLevel <= t.oMax;
-        const isNewValid = newLevel >= t.nMin && newLevel <= t.nMax;
-
-        if (!isOrigValid || !isNewValid) {
-            return { 
-                isValid: false, 
-                error: `Invalid Level Range for ${type.replace('-', ' ').toUpperCase()}. Original must be ${t.oMin}-${t.oMax}, New must be ${t.nMin}-${t.nMax}.` 
-            };
+        if (origLevel < t.oMin || origLevel > t.oMax || newLevel < t.nMin || newLevel > t.nMax) {
+            return { isValid: false, error: `Invalid Level Range for ${type.replace('-', ' ').toUpperCase()}.` };
         }
         const rates = getAlacarteRates(origLevel);
         return { isValid: true, isFixed: true, costs: [{ change: `${type.toUpperCase()} Checkpoint`, count: 1, dtp: rates.dtp, gold: rates.gold }] };
@@ -88,29 +81,46 @@ export function computeReworkCosts(type, oldChar, newChar) {
         const rates = getAlacarteRates(origLevel);
         if (rates.gold === 0 && rates.dtp === 0) return { isValid: false, error: "A-la-carte available for levels 6+ only." };
         
-        if (oldChar.name !== newChar.name && oldChar.name && newChar.name) costs.push({ change: `Character name change`, count: 2 });
-        if (ATTRIBUTES.some(a => oldChar.attributes[a] !== newChar.attributes[a])) costs.push({ change: `Starting ability score changes`, count: 2 });
-        if (oldChar.race !== newChar.race || !areModsEqual(oldChar.race_mods, newChar.race_mods) || !areFeaturesEqual(oldChar.race_features, newChar.race_features)) costs.push({ change: `Race/Species section changed`, count: 1 });
+        // Name Detailed Change
+        if (oldChar.name !== newChar.name && oldChar.name && newChar.name) {
+            costs.push({ change: `Name Change: ${oldChar.name} → ${newChar.name}`, count: 2 });
+        }
         
-        let originChanged = (oldChar.bg !== newChar.bg) || (!areFeaturesEqual(oldChar.origin_features, newChar.origin_features)) || (oldChar.origin_feat !== newChar.origin_feat) || (!areModsEqual(oldChar.origin_mods, newChar.origin_mods)) || (!areFeaturesEqual(oldChar.origin_feat_features, newChar.origin_feat_features));
-        if (originChanged) costs.push({ change: `Origin/Background section changed`, count: 1 });
+        // Attribute Detailed Change
+        const changedAttrs = ATTRIBUTES.filter(a => oldChar.attributes[a] !== newChar.attributes[a]);
+        if (changedAttrs.length > 0) {
+            const detail = changedAttrs.map(a => `${a} (${oldChar.attributes[a]}→${newChar.attributes[a]})`).join(', ');
+            costs.push({ change: `Attribute Changes: ${detail}`, count: 2 });
+        }
+        
+        // Race Detailed Change
+        if (oldChar.race !== newChar.race || !areModsEqual(oldChar.race_mods, newChar.race_mods) || !areFeaturesEqual(oldChar.race_features, newChar.race_features)) {
+            costs.push({ change: `Race/Species Change: ${oldChar.race || 'None'} → ${newChar.race || 'None'}`, count: 1 });
+        }
+        
+        // Origin Detailed Change
+        if (oldChar.bg !== newChar.bg || oldChar.origin_feat !== newChar.origin_feat || !areFeaturesEqual(oldChar.origin_features, newChar.origin_features)) {
+            costs.push({ change: `Origin Change: ${oldChar.bg || 'None'} (${oldChar.origin_feat || 'No Feat'}) → ${newChar.bg || 'None'} (${newChar.origin_feat || 'No Feat'})`, count: 1 });
+        }
         
         const oldClasses = oldChar.classes || [];
         const newClasses = newChar.classes || [];
-        let classMismatch = oldClasses.length !== newClasses.length || oldClasses.some((c, i) => c.class !== newClasses[i].class || c.subclass !== newClasses[i].subclass || c.version !== newClasses[i].version);
+        const oldStr = oldClasses.map(c => `${c.class} (${c.subclass || 'None'})`).join('/');
+        const newStr = newClasses.map(c => `${c.class} (${c.subclass || 'None'})`).join('/');
 
-        if (classMismatch) {
+        if (oldStr !== newStr) {
             let featCardCount = 0;
             newClasses.forEach(cl => {
                 let data = characterData.find(r => r.version === cl.version && r.class === cl.class && r.subclass === cl.subclass) || characterData.find(r => r.version === cl.version && r.class === cl.class);
                 featCardCount += (data?.ASI || [4, 8, 12, 16, 19]).filter(m => m <= (parseInt(cl.level) || 0)).length;
             });
-            costs.push({ change: `Class/Subclass change`, count: featCardCount });
+            costs.push({ change: `Class/Subclass Change: ${oldStr} → ${newStr}`, count: featCardCount });
         } else {
             const oldFeats = oldChar.feats || [];
             const newFeats = newChar.feats || [];
-            let featChanged = oldFeats.length !== newFeats.length || oldFeats.some((of, i) => of.name !== newFeats[i].name || !areModsEqual(of.mods, newFeats[i].mods) || !areFeaturesEqual(of.features, newFeats[i].features));
-            if (featChanged) costs.push({ change: `Feat selection or detail modified`, count: 1 });
+            if (oldFeats.some((of, i) => !newFeats[i] || of.name !== newFeats[i].name || !areModsEqual(of.mods, newFeats[i].mods))) {
+                costs.push({ change: `Feat details modified (ASIs, Modifiers, or Choices)`, count: 1 });
+            }
         }
 
         return { isValid: true, isFixed: false, rates, costs };

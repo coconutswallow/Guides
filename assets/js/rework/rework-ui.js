@@ -356,7 +356,6 @@ export function addCostRow(change, count, dtp, gold) {
 }
 
 export function generateOutputString(oldC, newC, cost, notes) {
-    // Replicates the buildB function from rework-old
     const buildB = (c) => {
         const clean = (s) => (s || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
         const classLine = c.classes.map(cl => {
@@ -371,36 +370,35 @@ export function generateOutputString(oldC, newC, cost, notes) {
             if (total > 0) bonusLine.push(`+${total} ${a}`);
         });
 
-        const featChoices = [];
-        if (c.origin_feat) {
-            let m = []; 
-            ATTRIBUTES.forEach(a => { if (c.origin_mods[a] != "0") m.push(`+${c.origin_mods[a]} ${a}`); });
-            featChoices.push(`${c.origin_feat}${m.length ? ' ' + m.join(", ") : ""} (Background)`);
-        }
-        
-        c.feats.forEach(f => {
+        const featChoices = c.feats.map(f => {
             let m = []; 
             ATTRIBUTES.forEach(a => { if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
-            featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source} (${f.lvl}))`);
+            return `${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source})`;
         });
 
-        return `Name: ${c.name}
-Version: ${c.classes[0]?.version || '2024'}
-Level: ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}
-Class: ${classLine}
-Race/Species: ${c.race}
-Starting Stats: (excluding Racial/Background Bonuses)
-Str / Dex / Con / Int / Wis / Cha
-${ATTRIBUTES.map(a => c.attributes[a]).join(' / ')}
-Racial/Background stat bonuses: ${bonusLine.join(', ') || 'None'}
-ASI/Feat/Origin Feat choices: ${featChoices.join(', ')}
-Background: ${c.bg}`;
+        return `**Level:** ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}\n**Class:** ${classLine}\n**Race:** ${c.race}\n**Attributes:** ${ATTRIBUTES.map(a => c.attributes[a]).join('/')}\n**Feats:** ${featChoices.join(', ') || 'None'}`;
     };
 
+    // Generate the detailed Change Log
+    const logs = [];
+    if (oldC.name !== newC.name) logs.push(`- Name: ${oldC.name} → ${newC.name}`);
+    
+    const attrChanges = ATTRIBUTES.filter(a => oldC.attributes[a] !== newC.attributes[a])
+        .map(a => `${a} (${oldC.attributes[a]}→${newC.attributes[a]})`);
+    if (attrChanges.length > 0) logs.push(`- Attributes: ${attrChanges.join(', ')}`);
+
+    const oldClStr = oldC.classes.map(c => `${c.class} (${c.subclass})`).join('/');
+    const newClStr = newC.classes.map(c => `${c.class} (${c.subclass})`).join('/');
+    if (oldClStr !== newClStr) logs.push(`- Classes: ${oldClStr} → ${newClStr}`);
+
+    if (oldC.race !== newC.race) logs.push(`- Race: ${oldC.race} → ${newC.race}`);
+    if (oldC.bg !== newC.bg) logs.push(`- Origin: ${oldC.bg} → ${newC.bg}`);
+
     const discordId = document.getElementById('manual-discord-id').value || "Unknown";
+    
     return `\`\`\`
 __***Character Change Request***__
-**Requestor:** @${discordId} as ${oldC.name} (${oldC.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)})
+**Requestor:** @${discordId}
 
 **Old Character**
 ${buildB(oldC)}
@@ -411,6 +409,9 @@ ${buildB(newC)}
 **Details**
 Cost: ${cost}
 Notes: ${notes}
+
+__***Change Log***__
+${logs.length > 0 ? logs.join('\n') : "- No structural changes detected."}
 \`\`\`
 <@&474659626193780751> <@&554463237924716545>`;
 }
