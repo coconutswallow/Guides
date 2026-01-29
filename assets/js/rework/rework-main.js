@@ -2,7 +2,7 @@ import { initCharacterData, fetchMyReworks, saveReworkToDb, loadReworkById, dele
 import { 
     scrapeColumn, populateColumn, renderBaseAttributes, renderFeatureRows, 
     addClassRow, removeClassRow, addCostRow, generateOutputString, 
-    updatePointBuyDisplay as refreshPoints, generateFeatCards // Added this import
+    updatePointBuyDisplay as refreshPoints, generateFeatCards 
 } from "./rework-ui.js";
 import { computeReworkCosts, getTotalLevel, getAlacarteRates } from "./rework-calculations.js";
 import { ATTRIBUTES } from "./rework-constants.js";
@@ -48,18 +48,19 @@ window.calculateCosts = () => {
     tbody.innerHTML = '';
 
     if (result.isFixed) {
-        thead.innerHTML = `<th style="text-align: left;">Rework Type</th><th>DTP</th><th>Gold</th>`;
+        thead.innerHTML = `<th style="text-align: left;">Rework Type</th><th>DTP</th><th>Gold</th><th style="width: 5%;"></th>`;
     } else {
-        thead.innerHTML = `<th style="text-align: left;">Detailed Change Description</th><th style="width: 120px;"># Changes</th>`;
+        thead.innerHTML = `<th style="text-align: left;">Detailed Change Description</th><th style="width: 120px;"># Changes</th><th style="width: 5%;"></th>`;
     }
 
     result.costs.forEach(c => {
         const row = document.createElement('tr');
         if (result.isFixed) {
-            row.innerHTML = `<td style="text-align: left;">${c.change}</td><td>${c.dtp}</td><td>${c.gold} GP</td>`;
+            row.innerHTML = `<td style="text-align: left;">${c.change}</td><td>${c.dtp}</td><td>${c.gold} GP</td><td></td>`;
         } else {
             row.innerHTML = `<td style="text-align: left; font-size: 0.85em; color: #444;">${c.change}</td>
-                             <td><input type="number" class="text-input cost-num-changes" value="${c.count}" onchange="window.updateTotalCost()"></td>`;
+                             <td><input type="number" class="text-input cost-num-changes" value="${c.count}" onchange="window.updateTotalCost()"></td>
+                             <td><button type="button" class="button" onclick="window.deleteCostRow(this)" style="background-color: #c0392b; color: #fff; padding: 4px 8px;">×</button></td>`;
         }
         tbody.appendChild(row);
     });
@@ -98,22 +99,23 @@ window.updateTotalCost = () => {
     }
 };
 
+// --- Manual Row Bindings [RESTORED] ---
+window.addCostRow = () => addCostRow("", 0, 0, 0);
+window.deleteCostRow = (btn) => { 
+    btn.closest('tr')?.remove(); 
+    window.updateTotalCost(); 
+};
 
-
-// --- UI Row Management Bindings ---
 window.addClassRow = (col) => addClassRow(col);
 window.removeClassRow = (btn) => removeClassRow(btn);
 window.calculatePointBuy = (colId) => refreshPoints(colId);
 
 // --- Save / Load / Delete Logic ---
-
-// This updates the dropdown list in the UI
 window.fetchReworks = async () => {
     try {
         const data = await fetchMyReworks();
         const sel = document.getElementById('load-rework-select');
         if (!sel) return;
-        
         sel.innerHTML = '<option value="">-- Load My Saved Rework --</option>';
         data.forEach(r => {
             const opt = document.createElement('option');
@@ -121,67 +123,45 @@ window.fetchReworks = async () => {
             opt.innerText = `${r.character_name || "Unnamed"} (${new Date(r.updated_at).toLocaleDateString()})`;
             sel.appendChild(opt);
         });
-    } catch (e) {
-        console.error("Error fetching UI list:", e);
-    }
+    } catch (e) { console.error(e); }
 };
 
 window.performLoad = async (id) => {
     if (!id) return;
     try {
         const d = await loadReworkById(id);
-        
-        // 1. Update basic UI metadata
         document.getElementById('current-rework-id').value = d.id;
         document.getElementById('manual-discord-id').value = d.discord_id || "";
         document.getElementById('rework-cost').value = d.cost || "";
         document.getElementById('rework-notes').value = d.notes || "";
         
-        // 2. Populate character columns 
-        // Note: populateColumn handles the class rows and race/origin data
         populateColumn('original', d.old_character);
         populateColumn('new', d.new_character);
         
-        // 3. FORCE FEAT GENERATION: Pass the saved feats specifically
-        // We do this after populateColumn has finished building the class row DOM
         generateFeatCards('original', d.old_character.feats);
         generateFeatCards('new', d.new_character.feats);
         
-        // 4. Final calculation refresh
         window.calculateCosts();
-    } catch(e) {
-        console.error("Load failed:", e);
-        alert("Load failed: " + e.message);
-    }
+    } catch(e) { alert("Load failed: " + e.message); }
 };
 
 window.saveRework = async () => {
     try {
         const oldC = scrapeColumn('original');
-        const newC = scrapeColumn('new');
-        
         const payload = {
             discord_id: document.getElementById('manual-discord-id')?.value || "Unknown",
             character_name: oldC.name,
             old_character: oldC,
-            new_character: newC,
+            new_character: scrapeColumn('new'),
             cost: document.getElementById('rework-cost')?.value || "",
             notes: document.getElementById('rework-notes')?.value || ""
         };
-
         const res = await saveReworkToDb(payload);
         document.getElementById('current-rework-id').value = res.id;
-        
-        const u = new URL(window.location); 
-        u.searchParams.set('id', res.id); 
-        window.history.pushState({}, '', u);
-        
+        const u = new URL(window.location); u.searchParams.set('id', res.id); window.history.pushState({}, '', u);
         alert("Rework Saved! UUID: " + res.id); 
-        await window.fetchReworks(); // This ensures the dropdown updates after saving
-    } catch(e) { 
-        console.error("Save error:", e);
-        alert("Error saving: " + e.message); 
-    }
+        await window.fetchReworks();
+    } catch(e) { alert("Error saving: " + e.message); }
 };
 
 window.loadExternalId = async () => {
@@ -196,23 +176,16 @@ window.loadSelectedRework = async () => {
 
 window.deleteRework = async () => {
     const sel = document.getElementById('load-rework-select');
-    if (!sel || !sel.value) {
-        alert("Please select a rework first.");
-        return;
-    }
-    if(!confirm("Are you sure you want to delete this rework?")) return;
+    if (!sel || !sel.value) return;
+    if(!confirm("Are you sure?")) return;
     try {
         await deleteReworkById(sel.value);
         document.getElementById('current-rework-id').value = "";
-        alert("Rework deleted successfully"); 
         await window.fetchReworks();
-    } catch (e) { 
-        console.error("Delete error:", e);
-        alert("Delete failed: " + e.message); 
-    }
+    } catch (e) { console.error(e); }
 };
 
-// --- Copy Utilities ---
+// --- Copy Utilities [RESTORED] ---
 window.copyValue = (s, t) => { 
     const el = document.getElementById(s); 
     const target = document.getElementById(t);
@@ -220,14 +193,10 @@ window.copyValue = (s, t) => {
 };
 
 window.copyAttributes = () => { 
-    const attrs = {};
     ATTRIBUTES.forEach(a => { 
         const source = document.getElementById(`attr-original-${a}`);
         const target = document.getElementById(`attr-new-${a}`);
-        if (source && target) {
-            target.value = source.value;
-            attrs[a] = source.value;
-        }
+        if (source && target) target.value = source.value;
     }); 
     window.calculatePointBuy('new'); 
 };
@@ -243,14 +212,12 @@ window.copyMods = (type) => {
 window.copyFeatures = (type) => {
     const sId = type === 'origin-feat' ? `origin-feat-features-container-original` : `${type}-features-container-original`;
     const tId = type === 'origin-feat' ? `origin-feat-features-container-new` : `${type}-features-container-new`;
-    
-    const sourceRows = document.querySelectorAll(`#${sId} .feature-row`);
-    const targetRows = document.querySelectorAll(`#${tId} .feature-row`);
-    
-    sourceRows.forEach((sourceRow, i) => {
-        if (targetRows[i]) {
-            targetRows[i].querySelector('.feature-type').value = sourceRow.querySelector('.feature-type').value;
-            targetRows[i].querySelector('.feature-name').value = sourceRow.querySelector('.feature-name').value;
+    const sRows = document.querySelectorAll(`#${sId} .feature-row`);
+    const tRows = document.querySelectorAll(`#${tId} .feature-row`);
+    sRows.forEach((row, i) => {
+        if (tRows[i]) {
+            tRows[i].querySelector('.feature-type').value = row.querySelector('.feature-type').value;
+            tRows[i].querySelector('.feature-name').value = row.querySelector('.feature-name').value;
         }
     });
 };
@@ -270,24 +237,11 @@ async function initApp() {
             renderFeatureRows(`origin-features-container-${col}`, 4);
             renderFeatureRows(`origin-feat-features-container-${col}`, 4);
         });
-
         await initCharacterData();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlId = urlParams.get('id');
-
-        if (urlId) {
-            // Use the fixed window version
-            await window.performLoad(urlId);
-        } else {
-            // Default empty state
-            ['original', 'new'].forEach(col => addClassRow(col));
-        }
-
+        const urlId = new URLSearchParams(window.location.search).get('id');
+        urlId ? await window.performLoad(urlId) : ['original', 'new'].forEach(col => addClassRow(col));
         await window.fetchReworks();
-    } catch (error) {
-        console.error("Initialization error:", error);
-    }
+    } catch (error) { console.error(error); }
 }
 
 document.addEventListener('DOMContentLoaded', initApp);

@@ -124,42 +124,58 @@ export function computeReworkCosts(type, oldChar, newChar) {
         const oldStr = oldClasses.map(c => `${c.class} (${c.subclass || 'None'})`).join('/');
         const newStr = newClasses.map(c => `${c.class} (${c.subclass || 'None'})`).join('/');
 
-        if (oldStr !== newStr) {
+        // Logic fix: check for level shifts even if classes are same
+        let buildChanged = oldClasses.length !== newClasses.length;
+        if (!buildChanged) {
+            for (let i = 0; i < oldClasses.length; i++) {
+                if (oldClasses[i].class !== newClasses[i].class || 
+                    oldClasses[i].subclass !== newClasses[i].subclass ||
+                    oldClasses[i].version !== newClasses[i].version ||
+                    oldClasses[i].level !== newClasses[i].level) { 
+                    buildChanged = true;
+                    break;
+                }
+            }
+        }
+
+        if (buildChanged) {
             let featCardCount = 0;
             newClasses.forEach(cl => {
-                let data = characterData.find(r => r.version === cl.version && r.class === cl.class && r.subclass === cl.subclass) || characterData.find(r => r.version === cl.version && r.class === cl.class);
-                featCardCount += (data?.ASI || [4, 8, 12, 16, 19]).filter(m => m <= (parseInt(cl.level) || 0)).length;
+                let data = characterData.find(r => r.version === cl.version && r.class === cl.class && r.subclass === cl.subclass) 
+                           || characterData.find(r => r.version === cl.version && r.class === cl.class);
+                const milestones = data?.ASI || [4, 8, 12, 16, 19];
+                featCardCount += milestones.filter(m => m <= (parseInt(cl.level) || 0)).length;
             });
-            costs.push({ change: `Class/Subclass Change: ${oldStr} → ${newStr}`, count: featCardCount });
+            costs.push({ 
+                change: `Class/Level Shift: ${oldStr} → ${newStr}`, 
+                count: featCardCount 
+            });
         } else {
             const oldFeats = oldChar.feats || [];
             const newFeats = newChar.feats || [];
-            if (oldStr === newStr) { // Only run granular check if classes are identical
-                const featChanges = [];
-                
-                oldFeats.forEach((of, i) => {
-                    const nf = newFeats[i];
-                    if (!nf) return;
+            const featChanges = [];
+            
+            oldFeats.forEach((of, i) => {
+                const nf = newFeats[i];
+                if (!nf) return;
 
-                    if (of.name !== nf.name) {
-                        featChanges.push(`${of.source}: ${of.name || 'Empty'} → ${nf.name || 'Empty'}`);
-                    } else {
-                        // Check if half-feat modifiers or feature selections changed
-                        const modsChanged = ATTRIBUTES.some(a => (of.mods[a] || "0") !== (nf.mods[a] || "0"));
-                        const featuresChanged = !areFeaturesEqual(of.features, nf.features);
-                        
-                        if (modsChanged || featuresChanged) {
-                            featChanges.push(`${of.name} (${of.source}) details/modifiers updated`);
-                        }
+                if (of.name !== nf.name) {
+                    featChanges.push(`${of.source}: ${of.name || 'Empty'} → ${nf.name || 'Empty'}`);
+                } else {
+                    const modsChanged = ATTRIBUTES.some(a => (of.mods[a] || "0") !== (nf.mods[a] || "0"));
+                    const featuresChanged = !areFeaturesEqual(of.features, nf.features);
+                    
+                    if (modsChanged || featuresChanged) {
+                        featChanges.push(`${of.name} (${of.source}) details/modifiers updated`);
                     }
-                });
-
-                if (featChanges.length > 0) {
-                    costs.push({ 
-                        change: `Feat/ASI Modifications: ${featChanges.join('; ')}`, 
-                        count: 1 
-                    });
                 }
+            });
+
+            if (featChanges.length > 0) {
+                costs.push({ 
+                    change: `Feat/ASI Modifications: ${featChanges.join('; ')}`, 
+                    count: 1 
+                });
             }
         }
         return { isValid: true, isFixed: false, rates, costs };
