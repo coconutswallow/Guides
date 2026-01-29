@@ -67,6 +67,24 @@ export function computeReworkCosts(type, oldChar, newChar) {
         [REWORK_TYPES.T4_CHECKPOINT]: { oMin: 17, oMax: 20, nMin: 11, nMax: 16 }
     };
 
+    // --- Story Rework Logic ---
+    if (type === REWORK_TYPES.STORY) {
+        if (newLevel > origLevel) {
+            return { isValid: false, error: "New level cannot be higher than the original level for a Story Rework." };
+        }
+        const rates = getAlacarteRates(origLevel);
+        return { 
+            isValid: true, 
+            isFixed: true, 
+            costs: [{ 
+                change: 'Story Rework', 
+                count: 1, 
+                dtp: rates.dtp, 
+                gold: rates.gold 
+            }] 
+        };
+    }
+
     if (checkpoints[type]) {
         const t = checkpoints[type];
         if (origLevel < t.oMin || origLevel > t.oMax || newLevel < t.nMin || newLevel > t.nMax) {

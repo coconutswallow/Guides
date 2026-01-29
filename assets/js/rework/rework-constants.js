@@ -20,5 +20,6 @@ export const REWORK_TYPES = {
     T2_CHECKPOINT: 't2-checkpoint',
     T3_CHECKPOINT: 't3-checkpoint',
     T4_CHECKPOINT: 't4-checkpoint',
-    ALACARTE: 'alacarte'
+    ALACARTE: 'alacarte',
+    STORY: 'story' 
 };

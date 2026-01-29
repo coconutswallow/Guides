@@ -364,12 +364,6 @@ export function generateOutputString(oldC, newC, cost, notes) {
             return `${name}${sub && sub !== 'None' ? ' ' + sub : ''} (${cl.level})`;
         }).join(' / ');
 
-        const bonusLine = [];
-        ATTRIBUTES.forEach(a => {
-            const total = (parseInt(c.race_mods[a]) || 0) + (parseInt(c.origin_mods[a]) || 0);
-            if (total > 0) bonusLine.push(`+${total} ${a}`);
-        });
-
         const featChoices = c.feats.map(f => {
             let m = []; 
             ATTRIBUTES.forEach(a => { if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
@@ -379,7 +373,14 @@ export function generateOutputString(oldC, newC, cost, notes) {
         return `**Level:** ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}\n**Class:** ${classLine}\n**Race:** ${c.race}\n**Attributes:** ${ATTRIBUTES.map(a => c.attributes[a]).join('/')}\n**Feats:** ${featChoices.join(', ') || 'None'}`;
     };
 
+    // Get Rework Type Label
+    const typeSelect = document.getElementById('rework-type');
+    const typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || "Not Selected";
+
     const logs = [];
+    logs.push(`**Rework Type:** ${typeLabel}`); // Added Rework Type to Log
+    logs.push(`---`);
+
     if (oldC.name !== newC.name) logs.push(`- Name: ${oldC.name} → ${newC.name}`);
     
     const attrChanges = ATTRIBUTES.filter(a => oldC.attributes[a] !== newC.attributes[a])
@@ -410,7 +411,7 @@ Cost: ${cost}
 Notes: ${notes}
 
 __***Change Log***__
-${logs.length > 0 ? logs.join('\n') : "- No structural changes detected."}
+${logs.join('\n')}
 \`\`\`
 <@&474659626193780751> <@&554463237924716545>`;
 }
