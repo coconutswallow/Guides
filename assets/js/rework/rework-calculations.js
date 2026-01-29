@@ -134,8 +134,32 @@ export function computeReworkCosts(type, oldChar, newChar) {
         } else {
             const oldFeats = oldChar.feats || [];
             const newFeats = newChar.feats || [];
-            if (oldFeats.some((of, i) => !newFeats[i] || of.name !== newFeats[i].name || !areModsEqual(of.mods, newFeats[i].mods))) {
-                costs.push({ change: `Feat details modified`, count: 1 });
+            if (oldStr === newStr) { // Only run granular check if classes are identical
+                const featChanges = [];
+                
+                oldFeats.forEach((of, i) => {
+                    const nf = newFeats[i];
+                    if (!nf) return;
+
+                    if (of.name !== nf.name) {
+                        featChanges.push(`${of.source}: ${of.name || 'Empty'} → ${nf.name || 'Empty'}`);
+                    } else {
+                        // Check if half-feat modifiers or feature selections changed
+                        const modsChanged = ATTRIBUTES.some(a => (of.mods[a] || "0") !== (nf.mods[a] || "0"));
+                        const featuresChanged = !areFeaturesEqual(of.features, nf.features);
+                        
+                        if (modsChanged || featuresChanged) {
+                            featChanges.push(`${of.name} (${of.source}) details/modifiers updated`);
+                        }
+                    }
+                });
+
+                if (featChanges.length > 0) {
+                    costs.push({ 
+                        change: `Feat/ASI Modifications: ${featChanges.join('; ')}`, 
+                        count: 1 
+                    });
+                }
             }
         }
         return { isValid: true, isFixed: false, rates, costs };

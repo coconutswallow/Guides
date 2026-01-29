@@ -98,6 +98,8 @@ window.updateTotalCost = () => {
     }
 };
 
+
+
 // --- UI Row Management Bindings ---
 window.addClassRow = (col) => addClassRow(col);
 window.removeClassRow = (btn) => removeClassRow(btn);
@@ -208,6 +210,49 @@ window.deleteRework = async () => {
         console.error("Delete error:", e);
         alert("Delete failed: " + e.message); 
     }
+};
+
+// --- Copy Utilities ---
+window.copyValue = (s, t) => { 
+    const el = document.getElementById(s); 
+    const target = document.getElementById(t);
+    if(el && target) target.value = el.value; 
+};
+
+window.copyAttributes = () => { 
+    const attrs = {};
+    ATTRIBUTES.forEach(a => { 
+        const source = document.getElementById(`attr-original-${a}`);
+        const target = document.getElementById(`attr-new-${a}`);
+        if (source && target) {
+            target.value = source.value;
+            attrs[a] = source.value;
+        }
+    }); 
+    window.calculatePointBuy('new'); 
+};
+
+window.copyMods = (type) => { 
+    ATTRIBUTES.forEach(a => { 
+        const s = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${a}"]`);
+        const t = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${a}"]`); 
+        if(s && t) t.value = s.value; 
+    }); 
+};
+
+window.copyFeatures = (type) => {
+    const sId = type === 'origin-feat' ? `origin-feat-features-container-original` : `${type}-features-container-original`;
+    const tId = type === 'origin-feat' ? `origin-feat-features-container-new` : `${type}-features-container-new`;
+    
+    const sourceRows = document.querySelectorAll(`#${sId} .feature-row`);
+    const targetRows = document.querySelectorAll(`#${tId} .feature-row`);
+    
+    sourceRows.forEach((sourceRow, i) => {
+        if (targetRows[i]) {
+            targetRows[i].querySelector('.feature-type').value = sourceRow.querySelector('.feature-type').value;
+            targetRows[i].querySelector('.feature-name').value = sourceRow.querySelector('.feature-name').value;
+        }
+    });
 };
 
 window.generateOutput = () => {
