@@ -2,20 +2,18 @@ import { ATTRIBUTES, POINT_COSTS } from './rework-constants.js';
 import { getState } from './state-manager.js';
 import { calculatePointBuyCost } from './rework-calculations.js';
 
+// --- Scrape & Populate logic ---
 export function scrapeColumn(colId) {
     const getV = (id) => document.getElementById(id)?.value || "";
     
-    // Attributes
     const attrs = {}; 
     ATTRIBUTES.forEach(a => attrs[a] = getV(`attr-${colId}-${a}`));
 
-    // Modifiers
     const rMods = {};
     document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => rMods[s.dataset.attr] = s.value);
     const oMods = {};
     document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => oMods[s.dataset.attr] = s.value);
 
-    // Classes
     const classes = [];
     document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
         classes.push({
@@ -26,7 +24,6 @@ export function scrapeColumn(colId) {
         });
     });
 
-    // Feats
     const feats = [];
     document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
         const mods = {};
@@ -40,7 +37,6 @@ export function scrapeColumn(colId) {
             });
         });
 
-        // Safe extraction of source and level
         const titleText = c.querySelector('.card-title')?.innerText || "";
         const source = titleText.split(' - ')[0] || "Unknown";
         const lvl = titleText.match(/Lvl (\d+)/)?.[1] || "";
@@ -54,7 +50,6 @@ export function scrapeColumn(colId) {
         });
     });
 
-    // Helper to scrape feature rows (Race/Origin)
     const scrapeFeatures = (cid) => {
         const arr = [];
         document.querySelectorAll(`#${cid} .feature-row`).forEach(row => {
@@ -97,9 +92,8 @@ export function populateColumn(colId, data) {
     document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => s.value = data.race_mods?.[s.dataset.attr] || "0");
     document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => s.value = data.origin_mods?.[s.dataset.attr] || "0");
 
-    // Helper to robustly restore feature rows
     const fillFeatures = (cid, feats) => {
-        renderFeatureRows(cid, 4); // Reset to default
+        renderFeatureRows(cid, 4); 
         const rows = document.querySelectorAll(`#${cid} .feature-row`);
         if (feats) {
             feats.forEach((f, i) => {
@@ -126,6 +120,7 @@ export function populateColumn(colId, data) {
     }
 }
 
+// --- UI Rendering logic ---
 export function renderBaseAttributes(colId) {
     const container = document.getElementById(`attrs-container-${colId}`);
     if(!container) return;
@@ -134,7 +129,7 @@ export function renderBaseAttributes(colId) {
         let optionsHtml = '';
         for (let i = 8; i <= 15; i++) {
             const cost = POINT_COSTS[i];
-            const isSelected = i === selectedValue ? 'selected' : '';
+            const isSelected = i === parseInt(selectedValue) ? 'selected' : '';
             optionsHtml += `<option value="${i}" ${isSelected}>${i} (${cost})</option>`;
         }
         return optionsHtml;
@@ -179,17 +174,16 @@ export function renderFeatureRows(containerId, count = 4) {
         </div>`).join('');
 }
 
+// --- Class & Feat logic ---
 export function removeClassRow(btn) {
     const block = btn.closest('.class-block');
     const container = block.parentElement;
     const colId = container.id.replace('classes-container-', '');
-    // Save feats before deleting so we don't lose data in other rows
     const savedFeats = saveFeatState(colId);
     block.remove();
     generateFeatCards(colId, savedFeats);
 }
 
-// Helper needed by removeClassRow and addClassRow
 function saveFeatState(colId) {
     const feats = [];
     document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
@@ -235,19 +229,23 @@ export function addClassRow(colId, init = null) {
     const characterData = getState().characterData || [];
 
     const updC = () => {
+        const currentVal = cS.value;
         cS.innerHTML = '<option value="">Class</option>'; 
         cS.disabled = !vS.value;
         if(!vS.value) return;
         const classes = [...new Set(characterData.filter(i => i.version == vS.value).map(i => i.class))];
         classes.forEach(c => cS.innerHTML += `<option value="${c}">${c}</option>`);
+        if (currentVal) cS.value = currentVal;
     };
 
     const updS = () => {
+        const currentVal = sS.value;
         sS.innerHTML = '<option value="">Subclass</option>'; 
         sS.disabled = !cS.value;
         if(!cS.value) return;
         const subs = characterData.filter(i => i.version == vS.value && i.class == cS.value);
         subs.forEach(s => sS.innerHTML += `<option value="${s.subclass}">${s.subclass || 'None'}</option>`);
+        if (currentVal) sS.value = currentVal;
     };
 
     const regen = () => {
@@ -257,6 +255,7 @@ export function addClassRow(colId, init = null) {
 
     vS.onchange = () => { updC(); regen(); };
     cS.onchange = () => { updS(); regen(); };
+    sS.onchange = () => regen();
     lI.oninput = () => regen();
     
     if (init) { 
@@ -271,6 +270,7 @@ export function addClassRow(colId, init = null) {
 
 export function generateFeatCards(colId, saved = null) {
     const container = document.getElementById(`feats-container-${colId}`);
+    if (!container) return;
     container.innerHTML = ''; 
     let idx = 0;
     const characterData = getState().characterData || [];
@@ -342,7 +342,7 @@ export function generateFeatCards(colId, saved = null) {
         });
     });
 }
-
+// --- Cost Row & Output Logic ---
 export function addCostRow(change, count, dtp, gold) {
     const tbody = document.getElementById('cost-table-body');
     const row = document.createElement('tr');
@@ -379,7 +379,6 @@ export function generateOutputString(oldC, newC, cost, notes) {
         return `**Level:** ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}\n**Class:** ${classLine}\n**Race:** ${c.race}\n**Attributes:** ${ATTRIBUTES.map(a => c.attributes[a]).join('/')}\n**Feats:** ${featChoices.join(', ') || 'None'}`;
     };
 
-    // Generate the detailed Change Log
     const logs = [];
     if (oldC.name !== newC.name) logs.push(`- Name: ${oldC.name} → ${newC.name}`);
     
