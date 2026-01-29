@@ -209,8 +209,19 @@ title: Character Rework Tool
         <h2 class="column-header">Cost Calculations</h2>
         
         <div class="card">
-            <h3 class="card-title">Cost Calculations</h3>
-            <div style="margin-bottom: 20px; line-height: 1.6;">
+            <h3 class="card-title" onclick="window.toggleAccordion('cost-info')" style="cursor: pointer; user-select: none;">
+                <span id="cost-info-icon">▼</span> Cost Calculations
+            </h3>
+            <div id="cost-info-content" style="margin-bottom: 20px; line-height: 1.6;">
+                <p style="margin-bottom: 10px;">Costs are based on the type of change:</p>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li>2024 Update Rework (0 cost)</li>
+                    <li>Any rework before level 6 (0 cost)</li>
+                    <li>Checkpoint Rework (cost based on tier)</li>
+                    <li>A-la-carte Rework (cost on a per-change basis)</li>
+                </ul>
+                
+                <p style="margin-bottom: 10px;"><strong>A-la-carte change costs:</strong></p>
                 <ul style="margin-left: 20px;">
                     <li>Changing 1 class level, your race/species (including racial features and ASIs), background (including features, proficiencies, and/or ASIs) and changing a feat or ASI all cost 1 change each</li>
                     <li>Changing a language known or tool or skill proficiency independent of other changes costs 1 change</li>
@@ -224,15 +235,33 @@ title: Character Rework Tool
                 </p>
             </div>
             
+            <div style="margin-bottom: 15px;">
+                <label class="input-label">Rework Type</label>
+                <select id="rework-type" class="text-input" onchange="window.calculateCosts()">
+                    <option value="">-- Select Rework Type --</option>
+                    <option value="2024-update">2024 Update Rework</option>
+                    <option value="level-5-below">Level 5 or below Rework</option>
+                    <option value="t2-checkpoint">T2 Checkpoint Rework</option>
+                    <option value="t3-checkpoint">T3 Checkpoint Rework</option>
+                    <option value="t4-checkpoint">T4 Checkpoint Rework</option>
+                    <option value="alacarte">A-la-carte Rework</option>
+                </select>
+            </div>
+            
+            <div id="cost-error" style="display: none; padding: 10px; background-color: #fee; border: 1px solid #c00; border-radius: 4px; margin-bottom: 15px; color: #c00;">
+            </div>
+            
             <h4 style="margin-top: 20px; margin-bottom: 10px;">Cost Calculation</h4>
             <button type="button" class="button button-secondary" onclick="window.calculateCosts()" style="margin-bottom: 10px;">Calculate Costs</button>
             
             <table class="stat-table" id="cost-table" style="margin-bottom: 10px;">
                 <thead>
                     <tr>
-                        <th style="width: 70%;">Change</th>
-                        <th style="width: 20%;">Cost</th>
-                        <th style="width: 10%;"></th>
+                        <th style="width: 50%;">Change</th>
+                        <th style="width: 15%;"># of Changes</th>
+                        <th style="width: 15%;">DTP Cost</th>
+                        <th style="width: 15%;">Gold Cost</th>
+                        <th style="width: 5%;"></th>
                     </tr>
                 </thead>
                 <tbody id="cost-table-body">
@@ -243,7 +272,9 @@ title: Character Rework Tool
             <button type="button" class="button button-secondary" onclick="window.addCostRow()">+ Add Row</button>
             
             <div style="margin-top: 15px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
-                <strong>Total Changes: <span id="total-cost">0</span></strong>
+                <strong>Total Changes: <span id="total-changes">0</span></strong><br>
+                <strong>Total DTP Cost: <span id="total-dtp">0</span></strong><br>
+                <strong>Total Gold Cost: <span id="total-gold">0</span> GP</strong>
             </div>
         </div>
         
@@ -357,8 +388,10 @@ title: Character Rework Tool
         const costRows = [];
         document.querySelectorAll('#cost-table-body tr').forEach(row => {
             const change = row.querySelector('.cost-change')?.value || '';
-            const cost = parseInt(row.querySelector('.cost-value')?.value) || 0;
-            costRows.push({ change, cost });
+            const numChanges = parseInt(row.querySelector('.cost-num-changes')?.value) || 0;
+            const dtpCost = parseInt(row.querySelector('.cost-dtp')?.value) || 0;
+            const goldCost = parseInt(row.querySelector('.cost-gold')?.value) || 0;
+            costRows.push({ change, numChanges, dtpCost, goldCost });
         });
 
         const payload = {
@@ -369,6 +402,7 @@ title: Character Rework Tool
             new_character: newChar,
             cost: document.getElementById('rework-cost').value,
             notes: document.getElementById('rework-notes').value,
+            rework_type: document.getElementById('rework-type').value,
             cost_rows: costRows,
             updated_at: new Date().toISOString()
         };
@@ -415,12 +449,18 @@ title: Character Rework Tool
             document.getElementById('current-rework-id').value = data.id;
             document.getElementById('rework-cost').value = data.cost || "";
             document.getElementById('rework-notes').value = data.notes || "";
+            document.getElementById('rework-type').value = data.rework_type || "";
 
             // Restore cost rows
             document.getElementById('cost-table-body').innerHTML = '';
             if (data.cost_rows && data.cost_rows.length > 0) {
                 data.cost_rows.forEach(row => {
-                    window.addCostRow(row.change || '', row.cost || 0);
+                    window.addCostRow(
+                        row.change || '', 
+                        row.numChanges || row.cost || 0,  // Backward compatible with old 'cost' field
+                        row.dtpCost || 0, 
+                        row.goldCost || 0
+                    );
                 });
             }
 
@@ -868,12 +908,26 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
     };
 
     // COST CALCULATION FUNCTIONS
-    window.addCostRow = function(change = "", cost = 0) {
+    window.toggleAccordion = function(id) {
+        const content = document.getElementById(`${id}-content`);
+        const icon = document.getElementById(`${id}-icon`);
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.innerText = '▼';
+        } else {
+            content.style.display = 'none';
+            icon.innerText = '▶';
+        }
+    };
+
+    window.addCostRow = function(change = "", numChanges = 0, dtpCost = 0, goldCost = 0) {
         const tbody = document.getElementById('cost-table-body');
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><input type="text" class="text-input cost-change" value="${change}" style="width: 100%;"></td>
-            <td><input type="number" class="text-input cost-value" value="${cost}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
+            <td><input type="number" class="text-input cost-num-changes" value="${numChanges}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
+            <td><input type="number" class="text-input cost-dtp" value="${dtpCost}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
+            <td><input type="number" class="text-input cost-gold" value="${goldCost}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
             <td><button type="button" class="button" onclick="window.deleteCostRow(this)" style="background-color: #c0392b; color: #fff; padding: 4px 8px; font-size: 0.9em;">×</button></td>
         `;
         tbody.appendChild(row);
@@ -886,208 +940,354 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
     };
 
     window.updateTotalCost = function() {
-        const costInputs = document.querySelectorAll('.cost-value');
-        let total = 0;
-        costInputs.forEach(input => {
-            const val = parseInt(input.value) || 0;
-            total += val;
+        let totalChanges = 0;
+        let totalDTP = 0;
+        let totalGold = 0;
+        
+        document.querySelectorAll('#cost-table-body tr').forEach(row => {
+            totalChanges += parseInt(row.querySelector('.cost-num-changes')?.value) || 0;
+            totalDTP += parseInt(row.querySelector('.cost-dtp')?.value) || 0;
+            totalGold += parseInt(row.querySelector('.cost-gold')?.value) || 0;
         });
-        document.getElementById('total-cost').innerText = total;
+        
+        document.getElementById('total-changes').innerText = totalChanges;
+        document.getElementById('total-dtp').innerText = totalDTP;
+        document.getElementById('total-gold').innerText = totalGold;
+    };
+
+    window.getTotalLevel = function(classes) {
+        return classes.reduce((sum, c) => sum + (parseInt(c.level) || 0), 0);
+    };
+
+    window.getAlacarteCost = function(level) {
+        if (level >= 6 && level <= 6) return { gold: 160, dtp: 30 };
+        if (level >= 7 && level <= 8) return { gold: 270, dtp: 30 };
+        if (level >= 9 && level <= 10) return { gold: 400, dtp: 30 };
+        if (level >= 11 && level <= 12) return { gold: 630, dtp: 40 };
+        if (level >= 13 && level <= 14) return { gold: 810, dtp: 40 };
+        if (level >= 15 && level <= 16) return { gold: 1030, dtp: 40 };
+        if (level >= 17 && level <= 18) return { gold: 1270, dtp: 50 };
+        if (level >= 19 && level <= 20) return { gold: 1530, dtp: 50 };
+        return { gold: 0, dtp: 0 };
+    };
+
+    window.showError = function(message) {
+        const errorDiv = document.getElementById('cost-error');
+        errorDiv.innerText = message;
+        errorDiv.style.display = 'block';
+    };
+
+    window.hideError = function() {
+        document.getElementById('cost-error').style.display = 'none';
     };
 
     window.calculateCosts = function() {
+        window.hideError();
+        
+        const reworkType = document.getElementById('rework-type').value;
+        if (!reworkType) {
+            window.showError('Please select a rework type first.');
+            return;
+        }
+        
         // Clear existing rows
         document.getElementById('cost-table-body').innerHTML = '';
         
         const original = window.scrapeColumn('original');
         const newChar = window.scrapeColumn('new');
         
-        // Check character name change
-        if (original.name !== newChar.name && original.name && newChar.name) {
-            window.addCostRow(`Character name change: ${original.name} → ${newChar.name}`, 2);
+        const origLevel = window.getTotalLevel(original.classes || []);
+        const newLevel = window.getTotalLevel(newChar.classes || []);
+        
+        // Handle special rework types
+        if (reworkType === '2024-update') {
+            window.addCostRow('2024 Update', 0, 0, 0);
+            window.updateTotalCost();
+            return;
         }
         
-        // Check base ability scores
-        const changedAttrs = [];
-        ATTRIBUTES.forEach(a => {
-            if (original.attributes[a] !== newChar.attributes[a]) {
-                changedAttrs.push(a);
+        if (reworkType === 'level-5-below') {
+            if (origLevel > 5) {
+                window.showError('Level 5 or below rework is only valid for characters at level 5 or below.');
+                return;
             }
-        });
-        if (changedAttrs.length > 0) {
-            window.addCostRow(`Starting ability score changes: ${changedAttrs.join(', ')}`, 2);
+            window.addCostRow('Level 5 or Below Free Rework', 0, 0, 0);
+            window.updateTotalCost();
+            return;
         }
         
-        // Check race/species
-        if (original.race !== newChar.race) {
-            window.addCostRow(`Race/Species change: ${original.race} → ${newChar.race}`, 1);
-        } else if (original.race) {
-            // Check racial bonuses
-            let racialBonusChanged = false;
+        if (reworkType === 't2-checkpoint') {
+            if (origLevel < 6 || origLevel > 10) {
+                window.showError('T2 Checkpoint requires original character level between 6-10.');
+                return;
+            }
+            if (newLevel < 3 || newLevel > 5) {
+                window.showError('T2 Checkpoint requires new character level between 3-5.');
+                return;
+            }
+            window.addCostRow('T2 Checkpoint', 1, 150, 820);
+            window.updateTotalCost();
+            return;
+        }
+        
+        if (reworkType === 't3-checkpoint') {
+            if (origLevel < 11 || origLevel > 16) {
+                window.showError('T3 Checkpoint requires original character level between 11-16.');
+                return;
+            }
+            if (newLevel < 6 || newLevel > 10) {
+                window.showError('T3 Checkpoint requires new character level between 6-10.');
+                return;
+            }
+            window.addCostRow('T3 Checkpoint', 1, 180, 2400);
+            window.updateTotalCost();
+            return;
+        }
+        
+        if (reworkType === 't4-checkpoint') {
+            if (origLevel < 17 || origLevel > 20) {
+                window.showError('T4 Checkpoint requires original character level between 17-20.');
+                return;
+            }
+            if (newLevel < 11 || newLevel > 15) {
+                window.showError('T4 Checkpoint requires new character level between 11-15.');
+                return;
+            }
+            window.addCostRow('T4 Checkpoint', 1, 260, 4250);
+            window.updateTotalCost();
+            return;
+        }
+        
+        // A-la-carte calculation
+        if (reworkType === 'alacarte') {
+            const costPerChange = window.getAlacarteCost(origLevel);
+            if (costPerChange.gold === 0) {
+                window.showError('A-la-carte rework is only available for characters level 6 and above.');
+                return;
+            }
+            
+            let changes = [];
+            
+            // Check character name change
+            if (original.name !== newChar.name && original.name && newChar.name) {
+                changes.push({ desc: `Character name change: ${original.name} → ${newChar.name}`, count: 2 });
+            }
+            
+            // Check base ability scores
+            const changedAttrs = [];
             ATTRIBUTES.forEach(a => {
-                if (original.race_mods[a] !== newChar.race_mods[a]) {
-                    racialBonusChanged = true;
+                if (original.attributes[a] !== newChar.attributes[a]) {
+                    changedAttrs.push(a);
                 }
             });
-            if (racialBonusChanged) {
-                window.addCostRow(`Racial bonuses changed`, 1);
+            if (changedAttrs.length > 0) {
+                changes.push({ desc: `Starting ability score changes: ${changedAttrs.join(', ')}`, count: 2 });
             }
             
-            // Check racial features
-            const origRaceFeats = original.race_features || [];
-            const newRaceFeats = newChar.race_features || [];
-            for (let i = 0; i < Math.max(origRaceFeats.length, newRaceFeats.length); i++) {
-                const origFeat = origRaceFeats[i] || { type: 'none', name: '' };
-                const newFeat = newRaceFeats[i] || { type: 'none', name: '' };
-                
-                if (origFeat.type !== 'none' || newFeat.type !== 'none') {
-                    if (origFeat.type !== newFeat.type || origFeat.name !== newFeat.name) {
-                        const fromText = origFeat.type !== 'none' ? `${origFeat.type}: ${origFeat.name}` : 'none';
-                        const toText = newFeat.type !== 'none' ? `${newFeat.type}: ${newFeat.name}` : 'none';
-                        window.addCostRow(`Racial feature change: ${fromText} → ${toText}`, 1);
+            // Check race/species
+            if (original.race !== newChar.race) {
+                changes.push({ desc: `Race/Species change: ${original.race} → ${newChar.race}`, count: 1 });
+            } else if (original.race) {
+                // Check racial bonuses
+                let racialBonusChanged = false;
+                ATTRIBUTES.forEach(a => {
+                    if (original.race_mods[a] !== newChar.race_mods[a]) {
+                        racialBonusChanged = true;
                     }
+                });
+                if (racialBonusChanged) {
+                    changes.push({ desc: `Racial bonuses changed`, count: 1 });
                 }
-            }
-        }
-        
-        // Check origin/background
-        if (original.bg !== newChar.bg) {
-            window.addCostRow(`Origin/Background change: ${original.bg} → ${newChar.bg}`, 1);
-        } else if (original.bg) {
-            // Check origin features
-            const origOriginFeats = original.origin_features || [];
-            const newOriginFeats = newChar.origin_features || [];
-            for (let i = 0; i < Math.max(origOriginFeats.length, newOriginFeats.length); i++) {
-                const origFeat = origOriginFeats[i] || { type: 'none', name: '' };
-                const newFeat = newOriginFeats[i] || { type: 'none', name: '' };
                 
-                if (origFeat.type !== 'none' || newFeat.type !== 'none') {
-                    if (origFeat.type !== newFeat.type || origFeat.name !== newFeat.name) {
-                        const fromText = origFeat.type !== 'none' ? `${origFeat.type}: ${origFeat.name}` : 'none';
-                        const toText = newFeat.type !== 'none' ? `${newFeat.type}: ${newFeat.name}` : 'none';
-                        window.addCostRow(`Origin feature change: ${fromText} → ${toText}`, 1);
-                    }
-                }
-            }
-        }
-        
-        // Check origin feat
-        if (original.origin_feat !== newChar.origin_feat) {
-            window.addCostRow(`Origin feat change: ${original.origin_feat} → ${newChar.origin_feat}`, 1);
-        } else if (original.origin_feat) {
-            // Check origin feat modifiers
-            let originFeatModChanged = false;
-            ATTRIBUTES.forEach(a => {
-                if (original.origin_mods[a] !== newChar.origin_mods[a]) {
-                    originFeatModChanged = true;
-                }
-            });
-            if (originFeatModChanged) {
-                window.addCostRow(`Origin feat modifiers changed`, 1);
-            }
-            
-            // Check origin feat features
-            const origOriginFeatFeats = original.origin_feat_features || [];
-            const newOriginFeatFeats = newChar.origin_feat_features || [];
-            for (let i = 0; i < Math.max(origOriginFeatFeats.length, newOriginFeatFeats.length); i++) {
-                const origFeat = origOriginFeatFeats[i] || { type: 'none', name: '' };
-                const newFeat = newOriginFeatFeats[i] || { type: 'none', name: '' };
-                
-                if (origFeat.type !== 'none' || newFeat.type !== 'none') {
-                    if (origFeat.type !== newFeat.type || origFeat.name !== newFeat.name) {
-                        const fromText = origFeat.type !== 'none' ? `${origFeat.type}: ${origFeat.name}` : 'none';
-                        const toText = newFeat.type !== 'none' ? `${newFeat.type}: ${newFeat.name}` : 'none';
-                        window.addCostRow(`Origin feat feature change: ${fromText} → ${toText}`, 1);
-                    }
-                }
-            }
-        }
-        
-        // Check classes
-        const origClasses = original.classes || [];
-        const newClasses = newChar.classes || [];
-        
-        // Create maps for easier comparison
-        const origClassMap = {};
-        origClasses.forEach(c => {
-            const key = `${c.version}-${c.class}`;
-            origClassMap[key] = c;
-        });
-        
-        const newClassMap = {};
-        newClasses.forEach(c => {
-            const key = `${c.version}-${c.class}`;
-            newClassMap[key] = c;
-        });
-        
-        // Check for removed or changed classes
-        origClasses.forEach(origClass => {
-            const key = `${origClass.version}-${origClass.class}`;
-            const newClass = newClassMap[key];
-            
-            if (!newClass) {
-                window.addCostRow(`Class removed: ${origClass.class} (${origClass.version})`, 1);
-            } else if (origClass.subclass !== newClass.subclass) {
-                window.addCostRow(`Subclass change: ${origClass.class} - ${origClass.subclass} → ${newClass.subclass}`, 1);
-            }
-        });
-        
-        // Check for added classes
-        newClasses.forEach(newClass => {
-            const key = `${newClass.version}-${newClass.class}`;
-            if (!origClassMap[key]) {
-                window.addCostRow(`Class added: ${newClass.class} (${newClass.version})`, 1);
-            }
-        });
-        
-        // Check feats/ASIs
-        const origFeats = original.feats || [];
-        const newFeats = newChar.feats || [];
-        const maxFeats = Math.max(origFeats.length, newFeats.length);
-        
-        for (let i = 0; i < maxFeats; i++) {
-            const origFeat = origFeats[i];
-            const newFeat = newFeats[i];
-            
-            if (!origFeat && newFeat) {
-                window.addCostRow(`Feat added: ${newFeat.name || 'ASI'} (Lvl ${newFeat.lvl})`, 1);
-            } else if (origFeat && !newFeat) {
-                window.addCostRow(`Feat removed: ${origFeat.name || 'ASI'} (Lvl ${origFeat.lvl})`, 1);
-            } else if (origFeat && newFeat) {
-                if (origFeat.name !== newFeat.name) {
-                    window.addCostRow(`Feat change: ${origFeat.name || 'ASI'} → ${newFeat.name || 'ASI'} (Lvl ${newFeat.lvl})`, 1);
-                } else {
-                    // Same feat, check modifiers
-                    let modsChanged = false;
-                    ATTRIBUTES.forEach(a => {
-                        if ((origFeat.mods?.[a] || '0') !== (newFeat.mods?.[a] || '0')) {
-                            modsChanged = true;
+                // Check racial features
+                const origRaceFeats = original.race_features || [];
+                const newRaceFeats = newChar.race_features || [];
+                for (let i = 0; i < Math.max(origRaceFeats.length, newRaceFeats.length); i++) {
+                    const origFeat = origRaceFeats[i] || { type: 'none', name: '' };
+                    const newFeat = newRaceFeats[i] || { type: 'none', name: '' };
+                    
+                    if (origFeat.type !== 'none' || newFeat.type !== 'none') {
+                        if (origFeat.type !== newFeat.type || origFeat.name !== newFeat.name) {
+                            const fromText = origFeat.type !== 'none' ? `${origFeat.type}: ${origFeat.name}` : 'none';
+                            const toText = newFeat.type !== 'none' ? `${newFeat.type}: ${newFeat.name}` : 'none';
+                            changes.push({ desc: `Racial feature change: ${fromText} → ${toText}`, count: 1 });
                         }
-                    });
-                    if (modsChanged) {
-                        window.addCostRow(`Feat modifiers changed: ${origFeat.name} (Lvl ${newFeat.lvl})`, 1);
+                    }
+                }
+            }
+            
+            // Check origin/background
+            if (original.bg !== newChar.bg) {
+                changes.push({ desc: `Origin/Background change: ${original.bg} → ${newChar.bg}`, count: 1 });
+            } else if (original.bg) {
+                // Check origin features
+                const origOriginFeats = original.origin_features || [];
+                const newOriginFeats = newChar.origin_features || [];
+                for (let i = 0; i < Math.max(origOriginFeats.length, newOriginFeats.length); i++) {
+                    const origFeat = origOriginFeats[i] || { type: 'none', name: '' };
+                    const newFeat = newOriginFeats[i] || { type: 'none', name: '' };
+                    
+                    if (origFeat.type !== 'none' || newFeat.type !== 'none') {
+                        if (origFeat.type !== newFeat.type || origFeat.name !== newFeat.name) {
+                            const fromText = origFeat.type !== 'none' ? `${origFeat.type}: ${origFeat.name}` : 'none';
+                            const toText = newFeat.type !== 'none' ? `${newFeat.type}: ${newFeat.name}` : 'none';
+                            changes.push({ desc: `Origin feature change: ${fromText} → ${toText}`, count: 1 });
+                        }
+                    }
+                }
+            }
+            
+            // Check origin feat
+            if (original.origin_feat !== newChar.origin_feat) {
+                changes.push({ desc: `Origin feat change: ${original.origin_feat} → ${newChar.origin_feat}`, count: 1 });
+            } else if (original.origin_feat) {
+                // Check origin feat modifiers
+                let originFeatModChanged = false;
+                ATTRIBUTES.forEach(a => {
+                    if (original.origin_mods[a] !== newChar.origin_mods[a]) {
+                        originFeatModChanged = true;
+                    }
+                });
+                if (originFeatModChanged) {
+                    changes.push({ desc: `Origin feat modifiers changed`, count: 1 });
+                }
+                
+                // Check origin feat features
+                const origOriginFeatFeats = original.origin_feat_features || [];
+                const newOriginFeatFeats = newChar.origin_feat_features || [];
+                for (let i = 0; i < Math.max(origOriginFeatFeats.length, newOriginFeatFeats.length); i++) {
+                    const origFeat = origOriginFeatFeats[i] || { type: 'none', name: '' };
+                    const newFeat = newOriginFeatFeats[i] || { type: 'none', name: '' };
+                    
+                    if (origFeat.type !== 'none' || newFeat.type !== 'none') {
+                        if (origFeat.type !== newFeat.type || origFeat.name !== newFeat.name) {
+                            const fromText = origFeat.type !== 'none' ? `${origFeat.type}: ${origFeat.name}` : 'none';
+                            const toText = newFeat.type !== 'none' ? `${newFeat.type}: ${newFeat.name}` : 'none';
+                            changes.push({ desc: `Origin feat feature change: ${fromText} → ${toText}`, count: 1 });
+                        }
+                    }
+                }
+            }
+            
+            // Check classes
+            const origClasses = original.classes || [];
+            const newClasses = newChar.classes || [];
+            
+            const origClassMap = {};
+            origClasses.forEach(c => {
+                const key = `${c.version}-${c.class}`;
+                origClassMap[key] = c;
+            });
+            
+            const newClassMap = {};
+            newClasses.forEach(c => {
+                const key = `${c.version}-${c.class}`;
+                newClassMap[key] = c;
+            });
+            
+            // Check for removed or changed classes
+            origClasses.forEach(origClass => {
+                const key = `${origClass.version}-${origClass.class}`;
+                const newClass = newClassMap[key];
+                
+                if (!newClass) {
+                    changes.push({ desc: `Class removed: ${origClass.class} (${origClass.version})`, count: 1 });
+                } else if (origClass.subclass !== newClass.subclass) {
+                    changes.push({ desc: `Subclass change: ${origClass.class} - ${origClass.subclass} → ${newClass.subclass}`, count: 1 });
+                }
+            });
+            
+            // Check for added classes
+            newClasses.forEach(newClass => {
+                const key = `${newClass.version}-${newClass.class}`;
+                if (!origClassMap[key]) {
+                    changes.push({ desc: `Class added: ${newClass.class} (${newClass.version})`, count: 1 });
+                }
+            });
+            
+            // Check feats/ASIs - improved logic to ignore order and removed feats
+            const origFeats = (original.feats || []).filter(f => f.name); // Only feats with names
+            const newFeats = (newChar.feats || []).filter(f => f.name);
+            
+            // Create maps by feat name for easier comparison (ignore level/order)
+            const origFeatMap = {};
+            origFeats.forEach(f => {
+                if (!origFeatMap[f.name]) origFeatMap[f.name] = [];
+                origFeatMap[f.name].push(f);
+            });
+            
+            const newFeatMap = {};
+            newFeats.forEach(f => {
+                if (!newFeatMap[f.name]) newFeatMap[f.name] = [];
+                newFeatMap[f.name].push(f);
+            });
+            
+            // Track which original feats have been matched
+            const matchedOrigFeats = new Set();
+            
+            // Check new feats
+            Object.keys(newFeatMap).forEach(featName => {
+                const newFeatInstances = newFeatMap[featName];
+                const origFeatInstances = origFeatMap[featName] || [];
+                
+                newFeatInstances.forEach((newFeat, newIdx) => {
+                    // Try to find an unmatched original feat with same name
+                    let matched = false;
+                    for (let origIdx = 0; origIdx < origFeatInstances.length; origIdx++) {
+                        const matchKey = `${featName}-${origIdx}`;
+                        if (!matchedOrigFeats.has(matchKey)) {
+                            const origFeat = origFeatInstances[origIdx];
+                            matchedOrigFeats.add(matchKey);
+                            matched = true;
+                            
+                            // Same feat exists, check for modifications
+                            let modsChanged = false;
+                            ATTRIBUTES.forEach(a => {
+                                if ((origFeat.mods?.[a] || '0') !== (newFeat.mods?.[a] || '0')) {
+                                    modsChanged = true;
+                                }
+                            });
+                            if (modsChanged) {
+                                changes.push({ desc: `Feat modifiers changed: ${featName}`, count: 1 });
+                            }
+                            
+                            // Check feat features
+                            const origFeatFeats = origFeat.features || [];
+                            const newFeatFeats = newFeat.features || [];
+                            for (let j = 0; j < Math.max(origFeatFeats.length, newFeatFeats.length); j++) {
+                                const origF = origFeatFeats[j] || { type: 'none', name: '' };
+                                const newF = newFeatFeats[j] || { type: 'none', name: '' };
+                                
+                                if (origF.type !== 'none' || newF.type !== 'none') {
+                                    if (origF.type !== newF.type || origF.name !== newF.name) {
+                                        const fromText = origF.type !== 'none' ? `${origF.type}: ${origF.name}` : 'none';
+                                        const toText = newF.type !== 'none' ? `${newF.type}: ${newF.name}` : 'none';
+                                        changes.push({ desc: `Feat feature change (${featName}): ${fromText} → ${toText}`, count: 1 });
+                                    }
+                                }
+                            }
+                            break;
+                        }
                     }
                     
-                    // Check feat features
-                    const origFeatFeats = origFeat.features || [];
-                    const newFeatFeats = newFeat.features || [];
-                    for (let j = 0; j < Math.max(origFeatFeats.length, newFeatFeats.length); j++) {
-                        const origF = origFeatFeats[j] || { type: 'none', name: '' };
-                        const newF = newFeatFeats[j] || { type: 'none', name: '' };
-                        
-                        if (origF.type !== 'none' || newF.type !== 'none') {
-                            if (origF.type !== newF.type || origF.name !== newF.name) {
-                                const fromText = origF.type !== 'none' ? `${origF.type}: ${origF.name}` : 'none';
-                                const toText = newF.type !== 'none' ? `${newF.type}: ${newF.name}` : 'none';
-                                window.addCostRow(`Feat feature change (${origFeat.name}): ${fromText} → ${toText}`, 1);
-                            }
-                        }
+                    // If no match found, this is a new feat
+                    if (!matched) {
+                        changes.push({ desc: `Feat added: ${featName}`, count: 1 });
                     }
-                }
-            }
+                });
+            });
+            
+            // Note: We don't count removed feats as changes
+            
+            // Add all changes to the table
+            changes.forEach(change => {
+                const dtpCost = change.count * costPerChange.dtp;
+                const goldCost = change.count * costPerChange.gold;
+                window.addCostRow(change.desc, change.count, dtpCost, goldCost);
+            });
+            
+            window.updateTotalCost();
         }
-        
-        window.updateTotalCost();
     };
 
 
