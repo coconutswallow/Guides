@@ -146,11 +146,7 @@ export function computeReworkCosts(type, oldChar, newChar) {
             });
             // Updated description to include the card count for clarity
             costs.push({ 
-                change: `Class/Level Shift: ${oldClStr} → ${newClStr} (${featCardCount} feat cards affected)`, 
-                count: featCardCount 
-            });
-            costs.push({ 
-                change: `Class/Level Shift: ${oldStr} → ${newStr}`, 
+                change: `Class/Level Shift: ${oldStr} → ${newStr} (${featCardCount} feat cards affected)`, 
                 count: featCardCount 
             });
         } else {

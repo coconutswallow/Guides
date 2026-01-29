@@ -357,7 +357,23 @@ export function addCostRow(change, count, dtp, gold) {
 
 // rework-ui.js updates
 export function generateOutputString(oldC, newC, cost, notes, calcResult) {
-    // ... (buildB internal function remains)
+    // Internal helper to build character block
+    const buildB = (c) => {
+        const clean = (s) => (s || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
+        const classLine = c.classes.map(cl => {
+            const name = clean(cl.class);
+            const sub = clean(cl.subclass);
+            return `${name}${sub && sub !== 'None' ? ' ' + sub : ''} (${cl.level})`;
+        }).join(' / ');
+
+        const featChoices = c.feats.map(f => {
+            let m = []; 
+            ATTRIBUTES.forEach(a => { if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
+            return `${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source})`;
+        });
+
+        return `**Level:** ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}\n**Class:** ${classLine}\n**Race:** ${c.race}\n**Attributes:** ${ATTRIBUTES.map(a => c.attributes[a]).join('/')}\n**Feats:** ${featChoices.join(', ') || 'None'}`;
+    };
 
     // Discord Name Formatting
     let discordId = document.getElementById('manual-discord-id').value || "Unknown";
@@ -376,9 +392,10 @@ export function generateOutputString(oldC, newC, cost, notes, calcResult) {
     if (calcResult && calcResult.costs) {
         calcResult.costs.forEach(c => {
             let logLine = `- ${c.change}`;
+            // If alacarte, show the breakdown
             if (!calcResult.isFixed && c.count > 0) {
-                const g = c.count * calcResult.rates.gold;
-                const d = c.count * calcResult.rates.dtp;
+                const g = c.count * (calcResult.rates?.gold || 0);
+                const d = c.count * (calcResult.rates?.dtp || 0);
                 logLine += ` (${c.count} pts: ${g} GP / ${d} DTP)`;
             }
             logs.push(logLine);
