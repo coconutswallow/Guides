@@ -3,7 +3,7 @@ import {
     fetchMyReworks, 
     saveReworkToDb, 
     loadReworkById, 
-    deleteReworkById, 
+    deleteReworkById,  // Fixed: Imported correctly now
     getState 
 } from "./state-manager.js";
 
@@ -14,7 +14,6 @@ import {
     renderFeatureRows,
     addClassRow, 
     removeClassRow, 
-    updatePointBuyDisplay, 
     generateFeatCards,
     addCostRow,
     generateOutputString,
@@ -31,7 +30,11 @@ import { ATTRIBUTES } from "./rework-constants.js";
 async function initApp() {
     console.log("Initializing Rework Tool...");
 
-    // 1. Initialize UI Elements (Attributes, Feature Rows)
+    // 1. Load Data from Supabase (Lookups)
+    // We load this FIRST so that addClassRow can populate dropdowns correctly
+    await initCharacterData();
+
+    // 2. Initialize UI Elements (Attributes, Feature Rows)
     ['original', 'new'].forEach(col => {
         renderBaseAttributes(col);
         
@@ -43,9 +46,6 @@ async function initApp() {
         // Add one empty class row to start
         addClassRow(col);
     });
-
-    // 2. Load Data from Supabase (Lookups)
-    await initCharacterData();
 
     // 3. Populate "My Reworks" dropdown from LocalStorage history
     await window.fetchReworks();
@@ -61,12 +61,6 @@ async function initApp() {
     // 5. Show Controls
     const controls = document.getElementById('logged-in-controls');
     if (controls) controls.style.display = 'flex';
-    
-    // Hide auth-specific elements if they still exist in HTML
-    const authInst = document.getElementById('instruction-text');
-    if (authInst) authInst.style.display = 'none';
-    const loggedOut = document.getElementById('logged-out-controls');
-    if (loggedOut) loggedOut.style.display = 'none';
 }
 
 // ==========================================
@@ -270,11 +264,7 @@ window.saveRework = async () => {
             });
         });
 
-        // ----------------------------------------------------
-        // SCHEMA ADAPTATION:
-        // 'rework_type' and 'cost_rows' are not in the top-level table schema.
-        // We will store them inside the 'new_character' JSONB object as metadata.
-        // ----------------------------------------------------
+        // Store metadata inside new_character (adapter pattern)
         newC._rework_meta = {
             rework_type: document.getElementById('rework-type').value,
             cost_rows: costRows
@@ -284,15 +274,14 @@ window.saveRework = async () => {
             discord_id: discordId,
             character_name: oldC.name || "Unnamed",
             old_character: oldC,
-            new_character: newC, // Contains _rework_meta
+            new_character: newC, 
             cost: document.getElementById('rework-cost').value,
             notes: document.getElementById('rework-notes').value,
-            // user_id is handled by Supabase Auth (if RLS is on) or logic in state-manager
         };
 
         const result = await saveReworkToDb(payload);
 
-        // Update URL to include ID so it can be shared
+        // Update URL
         const newUrl = new URL(window.location);
         newUrl.searchParams.set('id', result.id);
         window.history.pushState({}, '', newUrl);
@@ -301,7 +290,7 @@ window.saveRework = async () => {
         
         alert(`Rework Saved!\n\nID: ${result.id}\n(You can copy the URL to share this rework)`);
         
-        // Refresh dropdown to show the new save
+        // Refresh dropdown
         window.fetchReworks();
     } catch (e) {
         console.error(e);
@@ -309,16 +298,13 @@ window.saveRework = async () => {
     }
 };
 
-// Load from Dropdown
 window.loadSelectedRework = async () => {
     const id = document.getElementById('load-rework-select').value;
     if (!id) return;
     await window.loadExternalId(id);
 };
 
-// Load from Input or URL
 window.loadExternalId = async (id) => {
-    // If no ID passed, try to prompt user
     if (!id) {
         id = prompt("Please paste the Rework UUID:");
     }
@@ -333,17 +319,13 @@ window.loadExternalId = async (id) => {
         document.getElementById('rework-cost').value = data.cost || "";
         document.getElementById('rework-notes').value = data.notes || "";
 
-        // ----------------------------------------------------
-        // SCHEMA ADAPTATION (LOAD):
-        // Retrieve rework_type and cost_rows from JSONB meta if available
-        // ----------------------------------------------------
+        // Extract Meta Data from JSONB
         const meta = data.new_character?._rework_meta || {};
-        const costRows = meta.cost_rows || data.cost_rows || []; // Fallback if data was saved in old format
+        const costRows = meta.cost_rows || data.cost_rows || []; 
         const rType = meta.rework_type || data.rework_type || "";
 
         document.getElementById('rework-type').value = rType;
 
-        // Populate Characters
         populateColumn('original', data.old_character);
         populateColumn('new', data.new_character);
 
@@ -357,7 +339,7 @@ window.loadExternalId = async (id) => {
         }
         window.updateTotalCost();
 
-        // Refresh dropdown (so this loaded ID appears in "My Reworks")
+        // Refresh dropdown to ensure this loaded ID appears if it wasn't there before
         window.fetchReworks();
         
         console.log("Rework loaded successfully");
@@ -372,18 +354,17 @@ window.deleteRework = async () => {
     const id = document.getElementById('load-rework-select').value;
     if (!id) return alert("Please select a rework from the dropdown to delete.");
 
-    if (!confirm("Are you sure you want to delete this rework from your local list? (If you created it, it will be deleted from the server too).")) return;
+    if (!confirm("Are you sure you want to delete this rework?")) return;
 
     try {
         await deleteReworkById(id);
         
-        // Clear UI if we deleted the currently active one
         if (document.getElementById('current-rework-id').value === id) {
              document.getElementById('current-rework-id').value = "";
         }
         
         alert("Rework deleted.");
-        window.fetchReworks();
+        window.fetchReworks(); // Refresh dropdown to remove deleted item
     } catch (e) {
         alert("Delete failed: " + e.message);
     }

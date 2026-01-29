@@ -49,7 +49,7 @@ export function scrapeColumn(colId) {
         });
         
         // Extract source class and level from card title
-        const titleText = c.querySelector('.card-title').innerText;
+        const titleText = c.querySelector('.card-title')?.innerText || "Unknown";
         const sourceClass = titleText.split(' - ')[0];
         const lvlMatch = titleText.match(/Lvl (\d+)/);
         
@@ -114,6 +114,9 @@ export function populateColumn(colId, data) {
 
     // Helper to populate feature rows
     const fillFeatures = (containerId, featData) => {
+        // First ensure enough rows exist
+        renderFeatureRows(containerId, 4); // Default to 4
+        
         const rows = document.querySelectorAll(`#${containerId} .feature-row`);
         if (featData) {
             featData.forEach((f, i) => {
@@ -184,7 +187,10 @@ export function renderBaseAttributes(colId) {
 
 export function updatePointBuyDisplay(colId) {
     const attrs = {};
-    ATTRIBUTES.forEach(a => attrs[a] = document.getElementById(`attr-${colId}-${a}`).value);
+    ATTRIBUTES.forEach(a => {
+        const el = document.getElementById(`attr-${colId}-${a}`);
+        if(el) attrs[a] = el.value;
+    });
     
     const spent = calculatePointBuyCost(attrs);
     const remaining = 27 - spent;
@@ -219,7 +225,6 @@ export function renderFeatureRows(containerId, count = 4) {
 
 // --- Class & Feat Logic ---
 
-// Helper to save current inputs before regenerating DOM
 function saveFeatState(colId) {
     const feats = [];
     document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
@@ -274,7 +279,7 @@ export function addClassRow(colId, init = null) {
     const sS = block.querySelector('.subclass-select');
     const lI = block.querySelector('.level-input');
 
-    const characterData = getState().characterData;
+    const characterData = getState().characterData || [];
 
     const updC = (val) => {
         cS.innerHTML = '<option value="">Class</option>'; 
@@ -319,7 +324,15 @@ export function generateFeatCards(colId, saved = null) {
     const container = document.getElementById(`feats-container-${colId}`);
     container.innerHTML = ''; 
     let idx = 0;
+    
+    // Safety check: ensure lookups are loaded
     const characterData = getState().characterData;
+    if (!characterData || characterData.length === 0) {
+        // If data isn't loaded yet, we can't generate cards correctly.
+        // In a real scenario, we might want to trigger a load or retry, 
+        // but for now, we just return to avoid crashing.
+        return; 
+    }
 
     document.querySelectorAll(`#classes-container-${colId} .class-block`).forEach(b => {
         const ver = b.querySelector('.version-select').value;
@@ -329,7 +342,6 @@ export function generateFeatCards(colId, saved = null) {
 
         if (!cls || !ver) return;
 
-        // Find match for ASIs
         let dataRow = characterData.find(row => row.version == ver && row.class === cls && row.subclass === sub);
         if (!dataRow) dataRow = characterData.find(row => row.version == ver && row.class === cls);
 
@@ -440,7 +452,6 @@ export function generateOutputString(oldC, newC, costInfo, notes) {
             let m = []; 
             ATTRIBUTES.forEach(a => { if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); });
 
-            // Try to find subclass for formatting
             const sourceClassData = c.classes.find(cl => cl.class === f.source);
             const cleanSubName = sourceClassData ? clean(sourceClassData.subclass) : "";
             const subPart = (cleanSubName && cleanSubName !== 'None') ? ` ${cleanSubName}` : "";

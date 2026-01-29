@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient.js";
+import { supabase } from "/assets/js/supabaseClient.js";
 
 // Global State
 const state = {
@@ -6,32 +6,6 @@ const state = {
     currentReworkId: null,
     savedReworkIds: [] // loaded from localStorage
 };
-
-export async function fetchAllReworks() {
-    try {
-        const { data, error } = await supabase
-            .from('rework')
-            .select(`
-                id,
-                created_at,
-                updated_at,
-                discord_id,
-                character_name,
-                old_character,
-                new_character,
-                cost,
-                notes,
-                user_id
-            `)
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        return data;
-    } catch (err) {
-        console.error("Error fetching all reworks:", err);
-        return [];
-    }
-}
 
 const STORAGE_KEY = 'my_rework_ids';
 
@@ -41,8 +15,12 @@ export const setReworkId = (id) => { state.currentReworkId = id; };
 // --- Local Storage Management ---
 
 function loadLocalIds() {
-    const json = localStorage.getItem(STORAGE_KEY);
-    return json ? JSON.parse(json) : [];
+    try {
+        const json = localStorage.getItem(STORAGE_KEY);
+        return json ? JSON.parse(json) : [];
+    } catch (e) {
+        return [];
+    }
 }
 
 function addLocalId(id) {
@@ -99,7 +77,7 @@ export async function loadReworkById(id) {
         
         state.currentReworkId = data.id;
         
-        // If we load someone else's rework, add it to our local list so we can find it again
+        // If we load someone else's rework (via UUID), add it to our local list so we can find it again
         addLocalId(data.id); 
         
         return data;
@@ -109,7 +87,6 @@ export async function loadReworkById(id) {
 }
 
 export async function saveReworkToDb(payload) {
-    // No user_id injection anymore
     payload.updated_at = new Date().toISOString();
 
     const currentId = state.currentReworkId;
@@ -134,7 +111,23 @@ export async function saveReworkToDb(payload) {
 
     if (result) {
         state.currentReworkId = result.id;
-        addLocalId(result.id); // Save UUID to cookies/storage
+        addLocalId(result.id);
     }
     return result;
+}
+
+// RESTORED: This was missing in the previous version
+export async function deleteReworkById(id) {
+    if (!id) throw new Error("No ID provided for deletion");
+
+    const { error } = await supabase.from('rework').delete().eq('id', id);
+    if (error) throw error;
+
+    // Remove from local tracking
+    removeLocalId(id);
+    
+    // Clear current ID if it matches
+    if (state.currentReworkId === id) {
+        state.currentReworkId = null;
+    }
 }
