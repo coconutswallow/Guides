@@ -1,8 +1,8 @@
 import { supabase } from './supabaseClient.js';
 
 const REQUIRED_GUILD_ID = '308324031478890497';
-// 24 Hours in milliseconds
-const MAX_SESSION_AGE = 24 * 60 * 60 * 1000; 
+// 8 Hours in milliseconds
+const MAX_SESSION_AGE = 8 * 60 * 60 * 1000; 
 
 /**
  * Manages Supabase authentication state and handles synchronization 
