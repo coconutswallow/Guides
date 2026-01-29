@@ -61,7 +61,7 @@ title: Character Rework Tool
             <div class="char-column" id="col-original">
                 <h2 class="column-header">Original Character</h2>
                 <div class="card">
-                    <h3 class="card-title">Character Origin</h3>
+                    <h3 class="card-title">Character Info</h3>
                     <div class="origin-grid">
                         <div class="input-group">
                             <label class="input-label">Character Name</label>
@@ -74,28 +74,42 @@ title: Character Rework Tool
                                 27 / 27 Pts
                             </div>
                         </div>
-                        <div class="input-group">
-                            <label class="input-label">Race/Species</label>
-                            <input type="text" class="text-input" id="race-original" placeholder="Race/Species Details">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Racial Bonuses</label>
-                            <div id="race-mod-container-original"></div>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Origin (Background)</label>
-                            <input type="text" class="text-input" id="bg-original" placeholder="e.g. Acolyte">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Origin Feat</label>
-                            <input type="text" class="text-input" id="orig-feat-original" placeholder="Feat Name">
-                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
-                                    style="font-size:0.8em">Origin Feat Modifiers</label></div>
-                            <div id="origin-mod-container-original"></div>
-                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
-                                    style="font-size:0.8em">Proficiencies and Skills</label></div>
-                            <textarea class="text-input" id="orig-feat-prof-original" placeholder="List proficiencies and skills gained from this feat" rows="3"></textarea>
-                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Race/Species</h3>
+                    <div class="input-group">
+                        <label class="input-label">Race/Species</label>
+                        <input type="text" class="text-input" id="race-original" placeholder="Race/Species Details">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Racial Bonuses</label>
+                        <div id="race-mod-container-original"></div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Racial Features</label>
+                        <div id="race-features-container-original"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Origin (Background)</h3>
+                    <div class="input-group">
+                        <label class="input-label">Origin (Background)</label>
+                        <input type="text" class="text-input" id="bg-original" placeholder="e.g. Acolyte">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Origin Features</label>
+                        <div id="origin-features-container-original"></div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Origin Feat</label>
+                        <input type="text" class="text-input" id="orig-feat-original" placeholder="Feat Name">
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                style="font-size:0.8em">Origin Feat Modifiers</label></div>
+                        <div id="origin-mod-container-original"></div>
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                style="font-size:0.8em">Origin Feat Features</label></div>
+                        <div id="origin-feat-features-container-original"></div>
                     </div>
                 </div>
                 <div class="card">
@@ -110,7 +124,7 @@ title: Character Rework Tool
             <div class="char-column" id="col-new">
                 <h2 class="column-header">New Character</h2>
                 <div class="card">
-                    <h3 class="card-title">Character Origin</h3>
+                    <h3 class="card-title">Character Info</h3>
                     <div class="origin-grid">
                         <div class="input-group">
                             <div class="field-header-row"><label class="input-label">Character Name</label><button
@@ -127,39 +141,57 @@ title: Character Rework Tool
                                 27 / 27 Pts
                             </div>
                         </div>
-                        <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Race/Species</label><button
-                                    type="button" class="copy-link"
-                                    onclick="window.copyValue('race-original', 'race-new')">Copy</button></div>
-                            <input type="text" class="text-input" id="race-new" placeholder="Race/Species Details">
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Race/Species</h3>
+                    <div class="input-group">
+                        <div class="field-header-row"><label class="input-label">Race/Species</label><button
+                                type="button" class="copy-link"
+                                onclick="window.copyValue('race-original', 'race-new')">Copy</button></div>
+                        <input type="text" class="text-input" id="race-new" placeholder="Race/Species Details">
+                    </div>
+                    <div class="input-group">
+                        <div class="field-header-row"><label class="input-label">Racial Bonuses</label><button
+                                type="button" class="copy-link" onclick="window.copyMods('race')">Copy</button>
                         </div>
-                        <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Racial Bonuses</label><button
-                                    type="button" class="copy-link" onclick="window.copyMods('race')">Copy</button>
-                            </div>
-                            <div id="race-mod-container-new"></div>
+                        <div id="race-mod-container-new"></div>
+                    </div>
+                    <div class="input-group">
+                        <div class="field-header-row"><label class="input-label">Racial Features</label><button
+                                type="button" class="copy-link" onclick="window.copyFeatures('race')">Copy</button>
                         </div>
-                        <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Origin (Background)</label><button
-                                    type="button" class="copy-link"
-                                    onclick="window.copyValue('bg-original', 'bg-new')">Copy</button></div>
-                            <input type="text" class="text-input" id="bg-new" placeholder="e.g. Acolyte">
+                        <div id="race-features-container-new"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Origin (Background)</h3>
+                    <div class="input-group">
+                        <div class="field-header-row"><label class="input-label">Origin (Background)</label><button
+                                type="button" class="copy-link"
+                                onclick="window.copyValue('bg-original', 'bg-new')">Copy</button></div>
+                        <input type="text" class="text-input" id="bg-new" placeholder="e.g. Acolyte">
+                    </div>
+                    <div class="input-group">
+                        <div class="field-header-row"><label class="input-label">Origin Features</label><button
+                                type="button" class="copy-link" onclick="window.copyFeatures('origin')">Copy</button>
                         </div>
-                        <div class="input-group">
-                            <div class="field-header-row"><label class="input-label">Origin Feat</label><button
-                                    type="button" class="copy-link"
-                                    onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy</button>
-                            </div>
-                            <input type="text" class="text-input" id="orig-feat-new" placeholder="Feat Name">
-                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
-                                    style="font-size:0.8em">Origin Feat Modifiers</label><button type="button"
-                                    class="copy-link" onclick="window.copyMods('origin')">Copy</button></div>
-                            <div id="origin-mod-container-new"></div>
-                            <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
-                                    style="font-size:0.8em">Proficiencies and Skills</label><button type="button"
-                                    class="copy-link" onclick="window.copyValue('orig-feat-prof-original', 'orig-feat-prof-new')">Copy</button></div>
-                            <textarea class="text-input" id="orig-feat-prof-new" placeholder="List proficiencies and skills gained from this feat" rows="3"></textarea>
+                        <div id="origin-features-container-new"></div>
+                    </div>
+                    <div class="input-group">
+                        <div class="field-header-row"><label class="input-label">Origin Feat</label><button
+                                type="button" class="copy-link"
+                                onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy</button>
                         </div>
+                        <input type="text" class="text-input" id="orig-feat-new" placeholder="Feat Name">
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                style="font-size:0.8em">Origin Feat Modifiers</label><button type="button"
+                                class="copy-link" onclick="window.copyMods('origin')">Copy</button></div>
+                        <div id="origin-mod-container-new"></div>
+                        <div class="field-header-row" style="margin-top:10px;"><label class="input-label"
+                                style="font-size:0.8em">Origin Feat Features</label><button type="button"
+                                class="copy-link" onclick="window.copyFeatures('origin-feat')">Copy</button></div>
+                        <div id="origin-feat-features-container-new"></div>
                     </div>
                 </div>
                 <div class="card">
@@ -350,12 +382,50 @@ title: Character Rework Tool
         setV(`race-${colId}`, data.race);
         setV(`bg-${colId}`, data.bg);
         setV(`orig-feat-${colId}`, data.origin_feat);
-        setV(`orig-feat-prof-${colId}`, data.origin_feat_prof);
 
         ATTRIBUTES.forEach(a => setV(`attr-${colId}-${a}`, data.attributes?.[a] || "10"));
 
         document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => s.value = data.race_mods?.[s.dataset.attr] || "0");
         document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => s.value = data.origin_mods?.[s.dataset.attr] || "0");
+
+        // Restore race features
+        const raceFeatureRows = document.querySelectorAll(`#race-features-container-${colId} .feature-row`);
+        if (data.race_features) {
+            data.race_features.forEach((feat, i) => {
+                if (raceFeatureRows[i]) {
+                    const typeSelect = raceFeatureRows[i].querySelector('.feature-type');
+                    const nameInput = raceFeatureRows[i].querySelector('.feature-name');
+                    if (typeSelect) typeSelect.value = feat.type || "none";
+                    if (nameInput) nameInput.value = feat.name || "";
+                }
+            });
+        }
+        
+        // Restore origin features
+        const originFeatureRows = document.querySelectorAll(`#origin-features-container-${colId} .feature-row`);
+        if (data.origin_features) {
+            data.origin_features.forEach((feat, i) => {
+                if (originFeatureRows[i]) {
+                    const typeSelect = originFeatureRows[i].querySelector('.feature-type');
+                    const nameInput = originFeatureRows[i].querySelector('.feature-name');
+                    if (typeSelect) typeSelect.value = feat.type || "none";
+                    if (nameInput) nameInput.value = feat.name || "";
+                }
+            });
+        }
+        
+        // Restore origin feat features
+        const originFeatFeatureRows = document.querySelectorAll(`#origin-feat-features-container-${colId} .feature-row`);
+        if (data.origin_feat_features) {
+            data.origin_feat_features.forEach((feat, i) => {
+                if (originFeatFeatureRows[i]) {
+                    const typeSelect = originFeatFeatureRows[i].querySelector('.feature-type');
+                    const nameInput = originFeatFeatureRows[i].querySelector('.feature-name');
+                    if (typeSelect) typeSelect.value = feat.type || "none";
+                    if (nameInput) nameInput.value = feat.name || "";
+                }
+            });
+        }
 
         const container = document.getElementById(`classes-container-${colId}`);
         container.innerHTML = "";
@@ -388,18 +458,66 @@ title: Character Rework Tool
         const feats = [];
         document.querySelectorAll(`#feats-container-${colId} .feat-card`).forEach(c => {
             const mods = {};
-            c.querySelectorAll('select').forEach(s => mods[s.dataset.attr] = s.value);
+            c.querySelectorAll('select[data-attr]').forEach(s => mods[s.dataset.attr] = s.value);
+            
+            const features = [];
+            const featureTypes = c.querySelectorAll('.feat-feature-type');
+            const featureNames = c.querySelectorAll('.feat-feature-name');
+            featureTypes.forEach((typeSelect, i) => {
+                features.push({
+                    type: typeSelect.value,
+                    name: featureNames[i]?.value || ""
+                });
+            });
+            
             feats.push({
-                name: c.querySelector('.text-input').value,
+                name: c.querySelector('.feat-name')?.value || "",
                 mods: mods,
-                prof: c.querySelector('.feat-prof')?.value || "",
+                features: features,
                 // Using 'source' to match generateOutput's expectations
                 source: c.querySelector('.card-title').innerText.split(' - ')[0],
                 lvl: c.querySelector('.card-title').innerText.match(/Lvl (\d+)/)?.[1] || ""
             });
         });
 
-        return { name: getV(`name-${colId}`), race: getV(`race-${colId}`), bg: getV(`bg-${colId}`), origin_feat: getV(`orig-feat-${colId}`), origin_feat_prof: getV(`orig-feat-prof-${colId}`), attributes: attrs, race_mods: rMods, origin_mods: oMods, classes, feats };
+        // Collect race features
+        const raceFeatures = [];
+        document.querySelectorAll(`#race-features-container-${colId} .feature-row`).forEach(row => {
+            const type = row.querySelector('.feature-type')?.value || "none";
+            const name = row.querySelector('.feature-name')?.value || "";
+            raceFeatures.push({ type, name });
+        });
+        
+        // Collect origin features
+        const originFeatures = [];
+        document.querySelectorAll(`#origin-features-container-${colId} .feature-row`).forEach(row => {
+            const type = row.querySelector('.feature-type')?.value || "none";
+            const name = row.querySelector('.feature-name')?.value || "";
+            originFeatures.push({ type, name });
+        });
+        
+        // Collect origin feat features
+        const originFeatFeatures = [];
+        document.querySelectorAll(`#origin-feat-features-container-${colId} .feature-row`).forEach(row => {
+            const type = row.querySelector('.feature-type')?.value || "none";
+            const name = row.querySelector('.feature-name')?.value || "";
+            originFeatFeatures.push({ type, name });
+        });
+
+        return { 
+            name: getV(`name-${colId}`), 
+            race: getV(`race-${colId}`), 
+            race_features: raceFeatures,
+            bg: getV(`bg-${colId}`), 
+            origin_features: originFeatures,
+            origin_feat: getV(`orig-feat-${colId}`), 
+            origin_feat_features: originFeatFeatures,
+            attributes: attrs, 
+            race_mods: rMods, 
+            origin_mods: oMods, 
+            classes, 
+            feats 
+        };
     };
 
     window.generateOutput = () => {
@@ -579,7 +697,7 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
                 card.className = 'card feat-card';
                 card.innerHTML = `
                     <h3 class="card-title">${cls} - Lvl ${milestone} ASI/Feat</h3>
-                    <input type="text" class="text-input" placeholder="Feat Name">
+                    <input type="text" class="text-input feat-name" placeholder="Feat Name">
                     <table class="stat-table">
                         <thead>
                             <tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr>
@@ -590,21 +708,43 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
                         </tbody>
                     </table>
                     <div style="margin-top: 10px;">
-                        <label class="input-label" style="font-size:0.8em">Proficiencies and Skills</label>
-                        <textarea class="text-input feat-prof" placeholder="List proficiencies and skills gained from this feat" rows="3"></textarea>
+                        <label class="input-label" style="font-size:0.8em">Feat Features</label>
+                        <div class="feat-features-container">
+                            ${[1, 2, 3].map(i => `
+                                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px;">
+                                    <select class="text-input feat-feature-type">
+                                        <option value="none">None</option>
+                                        <option value="language">Language</option>
+                                        <option value="skill">Skill</option>
+                                        <option value="tool proficiency">Tool Proficiency</option>
+                                    </select>
+                                    <input type="text" class="text-input feat-feature-name" placeholder="Feature Name">
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>`;
                 
                 container.appendChild(card);
 
                 // Restore saved data if it exists for this index
                 if (saved && saved[idx]) {
-                    card.querySelector('.text-input').value = saved[idx].name || "";
-                    const profTextarea = card.querySelector('.feat-prof');
-                    if (profTextarea) profTextarea.value = saved[idx].prof || "";
+                    const nameInput = card.querySelector('.feat-name');
+                    if (nameInput) nameInput.value = saved[idx].name || "";
+                    
                     ATTRIBUTES.forEach(a => {
                         const sel = card.querySelector(`select[data-attr="${a}"]`);
                         if (sel) sel.value = saved[idx].mods?.[a] || "0";
                     });
+                    
+                    // Restore features
+                    const featureTypes = card.querySelectorAll('.feat-feature-type');
+                    const featureNames = card.querySelectorAll('.feat-feature-name');
+                    if (saved[idx].features) {
+                        saved[idx].features.forEach((feat, i) => {
+                            if (featureTypes[i]) featureTypes[i].value = feat.type || "none";
+                            if (featureNames[i]) featureNames[i].value = feat.name || "";
+                        });
+                    }
                 }
                 idx++;
             });
@@ -676,6 +816,48 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
     window.copyValue = (s, t) => { document.getElementById(t).value = document.getElementById(s).value; };
     window.copyAttributes = () => { ATTRIBUTES.forEach(a => document.getElementById(`attr-new-${a}`).value = document.getElementById(`attr-original-${a}`).value); window.calculatePointBuy('new'); };
     window.copyMods = (type) => { ATTRIBUTES.forEach(a => { const s = document.querySelector(`.mod-select-${type}[data-col="original"][data-attr="${a}"]`), t = document.querySelector(`.mod-select-${type}[data-col="new"][data-attr="${a}"]`); if (s && t) t.value = s.value; }); };
+    
+    window.copyFeatures = (type) => {
+        const sourceContainer = document.getElementById(`${type}-features-container-original`);
+        const targetContainer = document.getElementById(`${type}-features-container-new`);
+        if (!sourceContainer || !targetContainer) return;
+        
+        const sourceRows = sourceContainer.querySelectorAll('.feature-row');
+        const targetRows = targetContainer.querySelectorAll('.feature-row');
+        
+        sourceRows.forEach((sourceRow, i) => {
+            if (targetRows[i]) {
+                const sourceType = sourceRow.querySelector('.feature-type');
+                const sourceName = sourceRow.querySelector('.feature-name');
+                const targetType = targetRows[i].querySelector('.feature-type');
+                const targetName = targetRows[i].querySelector('.feature-name');
+                
+                if (sourceType && targetType) targetType.value = sourceType.value;
+                if (sourceName && targetName) targetName.value = sourceName.value;
+            }
+        });
+    };
+    
+    window.renderFeatureRows = (containerId, count = 4) => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        let html = '';
+        for (let i = 0; i < count; i++) {
+            html += `
+                <div class="feature-row" style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px;">
+                    <select class="text-input feature-type">
+                        <option value="none">None</option>
+                        <option value="language">Language</option>
+                        <option value="skill">Skill</option>
+                        <option value="tool proficiency">Tool Proficiency</option>
+                    </select>
+                    <input type="text" class="text-input feature-name" placeholder="Feature Name">
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+    };
 
     window.switchTab = (t) => {
         document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
@@ -692,6 +874,12 @@ Notes: ${document.getElementById('rework-notes').value || 'None'}
                 window.renderBaseAttributes(col);
                 document.getElementById(`race-mod-container-${col}`).innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><select class="mod-select-race" data-col="${col}" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
                 document.getElementById(`origin-mod-container-${col}`).innerHTML = `<table class="stat-table"><thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead><tbody><tr>${ATTRIBUTES.map(a => `<td><select class="mod-select-origin" data-col="${col}" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr></tbody></table>`;
+                
+                // Initialize feature containers
+                window.renderFeatureRows(`race-features-container-${col}`, 4);
+                window.renderFeatureRows(`origin-features-container-${col}`, 4);
+                window.renderFeatureRows(`origin-feat-features-container-${col}`, 4);
+                
                 window.addClassRow(col);
             });
         } catch (e) { console.error("App Init Error:", e); }
