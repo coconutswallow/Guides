@@ -7,7 +7,7 @@ import {
 import { computeReworkCosts, getTotalLevel, getAlacarteRates } from "./rework-calculations.js";
 import { ATTRIBUTES } from "./rework-constants.js";
 
-// --- Tab Navigation ---
+// --- Tab & Navigation ---
 window.switchTab = (t) => {
     document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
     document.querySelector(`button[onclick*="'${t}'"]`)?.classList.add('active');
@@ -16,10 +16,22 @@ window.switchTab = (t) => {
     if (t === 'cost') window.calculateCosts();
 };
 
-// --- Cost Calculation & Summary ---
+// --- UUID Clipboard Helper ---
+window.copyUuid = () => {
+    const uuidEl = document.getElementById('current-rework-id');
+    if (!uuidEl || !uuidEl.value) {
+        alert("No UUID to copy!");
+        return;
+    }
+    navigator.clipboard.writeText(uuidEl.value).then(() => {
+        alert("UUID copied to clipboard: " + uuidEl.value);
+    });
+};
+
+// --- Cost & Summary Logic ---
 window.calculateCosts = () => {
     const typeEl = document.getElementById('rework-type');
-    if (!typeEl) return;
+    if (!typeEl || !typeEl.value) return;
     
     const result = computeReworkCosts(typeEl.value, scrapeColumn('original'), scrapeColumn('new'));
     const err = document.getElementById('cost-error');
@@ -35,7 +47,6 @@ window.calculateCosts = () => {
     err.style.display = 'none';
     tbody.innerHTML = '';
 
-    // UI Alignment: Left-aligned descriptions
     if (result.isFixed) {
         thead.innerHTML = `<th style="text-align: left;">Rework Type</th><th>DTP</th><th>Gold</th>`;
     } else {
@@ -87,6 +98,81 @@ window.updateTotalCost = () => {
     }
 };
 
+// --- Save / Load / Delete Logic ---
+window.saveRework = async () => {
+    try {
+        const oldC = scrapeColumn('original');
+        const newC = scrapeColumn('new');
+        
+        const payload = {
+            discord_id: document.getElementById('manual-discord-id')?.value || "Unknown",
+            character_name: oldC.name,
+            old_character: oldC,
+            new_character: newC,
+            cost: document.getElementById('rework-cost')?.value || "",
+            notes: document.getElementById('rework-notes')?.value || ""
+        };
+
+        const res = await saveReworkToDb(payload);
+        document.getElementById('current-rework-id').value = res.id;
+        
+        const u = new URL(window.location); 
+        u.searchParams.set('id', res.id); 
+        window.history.pushState({}, '', u);
+        
+        alert("Rework Saved! UUID: " + res.id); 
+        await window.fetchReworks();
+    } catch(e) { 
+        console.error("Save error:", e);
+        alert("Error saving: " + e.message); 
+    }
+};
+
+async function performLoad(id) {
+    if (!id) return;
+    try {
+        const d = await loadReworkById(id);
+        document.getElementById('current-rework-id').value = d.id;
+        document.getElementById('manual-discord-id').value = d.discord_id || "";
+        document.getElementById('rework-cost').value = d.cost || "";
+        document.getElementById('rework-notes').value = d.notes || "";
+        
+        populateColumn('original', d.old_character);
+        populateColumn('new', d.new_character);
+        
+        window.calculateCosts();
+    } catch(e) {
+        alert("Load failed: " + e.message);
+    }
+}
+
+window.loadExternalId = async () => {
+    const id = prompt("Enter UUID:");
+    if (id) await performLoad(id);
+};
+
+window.loadSelectedRework = async () => {
+    const sel = document.getElementById('load-rework-select');
+    if (sel && sel.value) await performLoad(sel.value);
+};
+
+window.deleteRework = async () => {
+    const sel = document.getElementById('load-rework-select');
+    if (!sel || !sel.value) {
+        alert("Please select a rework first.");
+        return;
+    }
+    if(!confirm("Are you sure you want to delete this rework?")) return;
+    try {
+        await deleteReworkById(sel.value);
+        document.getElementById('current-rework-id').value = "";
+        alert("Rework deleted successfully"); 
+        await window.fetchReworks();
+    } catch (e) { 
+        alert("Delete failed: " + e.message); 
+    }
+};
+
 window.generateOutput = () => {
     const cost = document.getElementById('rework-cost').value;
     const notes = document.getElementById('rework-notes').value;
@@ -103,8 +189,11 @@ async function initApp() {
     });
     await initCharacterData();
     const urlId = new URLSearchParams(window.location.search).get('id');
-    urlId ? await loadReworkById(urlId).then(d => { populateColumn('original', d.old_character); populateColumn('new', d.new_character); })
-          : ['original', 'new'].forEach(col => addClassRow(col));
+    if (urlId) {
+        await performLoad(urlId);
+    } else {
+        ['original', 'new'].forEach(col => addClassRow(col));
+    }
     await window.fetchReworks();
 }
 

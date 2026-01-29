@@ -33,7 +33,10 @@ title: Character Rework Tool
             
             <div class="control-group">
                 <label class="input-label">Current UUID:</label>
-                <input type="text" id="current-rework-id" value="" readonly placeholder="Not Saved" style="width: 250px; background: #eee;">
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="current-rework-id" value="" readonly placeholder="Not Saved" style="width: 250px; background: #eee;">
+                    <button class="button action-btn" onclick="window.copyUuid()" style="background-color: #34495e; color: white;">Copy</button>
+                </div>
             </div>
         </div>
 
