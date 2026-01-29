@@ -18,7 +18,7 @@ import {
     generateFeatCards,
     addCostRow,
     generateOutputString,
-    updatePointBuyDisplay as refreshPoints // Alias for clarity
+    updatePointBuyDisplay as refreshPoints 
 } from "./rework-ui.js";
 
 import { computeReworkCosts } from "./rework-calculations.js";
@@ -58,7 +58,7 @@ async function initApp() {
         await window.loadExternalId(sharedId);
     }
 
-    // 5. Show Controls (No auth required anymore)
+    // 5. Show Controls
     const controls = document.getElementById('logged-in-controls');
     if (controls) controls.style.display = 'flex';
     
@@ -259,7 +259,7 @@ window.saveRework = async () => {
         const oldC = scrapeColumn('original');
         const newC = scrapeColumn('new');
         
-        // Scrape Cost Rows manually since they aren't in a column
+        // Scrape Cost Rows manually
         const costRows = [];
         document.querySelectorAll('#cost-table-body tr').forEach(row => {
             costRows.push({
@@ -270,15 +270,24 @@ window.saveRework = async () => {
             });
         });
 
+        // ----------------------------------------------------
+        // SCHEMA ADAPTATION:
+        // 'rework_type' and 'cost_rows' are not in the top-level table schema.
+        // We will store them inside the 'new_character' JSONB object as metadata.
+        // ----------------------------------------------------
+        newC._rework_meta = {
+            rework_type: document.getElementById('rework-type').value,
+            cost_rows: costRows
+        };
+
         const payload = {
             discord_id: discordId,
             character_name: oldC.name || "Unnamed",
             old_character: oldC,
-            new_character: newC,
-            rework_type: document.getElementById('rework-type').value,
+            new_character: newC, // Contains _rework_meta
             cost: document.getElementById('rework-cost').value,
             notes: document.getElementById('rework-notes').value,
-            cost_rows: costRows
+            // user_id is handled by Supabase Auth (if RLS is on) or logic in state-manager
         };
 
         const result = await saveReworkToDb(payload);
@@ -323,7 +332,16 @@ window.loadExternalId = async (id) => {
         document.getElementById('manual-discord-id').value = data.discord_id || "";
         document.getElementById('rework-cost').value = data.cost || "";
         document.getElementById('rework-notes').value = data.notes || "";
-        document.getElementById('rework-type').value = data.rework_type || "";
+
+        // ----------------------------------------------------
+        // SCHEMA ADAPTATION (LOAD):
+        // Retrieve rework_type and cost_rows from JSONB meta if available
+        // ----------------------------------------------------
+        const meta = data.new_character?._rework_meta || {};
+        const costRows = meta.cost_rows || data.cost_rows || []; // Fallback if data was saved in old format
+        const rType = meta.rework_type || data.rework_type || "";
+
+        document.getElementById('rework-type').value = rType;
 
         // Populate Characters
         populateColumn('original', data.old_character);
@@ -331,9 +349,8 @@ window.loadExternalId = async (id) => {
 
         // Restore Cost Rows
         document.getElementById('cost-table-body').innerHTML = '';
-        if (data.cost_rows && Array.isArray(data.cost_rows)) {
-            data.cost_rows.forEach(row => {
-                // Handle legacy field names if necessary
+        if (Array.isArray(costRows)) {
+            costRows.forEach(row => {
                 const num = row.numChanges !== undefined ? row.numChanges : (row.cost || 0);
                 addCostRow(row.change || '', num, row.dtpCost || 0, row.goldCost || 0);
             });
@@ -343,8 +360,6 @@ window.loadExternalId = async (id) => {
         // Refresh dropdown (so this loaded ID appears in "My Reworks")
         window.fetchReworks();
         
-        // If loaded from URL, we don't need to alert. If loaded manually, maybe nice to confirm.
-        // We'll just log it.
         console.log("Rework loaded successfully");
         
     } catch (e) {

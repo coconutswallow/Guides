@@ -7,6 +7,32 @@ const state = {
     savedReworkIds: [] // loaded from localStorage
 };
 
+export async function fetchAllReworks() {
+    try {
+        const { data, error } = await supabase
+            .from('rework')
+            .select(`
+                id,
+                created_at,
+                updated_at,
+                discord_id,
+                character_name,
+                old_character,
+                new_character,
+                cost,
+                notes,
+                user_id
+            `)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data;
+    } catch (err) {
+        console.error("Error fetching all reworks:", err);
+        return [];
+    }
+}
+
 const STORAGE_KEY = 'my_rework_ids';
 
 export const getState = () => state;
