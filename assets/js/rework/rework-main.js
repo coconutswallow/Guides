@@ -12,7 +12,14 @@ window.switchTab = (t) => {
     const currentTab = document.querySelector('.tab-content.active')?.id;
     
     // Validate when leaving Input tab
+    // Validate when leaving Input tab
     if (currentTab === 'tab-input' && t !== 'input') {
+        const reworkType = document.getElementById('rework-type')?.value;
+        if (!reworkType) {
+            alert("Please select a Rework Type before proceeding.");
+            return;
+        }
+        
         const validationError = window.validateReworkType();
         if (validationError) {
             alert(validationError);
