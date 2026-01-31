@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient.js';
+import { logError } from './error-logger.js';
 
 const REQUIRED_GUILD_ID = '308324031478890497';
 // 24 Hours in milliseconds
@@ -25,9 +26,13 @@ class AuthManager {
     init(onUserReady) {
         this.client.auth.getSession().then(({ data }) => {
             this.handleSession(data.session, onUserReady);
+        }).catch(error => {
+            logError('auth-manager', `Failed to get initial session: ${error.message}`);
+            if (onUserReady) onUserReady(null);
         });
 
         this.client.auth.onAuthStateChange((event, session) => {
+            logError('auth-manager', `Auth state changed: ${event}`);
             this.handleSession(session, onUserReady);
         });
     }
@@ -40,27 +45,32 @@ class AuthManager {
      */
     async handleSession(session, callback) {
         if (!session) {
+            logError('auth-manager', 'handleSession: No session found - user logged out or session expired');
             this.user = null;
             if (callback) callback(null);
             return;
         }
+
+        logError('auth-manager', `handleSession: Processing session for user ${session.user.id}`);
 
         // 1. Check the DB for 'last_seen'
         const isFresh = await this.checkSessionFreshness(session.user.id);
 
         if (isFresh) {
             // DB is fresh (sync happened < 24h ago). We are good.
+            logError('auth-manager', `handleSession: Session is fresh for user ${session.user.id}`);
             this.user = session.user;
             if (callback) callback(this.user);
         } else {
             // DB is stale. We must Sync.
-            console.log("Auth: Session stale or missing. Syncing...");
+            logError('auth-manager', `handleSession: Session stale or missing for user ${session.user.id}. Syncing...`);
             try {
                 await this.syncDiscordToDB(session);
                 this.user = session.user;
+                logError('auth-manager', `handleSession: Sync successful for user ${session.user.id}`);
                 if (callback) callback(this.user);
             } catch (error) {
-                console.error("Auth: Sync failed.", error);
+                logError('auth-manager', `handleSession: Sync failed for user ${session.user.id}: ${error.message}`);
                 await this.logout();
             }
         }
@@ -79,14 +89,30 @@ class AuthManager {
                 .eq('user_id', userId)
                 .single();
 
-            if (error || !data || !data.last_seen) return false;
+            if (error) {
+                logError('auth-manager', `checkSessionFreshness: DB error for user ${userId}: ${error.message}`);
+                return false;
+            }
+            
+            if (!data) {
+                logError('auth-manager', `checkSessionFreshness: No data found for user ${userId}`);
+                return false;
+            }
+            
+            if (!data.last_seen) {
+                logError('auth-manager', `checkSessionFreshness: No last_seen timestamp for user ${userId}`);
+                return false;
+            }
 
             const lastSeenDate = new Date(data.last_seen);
             const now = new Date();
             const ageInMs = now - lastSeenDate;
+            const isFresh = ageInMs < MAX_SESSION_AGE;
 
-            return ageInMs < MAX_SESSION_AGE;
+            logError('auth-manager', `checkSessionFreshness: User ${userId} last_seen=${data.last_seen}, age=${Math.floor(ageInMs/1000/60)} minutes, fresh=${isFresh}`);
+            return isFresh;
         } catch (e) {
+            logError('auth-manager', `checkSessionFreshness: Exception for user ${userId}: ${e.message}`);
             return false; // Fail safe: assume stale
         }
     }
@@ -99,23 +125,43 @@ class AuthManager {
      */
     async syncDiscordToDB(session) {
         const token = session.provider_token;
-        if (!token) throw new Error("No token found");
+        if (!token) {
+            logError('auth-manager', 'syncDiscordToDB: No provider token found in session');
+            throw new Error("No token found");
+        }
 
+        logError('auth-manager', 'syncDiscordToDB: Checking guild membership...');
         const isMember = await this.checkGuildMembership(token);
-        if (!isMember) throw new Error("User not in required Discord Guild");
+        if (!isMember) {
+            logError('auth-manager', `syncDiscordToDB: User not in required Discord Guild (${REQUIRED_GUILD_ID})`);
+            throw new Error("User not in required Discord Guild");
+        }
 
+        logError('auth-manager', 'syncDiscordToDB: Fetching guild member data...');
         const member = await this.fetchGuildMember(token);
-        if (!member) throw new Error("Could not fetch Discord member data");
+        if (!member) {
+            logError('auth-manager', 'syncDiscordToDB: Could not fetch Discord member data');
+            throw new Error("Could not fetch Discord member data");
+        }
+
+        const discordId = session.user.user_metadata.provider_id;
+        const displayName = member.nick || session.user.user_metadata.full_name;
+        logError('auth-manager', `syncDiscordToDB: Calling link_discord_account RPC for discord_id=${discordId}, name=${displayName}, roles=${JSON.stringify(member.roles)}`);
 
         // The RPC function typically handles updating 'last_seen' to NOW()
         // Ensure your Postgres function 'link_discord_account' does this!
         const { error } = await this.client.rpc('link_discord_account', {
-            arg_discord_id: session.user.user_metadata.provider_id,
-            arg_display_name: member.nick || session.user.user_metadata.full_name,
+            arg_discord_id: discordId,
+            arg_display_name: displayName,
             arg_roles: member.roles
         });
 
-        if (error) throw error;
+        if (error) {
+            logError('auth-manager', `syncDiscordToDB: RPC link_discord_account failed: ${error.message}`);
+            throw error;
+        }
+
+        logError('auth-manager', 'syncDiscordToDB: Successfully synced Discord data to DB');
     }
 
     /**
@@ -148,10 +194,26 @@ class AuthManager {
             const r = await fetch('https://discord.com/api/users/@me/guilds', {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            if (r.status === 429) return true; 
+            
+            if (r.status === 429) {
+                logError('auth-manager', 'checkGuildMembership: Rate limited by Discord API, assuming membership');
+                return true; 
+            }
+            
+            if (!r.ok) {
+                logError('auth-manager', `checkGuildMembership: Discord API returned status ${r.status}`);
+                return false;
+            }
+            
             const g = await r.json();
-            return Array.isArray(g) && g.some(x => x.id === REQUIRED_GUILD_ID);
-        } catch(e) { return false; }
+            const isMember = Array.isArray(g) && g.some(x => x.id === REQUIRED_GUILD_ID);
+            
+            logError('auth-manager', `checkGuildMembership: User ${isMember ? 'IS' : 'IS NOT'} a member of guild ${REQUIRED_GUILD_ID}`);
+            return isMember;
+        } catch(e) { 
+            logError('auth-manager', `checkGuildMembership: Exception - ${e.message}`);
+            return false;
+        }
     }
 
     /**
@@ -164,8 +226,19 @@ class AuthManager {
             const r = await fetch(`https://discord.com/api/users/@me/guilds/${REQUIRED_GUILD_ID}/member`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            return r.ok ? await r.json() : null;
-        } catch(e) { return null; }
+            
+            if (!r.ok) {
+                logError('auth-manager', `fetchGuildMember: Discord API returned status ${r.status}`);
+                return null;
+            }
+            
+            const member = await r.json();
+            logError('auth-manager', `fetchGuildMember: Successfully fetched member data with ${member.roles?.length || 0} roles`);
+            return member;
+        } catch(e) {
+            logError('auth-manager', `fetchGuildMember: Exception - ${e.message}`);
+            return null;
+        }
     }
 }
 

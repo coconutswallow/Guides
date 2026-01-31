@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient.js';
+import { logError } from './error-logger.js';
 
 /**
  * Checks if a user has a specific role.
@@ -9,7 +10,10 @@ import { supabase } from './supabaseClient.js';
  * Documentation:  https://github.com/hawthorneguild/HawthorneTeams/issues/17
  */
 export async function checkAccess(userId, requiredRole) {
-    if (!userId) return false;
+    if (!userId) {
+        logError('auth-check', 'checkAccess: No userId provided');
+        return false;
+    }
 
     try {
         const { data, error } = await supabase
@@ -18,8 +22,18 @@ export async function checkAccess(userId, requiredRole) {
             .eq('user_id', userId)
             .single();
 
-        if (error || !data || !data.roles) {
-            console.warn("AuthGuard: Could not fetch roles for user.");
+        if (error) {
+            logError('auth-check', `checkAccess: DB error for user ${userId}: ${error.message}`);
+            return false;
+        }
+        
+        if (!data) {
+            logError('auth-check', `checkAccess: No data found for user ${userId}`);
+            return false;
+        }
+        
+        if (!data.roles) {
+            logError('auth-check', `checkAccess: No roles found for user ${userId}`);
             return false;
         }
 
@@ -30,10 +44,11 @@ export async function checkAccess(userId, requiredRole) {
         // "Does the user's role list include any of the required roles?"
         const hasPermission = required.some(r => data.roles.includes(r));
         
+        logError('auth-check', `checkAccess: User ${userId} has roles ${JSON.stringify(data.roles)}, required ${JSON.stringify(required)}, access=${hasPermission}`);
         return hasPermission;
 
     } catch (e) {
-        console.error("AuthGuard Error:", e);
+        logError('auth-check', `checkAccess: Exception for user ${userId}: ${e.message}`);
         return false;
     }
 }
