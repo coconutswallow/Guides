@@ -25,42 +25,53 @@ let deleteTargetId = null;
  * Main initialization on DOM Load.
  * Sets up authentication listeners, button events, and modal handlers.
  */
-document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Check Auth State
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (user) {
-        await handleUserLogin(user); // <--- 2. Use a handler that checks roles
-    } else {
-        showLanding();
-    }
-
-    // 2. Setup Listeners
-    // Button: Create new session (Header)
-    const btnNew = document.getElementById('btn-new-session');
-    if (btnNew) btnNew.addEventListener('click', handleNewSession);
-
-    // Button: Create first session (Empty State)
-    const btnFirst = document.getElementById('btn-create-first');
-    if (btnFirst) btnFirst.addEventListener('click', handleNewSession);
-    
-    // Auth State Listener: Handles dynamic login/logout events without page reload
-    supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN') {
-            await handleUserLogin(session.user);
-        } else if (event === 'SIGNED_OUT') {
-            currentUser = null;
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Instead of calling supabase.auth direct, use the authManager init
+    // This ensures syncDiscordToDB finishes before we check roles
+    window.authManager.init(async (user) => {
+        if (user) {
+            await handleUserLogin(user);
+        } else {
             showLanding();
         }
     });
 
-    // ... (Modal listeners remain the same)
+    // 2. Setup Listeners
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    const btnNew = document.getElementById('btn-new-session');
+    if (btnNew) btnNew.addEventListener('click', handleNewSession);
+
+    const btnFirst = document.getElementById('btn-create-first');
+    if (btnFirst) btnFirst.addEventListener('click', handleNewSession);
+    
     const btnCancel = document.getElementById('btn-cancel-delete');
     const btnConfirm = document.getElementById('btn-confirm-delete');
 
     if (btnCancel) btnCancel.addEventListener('click', closeDeleteModal);
     if (btnConfirm) btnConfirm.addEventListener('click', executeDelete);
-});
+}
+
+// Update handleUserLogin to be more resilient
+async function handleUserLogin(user) {
+    try {
+        const hasAccess = await checkAccess(user.id, ['Trial DM', 'Full DM']);
+
+        if (hasAccess) {
+            currentUser = user;
+            showDashboard();
+        } else {
+            console.warn("Access Denied: User lacks required roles.");
+            alert("Access Denied: You must be a Trial DM or Full DM to use this tool.");
+            window.authManager.logout(); 
+        }
+    } catch (err) {
+        console.error("Error during role check:", err);
+        showLanding();
+    }
+}
 
 // --- NEW HELPER FUNCTION ---
 /**
