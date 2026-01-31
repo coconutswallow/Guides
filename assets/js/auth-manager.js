@@ -214,28 +214,62 @@ class AuthManager {
      * @returns {Promise<boolean>}
      */
     async checkGuildMembership(token) {
+         // Log immediately, synchronously
+         console.log('[checkGuildMembership] ENTRY - token length:', token?.length || 0);
+         logError('auth-manager', `checkGuildMembership: ENTRY with token length ${token?.length || 0}`);
+         
          try {
+            console.log('[checkGuildMembership] Starting Discord API call');
+            logError('auth-manager', 'checkGuildMembership: Starting Discord API call to /users/@me/guilds');
+            
+            // Add a timeout to prevent hanging
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => {
+                console.log('[checkGuildMembership] TIMEOUT - aborting request');
+                controller.abort();
+            }, 10000); // 10 second timeout
+            
+            console.log('[checkGuildMembership] About to fetch...');
             const r = await fetch('https://discord.com/api/users/@me/guilds', {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
+                signal: controller.signal
             });
             
+            console.log('[checkGuildMembership] Fetch completed, status:', r.status);
+            clearTimeout(timeoutId);
+            
+            logError('auth-manager', `checkGuildMembership: Discord API responded with status ${r.status}`);
+            
             if (r.status === 429) {
+                console.log('[checkGuildMembership] Rate limited, assuming membership');
                 logError('auth-manager', 'checkGuildMembership: Rate limited by Discord API, assuming membership');
                 return true; 
             }
             
             if (!r.ok) {
-                logError('auth-manager', `checkGuildMembership: Discord API returned status ${r.status}`);
+                const errorText = await r.text();
+                console.log('[checkGuildMembership] API error:', r.status, errorText);
+                logError('auth-manager', `checkGuildMembership: Discord API error: status=${r.status}, body=${errorText}`);
                 return false;
             }
             
+            console.log('[checkGuildMembership] Parsing response JSON...');
             const g = await r.json();
+            console.log('[checkGuildMembership] Guild count:', g?.length || 0);
+            logError('auth-manager', `checkGuildMembership: Fetched ${g?.length || 0} guilds`);
+            
             const isMember = Array.isArray(g) && g.some(x => x.id === REQUIRED_GUILD_ID);
             
+            console.log('[checkGuildMembership] Is member:', isMember);
             logError('auth-manager', `checkGuildMembership: User ${isMember ? 'IS' : 'IS NOT'} a member of guild ${REQUIRED_GUILD_ID}`);
             return isMember;
-        } catch(e) { 
-            logError('auth-manager', `checkGuildMembership: Exception - ${e.message}`);
+        } catch(e) {
+            console.error('[checkGuildMembership] EXCEPTION:', e);
+            if (e.name === 'AbortError') {
+                logError('auth-manager', `checkGuildMembership: Request timed out after 10 seconds`);
+            } else {
+                logError('auth-manager', `checkGuildMembership: Exception - ${e.message} | Stack: ${e.stack}`);
+            }
             return false;
         }
     }
