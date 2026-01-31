@@ -1,8 +1,8 @@
 import { supabase } from './supabaseClient.js';
 
 const REQUIRED_GUILD_ID = '308324031478890497';
-// 8 Hours in milliseconds
-const MAX_SESSION_AGE = 8 * 60 * 60 * 1000; 
+// 24 Hours in milliseconds
+const MAX_SESSION_AGE = 24 * 60 * 60 * 1000; 
 
 /**
  * Manages Supabase authentication state and handles synchronization 
@@ -99,28 +99,23 @@ class AuthManager {
      */
     async syncDiscordToDB(session) {
         const token = session.provider_token;
-        if (!token) throw new Error("No Discord provider token found in session.");
+        if (!token) throw new Error("No token found");
 
         const isMember = await this.checkGuildMembership(token);
-        if (!isMember) throw new Error("User is not a member of the required Discord Guild.");
+        if (!isMember) throw new Error("User not in required Discord Guild");
 
         const member = await this.fetchGuildMember(token);
-        if (!member) throw new Error("Could not fetch Discord member details (roles/nick).");
+        if (!member) throw new Error("Could not fetch Discord member data");
 
-        console.log("Auth: Attempting RPC sync for Discord ID:", session.user.user_metadata.provider_id);
-
+        // The RPC function typically handles updating 'last_seen' to NOW()
+        // Ensure your Postgres function 'link_discord_account' does this!
         const { error } = await this.client.rpc('link_discord_account', {
             arg_discord_id: session.user.user_metadata.provider_id,
             arg_display_name: member.nick || session.user.user_metadata.full_name,
             arg_roles: member.roles
         });
 
-        if (error) {
-            console.error("Auth: Database RPC Error:", error.message, error.details);
-            throw error; // This will be caught by handleSession, triggering logout
-        }
-        
-        console.log("Auth: Sync successful.");
+        if (error) throw error;
     }
 
     /**
