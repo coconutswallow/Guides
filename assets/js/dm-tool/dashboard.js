@@ -13,21 +13,16 @@
 import { supabase } from '../supabaseClient.js';
 import '../auth-manager.js'; 
 import { fetchSessionList, createSession, deleteSession } from './data-manager.js';
-import { checkAccess } from '../auth-check.js'; // <--- 1. Import checkAccess
+import { checkAccess } from '../auth-check.js';
 
 /** @type {Object|null} Holds the currently authenticated Supabase user object */
 let currentUser = null;
-
-/** @type {string|null} Temporary storage for the Session ID to be deleted (used by modal) */
+/** @type {string|null} Temporary storage for the Session ID to be deleted */
 let deleteTargetId = null; 
 
-/**
- * Main initialization on DOM Load.
- * Sets up authentication listeners, button events, and modal handlers.
- */
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Instead of calling supabase.auth direct, use the authManager init
-    // This ensures syncDiscordToDB finishes before we check roles
+    // Use the central authManager to coordinate the Discord sync
+    // before checking roles. This prevents the "flash" and "kick" loop.
     window.authManager.init(async (user) => {
         if (user) {
             await handleUserLogin(user);
@@ -36,9 +31,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Setup Listeners
+    // Setup UI Listeners
     setupEventListeners();
 });
+
+/**
+ * Single declaration of handleUserLogin to prevent SyntaxError.
+ */
+async function handleUserLogin(user) {
+    try {
+        // This check waits for the DB 'roles' column updated by your RPC function.
+        const hasAccess = await checkAccess(user.id, ['Trial DM', 'Full DM']);
+
+        if (hasAccess) {
+            currentUser = user;
+            showDashboard();
+        } else {
+            console.warn("Access Denied: User lacks required roles.");
+            alert("Access Denied: You must be a Trial DM or Full DM to use this tool.");
+            await window.authManager.logout(); 
+        }
+    } catch (err) {
+        console.error("Error during role check:", err);
+        showLanding();
+    }
+}
 
 function setupEventListeners() {
     const btnNew = document.getElementById('btn-new-session');
