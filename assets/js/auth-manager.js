@@ -15,6 +15,8 @@ class AuthManager {
     constructor() {
         this.client = supabase;
         this.user = null;
+        this.syncInProgress = false;
+        this.syncPromise = null;
     }
 
     /**
@@ -64,14 +66,36 @@ class AuthManager {
         } else {
             // DB is stale. We must Sync.
             logError('auth-manager', `handleSession: Session stale or missing for user ${session.user.id}. Syncing...`);
+            
+            // Prevent multiple simultaneous syncs with a lock
+            if (this.syncInProgress) {
+                logError('auth-manager', `handleSession: Sync already in progress, waiting for completion...`);
+                try {
+                    await this.syncPromise;
+                    this.user = session.user;
+                    if (callback) callback(this.user);
+                } catch (error) {
+                    logError('auth-manager', `handleSession: Waited sync failed: ${error.message}`);
+                    if (callback) callback(null);
+                }
+                return;
+            }
+            
+            // Set lock and create sync promise
+            this.syncInProgress = true;
+            this.syncPromise = this.syncDiscordToDB(session);
+            
             try {
-                await this.syncDiscordToDB(session);
+                await this.syncPromise;
                 this.user = session.user;
                 logError('auth-manager', `handleSession: Sync successful for user ${session.user.id}`);
                 if (callback) callback(this.user);
             } catch (error) {
-                logError('auth-manager', `handleSession: Sync failed for user ${session.user.id}: ${error.message}`);
+                logError('auth-manager', `handleSession: Sync failed for user ${session.user.id}: ${error.message} | Stack: ${error.stack}`);
                 await this.logout();
+            } finally {
+                this.syncInProgress = false;
+                this.syncPromise = null;
             }
         }
     }
@@ -223,20 +247,36 @@ class AuthManager {
      */
     async fetchGuildMember(token) {
         try {
+            logError('auth-manager', `fetchGuildMember: Starting fetch for guild ${REQUIRED_GUILD_ID}`);
+            
+            // Add a timeout to prevent hanging
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+            
             const r = await fetch(`https://discord.com/api/users/@me/guilds/${REQUIRED_GUILD_ID}/member`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
+                signal: controller.signal
             });
             
+            clearTimeout(timeoutId);
+            
+            logError('auth-manager', `fetchGuildMember: Discord API responded with status ${r.status}`);
+            
             if (!r.ok) {
-                logError('auth-manager', `fetchGuildMember: Discord API returned status ${r.status}`);
+                const errorText = await r.text();
+                logError('auth-manager', `fetchGuildMember: Discord API error: status=${r.status}, body=${errorText}`);
                 return null;
             }
             
             const member = await r.json();
-            logError('auth-manager', `fetchGuildMember: Successfully fetched member data with ${member.roles?.length || 0} roles`);
+            logError('auth-manager', `fetchGuildMember: Successfully fetched member data with ${member.roles?.length || 0} roles: ${JSON.stringify(member.roles || [])}`);
             return member;
         } catch(e) {
-            logError('auth-manager', `fetchGuildMember: Exception - ${e.message}`);
+            if (e.name === 'AbortError') {
+                logError('auth-manager', `fetchGuildMember: Request timed out after 10 seconds`);
+            } else {
+                logError('auth-manager', `fetchGuildMember: Exception - ${e.message} | Stack: ${e.stack}`);
+            }
             return null;
         }
     }
