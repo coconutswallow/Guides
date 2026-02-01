@@ -12,7 +12,7 @@ const MAX_SESSION_AGE = 24 * 60 * 60 * 1000;
  * Documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/17
  */
 class AuthManager {
-    constructor() {
+    constructor() { catch (error) {
         this.client = supabase;
         this.user = null;
         this.syncInProgress = false;
@@ -90,7 +90,7 @@ class AuthManager {
                 this.user = session.user;
                 logError('auth-manager', `handleSession: Sync successful for user ${session.user.id}`);
                 if (callback) callback(this.user);
-            } catch (error) {
+            } catch (error) {console.error("Auth: Sync failed.", error);
                 logError('auth-manager', `handleSession: Sync failed for user ${session.user.id}: ${error.message} | Stack: ${error.stack}`);
                 await this.logout();
             } finally {
