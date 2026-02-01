@@ -2,23 +2,14 @@ import { supabase } from './supabaseClient.js';
 
 let debugCache = null;
 let errorCount = 0;
-const MAX_ERRORS_PER_SESSION = 200; // Increased from 20 to capture full auth flow
-
+const MAX_ERRORS_PER_SESSION = 50;
 /**
  * Logs errors to the database if the system debug setting is "true".
- * Always logs to console as fallback.
+ * If debug is false or not set, logs to console only.
  * @param {string} moduleName - The script/module name (e.g., 'auth-manager').
  * @param {string} errorMessage - The error details.
  */
 export async function logError(moduleName, errorMessage) {
-    // ALWAYS log to console FIRST - this is critical for debugging
-    try {
-        console.log(`[${moduleName}] ${errorMessage}`);
-    } catch (consoleError) {
-        // Even console.log failed - something is very wrong
-        alert(`Logger broken: ${consoleError.message}`);
-    }
-
     // 1. Safety check to prevent log flooding
     if (errorCount >= MAX_ERRORS_PER_SESSION) {
         console.warn(`[error-logger] Max errors (${MAX_ERRORS_PER_SESSION}) reached, skipping DB write`);
@@ -44,17 +35,20 @@ export async function logError(moduleName, errorMessage) {
 
             if (fetchError) {
                 console.error("Logger: Error fetching debug setting", fetchError);
-                // Don't return - still try to log
-                debugCache = false; // Default to false if we can't fetch
-                return;
+                // Default to false if we can't fetch
+                debugCache = false;
+                sessionStorage.setItem('hawt_debug_enabled', 'false');
+            } else {
+                debugCache = (data?.value === 'true');
+                sessionStorage.setItem('hawt_debug_enabled', debugCache.toString());
             }
-
-            debugCache = (data?.value === 'true');
-            sessionStorage.setItem('hawt_debug_enabled', debugCache.toString());
         }
 
-        // 4. Log to 'errors' table if debug is true
+        // 4. Log based on debug mode
         if (debugCache === true) {
+            // DEBUG MODE: Log to database AND console
+            console.log(`[${moduleName}] ${errorMessage}`);
+
             const { error: insertError } = await supabase
                 .from('errors')
                 .insert([
@@ -69,8 +63,13 @@ export async function logError(moduleName, errorMessage) {
             } else {
                 errorCount++;
             }
+        } else {
+            // PRODUCTION MODE: Log to console only
+            console.log(`[${moduleName}] ${errorMessage}`);
         }
     } catch (err) {
         console.error("Logger: Critical failure", err);
+        // Fallback to console
+        console.log(`[${moduleName}] ${errorMessage}`);
     }
 }
