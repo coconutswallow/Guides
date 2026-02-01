@@ -15,6 +15,8 @@ let currentUser = null;
 /** @type {string|null} Temporary storage for the Session ID to be deleted */
 let deleteTargetId = null; 
 
+let dashboardInitialized = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     // Coordinate with authManager to ensure sync/freshness logic completes 
     // before we attempt to check roles or load data.
@@ -80,8 +82,12 @@ function showLanding() {
  * Toggles the UI to show the Dashboard and loads session data.
  */
 async function showDashboard() {
+    if (dashboardInitialized) return;
+    dashboardInitialized = true;
+    
     const dash = document.getElementById('dashboard-content');
     const landing = document.getElementById('public-landing');
+    
     if(landing) landing.classList.add('hidden');
     if(dash) dash.classList.remove('hidden');
     
