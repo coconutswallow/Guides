@@ -38,8 +38,8 @@ export async function logError(moduleName, errorMessage) {
         if (debugCache === null) {
             const { data, error: fetchError } = await supabase
                 .from('system')
-                .select('Value')
-                .eq('Setting', 'debug')
+                .select('value')
+                .eq('setting', 'debug')
                 .single();
 
             if (fetchError) {
@@ -49,7 +49,7 @@ export async function logError(moduleName, errorMessage) {
                 return;
             }
 
-            debugCache = (data?.Value === 'true');
+            debugCache = (data?.value === 'true');
             sessionStorage.setItem('hawt_debug_enabled', debugCache.toString());
         }
 
