@@ -49,14 +49,25 @@ export async function logError(moduleName, errorMessage) {
             // DEBUG MODE: Log to database AND console
             console.log(`[${moduleName}] ${errorMessage}`);
 
+            // NEW: Attempt to capture authenticated user id (works fine if unauthenticated)
+            let userId = null;
+            try {
+                const { data: authData } = await supabase.auth.getUser();
+                userId = authData?.user?.id || null;
+            } catch (_) {
+                userId = null;
+            }
+
+            // NEW: Include user_id only when present
+            const payload = {
+                module: moduleName,
+                error: errorMessage
+            };
+            if (userId) payload.user_id = userId;
+
             const { error: insertError } = await supabase
                 .from('errors')
-                .insert([
-                    {
-                        module: moduleName,
-                        error: errorMessage
-                    }
-                ]);
+                .insert([payload]);
 
             if (insertError) {
                 console.error("Logger: Failed to write to database", insertError);
