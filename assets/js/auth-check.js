@@ -11,7 +11,7 @@ import { logError } from './error-logger.js';
  */
 export async function checkAccess(userId, requiredRole) {
     if (!userId) {
-        logError('auth-check', 'checkAccess: No userId provided');
+        logError('auth-check', 'checkAccess: No userId provided', 'warning');
         return false;
     }
 
@@ -26,25 +26,25 @@ export async function checkAccess(userId, requiredRole) {
             logError('auth-check', `checkAccess: DB error for user ${userId}: ${error.message}`);
             return false;
         }
-        
+
         if (!data) {
-            logError('auth-check', `checkAccess: No data found for user ${userId}`);
+            logError('auth-check', `checkAccess: No data found for user ${userId}`, 'warning');
             return false;
         }
-        
+
         if (!data.roles) {
-            logError('auth-check', `checkAccess: No roles found for user ${userId}`);
+            logError('auth-check', `checkAccess: No roles found for user ${userId}`, 'warning');
             return false;
         }
 
         // Handle single string or array of required roles
         // If we pass an array (e.g. ['Admin', 'Mod']), we check if they have ANY of them.
         const required = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-        
+
         // "Does the user's role list include any of the required roles?"
         const hasPermission = required.some(r => data.roles.includes(r));
-        
-        logError('auth-check', `checkAccess: User ${userId} has roles ${JSON.stringify(data.roles)}, required ${JSON.stringify(required)}, access=${hasPermission}`);
+
+        logError('auth-check', `checkAccess: User ${userId} has roles ${JSON.stringify(data.roles)}, required ${JSON.stringify(required)}, access=${hasPermission}`, 'info');
         return hasPermission;
 
     } catch (e) {

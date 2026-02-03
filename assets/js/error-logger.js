@@ -8,13 +8,34 @@ const MAX_ERRORS_PER_SESSION = 50;
  * If debug is false or not set, logs to console only.
  * @param {string} moduleName - The script/module name (e.g., 'auth-manager').
  * @param {string} errorMessage - The error details.
+ * @param {string} level - Severity level (info, warning, error, critical). Defaults to 'error'.
  */
-export async function logError(moduleName, errorMessage) {
+export async function logError(moduleName, errorMessage, level = 'error') {
     // 1. Safety check to prevent log flooding
     if (errorCount >= MAX_ERRORS_PER_SESSION) {
         console.warn(`[error-logger] Max errors (${MAX_ERRORS_PER_SESSION}) reached, skipping DB write`);
         return;
     }
+
+    // Helper to format console message
+    const formattedMessage = level === 'critical' ? `!!! CRITICAL !!! [${moduleName}] ${errorMessage}` : `[${moduleName}] ${errorMessage}`;
+
+    // Helper to execute console logging
+    const logToConsole = () => {
+        switch (level) {
+            case 'info':
+                console.info(formattedMessage);
+                break;
+            case 'warning':
+                console.warn(formattedMessage);
+                break;
+            case 'critical':
+            case 'error':
+            default:
+                console.error(formattedMessage);
+                break;
+        }
+    };
 
     try {
         // 2. Check Cache/SessionStorage for the "debug" setting
@@ -47,7 +68,7 @@ export async function logError(moduleName, errorMessage) {
         // 4. Log based on debug mode
         if (debugCache === true) {
             // DEBUG MODE: Log to database AND console
-            console.log(`[${moduleName}] ${errorMessage}`);
+            logToConsole();
 
             // NEW: Attempt to capture authenticated user id (works fine if unauthenticated)
             let userId = null;
@@ -61,7 +82,8 @@ export async function logError(moduleName, errorMessage) {
             // NEW: Include user_id only when present
             const payload = {
                 module: moduleName,
-                error: errorMessage
+                error: errorMessage,
+                level: level
             };
             if (userId) payload.user_id = userId;
 
@@ -76,11 +98,11 @@ export async function logError(moduleName, errorMessage) {
             }
         } else {
             // PRODUCTION MODE: Log to console only
-            console.log(`[${moduleName}] ${errorMessage}`);
+            logToConsole();
         }
     } catch (err) {
         console.error("Logger: Critical failure", err);
         // Fallback to console
-        console.log(`[${moduleName}] ${errorMessage}`);
+        logToConsole();
     }
 }

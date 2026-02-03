@@ -1,0 +1,141 @@
+DECLARE
+    mapped_role_names text[];
+    new_uuid UUID;
+    role_count int;
+    debug_enabled boolean;
+BEGIN
+    -- Get the authenticated user ID
+    new_uuid := auth.uid();
+    -- Check if debug mode is enabled  
+    SELECT (value = 'true') INTO debug_enabled
+    FROM public.system
+    WHERE setting = 'debug'
+    LIMIT 1;
+
+    IF debug_enabled IS NULL THEN
+        debug_enabled := false;
+    END IF;
+
+    -- Log function entry
+    IF debug_enabled THEN
+        INSERT INTO public.errors (module, error)
+        VALUES (
+            'link_discord_account',
+            format('ENTRY: discord_id=%s, display_name=%s, user_id=%s, raw_roles=%s',
+                arg_discord_id,
+                arg_display_name,
+                new_uuid::text,
+                array_to_string(arg_roles, ',')
+            )
+        );
+    END IF;
+
+    -- Validate inputs
+    IF arg_discord_id IS NULL OR arg_discord_id = '' THEN
+        INSERT INTO public.errors (module, error)
+        VALUES ('link_discord_account', 'ERROR: arg_discord_id is NULL or empty');
+        RAISE EXCEPTION 'discord_id cannot be NULL or empty';
+    END IF;
+
+    IF new_uuid IS NULL THEN
+        INSERT INTO public.errors (module, error)
+        VALUES ('link_discord_account', 'ERROR: auth.uid() returned NULL - user not authenticated');
+        RAISE EXCEPTION 'User not authenticated (auth.uid() is NULL)';
+    END IF;
+
+    -- 1. Translate Discord Role IDs to Names using your map table
+    BEGIN
+        SELECT coalesce(array_agg(role_name), '{}')
+        INTO mapped_role_names
+        FROM public.discord_role_map
+        WHERE role_id = ANY(arg_roles);
+
+        GET DIAGNOSTICS role_count = ROW_COUNT;
+
+        IF debug_enabled THEN
+            INSERT INTO public.errors (module, error)
+            VALUES (
+                'link_discord_account',
+                format('Role mapping: %s Discord role IDs → %s mapped names (%s)',
+                    array_length(arg_roles, 1),
+                    array_length(mapped_role_names, 1),
+                    array_to_string(mapped_role_names, ',')
+                )
+            );
+        END IF;
+
+    EXCEPTION WHEN OTHERS THEN
+        INSERT INTO public.errors (module, error)
+        VALUES (
+            'link_discord_account',
+            format('ERROR in role mapping: %s - SQLSTATE: %s', SQLERRM, SQLSTATE)
+        );
+        RAISE;
+    END;
+
+    -- 2. Upsert into discord_users
+    BEGIN
+        INSERT INTO public.discord_users (
+            discord_id,     
+            user_id,
+            display_name, 
+            roles,          
+            last_seen
+        )
+        VALUES (
+            arg_discord_id,
+            new_uuid,     
+            arg_display_name,
+            to_jsonb(mapped_role_names),
+            now()
+        )
+        ON CONFLICT (discord_id) DO UPDATE
+        SET 
+            user_id = EXCLUDED.user_id,
+            display_name = EXCLUDED.display_name,
+            roles = EXCLUDED.roles,
+            last_seen = now();
+
+        IF debug_enabled THEN
+            INSERT INTO public.errors (module, error)
+            VALUES (
+                'link_discord_account',
+                format('Upserted discord_users: discord_id=%s, user_id=%s, roles=%s, last_seen=now()',
+                    arg_discord_id,
+                    new_uuid::text,
+                    to_jsonb(mapped_role_names)::text
+                )
+            );
+        END IF;
+
+    EXCEPTION WHEN OTHERS THEN
+        INSERT INTO public.errors (module, error)
+        VALUES (
+            'link_discord_account',
+            format('ERROR in discord_users upsert: %s - SQLSTATE: %s', SQLERRM, SQLSTATE)
+        );
+        RAISE;
+    END;
+
+    -- Log successful completion
+    IF debug_enabled THEN
+        INSERT INTO public.errors (module, error)
+        VALUES (
+            'link_discord_account',
+            format('SUCCESS: Completed for discord_id=%s, user_id=%s', arg_discord_id, new_uuid::text)
+        );
+    END IF;
+
+EXCEPTION WHEN OTHERS THEN
+    -- Catch-all for any unhandled errors
+    INSERT INTO public.errors (module, error)
+    VALUES (
+        'link_discord_account',
+        format('FATAL ERROR: %s - SQLSTATE: %s - discord_id=%s', 
+            SQLERRM, 
+            SQLSTATE,
+            arg_discord_id
+        )
+    );
+    RAISE;
+END;

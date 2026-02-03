@@ -36,9 +36,9 @@ class AuthManager {
         this.client.auth.onAuthStateChange((event, session) => {
             // Only log significant auth events
             if (event === 'SIGNED_IN') {
-                logError('auth-manager', 'User signed in');
+                logError('auth-manager', 'User signed in', 'info');
             } else if (event === 'SIGNED_OUT') {
-                logError('auth-manager', 'User signed out');
+                logError('auth-manager', 'User signed out', 'info');
             }
             this.handleSession(session, onUserReady);
         });
@@ -85,10 +85,10 @@ class AuthManager {
             this.syncPromise = this.syncDiscordToDB(session);
 
             try {
-                logError('auth-manager', `Session stale, syncing Discord data for user ${session.user.id}`);
+                logError('auth-manager', `Session stale, syncing Discord data for user ${session.user.id}`, 'info');
                 await this.syncPromise;
                 this.user = session.user;
-                logError('auth-manager', `Sync successful for user ${session.user.id}`);
+                logError('auth-manager', `Sync successful for user ${session.user.id}`, 'info');
                 if (callback) callback(this.user);
             } catch (error) {
                 logError('auth-manager', `Sync FAILED: ${error.message}`);
@@ -119,7 +119,7 @@ class AuthManager {
             }
 
             if (!data || !data.last_seen) {
-                logError('auth-manager', `checkSessionFreshness: No last_seen timestamp found for user ${userId}`);
+                logError('auth-manager', `checkSessionFreshness: No last_seen timestamp found for user ${userId}`, 'warning');
                 return false;
             }
 
@@ -149,7 +149,7 @@ class AuthManager {
 
         const isMember = await this.checkGuildMembership(token);
         if (!isMember) {
-            logError('auth-manager', `syncDiscordToDB: User not in required Discord Guild ${REQUIRED_GUILD_ID}`);
+            logError('auth-manager', `syncDiscordToDB: User not in required Discord Guild ${REQUIRED_GUILD_ID}`, 'warning');
             throw new Error("User not in required Discord Guild");
         }
 
@@ -190,7 +190,7 @@ class AuthManager {
      * Signs the user out of Supabase and reloads the page.
      */
     async logout() {
-        logError('auth-manager', 'User logged out');
+        logError('auth-manager', 'User logged out', 'info');
         await this.client.auth.signOut();
         window.location.reload();
     }
@@ -213,7 +213,7 @@ class AuthManager {
             clearTimeout(timeoutId);
 
             if (r.status === 429) {
-                logError('auth-manager', 'checkGuildMembership: Discord API rate limited, assuming membership');
+                logError('auth-manager', 'checkGuildMembership: Discord API rate limited, assuming membership', 'warning');
                 return true;
             }
 
