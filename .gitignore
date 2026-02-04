@@ -1,8 +1,9 @@
 # AI Context Files
-context/
+.context/
 
 # Agent Configs
 .agent/
+
 
 # vscode settings
 .vscode/
@@ -12,6 +13,7 @@ context/
 
 # Site
 _site/
+
 
 # Node / Testing (Local Only)
 node_modules/
