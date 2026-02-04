@@ -9,3 +9,6 @@ context/
 
 # env files
 .env
+
+# Site
+_site/

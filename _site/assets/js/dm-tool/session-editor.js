@@ -10,7 +10,6 @@
  * 3. Calculation Orchestration: Triggering math updates when inputs change.
  * 4. Persistence: Saving/Loading sessions and templates via DataManager.
  * * @module SessionEditor
- * @todo File exceeds 1000 lines. Consider extracting UI Setup Helpers or Calculation Triggers into separate modules like `session-controllers.js`.
  */
 
 import { supabase } from '../supabaseClient.js';
