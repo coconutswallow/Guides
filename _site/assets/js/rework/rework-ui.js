@@ -860,7 +860,7 @@ export function generateOutputString(oldC, newC, cost, notes, calcResult) {
             ATTRIBUTES.forEach(a => {
                 if (f.mods[a] != "0") m.push(`${f.mods[a] > 0 ? '+' : ''}${f.mods[a]} ${a}`);
             });
-            featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source})`);
+            featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${clean(f.source)} (Level ${f.lvl}))`);
         });
         const featString = featChoices.join(', ') || 'None';
 
