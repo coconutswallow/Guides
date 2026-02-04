@@ -883,28 +883,6 @@ Background: ${c.bg}`;
         discordId = '@' + discordId;
     }
 
-    // Get human-readable rework type label
-    const typeSelect = document.getElementById('rework-type');
-    let typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || "Not Selected";
-
-    // Build internal change log for the Notes section
-    const logs = [];
-    logs.push(`- **Rework Type:** ${typeLabel}`);
-
-    if (calcResult && calcResult.costs) {
-        calcResult.costs.forEach(c => {
-            let logLine = `- ${c.change}`;
-
-            // For a-la-carte, show the cost breakdown for each item
-            if (!calcResult.isFixed && c.count > 0) {
-                const g = c.count * (calcResult.rates?.gold || 0);
-                const d = c.count * (calcResult.rates?.dtp || 0);
-                logLine += ` (${c.count} pts: ${g} GP / ${d} DTP)`;
-            }
-            logs.push(logLine);
-        });
-    }
-
     const oldLevel = getTotalLevel(oldC.classes);
     const reworkId = document.getElementById('current-rework-id')?.value || "Not Saved";
 
@@ -920,8 +898,8 @@ ${buildCharacterBlock(oldC)}
 **New Character**
 ${buildCharacterBlock(newC)}
 
-**Notes:** (${cost})
-${notes ? notes + '\n' : ''}${logs.join('\n')}
+**Notes:**
+${notes ? notes + '\n' : ''}Cost: ${cost}
 
 **Rework ID:** ${reworkId}
 <@&474659626193780751> <@&554463237924716545>
