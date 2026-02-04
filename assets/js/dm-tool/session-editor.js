@@ -12,30 +12,30 @@
  * * @module SessionEditor
  */
 
-import { supabase } from '../supabaseClient.js'; 
+import { supabase } from '../supabaseClient.js';
 import { stateManager } from './state-manager.js';
-import { 
-    saveSession, 
+import {
+    saveSession,
     createSession,
-    saveAsTemplate, 
-    loadSession, 
-    fetchGameRules, 
-    fetchActiveEvents, 
+    saveAsTemplate,
+    loadSession,
+    fetchGameRules,
+    fetchActiveEvents,
     fetchTemplates,
     deleteSession,
-    fetchPlayerSubmissions 
+    fetchPlayerSubmissions
 } from './data-manager.js';
 
-import { checkAccess } from '../auth-check.js'; 
+import { checkAccess } from '../auth-check.js';
 import * as UI from './session-ui.js';
 import * as Rows from './session-rows.js';
 import * as IO from './session-io.js';
 import CalculationEngine from './calculation-engine.js';
-import { 
-    updateLootInstructions, 
-    updateLootDeclaration, 
-    updateHgenLogic, 
-    updateDMLootLogic 
+import {
+    updateLootInstructions,
+    updateLootDeclaration,
+    updateHgenLogic,
+    updateDMLootLogic
 } from './session-loot.js';
 
 
@@ -45,16 +45,16 @@ import {
 let calculationEngine = null;
 
 /** @type {Object|null} Cached copy of the game rules (XP tables, gold limits, etc.) */
-let cachedGameRules = null; 
+let cachedGameRules = null;
 
 /** @type {boolean} Flag indicating if the current user has "Full DM" privileges */
-let isFullDM = false; 
+let isFullDM = false;
 
 /** @type {string} Current user's Discord ID (used for mentions/tracking) */
 let cachedDiscordId = "YOUR_ID";
 
 /** @type {string} Current user's Display Name (used for MAL output) */
-let cachedDisplayName = "DM"; 
+let cachedDisplayName = "DM";
 
 /** * DOM Element Cache to reduce repeated `getElementById` calls for static elements.
  * @type {Object<string, HTMLElement>}
@@ -77,15 +77,15 @@ async function cacheDiscordId() {
                 cachedDiscordId = identity.id;
             }
         }
-        
+
         // Fetch display name from the directory to ensure it matches server nickname
         if (cachedDiscordId) {
             const { data } = await supabase
-                .from('member_directory')
+                .from('discord_users')
                 .select('display_name')
                 .eq('discord_id', cachedDiscordId)
                 .single();
-            
+
             if (data && data.display_name) {
                 cachedDisplayName = data.display_name;
             }
@@ -117,16 +117,16 @@ function cacheDOMElements() {
  * @returns {string} The incremented name.
  */
 function incrementPartName(name) {
-    if(!name) return "Session Part 2";
-    
+    if (!name) return "Session Part 2";
+
     // Regex matches "Name", optional " - Part ", and the number
     const match = name.match(/^(.*?)(\s?-?\s?Part\s?)(\d+)$/i);
-    
-    if(match) {
+
+    if (match) {
         const num = parseInt(match[3]) + 1;
         return `${match[1]}${match[2]}${num}`;
     }
-    
+
     return `${name} Part 2`;
 }
 
@@ -139,9 +139,9 @@ function incrementPartName(name) {
 function incrementGameString(val) {
     if (val === "10+") return "10+";
     const num = parseInt(val);
-    
+
     if (isNaN(num)) return "1";
-    
+
     if (num >= 10) return "10+";
     return (num + 1).toString();
 }
@@ -151,11 +151,11 @@ function incrementGameString(val) {
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     // 1. Initialize User & Rules Data
     await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
-    
+
     // 2. Initialize Engines & Cache
     cacheDOMElements();
     calculationEngine = new CalculationEngine(cachedGameRules);
@@ -179,15 +179,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             scheduleUpdate(() => {
                 updateSessionCalculations();
                 updateLootInstructions(isFullDM);
-                updateLootDeclaration(cachedDiscordId); 
-                updateHgenLogic(cachedDiscordId);   
+                updateLootDeclaration(cachedDiscordId);
+                updateHgenLogic(cachedDiscordId);
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
                 IO.updateJumpstartDisplay();
             });
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
     };
-    
+
 
     // 5. Initial UI Updates
     updateLootInstructions(isFullDM);
@@ -227,13 +227,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         IO.generateOutput();
     });
 
-    
+
     // 6. Initialize UI Components
-    UI.initTabs(() => IO.generateOutput()); 
+    UI.initTabs(() => IO.generateOutput());
     UI.initTimezone();
-    UI.initDateTimeConverter(); 
+    UI.initDateTimeConverter();
     UI.initAccordions();
-    
+
     // Initialize Incentives Modal with save callback
     UI.initIncentivesModal((ctx) => {
         scheduleUpdate(() => {
@@ -241,13 +241,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateDMLootLogic(cachedDiscordId, cachedGameRules);
         });
     });
-    
+
     // 7. Initialize Logic Controllers
     initCopyGameLogic();
-    initTemplateLogic(); 
+    initTemplateLogic();
     initPlayerSetup();
     initPlayerSync();
-    
+
     // Bind generic inputs for dirty checking / state updates
     const bindGeneralInputs = (ids) => {
         ids.forEach(id => {
@@ -276,15 +276,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert("Please save the session first to generate a Session ID.");
                 return;
             }
-            
+
             const path = window.location.pathname;
             const directory = path.substring(0, path.lastIndexOf('/'));
             const inviteUrl = `${window.location.origin}${directory}/player-entry.html?session_id=${id}`;
-            
+
             const inpInvite = document.getElementById('inp-invite-link');
             if (inpInvite) {
                 inpInvite.value = inviteUrl;
-                
+
                 // Save invite URL to session metadata immediately
                 try {
                     await supabase
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Bind specific inputs that should trigger immediate output generation
     const bindOutput = (id) => {
         const el = document.getElementById(id);
-        if(el) el.addEventListener('input', () => IO.generateOutput());
+        if (el) el.addEventListener('input', () => IO.generateOutput());
     };
     bindOutput('inp-lobby-url');
     bindOutput('inp-listing-url');
@@ -311,28 +311,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 8. Populate Dropdowns from Game Rules
     const rules = cachedGameRules;
-    if(rules && rules.options) {
-        if(rules.options["Game Version"]) UI.fillDropdown('inp-version', rules.options["Game Version"]);
-        if(rules.options["Application Types"]) UI.fillDropdown('inp-apps-type', rules.options["Application Types"]);
-        if(rules.options["Game Format"]) UI.fillDropdown('inp-format', rules.options["Game Format"]);
+    if (rules && rules.options) {
+        if (rules.options["Game Version"]) UI.fillDropdown('inp-version', rules.options["Game Version"]);
+        if (rules.options["Application Types"]) UI.fillDropdown('inp-apps-type', rules.options["Application Types"]);
+        if (rules.options["Game Format"]) UI.fillDropdown('inp-format', rules.options["Game Format"]);
     }
 
     if (rules && rules.tier) {
         const tierSelect = document.getElementById('inp-tier');
         if (tierSelect) {
             tierSelect.setAttribute('multiple', 'true');
-            tierSelect.innerHTML = ''; 
+            tierSelect.innerHTML = '';
             Object.keys(rules.tier).sort().forEach(key => {
                 const el = document.createElement('option');
-                el.value = key; 
+                el.value = key;
                 el.textContent = key;
                 tierSelect.appendChild(el);
             });
         }
     }
-    
-    await initEventsDropdown(); 
-    await initTemplateDropdown(); 
+
+    await initEventsDropdown();
+    await initTemplateDropdown();
 
     // 9. Load Session Data (if ID present)
     const urlParams = new URLSearchParams(window.location.search);
@@ -350,17 +350,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         domCache.sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (!item) return;
-            
+
             // Generate Session Log when that tab is clicked
             if (item.dataset.target === 'view-session-output') {
                 IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
             }
-            
+
             // Generate MAL when that tab is clicked
             if (item.dataset.target === 'view-mal-update') {
                 IO.generateMALUpdate(cachedDisplayName);
             }
-            
+
             // Force Sync Roster -> Session when entering Session Details
             if (item.dataset.target === 'view-session-details') {
                 Rows.syncSessionPlayersFromMaster(callbacks);
@@ -371,18 +371,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Handle session loading logic if ID was provided
     if (sessionId) {
         await loadSessionData(sessionId, callbacks);
-    } 
+    }
 
     // --- Feature: Session Duration Logic ---
     // Automatically updates player hours and suggests splitting sessions if duration > 5.5h
-    if(domCache.sessionHoursInput) {
-        domCache.sessionHoursInput.addEventListener('change', () => { 
+    if (domCache.sessionHoursInput) {
+        domCache.sessionHoursInput.addEventListener('change', () => {
             const val = parseFloat(domCache.sessionHoursInput.value) || 0;
-            
+
             // Update max hours on all player cards
             const cards = document.querySelectorAll('#session-roster-list .player-card');
             const newSessionHours = parseFloat(domCache.sessionHoursInput.value) || 3;
-            
+
             cards.forEach(card => {
                 const hInput = card.querySelector('.s-hours');
                 if (hInput) {
@@ -390,15 +390,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     hInput.setAttribute('max', newSessionHours);
                 }
             });
-            
+
             // Trigger "Next Part" modal if long session
             if (val > 5.5) {
                 const proceed = confirm("Duration exceeds 5.5 hours. Do you want to create the next part automatically?");
-                if(proceed) {
+                if (proceed) {
                     // Reset current session to standard length
                     domCache.sessionHoursInput.value = 3;
                     updateSessionCalculations();
-                    
+
                     // Pre-fill modal
                     document.getElementById('chk-next-part').checked = true;
                     const currentName = document.getElementById('header-game-name').value;
@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     setupCalculationTriggers(callbacks);
-    
+
     // Bind specific inputs for Loot Plan
     const lootPlanInput = document.getElementById('inp-loot-plan');
     if (lootPlanInput) {
@@ -435,13 +435,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     ['inp-predet-perms', 'inp-predet-cons'].forEach(id => {
         const el = document.getElementById(id);
-        if(el) {
+        if (el) {
             el.addEventListener('input', () => {
                 scheduleUpdate(() => updateHgenLogic(cachedDiscordId));
             });
         }
     });
-    
+
     // Initial calculation run
     setTimeout(() => {
         callbacks.onUpdate();
@@ -458,11 +458,11 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 function updateSessionCalculations() {
     if (!calculationEngine) return;
-    
+
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
     const stats = stateManager.getStats(); // Get APL
     const maxGold = calculationEngine.calculateMaxGold(stats.apl);
-    
+
     // --- FIX: Update the visual "Max Gold" Label ---
     const elMaxGold = document.querySelector('.val-max-gold');
     if (elMaxGold) {
@@ -471,7 +471,7 @@ function updateSessionCalculations() {
     // ------------------------------------------------
 
     const cards = document.querySelectorAll('#session-roster-list .player-card');
-    
+
     cards.forEach(card => {
         // Gather input data from the card
         const levelInput = card.querySelector('.s-level'); // Effective Level
@@ -482,9 +482,9 @@ function updateSessionCalculations() {
         const goldInput = card.querySelector('.s-gold'); // Get Gold Input
         const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
         const incentivesBtn = card.querySelector('.s-incentives-btn');
-        
+
         if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
-        
+
         // --- Max Gold Validation / Warning ---
         // Visually warn user if they award more gold than the table allows
         const currentGold = parseFloat(goldInput.value) || 0;
@@ -503,26 +503,26 @@ function updateSessionCalculations() {
             forfeit_xp: forfeitCheckbox ? forfeitCheckbox.checked : false,
             incentives: incentivesBtn ? JSON.parse(incentivesBtn.dataset.incentives || '[]') : []
         };
-        
+
         // Run Calculation
         const rewards = calculationEngine.calculatePlayerRewards(playerData, sessionHours);
-        
+
         // Update DOM
         xpInput.value = rewards.xp;
         dtpInput.value = rewards.dtp;
     });
-    
+
     // Trigger downstream updates
     updateDMCalculations();
     updateStatsDisplays();
-    
+
     // Update Read-only Stats for New Hires / Welcome Wagon in Session View
     // This is required here to ensure Session View is visually in sync with Loot View
     const playerStats = stateManager.getPlayerStats();
     const elNewHires = document.getElementById('loot-val-newhires');
     const elWelcome = document.getElementById('loot-val-welcome');
-    if(elNewHires) elNewHires.value = playerStats.newHires;
-    if(elWelcome) elWelcome.value = playerStats.welcomeWagon;
+    if (elNewHires) elNewHires.value = playerStats.newHires;
+    if (elWelcome) elWelcome.value = playerStats.welcomeWagon;
 }
 
 /**
@@ -531,28 +531,28 @@ function updateSessionCalculations() {
  */
 function updateDMCalculations() {
     if (!calculationEngine) return;
-    
+
     const state = stateManager.getFullState();
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
-    
+
     const dmXPOutput = document.querySelector('.dm-res-xp');
     const dmDTPOutput = document.querySelector('.dm-res-dtp');
     const dmGPOutput = document.querySelector('.dm-res-gp');
     const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
     const dmIncentivesBtn = document.getElementById('btn-dm-loot-incentives');
-    
+
     if (!dmXPOutput || !dmDTPOutput || !dmGPOutput) return;
-    
+
     const dmData = {
         level: parseInt(state.dm.level) || 1,
         forfeit_xp: dmForfeitCheckbox ? dmForfeitCheckbox.checked : false,
         incentives: dmIncentivesBtn ? JSON.parse(dmIncentivesBtn.dataset.incentives || '[]') : []
     };
-    
+
     const playerStats = stateManager.getPlayerStats();
-    
+
     const rewards = calculationEngine.calculateDMRewards(dmData, sessionHours, playerStats);
-    
+
     // Update DOM
     dmXPOutput.value = rewards.xp;
     dmDTPOutput.value = rewards.dtp;
@@ -564,11 +564,11 @@ function updateDMCalculations() {
  */
 function updateStatsDisplays() {
     const stats = stateManager.getStats();
-    
+
     const elSize = document.getElementById('setup-val-party-size');
     const elApl = document.getElementById('setup-val-apl');
     const elTier = document.getElementById('setup-val-tier');
-    
+
     if (elSize) elSize.textContent = stats.partySize;
     if (elApl) elApl.textContent = stats.apl;
     if (elTier) elTier.textContent = stats.tier;
@@ -586,14 +586,14 @@ function setupCalculationTriggers(callbacks) {
             const item = e.target.closest('.nav-item');
             if (item && item.dataset.target === 'view-session-details') {
                 Rows.syncSessionPlayersFromMaster(callbacks);
-                
+
                 // Auto-fill Session Date from Setup Date if Session Date is empty
                 const setupDateInput = document.getElementById('inp-start-datetime');
                 const sessionDateInput = document.getElementById('inp-session-date');
-                
+
                 if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
                     sessionDateInput.value = setupDateInput.value;
-                    
+
                     const tz = document.getElementById('inp-timezone')?.value;
                     const unixVal = UI.toUnixTimestamp(setupDateInput.value, tz);
                     const sessionUnixInput = document.getElementById('inp-session-unix');
@@ -603,7 +603,7 @@ function setupCalculationTriggers(callbacks) {
         });
     }
     const setupDateInput = document.getElementById('inp-start-datetime');
-    
+
     if (setupDateInput) {
         setupDateInput.addEventListener('input', () => {
             const sessionDateInput = document.getElementById('inp-session-date');
@@ -612,7 +612,7 @@ function setupCalculationTriggers(callbacks) {
 
             // Only update if the session date is currently empty
             if (sessionDateInput && !sessionDateInput.value) {
-                
+
                 // 1. Copy the visual date string
                 sessionDateInput.value = setupDateInput.value;
 
@@ -629,50 +629,50 @@ function setupCalculationTriggers(callbacks) {
     const dmLevel = document.getElementById('out-dm-level');
     const dmGames = document.getElementById('out-dm-games');
     const btnDMIncLoot = document.getElementById('btn-dm-loot-incentives');
-    const syncBtn = document.getElementById('btn-sync-session'); 
+    const syncBtn = document.getElementById('btn-sync-session');
     const addPlayerBtn = document.getElementById('btn-add-session-player');
 
     // DM inputs triggers
-    if(dmLevel) {
+    if (dmLevel) {
         dmLevel.addEventListener('input', () => scheduleUpdate(callbacks.onUpdate));
     }
-    if(dmGames) {
+    if (dmGames) {
         dmGames.addEventListener('input', () => scheduleUpdate(callbacks.onUpdate));
     }
-    
+
     // Modal trigger
-    if(btnDMIncLoot) {
+    if (btnDMIncLoot) {
         btnDMIncLoot.addEventListener('click', () => callbacks.onOpenModal(btnDMIncLoot, null, true));
     }
-    
+
     // Sync Button
-    if(syncBtn) {
+    if (syncBtn) {
         syncBtn.addEventListener('click', async () => {
-             const urlParams = new URLSearchParams(window.location.search);
-             const id = urlParams.get('id');
-             if(!id) return alert("Save session first");
-             
-             if (!confirm("This will merge player submissions into your Session Log.\n\nContinue?")) return;
-             
-             const submissions = await fetchPlayerSubmissions(id);
-             Rows.applyPlayerSubmissions(submissions, callbacks);
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (!id) return alert("Save session first");
+
+            if (!confirm("This will merge player submissions into your Session Log.\n\nContinue?")) return;
+
+            const submissions = await fetchPlayerSubmissions(id);
+            Rows.applyPlayerSubmissions(submissions, callbacks);
         });
     }
 
     // Manual Add Player Button
-    if(addPlayerBtn) {
+    if (addPlayerBtn) {
         addPlayerBtn.addEventListener('click', () => {
             Rows.addSessionPlayerRow(document.getElementById('session-roster-list'), {}, callbacks);
         });
     }
 
     // DM Setup inputs triggers
-    if(domCache.dmLevelSetup) {
+    if (domCache.dmLevelSetup) {
         domCache.dmLevelSetup.addEventListener('input', () => {
             scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
         });
     }
-    if(domCache.dmGamesSetup) {
+    if (domCache.dmGamesSetup) {
         domCache.dmGamesSetup.addEventListener('change', () => {
             scheduleUpdate(() => {
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
@@ -680,7 +680,7 @@ function setupCalculationTriggers(callbacks) {
             });
         });
     }
-    
+
     // Roster Body triggers (for updating loot stats when master roster changes)
     if (domCache.rosterBody) {
         domCache.rosterBody.addEventListener('change', () => {
@@ -688,13 +688,13 @@ function setupCalculationTriggers(callbacks) {
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
             });
         });
-        
+
         domCache.rosterBody.addEventListener('click', (e) => {
             if (e.target.matches('.btn-delete-row')) {
                 // Short delay to allow DOM removal to complete before recalculating
                 setTimeout(() => {
                     scheduleUpdate(() => updateDMLootLogic(cachedDiscordId, cachedGameRules));
-                }, 100); 
+                }, 100);
             }
         });
 
@@ -702,7 +702,7 @@ function setupCalculationTriggers(callbacks) {
         domCache.rosterBody.addEventListener('input', (e) => {
             // Update global state immediately from DOM so that calculateStats() is accurate
             stateManager.state.players = Rows.getMasterRosterData();
-            
+
             // Debounce the heavy lifting (UI updates)
             scheduleUpdate(() => {
                 window._sessionCallbacks.onUpdate();
@@ -722,7 +722,7 @@ async function loadSessionData(sessionId, callbacks) {
         const session = await loadSession(sessionId);
         if (session) {
             IO.populateForm(session, callbacks);
-            
+
             // Load invite link if present in DB
             if (session.invite_url) {
                 const inpInvite = document.getElementById('inp-invite-link');
@@ -742,10 +742,10 @@ async function initEventsDropdown() {
     const events = await fetchActiveEvents();
     const select = document.getElementById('inp-event');
     if (!select) return;
-    select.innerHTML = ''; 
+    select.innerHTML = '';
     events.forEach(evt => {
         const el = document.createElement('option');
-        el.value = evt.name; 
+        el.value = evt.name;
         el.textContent = evt.name;
         select.appendChild(el);
     });
@@ -755,13 +755,13 @@ async function initTemplateDropdown() {
     const select = document.getElementById('template-select');
     if (!select) return;
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return; 
+    if (!user) return;
 
     const templates = await fetchTemplates(user.id);
     select.innerHTML = '<option value="">Select a saved template...</option>';
     templates.forEach(tmpl => {
         const opt = document.createElement('option');
-        opt.value = tmpl.id; 
+        opt.value = tmpl.id;
         opt.textContent = tmpl.title;
         select.appendChild(opt);
     });
@@ -770,15 +770,15 @@ async function initTemplateDropdown() {
 function initPlayerSetup() {
     const btnAdd = document.getElementById('btn-add-player');
 
-    if(btnAdd) {
-        btnAdd.addEventListener('click', () => { 
+    if (btnAdd) {
+        btnAdd.addEventListener('click', () => {
             Rows.addPlayerRowToMaster({});
             scheduleUpdate(() => {
                 window._sessionCallbacks.onUpdate();
             });
-        }); 
+        });
     }
-    
+
     // Note: The main 'input' listener for rosterBody is now in setupCalculationTriggers
     // to handle state syncing.
 }
@@ -791,7 +791,7 @@ function initPlayerSync() {
     if (btnCopy) {
         btnCopy.addEventListener('click', () => {
             if (!inpInvite || !inpInvite.value) return alert("Generate a link first.");
-            
+
             navigator.clipboard.writeText(inpInvite.value).then(() => {
                 const originalText = btnCopy.innerText;
                 btnCopy.innerText = "Copied!";
@@ -815,7 +815,7 @@ function initPlayerSync() {
             }
             await Rows.syncMasterRosterFromSubmissions(submissions);
             alert(`Synced ${submissions.length} player(s) from submissions.`);
-            
+
             scheduleUpdate(() => window._sessionCallbacks.onUpdate());
         });
     }
@@ -833,8 +833,8 @@ function initCopyGameLogic() {
     const btnCopy = document.getElementById('btn-copy-game');
     const modal = document.getElementById('modal-copy-game');
     const btnConfirm = document.getElementById('btn-confirm-copy');
-    
-    if(btnCopy) {
+
+    if (btnCopy) {
         btnCopy.addEventListener('click', () => {
             const currentName = document.getElementById('header-game-name').value;
             document.getElementById('inp-copy-name').value = incrementPartName(currentName);
@@ -842,25 +842,25 @@ function initCopyGameLogic() {
         });
     }
 
-    if(btnConfirm) {
+    if (btnConfirm) {
         btnConfirm.addEventListener('click', async () => {
             const newName = document.getElementById('inp-copy-name').value;
-            if(!newName) return alert("Please enter a name.");
-            
+            if (!newName) return alert("Please enter a name.");
+
             const isNextPart = document.getElementById('chk-next-part').checked;
             const fullData = IO.getFormData();
-            
+
             // Prepare new session data
-            fullData.header.title = newName; 
+            fullData.header.title = newName;
             fullData.session_log.title = newName;
-            
+
             // Reset log data
-            fullData.session_log.hours = 3; 
+            fullData.session_log.hours = 3;
             fullData.session_log.notes = "";
             fullData.session_log.summary = "";
             fullData.session_log.dm_rewards.loot_selected = "";
             fullData.session_log.dm_rewards.incentives = [];
-            
+
             if (isNextPart) {
                 // FIX: Set Application Type to "Pre-filled" for next part
                 fullData.header.apps_type = "Pre-filled";
@@ -871,12 +871,12 @@ function initCopyGameLogic() {
                         p.games_count = incrementGameString(p.games_count);
                     });
                 }
-                
+
                 // Increment DM Games
                 if (fullData.dm) {
                     fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
                 }
-                
+
                 // Reset/Increment Session Player Data
                 if (fullData.session_log.players) {
                     fullData.session_log.players.forEach(p => {
@@ -891,16 +891,16 @@ function initCopyGameLogic() {
                         p.incentives = [];
                     });
                 }
-                
+
                 fullData.session_log.dm_rewards.games_played = fullData.dm.games_count;
             }
-            
+
             const { data: { user } } = await supabase.auth.getUser();
-            if(!user) return alert("Not logged in");
+            if (!user) return alert("Not logged in");
 
             try {
                 const newSession = await createSession(user.id, newName, false);
-                if(newSession) {
+                if (newSession) {
                     await saveSession(newSession.id, fullData, { title: newName });
                     window.location.href = `session.html?id=${newSession.id}`;
                 }
@@ -924,56 +924,56 @@ function initTemplateLogic() {
     const btnSaveSetup = document.getElementById('btn-save-template-setup');
     const tmplSelect = document.getElementById('template-select');
     const btnDelete = document.getElementById('btn-delete-template');
-    
-    if(btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
-    
-    if(btnSaveSetup) {
+
+    if (btnOpen) btnOpen.addEventListener('click', () => modal.showModal());
+
+    if (btnSaveSetup) {
         btnSaveSetup.addEventListener('click', () => {
             const currentName = document.getElementById('header-game-name').value;
             const selectedText = tmplSelect && tmplSelect.selectedIndex > 0 ? tmplSelect.options[tmplSelect.selectedIndex].text : "";
-            
+
             // FIX: Default to selected template name if overwriting, else game name
-            if(selectedText) {
+            if (selectedText) {
                 document.getElementById('inp-template-name').value = selectedText;
-            } else if(currentName) {
+            } else if (currentName) {
                 document.getElementById('inp-template-name').value = currentName;
             }
-            
+
             document.getElementById('modal-save-template').showModal();
         });
     }
-    
-    if(btnDelete) {
+
+    if (btnDelete) {
         btnDelete.addEventListener('click', async () => {
             const tmplId = document.getElementById('template-select').value;
-            if(!tmplId) return alert("Please select a template to delete.");
-            
-            if(confirm("Are you sure you want to delete this template? This cannot be undone.")) {
+            if (!tmplId) return alert("Please select a template to delete.");
+
+            if (confirm("Are you sure you want to delete this template? This cannot be undone.")) {
                 try {
-                    await deleteSession(tmplId); 
-                    await initTemplateDropdown(); 
+                    await deleteSession(tmplId);
+                    await initTemplateDropdown();
                     alert("Template deleted.");
-                } catch(e) {
+                } catch (e) {
                     console.error(e);
                     alert("Error deleting template.");
                 }
             }
         });
     }
-    
-    if(btnConfirm) {
+
+    if (btnConfirm) {
         btnConfirm.addEventListener('click', async () => {
             const tmplName = document.getElementById('inp-template-name').value;
-            if(!tmplName) return alert("Enter a name");
+            if (!tmplName) return alert("Enter a name");
             const { data: { user } } = await supabase.auth.getUser();
-            if(!user) return alert("Please login");
-            
+            if (!user) return alert("Please login");
+
             const fullData = IO.getFormData();
-            const templateData = IO.prepareTemplateData(fullData); 
-            
+            const templateData = IO.prepareTemplateData(fullData);
+
             try {
                 await saveAsTemplate(user.id, tmplName, templateData);
-                await initTemplateDropdown(); 
+                await initTemplateDropdown();
                 alert("Template Saved!");
                 modal.close();
             } catch (e) {
@@ -982,20 +982,20 @@ function initTemplateLogic() {
             }
         });
     }
-    
-    if(btnLoad) {
+
+    if (btnLoad) {
         btnLoad.addEventListener('click', async () => {
             const tmplId = document.getElementById('template-select').value;
-            if(!tmplId) return;
+            if (!tmplId) return;
             const session = await loadSession(tmplId);
-            if(session) {
+            if (session) {
                 IO.populateForm(session, window._sessionCallbacks, { keepTitle: true });
                 alert("Template Loaded!");
             }
         });
     }
-    
-    if(btnSaveGame) {
+
+    if (btnSaveGame) {
         btnSaveGame.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const sessionId = urlParams.get('id');
@@ -1003,20 +1003,20 @@ function initTemplateLogic() {
             const title = document.getElementById('header-game-name').value || "Untitled Session";
             const dateInput = document.getElementById('inp-start-datetime');
             const date = dateInput && dateInput.value ? new Date(dateInput.value).toISOString().split('T')[0] : null;
-            
+
             if (sessionId) {
                 await saveSession(sessionId, formData, { title, date });
                 const btn = document.getElementById('btn-save-game');
                 const originalText = btn.innerText;
                 btn.innerText = "Saved!";
-                btn.classList.add('button-success'); 
+                btn.classList.add('button-success');
                 setTimeout(() => {
                     btn.innerText = originalText;
                     btn.classList.remove('button-success');
                 }, 1500);
             } else {
                 const { data: { user } } = await supabase.auth.getUser();
-                if(user) {
+                if (user) {
                     const newS = await createSession(user.id, title);
                     await saveSession(newS.id, formData, { title, date });
                     window.history.pushState({}, "", `?id=${newS.id}`);

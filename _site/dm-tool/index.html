@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DM Session Logs | Dashboard</title>
+    <link rel="stylesheet" href="/Guides/assets/css/style.css">
+    <link rel="stylesheet" href="/Guides/assets/css/search.css"> 
+	<link rel="stylesheet" href="/Guides/assets/css/style.css">
+    <link rel="stylesheet" href="/Guides/assets/css/home.css">
+    <script type="module" src="/Guides/assets/js/heading-links.js"></script>
+
+    
+    <link rel="icon" type="image/png" href="/Guides/assets/thumbnails/guild-icon.png">
+    <link rel="apple-touch-icon" href="/Guides/assets/thumbnails/guild-icon.png">
+    
+    
+    
+<!-- Google tag (gtag.js) --> 
+ <script async src="https://www.googletagmanager.com/gtag/js?id=G-5TDMHYK3X8"></script> 
+ <script> 
+    window.dataLayer = window.dataLayer || []; 
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date()); 
+    gtag('config', 'G-5TDMHYK3X8'); 
+</script>
+</head>
+<body class=" " style="--page-bg-image: url('/Guides/assets/images/still-life-objects-with-role-playing-game-sheet.jpg')">
+    
+    <script>
+    // Fallback: Set background image if not already set
+    if (!document.body.style.getPropertyValue('--page-bg-image')) {
+    document.body.style.setProperty('--page-bg-image', 'url("/Guides/assets/images/still-life-objects-with-role-playing-game-sheet.jpg")');
+}
+    </script>
+    
+        
+    <header class="site-header">
+        <div class="header-content">
+            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <h1 class="site-title">
+                <a href="/Guides/" class="home-link">
+                    <img src="/Guides/assets/thumbnails/guild-icon.png" class="guild-icon">
+                    Hawthorne Guild
+                </a>
+            </h1>
+            
+            <div class="header-search-container">
+                <input type="text" id="search-input" placeholder="Search..." aria-label="Search documents">
+            </div>
+        </div>
+    </header>
+
+    <div id="sidebar-menu">
+        <div class="sidebar-header">
+            <h4 class="sidebar-title">Navigation</h4>
+            <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
+        </div>
+        
+        <div class="sidebar-nav">
+            
+                
+                    <a href="/Guides/" class="nav-link">Home</a>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Rules & Roles
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                    
+                                    
+                                        
+                                        
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Player's Guide
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                
+                                
+                                
+                                
+                                    
+                                        <div class="nav-subsection">
+                                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                                <span class="toggle-icon">▶</span>
+                                                <span>Appendices</span>
+                                            </button>
+                                            <div class="nav-subsubmenu">
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+                
+                    <a href="https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view" class="nav-link">Arcana</a>
+                    
+                
+            
+                
+                    <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" class="nav-link">DM's Guide</a>
+                    
+                
+            
+                
+                    <a href="/Guides/monsters/" class="nav-link">Monster Compendium</a>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Adventure Locations
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                    
+                                    
+                                        
+                                        
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+                
+                    <a href="/Guides/faq.html" class="nav-link">FAQ</a>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Resources
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                    
+                                    
+                                        
+                                        
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+        </div>
+    </div>
+
+    <div id="menu-overlay"></div>
+
+    <ul id="search-results"></ul>
+
+    <div class="page ">
+        <link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/dm-tool.css">
+
+<div class="dashboard-container page"> 
+    <style>
+/* auth Header Component
+ * ---------------------
+ * This component provides a user authentication interface using Supabase and Discord OAuth.
+ * It displays a login button when the user is not authenticated and shows the user's profile
+ * information along with a logout button when authenticated.
+ *
+ * Usage:
+ * - Include this file in your HTML where you want the auth header to appear.
+ * - Ensure that the `authManager` script is loaded on the page to handle authentication logic.
+ *
+ * Documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/17
+ */
+</style>
+
+<div id="auth-component" class="auth-wrapper">
+
+    <span id="auth-loading" class="auth-loading-text" role="status">Loading...</span>
+
+    <button id="login-btn" class="auth-btn auth-btn-discord" style="display:none;">
+        <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true">
+            <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+        </svg>
+        Login with Discord
+    </button>
+
+    <div id="user-profile" class="auth-profile" style="display:none;">
+        <img id="user-avatar" src="" alt="User Avatar" class="auth-avatar" 
+             onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTgxODBEIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINGE0IDQgMCAwIDAtNCA0djIiPjwvcGF0aD48Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiPjwvY2lyY2xlPjwvc3ZnPg==';">
+        
+        <div class="auth-user-info">
+            <span id="user-name" class="auth-name">Adventurer</span>
+        </div>
+        
+        <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out" aria-label="Sign Out">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<style>
+/* THEMING:
+   This component inherits variables from the global scope.
+   Expected variables:
+   --font-header: Main font family
+   --color-text-secondary: Muted text color
+   --color-bg-light: Light background for profile pill
+   --color-border: Border color for profile pill
+   --color-primary: Primary accent color (used for borders/text)
+*/
+
+.auth-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: var(--font-header, sans-serif);
+    font-size: 0.9em;
+}
+
+.auth-loading-text {
+    color: var(--color-text-secondary, #888);
+    font-style: italic;
+}
+
+.auth-btn {
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 0.6em 1.2em;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.1)); /* Added fallback */
+}
+
+.auth-btn-discord {
+    background-color: #5865F2;
+    color: white;
+}
+
+.auth-btn-discord:hover {
+    background-color: #4752C4;
+    transform: translateY(-2px);
+}
+
+.discord-logo {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.auth-btn-logout {
+    background: transparent;
+    color: var(--color-text-secondary, #5a5a5a);
+    padding: 4px;
+    margin-left: 8px;
+    box-shadow: none;
+}
+
+.auth-btn-logout:hover {
+    color: var(--palette-alert-danger-action, #c00);
+    background-color: rgba(0,0,0,0.05);
+}
+
+.auth-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--color-bg-light, #FDF1DC);
+    border: 2px solid var(--color-border, #D4C4B0);
+    color: var(--color-text, #2c2c2c);
+    padding: 6px 12px;
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.1));
+}
+
+.auth-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-primary, #58180D);
+    background-color: white; /* Ensures transparent SVGs look okay */
+}
+
+.auth-user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.auth-name {
+    font-weight: 700;
+    font-size: 0.9em;
+    color: var(--color-primary, #58180D);
+}
+</style>
+
+<script>
+(function () {
+    const getEl = (id) => document.getElementById(id);
+
+    const ui = {
+        loading: getEl('auth-loading'),
+        loginBtn: getEl('login-btn'),
+        profile: getEl('user-profile'),
+        avatar: getEl('user-avatar'),
+        name: getEl('user-name'),
+        logoutBtn: getEl('logout-btn')
+    };
+
+    /**
+     * Updates the DOM based on the user state.
+     * @param {Object|null} user - The Supabase user object or null.
+     */
+    const updateAuthUI = (user) => {
+        if(!ui.loading) return; // Safety check if DOM is missing
+        
+        ui.loading.style.display = 'none';
+
+        if (!user) {
+            // Logged out state
+            ui.loginBtn.style.display = 'inline-flex';
+            ui.profile.style.display = 'none';
+        } else {
+            // Logged in state
+            ui.loginBtn.style.display = 'none';
+            ui.profile.style.display = 'flex';
+
+            // Use Supabase/Discord metadata
+            ui.name.textContent = user.user_metadata?.full_name || 'Adventurer';
+
+            if (user.user_metadata?.avatar_url) {
+                ui.avatar.src = user.user_metadata.avatar_url;
+                ui.avatar.style.display = 'block';
+            }
+        }
+
+        // Hook for page-specific logic (e.g. AuthGuard)
+        if (typeof window.handlePageAuth === 'function') {
+            window.handlePageAuth(user);
+        }
+    };
+
+    // Polling configuration
+    let pollCount = 0;
+    const MAX_POLLS = 50; // 50 * 100ms = 5 seconds max wait time
+
+    const initAuth = () => {
+        // Wait for authManager to load from the other script
+        if (!window.authManager) {
+            pollCount++;
+            if (pollCount > MAX_POLLS) {
+                console.warn("Auth: Failed to load authManager within 5 seconds.");
+                if(ui.loading) ui.loading.textContent = "Auth Error";
+                return;
+            }
+            setTimeout(initAuth, 100);
+            return;
+        }
+
+        ui.loginBtn.onclick = () => window.authManager.login();
+        ui.logoutBtn.onclick = () => window.authManager.logout();
+        
+        // Initialize the manager, passing our UI updater callback
+        window.authManager.init(updateAuthUI);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAuth);
+    } else {
+        initAuth();
+    }
+})();
+</script>
+
+    <div id="dashboard-content" class="hidden">
+        <div class="dashboard-header">
+            <h1>My Session Logs</h1>
+            <button id="btn-new-session" class="button">+ New Session</button> 
+        </div>
+
+        <div id="loading-state" style="text-align:left; padding:3rem; color:var(--color-text-secondary);">
+            Loading sessions...
+        </div>
+
+        <div id="empty-state" class="hidden">
+            <h3>No sessions found</h3>
+            <p style="margin-bottom:1rem;">No Session Logs Found. Please Click +New Session Button to get started.</p>
+            <button id="btn-create-first" class="button button-secondary">Create Session</button>
+        </div>
+
+        <table id="session-table" class="hidden">
+            <thead>
+                <tr>
+                    <th style="width: 45%;">Session Name</th>
+                    <th style="width: 15%;">Date</th>
+                    <th style="width: 10%; text-align:right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="session-list-body">
+            </tbody>
+        </table>
+    </div>
+
+    <div id="public-landing" class="hidden" style="text-align:left; padding: 4rem 1rem;">
+        <h2>Welcome to the Hawthorne DM Tool</h2>
+        <p style="margin: 1rem 0; color:var(--color-text-secondary);">
+            The new DM Session Log tool.
+        <br>
+        This tool is intended to make it easy for you to DM in the Hawthorne Server from initial game listing to logging your session.
+        <p>For new DMs, it provides a guided step-by-step workflow; for experienced DMs, you can save/load templates to spin up a game in a couple of minutes:</p>
+        <ul>
+            <li><strong>Game Setup: </strong> Setup your game details for the Game Listing and Ad, with buttons to copy to clipboard to quickly post into discord.</li>
+            <li><strong>Templates: </strong> Save templates to quickly load your game setup without re-entering everything again.</li>
+            <li><strong>Loot & Incentive Calculations: </strong> Manage loot rolls and incentives for players and yourself</li>
+            <li><strong>Session Details: </strong> Create the session log details to post to #session-log</li>
+            <li><strong>MAL: </strong> Copy-Paste your session details into your MAL</li>
+            <li><strong>Multi-session support: </strong> Function to create a copy for next session and auto-updates games played stats for incentive calculations</li>
+            <li><strong>Player Input Pages: </strong> Don't want to log all of the player data yourself? Send them a link and let them update it for you!</li>
+        </ul>
+    
+        <p>To get started, please sign in using the Discord Login button at the top left.</p>
+        <br>
+        <p><strong>Note:</strong>While this tool has been made to work on mobile, for best experience, use the tool on desktop.</p>
+    </div>
+
+
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">Delete Session?</h3>
+            <p>Are you sure you want to delete this session? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="btn-cancel-delete" class="button button-secondary">Cancel</button>
+                <button id="btn-confirm-delete" class="button btn-danger-outline">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<p style="font-size: 0.7rem; text-align: left; color: var(--color-text-secondary); margin-top: 1rem;">
+    Background Image by <a href="https://www.freepik.com/free-photo/still-life-objects-with-role-playing-game-sheet_24749865.htm#fromView=search&page=2&position=13&uuid=a480a100-0efa-4ab1-90aa-58acd220ac7f&query=dungeon+and+dragon" target="_blank">FreePik</a>
+</p>
+<script type="module" src="../assets/js/supabaseClient.js"></script>
+<script type="module" src="../assets/js/dm-tool/dashboard.js"></script>
+    </div>
+    
+    <footer class="site-footer">
+            <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="footer-icons">
+                    <a href="https://discord.com/channels/308324031478890497/" target="_blank" rel="noopener noreferrer" aria-label="Join our Discord">
+                        <img src="https://cdn.imgbin.com/3/3/19/discord-icon-round-discord-logo-design-tqKpZ6Yk.jpg" alt="Discord" class="footer-icon">
+                    </a>
+                    <a href="https://www.youtube.com/@HawthorneGuild" target="_blank" rel="noopener noreferrer" aria-label="Visit our YouTube channel">
+                        <img src="https://cdn.imgbin.com/0/18/20/imgbin-youtube-logo-computer-icons-subscribe-youtube-logo-YB8eFUCu8ZysbqwvcTBF63AtA.jpg" alt="YouTube" class="footer-icon">
+                    </a>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="https://forms.gle/NVe7kapBgLL2g1E69" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; margin-left: 15px; font-size: 0.85em;">Feedback</a>
+                </div>
+            </div>
+        </footer>
+
+    <script>
+        // 1. BASE URL DEFINITION (Guaranteed to run first for search.js)
+        const BASE_URL = "/Guides"; 
+        
+        // 2. CORE MENU TOGGLE LOGIC (Main Hamburger/Close Button)
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+            function toggleMenu() {
+                sidebarMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            closeMenuBtn.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
+        }
+    </script>
+    
+    <script src="/Guides/assets/js/lunr.js"></script> 
+    <script src="/Guides/assets/js/search.js"></script>
+    <script src="/Guides/assets/js/sidebar.js"></script>
+    <script type="module" src="/Guides/assets/js/auth-manager.js"></script>
+
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+    <span class="sun-icon">☀️</span>
+    <span class="moon-icon">🌙</span>
+</button>
+
+    <script>
+    (function() {
+        // Get the theme toggle button
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        htmlElement.setAttribute('data-theme', currentTheme);
+        
+        // Toggle theme function
+        function toggleTheme() {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Apply new theme
+            htmlElement.setAttribute('data-theme', newTheme);
+            
+            // Save preference to localStorage
+            localStorage.setItem('theme', newTheme);
+            
+            // Optional: Log for debugging
+            console.log('Theme changed to:', newTheme);
+        }
+        
+        // Add click event listener
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+        
+        // Optional: Add keyboard support (Enter or Space to toggle)
+        if (themeToggle) {
+            themeToggle.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleTheme();
+                }
+            });
+        }
+    })();
+</script>
+<script>
+    // Automatically set external links to open in a new tab
+    document.addEventListener("DOMContentLoaded", function() {
+        var links = document.getElementsByTagName('a');
+        var currentDomain = window.location.hostname;
+
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            
+            // 1. Check if link exists
+            if (!link.href) continue;
+
+            // 2. Check if it's a local anchor (#section)
+            if (link.getAttribute('href').startsWith('#')) continue;
+
+            // 3. Check if it's a mailto or tel link
+            if (link.href.startsWith('mailto:') || link.href.startsWith('tel:')) continue;
+
+            // 4. Main Check: Is the hostname different?
+            // We also check if the protocol is http/https to avoid messing with javascript: calls
+            if (link.hostname !== currentDomain && (link.protocol === 'http:' || link.protocol === 'https:')) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        }
+    });
+</script>
+</body>
+</html>

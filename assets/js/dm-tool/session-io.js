@@ -6,6 +6,7 @@
 
 import { stateManager } from './state-manager.js';
 import * as Rows from './session-rows.js';
+import { fetchGameRules } from './data-manager.js';
 
 /**
  * Safely sets the value of a DOM element by ID.
@@ -56,7 +57,7 @@ export function getFormData() {
             loot_plan: getVal('inp-loot-plan', state.header.loot_plan),
             predet_perms: getVal('inp-predet-perms', state.header.predet_perms),
             predet_cons: getVal('inp-predet-cons', state.header.predet_cons),
-            
+
             // Link Fields
             dm_collab_link: getVal('inp-dm-collab-link', state.header.dm_collab_link),
             dm_collaborators: getVal('inp-dm-collaborators', state.header.dm_collaborators),
@@ -77,7 +78,7 @@ export function getFormData() {
             dm_collaborators: getVal('inp-dm-collab', state.session_log.dm_collaborators),
             players: Rows.getSessionRosterData(),
             dm_rewards: state.session_log.dm_rewards,
-            
+
             // Link Fields
             dm_loot_links: getVal('inp-dm-loot-links', state.session_log.dm_loot_links),
             session_log_links: getVal('inp-session-log-links', state.session_log.session_log_links)
@@ -93,12 +94,12 @@ export function populateForm(session, callbacks, options = {}) {
         stateManager.updateField('header', 'title', session.title);
         setVal('header-game-name', session.title);
     }
-    
+
     if (!session.form_data) return;
-    
+
     const fd = session.form_data;
     stateManager.loadFromDB(session);
-    
+
     if (fd.header) {
         setVal('inp-start-datetime', fd.header.game_date_str);
         if (fd.header.timezone) setVal('inp-timezone', fd.header.timezone);
@@ -123,7 +124,7 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-loot-plan', fd.header.loot_plan);
         setVal('inp-predet-perms', fd.header.predet_perms);
         setVal('inp-predet-cons', fd.header.predet_cons);
-        
+
         // Restore Link Fields
         setVal('inp-dm-collab-link', fd.header.dm_collab_link);
         setVal('inp-dm-collaborators', fd.header.dm_collaborators);
@@ -131,18 +132,18 @@ export function populateForm(session, callbacks, options = {}) {
 
         if (fd.header.tier && Array.isArray(fd.header.tier)) {
             const tierSelect = document.getElementById('inp-tier');
-            if(tierSelect) {
-                 Array.from(tierSelect.options).forEach(opt => {
+            if (tierSelect) {
+                Array.from(tierSelect.options).forEach(opt => {
                     opt.selected = fd.header.tier.includes(opt.value);
-                 });
+                });
             }
         }
-        
+
         const eventSelect = document.getElementById('inp-event');
         if (eventSelect && fd.header.event_tags) {
-             Array.from(eventSelect.options).forEach(opt => {
+            Array.from(eventSelect.options).forEach(opt => {
                 opt.selected = fd.header.event_tags.includes(opt.value);
-             });
+            });
         }
     }
 
@@ -157,12 +158,12 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-session-notes', fd.session_log.notes);
         setVal('session-summary', fd.session_log.summary);
         setVal('inp-dm-collab', fd.session_log.dm_collaborators);
-        
+
         // Restore Link Fields
         setVal('inp-dm-loot-links', fd.session_log.dm_loot_links);
         setVal('inp-session-log-links', fd.session_log.session_log_links);
     }
-    
+
     const tbody = document.getElementById('roster-body');
     if (tbody && fd.players) {
         tbody.innerHTML = '';
@@ -170,7 +171,7 @@ export function populateForm(session, callbacks, options = {}) {
             Rows.addPlayerRowToMaster(player);
         });
     }
-    
+
     const listContainer = document.getElementById('session-roster-list');
     if (listContainer && fd.session_log?.players) {
         listContainer.innerHTML = '';
@@ -178,7 +179,7 @@ export function populateForm(session, callbacks, options = {}) {
             Rows.addSessionPlayerRow(listContainer, p, callbacks);
         });
     }
-    
+
     generateOutput();
     if (callbacks.onUpdate) callbacks.onUpdate();
 }
@@ -188,12 +189,12 @@ export function populateForm(session, callbacks, options = {}) {
  */
 export async function generateOutput() {
     const state = getFormData();
-    
+
     // 1. GAME LISTING OUTPUT
     const listingEl = document.getElementById('out-listing-text');
     if (listingEl) {
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
-        
+
         let tierStr = "N/A";
         if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
             const sortedTiers = state.header.tier.sort((a, b) => {
@@ -207,20 +208,20 @@ export async function generateOutput() {
                 tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
             }
         }
-        
+
         const apl = state.header.apl || "N/A";
         let eventsString = '';
         if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
             eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
         }
-        
+
         let details = "";
         if (state.header.tone) details += `**Tone:** ${state.header.tone}\n`;
         if (state.header.focus) details += `**Focus:** ${state.header.focus}\n`;
         if (state.header.encounter_difficulty) details += `**Encounter Difficulty:** ${state.header.encounter_difficulty}\n`;
         if (state.header.threat_level) details += `**Enemy Threat Level:** ${state.header.threat_level}\n`;
         if (state.header.char_loss) details += `**Chance of Character Loss:** ${state.header.char_loss}\n`;
-        
+
         let warnings = state.header.warnings ? `**Content Warnings:**\n${state.header.warnings}\n\n` : "";
         let houseRules = state.header.house_rules ? `**House Rules:**\n${state.header.house_rules}\n\n` : "";
         let apply = state.header.how_to_apply ? `**How to Apply:**\n${state.header.how_to_apply}\n\n` : "";
@@ -235,7 +236,7 @@ ${state.header.game_description || "No description provided."}
 **Tier:** ${tierStr}  **APL:** ${apl}  **Players:** ${state.header.party_size || "0"}
 **Platform:** ${state.header.platform || "Foundry VTT"}
 ${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_url || "N/A"}`;
-        
+
         listingEl.value = listingText;
     }
 
@@ -244,7 +245,7 @@ ${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_u
     if (adEl) {
         const dateStr = state.header.game_datetime ? `<t:${state.header.game_datetime}:F>` : "TBD";
         const relative = state.header.game_datetime ? `<t:${state.header.game_datetime}:R>` : "";
-        
+
         let tierStr = "N/A";
         if (state.header.tier && Array.isArray(state.header.tier) && state.header.tier.length > 0) {
             const sortedTiers = state.header.tier.sort((a, b) => {
@@ -258,10 +259,10 @@ ${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_u
                 tierStr = `${sortedTiers[0]} to ${sortedTiers[sortedTiers.length - 1]}`;
             }
         }
-        
+
         const partySize = state.header.party_size || "N/A";
         const apl = state.header.apl || "N/A";
-        
+
         let eventsString = '';
         if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
             eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
@@ -278,17 +279,49 @@ ${state.header.game_description || "No description provided."}
 
 **Game Listing:** ${state.header.listing_url || "N/A"}`;
 
-        adEl.value = adText;
+        // AUTOMATIC PING GENERATION
+        let finalAdText = adText;
+        try {
+            const rules = await fetchGameRules();
+            let pingKey = "";
+            const finalPings = new Set();
+
+            // Map Game Format to Lookup Keys
+            const gType = (state.header.game_type || "").toLowerCase();
+            if (gType.includes("voice")) pingKey = "voice ping";
+            else if (gType.includes("pbp")) pingKey = "PBP ping";
+            else if (gType.includes("live text")) pingKey = "live text ping";
+
+            if (rules && rules.tier && pingKey) {
+                if (state.header.tier && Array.isArray(state.header.tier)) {
+                    // Note: state.header.tier is sorted in-place in the Listing generation block (Section 1)
+                    // But to be safe and consistent, we rely on the Set to preserve insertion order of the loop
+                    state.header.tier.forEach(t => {
+                        if (rules.tier[t] && rules.tier[t][pingKey]) {
+                            finalPings.add(rules.tier[t][pingKey].trim());
+                        }
+                    });
+                }
+            }
+
+            if (finalPings.size > 0) {
+                finalAdText += "\n\n" + Array.from(finalPings).join(' ');
+            }
+        } catch (e) {
+            console.error("Error generating pings:", e);
+        }
+
+        adEl.value = finalAdText;
     }
 
     // 3. SESSION LOBBY OUTPUT
     const lobbyEl = document.getElementById('out-session-lobby');
     if (lobbyEl) {
-        const listingUrl = document.getElementById('inp-game-listing-url')?.value 
-            || state.header.listing_url 
-            || state.header.lobby_url 
+        const listingUrl = document.getElementById('inp-game-listing-url')?.value
+            || state.header.listing_url
+            || state.header.lobby_url
             || "N/A";
-        
+
         const playerMentions = [];
         if (state.players && Array.isArray(state.players)) {
             state.players.forEach(player => {
@@ -299,13 +332,13 @@ ${state.header.game_description || "No description provided."}
                 }
             });
         }
-        
+
         const playerMentionList = playerMentions.length > 0 ? playerMentions.join(' ') : '(No players added yet)';
-        
+
         const lobbyText = `This lobby is for the game corresponding to the following listing: ${listingUrl}
 
 ${playerMentionList}`;
-        
+
         lobbyEl.value = lobbyText;
     }
 
@@ -317,7 +350,7 @@ ${playerMentionList}`;
     };
 
     setVal('rec-listing-link', state.header.listing_url);
-    setVal('rec-ad-link', getValSafe('inp-listing-url')); 
+    setVal('rec-ad-link', getValSafe('inp-listing-url'));
     setVal('rec-lobby-link', state.header.lobby_url);
     setVal('rec-player-loot-links', state.header.player_loot_links);
     setVal('rec-dm-loot-links', state.session_log.dm_loot_links);
@@ -331,32 +364,32 @@ ${playerMentionList}`;
 export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const state = getFormData();
     const stats = stateManager.getStats();
-    
+
     // Auto-Generate DM Collaboration Field (Tab 7) if Tab 4 info exists
     const collabNamesRaw = state.header.dm_collaborators || "";
     const collabLink = state.header.dm_collab_link || "";
     const dmCollabField = document.getElementById('inp-dm-collab');
-    
+
     if (collabNamesRaw && collabLink && dmCollabField && !dmCollabField.value) {
         const names = collabNamesRaw.split(/[\n,]+/).map(n => n.trim()).filter(n => n).join(', ');
         if (names) {
             const generatedString = `${names} each earns 10DTP for their assistance with ${collabLink}`;
             dmCollabField.value = generatedString;
-            state.session_log.dm_collaborators = generatedString; 
+            state.session_log.dm_collaborators = generatedString;
         }
     }
-    
+
     const gameName = state.header.title || "Untitled";
     const gameVersion = state.header.game_version || "N/A";
     const gameFormat = state.header.game_type || "N/A";
-    
+
     const sessionNotes = state.session_log.notes || "";
     const hasSessionData = sessionNotes.trim().length > 0;
     const appsType = hasSessionData ? "Prefilled" : (state.header.apps_type || "N/A");
-    
+
     const sessionHours = state.session_log.hours || 3;
     const sessionSummary = state.session_log.summary || "";
-    const dmCollaborators = state.session_log.dm_collaborators || ""; 
+    const dmCollaborators = state.session_log.dm_collaborators || "";
 
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id') || 'N/A';
@@ -365,18 +398,18 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     if (Array.isArray(state.header.event_tags) && state.header.event_tags.length > 0) {
         eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
     }
-    
+
     let playerLines = [];
     const players = Rows.getSessionRosterData();
-    
+
     players.forEach(player => {
         const xpStr = player.forfeit_xp ? "forfeits XP" : `gains ${player.xp || "0"} XP`;
-        
+
         let levelDisplay = player.level || "1";
         if (player.real_level && String(player.real_level) !== String(player.level)) {
-             levelDisplay = `${player.real_level}, playing at level ${player.level}`;
+            levelDisplay = `${player.real_level}, playing at level ${player.level}`;
         }
-        
+
         // INTELLIGENT NAME DISPLAY
         let playerReference = player.display_name || "Unknown";
         if (player.discord_id && /^\d+$/.test(player.discord_id)) {
@@ -384,28 +417,28 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
         }
 
         let line = `- ${playerReference} as ${player.character_name || "Unknown"} (${levelDisplay}) ${xpStr}, ${player.dtp || "0"} DTP`;
-        
+
         if (player.incentives?.length > 0) {
             line += ` (incentives: ${player.incentives.join(', ')})`;
         }
-        
+
         line += `, and ${player.gold || "0"} GP.`;
         if (player.loot) line += ` They take ${player.loot}.`;
-        
+
         if (player.items_used || player.gold_used) {
             let res = [];
             if (player.items_used) res.push(player.items_used);
             if (player.gold_used) res.push(`${player.gold_used} GP`);
             line += ` They used ${res.join(' and ')}.`;
         }
-        
+
         if (player.notes) line += ` ${player.notes}`;
         playerLines.push(line);
     });
-    
+
     const dmCharName = state.dm.character_name || "DM Character";
     const dmLevel = state.session_log.dm_rewards.level || state.dm.level || "1";
-    
+
     const dmXP = document.querySelector('.dm-res-xp')?.value || "0";
     const dmDTP = document.querySelector('.dm-res-dtp')?.value || "0";
     const dmGP = document.querySelector('.dm-res-gp')?.value || "0";
@@ -429,7 +462,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     output += `**Hours Played:** ${sessionHours}\n\n`;
     output += `**EXP, DTP, GP, Loot, and Resources Used:**\n`;
     output += playerLines.join('\n') + '\n\n';
-    
+
     const playerStats = stateManager.getPlayerStats();
     let dmIncentivesList = [];
     if (state.dm.games_count !== "10+" && parseInt(state.dm.games_count) <= 10) {
@@ -437,14 +470,14 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     }
     if (playerStats.newHires > 0) dmIncentivesList.push(`New Hires x${playerStats.newHires}`);
     if (playerStats.welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${playerStats.welcomeWagon}`);
-    
+
     if (state.session_log.dm_rewards.incentives) {
         dmIncentivesList = dmIncentivesList.concat(state.session_log.dm_rewards.incentives);
     }
 
     output += `**DM Incentives:** ${dmIncentivesList.join(', ') || 'None'}\n`;
     output += `**DM Rewards:** ${dmRewardsLine}\n\n`;
-    
+
     if (dmCollaborators) output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
     if (sessionNotes) output += `**Notes:**\n${sessionNotes}\n\n`;
 
@@ -457,7 +490,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     if (stateManager.dom.outSession) {
         stateManager.dom.outSession.value = fullTextTotal.trim();
         if (stateManager.dom.outSummary) {
-             stateManager.dom.outSummary.value = (fullTextTotal.length > 999) ? summaryHeader + summaryContent : "";
+            stateManager.dom.outSummary.value = (fullTextTotal.length > 999) ? summaryHeader + summaryContent : "";
         }
     }
 
@@ -476,19 +509,19 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
 export function generateMALUpdate(dmDisplayName) {
     const state = stateManager.getFullState();
     const stats = stateManager.getStats();
-    
+
     const sessionDate = stateManager.dom.sessionDate?.value || '';
     const formattedDate = sessionDate ? sessionDate.split('T')[0] : new Date().toISOString().split('T')[0];
-    
+
     const gameName = state.header.title || 'Untitled';
     const dmName = dmDisplayName || state.dm.character_name || 'DM';
     const dmXP = document.querySelector('.dm-res-xp')?.value || '0';
     const dmGP = document.querySelector('.dm-res-gp')?.value || '0';
     const dmDTP = document.querySelector('.dm-res-dtp')?.value || '0';
     const dmLoot = state.session_log.dm_rewards.loot_selected || '';
-    
+
     const malRow = `${formattedDate}\t"DM"\t${gameName}\t${dmName}\t${stats.apl}\t${dmXP}\t${dmGP}\t${dmDTP}\t${dmLoot}`;
-    
+
     if (stateManager.dom.outMAL) {
         stateManager.dom.outMAL.value = malRow;
     }
@@ -499,17 +532,17 @@ export function generateMALUpdate(dmDisplayName) {
  */
 export function prepareTemplateData(originalData) {
     const data = JSON.parse(JSON.stringify(originalData));
-    
+
     if (data.header) {
         data.header.game_datetime = null;
-        data.header.game_date_str = ""; 
+        data.header.game_date_str = "";
         data.header.listing_url = "";
         // data.header.lobby_url = ""; 
     }
-    
+
     data.players = [];
     data.dm = { character_name: "", level: "", games_count: "0" };
-    
+
     data.session_log = {
         title: "",
         hours: 0,
@@ -527,7 +560,7 @@ export function prepareTemplateData(originalData) {
         dm_loot_links: '',
         session_log_links: ''
     };
-    
+
     return data;
 }
 
@@ -539,7 +572,7 @@ export function updateJumpstartDisplay() {
     const dmGamesVal = state.dm.games_count;
     const dmGamesNum = parseInt(dmGamesVal) || 999;
     const isJumpstart = (dmGamesVal !== "10+" && dmGamesNum <= 10);
-    
+
     const jumpstartField = document.getElementById('loot-val-jumpstart');
     if (jumpstartField) {
         jumpstartField.value = isJumpstart ? "Yes" : "No";

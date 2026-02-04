@@ -1,0 +1,1326 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Editor</title>
+    <link rel="stylesheet" href="/Guides/assets/css/style.css">
+    <link rel="stylesheet" href="/Guides/assets/css/search.css"> 
+	<link rel="stylesheet" href="/Guides/assets/css/style.css">
+    <link rel="stylesheet" href="/Guides/assets/css/home.css">
+    <script type="module" src="/Guides/assets/js/heading-links.js"></script>
+
+    
+    <link rel="icon" type="image/png" href="/Guides/assets/thumbnails/guild-icon.png">
+    <link rel="apple-touch-icon" href="/Guides/assets/thumbnails/guild-icon.png">
+    
+    
+    
+<!-- Google tag (gtag.js) --> 
+ <script async src="https://www.googletagmanager.com/gtag/js?id=G-5TDMHYK3X8"></script> 
+ <script> 
+    window.dataLayer = window.dataLayer || []; 
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date()); 
+    gtag('config', 'G-5TDMHYK3X8'); 
+</script>
+</head>
+<body class=" " >
+    
+        
+    <header class="site-header">
+        <div class="header-content">
+            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <h1 class="site-title">
+                <a href="/Guides/" class="home-link">
+                    <img src="/Guides/assets/thumbnails/guild-icon.png" class="guild-icon">
+                    Hawthorne Guild
+                </a>
+            </h1>
+            
+            <div class="header-search-container">
+                <input type="text" id="search-input" placeholder="Search..." aria-label="Search documents">
+            </div>
+        </div>
+    </header>
+
+    <div id="sidebar-menu">
+        <div class="sidebar-header">
+            <h4 class="sidebar-title">Navigation</h4>
+            <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
+        </div>
+        
+        <div class="sidebar-nav">
+            
+                
+                    <a href="/Guides/" class="nav-link">Home</a>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Rules & Roles
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                    
+                                    
+                                        
+                                        
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Player's Guide
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                
+                                
+                                
+                                
+                                    
+                                        <div class="nav-subsection">
+                                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                                <span class="toggle-icon">▶</span>
+                                                <span>Appendices</span>
+                                            </button>
+                                            <div class="nav-subsubmenu">
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+                
+                    <a href="https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view" class="nav-link">Arcana</a>
+                    
+                
+            
+                
+                    <a href="https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing" class="nav-link">DM's Guide</a>
+                    
+                
+            
+                
+                    <a href="/Guides/monsters/" class="nav-link">Monster Compendium</a>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Adventure Locations
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                    
+                                    
+                                        
+                                        
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+                
+                    <a href="/Guides/faq.html" class="nav-link">FAQ</a>
+                    
+                
+            
+                
+                    <div class="nav-section">
+                        <button class="nav-section-toggle" aria-expanded="false">
+                            <span class="toggle-icon">▶</span>
+                            Resources
+                        </button>
+                        <div class="nav-submenu">
+                            
+                            
+                            
+                                
+                                
+                                    
+                                    
+                                        
+                                        
+                                    
+                                
+                            
+                        </div>
+                    </div>
+                    
+                
+            
+        </div>
+    </div>
+
+    <div id="menu-overlay"></div>
+
+    <ul id="search-results"></ul>
+
+    <div class="page ">
+        <!--
+    map-editor.html
+    
+    OVERVIEW:
+    Administrative interface for editing location maps and pins.
+    Provides a dropdown to select maps, displays map info, and enables
+    full pin editing capabilities through the MapComponent widget.
+    
+    KEY FEATURES:
+    - Role-based access control (Staff and Staff Apprentice only)
+    - Map selection dropdown with automatic refresh
+    - Live map statistics (dimensions, default view, pin count)
+    - Full editing controls (add/delete pins, set default view)
+    - Status messaging for user feedback
+    - Responsive design with 21:9 aspect ratio map display
+    
+    ARCHITECTURE:
+    1. Auth Check → Shows/hides interface based on user role
+    2. Map Loading → Fetches all maps from database
+    3. Map Selection → User picks a map from dropdown
+    4. Widget Initialization → Creates editable MapComponent
+    5. Real-time Updates → Changes reflected immediately
+    
+    SECURITY:
+    - Requires authentication via auth-header.html
+    - Checks user roles via checkAccess() function
+    - Database operations require Supabase RLS policies
+    
+    DEPENDENCIES:
+    - Leaflet.js 1.9.4
+    - Supabase client
+    - map-widget.js module
+    - auth-check.js module
+    - auth-header.html include
+    - map.css stylesheet
+-->
+
+<style>
+/* ============================================================================
+   LAYOUT STYLES
+   ============================================================================ */
+
+/**
+ * Main editor container
+ * Centers content and provides consistent padding
+ */
+.editor-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/**
+ * Header section
+ * Contains title and authentication controls
+ * Flexbox layout for space-between alignment
+ */
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border-medium);
+}
+
+.editor-header h1 {
+    margin: 0;
+    color: var(--color-text-emphasis);
+}
+
+/* ============================================================================
+   CONTROL PANEL STYLES
+   ============================================================================ */
+
+/**
+ * Control panel container
+ * Houses map selection dropdown and settings
+ */
+.editor-controls {
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+/**
+ * Individual control row
+ * Flexbox layout for label + input alignment
+ */
+.control-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.control-group label {
+    font-weight: 600;
+    color: var(--color-text-main);
+    min-width: 120px; /* Aligns all inputs vertically */
+}
+
+.control-group select,
+.control-group input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-main);
+    font-family: var(--font-primary);
+}
+
+/**
+ * Action buttons
+ * Styled with accent color and hover effects
+ */
+.control-group button {
+    padding: 0.5rem 1.5rem;
+    background-color: var(--color-accent);
+    color: var(--color-bg-light);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.2s ease;
+}
+
+.control-group button:hover {
+    filter: brightness(1.2); /* Brightens on hover */
+}
+
+.control-group button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================================================
+   STATUS MESSAGE STYLES
+   ============================================================================ */
+
+/**
+ * Base status message styling
+ * Different colors for different message types
+ */
+.status-message {
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+/* Info messages (blue) */
+.status-info {
+    background-color: #2c5aa0;
+    color: white;
+    border-left: 4px solid #1e3a6b;
+}
+
+/* Success messages (green) */
+.status-success {
+    background-color: #27ae60;
+    color: white;
+    border-left: 4px solid #1e8449;
+}
+
+/* Error messages (red) */
+.status-error {
+    background-color: var(--color-danger-bg, #5a1a1a);
+    color: var(--color-danger-text, #ffaaaa);
+    border-left: 4px solid var(--color-danger-border);
+}
+
+/* Warning messages (orange) */
+.status-warning {
+    background-color: #f39c12;
+    color: white;
+    border-left: 4px solid #d68910;
+}
+
+/* ============================================================================
+   ACCESS CONTROL STYLES
+   ============================================================================ */
+
+/**
+ * Access denied message
+ * Shown when user lacks required permissions
+ */
+.access-denied {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--color-bg-light);
+    border: 2px solid var(--color-danger-border, #c0392b);
+    border-radius: var(--radius-md);
+    margin-top: 2rem;
+}
+
+.access-denied h2 {
+    color: var(--color-danger-text, #c0392b);
+    margin-bottom: 1rem;
+}
+
+/* ============================================================================
+   MAP INFO DISPLAY STYLES
+   ============================================================================ */
+
+/**
+ * Map information panel
+ * Shows metadata about selected map
+ */
+.map-info-display {
+    background-color: var(--color-bg-medium);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    font-size: 0.9em;
+}
+
+.map-info-display p {
+    margin: 0.25rem 0;
+    color: var(--color-text-secondary);
+}
+
+.map-info-display strong {
+    color: var(--color-text-emphasis);
+}
+
+/* ============================================================================
+   INSTRUCTIONS PANEL STYLES
+   ============================================================================ */
+
+/**
+ * User instructions panel
+ * Helps users understand how to use the editor
+ */
+.instructions {
+    background-color: var(--color-bg-medium);
+    border-left: 4px solid var(--color-accent);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-sm);
+}
+
+.instructions h3 {
+    margin-top: 0;
+    color: var(--color-text-emphasis);
+}
+
+.instructions ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.instructions li {
+    margin: 0.25rem 0;
+    color: var(--color-text-main);
+}
+
+/* ============================================================================
+   MAP WIDGET CONTAINER STYLES
+   ============================================================================ */
+
+/**
+ * Map widget container with 21:9 aspect ratio
+ * 
+ * ASPECT RATIO EXPLANATION:
+ * - 21:9 is an ultrawide format (≈2.33:1)
+ * - Common in modern displays and cinematic content
+ * - Provides horizontal space for wide maps
+ * 
+ * IMPLEMENTATION:
+ * - Modern browsers: aspect-ratio property
+ * - Fallback: padding-bottom percentage trick
+ *   (9/21 * 100 = 42.85%)
+ */
+#map-editor-widget {
+    width: 100%;
+    aspect-ratio: 21 / 9; /* Modern approach */
+    
+    /* Fallback for browsers before ~2021 */
+    @supports not (aspect-ratio: 21 / 9) {
+        height: 0;
+        padding-bottom: 42.85%; /* (9 / 21) * 100 */
+    }
+
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 2px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    position: relative;
+    background: #000; /* Prevents white flash during load */
+    overflow: hidden;
+}
+
+/**
+ * Ensure Leaflet container fills the aspect ratio box
+ * Important for proper map display
+ */
+#map-editor-widget .leaflet-container {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+/**
+ * Loading state indicator
+ * Centered within container
+ */
+#map-editor-widget .loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+</style>
+
+<div class="editor-container">
+    <!-- ========================================================================
+         HEADER SECTION
+         Contains title and authentication UI
+         ======================================================================== -->
+    <div class="editor-header">
+        <h1>🗺️ Map Editor</h1>
+        <style>
+/* auth Header Component
+ * ---------------------
+ * This component provides a user authentication interface using Supabase and Discord OAuth.
+ * It displays a login button when the user is not authenticated and shows the user's profile
+ * information along with a logout button when authenticated.
+ *
+ * Usage:
+ * - Include this file in your HTML where you want the auth header to appear.
+ * - Ensure that the `authManager` script is loaded on the page to handle authentication logic.
+ *
+ * Documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/17
+ */
+</style>
+
+<div id="auth-component" class="auth-wrapper">
+
+    <span id="auth-loading" class="auth-loading-text" role="status">Loading...</span>
+
+    <button id="login-btn" class="auth-btn auth-btn-discord" style="display:none;">
+        <svg class="discord-logo" width="20" height="20" viewBox="0 0 127.14 96.36" aria-hidden="true">
+            <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0A105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.44-2.54-47.89-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+        </svg>
+        Login with Discord
+    </button>
+
+    <div id="user-profile" class="auth-profile" style="display:none;">
+        <img id="user-avatar" src="" alt="User Avatar" class="auth-avatar" 
+             onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTgxODBEIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINGE0IDQgMCAwIDAtNCA0djIiPjwvcGF0aD48Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiPjwvY2lyY2xlPjwvc3ZnPg==';">
+        
+        <div class="auth-user-info">
+            <span id="user-name" class="auth-name">Adventurer</span>
+        </div>
+        
+        <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out" aria-label="Sign Out">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<style>
+/* THEMING:
+   This component inherits variables from the global scope.
+   Expected variables:
+   --font-header: Main font family
+   --color-text-secondary: Muted text color
+   --color-bg-light: Light background for profile pill
+   --color-border: Border color for profile pill
+   --color-primary: Primary accent color (used for borders/text)
+*/
+
+.auth-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: var(--font-header, sans-serif);
+    font-size: 0.9em;
+}
+
+.auth-loading-text {
+    color: var(--color-text-secondary, #888);
+    font-style: italic;
+}
+
+.auth-btn {
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 0.6em 1.2em;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.1)); /* Added fallback */
+}
+
+.auth-btn-discord {
+    background-color: #5865F2;
+    color: white;
+}
+
+.auth-btn-discord:hover {
+    background-color: #4752C4;
+    transform: translateY(-2px);
+}
+
+.discord-logo {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.auth-btn-logout {
+    background: transparent;
+    color: var(--color-text-secondary, #5a5a5a);
+    padding: 4px;
+    margin-left: 8px;
+    box-shadow: none;
+}
+
+.auth-btn-logout:hover {
+    color: var(--palette-alert-danger-action, #c00);
+    background-color: rgba(0,0,0,0.05);
+}
+
+.auth-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--color-bg-light, #FDF1DC);
+    border: 2px solid var(--color-border, #D4C4B0);
+    color: var(--color-text, #2c2c2c);
+    padding: 6px 12px;
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.1));
+}
+
+.auth-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-primary, #58180D);
+    background-color: white; /* Ensures transparent SVGs look okay */
+}
+
+.auth-user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.auth-name {
+    font-weight: 700;
+    font-size: 0.9em;
+    color: var(--color-primary, #58180D);
+}
+</style>
+
+<script>
+(function () {
+    const getEl = (id) => document.getElementById(id);
+
+    const ui = {
+        loading: getEl('auth-loading'),
+        loginBtn: getEl('login-btn'),
+        profile: getEl('user-profile'),
+        avatar: getEl('user-avatar'),
+        name: getEl('user-name'),
+        logoutBtn: getEl('logout-btn')
+    };
+
+    /**
+     * Updates the DOM based on the user state.
+     * @param {Object|null} user - The Supabase user object or null.
+     */
+    const updateAuthUI = (user) => {
+        if(!ui.loading) return; // Safety check if DOM is missing
+        
+        ui.loading.style.display = 'none';
+
+        if (!user) {
+            // Logged out state
+            ui.loginBtn.style.display = 'inline-flex';
+            ui.profile.style.display = 'none';
+        } else {
+            // Logged in state
+            ui.loginBtn.style.display = 'none';
+            ui.profile.style.display = 'flex';
+
+            // Use Supabase/Discord metadata
+            ui.name.textContent = user.user_metadata?.full_name || 'Adventurer';
+
+            if (user.user_metadata?.avatar_url) {
+                ui.avatar.src = user.user_metadata.avatar_url;
+                ui.avatar.style.display = 'block';
+            }
+        }
+
+        // Hook for page-specific logic (e.g. AuthGuard)
+        if (typeof window.handlePageAuth === 'function') {
+            window.handlePageAuth(user);
+        }
+    };
+
+    // Polling configuration
+    let pollCount = 0;
+    const MAX_POLLS = 50; // 50 * 100ms = 5 seconds max wait time
+
+    const initAuth = () => {
+        // Wait for authManager to load from the other script
+        if (!window.authManager) {
+            pollCount++;
+            if (pollCount > MAX_POLLS) {
+                console.warn("Auth: Failed to load authManager within 5 seconds.");
+                if(ui.loading) ui.loading.textContent = "Auth Error";
+                return;
+            }
+            setTimeout(initAuth, 100);
+            return;
+        }
+
+        ui.loginBtn.onclick = () => window.authManager.login();
+        ui.logoutBtn.onclick = () => window.authManager.logout();
+        
+        // Initialize the manager, passing our UI updater callback
+        window.authManager.init(updateAuthUI);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAuth);
+    } else {
+        initAuth();
+    }
+})();
+</script>
+    </div>
+
+    <!-- ========================================================================
+         ACCESS DENIED MESSAGE
+         Shown when user is not authenticated or lacks permissions
+         Hidden by default, shown by JavaScript if needed
+         ======================================================================== -->
+    <div id="access-denied" class="access-denied" style="display: none;">
+        <h2>⛔ Access Denied</h2>
+        <p>You need to be logged in with Staff or Staff Apprentice permissions to use the Map Editor.</p>
+        <p>Please log in with an authorized account.</p>
+    </div>
+
+    <!-- ========================================================================
+         EDITOR INTERFACE
+         Main editing UI, hidden until authentication succeeds
+         ======================================================================== -->
+    <div id="editor-interface" style="display: none;">
+        
+        <!-- Instructions Panel -->
+        <div class="instructions">
+            <h3>📍 How to Use the Map Editor</h3>
+            <ul>
+                <li><strong>Select a Map:</strong> Choose a map from the dropdown to begin editing</li>
+                <li><strong>Add Pins:</strong> Right-click on the map to place a new location pin</li>
+                <li><strong>Delete Pins:</strong> Click on a pin and use the "Delete Pin" button in the popup</li>
+                <li><strong>Set Default View:</strong> Pan and zoom to your desired starting view, then click "💾 Set Default View"</li>
+                <li><strong>Current Coordinates:</strong> Watch the bottom-left corner to see your current position and zoom level</li>
+            </ul>
+        </div>
+
+        <!-- Status Messages Container (populated by JavaScript) -->
+        <div id="status-container"></div>
+
+        <!-- Map Selection Controls -->
+        <div class="editor-controls">
+            <div class="control-group">
+                <label for="map-select">Select Map:</label>
+                <select id="map-select">
+                    <option value="">-- Loading Maps --</option>
+                </select>
+                <button id="refresh-maps-btn" title="Refresh map list">🔄 Refresh</button>
+            </div>
+
+            <!-- Map Info Display (shown after map selection) -->
+            <div id="map-info" class="map-info-display" style="display: none;">
+                <p><strong>Map Name:</strong> <span id="info-name"></span></p>
+                <p><strong>Dimensions:</strong> <span id="info-dimensions"></span></p>
+                <p><strong>Current Default View:</strong> <span id="info-default"></span></p>
+                <p><strong>Pin Count:</strong> <span id="info-pins"></span></p>
+            </div>
+        </div>
+
+        <!-- Map Widget Container -->
+        <div id="map-editor-widget" 
+             data-map-component
+             data-editable="true">
+            <div class="loading-spinner">Select a map to begin editing...</div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================================
+     JAVASCRIPT MODULE
+     Handles authentication, map loading, and widget management
+     ============================================================================ -->
+<script type="module">
+    // Import required modules
+    import { supabase } from "/Guides/assets/js/supabaseClient.js";
+    import { checkAccess } from "/Guides/assets/js/auth-check.js";
+    import { initMapComponents } from "/Guides/assets/js/map-widget.js";
+
+    // ========================================================================
+    // STATE MANAGEMENT
+    // ========================================================================
+    
+    /**
+     * Current authenticated user object
+     * Null if not logged in
+     */
+    let currentUser = null;
+    
+    /**
+     * Array of available maps from database
+     * Populated by loadMaps()
+     */
+    let availableMaps = [];
+    
+    /**
+     * Reference to current MapComponent instance
+     * Used for cleanup when switching maps
+     */
+    let currentMapWidget = null;
+
+    // ========================================================================
+    // UI ELEMENT REFERENCES
+    // Cache DOM elements for performance
+    // ========================================================================
+    
+    const ui = {
+        accessDenied: document.getElementById('access-denied'),
+        editorInterface: document.getElementById('editor-interface'),
+        mapSelect: document.getElementById('map-select'),
+        refreshBtn: document.getElementById('refresh-maps-btn'),
+        statusContainer: document.getElementById('status-container'),
+        mapInfo: document.getElementById('map-info'),
+        mapWidget: document.getElementById('map-editor-widget')
+    };
+
+    // ========================================================================
+    // UI FEEDBACK FUNCTIONS
+    // ========================================================================
+    
+    /**
+     * Display a status message to the user
+     * 
+     * MESSAGE TYPES:
+     * - info: General information (blue)
+     * - success: Operation completed (green)
+     * - warning: Caution needed (orange)
+     * - error: Something failed (red)
+     * 
+     * AUTO-DISMISS:
+     * Info and success messages auto-remove after 5 seconds
+     * Warning and error messages stay until next status
+     * 
+     * @param {string} message - Message text to display
+     * @param {string} type - Message type (info|success|warning|error)
+     */
+    function showStatus(message, type = 'info') {
+        const statusEl = document.createElement('div');
+        statusEl.className = `status-message status-${type}`;
+        statusEl.textContent = message;
+        
+        // Replace any existing status message
+        ui.statusContainer.innerHTML = '';
+        ui.statusContainer.appendChild(statusEl);
+
+        // Auto-remove positive messages after 5 seconds
+        if (type === 'success' || type === 'info') {
+            setTimeout(() => statusEl.remove(), 5000);
+        }
+    }
+
+    // ========================================================================
+    // MAP LOADING FUNCTIONS
+    // ========================================================================
+    
+    /**
+     * Load all available maps from database
+     * 
+     * QUERY DETAILS:
+     * - Table: location_maps
+     * - Fields: id, name, width, height, initial_x, initial_y, initial_zoom
+     * - Order: Alphabetically by name
+     * 
+     * UPDATES:
+     * - Populates availableMaps array
+     * - Calls populateMapDropdown() to update UI
+     * - Shows warning if no maps found
+     */
+    async function loadMaps() {
+        try {
+            const { data, error } = await supabase
+                .from('location_maps')
+                .select('id, name, width, height, initial_x, initial_y, initial_zoom')
+                .order('name');
+
+            if (error) throw error;
+
+            availableMaps = data || [];
+            populateMapDropdown();
+            
+            if (availableMaps.length === 0) {
+                showStatus('No maps found in database', 'warning');
+            }
+        } catch (error) {
+            console.error('Error loading maps:', error);
+            showStatus('Failed to load maps: ' + error.message, 'error');
+        }
+    }
+
+    /**
+     * Populate the map selection dropdown
+     * 
+     * IMPLEMENTATION:
+     * - Clears existing options
+     * - Adds default "Select a Map" option
+     * - Creates option for each map with data attribute
+     * 
+     * DATA STORAGE:
+     * Map data is stored in option.dataset.mapData as JSON
+     * This avoids additional database queries when selecting
+     */
+    function populateMapDropdown() {
+        ui.mapSelect.innerHTML = '<option value="">-- Select a Map --</option>';
+        
+        availableMaps.forEach(map => {
+            const option = document.createElement('option');
+            option.value = map.id;
+            option.textContent = map.name;
+            // Store complete map data for quick access
+            option.dataset.mapData = JSON.stringify(map);
+            ui.mapSelect.appendChild(option);
+        });
+    }
+
+    // ========================================================================
+    // MAP WIDGET MANAGEMENT
+    // ========================================================================
+    
+    /**
+     * Load and display the selected map in the editor
+     * 
+     * PROCESS:
+     * 1. Get selected map ID from dropdown
+     * 2. If empty, show placeholder and hide info
+     * 3. Fetch map data (from cached option.dataset)
+     * 4. Query pin count from locations table
+     * 5. Update info panel with map details
+     * 6. Clean up any existing map instance
+     * 7. Initialize new MapComponent in editable mode
+     * 
+     * CLEANUP:
+     * Properly removes old Leaflet map instance to prevent
+     * memory leaks and multiple event handlers
+     * 
+     * TIMING:
+     * Uses setTimeout to ensure DOM is ready for Leaflet
+     */
+    async function loadSelectedMap() {
+        const selectedId = ui.mapSelect.value;
+        
+        // No map selected - show placeholder
+        if (!selectedId) {
+            ui.mapWidget.innerHTML = '<div class="loading-spinner">Select a map to begin editing...</div>';
+            ui.mapInfo.style.display = 'none';
+            return;
+        }
+
+        try {
+            showStatus('Loading map...', 'info');
+            
+            // Get cached map data from dropdown option
+            const selectedOption = ui.mapSelect.options[ui.mapSelect.selectedIndex];
+            const mapData = JSON.parse(selectedOption.dataset.mapData);
+            
+            console.log('Loading map:', mapData);
+
+            // ================================================================
+            // Update Map Info Panel
+            // ================================================================
+            
+            ui.mapInfo.style.display = 'block';
+            document.getElementById('info-name').textContent = mapData.name;
+            document.getElementById('info-dimensions').textContent = `${mapData.width} × ${mapData.height}`;
+            
+            // Format default view info
+            const defaultView = (mapData.initial_x !== null && mapData.initial_y !== null) 
+                ? `[${mapData.initial_y.toFixed(1)}, ${mapData.initial_x.toFixed(1)}] @ zoom ${mapData.initial_zoom || 0}`
+                : 'Not set (using fit bounds)';
+            document.getElementById('info-default').textContent = defaultView;
+
+            // ================================================================
+            // Get Pin Count
+            // ================================================================
+            
+            const { data: locations, count, error: countError } = await supabase
+                .from('locations')
+                .select('*', { count: 'exact' })
+                .eq('map_id', selectedId);
+            
+            if (countError) {
+                console.error('Error loading pin count:', countError);
+            } else {
+                console.log('Found pins:', count, locations);
+            }
+            
+            document.getElementById('info-pins').textContent = count || 0;
+
+            // ================================================================
+            // Clean Up Existing Map Instance
+            // ================================================================
+            
+            if (window.mapComponents && window.mapComponents['map-editor-widget']) {
+                const existingWidget = window.mapComponents['map-editor-widget'];
+                if (existingWidget.map) {
+                    existingWidget.map.remove(); // Properly dispose Leaflet map
+                }
+                delete window.mapComponents['map-editor-widget'];
+            }
+
+            // ================================================================
+            // Initialize New Map Widget
+            // ================================================================
+            
+            // Reset container and set data attributes
+            ui.mapWidget.innerHTML = '';
+            ui.mapWidget.dataset.mapId = selectedId;
+            ui.mapWidget.dataset.editable = 'true';
+            
+            console.log('Initializing map widget with ID:', selectedId);
+            
+            // Small delay ensures DOM is fully ready
+            setTimeout(() => {
+                initMapComponents();
+                
+                // Verify initialization after brief delay
+                setTimeout(() => {
+                    if (window.mapComponents && window.mapComponents['map-editor-widget']) {
+                        console.log('Map widget initialized successfully');
+                        showStatus(`Map "${mapData.name}" loaded with ${count || 0} pins`, 'success');
+                    } else {
+                        console.error('Map widget failed to initialize');
+                        showStatus('Map widget failed to initialize', 'error');
+                    }
+                }, 500);
+            }, 100);
+
+        } catch (error) {
+            console.error('Error loading map:', error);
+            showStatus('Failed to load map: ' + error.message, 'error');
+        }
+    }
+
+    // ========================================================================
+    // AUTHENTICATION HANDLER
+    // ========================================================================
+    
+    /**
+     * Handle page authentication state
+     * 
+     * CALLED BY:
+     * auth-header.html after determining authentication state
+     * 
+     * ACCESS CONTROL:
+     * - Not logged in → Show access denied
+     * - Logged in but no permission → Show access denied with message
+     * - Has required role → Show editor interface
+     * 
+     * REQUIRED ROLES:
+     * - Staff
+     * - Staff Apprentice
+     * 
+     * @param {Object|null} user - Authenticated user object or null
+     */
+    window.handlePageAuth = async function(user) {
+        currentUser = user;
+
+        if (!user) {
+            // Not authenticated
+            ui.accessDenied.style.display = 'block';
+            ui.editorInterface.style.display = 'none';
+            return;
+        }
+
+        // Check user permissions
+        const hasAccess = await checkAccess(user.id, ['Staff', 'Staff Apprentice']);
+
+        if (!hasAccess) {
+            // Authenticated but insufficient permissions
+            ui.accessDenied.style.display = 'block';
+            ui.editorInterface.style.display = 'none';
+            showStatus('You do not have permission to access the Map Editor', 'error');
+            return;
+        }
+
+        // User has access - show editor
+        ui.accessDenied.style.display = 'none';
+        ui.editorInterface.style.display = 'block';
+        showStatus('Welcome to the Map Editor! Select a map to begin.', 'info');
+        
+        // Load available maps from database
+        await loadMaps();
+    };
+
+    // ========================================================================
+    // EVENT LISTENERS
+    // ========================================================================
+    
+    /**
+     * Map selection change handler
+     * Loads the newly selected map into the editor
+     */
+    ui.mapSelect.addEventListener('change', loadSelectedMap);
+    
+    /**
+     * Refresh button handler
+     * Reloads map list from database
+     */
+    ui.refreshBtn.addEventListener('click', async () => {
+        showStatus('Refreshing map list...', 'info');
+        await loadMaps();
+        showStatus('Map list refreshed', 'success');
+    });
+
+    // ========================================================================
+    // INITIAL STATE
+    // Hide all content until auth check completes
+    // ========================================================================
+    
+    ui.accessDenied.style.display = 'none';
+    ui.editorInterface.style.display = 'none';
+</script>
+
+<!-- ============================================================================
+     EXTERNAL DEPENDENCIES
+     ============================================================================ -->
+
+<!-- Leaflet CSS - Provides base map styling -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Custom Map Styles - Additional styling for popups, controls, etc. -->
+<link rel="stylesheet" href="/Guides/assets/css/map.css" />
+
+<!-- Leaflet JavaScript - Core mapping library -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!--
+    NOTES:
+    
+    1. Database Schema Requirements:
+       - location_maps table with proper columns
+       - locations table with foreign key to location_maps
+       - RLS policies to protect data
+    
+    2. Authentication Setup:
+       - auth-header.html must call handlePageAuth(user)
+       - checkAccess() must be implemented in auth-check.js
+       - Supabase auth must be configured
+    
+    3. Performance Considerations:
+       - Map data is cached in dropdown options
+       - Pin count is queried separately (not cached)
+       - Old map instances are properly cleaned up
+       - DOM updates use small delays for Leaflet compatibility
+    
+    4. User Experience:
+       - Status messages provide feedback for all operations
+       - Loading states prevent confusion
+       - Instructions panel helps new users
+       - Map info panel provides context
+    
+    5. Error Handling:
+       - All async operations are try-catch wrapped
+       - Errors are logged to console and shown to user
+       - Graceful fallbacks for missing data
+-->
+    </div>
+    
+    <footer class="site-footer">
+            <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="footer-icons">
+                    <a href="https://discord.com/channels/308324031478890497/" target="_blank" rel="noopener noreferrer" aria-label="Join our Discord">
+                        <img src="https://cdn.imgbin.com/3/3/19/discord-icon-round-discord-logo-design-tqKpZ6Yk.jpg" alt="Discord" class="footer-icon">
+                    </a>
+                    <a href="https://www.youtube.com/@HawthorneGuild" target="_blank" rel="noopener noreferrer" aria-label="Visit our YouTube channel">
+                        <img src="https://cdn.imgbin.com/0/18/20/imgbin-youtube-logo-computer-icons-subscribe-youtube-logo-YB8eFUCu8ZysbqwvcTBF63AtA.jpg" alt="YouTube" class="footer-icon">
+                    </a>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="https://forms.gle/NVe7kapBgLL2g1E69" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; margin-left: 15px; font-size: 0.85em;">Feedback</a>
+                </div>
+            </div>
+        </footer>
+
+    <script>
+        // 1. BASE URL DEFINITION (Guaranteed to run first for search.js)
+        const BASE_URL = "/Guides"; 
+        
+        // 2. CORE MENU TOGGLE LOGIC (Main Hamburger/Close Button)
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+            function toggleMenu() {
+                sidebarMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            closeMenuBtn.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
+        }
+    </script>
+    
+    <script src="/Guides/assets/js/lunr.js"></script> 
+    <script src="/Guides/assets/js/search.js"></script>
+    <script src="/Guides/assets/js/sidebar.js"></script>
+    <script type="module" src="/Guides/assets/js/auth-manager.js"></script>
+
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+    <span class="sun-icon">☀️</span>
+    <span class="moon-icon">🌙</span>
+</button>
+
+    <script>
+    (function() {
+        // Get the theme toggle button
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        htmlElement.setAttribute('data-theme', currentTheme);
+        
+        // Toggle theme function
+        function toggleTheme() {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Apply new theme
+            htmlElement.setAttribute('data-theme', newTheme);
+            
+            // Save preference to localStorage
+            localStorage.setItem('theme', newTheme);
+            
+            // Optional: Log for debugging
+            console.log('Theme changed to:', newTheme);
+        }
+        
+        // Add click event listener
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+        
+        // Optional: Add keyboard support (Enter or Space to toggle)
+        if (themeToggle) {
+            themeToggle.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleTheme();
+                }
+            });
+        }
+    })();
+</script>
+<script>
+    // Automatically set external links to open in a new tab
+    document.addEventListener("DOMContentLoaded", function() {
+        var links = document.getElementsByTagName('a');
+        var currentDomain = window.location.hostname;
+
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            
+            // 1. Check if link exists
+            if (!link.href) continue;
+
+            // 2. Check if it's a local anchor (#section)
+            if (link.getAttribute('href').startsWith('#')) continue;
+
+            // 3. Check if it's a mailto or tel link
+            if (link.href.startsWith('mailto:') || link.href.startsWith('tel:')) continue;
+
+            // 4. Main Check: Is the hostname different?
+            // We also check if the protocol is http/https to avoid messing with javascript: calls
+            if (link.hostname !== currentDomain && (link.protocol === 'http:' || link.protocol === 'https:')) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        }
+    });
+</script>
+</body>
+</html>
