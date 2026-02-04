@@ -853,7 +853,7 @@ export function generateOutputString(oldC, newC, cost, notes, calcResult) {
         // Collect all feats including the origin feat
         const featChoices = [];
         if (c.origin_feat) {
-            featChoices.push(`${c.origin_feat} (Origin)`);
+            featChoices.push(`${c.origin_feat} (${c.bg || 'Origin'})`);
         }
         c.feats.forEach(f => {
             let m = [];
@@ -909,8 +909,8 @@ Background: ${c.bg}`;
     const reworkId = document.getElementById('current-rework-id')?.value || "Not Saved";
 
     // Assemble final output string matching the rework.md template
-    // We omit the code block backticks to allow bold/italic formatting to render in Discord
-    return `__***Character Change Request***__
+    return `\`\`\`
+__***Character Change Request***__
 
 **Requestor:** ${discordId} as ${oldC.name}(${oldLevel})
 
@@ -924,5 +924,6 @@ ${buildCharacterBlock(newC)}
 ${notes ? notes + '\n' : ''}${logs.join('\n')}
 
 **Rework ID:** ${reworkId}
-<@&474659626193780751> <@&554463237924716545>`;
+<@&474659626193780751> <@&554463237924716545>
+\`\`\``;
 }
