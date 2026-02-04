@@ -51,11 +51,11 @@ export function scrapeColumn(colId) {
      * @returns {string} Element value or empty string
      */
     const getV = (id) => document.getElementById(id)?.value || "";
-    
+
     // --------------------------------------------------------
     // Extract base attributes (STR, DEX, CON, INT, WIS, CHA)
     // --------------------------------------------------------
-    const attrs = {}; 
+    const attrs = {};
     ATTRIBUTES.forEach(attrName => {
         attrs[attrName] = getV(`attr-${colId}-${attrName}`);
     });
@@ -67,7 +67,7 @@ export function scrapeColumn(colId) {
     document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(select => {
         rMods[select.dataset.attr] = select.value;
     });
-    
+
     // --------------------------------------------------------
     // Extract origin/background modifiers
     // --------------------------------------------------------
@@ -99,7 +99,7 @@ export function scrapeColumn(colId) {
         card.querySelectorAll('select[data-attr]').forEach(select => {
             mods[select.dataset.attr] = select.value;
         });
-        
+
         // Extract feat features (languages, skills, tool proficiencies)
         const features = [];
         card.querySelectorAll('.feat-feature-type').forEach((typeSelect, i) => {
@@ -142,18 +142,18 @@ export function scrapeColumn(colId) {
     // --------------------------------------------------------
     // Return complete character object
     // --------------------------------------------------------
-    return { 
-        name: getV(`name-${colId}`), 
-        race: getV(`race-${colId}`), 
+    return {
+        name: getV(`name-${colId}`),
+        race: getV(`race-${colId}`),
         race_features: scrapeFeatures(`race-features-container-${colId}`),
-        bg: getV(`bg-${colId}`), 
+        bg: getV(`bg-${colId}`),
         origin_features: scrapeFeatures(`origin-features-container-${colId}`),
-        origin_feat: getV(`orig-feat-${colId}`), 
+        origin_feat: getV(`orig-feat-${colId}`),
         origin_feat_features: scrapeFeatures(`origin-feat-features-container-${colId}`),
-        attributes: attrs, 
-        race_mods: rMods, 
-        origin_mods: oMods, 
-        classes, 
+        attributes: attrs,
+        race_mods: rMods,
+        origin_mods: oMods,
+        classes,
         feats
     };
 }
@@ -187,15 +187,15 @@ export function scrapeColumn(colId) {
  */
 export function populateColumn(colId, data) {
     if (!data) return;
-    
+
     /**
      * Helper: Safely set value on an input element
      * @param {string} id - Element ID
      * @param {string} val - Value to set
      */
-    const setV = (id, val) => { 
-        const el = document.getElementById(id); 
-        if (el) el.value = val || ""; 
+    const setV = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val || "";
     };
 
     // --------------------------------------------------------
@@ -220,7 +220,7 @@ export function populateColumn(colId, data) {
     document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(select => {
         select.value = data.race_mods?.[select.dataset.attr] || "0";
     });
-    
+
     document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(select => {
         select.value = data.origin_mods?.[select.dataset.attr] || "0";
     });
@@ -233,7 +233,7 @@ export function populateColumn(colId, data) {
     const fillFeatures = (cid, feats) => {
         renderFeatureRows(cid, 4);  // Ensure 4 rows exist
         const rows = document.querySelectorAll(`#${cid} .feature-row`);
-        
+
         if (feats) {
             feats.forEach((f, i) => {
                 if (rows[i]) {
@@ -258,7 +258,7 @@ export function populateColumn(colId, data) {
     // --------------------------------------------------------
     const container = document.getElementById(`classes-container-${colId}`);
     container.innerHTML = "";  // Clear existing classes
-    
+
     if (data.classes && data.classes.length > 0) {
         data.classes.forEach(c => addClassRow(colId, c));
     } else {
@@ -285,8 +285,8 @@ export function populateColumn(colId, data) {
  */
 export function renderBaseAttributes(colId) {
     const container = document.getElementById(`attrs-container-${colId}`);
-    if(!container) return;
-    
+    if (!container) return;
+
     /**
      * Generates option HTML for an attribute dropdown
      * @param {number} selectedValue - Currently selected value
@@ -310,7 +310,7 @@ export function renderBaseAttributes(colId) {
             <tr>${ATTRIBUTES.map(a => `<td><select id="attr-${colId}-${a}" class="text-input" style="width: 100%;" onchange="window.calculatePointBuy('${colId}')">${generateOptions(10)}</select></td>`).join('')}</tr>
         </tbody>
     </table>`;
-    
+
     // Initialize point-buy display
     updatePointBuyDisplay(colId);
 }
@@ -335,18 +335,18 @@ export function updatePointBuyDisplay(colId) {
     const attrs = {};
     ATTRIBUTES.forEach(a => {
         const el = document.getElementById(`attr-${colId}-${a}`);
-        if(el) attrs[a] = el.value;
+        if (el) attrs[a] = el.value;
     });
-    
+
     // Calculate points spent
     const spent = calculatePointBuyCost(attrs);
     const remaining = 27 - spent;
-    
+
     // Update display
     const display = document.getElementById(`points-${colId}`);
-    if(display) {
+    if (display) {
         display.innerText = `${remaining} / 27 Pts`;
-        
+
         // Color code based on remaining points
         if (remaining < 0) {
             display.style.color = '#e74c3c';  // Red - over budget
@@ -384,7 +384,7 @@ export function updatePointBuyDisplay(colId) {
 export function renderFeatureRows(containerId, count = 4) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    
+
     // Generate the feature rows HTML
     container.innerHTML = Array(count).fill(0).map(() => `
         <div class="feature-row" style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px;">
@@ -420,13 +420,13 @@ export function removeClassRow(btn) {
     const block = btn.closest('.class-block');
     const container = block.parentElement;
     const colId = container.id.replace('classes-container-', '');
-    
+
     // Save current feat state before removing
     const savedFeats = saveFeatState(colId);
-    
+
     // Remove the class block
     block.remove();
-    
+
     // Regenerate feat cards based on remaining classes
     generateFeatCards(colId, savedFeats);
 }
@@ -453,7 +453,7 @@ function saveFeatState(colId) {
         card.querySelectorAll('select[data-attr]').forEach(select => {
             mods[select.dataset.attr] = select.value;
         });
-        
+
         // Extract features
         const features = [];
         card.querySelectorAll('.feat-feature-type').forEach((typeSelect, i) => {
@@ -463,7 +463,7 @@ function saveFeatState(colId) {
                 name: nameInput?.value || ""
             });
         });
-        
+
         feats.push({
             name: card.querySelector('.feat-name')?.value || "",
             mods: mods,
@@ -541,15 +541,15 @@ export function addClassRow(colId, init = null) {
         cS.disabled = !vS.value;
         sS.innerHTML = '<option value="">Subclass</option>';
         sS.disabled = true;
-        
+
         if (!vS.value) return;
-        
+
         // Get unique classes for this version
         const classes = [...new Set(
             characterData.filter(i => i.version == vS.value).map(i => i.class)
         )];
         classes.forEach(c => cS.innerHTML += `<option value="${c}">${c}</option>`);
-        
+
         // Restore previous value if it still exists
         if (currentVal) cS.value = currentVal;
     };
@@ -560,19 +560,19 @@ export function addClassRow(colId, init = null) {
      */
     const updS = () => {
         const currentVal = sS.value;
-        sS.innerHTML = '<option value="">Subclass</option>'; 
+        sS.innerHTML = '<option value="">Subclass</option>';
         sS.disabled = !cS.value;
-        
-        if(!cS.value) return;
-        
+
+        if (!cS.value) return;
+
         // Get subclasses for this version/class combination
-        const subs = characterData.filter(i => 
+        const subs = characterData.filter(i =>
             i.version == vS.value && i.class == cS.value
         );
-        subs.forEach(s => 
+        subs.forEach(s =>
             sS.innerHTML += `<option value="${s.subclass}">${s.subclass || 'None'}</option>`
         );
-        
+
         // Restore previous value if it still exists
         if (currentVal) sS.value = currentVal;
     };
@@ -592,15 +592,15 @@ export function addClassRow(colId, init = null) {
     cS.onchange = () => { updS(); regen(); };  // Class change → update subclasses
     sS.onchange = () => regen();               // Subclass change → regen feats
     lI.oninput = () => regen();                // Level change → regen feats
-    
+
     // Populate with initial data if provided
-    if (init) { 
-        vS.value = init.version; 
-        updC(); 
-        cS.value = init.class; 
-        updS(); 
-        sS.value = init.subclass; 
-        lI.value = init.level; 
+    if (init) {
+        vS.value = init.version;
+        updC();
+        cS.value = init.class;
+        updS();
+        sS.value = init.subclass;
+        lI.value = init.level;
     }
 }
 
@@ -635,7 +635,7 @@ export function addClassRow(colId, init = null) {
 export function generateFeatCards(colId, saved = null) {
     const container = document.getElementById(`feats-container-${colId}`);
     if (!container) return;
-    
+
     container.innerHTML = '';  // Clear existing cards
     let idx = 0;
     const characterData = getState().characterData || [];
@@ -651,13 +651,13 @@ export function generateFeatCards(colId, saved = null) {
         if (!cls || !ver) return;
 
         // Look up ASI levels for this class/subclass combination
-        let dataRow = characterData.find(row => 
+        let dataRow = characterData.find(row =>
             row.version == ver && row.class === cls && row.subclass === sub
         );
-        
+
         // Fall back to base class if subclass not found
         if (!dataRow) {
-            dataRow = characterData.find(row => 
+            dataRow = characterData.find(row =>
                 row.version == ver && row.class === cls
             );
         }
@@ -669,7 +669,7 @@ export function generateFeatCards(colId, saved = null) {
         asiLevels.forEach(milestone => {
             if (milestone > lvl) return;  // Skip if level not reached
 
-            const card = document.createElement('div'); 
+            const card = document.createElement('div');
             card.className = 'card feat-card';
             card.innerHTML = `
                 <h3 class="card-title">${cls} - Lvl ${milestone} ASI/Feat</h3>
@@ -696,23 +696,23 @@ export function generateFeatCards(colId, saved = null) {
                         `).join('')}
                     </div>
                 </div>`;
-            
+
             container.appendChild(card);
 
             // Restore saved data if available
             if (saved && saved[idx]) {
                 const s = saved[idx];
-                
+
                 // Restore feat name
                 const nameInp = card.querySelector('.feat-name');
                 if (nameInp) nameInp.value = s.name || "";
-                
+
                 // Restore attribute modifiers
                 ATTRIBUTES.forEach(a => {
                     const sel = card.querySelector(`select[data-attr="${a}"]`);
                     if (sel) sel.value = s.mods?.[a] || "0";
                 });
-                
+
                 // Restore feat features
                 if (s.features) {
                     const types = card.querySelectorAll('.feat-feature-type');
@@ -798,31 +798,83 @@ export function generateOutputString(oldC, newC, cost, notes, calcResult) {
      * @param {Object} c - Character data
      * @returns {string} Formatted character summary
      */
-    const buildB = (c) => {
+    /**
+     * Builds a detailed character summary block matching the official template.
+     * 
+     * Extracts and formats:
+     * - Name and Level
+     * - Rules Version (2014/2024)
+     * - Classes and Subclasses
+     * - Race/Species
+     * - Starting Attributes (Base Point Buy)
+     * - Combined Racial/Background modifiers
+     * - Origin and ASI/Feat choices
+     * - Background name
+     * 
+     * @param {Object} c - Character data object
+     * @returns {string} Formatted markdown block
+     */
+    const buildCharacterBlock = (c) => {
         /**
          * Helper: Cleans class/subclass names by removing parenthetical content
          * @param {string} s - String to clean
          * @returns {string} Cleaned string
          */
         const clean = (s) => (s || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
-        
-        // Build class line (e.g., "Fighter Battlemaster (10) / Rogue Thief (5)")
+
+        // Determine character version based on first class (safest assumption)
+        const version = c.classes.length > 0 ? c.classes[0].version : "2014";
+
+        // Calculate total character level
+        const level = c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0);
+
+        // Format class line (e.g. "Fighter Battlemaster (10) / Rogue Thief (5)")
         const classLine = c.classes.map(cl => {
             const name = clean(cl.class);
             const sub = clean(cl.subclass);
             return `${name}${sub && sub !== 'None' ? ' ' + sub : ''} (${cl.level})`;
         }).join(' / ');
 
-        // Build feat list with modifiers
-        const featChoices = c.feats.map(f => {
-            let m = []; 
-            ATTRIBUTES.forEach(a => { 
-                if (f.mods[a] != "0") m.push(`+${f.mods[a]} ${a}`); 
-            });
-            return `${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source})`;
-        });
+        // Format starting point-buy stats
+        const startingStats = ATTRIBUTES.map(a => c.attributes[a]).join(' / ');
 
-        return `**Level:** ${c.classes.reduce((a, b) => a + (parseInt(b.level) || 0), 0)}\n**Class:** ${classLine}\n**Race:** ${c.race}\n**Attributes:** ${ATTRIBUTES.map(a => c.attributes[a]).join('/')}\n**Feats:** ${featChoices.join(', ') || 'None'}`;
+        // Collect combined racial and background/origin modifiers
+        let mods = [];
+        ATTRIBUTES.forEach(a => {
+            const rMod = parseInt(c.race_mods?.[a]) || 0;
+            const oMod = parseInt(c.origin_mods?.[a]) || 0;
+            const totalMod = rMod + oMod;
+            if (totalMod !== 0) {
+                mods.push(`${totalMod > 0 ? '+' : ''}${totalMod} ${a}`);
+            }
+        });
+        const modString = mods.join(', ') || 'None';
+
+        // Collect all feats including the origin feat
+        const featChoices = [];
+        if (c.origin_feat) {
+            featChoices.push(`${c.origin_feat} (Origin)`);
+        }
+        c.feats.forEach(f => {
+            let m = [];
+            ATTRIBUTES.forEach(a => {
+                if (f.mods[a] != "0") m.push(`${f.mods[a] > 0 ? '+' : ''}${f.mods[a]} ${a}`);
+            });
+            featChoices.push(`${f.name}${m.length ? ' ' + m.join(", ") : ""} (${f.source})`);
+        });
+        const featString = featChoices.join(', ') || 'None';
+
+        return `Name: ${c.name}
+Version: ${version}
+Level: ${level}
+Class: ${classLine}
+Race/Species: ${c.race}
+Starting Stats: (excluding Racial/Background Bonuses)
+Str/Dex/Con/Int/Wis/Cha
+${startingStats}
+Racial/Background stat bonuses: ${modString}
+ASI/Feat/Origin Feat choices: ${featString}
+Background: ${c.bg}`;
     };
 
     // Format Discord ID (ensure @ prefix)
@@ -835,15 +887,14 @@ export function generateOutputString(oldC, newC, cost, notes, calcResult) {
     const typeSelect = document.getElementById('rework-type');
     let typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || "Not Selected";
 
-    // Build change log from calculation results
+    // Build internal change log for the Notes section
     const logs = [];
-    logs.push(`**Rework Type:** ${typeLabel}`);
-    logs.push(`---`);
-    
+    logs.push(`- **Rework Type:** ${typeLabel}`);
+
     if (calcResult && calcResult.costs) {
         calcResult.costs.forEach(c => {
             let logLine = `- ${c.change}`;
-            
+
             // For a-la-carte, show the cost breakdown for each item
             if (!calcResult.isFixed && c.count > 0) {
                 const g = c.count * (calcResult.rates?.gold || 0);
@@ -857,25 +908,21 @@ export function generateOutputString(oldC, newC, cost, notes, calcResult) {
     const oldLevel = getTotalLevel(oldC.classes);
     const reworkId = document.getElementById('current-rework-id')?.value || "Not Saved";
 
-    // Assemble final output string
-    return `\`\`\`
-__***Character Change Request***__
+    // Assemble final output string matching the rework.md template
+    // We omit the code block backticks to allow bold/italic formatting to render in Discord
+    return `__***Character Change Request***__
+
 **Requestor:** ${discordId} as ${oldC.name}(${oldLevel})
 
 **Old Character**
-${buildB(oldC)}
+${buildCharacterBlock(oldC)}
 
 **New Character**
-${buildB(newC)}
+${buildCharacterBlock(newC)}
 
-**Details**
-Cost: ${cost}
-Notes: ${notes}
-
-__***Change Log***__
-${logs.join('\n')}
+**Notes:** (${cost})
+${notes ? notes + '\n' : ''}${logs.join('\n')}
 
 **Rework ID:** ${reworkId}
-\`\`\`
 <@&474659626193780751> <@&554463237924716545>`;
 }

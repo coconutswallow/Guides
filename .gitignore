@@ -12,3 +12,10 @@ context/
 
 # Site
 _site/
+
+# Node / Testing (Local Only)
+node_modules/
+package.json
+package-lock.json
+vitest.config.js
+test/*.test.js
