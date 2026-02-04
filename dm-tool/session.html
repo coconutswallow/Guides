@@ -310,7 +310,9 @@ extra_css:
                                 <div class="form-group" style="flex: 2;">
                                     <label>Start Date & Time <span class="req">*</span>{% include help-icon.html
                                         text="Enter the date & time in your own timezone. The tool will translate into
-                                        Discord timestamp in the output. If you are planning a multi-session game over
+                                        Discord timestamp in the output.
+
+                                        If you are planning a multi-session game over
                                         different days, you can add the dates with the [+ add time] button and these
                                         times will be included in the Game Ad and Game Listings." position="bottom"
                                         %}</label>
@@ -744,7 +746,9 @@ extra_css:
                                 </div>
                                 <div style="flex: 1;">
                                     <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Jumpstart
-                                        DM?</label>
+                                        DM?{% include help-icon.html
+                                        text="Jumpstart DMs are DMs who have run less than 10 games on the server."
+                                        position="top" %}</label>
                                     <input type="text" id="loot-val-jumpstart" class="table-input readonly-input"
                                         readonly value="No">
                                 </div>
