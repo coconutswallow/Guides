@@ -184,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 updateHgenLogic(cachedDiscordId);
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
                 IO.updateJumpstartDisplay();
+                IO.generateOutput();
             });
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
@@ -516,8 +517,33 @@ function updateSessionCalculations() {
         // Run Calculation
         const rewards = calculationEngine.calculatePlayerRewards(playerData, sessionHours);
 
-        // Update DOM
-        xpInput.value = rewards.xp;
+        // Update DOM (Manual XP Override Logic)
+        const currentXP = parseInt(xpInput.value);
+        const autoXP = parseInt(xpInput.dataset.autoXp);
+        const newXP = rewards.xp;
+
+        // If this is first run (autoXP undefined) OR value matches previous auto, we sync.
+        // Also sync if the field is empty.
+        const shouldSync = isNaN(autoXP) || currentXP === autoXP || xpInput.value === "";
+
+        if (shouldSync) {
+            xpInput.value = newXP;
+            xpInput.style.borderColor = "";
+            xpInput.title = "";
+        } else {
+            // User has manually diverged. Check if they are still divergent.
+            if (parseInt(xpInput.value) !== newXP) {
+                xpInput.style.borderColor = "#ff9800"; // Orange/Warning color
+                xpInput.title = "Warning: changing XP should only occur in very limited situations, e.g. campaigns with milestone XP/level ups.";
+            } else {
+                xpInput.style.borderColor = "";
+                xpInput.title = "";
+            }
+        }
+
+        // Update the baseline for next time
+        xpInput.dataset.autoXp = newXP;
+
         dtpInput.value = rewards.dtp;
     });
 
@@ -676,6 +702,11 @@ function setupCalculationTriggers(callbacks) {
     }
     if (dmGames) {
         dmGames.addEventListener('input', () => scheduleUpdate(callbacks.onUpdate));
+    }
+
+    const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
+    if (dmForfeitCheckbox) {
+        dmForfeitCheckbox.addEventListener('change', () => scheduleUpdate(callbacks.onUpdate));
     }
 
     // Modal trigger

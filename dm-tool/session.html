@@ -740,14 +740,14 @@ extra_css:
                                 </div>
                                 <div style="flex: 1;">
                                     <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Welcome Wagon
-                                        (First game)</label>
+                                        (Player's first game)</label>
                                     <input type="text" id="loot-val-welcome" class="table-input readonly-input" readonly
                                         value="0">
                                 </div>
                                 <div style="flex: 1;">
                                     <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Jumpstart
                                         DM?{% include help-icon.html
-                                        text="Jumpstart DMs are DMs who have run less than 10 games on the server."
+                                        text="Jumpstart DMs are DMs who have run 10 games or less on the server."
                                         position="top" %}</label>
                                     <input type="text" id="loot-val-jumpstart" class="table-input readonly-input"
                                         readonly value="No">
@@ -961,7 +961,9 @@ extra_css:
                                 </div>
 
                                 <div class="card-field w-25">
-                                    <label class="field-label">XP Earned</label>
+                                    <label class="field-label">XP Earned {% include help-icon.html text="You can edit
+                                        this field, but XP should only be changed in very limited situations, e.g.
+                                        campaigns with milestone XP/level ups." position="bottom" %}</label>
                                     <input type="text" class="table-input dm-res-xp readonly-result" readonly>
                                 </div>
 

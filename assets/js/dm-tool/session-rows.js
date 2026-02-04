@@ -15,10 +15,27 @@ import { fetchMemberMap } from './data-manager.js';
 /**
  * Recalculates Party Size, APL (Average Party Level), and Tier based on the Master Roster.
  */
+/**
+ * Generates the HTML for a help icon with tooltip.
+ * Replicates _includes/help-icon.html behavior for dynamic JS content.
+ */
+function getHelpIconHTML(text, position = "top") {
+    const safeText = text.replace(/"/g, '&quot;');
+    return `<span class="help-icon-wrapper" data-position="${position}">
+      <svg class="help-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+      <span class="help-tooltip">${safeText}</span>
+    </span>`;
+}
+
 export function updateMasterRosterStats() {
     const rows = document.querySelectorAll('#roster-body .player-row');
     let totalLevel = 0;
-    let playerCount = 0; 
+    let playerCount = 0;
 
     rows.forEach(row => {
         const elLvl = row.querySelector('.inp-level');
@@ -28,7 +45,7 @@ export function updateMasterRosterStats() {
 
         const lvlRaw = parseFloat(elLvl.value) || 0;
         const lvlPlayAsRaw = parseFloat(elPlayAs.value) || 0;
-        
+
         const effectiveLevel = lvlPlayAsRaw > 0 ? lvlPlayAsRaw : lvlRaw;
 
         if (effectiveLevel > 0) {
@@ -38,7 +55,7 @@ export function updateMasterRosterStats() {
     });
 
     const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
-    
+
     let tier = 1;
     if (apl >= 17) tier = 4;
     else if (apl >= 11) tier = 3;
@@ -48,9 +65,9 @@ export function updateMasterRosterStats() {
     const elApl = document.getElementById('setup-val-apl');
     const elTier = document.getElementById('setup-val-tier');
 
-    if(elSize) elSize.textContent = rows.length; 
-    if(elApl) elApl.textContent = apl;
-    if(elTier) elTier.textContent = tier;
+    if (elSize) elSize.textContent = rows.length;
+    if (elApl) elApl.textContent = apl;
+    if (elTier) elTier.textContent = tier;
 }
 
 /**
@@ -58,22 +75,22 @@ export function updateMasterRosterStats() {
  */
 export function addPlayerRowToMaster(data = {}) {
     const tbody = document.getElementById('roster-body');
-    if(!tbody) return;
-    
+    if (!tbody) return;
+
     const tr = document.createElement('tr');
     tr.className = 'player-row';
-    
+
     let gamesOptions = '';
-    for(let i=1; i<=10; i++) {
+    for (let i = 1; i <= 10; i++) {
         const val = i.toString();
         const selected = (data.games_count === val) ? 'selected' : '';
         gamesOptions += `<option value="${val}" ${selected}>${val}</option>`;
     }
     gamesOptions += `<option value="10+" ${data.games_count === '10+' ? 'selected' : ''}>10+</option>`;
-    
+
     const displayValue = data.display_name || data.discord_id || '';
     const idValue = data.discord_id || '';
-    
+
     tr.innerHTML = `
         <td>
             <input type="text" class="table-input inp-player-display" placeholder="Player Name (@Name)" value="${displayValue}">
@@ -94,27 +111,27 @@ export function addPlayerRowToMaster(data = {}) {
             }
         });
     }
-    
+
     const nameInput = tr.querySelector('.inp-player-display');
     const idInput = tr.querySelector('.inp-discord-id');
-    
+
     const syncId = () => {
         let value = nameInput.value.trim();
         // Only if we don't have a valid numeric ID (i.e. we are in manual mode)
         // do we treat the text input as the ID.
         if (!idInput.value || !/^\d+$/.test(idInput.value)) {
-             idInput.value = value;
+            idInput.value = value;
         }
     };
 
     nameInput.addEventListener('change', () => {
         let value = nameInput.value.trim();
-        if (value && !value.startsWith('@') && !/^\d+$/.test(value)) { 
+        if (value && !value.startsWith('@') && !/^\d+$/.test(value)) {
             nameInput.value = '@' + value;
         }
         syncId();
     });
-    
+
     nameInput.addEventListener('blur', () => {
         let value = nameInput.value.trim();
         if (value && !value.startsWith('@') && !/^\d+$/.test(value)) {
@@ -125,16 +142,16 @@ export function addPlayerRowToMaster(data = {}) {
 
     tr.querySelector('.btn-delete-row').addEventListener('click', () => {
         tr.remove();
-        updateMasterRosterStats(); 
+        updateMasterRosterStats();
     });
 
     const lvlInput = tr.querySelector('.inp-level');
     const playAsInput = tr.querySelector('.inp-level-play-as');
-    
+
     [lvlInput, playAsInput].forEach(inp => {
         inp.addEventListener('input', updateMasterRosterStats);
         inp.addEventListener('change', updateMasterRosterStats);
-        inp.addEventListener('blur', updateMasterRosterStats); 
+        inp.addEventListener('blur', updateMasterRosterStats);
     });
 
     tbody.appendChild(tr);
@@ -150,7 +167,7 @@ export function getMasterRosterData() {
     rows.forEach(row => {
         const displayName = row.querySelector('.inp-player-display').value;
         const discordId = row.querySelector('.inp-discord-id').value;
-        
+
         // If discord_id is empty, fallback to display name (manual entry case)
         const finalId = discordId || displayName;
 
@@ -159,7 +176,7 @@ export function getMasterRosterData() {
             display_name: displayName,
             character_name: row.querySelector('.inp-char-name').value,
             level: row.querySelector('.inp-level').value,
-            level_playing_as: row.querySelector('.inp-level-play-as').value, 
+            level_playing_as: row.querySelector('.inp-level-play-as').value,
             games_count: row.querySelector('.inp-games-count').value
         });
     });
@@ -182,18 +199,18 @@ export async function syncMasterRosterFromSubmissions(submissions) {
     let displayMap = {};
     try {
         displayMap = await fetchMemberMap(discordIds);
-    } catch(e) {
+    } catch (e) {
         console.warn("Could not fetch member map (likely RLS)", e);
     }
 
     submissions.forEach(sub => {
         const p = sub.payload || {};
         const pid = sub.discord_id;
-        if(!pid) return;
+        if (!pid) return;
 
         // Resolve display name: Payload Name -> Map lookup -> Discord ID
         let displayName = p.display_name || displayMap[pid] || p.char_name || pid;
-        
+
         // If it looks like a name (not a number) and lacks @, add it
         if (isNaN(displayName) && !displayName.startsWith('@')) {
             displayName = '@' + displayName;
@@ -203,7 +220,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
         const rows = tbody.querySelectorAll('.player-row');
         rows.forEach(r => {
             const rid = r.querySelector('.inp-discord-id').value;
-            if(rid === pid) {
+            if (rid === pid) {
                 foundRow = r;
             }
         });
@@ -212,7 +229,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
             // Update existing row
             foundRow.querySelector('.inp-player-display').value = displayName;
             foundRow.querySelector('.inp-discord-id').value = pid;
-            
+
             if (p.char_name) foundRow.querySelector('.inp-char-name').value = p.char_name;
             if (p.level) foundRow.querySelector('.inp-level').value = p.level;
             if (p.level_as) foundRow.querySelector('.inp-level-play-as').value = p.level_as;
@@ -249,11 +266,11 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     } else {
         rowHours = sessionTotal;
     }
-    
+
     const currentIncentives = data.incentives || [];
     const incentivesJson = JSON.stringify(currentIncentives);
     const btnText = currentIncentives.length > 0 ? `+` : '+';
-    
+
     const isForfeit = data.forfeit_xp === true || data.forfeit_xp === "true";
     const realLevel = data.real_level || data.level || '1';
 
@@ -280,15 +297,15 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
                 <input type="hidden" class="s-real-level" value="${realLevel}"> 
                 <input type="hidden" class="s-games" value="${data.games_count || '1'}">
                 <input type="hidden" class="s-display-name" value="${data.display_name || ''}">
-
+                                
                 <div class="card-field w-20">
-                    <label class="field-label">Hours</label>
+                    <label class="field-label">Hours </label>
                     <input type="number" class="table-input s-hours" value="${rowHours}" step="0.5" min="0" max="${sessionTotal}">
                 </div>
 
                 <div class="card-field w-25">
-                    <label class="field-label">XP Earned</label>
-                    <input type="text" class="table-input readonly-result s-xp" readonly placeholder="Auto" value="${data.xp || ''}">
+                    <label class="field-label">XP Earned ${getHelpIconHTML("You can edit this field, but XP should only be changed in very limited situations, e.g. campaigns with milestone XP/level ups.", "bottom")}</label>
+                    <input type="text" class="table-input s-xp" placeholder="Auto" value="${data.xp || ''}">
                 </div>
 
                 <div class="card-field w-15" style="text-align:center;">
@@ -309,7 +326,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
 
             <div class="card-row">
                 <div class="card-field w-50">
-                    <label class="field-label">Gold Awarded</label>
+                    <label class="field-label">Gold Awarded ${getHelpIconHTML("See the max gold above. Awarding max gold is not mandatory/expected; in fact, awarding gold based on the context of the game is recommended.", "bottom")}</label>
                     <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
                 </div>
                 <div class="card-field w-50">
@@ -346,60 +363,64 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     const icon = card.querySelector('.step-icon');
 
     header.addEventListener('click', (e) => {
-        if(e.target.closest('.btn-delete-card')) return;
+        if (e.target.closest('.btn-delete-card')) return;
         const isHidden = body.style.display === 'none';
-        if(isHidden) {
+        if (isHidden) {
             body.style.display = 'flex';
-            icon.style.transform = 'rotate(0deg)'; 
+            icon.style.transform = 'rotate(0deg)';
         } else {
             body.style.display = 'none';
-            icon.style.transform = 'rotate(-90deg)'; 
+            icon.style.transform = 'rotate(-90deg)';
         }
     });
 
     card.querySelector('.btn-delete-card').addEventListener('click', () => {
         card.remove();
-        if(callbacks.onUpdate) callbacks.onUpdate();
+        if (callbacks.onUpdate) callbacks.onUpdate();
     });
 
     const hInput = card.querySelector('.s-hours');
-    
+
     hInput.addEventListener('input', () => {
         const sessionMax = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
         let val = parseFloat(hInput.value);
-        
+
         if (val > sessionMax) {
             hInput.value = sessionMax;
         } else if (val < 0) {
             hInput.value = 0;
         }
-        
-        if(callbacks.onUpdate) callbacks.onUpdate();
+
+        if (callbacks.onUpdate) callbacks.onUpdate();
     });
-    
+
     hInput.addEventListener('blur', () => {
         if (!hInput.value || hInput.value.trim() === "") {
             hInput.value = document.getElementById('inp-session-total-hours')?.value || 3;
-            if(callbacks.onUpdate) callbacks.onUpdate();
+            if (callbacks.onUpdate) callbacks.onUpdate();
         }
     });
 
     card.querySelector('.s-gold').addEventListener('input', () => {
-        if(callbacks.onUpdate) callbacks.onUpdate();
+        if (callbacks.onUpdate) callbacks.onUpdate();
+    });
+
+    card.querySelector('.s-xp').addEventListener('input', () => {
+        if (callbacks.onUpdate) callbacks.onUpdate();
     });
 
     const forfeitCheckbox = card.querySelector('.s-forfeit-xp');
     forfeitCheckbox.addEventListener('change', () => {
-        if(callbacks.onUpdate) callbacks.onUpdate();
+        if (callbacks.onUpdate) callbacks.onUpdate();
     });
-    
+
     const btnIncentives = card.querySelector('.s-incentives-btn');
     btnIncentives.addEventListener('click', () => {
-        if(callbacks.onOpenModal) callbacks.onOpenModal(btnIncentives, null, false);
+        if (callbacks.onOpenModal) callbacks.onOpenModal(btnIncentives, null, false);
     });
 
     listContainer.appendChild(card);
-    if(callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
+    if (callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
 }
 
 /**
@@ -416,16 +437,16 @@ export function getSessionRosterData() {
 
         players.push({
             discord_id: card.querySelector('.s-discord-id').value,
-            character_name: card.querySelector('.s-char-name').value, 
+            character_name: card.querySelector('.s-char-name').value,
             display_name: card.querySelector('.s-display-name')?.value || card.querySelector('.player-card-title').textContent,
             level: card.querySelector('.s-level').value,
-            real_level: card.querySelector('.s-real-level')?.value, 
+            real_level: card.querySelector('.s-real-level')?.value,
             games_count: card.querySelector('.s-games').value,
-            
+
             hours: card.querySelector('.s-hours').value,
             xp: card.querySelector('.s-xp').value,
             forfeit_xp: forfeitXp,
-            
+
             gold: card.querySelector('.s-gold').value,
             gold_used: card.querySelector('.s-gold-used').value,
             dtp: card.querySelector('.s-dtp').value,
@@ -443,9 +464,9 @@ export function getSessionRosterData() {
  */
 export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) {
     const listContainer = document.getElementById('session-roster-list');
-    const masterData = getMasterRosterData(); 
+    const masterData = getMasterRosterData();
     const sessionCards = Array.from(listContainer.querySelectorAll('.player-card'));
-    
+
     const processedIds = new Set();
 
     masterData.forEach(masterPlayer => {
@@ -460,15 +481,15 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
             existingCard.querySelector('.player-card-title').textContent = masterPlayer.display_name;
             existingCard.querySelector('.s-char-name').value = masterPlayer.character_name;
             existingCard.querySelector('.s-level').value = masterPlayer.level_playing_as || masterPlayer.level;
-            
+
             const realLevelField = existingCard.querySelector('.s-real-level');
-            if(realLevelField) realLevelField.value = masterPlayer.level;
+            if (realLevelField) realLevelField.value = masterPlayer.level;
 
             existingCard.querySelector('.s-games').value = masterPlayer.games_count;
-            
+
             const displayNameField = existingCard.querySelector('.s-display-name');
             if (displayNameField) displayNameField.value = masterPlayer.display_name;
-            
+
             const summaryText = masterPlayer.character_name ? `(${masterPlayer.character_name})` : '';
             existingCard.querySelector('.player-summary-text').textContent = summaryText;
         } else {
@@ -477,10 +498,10 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
                 discord_id: masterPlayer.discord_id,
                 display_name: masterPlayer.display_name,
                 character_name: masterPlayer.character_name,
-                level: masterPlayer.level_playing_as || masterPlayer.level, 
+                level: masterPlayer.level_playing_as || masterPlayer.level,
                 real_level: masterPlayer.level, // Real Level
                 games_count: masterPlayer.games_count,
-                forfeit_xp: false 
+                forfeit_xp: false
             };
             addSessionPlayerRow(listContainer, newData, callbacks, suppressUpdate);
         }
@@ -493,8 +514,8 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
             card.remove();
         }
     });
-    
-    if(callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
+
+    if (callbacks.onUpdate && !suppressUpdate) callbacks.onUpdate();
 }
 
 /**
@@ -505,10 +526,10 @@ export function syncSessionPlayersFromMaster(callbacks, suppressUpdate = false) 
  */
 function cleanFieldValue(value) {
     if (!value) return '';
-    
+
     const normalized = value.toString().trim().toLowerCase();
     const emptyValues = ['0', 'n/a', 'none'];
-    
+
     return emptyValues.includes(normalized) ? '' : value;
 }
 
@@ -524,7 +545,7 @@ export function applyPlayerSubmissions(submissions, callbacks) {
     submissions.forEach(sub => {
         const p = sub.payload || {};
         const discordId = sub.discord_id || "";
-        
+
         if (!discordId) return;
 
         // Match submission to card by Discord ID
@@ -539,11 +560,11 @@ export function applyPlayerSubmissions(submissions, callbacks) {
             if (p.gold) card.querySelector('.s-gold').value = p.gold;
             if (p.gold_used) card.querySelector('.s-gold-used').value = cleanFieldValue(p.gold_used);
             if (p.notes) card.querySelector('.s-notes').value = cleanFieldValue(p.notes);
-            
+
             if (p.incentives && Array.isArray(p.incentives)) {
-                 const btn = card.querySelector('.s-incentives-btn');
-                 btn.dataset.incentives = JSON.stringify(p.incentives);
-                 btn.innerText = p.incentives.length > 0 ? "+" : "+";
+                const btn = card.querySelector('.s-incentives-btn');
+                btn.dataset.incentives = JSON.stringify(p.incentives);
+                btn.innerText = p.incentives.length > 0 ? "+" : "+";
             }
         }
     });

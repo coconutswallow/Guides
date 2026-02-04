@@ -2211,6 +2211,12 @@ img+.image-caption {
   font-size: 0.85rem;
   line-height: 1.4;
   white-space: normal;
+  text-transform: none;
+  /* Reset uppercase */
+  font-weight: normal;
+  /* Reset bold */
+  letter-spacing: normal;
+  /* Reset spacing */
   max-width: 250px;
   width: max-content;
   border: 2px solid var(--color-border);

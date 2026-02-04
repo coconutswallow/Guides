@@ -4,11 +4,12 @@
    1. GLOBAL LAYOUT & SCROLL
    ============================ */
 :root {
-    --header-height-buffer: 60px; 
+    --header-height-buffer: 60px;
     --editor-header-height: 85px;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -25,9 +26,9 @@ body {
 /* Editor Layout Calculation (Desktop) */
 .editor-container {
     display: flex;
-    height: calc(100vh - var(--editor-header-height) - var(--header-height-buffer)); 
-    overflow: hidden; 
-    min-height: 0; 
+    height: calc(100vh - var(--editor-header-height) - var(--header-height-buffer));
+    overflow: hidden;
+    min-height: 0;
 }
 
 /* Dashboard Layout */
@@ -35,7 +36,7 @@ body {
     flex: 1;
     overflow-y: visible;
     padding-bottom: 2rem;
-    height: auto; 
+    height: auto;
     width: 100%;
 }
 
@@ -43,7 +44,7 @@ body {
 /* --- MOBILE RESPONSIVE OVERRIDES --- */
 @media (max-width: 768px) {
     :root {
-        --header-height-buffer: 80px; 
+        --header-height-buffer: 80px;
     }
 
     body {
@@ -53,41 +54,44 @@ body {
 
     .editor-container {
         height: auto;
-        display: block; 
+        display: block;
         overflow: visible;
     }
 
     /* HEADER LAYOUT FIXES */
     .editor-header {
-        height: auto; 
+        height: auto;
         min-height: 70px;
         flex-wrap: wrap;
         padding: 10px;
-        background: var(--color-bg-light); 
+        background: var(--color-bg-light);
         position: relative;
         z-index: 100;
         margin-bottom: 20px;
     }
-    
-    .header-inputs { 
-        order: 1; 
-        flex: 1; 
-        min-width: 150px; 
-        margin-right: 10px; /* Space between title and buttons if they wrap */
+
+    .header-inputs {
+        order: 1;
+        flex: 1;
+        min-width: 150px;
+        margin-right: 10px;
+        /* Space between title and buttons if they wrap */
     }
 
     /* ACTION BUTTONS GRID LAYOUT */
     .header-actions {
-        order: 2; 
-        width: 100%; 
+        order: 2;
+        width: 100%;
         margin-top: 10px;
         padding-top: 10px;
         border-top: 1px solid var(--color-border);
-        
+
         /* Grid System for Side-by-Side Buttons */
         display: grid !important;
-        grid-template-columns: 1fr 1fr; /* Two equal columns */
-        gap: 10px; /* Space between buttons */
+        grid-template-columns: 1fr 1fr;
+        /* Two equal columns */
+        gap: 10px;
+        /* Space between buttons */
         justify-content: stretch;
     }
 
@@ -106,12 +110,13 @@ body {
         text-overflow: ellipsis;
         overflow: hidden;
     }
-    
+
     .editor-main {
         height: auto;
         overflow: visible;
         padding: 10px;
-        padding-bottom: 100px !important; /* Increased padding for footer */
+        padding-bottom: 100px !important;
+        /* Increased padding for footer */
     }
 }
 
@@ -129,7 +134,7 @@ body {
 
 #auth-header {
     display: flex;
-    justify-content: flex-end; 
+    justify-content: flex-end;
     align-items: center;
     padding: 1rem 0;
     border-bottom: 1px solid var(--color-border);
@@ -137,10 +142,10 @@ body {
 }
 
 #empty-state {
-    text-align: left; 
-    padding: 3rem; 
-    background: var(--color-bg-light); 
-    border: 2px solid var(--color-border); 
+    text-align: left;
+    padding: 3rem;
+    background: var(--color-bg-light);
+    border: 2px solid var(--color-border);
     border-radius: 8px;
 }
 
@@ -191,7 +196,7 @@ body {
     border-left-color: var(--color-primary);
     color: var(--color-primary);
     font-weight: bold;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
 }
 
 .nav-divider {
@@ -224,7 +229,7 @@ body {
     box-shadow: var(--shadow-md);
     z-index: 10;
     flex-shrink: 0;
-    height: 85px; 
+    height: 85px;
     box-sizing: border-box;
 }
 
@@ -316,8 +321,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ============================
@@ -375,7 +387,7 @@ body {
 .form-group {
     display: flex;
     flex-direction: column;
-    width: 100%; 
+    width: 100%;
 }
 
 .form-group.flex-grow {
@@ -391,8 +403,8 @@ body {
 }
 
 /* Standard Inputs in Game Ads & Forms */
-.form-group input, 
-.form-group select, 
+.form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 0.6rem;
@@ -404,7 +416,8 @@ body {
     color: var(--color-text);
 }
 
-.form-group input:focus, .form-group select:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px var(--shadow-color-light);
@@ -433,7 +446,7 @@ body {
     padding: 0.5rem;
     border: 1px solid var(--color-border);
     /* FIX: Force white background */
-    background-color: #ffffff; 
+    background-color: #ffffff;
     color: var(--color-text);
     border-radius: 4px;
 }
@@ -453,7 +466,8 @@ body {
 #player-roster-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Spacing between cards */
+    gap: 1.5rem;
+    /* Spacing between cards */
 }
 
 /* The Card Itself */
@@ -461,13 +475,13 @@ body {
     background: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     overflow: hidden;
     transition: all 0.2s ease;
 }
 
 .player-card:hover {
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     border-color: var(--color-primary);
 }
 
@@ -476,7 +490,7 @@ body {
     background: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     padding: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -512,7 +526,7 @@ body {
 }
 
 .btn-delete-card {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     color: #fff;
     border: none;
     padding: 2px 8px;
@@ -521,6 +535,7 @@ body {
     font-size: 0.9em;
     transition: background 0.2s;
 }
+
 .btn-delete-card:hover {
     background: var(--palette-alert-danger-action);
 }
@@ -548,12 +563,29 @@ body {
 }
 
 /* Sizing utilities for card fields */
-.w-25 { width: 25%; }
-.w-30 { width: 30%; }
-.w-20 { width: 20%; }
-.w-15 { width: 15%; }
-.w-50 { width: 50%; }
-.w-100 { width: 100%; }
+.w-25 {
+    width: 25%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.w-15 {
+    width: 15%;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-100 {
+    width: 100%;
+}
 
 .field-label {
     font-size: 0.7em;
@@ -566,14 +598,16 @@ body {
 /* Input Styling inside cards (Table Inputs) */
 .table-input {
     width: 100%;
-    padding: 0.6rem; /* MATCHED to .form-group input (was 8px) */
+    padding: 0.6rem;
+    /* MATCHED to .form-group input (was 8px) */
     border: 1px solid var(--color-border);
     border-radius: 4px;
     font-family: inherit;
-    font-size: 1rem; /* MATCHED to standard inputs (was 0.95rem) */
+    font-size: 1rem;
+    /* MATCHED to standard inputs (was 0.95rem) */
     box-sizing: border-box;
     /* FIX: Force white background */
-    background: #ffffff; 
+    background: #ffffff;
     color: var(--color-text);
 }
 
@@ -584,7 +618,7 @@ body {
 }
 
 /* FIX: Read-only fields (No border, No bold, Transparent) */
-.readonly-input, 
+.readonly-input,
 .readonly-result {
     background-color: transparent !important;
     border: none !important;
@@ -652,7 +686,8 @@ body {
 
 .s-incentives-btn {
     width: 40px;
-    height: 38px; /* Matches standard input height */
+    height: 38px;
+    /* Matches standard input height */
     padding: 0;
     display: flex;
     align-items: center;
@@ -683,7 +718,7 @@ body {
     color: #fff !important;
 }
 
-#btn-load-template, 
+#btn-load-template,
 #btn-open-save-template {
     background-color: rgba(255, 255, 255, 0.1);
     color: var(--color-text);
@@ -691,7 +726,7 @@ body {
     transition: all 0.2s ease;
 }
 
-#btn-load-template:hover, 
+#btn-load-template:hover,
 #btn-open-save-template:hover {
     background-color: var(--color-primary);
     color: var(--color-btn-text);
@@ -713,7 +748,7 @@ dialog {
 }
 
 dialog::backdrop {
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .checkbox-list {
@@ -754,7 +789,7 @@ dialog::backdrop {
     color: var(--color-btn-text);
 }
 
-[data-theme="dark"] #btn-load-template, 
+[data-theme="dark"] #btn-load-template,
 [data-theme="dark"] #btn-open-save-template {
     color: var(--color-text);
 }
@@ -767,23 +802,25 @@ dialog::backdrop {
 
 [data-theme="dark"] .player-card,
 [data-theme="dark"] .card {
-    background: var(--color-bg-light); 
+    background: var(--color-bg-light);
     border-color: var(--color-border);
 }
 
 /* Restore dark background for inputs in dark mode */
 [data-theme="dark"] .table-input,
-[data-theme="dark"] .form-group input, 
-[data-theme="dark"] .form-group select, 
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select,
 [data-theme="dark"] .form-group textarea,
 [data-theme="dark"] #inp-event[multiple],
 [data-theme="dark"] #template-select {
-    background: var(--color-bg-medium); 
+    background: var(--color-bg-medium);
     border-color: var(--color-border);
     color: var(--color-text);
 }
+
 [data-theme="dark"] .player-card-header {
-    color: var(--palette-bg-card-dark); /* Dark background color for text */
+    color: var(--palette-bg-card-dark);
+    /* Dark background color for text */
 }
 
 [data-theme="dark"] .player-card-title,
@@ -793,7 +830,7 @@ dialog::backdrop {
 
 
 /* Ensure read-only text is visible in dark mode */
-[data-theme="dark"] .readonly-input, 
+[data-theme="dark"] .readonly-input,
 [data-theme="dark"] .readonly-result {
     background: transparent !important;
     color: var(--color-text-secondary);
@@ -813,7 +850,7 @@ dialog::backdrop {
     border: 1px solid var(--color-border);
     background: var(--color-bg-light);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible;
     margin-bottom: 0;
 }
 
@@ -831,7 +868,8 @@ dialog::backdrop {
     user-select: none;
     transition: background 0.2s;
     border-bottom: 1px solid transparent;
-    z-index: 0; /* Lower than help icons */
+    z-index: 0;
+    /* Lower than help icons */
 }
 
 .accordion-header:hover {
@@ -848,7 +886,8 @@ dialog::backdrop {
 }
 
 .dm-val-jumpstart {
-    pointer-events: none; /* Make it truly read-only */
+    pointer-events: none;
+    /* Make it truly read-only */
 }
 
 /* Chevron Icon */
@@ -958,18 +997,22 @@ dialog::backdrop {
 
 /* Soft Validation Warning for Gold */
 .card-field.warning input {
-    border-color: #ffc107 !important; /* Amber/Yellow */
-    background-color: rgba(255, 193, 7, 0.1); /* Light Yellow tint */
+    border-color: #ffc107 !important;
+    /* Amber/Yellow */
+    background-color: rgba(255, 193, 7, 0.1);
+    /* Light Yellow tint */
 }
+
 .card-field.warning label {
-    color: #e0a800; /* Darker yellow for text readability */
+    color: #e0a800;
+    /* Darker yellow for text readability */
 }
 
 /* ============================
    11. MOBILE WIZARD NAVIGATION
    ============================ */
 .mobile-nav-footer {
-    display: none; 
+    display: none;
 }
 
 @media (max-width: 768px) {
@@ -981,15 +1024,16 @@ dialog::backdrop {
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: var(--color-bg-medium); 
+        background-color: var(--color-bg-medium);
         border-top: 1px solid var(--color-primary);
         padding: 10px 15px;
-        z-index: 9999; 
-        box-shadow: 0 -4px 10px rgba(0,0,0,0.3);
-        height: 70px; /* Fixed height for consistency */
+        z-index: 9999;
+        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+        height: 70px;
+        /* Fixed height for consistency */
     }
 
-    .nav-btn.prev-link, 
+    .nav-btn.prev-link,
     .nav-btn.next-link {
         appearance: none;
         -webkit-appearance: none;
@@ -999,7 +1043,7 @@ dialog::backdrop {
         padding: 0.75em 1em;
         background: var(--color-bg-light);
         border: 2px solid var(--color-border);
-        border-radius: 4px; 
+        border-radius: 4px;
         text-decoration: none;
         color: var(--color-primary);
         transition: all 0.2s;
@@ -1007,14 +1051,16 @@ dialog::backdrop {
         text-transform: uppercase;
         font-size: 0.85em;
         cursor: pointer;
-        min-width: 100px; /* Ensure button is tappable */
+        min-width: 100px;
+        /* Ensure button is tappable */
         justify-content: center;
-        flex: 1; /* Allow growing */
+        flex: 1;
+        /* Allow growing */
         max-width: 45%;
     }
 
     /* Active/Hover States */
-    .nav-btn.prev-link:active, 
+    .nav-btn.prev-link:active,
     .nav-btn.next-link:active {
         background-color: var(--color-primary);
         color: white;
@@ -1029,15 +1075,17 @@ dialog::backdrop {
     }
 
     .mobile-step-indicator {
-        display: none; /* Hide center text, buttons now have labels */
+        display: none;
+        /* Hide center text, buttons now have labels */
     }
-    
+
     .nav-arrow {
         font-weight: bold;
         font-size: 1.2em;
         line-height: 1;
     }
 }
+
 /* ============================
    12. WORKFLOW DIAGRAM (CSS RENDER)
    ============================ */
@@ -1045,7 +1093,8 @@ dialog::backdrop {
     display: grid;
     grid-template-columns: 140px 240px 1fr;
     gap: 15px 30px;
-    align-items: center; /* Vertically center phases */
+    align-items: center;
+    /* Vertically center phases */
     margin: 2rem 0;
     font-family: var(--font-body);
 }
@@ -1065,14 +1114,15 @@ dialog::backdrop {
 }
 
 .wf-step {
-    background-color: #f4eadd; /* Beige from image */
+    background-color: #f4eadd;
+    /* Beige from image */
     border: 1px solid #d4c4b0;
     color: #333;
     padding: 8px 12px;
     border-radius: 2px;
     font-weight: 600;
     font-size: 0.95em;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1091,14 +1141,15 @@ dialog::backdrop {
     font-size: 0.95em;
     line-height: 1.5;
     /* Create the bracket look with a border */
-    border-left: 3px solid var(--color-primary); 
+    border-left: 3px solid var(--color-primary);
     display: flex;
     align-items: center;
     min-height: 100%;
 }
 
 /* Optional: Add little horizontal ticks to the bracket */
-.wf-desc::before, .wf-desc::after {
+.wf-desc::before,
+.wf-desc::after {
     content: '';
     position: absolute;
     left: 0;
@@ -1106,8 +1157,14 @@ dialog::backdrop {
     height: 3px;
     background-color: var(--color-primary);
 }
-.wf-desc::before { top: 0; }
-.wf-desc::after { bottom: 0; }
+
+.wf-desc::before {
+    top: 0;
+}
+
+.wf-desc::after {
+    bottom: 0;
+}
 
 /* --- RESPONSIVE WORKFLOW --- */
 @media (max-width: 768px) {
@@ -1125,9 +1182,11 @@ dialog::backdrop {
         margin-top: 15px;
         color: var(--color-primary);
     }
-    
+
     /* Hide empty phases on mobile */
-    .wf-phase:empty { display: none; }
+    .wf-phase:empty {
+        display: none;
+    }
 
     .wf-steps {
         width: 100%;
@@ -1139,7 +1198,9 @@ dialog::backdrop {
         margin-bottom: 10px;
         /* Remove brackets on mobile, just keep left border bar */
     }
-    .wf-desc::before, .wf-desc::after {
+
+    .wf-desc::before,
+    .wf-desc::after {
         display: none;
     }
 }
