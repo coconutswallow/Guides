@@ -5,8 +5,10 @@
  */
 
 import { stateManager } from './state-manager.js';
+import { logError } from '../error-logger.js';
 import * as Rows from './session-rows.js';
 import { fetchGameRules } from './data-manager.js';
+import * as UI from './session-ui.js';
 
 /**
  * Safely sets the value of a DOM element by ID.
@@ -58,8 +60,12 @@ export function getFormData() {
             predet_perms: getVal('inp-predet-perms', state.header.predet_perms),
             predet_cons: getVal('inp-predet-cons', state.header.predet_cons),
 
+            // Collect dynamic additional times
+            additional_times: Array.from(document.querySelectorAll('.inp-additional-time')).map(input => input.dataset.unix).filter(Boolean),
+
             // Link Fields
             dm_collab_link: getVal('inp-dm-collab-link', state.header.dm_collab_link),
+            dm_collaborators: getVal('inp-dm-collaborators', state.header.dm_collaborators),
             dm_collaborators: getVal('inp-dm-collaborators', state.header.dm_collaborators),
             player_loot_links: getVal('inp-player-loot-links', state.header.player_loot_links)
         },
@@ -139,10 +145,12 @@ export function populateForm(session, callbacks, options = {}) {
             }
         }
 
-        const eventSelect = document.getElementById('inp-event');
-        if (eventSelect && fd.header.event_tags) {
-            Array.from(eventSelect.options).forEach(opt => {
-                opt.selected = fd.header.event_tags.includes(opt.value);
+        // Restore Additional Times
+        const timeContainer = document.getElementById('additional-times-container');
+        if (timeContainer) timeContainer.innerHTML = ''; // Clear first
+        if (fd.header.additional_times && Array.isArray(fd.header.additional_times)) {
+            fd.header.additional_times.forEach(unix => {
+                UI.addTimeField(unix);
             });
         }
     }
@@ -226,8 +234,16 @@ export async function generateOutput() {
         let houseRules = state.header.house_rules ? `**House Rules:**\n${state.header.house_rules}\n\n` : "";
         let apply = state.header.how_to_apply ? `**How to Apply:**\n${state.header.how_to_apply}\n\n` : "";
 
+        // Build Date String with Additional Times
+        let combinedDateStr = dateStr;
+        if (state.header.additional_times && state.header.additional_times.length > 0) {
+            state.header.additional_times.forEach((time, index) => {
+                combinedDateStr += `\n                 Part ${index + 2}: <t:${time}:F>`;
+            });
+        }
+
         const listingText = `**Game Name:** ${state.header.title}
-${eventsString}**Date & Time:** ${dateStr}
+${eventsString}**Date & Time:** ${combinedDateStr}
 
 **Description:**
 ${state.header.game_description || "No description provided."}
@@ -268,8 +284,16 @@ ${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_u
             eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
         }
 
+        // Build Date String with Additional Times
+        let combinedDateStr = `${dateStr} (${relative})`;
+        if (state.header.additional_times && state.header.additional_times.length > 0) {
+            state.header.additional_times.forEach((time, index) => {
+                combinedDateStr += `\n         Part ${index + 2}: <t:${time}:F>`;
+            });
+        }
+
         const adText = `**Game:** ${state.header.title}
-${eventsString}**Time:** ${dateStr} (${relative})
+${eventsString}**Time:** ${combinedDateStr}
 **Format:** ${state.header.game_type || "N/A"}
 **Players:** ${partySize}
 **Tier:** ${tierStr}  **APL:** ${apl}
@@ -308,7 +332,7 @@ ${state.header.game_description || "No description provided."}
                 finalAdText += "\n\n" + Array.from(finalPings).join(' ');
             }
         } catch (e) {
-            console.error("Error generating pings:", e);
+            logError('session-io', `Error generating pings: ${e.message}`, 'error');
         }
 
         adEl.value = finalAdText;

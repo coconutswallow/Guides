@@ -10,6 +10,7 @@
  * 3. Calculation Orchestration: Triggering math updates when inputs change.
  * 4. Persistence: Saving/Loading sessions and templates via DataManager.
  * * @module SessionEditor
+ * @todo File exceeds 1000 lines. Consider extracting UI Setup Helpers or Calculation Triggers into separate modules like `session-controllers.js`.
  */
 
 import { supabase } from '../supabaseClient.js';
@@ -25,6 +26,7 @@ import {
     deleteSession,
     fetchPlayerSubmissions
 } from './data-manager.js';
+import { logError } from '../error-logger.js';
 
 import { checkAccess } from '../auth-check.js';
 import * as UI from './session-ui.js';
@@ -91,7 +93,7 @@ async function cacheDiscordId() {
             }
         }
     } catch (e) {
-        console.warn("Could not fetch Discord ID:", e);
+        logError('session-editor', `Could not fetch Discord ID: ${e.message}`, 'warning');
     }
 }
 
@@ -164,12 +166,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
         isFullDM = await checkAccess(user.id, 'Full DM');
-        console.log("User Role Check - Full DM:", isFullDM);
+        logError('session-editor', `User Role Check - Full DM: ${isFullDM}`, 'info');
     }
 
     // 4. Initialize State Manager
     stateManager.init();
-    console.log('✓ State Manager Ready');
+    logError('session-editor', 'State Manager Ready', 'info');
 
     /** * Define Global Callbacks for interactions.
      * These allow UI components (like Rows) to trigger main controller logic without circular dependencies.
@@ -292,7 +294,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         .update({ invite_url: inviteUrl })
                         .eq('id', id);
                 } catch (e) {
-                    console.warn('Could not save invite URL:', e);
+                    logError('session-editor', `Could not save invite URL: ${e.message}`, 'warning');
                 }
             }
         });
@@ -333,6 +335,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await initEventsDropdown();
     await initTemplateDropdown();
+
+    // 8b. Initialize Add Time Button
+    const btnAddTime = document.getElementById('btn-add-time');
+    if (btnAddTime) {
+        btnAddTime.addEventListener('click', () => {
+            UI.addTimeField();
+        });
+    }
 
     // 9. Load Session Data (if ID present)
     const urlParams = new URLSearchParams(window.location.search);
@@ -585,19 +595,48 @@ function setupCalculationTriggers(callbacks) {
         domCache.sidebarNav.addEventListener('click', (e) => {
             const item = e.target.closest('.nav-item');
             if (item && item.dataset.target === 'view-session-details') {
+                // Force Sync Roster -> Session when entering Session Details
                 Rows.syncSessionPlayersFromMaster(callbacks);
 
-                // Auto-fill Session Date from Setup Date if Session Date is empty
+                // Auto-fill Session Date logic
                 const setupDateInput = document.getElementById('inp-start-datetime');
                 const sessionDateInput = document.getElementById('inp-session-date');
+                const sessionUnixInput = document.getElementById('inp-session-unix');
+                const tz = document.getElementById('inp-timezone')?.value;
+                const gameName = document.getElementById('header-game-name')?.value || "";
 
-                if (setupDateInput && setupDateInput.value && sessionDateInput && !sessionDateInput.value) {
-                    sessionDateInput.value = setupDateInput.value;
+                if (sessionDateInput && !sessionDateInput.value) {
+                    let targetDateStr = setupDateInput.value;
+                    let targetUnix = "";
 
-                    const tz = document.getElementById('inp-timezone')?.value;
-                    const unixVal = UI.toUnixTimestamp(setupDateInput.value, tz);
-                    const sessionUnixInput = document.getElementById('inp-session-unix');
-                    if (sessionUnixInput) sessionUnixInput.value = unixVal;
+                    // Complex Logic: Check for "Part X" in game name
+                    const match = gameName.match(/Part\s*(\d+)/i);
+                    if (match && match[1]) {
+                        const partNum = parseInt(match[1]);
+                        if (partNum > 1) {
+                            // Part 2 corresponds to index 0 of additional_times (since Part 1 is main input)
+                            const additionalTimes = IO.getFormData().header.additional_times || [];
+                            const timeIndex = partNum - 2;
+
+                            if (additionalTimes[timeIndex]) {
+                                // Convert Unix to Local ISO for the input
+                                targetUnix = additionalTimes[timeIndex];
+                                targetDateStr = UI.unixToLocalIso(targetUnix, tz);
+                            }
+                        }
+                    }
+
+                    if (targetDateStr) {
+                        sessionDateInput.value = targetDateStr;
+
+                        // If we derived it from unix, use that directly, else recalc
+                        if (targetUnix) {
+                            if (sessionUnixInput) sessionUnixInput.value = targetUnix;
+                        } else {
+                            const unixVal = UI.toUnixTimestamp(targetDateStr, tz);
+                            if (sessionUnixInput) sessionUnixInput.value = unixVal;
+                        }
+                    }
                 }
             }
         });
@@ -730,7 +769,7 @@ async function loadSessionData(sessionId, callbacks) {
             }
         }
     } catch (error) {
-        console.error("Error loading session:", error);
+        logError('session-editor', `Error loading session: ${error.message}`, 'error');
     }
 }
 

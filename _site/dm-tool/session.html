@@ -466,8 +466,12 @@
   </svg>
   <span class="help-tooltip">Enter the date & time in your own timezone. The tool will translate into Discord timestamp in the output.</span>
 </span></label>
-                                    <input type="datetime-local" id="inp-start-datetime" data-required="true">
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="datetime-local" id="inp-start-datetime" data-required="true" style="flex: 1;">
+                                        <button class="button button-secondary btn-sm" id="btn-add-time" title="Add another session part">+ Add Time</button>
+                                    </div>
                                     <input type="hidden" id="inp-unix-time">
+                                    <div id="additional-times-container"></div>
                                 </div>
                                 <div class="form-group" style="flex: 1;">
                                     <label>Timezone <span class="req">*</span></label>

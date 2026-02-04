@@ -11,6 +11,7 @@
  * 5. Modal management for selecting game incentives.
  * @module SessionUI
  */
+import { logError } from '../error-logger.js';
 
 /** * Temporary state storage for the currently open Incentives Modal.
  * Stores references to the triggering button and context (DM vs Player)
@@ -18,6 +19,10 @@
  * @type {Object|null}
  */
 let activeIncentiveRowData = null;
+
+// Expose addTimeField to global scope for potential inline usage (though we use module imports)
+// or just export it.
+
 
 /* ===========================
    1. UTILITIES
@@ -37,23 +42,23 @@ export function toUnixTimestamp(dateStr, timeZone) {
 
     // Append 'Z' to treat input as UTC base for calculation, then adjust offset
     const utcDate = new Date(dateStr + 'Z');
-    
+
     try {
         // Extract the specific offset for the given timezone and date
         const fmt = new Intl.DateTimeFormat('en-US', {
             timeZone: timeZone,
             timeZoneName: 'longOffset'
         });
-        
+
         const parts = fmt.formatToParts(utcDate);
-        const offsetStr = parts.find(p => p.type === 'timeZoneName').value; 
+        const offsetStr = parts.find(p => p.type === 'timeZoneName').value;
 
         // Handle GMT case (no offset)
         if (offsetStr === 'GMT') return Math.floor(utcDate.getTime() / 1000);
 
         // Parse offset string (e.g., "GMT-05:00" or "GMT+1")
         const match = offsetStr.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
-        if (!match) return Math.floor(utcDate.getTime() / 1000); 
+        if (!match) return Math.floor(utcDate.getTime() / 1000);
 
         const sign = match[1] === '+' ? 1 : -1;
         const hours = parseInt(match[2], 10);
@@ -63,7 +68,7 @@ export function toUnixTimestamp(dateStr, timeZone) {
         // Apply inverse offset to get the correct timestamp
         return Math.floor((utcDate.getTime() - offsetMs) / 1000);
     } catch (e) {
-        console.warn("Date conversion fallback", e);
+        logError('session-ui', `Date conversion fallback: ${e.message}`, 'warning');
         return Math.floor(utcDate.getTime() / 1000);
     }
 }
@@ -86,8 +91,8 @@ export function unixToLocalIso(unixSeconds, timeZone) {
         const parts = fmt.formatToParts(date);
         const get = (t) => parts.find(p => p.type === t).value;
         return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
-    } catch(e) {
-        console.error("Date conversion error", e);
+    } catch (e) {
+        logError('session-ui', `Date conversion error: ${e.message}`, 'error');
         return "";
     }
 }
@@ -108,7 +113,7 @@ export function initAccordions() {
         header.addEventListener('click', (e) => {
             const card = header.closest('.accordion-card');
             const isOpen = card.classList.contains('open');
-            if(isOpen) card.classList.remove('open');
+            if (isOpen) card.classList.remove('open');
             else card.classList.add('open');
         });
     });
@@ -121,7 +126,7 @@ export function initAccordions() {
         input.addEventListener('change', handler);
         input.addEventListener('blur', handler);
     });
-    
+
     // Initial validation pass
     document.querySelectorAll('.accordion-card').forEach(validateCard);
 
@@ -131,12 +136,12 @@ export function initAccordions() {
         mdInputs.forEach(input => {
             const oldVal = input.dataset.lastVal || "";
             const newVal = input.value;
-            if(oldVal !== newVal) {
+            if (oldVal !== newVal) {
                 input.dataset.lastVal = newVal;
                 validateCard(input.closest('.accordion-card'));
             }
         });
-    }, 1000); 
+    }, 1000);
 }
 
 /**
@@ -146,13 +151,13 @@ export function initAccordions() {
  * * @param {HTMLElement} card - The accordion card element.
  */
 function validateCard(card) {
-    if(!card) return;
+    if (!card) return;
     const reqFields = card.querySelectorAll('[data-required="true"]');
     let allValid = true;
     reqFields.forEach(field => {
-        if(!field.value || field.value.trim() === "") allValid = false;
+        if (!field.value || field.value.trim() === "") allValid = false;
     });
-    if(allValid) card.classList.add('completed');
+    if (allValid) card.classList.add('completed');
     else card.classList.remove('completed');
 }
 /* ===========================
@@ -211,7 +216,7 @@ export function initTabs(outputCallback) {
 
     if (btnPrev && btnNext) {
         btnPrev.addEventListener('click', (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
             e.stopPropagation();
             navigateMobileStep(-1, outputCallback);
         });
@@ -221,7 +226,7 @@ export function initTabs(outputCallback) {
             navigateMobileStep(1, outputCallback);
         });
     }
-    
+
     // Initialize buttons
     updateMobileButtons('view-start');
 }
@@ -241,11 +246,11 @@ function switchTab(targetId, outputCallback) {
 
     // Show target section
     const targetEl = document.getElementById(targetId);
-    if(targetEl) {
+    if (targetEl) {
         targetEl.classList.remove('hidden-section');
-        
+
         updateMobileButtons(targetId);
-        
+
         // Auto-close sidebar on mobile
         const sidebar = document.getElementById('sidebar-nav');
         const overlay = document.getElementById('mobile-overlay');
@@ -255,10 +260,10 @@ function switchTab(targetId, outputCallback) {
         }
 
         handleOutputGeneration(targetId, outputCallback);
-        
+
         const main = document.querySelector('.editor-main');
-        if(main) main.scrollTop = 0;
-        window.scrollTo(0, 0); 
+        if (main) main.scrollTop = 0;
+        window.scrollTo(0, 0);
     }
 }
 
@@ -268,7 +273,7 @@ function switchTab(targetId, outputCallback) {
 function navigateMobileStep(direction, outputCallback) {
     // Determine current index based on visible section or active sidebar item
     let currentIndex = 0;
-    
+
     // Check which view is currently NOT hidden
     const visibleSection = document.querySelector('.view-section:not(.hidden-section)');
     if (visibleSection) {
@@ -296,11 +301,11 @@ function navigateMobileStep(direction, outputCallback) {
 function updateMobileButtons(currentId) {
     const btnPrev = document.getElementById('btn-mobile-prev');
     const btnNext = document.getElementById('btn-mobile-next');
-    
+
     if (!btnPrev || !btnNext) return;
 
     const index = TAB_ORDER.indexOf(currentId);
-    
+
     // 1. Previous Button
     if (index <= 0) {
         // Hide "Back" on the first step
@@ -328,8 +333,8 @@ function updateMobileButtons(currentId) {
 function handleOutputGeneration(targetId, outputCallback) {
     if (!outputCallback) return;
 
-    if (targetId === 'view-game-listing' || 
-        targetId === 'view-game-ad' || 
+    if (targetId === 'view-game-listing' ||
+        targetId === 'view-game-ad' ||
         targetId === 'view-session-output') {
         outputCallback();
     }
@@ -337,8 +342,8 @@ function handleOutputGeneration(targetId, outputCallback) {
     if (targetId === 'view-session-lobby') {
         // Auto-fill logic specific to this tab
         const lobbyUrlVal = document.getElementById('inp-lobby-url')?.value;
-        const sessionLobbyInput = document.getElementById('inp-game-listing-url'); 
-        if(lobbyUrlVal && sessionLobbyInput && !sessionLobbyInput.value) {
+        const sessionLobbyInput = document.getElementById('inp-game-listing-url');
+        if (lobbyUrlVal && sessionLobbyInput && !sessionLobbyInput.value) {
             sessionLobbyInput.value = lobbyUrlVal;
         }
         outputCallback();
@@ -357,17 +362,17 @@ export function initDateTimeConverter() {
     const dateInput = document.getElementById('inp-start-datetime');
     const tzSelect = document.getElementById('inp-timezone');
     const unixInput = document.getElementById('inp-unix-time');
-    
-    if(!dateInput || !tzSelect) return;
+
+    if (!dateInput || !tzSelect) return;
 
     const updateUnix = () => {
         const dateVal = dateInput.value;
         const tzVal = tzSelect.value;
-        if(unixInput) unixInput.value = toUnixTimestamp(dateVal, tzVal);
+        if (unixInput) unixInput.value = toUnixTimestamp(dateVal, tzVal);
     };
-    
+
     dateInput.addEventListener('change', updateUnix);
-    dateInput.addEventListener('input', updateUnix); 
+    dateInput.addEventListener('input', updateUnix);
     tzSelect.addEventListener('change', updateUnix);
 }
 
@@ -378,20 +383,20 @@ export function initDateTimeConverter() {
  */
 export function initTimezone() {
     const tzSelect = document.getElementById('inp-timezone');
-    if(!tzSelect) return;
-    
+    if (!tzSelect) return;
+
     const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     tzSelect.innerHTML = '';
-    
+
     // Fallback list if browser doesn't support supportedValuesOf
     let timezones = Intl.supportedValuesOf ? Intl.supportedValuesOf('timeZone') : ["UTC", "America/New_York"];
     if (!timezones.includes(userTz)) timezones.push(userTz);
-    
+
     timezones.sort().forEach(tz => {
         const opt = document.createElement('option');
         opt.value = tz;
-        opt.textContent = tz.replace(/_/g, " "); 
-        if(tz === userTz) opt.selected = true;
+        opt.textContent = tz.replace(/_/g, " ");
+        if (tz === userTz) opt.selected = true;
         tzSelect.appendChild(opt);
     });
 }
@@ -425,11 +430,11 @@ export function initIncentivesModal(saveCallback) {
     const modal = document.getElementById('modal-incentives');
     const btnCancel = document.getElementById('btn-cancel-incentives');
     const btnSave = document.getElementById('btn-save-incentives');
-    
-    if(btnCancel) btnCancel.addEventListener('click', () => { activeIncentiveRowData = null; modal.close(); });
-    
+
+    if (btnCancel) btnCancel.addEventListener('click', () => { activeIncentiveRowData = null; modal.close(); });
+
     // Clone button to strip existing listeners (prevents multiple bindings if init called twice)
-    if(btnSave) {
+    if (btnSave) {
         const newBtn = btnSave.cloneNode(true);
         btnSave.parentNode.replaceChild(newBtn, btnSave);
         newBtn.addEventListener('click', () => saveIncentivesInternal(saveCallback));
@@ -449,7 +454,7 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
     const modal = document.getElementById('modal-incentives');
     const listContainer = document.getElementById('incentives-list');
     const msgContainer = document.getElementById('incentives-message');
-    listContainer.innerHTML = ''; 
+    listContainer.innerHTML = '';
 
     // Retrieve currently selected incentives from button dataset
     const currentSelection = JSON.parse(buttonEl.dataset.incentives || '[]');
@@ -469,9 +474,9 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
                 checkbox.type = 'checkbox';
                 checkbox.value = name;
                 if (currentSelection.includes(name)) checkbox.checked = true;
-                
+
                 label.appendChild(checkbox);
-                
+
                 // UPDATED: Handle Object vs Number values in Game Rules
                 // Some incentives are simple numbers (DTP), others are objects (DTP + Loot Rolls)
                 let desc = "";
@@ -486,15 +491,105 @@ export function openIncentivesModal(buttonEl, viewContext, isDM, gameRules) {
                     if (roll > 0) parts.push(`+${roll} Loot Roll`);
                     if (parts.length > 0) desc = ` (${parts.join(', ')})`;
                 }
-                
+
                 label.appendChild(document.createTextNode(`${name}${desc}`));
                 listContainer.appendChild(label);
             });
         }
-    } 
+    }
     if (!hasIncentives) msgContainer.textContent = `No ${isDM ? 'DM' : 'Player'} Incentives found in game rules.`;
     modal.showModal();
 }
+
+/** 
+ * Dynamically adds a new Date/Time field for multi-part sessions.
+ */
+export function addTimeField(unixVal = null) {
+    const container = document.getElementById('additional-times-container');
+    const tzSelect = document.getElementById('inp-timezone');
+    if (!container || !tzSelect) return;
+
+    const count = container.children.length + 2; // Part 2, Part 3, etc.
+    const row = document.createElement('div');
+    row.className = 'additional-time-row';
+    row.style.display = 'flex';
+    row.style.gap = '0.5rem';
+    row.style.marginTop = '0.5rem';
+    row.style.alignItems = 'center';
+
+    const label = document.createElement('span');
+    label.textContent = `Part ${count}:`;
+    label.style.fontWeight = 'bold';
+    label.style.minWidth = '50px';
+
+    const input = document.createElement('input');
+    input.type = 'datetime-local';
+    input.className = 'inp-additional-time';
+    input.style.flex = '1';
+
+    // If a value is provided (from load persistence), set it
+    // NOTE: persisted value is Unix timestamp, need to convert to Local ISO
+    if (unixVal) {
+        input.value = unixToLocalIso(unixVal, tzSelect.value);
+        input.dataset.unix = unixVal;
+    }
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'button btn-danger-outline btn-sm';
+    removeBtn.textContent = '✕';
+    removeBtn.title = 'Remove this part';
+    removeBtn.style.padding = '0 0.5rem';
+
+    removeBtn.addEventListener('click', () => {
+        row.remove();
+        reindexTimeFields();
+        triggerStateUpdate();
+    });
+
+    input.addEventListener('change', () => {
+        updateTimeRow(input, tzSelect.value);
+        triggerStateUpdate();
+    });
+
+    // Also update when main timezone changes
+    tzSelect.addEventListener('change', () => {
+        // Recalculate unix based on new timezone
+        updateTimeRow(input, tzSelect.value);
+        triggerStateUpdate();
+    });
+
+    row.appendChild(label);
+    row.appendChild(input);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+}
+
+function updateTimeRow(input, tz) {
+    if (!input.value) {
+        delete input.dataset.unix;
+        return;
+    }
+    input.dataset.unix = toUnixTimestamp(input.value, tz);
+}
+
+function reindexTimeFields() {
+    const container = document.getElementById('additional-times-container');
+    if (!container) return;
+    Array.from(container.children).forEach((row, index) => {
+        const label = row.querySelector('span');
+        if (label) label.textContent = `Part ${index + 2}:`;
+    });
+}
+
+// Helper to trigger a state update in SessionEditor (if needed) or just I/O
+function triggerStateUpdate() {
+    // We rely on session-io.getFormData() to scrape these values
+    // But we might want to trigger output generation immediately
+    if (window._sessionCallbacks && window._sessionCallbacks.onUpdate) {
+        window._sessionCallbacks.onUpdate(); // Recalculate outputs
+    }
+}
+
 
 /**
  * Internal handler for the Modal's "Save" button.
@@ -506,11 +601,11 @@ function saveIncentivesInternal(saveCallback) {
     const modal = document.getElementById('modal-incentives');
     const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
     const selected = Array.from(checkboxes).map(cb => cb.value);
-    
+
     // Update the button that opened the modal
     const btn = activeIncentiveRowData.button;
     btn.dataset.incentives = JSON.stringify(selected);
-    
+
     // Logic: If it's the Player Card small button, keep the "+" style.
     // If it's the large "Add Additional Incentives" button, keep/update that text.
     if (btn.classList.contains('s-incentives-btn')) {
@@ -519,7 +614,7 @@ function saveIncentivesInternal(saveCallback) {
         // Optional: Change text to "Edit Incentives" if items are selected
         btn.innerText = selected.length > 0 ? "Edit Incentives" : "Add Additional Incentives";
     }
-    
+
     // Sync display text if sibling input exists
     // (This handles both the DM view and any future layouts)
     const wrapper = btn.closest('.dtp-wrapper');
@@ -529,10 +624,10 @@ function saveIncentivesInternal(saveCallback) {
             displayInput.value = selected.join(', ');
         }
     }
-    
+
     // Execute state update callback
-    if(saveCallback) saveCallback(activeIncentiveRowData.viewContext);
-    
+    if (saveCallback) saveCallback(activeIncentiveRowData.viewContext);
+
     activeIncentiveRowData = null;
     modal.close();
 }
