@@ -11,6 +11,7 @@
  */
 
 import { fetchMemberMap } from './data-manager.js';
+import { logError } from '../error-logger.js';
 
 /**
  * Recalculates Party Size, APL (Average Party Level), and Tier based on the Master Roster.
@@ -200,7 +201,7 @@ export async function syncMasterRosterFromSubmissions(submissions) {
     try {
         displayMap = await fetchMemberMap(discordIds);
     } catch (e) {
-        console.warn("Could not fetch member map (likely RLS)", e);
+        logError('session-rows', `Could not fetch member map (likely RLS): ${e.message}`, 'warning');
     }
 
     submissions.forEach(sub => {
