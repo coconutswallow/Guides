@@ -1,0 +1,369 @@
+---
+layout: default
+title: Staff Portal
+---
+
+<!-- 
+    staff/index.html
+    
+    OVERVIEW:
+    Restricted portal for staff members (Staff and Staff Apprentice roles).
+    Provides access to administrative tools and documentation.
+    
+    SECURITY:
+    - Requires authentication via auth-header.html
+    - Checks user roles via checkAccess() function
+-->
+
+<style>
+  /* ============================================================================
+   STAFF PORTAL REDESIGN
+   ============================================================================ */
+
+  .staff-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .staff-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: var(--color-primary);
+  }
+
+  .access-denied {
+    text-align: center;
+    padding: 5rem 2rem;
+    background-color: var(--color-bg-light);
+    border: 3px solid var(--palette-alert-danger-border);
+    border-radius: 12px;
+    margin-top: 2rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .access-denied h2 {
+    color: var(--palette-alert-danger-border);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Dashboard Layout */
+  .dashboard-grid {
+    display: grid;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .dashboard-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Tool Card Styles */
+  .tool-card {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+  }
+
+  .tool-card.disabled {
+    opacity: 0.8;
+    background-color: var(--palette-bg-row-light);
+  }
+
+  [data-theme="dark"] .tool-card.disabled {
+    background-color: var(--palette-bg-row-dark);
+  }
+
+  .tool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .tool-title {
+    margin: 0;
+    font-size: 1.35rem;
+    color: var(--color-primary);
+    font-family: var(--font-header);
+    font-weight: 700;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-active {
+    background-color: var(--palette-alert-success-bg-light);
+    color: var(--palette-alert-success-border);
+    border: 1px solid var(--palette-alert-success-border);
+  }
+
+  .status-disabled {
+    background-color: var(--palette-neutral-gray-200);
+    color: var(--palette-neutral-gray-500);
+    border: 1px solid var(--palette-neutral-gray-400);
+  }
+
+  [data-theme="dark"] .status-disabled {
+    background-color: var(--palette-neutral-gray-700);
+    color: var(--palette-neutral-gray-400);
+  }
+
+  .tool-description {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+    line-height: 1.5;
+  }
+
+  .tool-meta {
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .access-label {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .access-roles {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .tool-button {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    background-color: var(--color-primary);
+    color: var(--color-bg-light) !important;
+    text-align: center;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+  }
+
+  .tool-button:hover {
+    background-color: var(--palette-brand-main-darker);
+    text-decoration: none !important;
+  }
+
+  .tool-button.inactive {
+    background-color: var(--palette-neutral-gray-400);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+</style>
+
+<div class="staff-container">
+  <div class="staff-header">
+    <h1>🛠️ Staff Portal</h1>
+    {% include auth-header.html %}
+  </div>
+
+  <!-- Access Denied Message -->
+  <div id="access-denied" class="access-denied" style="display: none;">
+    <h2>⛔ Access Denied</h2>
+    <p>You need to be logged in with <strong>Staff</strong> or <strong>Staff Apprentice</strong> permissions to access
+      the Staff Portal.</p>
+    <p>Please log in to access this page.</p>
+  </div>
+
+  <!-- Staff Interface -->
+  <div id="staff-interface" style="display: none;">
+
+    <div class="dashboard-grid">
+      <!-- SECTION: SITE CONTENT -->
+      <section class="dashboard-section">
+        <h2>📜 Site Content</h2>
+        <div class="tool-grid">
+          <!-- Tool: Static Content Editor -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <h3 class="tool-title">Static Content Editor</h3>
+              <span class="status-badge status-active">Active</span>
+            </div>
+            <p class="tool-description">Update static pages (Guides, Adventure Locations, FAQ, Timelines).</p>
+            <div class="tool-meta">
+              <span class="access-label">🔑 Access: <span class="access-roles">User-specific (as assigned by
+                  Admin)</span></span>
+              <a href="{{ '/page-admin/' | relative_url }}" class="tool-button">Open Editor</a>
+            </div>
+          </div>
+          <!-- Tool: Map Editor -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <h3 class="tool-title">Faerun Map Editor</h3>
+              <span class="status-badge status-active">Active</span>
+            </div>
+            <p class="tool-description">Update pins on the Faerun Map.</p>
+            <div class="tool-meta">
+              <span class="access-label">🔑 Access: <span class="access-roles">Lore, Lore Apprentice,
+                  Admin</span></span>
+              <a href="{{ '/page-admin/' | relative_url }}" class="tool-button">Open Editor</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: ROLE SPECIFIC -->
+      <section class="dashboard-section">
+        <h2>⚔️ Role Specific Tools</h2>
+        <div class="tool-grid">
+          <!-- Tool: Home Brew Reviewer -->
+          <div class="tool-card disabled">
+            <div class="tool-header">
+              <h3 class="tool-title">Review Homebrews</h3>
+              <span class="status-badge status-disabled">Coming Soon</span>
+            </div>
+            <p class="tool-description">Review and approve DM-submitted homebrew creations (starting with monsters,
+              items to follow).</p>
+            <div class="tool-meta">
+              <span class="access-label">🔑 Access: <span class="access-roles">Lore, Rules, Admin</span></span>
+              <a href="#" class="tool-button inactive">Inactive</a>
+            </div>
+          </div>
+
+          <!-- Tool: Rework Reviewer -->
+          <div class="tool-card disabled">
+            <div class="tool-header">
+              <h3 class="tool-title">Rework Reviewer</h3>
+              <span class="status-badge status-disabled">Coming Soon</span>
+            </div>
+            <p class="tool-description">Review Player Rework submissions in the character tool.</p>
+            <div class="tool-meta">
+              <span class="access-label">🔑 Access: <span class="access-roles">Auditor</span></span>
+              <a href="#" class="tool-button inactive">Inactive</a>
+            </div>
+          </div>
+
+          <!-- Tool: DM Logs -->
+          <div class="tool-card disabled">
+            <div class="tool-header">
+              <h3 class="tool-title">DM Logs</h3>
+              <span class="status-badge status-disabled">Planned</span>
+            </div>
+            <p class="tool-description">DM Logs formatted specifically for Record Keepers.</p>
+            <div class="tool-meta">
+              <span class="access-label">🔑 Access: <span class="access-roles">Record Keeper</span></span>
+              <a href="#" class="tool-button inactive">Inactive</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: ADMIN -->
+      <section class="dashboard-section">
+        <h2>🛡️ System Administration</h2>
+        <div class="tool-grid">
+          <!-- Tool: DecapBridge Admin -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <h3 class="tool-title">DecapBridge Admin</h3>
+              <span class="status-badge status-active">Active</span>
+            </div>
+            <p class="tool-description">Maintain DecapBridge settings and manage user invites.</p>
+            <div class="tool-meta">
+              <span class="access-label">🔑 Access: <span class="access-roles">Admin</span></span>
+              <a href="https://decapbridge.com/auth/login" class="tool-button">Manage Settings</a>
+            </div>
+          </div>
+
+          <!-- Tool: Events -->
+          <div class="tool-card disabled">
+            <div class="tool-header">
+              <h3 class="tool-title">Events</h3>
+              <span class="status-badge status-disabled">Planned</span>
+            </div>
+            <p class="tool-description">Add and manage events selectable from the DM tool
+            <p>
+            <div class="tool-meta">
+              <span class="access-label">🔑 Access: <span class="access-roles">Admin</span></span>
+              <a href="#" class="tool-button inactive">Inactive</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+  import { checkAccess } from "{{ '/assets/js/auth-check.js' | relative_url }}";
+
+  const ui = {
+    accessDenied: document.getElementById('access-denied'),
+    staffInterface: document.getElementById('staff-interface')
+  };
+
+  /**
+   * Authentication callback called by auth-header.html
+   */
+  window.handlePageAuth = async function (user) {
+    if (!user) {
+      ui.accessDenied.style.display = 'block';
+      ui.staffInterface.style.display = 'none';
+      return;
+    }
+
+    // Check if user has Staff or Staff Apprentice roles
+    const hasAccess = await checkAccess(user.id, ['Staff', 'Staff Apprentice']);
+
+    if (!hasAccess) {
+      ui.accessDenied.style.display = 'block';
+      ui.staffInterface.style.display = 'none';
+      return;
+    }
+
+    // Access granted
+    ui.accessDenied.style.display = 'none';
+    ui.staffInterface.style.display = 'block';
+  };
+</script>

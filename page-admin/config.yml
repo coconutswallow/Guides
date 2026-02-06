@@ -1,4 +1,3 @@
-# --- Backend Authentication (DecapBridge) ---
 backend:
   name: git-gateway
   repo: coconutswallow/Guides
@@ -24,6 +23,7 @@ public_folder: "/Guides/assets/images"
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 site_url: https://coconutswallow.github.io/Guides
 
+
 # --- Content Collections ---
 collections:
   - name: "rules"
@@ -35,9 +35,7 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
-      
 
   - name: "playersguide"
     label: "Player's Guide"
@@ -48,9 +46,19 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
-      
+
+  - name: "appendices"
+    label: "Player's Guide Appendices"
+    folder: "_playersguide/appendices"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Show Table of Contents", name: "toc", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "dms_guide"
     label: "DM's Guide"
@@ -61,9 +69,7 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
-      
 
   - name: "arcana"
     label: "Arcana"
@@ -74,12 +80,10 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
-      
 
-  - name: "fieldguide"
-    label: "Adventure Locations"
+  - name: "field_guide"
+    label: "Field Guide"
     folder: "_fieldguide"
     create: true
     fields:
@@ -87,9 +91,7 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
-      
 
   - name: "help"
     label: "Help"
@@ -100,9 +102,7 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
-      
 
   - name: "resources"
     label: "Resources"
@@ -113,6 +113,20 @@ collections:
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - {label: "Show Table of Contents", name: "toc", widget: "boolean", default: false}
       - { label: "Body", name: "body", widget: "markdown" }
       
+  - name: "data"
+    label: "Fast Search Data"
+    files:
+      - name: "faqs"
+        label: "Frequently Asked Questions"
+        file: "_data/faqs.yml"
+        fields:
+          - label: "Entries"
+            name: "entries"
+            widget: "list"
+            summary: "{{fields.question}}"
+            fields:
+              - { label: "Question", name: "question", widget: "string" }
+              - { label: "Category", name: "category", widget: "string" }
+              - { label: "Answer", name: "answer", widget: "markdown" }

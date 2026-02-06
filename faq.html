@@ -6,7 +6,7 @@ extra_css:
 ---
 <script src="//unpkg.com/alpinejs" defer></script>
 
-{% assign categories = site.data.faqs | map: "category" | uniq %}
+{% assign categories = site.data.faqs.entries | map: "category" | uniq %}
 
 <!-- Define category sort order -->
 {% assign category_order = "General,Character Creation,MAL,Games,Downtime,DM,Rules,Support" | split: "," %}
@@ -69,7 +69,7 @@ extra_css:
 
     <div class="faq-list">
       {% for category in sorted_categories %}
-        {% assign category_items = site.data.faqs | where: "category", category %}
+        {% assign category_items = site.data.faqs.entries | where: "category", category %}
         
         <div 
           id="category-{{ category | slugify }}" 
