@@ -27,6 +27,7 @@ class StateManager {
                 focus: '',
                 encounter_difficulty: '',
                 threat_level: '',
+                hazard_level: '',
                 char_loss: '',
                 house_rules: '',
                 notes: '',
@@ -107,6 +108,7 @@ class StateManager {
         this.dom.focus = document.getElementById('inp-focus');
         this.dom.diffEncounter = document.getElementById('inp-diff-encounter');
         this.dom.diffThreat = document.getElementById('inp-diff-threat');
+        this.dom.diffHazard = document.getElementById('inp-diff-hazard');
         this.dom.diffLoss = document.getElementById('inp-diff-loss');
 
         this.dom.houseRules = document.getElementById('inp-houserules');
@@ -175,6 +177,13 @@ class StateManager {
             { el: this.dom.description, sect: 'header', field: 'game_description', update: ['outputs'] },
             { el: this.dom.apl, sect: 'header', field: 'apl', update: ['outputs'] },
             { el: this.dom.partySize, sect: 'header', field: 'party_size', update: ['outputs'] },
+
+            { el: this.dom.tone, sect: 'header', field: 'tone', update: ['outputs'] },
+            { el: this.dom.focus, sect: 'header', field: 'focus', update: ['outputs'] },
+            { el: this.dom.diffEncounter, sect: 'header', field: 'encounter_difficulty', update: ['outputs'] },
+            { el: this.dom.diffThreat, sect: 'header', field: 'threat_level', update: ['outputs'] },
+            { el: this.dom.diffHazard, sect: 'header', field: 'hazard_level', update: ['outputs'] },
+            { el: this.dom.diffLoss, sect: 'header', field: 'char_loss', update: ['outputs'] },
 
             { el: this.dom.sessionNotes, sect: 'session_log', field: 'notes', update: ['outputs'] },
             { el: this.dom.dmCollab, sect: 'session_log', field: 'dm_collaborators', update: ['outputs'] },

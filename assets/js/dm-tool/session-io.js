@@ -223,17 +223,6 @@ export async function generateOutput() {
             eventsString = `**Event(s):** ${state.header.event_tags.join(', ')}\n`;
         }
 
-        let details = "";
-        if (state.header.tone) details += `**Tone:** ${state.header.tone}\n`;
-        if (state.header.focus) details += `**Focus:** ${state.header.focus}\n`;
-        if (state.header.encounter_difficulty) details += `**Encounter Difficulty:** ${state.header.encounter_difficulty}\n`;
-        if (state.header.threat_level) details += `**Enemy Threat Level:** ${state.header.threat_level}\n`;
-        if (state.header.char_loss) details += `**Chance of Character Loss:** ${state.header.char_loss}\n`;
-
-        let warnings = state.header.warnings ? `**Content Warnings:**\n${state.header.warnings}\n\n` : "";
-        let houseRules = state.header.house_rules ? `**House Rules:**\n${state.header.house_rules}\n\n` : "";
-        let apply = state.header.how_to_apply ? `**How to Apply:**\n${state.header.how_to_apply}\n\n` : "";
-
         // Build Date String with Additional Times
         let combinedDateStr = dateStr;
         if (state.header.additional_times && state.header.additional_times.length > 0) {
@@ -242,16 +231,41 @@ export async function generateOutput() {
             });
         }
 
-        const listingText = `**Game Name:** ${state.header.title}
-${eventsString}**Date & Time:** ${combinedDateStr}
+        const listingText = `**Start Time:** ${combinedDateStr}
 
-**Description:**
+**Name:** ${state.header.title || "TBD"}
+**Description:** 
 ${state.header.game_description || "No description provided."}
 
+**Version:** ${state.header.game_version || "N/A"}
+**Format:** ${state.header.game_type || "N/A"}
+**Tier and APL:** ${tierStr}  **APL:** ${apl}
+**Party Size:** ${state.header.party_size || "0"}
 **Applications:** ${state.header.apps_type || "N/A"}
-**Tier:** ${tierStr}  **APL:** ${apl}  **Players:** ${state.header.party_size || "0"}
+
+**Tone:** ${state.header.tone || "N/A"}
+**Focus:** ${state.header.focus || "N/A"}
+**Difficulty:**
+- **Encounter Difficulty:** ${state.header.encounter_difficulty || "N/A"}
+- **Chance of Character Loss:** ${state.header.char_loss || "N/A"}
+- **Enemy Threat Level:** ${state.header.threat_level || "N/A"}
+- **Environment Hazard Level:** ${state.header.hazard_level || "N/A"}
+
+**Lobby:** ${state.header.lobby_url || "N/A"}
 **Platform:** ${state.header.platform || "Foundry VTT"}
-${details}${warnings}${houseRules}${apply}**Game Lobby:** ${state.header.lobby_url || "N/A"}`;
+**Duration:** ${state.header.intended_duration || "N/A"}
+
+**House Rules:** 
+${state.header.house_rules || "None"}
+
+**Notes:** 
+${state.header.notes || "None"}
+
+**Content Warnings:** 
+${state.header.warnings || "None"}
+
+**How to Apply:**
+${state.header.how_to_apply || "N/A"}`;
 
         listingEl.value = listingText;
     }
