@@ -3,6 +3,8 @@
  * STATE MANAGER MODULE
  * ================================================================
  * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ * 
  * This module manages application state and handles all data persistence
  * operations including:
  * - In-memory state management
@@ -62,8 +64,8 @@ export const getState = () => state;
  * @example
  * setReworkId('550e8400-e29b-41d4-a716-446655440000');
  */
-export const setReworkId = (id) => { 
-    state.currentReworkId = id; 
+export const setReworkId = (id) => {
+    state.currentReworkId = id;
 };
 
 // ================================================================
@@ -85,12 +87,12 @@ export const setReworkId = (id) => {
  * // ['uuid-1', 'uuid-2', 'uuid-3']
  */
 function loadLocalIds() {
-    try { 
+    try {
         const stored = localStorage.getItem(STORAGE_KEY);
         return stored ? JSON.parse(stored) : [];
-    } catch (error) { 
+    } catch (error) {
         console.error('Failed to parse localStorage IDs:', error);
-        return []; 
+        return [];
     }
 }
 
@@ -108,7 +110,7 @@ function loadLocalIds() {
  */
 function addLocalId(id) {
     const ids = loadLocalIds();
-    
+
     // Only add if not already present (prevent duplicates)
     if (!ids.includes(id)) {
         ids.push(id);
@@ -130,10 +132,10 @@ function addLocalId(id) {
  */
 export function removeLocalId(id) {
     let ids = loadLocalIds();
-    
+
     // Filter out the specified ID
     ids = ids.filter(savedId => savedId !== id);
-    
+
     // Save back to localStorage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
 }
@@ -167,33 +169,33 @@ export async function initCharacterData() {
     try {
         // Load saved rework IDs from localStorage
         state.savedReworkIds = loadLocalIds();
-        
+
         console.log("Fetching character lookup data from Supabase...");
-        
+
         // Query the lookups table for character data
         const { data, error } = await supabase
             .from('lookups')
             .select('data')
             .eq('type', 'character')  // Filter for character lookup type
             .single();                 // Expect exactly one row
-        
+
         // Handle query errors
         if (error) {
             console.error("Supabase error fetching character data:", error);
             throw error;
         }
-        
+
         // Handle missing data
         if (!data || !data.data) {
             console.warn("No character data found in lookups table");
             state.characterData = [];
             return;
         }
-        
+
         // Store the character data array in state
         state.characterData = data.data;
         console.log(`✓ Loaded ${state.characterData.length} character class/subclass combinations`);
-        
+
         // Validate data structure (helpful for debugging)
         if (state.characterData.length > 0) {
             const sample = state.characterData[0];
@@ -201,7 +203,7 @@ export async function initCharacterData() {
                 console.error("Invalid character data structure. Expected: {ASI, class, version, subclass}");
             }
         }
-        
+
     } catch (e) {
         console.error("Failed to load character data:", e);
         console.warn("Classes and subclasses will not be populated");
@@ -232,10 +234,10 @@ export async function initCharacterData() {
  */
 export async function fetchMyReworks() {
     const ids = loadLocalIds();
-    
+
     // If no IDs in localStorage, return empty array
     if (ids.length === 0) return [];
-    
+
     try {
         // Query Supabase for reworks matching the saved IDs
         const { data, error } = await supabase
@@ -243,14 +245,14 @@ export async function fetchMyReworks() {
             .select('id, character_name, updated_at')  // Only fetch needed fields
             .in('id', ids)                              // Filter by saved IDs
             .order('updated_at', { ascending: false }); // Most recent first
-        
+
         if (error) throw error;
-        
+
         return data || [];
-        
-    } catch (err) { 
+
+    } catch (err) {
         console.error("Error fetching reworks:", err);
-        return []; 
+        return [];
     }
 }
 
@@ -279,16 +281,16 @@ export async function loadReworkById(id) {
         .select('*')          // Get all columns
         .eq('id', id)         // Match the specific ID
         .single();            // Expect exactly one result
-    
+
     if (error) throw error;
-    
+
     // Update state with loaded rework info
     state.currentReworkId = data.id;
     state.loadedCharacterName = data.character_name;  // Track for change detection
-    
+
     // Ensure this ID is in localStorage
     addLocalId(data.id);
-    
+
     return data;
 }
 
@@ -331,54 +333,54 @@ export async function loadReworkById(id) {
 export async function saveReworkToDb(payload) {
     // Add current timestamp
     payload.updated_at = new Date().toISOString();
-    
+
     const currentId = state.currentReworkId;
-    
+
     // Check if the character name has changed since loading
     // If name changed, treat as a new rework (Save As behavior)
-    const nameChanged = state.loadedCharacterName && 
-                       payload.character_name !== state.loadedCharacterName;
+    const nameChanged = state.loadedCharacterName &&
+        payload.character_name !== state.loadedCharacterName;
 
     let result;
-    
+
     // Decide whether to UPDATE or INSERT
     if (currentId && !nameChanged) {
         // --------------------------------------------------------
         // UPDATE EXISTING RECORD
         // --------------------------------------------------------
         console.log('Updating existing rework:', currentId);
-        
+
         const { data, error } = await supabase
             .from('rework')
             .update(payload)           // Update with new data
             .eq('id', currentId)       // Match the current ID
             .select();                 // Return the updated record
-        
+
         if (error) throw error;
         result = data[0];
-        
+
     } else {
         // --------------------------------------------------------
         // INSERT NEW RECORD
         // --------------------------------------------------------
         console.log('Creating new rework record');
-        
+
         const { data, error } = await supabase
             .from('rework')
             .insert([payload])  // Insert as new record
             .select();          // Return the created record
-        
+
         if (error) throw error;
         result = data[0];
     }
-    
+
     // Update state with the saved rework info
     state.currentReworkId = result.id;
     state.loadedCharacterName = result.character_name;
-    
+
     // Ensure the ID is in localStorage
     addLocalId(result.id);
-    
+
     return result;
 }
 
@@ -404,12 +406,12 @@ export async function deleteReworkById(id) {
         .from('rework')
         .delete()
         .eq('id', id);
-    
+
     if (error) throw error;
-    
+
     // Clean up localStorage
     removeLocalId(id);
-    
+
     // Clear state if this was the current rework
     if (state.currentReworkId === id) {
         state.currentReworkId = null;

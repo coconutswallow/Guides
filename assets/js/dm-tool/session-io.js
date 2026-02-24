@@ -575,6 +575,10 @@ export function prepareTemplateData(originalData) {
         data.header.game_datetime = null;
         data.header.game_date_str = "";
         data.header.listing_url = "";
+        data.header.loot_plan = "";
+        data.header.predet_perms = "0";
+        data.header.predet_cons = "0";
+        data.header.player_loot_links = "";
         // data.header.lobby_url = ""; 
     }
 
