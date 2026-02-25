@@ -1,6 +1,9 @@
 // assets/js/dm-tool/session-ui.js
 
 /**
+ *
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ *
  * @file session-ui.js
  * @description Manages User Interface interactions for the Session Editor.
  * This module handles:

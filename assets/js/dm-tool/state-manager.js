@@ -1,6 +1,9 @@
 // assets/js/dm-tool/state-manager.js
 
 /**
+ * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ *
  * @file state-manager.js
  * @description Centralized State Management for the DM Tool.
  * @module StateManager

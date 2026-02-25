@@ -3,6 +3,8 @@
  * REWORK CONSTANTS MODULE
  * ================================================================
  * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ * 
  * This module defines all constant values used throughout the D&D
  * character rework calculator application. These include attribute
  * lists, point-buy costs, pricing tiers, and rework type identifiers.

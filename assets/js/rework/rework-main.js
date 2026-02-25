@@ -3,6 +3,8 @@
  * REWORK MAIN MODULE
  * ================================================================
  * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ * 
  * This is the main entry point and orchestration module for the
  * D&D character rework calculator application. It handles:
  * - Application initialization

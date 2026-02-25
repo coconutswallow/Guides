@@ -1,7 +1,10 @@
 // assets/js/dm-tool/session-editor.js
 
 /**
- * @fileoverview Main controller for the DM Tool Session Editor.
+ *
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ * 
+ *  @fileoverview Main controller for the DM Tool Session Editor.
  * * This module orchestrates the interaction between the UI, the State Manager, 
  * the Calculation Engine, and the Data Layer (Supabase).
  * * Key Responsibilities:

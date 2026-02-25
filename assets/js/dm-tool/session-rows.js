@@ -1,6 +1,9 @@
 // assets/js/dm-tool/session-rows.js
 
 /**
+ *
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ *
  * @file session-rows.js
  * @description Manages the creation, synchronization, and data scraping of Player Rows.
  * This module handles two distinct types of rows:

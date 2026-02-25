@@ -1,4 +1,7 @@
 /**
+ *
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ *
  * @file session-io.js
  * @description Handles Data Input/Output operations for the DM Tool.
  * * @module SessionIO

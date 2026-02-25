@@ -3,6 +3,8 @@
  * REWORK UI MODULE
  * ================================================================
  * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ * 
  * This module handles all user interface operations including:
  * - Data extraction from DOM (scraping)
  * - Data injection into DOM (populating)

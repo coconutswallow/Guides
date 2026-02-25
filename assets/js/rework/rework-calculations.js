@@ -3,6 +3,8 @@
  * REWORK CALCULATIONS MODULE
  * ================================================================
  * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ * 
  * This module contains all calculation logic for the character rework
  * system, including point-buy costs, level totals, pricing lookups,
  * and comprehensive rework cost computation.

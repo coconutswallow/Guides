@@ -1,4 +1,7 @@
 /**
+ * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ * 
  * assets/js/dm-tool/dashboard.js
  * @file dashboard.js
  * @description Manages the main dashboard view for the DM Tool. 

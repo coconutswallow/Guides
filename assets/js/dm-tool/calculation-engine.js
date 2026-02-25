@@ -1,6 +1,9 @@
 // assets/js/dm-tool/calculation-engine.js
 
 /**
+ * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ * 
  * @file calculation-engine.js
  * @description A dedicated calculation engine for the DM Tool.
  * This class isolates all math and logic related to Experience Points (XP),

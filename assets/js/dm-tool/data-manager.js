@@ -1,4 +1,7 @@
 /**
+ * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ * 
  * data-manager.js
  * Location: /assets/js/dm-tool/data-manager.js
  * * @file data-manager.js

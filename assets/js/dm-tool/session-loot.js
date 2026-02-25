@@ -1,6 +1,9 @@
 // assets/js/dm-tool/session-loot.js
 
 /**
+ *
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ *
  * @file session-loot.js
  * @description Manages loot generation logic, rule display, and Discord command creation.
  * This module handles the logic for:
