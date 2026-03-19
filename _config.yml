@@ -12,9 +12,9 @@ collections:
   playersguide:
     output: true
     permalink: /playersguide/:path/
-  dms_guide:
+  dmsguide:
     output: true
-    permalink: /dms-guide/:path/
+    permalink: /dmsguide/:path/
   arcana:
     output: true
     permalink: /arcana/:path/
@@ -60,14 +60,16 @@ navigation:
     url: "https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view"
 
   # =========================================================
-  # DM's Guide Section - currently commented out to use PDF instead
+  # DM's Guide Section
   #  - title: "DM's Guide"
-  #    collection: dms_guide
+  #    collection: dmsguide
   # =========================================================
 
   - title: "DM's Guide"
-    url: "https://drive.google.com/file/d/1MiXp60GBg2ZASiiGjgFtTRFHp7Jf0m2P/view?usp=sharing"
-
+    collection: dmsguide
+    sections:
+      - title: "Appendices"
+        folder: "dmsguide/appendices"
   # =========================================================
   # Monster Compendium Section
   #

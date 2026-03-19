@@ -202,7 +202,7 @@
   --color-sidebar-bg: var(--palette-brand-main-darker);
   --color-sidebar-border: var(--palette-brand-highlight);
   --color-nav-hover-light: var(--color-sidebar-border);
-  --color-role-badge-bg: var(--palette-neutral-gray-500);
+  --color-role-badge-bg: transparent;
   --color-header-overlay: rgba(0, 0, 0, 0.4);
 
   /* Search */
@@ -440,25 +440,26 @@ h6 {
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 2.3em;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 h2 {
-  font-size: 1.75em;
-  text-transform: underline;
+  font-size: 1.85em;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0.2em;
   margin-top: 1.5em;
 }
 
 h3 {
-  font-size: 1.5em;
+  font-size: 1.55em;
   text-transform: uppercase;
   margin-top: 1.2em;
 }
 
 h4 {
-  font-size: 1.3em;
+  font-size: 1.35em;
   margin-top: 1em;
 }
 
@@ -1262,7 +1263,7 @@ tbody tr:hover {
 .role-auditor {
   color: var(--palette-role-auditor);
   font-weight: 600;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1270,7 +1271,7 @@ tbody tr:hover {
 .role-auditor-apprentice {
   color: var(--palette-role-auditor-apprentice);
   font-weight: 600;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1278,7 +1279,7 @@ tbody tr:hover {
 .role-lore {
   color: var(--palette-role-lore);
   font-weight: 600;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1286,7 +1287,7 @@ tbody tr:hover {
 .role-lore-apprentice {
   color: var(--palette-role-lore-apprentice);
   font-weight: 600;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1294,7 +1295,7 @@ tbody tr:hover {
 .role-pr {
   color: var(--palette-role-pr);
   font-weight: 600;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1302,7 +1303,7 @@ tbody tr:hover {
 .role-rules {
   color: var(--palette-role-rules);
   font-weight: 600;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1310,7 +1311,7 @@ tbody tr:hover {
 .role-rules-apprentice {
   color: var(--palette-role-rules-apprentice);
   font-weight: 600;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1318,7 +1319,7 @@ tbody tr:hover {
 .role-engineer {
   color: var(--palette-role-engineer);
   font-weight: 700;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1326,7 +1327,7 @@ tbody tr:hover {
 .role-engineer-apprentice {
   color: var(--palette-role-engineer-apprentice);
   font-weight: 700;
-  background-color: var(--palette-neutral-gray-500);
+  background-color: var(--color-role-badge-bg);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -1334,6 +1335,9 @@ tbody tr:hover {
 .role-admins {
   color: var(--palette-role-admins);
   font-weight: 800;
+  background-color: var(--color-role-badge-bg);
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 /* Dark mode role adjustments */

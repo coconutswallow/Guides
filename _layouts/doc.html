@@ -27,12 +27,7 @@ layout: default
 
         <h1 class="doc-title">{{ page.title }}</h1>
 
-        {% if page.author or page.date %}
-        <div class="doc-meta">
-            {% if page.author %}<span class="doc-author">By {{ page.author }}</span>{% endif %}
-            {% if page.date %}<span class="doc-date">{{ page.date | date: "%B %d, %Y" }}</span>{% endif %}
-        </div>
-        {% endif %}
+
 
         <div class="doc-body">
             {{ content }}
