@@ -1,350 +1,365 @@
 {% comment %}
 =============================================================================
- FRONT MATTER DOCUMENTATION
- Copy and paste these variables to the top of your markdown files to control page behavior.
+FRONT MATTER DOCUMENTATION
+Copy and paste these variables to the top of your markdown files to control page behavior.
 =============================================================================
 
-layout: default        # The layout file to use (usually "default" or "doc")
-title: "Page Title"    # The title shown in the browser tab and page header
-order: 1               # (Integer) Controls the sort order in the sidebar menu (1, 2, 3...)
+layout: default # The layout file to use (usually "default" or "doc")
+title: "Page Title" # The title shown in the browser tab and page header
+order: 1 # (Integer) Controls the sort order in the sidebar menu (1, 2, 3...)
 
 # --- Navigation & Display Options ---
-hide_from_nav: true    # If true, removes this page from the sidebar menu but keeps it published
-toc: true              # If true, enables the Table of Contents and adjusts page width
-body_class: "my-class" # Adds a custom CSS class to the <body> tag for specific styling
+hide_from_nav: true # If true, removes this page from the sidebar menu but keeps it published
+toc: true # If true, enables the Table of Contents and adjusts page width
+body_class: "my-class" # Adds a custom CSS class to the
 
-# --- Visual Customization ---
-background_image: "/assets/images/bg.jpg"  # Overrides the default background image for this specific page
-extra_css:                                 # specific CSS files to load just for this page
-  - "/assets/css/special-styles.css"
+<body> tag for specific styling
 
-=============================================================================
-{% endcomment %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title | default: site.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}"> 
-	<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
-    <script type="module" src="{{ '/assets/js/heading-links.js' | relative_url }}"></script>
+    # --- Visual Customization ---
+    background_image: "/assets/images/bg.jpg" # Overrides the default background image for this specific page
+    extra_css: # specific CSS files to load just for this page
+    - "/assets/css/special-styles.css"
 
-    
-    <link rel="icon" type="image/png" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">
-    <link rel="apple-touch-icon" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">
-    
-    {% for stylesheet in page.extra_css %}
+    =============================================================================
+    {% endcomment %}
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ page.title | default: site.title }}</title>
+        <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+        <link rel="stylesheet" href="{{ '/assets/css/search.css' | relative_url }}">
+        <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+        <link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
+        <script type="module" src="{{ '/assets/js/heading-links.js' | relative_url }}"></script>
+
+
+        <link rel="icon" type="image/png" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">
+        <link rel="apple-touch-icon" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">
+
+        {% for stylesheet in page.extra_css %}
         <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
-    {% endfor %}
-    {% for stylesheet in layout.extra_css %}
-    <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
-{% endfor %}
-{% include analytics.html %}
-</head>
-<body class="{{ page.body_class }} {{ layout.body_class }}" {% if page.background_image or layout.background_image %}style="--page-bg-image: url('{{ page.background_image | default: layout.background_image | relative_url }}')"{% endif %}>
-    {% if page.background_image %}
-    <script>
-    // Fallback: Set background image if not already set
-    if (!document.body.style.getPropertyValue('--page-bg-image')) {
-    document.body.style.setProperty('--page-bg-image', 'url("{{ page.background_image | default: layout.background_image | relative_url }}")');
-}
-    </script>
-    {% endif %}
-        
-    <header class="site-header">
-        <div class="header-content">
-            <button id="menu-toggle" aria-label="Toggle Navigation Menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <h1 class="site-title">
-                <a href="{{ '/' | relative_url }}" class="home-link">
-                    <img src="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}" class="guild-icon">
-                    {{ site.title | default: "Hawthorne Guild" }}
-                </a>
-            </h1>
-            
-            <div class="header-search-container">
-                <input type="text" id="search-input" placeholder="Search..." aria-label="Search documents">
+        {% endfor %}
+        {% for stylesheet in layout.extra_css %}
+        <link rel="stylesheet" href="{{ stylesheet | relative_url }}">
+        {% endfor %}
+        {% include analytics.html %}
+    </head>
+
+    <body class="{{ page.body_class }} {{ layout.body_class }}" {% if page.background_image or layout.background_image
+        %}style="--page-bg-image: url('{{ page.background_image | default: layout.background_image | relative_url }}')"
+        {% endif %}>
+        {% if page.background_image %}
+        <script>
+            // Fallback: Set background image if not already set
+            if (!document.body.style.getPropertyValue('--page-bg-image')) {
+                document.body.style.setProperty('--page-bg-image', 'url("{{ page.background_image | default: layout.background_image | relative_url }}")');
+            }
+        </script>
+        {% endif %}
+
+        <header class="site-header">
+            <div class="header-content">
+                <button id="menu-toggle" aria-label="Toggle Navigation Menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+                <h1 class="site-title">
+                    <a href="{{ '/' | relative_url }}" class="home-link">
+                        <img src="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}" class="guild-icon">
+                        {{ site.title | default: "Hawthorne Guild" }}
+                    </a>
+                </h1>
+
+                <div class="header-search-container">
+                    <input type="text" id="search-input" placeholder="Search..." aria-label="Search documents">
+                </div>
+            </div>
+        </header>
+
+        <div id="sidebar-menu">
+            <div class="sidebar-header">
+                <h4 class="sidebar-title">Navigation</h4>
+                <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
+            </div>
+
+            <div class="sidebar-nav">
+                {% for nav_item in site.navigation %}
+                {% if nav_item.url %}
+                <a href="{{ nav_item.url | relative_url }}" class="nav-link">{{ nav_item.title }}</a>
+
+                {% elsif nav_item.collection %}
+                <div class="nav-section">
+                    <button class="nav-section-toggle" aria-expanded="false">
+                        <span class="toggle-icon">▶</span>
+                        {{ nav_item.title }}
+                    </button>
+                    <div class="nav-submenu">
+                        {% assign collection_name = nav_item.collection %}
+
+                        {% if nav_item.sections %}
+                        {% for page in site[collection_name] limit:2 %}
+                        {% endfor %}
+                        {% assign all_pages = site[collection_name] | sort: "order" %}
+
+                        {% for page in all_pages %}
+                        {% assign is_in_section_folder = false %}
+                        {% for section in nav_item.sections %}
+                        {% if section.folder %}
+                        {% comment %} --- FIX 1 --- {% endcomment %}
+                        {% comment %} Extract the final folder name (e.g., "appendices") {% endcomment %}
+                        {% assign folder_name = section.folder | split: "/" | last %}
+                        {% assign folder_check = '/' | append: folder_name | append: '/' %}
+
+                        {% if page.path contains folder_check %}
+                        {% assign is_in_section_folder = true %}
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+
+                        {% unless is_in_section_folder %}
+                        {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                        {% unless page.hide_from_nav %}
+                        <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " |
+                            capitalize_words }}</a>
+                        {% endunless %}
+                        {% endunless %}
+                        {% endfor %}
+
+                        {% for section in nav_item.sections %}
+                        {% if section.url %}
+                        <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
+
+                        {% elsif section.folder %}
+                        <div class="nav-subsection">
+                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                <span class="toggle-icon">▶</span>
+                                <span>{{ section.title }}</span>
+                            </button>
+                            <div class="nav-subsubmenu">
+                                {% comment %} --- FIX 3 --- {% endcomment %}
+                                {% assign folder_name = section.folder | split: "/" | last %}
+                                {% assign folder_check = '/' | append: folder_name | append: '/' %}
+
+                                {% assign folder_pages = site[collection_name] | where_exp: "page", "page.path contains
+                                folder_check" | sort: "order" %}
+                                {% for page in folder_pages %}
+                                {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                                {% unless page.hide_from_nav %}
+                                <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace:
+                                    "-", " " | capitalize_words }}</a>
+                                {% endunless %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        {% assign collection_items = site[collection_name] %}
+                        {% if collection_items %}
+                        {% assign collection_docs = collection_items | where_exp: "item", "item.layout == 'doc'" %}
+                        {% if collection_docs.size > 0 %}
+                        {% assign sorted_docs = collection_docs | sort: "order" %}
+                        {% for doc in sorted_docs %}
+                        {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                        {% unless doc.hide_from_nav %}
+                        <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+                        {% endunless %}
+                        {% endfor %}
+                        {% else %}
+                        {% assign sorted_items = collection_items | sort: "order" %}
+                        {% for item in sorted_items %}
+                        {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
+                        {% unless item.hide_from_nav %}
+                        <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                        {% endunless %}
+                        {% endfor %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% elsif nav_item.sections %}
+                <div class="nav-section">
+                    <button class="nav-section-toggle" aria-expanded="false">
+                        <span class="toggle-icon">▶</span>
+                        {{ nav_item.title }}
+                    </button>
+                    <div class="nav-submenu">
+                        {% for section in nav_item.sections %}
+                        {% if section.url %}
+                        <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
+                        {% elsif section.subsections %}
+                        <div class="nav-subsection">
+                            <button class="nav-subsection-toggle" aria-expanded="false">
+                                <span class="toggle-icon">▶</span>
+                                {{ section.title }}
+                            </button>
+                            <div class="nav-subsubmenu">
+                                {% for subsection in section.subsections %}
+                                <a href="{{ subsection.url | relative_url }}">{{ subsection.title }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% elsif nav_item.links %}
+                <div class="nav-section">
+                    <button class="nav-section-toggle" aria-expanded="false">
+                        <span class="toggle-icon">▶</span>
+                        {{ nav_item.title }}
+                    </button>
+                    <div class="nav-submenu">
+                        {% for link in nav_item.links %}
+                        <a href="{{ link.url | relative_url }}">{{ link.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
             </div>
         </div>
-    </header>
 
-    <div id="sidebar-menu">
-        <div class="sidebar-header">
-            <h4 class="sidebar-title">Navigation</h4>
-            <button id="close-menu-btn" class="close-btn" aria-label="Close Menu">&times;</button>
+        <div id="menu-overlay"></div>
+
+        <ul id="search-results"></ul>
+
+        <div class="page {% if page.toc %}page-wide{% endif %}">
+            {{ content }}
         </div>
-        
-        <div class="sidebar-nav">
-            {% for nav_item in site.navigation %}
-                {% if nav_item.url %}
-                    <a href="{{ nav_item.url | relative_url }}" class="nav-link">{{ nav_item.title }}</a>
-                    
-                {% elsif nav_item.collection %}
-                    <div class="nav-section">
-                        <button class="nav-section-toggle" aria-expanded="false">
-                            <span class="toggle-icon">▶</span>
-                            {{ nav_item.title }}
-                        </button>
-                        <div class="nav-submenu">
-                            {% assign collection_name = nav_item.collection %}
-                            
-                            {% if nav_item.sections %}
-                                {% for page in site[collection_name] limit:2 %}
-                                    {% endfor %}
-                                {% assign all_pages = site[collection_name] | sort: "order" %}
-                                
-                                {% for page in all_pages %}
-                                    {% assign is_in_section_folder = false %}
-                                    {% for section in nav_item.sections %}
-                                        {% if section.folder %}
-                                            {% comment %} --- FIX 1 --- {% endcomment %}
-                                            {% comment %} Extract the final folder name (e.g., "appendices") {% endcomment %}
-                                            {% assign folder_name = section.folder | split: "/" | last %}
-                                            {% assign folder_check = '/' | append: folder_name | append: '/' %}
-                                            
-                                            {% if page.path contains folder_check %}
-                                                {% assign is_in_section_folder = true %}
-                                                {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                    
-                                    {% unless is_in_section_folder %}
-                                        {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
-                                        {% unless page.hide_from_nav %}
-                                            <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize_words }}</a>
-                                        {% endunless %}
-                                    {% endunless %}
-                                {% endfor %}
-                                
-                                {% for section in nav_item.sections %}
-                                    {% if section.url %}
-                                        <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
-                                        
-                                    {% elsif section.folder %}
-                                        <div class="nav-subsection">
-                                            <button class="nav-subsection-toggle" aria-expanded="false">
-                                                <span class="toggle-icon">▶</span>
-                                                <span>{{ section.title }}</span>
-                                            </button>
-                                            <div class="nav-subsubmenu">
-                                                {% comment %} --- FIX 3 --- {% endcomment %}
-                                                {% assign folder_name = section.folder | split: "/" | last %}
-                                                {% assign folder_check = '/' | append: folder_name | append: '/' %}
-                                                
-                                                {% assign folder_pages = site[collection_name] | where_exp: "page", "page.path contains folder_check" | sort: "order" %}
-                                                {% for page in folder_pages %}
-                                                    {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
-                                                    {% unless page.hide_from_nav %}
-                                                        <a href="{{ page.url | relative_url }}">{{ page.title | default: page.slug | replace: "-", " " | capitalize_words }}</a>
-                                                    {% endunless %}
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                {% assign collection_items = site[collection_name] %}
-                                {% if collection_items %}
-                                    {% assign collection_docs = collection_items | where_exp: "item", "item.layout == 'doc'" %}
-                                    {% if collection_docs.size > 0 %}
-                                        {% assign sorted_docs = collection_docs | sort: "order" %}
-                                        {% for doc in sorted_docs %}
-                                            {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
-                                            {% unless doc.hide_from_nav %}
-                                                <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
-                                            {% endunless %}
-                                        {% endfor %}
-                                    {% else %}
-                                        {% assign sorted_items = collection_items | sort: "order" %}
-                                        {% for item in sorted_items %}
-                                            {% comment %} --- UPDATE: Check for hide_from_nav --- {% endcomment %}
-                                            {% unless item.hide_from_nav %}
-                                                <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
-                                            {% endunless %}
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                {% elsif nav_item.sections %}
-                    <div class="nav-section">
-                        <button class="nav-section-toggle" aria-expanded="false">
-                            <span class="toggle-icon">▶</span>
-                            {{ nav_item.title }}
-                        </button>
-                        <div class="nav-submenu">
-                            {% for section in nav_item.sections %}
-                                {% if section.url %}
-                                    <a href="{{ section.url | relative_url }}">{{ section.title }}</a>
-                                {% elsif section.subsections %}
-                                    <div class="nav-subsection">
-                                        <button class="nav-subsection-toggle" aria-expanded="false">
-                                            <span class="toggle-icon">▶</span>
-                                            {{ section.title }}
-                                        </button>
-                                        <div class="nav-subsubmenu">
-                                            {% for subsection in section.subsections %}
-                                                <a href="{{ subsection.url | relative_url }}">{{ subsection.title }}</a>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    
-                {% elsif nav_item.links %}
-                    <div class="nav-section">
-                        <button class="nav-section-toggle" aria-expanded="false">
-                            <span class="toggle-icon">▶</span>
-                            {{ nav_item.title }}
-                        </button>
-                        <div class="nav-submenu">
-                            {% for link in nav_item.links %}
-                                <a href="{{ link.url | relative_url }}">{{ link.title }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
 
-    <div id="menu-overlay"></div>
-
-    <ul id="search-results"></ul>
-
-    <div class="page {% if page.toc %}page-wide{% endif %}">
-        {{ content }}
-    </div>
-    
-    <footer class="site-footer">
+        <footer class="site-footer">
             <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center;">
                 <div class="footer-icons">
-                    <a href="https://discord.com/channels/308324031478890497/" target="_blank" rel="noopener noreferrer" aria-label="Join our Discord">
-                        <img src="https://cdn.imgbin.com/3/3/19/discord-icon-round-discord-logo-design-tqKpZ6Yk.jpg" alt="Discord" class="footer-icon">
+                    <a href="https://discord.com/channels/308324031478890497/" target="_blank" rel="noopener noreferrer"
+                        aria-label="Join our Discord">
+                        <img src="https://cdn.imgbin.com/3/3/19/discord-icon-round-discord-logo-design-tqKpZ6Yk.jpg"
+                            alt="Discord" class="footer-icon">
                     </a>
-                    <a href="https://www.youtube.com/@HawthorneGuild" target="_blank" rel="noopener noreferrer" aria-label="Visit our YouTube channel">
-                        <img src="https://cdn.imgbin.com/0/18/20/imgbin-youtube-logo-computer-icons-subscribe-youtube-logo-YB8eFUCu8ZysbqwvcTBF63AtA.jpg" alt="YouTube" class="footer-icon">
+                    <a href="https://www.youtube.com/@HawthorneGuild" target="_blank" rel="noopener noreferrer"
+                        aria-label="Visit our YouTube channel">
+                        <img src="https://cdn.imgbin.com/0/18/20/imgbin-youtube-logo-computer-icons-subscribe-youtube-logo-YB8eFUCu8ZysbqwvcTBF63AtA.jpg"
+                            alt="YouTube" class="footer-icon">
                     </a>
                 </div>
-                
+
                 <div class="footer-links">
-                    <a href="https://forms.gle/NVe7kapBgLL2g1E69" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; margin-left: 15px; font-size: 0.85em;">Feedback</a>
+                    <a href="https://forms.gle/9xsYMqiMJZ5bK5mV9" target="_blank" rel="noopener noreferrer"
+                        style="color: inherit; text-decoration: none; margin-left: 15px; font-size: 0.85em;">Feedback</a>
                 </div>
             </div>
         </footer>
 
-    <script>
-        // 1. BASE URL DEFINITION (Guaranteed to run first for search.js)
-        const BASE_URL = "{{ site.baseurl }}"; 
-        
-        // 2. CORE MENU TOGGLE LOGIC (Main Hamburger/Close Button)
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebarMenu = document.getElementById('sidebar-menu');
-        const closeMenuBtn = document.getElementById('close-menu-btn');
-        const menuOverlay = document.getElementById('menu-overlay');
+        <script>
+            // 1. BASE URL DEFINITION (Guaranteed to run first for search.js)
+            const BASE_URL = "{{ site.baseurl }}";
 
-        if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
-            function toggleMenu() {
-                sidebarMenu.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
-                document.body.classList.toggle('menu-open');
+            // 2. CORE MENU TOGGLE LOGIC (Main Hamburger/Close Button)
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebarMenu = document.getElementById('sidebar-menu');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const menuOverlay = document.getElementById('menu-overlay');
+
+            if (menuToggle && sidebarMenu && closeMenuBtn && menuOverlay) {
+                function toggleMenu() {
+                    sidebarMenu.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
+                    document.body.classList.toggle('menu-open');
+                }
+
+                menuToggle.addEventListener('click', toggleMenu);
+                closeMenuBtn.addEventListener('click', toggleMenu);
+                menuOverlay.addEventListener('click', toggleMenu);
             }
+        </script>
 
-            menuToggle.addEventListener('click', toggleMenu);
-            closeMenuBtn.addEventListener('click', toggleMenu);
-            menuOverlay.addEventListener('click', toggleMenu);
-        }
-    </script>
-    
-    <script src="{{ '/assets/js/lunr.js' | relative_url }}"></script> 
-    <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
-    <script src="{{ '/assets/js/sidebar.js' | relative_url }}"></script>
-    <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lunr.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/sidebar.js' | relative_url }}"></script>
+        <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
 
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
-    <span class="sun-icon">☀️</span>
-    <span class="moon-icon">🌙</span>
-</button>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+            <span class="sun-icon">☀️</span>
+            <span class="moon-icon">🌙</span>
+        </button>
 
-    <script>
-    (function() {
-        // Get the theme toggle button
-        const themeToggle = document.getElementById('theme-toggle');
-        const htmlElement = document.documentElement;
-        
-        // Check for saved theme preference or default to light mode
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        
-        // Apply the saved theme on page load
-        htmlElement.setAttribute('data-theme', currentTheme);
-        
-        // Toggle theme function
-        function toggleTheme() {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            // Apply new theme
-            htmlElement.setAttribute('data-theme', newTheme);
-            
-            // Save preference to localStorage
-            localStorage.setItem('theme', newTheme);
-            
-            // Optional: Log for debugging
-            console.log('Theme changed to:', newTheme);
-        }
-        
-        // Add click event listener
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
-        }
-        
-        // Optional: Add keyboard support (Enter or Space to toggle)
-        if (themeToggle) {
-            themeToggle.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleTheme();
+        <script>
+            (function () {
+                // Get the theme toggle button
+                const themeToggle = document.getElementById('theme-toggle');
+                const htmlElement = document.documentElement;
+
+                // Check for saved theme preference or default to light mode
+                const currentTheme = localStorage.getItem('theme') || 'light';
+
+                // Apply the saved theme on page load
+                htmlElement.setAttribute('data-theme', currentTheme);
+
+                // Toggle theme function
+                function toggleTheme() {
+                    const currentTheme = htmlElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                    // Apply new theme
+                    htmlElement.setAttribute('data-theme', newTheme);
+
+                    // Save preference to localStorage
+                    localStorage.setItem('theme', newTheme);
+
+                    // Optional: Log for debugging
+                    console.log('Theme changed to:', newTheme);
+                }
+
+                // Add click event listener
+                if (themeToggle) {
+                    themeToggle.addEventListener('click', toggleTheme);
+                }
+
+                // Optional: Add keyboard support (Enter or Space to toggle)
+                if (themeToggle) {
+                    themeToggle.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleTheme();
+                        }
+                    });
+                }
+            })();
+        </script>
+        <script>
+            // Automatically set external links to open in a new tab
+            document.addEventListener("DOMContentLoaded", function () {
+                var links = document.getElementsByTagName('a');
+                var currentDomain = window.location.hostname;
+
+                for (var i = 0; i < links.length; i++) {
+                    var link = links[i];
+
+                    // 1. Check if link exists
+                    if (!link.href) continue;
+
+                    // 2. Check if it's a local anchor (#section)
+                    if (link.getAttribute('href').startsWith('#')) continue;
+
+                    // 3. Check if it's a mailto or tel link
+                    if (link.href.startsWith('mailto:') || link.href.startsWith('tel:')) continue;
+
+                    // 4. Main Check: Is the hostname different?
+                    // We also check if the protocol is http/https to avoid messing with javascript: calls
+                    if (link.hostname !== currentDomain && (link.protocol === 'http:' || link.protocol === 'https:')) {
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                    }
                 }
             });
-        }
-    })();
-</script>
-<script>
-    // Automatically set external links to open in a new tab
-    document.addEventListener("DOMContentLoaded", function() {
-        var links = document.getElementsByTagName('a');
-        var currentDomain = window.location.hostname;
+        </script>
+    </body>
 
-        for (var i = 0; i < links.length; i++) {
-            var link = links[i];
-            
-            // 1. Check if link exists
-            if (!link.href) continue;
-
-            // 2. Check if it's a local anchor (#section)
-            if (link.getAttribute('href').startsWith('#')) continue;
-
-            // 3. Check if it's a mailto or tel link
-            if (link.href.startsWith('mailto:') || link.href.startsWith('tel:')) continue;
-
-            // 4. Main Check: Is the hostname different?
-            // We also check if the protocol is http/https to avoid messing with javascript: calls
-            if (link.hostname !== currentDomain && (link.protocol === 'http:' || link.protocol === 'https:')) {
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-            }
-        }
-    });
-</script>
-</body>
-</html>
+    </html>
