@@ -62,13 +62,25 @@ collections:
 
   - name: "dms_guide"
     label: "DM's Guide"
-    folder: "_dms_guide"
+    folder: "_dmsguide"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Layout", name: "layout", widget: "string", default: "doc" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
       - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+    
+  - name: "dms_appendices"
+    label: "DM's Guide Appendices"
+    folder: "_dmsguide/appendices"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
+      - { label: "Background Image", name: "background_image", widget: "image", required: false }
+      - { label: "Show Table of Contents", name: "toc", widget: "boolean", default: false }
       - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "arcana"
