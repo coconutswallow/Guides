@@ -15,6 +15,9 @@ collections:
   dmsguide:
     output: true
     permalink: /dmsguide/:path/
+  dms_appendices:
+    output: true
+    permalink: /dmsguide/appendices/:path/
   arcana:
     output: true
     permalink: /arcana/:path/

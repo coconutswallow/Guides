@@ -62,7 +62,7 @@ collections:
 
   - name: "dmsguide"
     label: "DM's Guide"
-    folder: "dmsguide"
+    folder: "_dmsguide"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -73,7 +73,7 @@ collections:
       - { label: "Body", name: "body", widget: "markdown" }
   - name: "dms_appendices"
     label: "DM's Guide Appendices"
-    folder: "dmsguide/appendices"
+    folder: "_dmsguide/appendices"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
