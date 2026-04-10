@@ -25,4 +25,4 @@ After registering as a DM on the server, you immediately gain the <span class="r
 | Predetermine multisession loot | ✘ | ✔ |
 | Drop homebrew items and rewards | With a request to Rules | With a request to Rules |
 
-Each privilege is further detailed later in this document. For information on how to apply for either the Full DM or Homebrew tag, see Appendix A at the end of this document.
+Each privilege is further detailed later in this document. For information on how to apply for either the <span class="role-full-dm">Full DM</span> or <span class="role-homebrew">Homebrew</span> tag, see [Appendix A](/Guides/dmsguide/appendices/appendix-a-application/) at the end of this document.

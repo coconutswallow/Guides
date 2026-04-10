@@ -8,9 +8,9 @@ Welcome Dungeon Masters! This document provides all of the information and rules
 
 ### Registration. 
 
-To become a Trial DM, you must be registered as a player (with the Adventurer role) and use our DM Registration form. Afterward, either 
-a) contact the Player Relations team in [#pr-couch](https://discord.com/channels/308324031478890497/719671742141956157) if you have played at least one game on the server or 
-b) submit a request to the Auditors and Player Relations teams in [#player-requests](https://discord.com/channels/308324031478890497/617817995724587017).
+To become a <span class="role-trial-dm">Trial DM</span>, you must be [registered as a player](https://docs.google.com/forms/d/e/1FAIpQLSczpPkGe7NW_HrD9LLc3Tv8-Ts4MZ30TSv5oJa0kx4Ia-PYyQ/viewform?usp=sf_link) (with the <span class="role-adventurer">Adventurer</span> role) and use our [DM Registration form](https://docs.google.com/forms/d/e/1FAIpQLSeSJFrWH_ZFCBa_TndvhqhJsNDtVoKb4hAt7X2v07D-4lLTbw/viewform). Afterward, either 
+a) contact the Player Relations team in [#pr-couch](https://discord.com/channels/308324031478890497/719671742141956157) if you have played at least <b>one game</b> on the server or 
+b) submit a request to the <span class="role-auditor">Auditors</span> and <span class="role-pr">Player Relations</span> teams in [#player-requests](https://discord.com/channels/308324031478890497/617817995724587017).
 
 ### Rules
 
@@ -18,13 +18,13 @@ Read through this document to familiarize yourself with the rules on DMing on th
 
 ### Run Games
 
-- You can now run games on the server: Determine the session you want to run, including intended tier of play and Average Party Level (APL). For monsters that can be used, refer to Allowed Content.
-- To get players, post a game ad in [#gamelistings](https://discord.com/channels/308324031478890497/1366924010255814768), following the pinned format and ping players in [#game-advertisement](https://discord.com/channels/308324031478890497/343396172293210112)
+- You can now run games on the server: Determine the session you want to run, including intended tier of play and Average Party Level (APL). For monsters that can be used, refer to [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=1191582799).
+- To get players, post a game ad in [#game-listings](https://discord.com/channels/308324031478890497/1366924010255814768), following the pinned format and ping players in [#game-advertisement](https://discord.com/channels/308324031478890497/343396172293210112)
 - Roll for and/or predetermine loot in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718), using the pinned format.
 - Run a game of 3 hours duration or longer.
 - At the game’s end, award the PCs experience, gold, DTP, and found loot earned.
 - Log the finished game, including the above info, in [#session-log](https://discord.com/channels/308324031478890497/343418646300852225), using the pinned format.
-- Select and log a PC of yours to assign DM rewards to, rolling for DM loot in [#treasurelog](https://discord.com/channels/308324031478890497/617808735770902718). Log both in your MAL and [#session-log](https://discord.com/channels/308324031478890497/617788648439676929).
+- Select and log a PC of yours to assign DM rewards to, rolling for DM loot in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718). Log both in your MAL and [#session-log](https://discord.com/channels/308324031478890497/617788648439676929).
 
 
 ### Important Links
@@ -44,7 +44,7 @@ Read through this document to familiarize yourself with the rules on DMing on th
 
 | Channel | Purpose |
 | :--- | :--- |
-| [#gamelistings](https://discord.com/channels/308324031478890497/1366924010255814768) | List your games |
+| [#game-listings](https://discord.com/channels/308324031478890497/1366924010255814768) | List your games |
 | [#game-advertisement](https://discord.com/channels/308324031478890497/343396172293210112) | Alert players to your games |
 | [#looking-for-game](https://discord.com/channels/308324031478890497/343958795602493441) | Find players looking for games |
 | [#resources](https://discord.com/channels/308324031478890497/617817564554199100) | Find all major server documents |

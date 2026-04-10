@@ -18,7 +18,7 @@ Besides voiced sessions, you can choose to run a game in text as a Play-By-Post 
 
 ### Co-DMing
 
-Besides DMing by yourself, you can choose to <b>co-DM</b> a game with another DM and run the game together. Only up to <b>two</b> DMs can co-DM a game at a time, and both DMs earn DM rewards for the game. Additionally, the DMs share their DM privileges for the game: for example, a Trial DM and a Full DM co-DMing the same game can use all of the Full DM privileges.
+Besides DMing by yourself, you can choose to <b>co-DM</b> a game with another DM and run the game together. Only up to <b>two</b> DMs can co-DM a game at a time, and both DMs earn DM rewards for the game. Additionally, the DMs share their DM privileges for the game: for example, a <span class="role-trial-dm">Trial DM</span> and a <span class="role-full-dm">Full DM</span> co-DMing the same game can use all of the <span class="role-full-dm">Full DM</span> privileges.
 
 ### Encounters
 
@@ -80,7 +80,7 @@ After you have posted the session log for the game, you can select and apply the
 
 - Your selected DMPC earns the same amount of DTP as the PCs in the game
 - Your selected DMPC earns XP per session hour and gold for their level as per the table below. For XP, you earn half the listed amount for a half hour.
-- Your selected DMPC gains a Loot Reward: you can either (a) select a T0 item in Allowed Content (following the guidelines for predetermining T0 consumables if selecting a consumable) (b) roll a random loot roll for your DMPC’s level in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) using the pinned format (treat the number of players as 1 and the APL = your DMPC’s level) or (c) gain either 1 Renown or 1 Piety for a group or faith the DMPC already has 1+ Renown or Piety with.
+- Your selected DMPC gains a Loot Reward: you can either (a) select a T0 item in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=1722048058) (following the guidelines for predetermining T0 consumables if selecting a consumable) (b) roll a random loot roll for your DMPC’s level in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) using the pinned format (treat the number of players as 1 and the APL = your DMPC’s level) or (c) gain either 1 Renown or 1 Piety for a group or faith the DMPC already has 1+ Renown or Piety with.
 - DM Gold and DM Loot is only obtained for sessions that last 3+ hours.
 
 ### DM XP and Gold

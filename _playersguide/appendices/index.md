@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Players Guide Appendices"
-order: 1
+order: 89
 background_image:
 hide_from_nav: true  
 ---
