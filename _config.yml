@@ -89,6 +89,9 @@ navigation:
   - title: "FAQ"
     url: /faq.html
 
+  - title: "Help"
+    collection: help
+
   - title: "Resources"
     collection: resources
 

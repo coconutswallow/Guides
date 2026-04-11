@@ -1,6 +1,7 @@
 ---
 title: Help Index
 layout: doc
+permalink: /help/
 order: 1
 exclude_from_search: true
 ---
