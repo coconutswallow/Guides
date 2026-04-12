@@ -7,9 +7,11 @@ background_image: /assets/images/tavern_brawl.jpg
 
 ### Equipment Purchases
 
-You can purchase everything under the <b>Equipment</b> Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (some conditions may apply - please read the item details).  All other types of items (e.g. magical items can only be purchased from other players or recieved as loot from adventures)
+You can purchase everything under the <b>Equipment</b> Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (some conditions may apply - please read the item details).  
 
-Equipment purchases of this type can be made during downtime, or in-session as allowed by the DM (e.g. when the party at a market or in the vicinity of a merchant).
+Items not listed under the Equipment Tab (e.g. magical items) can only be purchased from other players or recieved as loot from adventures.
+
+Equipment purchases can be made during downtime, or in-session as allowed by the DM (e.g. when the party is at a market or in the vicinity of a merchant).
 
 #### Making equipment purchases during downtime:
 
@@ -44,6 +46,7 @@ You can trade items with other PCs. Only PCs in the same location can trade with
 
 ![Trade Example]({{ '/assets/images/trade-example.png' | relative_url }})
 
+You can list your items for trade in <a href="https://discord.com/channels/308324031478890497/617822091164516405">#trade-listing</a>.  But please observe the <a href="https://discord.com/channels/308324031478890497/617822091164516405/1424311899843068005">rules for posts</a> in this channel.
+
 **Note**: You can’t trade gold or equipment that can be sold for gold between your PCs, even by proxy or cross character trade (such as trading an item from one of your PCs and receiving an item on another PC).
 
-You can list your items for trade in <a href="https://discord.com/channels/308324031478890497/617822091164516405">#trade-listing</a>.  But please observe the <a href="https://discord.com/channels/308324031478890497/617822091164516405/1424311899843068005">rules for posts</a> in this channel.

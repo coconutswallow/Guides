@@ -38,6 +38,11 @@ The following additional rules apply during character creation beyond the offici
 | <strong>Starting Equipment</strong>      | Your character’s background and initial class determines this. Rolling for gold is not allowed. Note: A character that starts at level 5 starts with an additional 600 GP.                                                                                                                                                                                                              |
 | <strong>Renown</strong>                  | Renown. You can start with a Renown score of 3 as a respected member of a group in the setting, including associated Renown rewards. See <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> Content for details. 
 
+### Character Backstory
+
+You are welcome to create a backstory for your character, but it is not required.  If you do, please make sure it is consistent with the setting of the Forgotten Realms.  If you would like to share your backstory with the community, you are welcome to create an entry in the [#Heroes Hall](https://discord.com/channels/308324031478890497/1402077681088073768) channel.  DMs may read these backstories as part of their selection process for games or potentially incorporate the backstory into the adventure!
+
+
 ### Notes
 
 * There is no limit to the number of characters you wish to create as long as they adhere to the rules above!

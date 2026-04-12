@@ -4,14 +4,17 @@ title: "Appendix: Bastions"
 order: 91
 background_image: /assets/images/tavern_brawl.jpg
 ---
+A Bastion is a location that belongs to a Player Character - essentially their home - providing a place to call their own and opens opportunities to them such as crafting, summoning aid, and a range of other activities.
 
 Player characters can acquire and use Bastions as described in the 2024 Dungeon Master’s Guide and as follows. See <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> for more details.
 
 ## Building Bastions
 
-Bastions aren’t gained from levelling up, but instead must be built in downtime using gold and DTP, with costs listed in <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> for more details. Your initial Bastion must consist of two Basic Facilities (one Cramped and one Roomy) and two Special Facilities. You must be level 5+ to build and benefit from a Bastion.
+Bastions aren’t gained from levelling up, but instead must be built in downtime using gold and DTP, with costs listed in <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> for more details. 
 
-You must meet the prerequisites of any Special Facility in order to build and benefit from it, and the maximum number of Special Facilities your Bastion can have at any given time depends on your character level.
+Your initial Bastion must consist of two Basic Facilities (one Cramped and one Roomy) and two Special Facilities. Building a basic Bastion with these facilities will generally cost 3500 GP and 155 DTP.
+
+You must be level 5+ to build and benefit from a Bastion. You must meet the prerequisites of any Special Facility in order to build and benefit from it, and the maximum number of Special Facilities your Bastion can have at any given time depends on your character level.
 
 |Level|	Special Facilities|
 |5 - 8|2|
