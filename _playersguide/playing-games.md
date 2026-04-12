@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Playing Games"
-order: 12
+order: 13
 background_image: /assets/images/tavern_brawl.jpg
 ---
 
