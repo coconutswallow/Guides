@@ -39,20 +39,4 @@ Once you've created your first character sheet, you should add the character in 
 
 Your character comes with initial gold and equipment based on the rules of the PHB.  You can purchase everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (some conditions may apply - please read the item details).  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
 
-Equipment Purchase Log:
-
-![Equipment Purchase Downtime Log]({{ '/assets/images/mal-equipment-purchase.png' | relative_url }})
-
-In the inventory section of your MAL, add your equipment:
-
-![Inventory Update]({{ '/assets/images/mal-inventory.png' | relative_url }})
-
-Then in discord in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>, add an entry like this:
-
-<code>mydiscord_id as character-name (level) spends xx GP to purchase goods</code>
-
-Example:
-
-<code>@player1 as Robin Hood (5) spends 35GP to purchase 1x Shortbow and 1x Leather Armor</code>
-
-**Note:** that reselling equipment to the general market is at 50% value of the original purchase price.  You can also buy and sell goods to other players.  See section on Trades in Downtime Activities for more details.
+See the next page for examples of how to log an equipment purchase.

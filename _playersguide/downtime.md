@@ -21,6 +21,10 @@ You can buy and sell items as listed. The purchase limit in Hawthorne is 15,000G
 
 ```PlayerDiscord as Character (level) purchases <list items> for <amount> gp```
 
+### Trading with other players
+
+You can trade items with other PCs. Only PCs in the same location can trade with each other and any items you obtain via trading with another PC must be of your PC’s tier or lower. All trades must be logged in #trade-logs and both players’ MALs must be updated with the corresponding entries.  See the previous page for an example of how to log a trade.
+
 ### Bastions
 
 You can construct and use a Bastion and its facilities. See [Appendix: Bastions](/Guides/playersguide/appendices/bastions/) and <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> for details.
@@ -48,16 +52,6 @@ You can cast a spell with a lasting effect or copy a spell.  Note that Hawthorne
 ### Spellcasting Services
 
 You can purchase spellcasting services for the listed level 0 - 5 spells in Hawthorne. Outside of Hawthorne, villages offer up to level 2 spells and towns and cities offer up to level 5 spells.
-
-### Trading
-
-You can trade items with other PCs. Only PCs in the same location can trade with each other and any items you obtain via trading with another PC must be of your PC’s tier or lower. All trades must be logged in <a href="https://discord.com/channels/308324031478890497/617832619689902100">#trade-logs</a> and both players’ MALs must be updated with the corresponding entries.
-
-![Trade Example]({{ '/assets/images/trade-example.png' | relative_url }})
-
-**Note**: You can’t trade gold or equipment that can be sold for gold between your PCs, even by proxy or cross character trade (such as trading an item from one of your PCs and receiving an item on another PC).
-
-You can list your items for trade in <a href="https://discord.com/channels/308324031478890497/617822091164516405">#trade-listing</a>.  But please observe the <a href="https://discord.com/channels/308324031478890497/617822091164516405/1424311899843068005">rules for posts</a> in this channel.
 
 ### Training
 
