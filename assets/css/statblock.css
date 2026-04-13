@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Marcellus+SC&display=swap');
+
 /* ============================================ */
 /* D&D 2024 MONSTER STAT BLOCK STYLES */
 /* ============================================ */
@@ -22,7 +24,7 @@
  */
 
 .monster-page .page {
-  max-width: 1000px;
+  max-width: 1400px; /* Match standard site width */
   background: var(--statblock-page-bg) var(--statblock-texture);
   padding: 20px;
   box-shadow: 0 0 15px var(--statblock-box-shadow);
@@ -45,12 +47,12 @@ blockquote.stat-block,
 .stat-block blockquote,
 .monster-page blockquote {
   background: var(--color-bg-light);
-  border: 2px solid var(--color-primary);
-  border-radius: 8px;
+  border: 5px double var(--color-primary);
+  border-radius: 12px;
   padding: 0; /* Padding added to children instead */
   margin: 1em 0;
   box-shadow: 0 0 8px var(--statblock-card-shadow);
-  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-family: 'Alegreya Sans', 'Source Sans 3', Arial, sans-serif;
   font-style: normal; /* Override default blockquote italic */
   overflow: hidden;
   page-break-inside: avoid; /* Keep stat block together when printing */
@@ -68,8 +70,8 @@ blockquote.stat-block,
 
 .monster-page blockquote h2,
 blockquote.stat-block h2 {
-  font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
-  font-size: 1.3em;
+  font-family: 'Marcellus SC', 'Cinzel Decorative', 'Cinzel', Georgia, serif;
+  font-size: 1.6em;
   color: var(--statblock-header-text);
   background: var(--color-primary);
   border: none;
@@ -247,7 +249,7 @@ blockquote.stat-block table td {
   border: none;
   background: none;
   min-width: 0;
-  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-family: 'Alegreya Sans', 'Source Sans 3', Arial, sans-serif;
   font-style: normal;
   color: var(--color-text);
   transition: color 0.3s ease, background-color 0.3s ease;
@@ -258,9 +260,13 @@ blockquote.stat-block table td {
 blockquote.stat-block table th {
   font-weight: 700;
   color: var(--color-bg-light);
+  background: var(--color-primary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 0.9em;
+  font-size: 0.8em;
+  padding: 4px 2px;
+  text-align: center;
+  border-radius: 2px;
 }
 
 /* Table data cells */
@@ -294,7 +300,7 @@ blockquote.stat-block table td {
 blockquote.stat-block table td:nth-child(1),
 blockquote.stat-block table td:nth-child(5),
 blockquote.stat-block table td:nth-child(9) {
-  width: 12%;
+  width: 10%;
   text-align: left;
   font-weight: 700;
   padding-left: 6px;
@@ -307,7 +313,7 @@ blockquote.stat-block table td:nth-child(9) {
 blockquote.stat-block table td:nth-child(2),
 blockquote.stat-block table td:nth-child(6),
 blockquote.stat-block table td:nth-child(10) {
-  width: 8%;
+  width: 7%;
   font-weight: 600;
 }
 
@@ -324,7 +330,7 @@ blockquote.stat-block table td:nth-child(7),
 blockquote.stat-block table td:nth-child(8),
 blockquote.stat-block table td:nth-child(11),
 blockquote.stat-block table td:nth-child(12) {
-  width: 8%;
+  width: 7%;
   font-weight: 400;
   background: var(--statblock-modifier-bg);
 }
@@ -356,7 +362,7 @@ blockquote.stat-block hr {
  */
 
 .statblock-creator {
-  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-family: 'Alegreya Sans', 'Source Sans 3', Arial, sans-serif;
   font-size: 0.9em;
   font-style: italic;
   color: var(--color-primary);
@@ -586,3 +592,79 @@ blockquote.stat-block hr {
     page-break-inside: avoid;
   }
 }
+/* ============================================ */
+/* MONSTER DETAIL VIEW / LAYOUT HELPERS */
+/* ============================================ */
+
+.monster-detail-layout {
+    width: 100%;
+}
+
+.stat-row, .stat-row-split {
+    margin: 6px 0; 
+    font-size: 1em;
+    line-height: 1.4;
+    color: var(--color-text);
+}
+
+.stat-row-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.feature-item p { 
+    display: inline-block; 
+    margin-bottom: 0.5em; 
+    font-style: normal !important; 
+}
+
+.feature-item li p { 
+    display: block; 
+    margin-bottom: 0; 
+}
+
+.monster-lore-container {
+    margin-bottom: 2rem;
+}
+
+.image-caption {
+    font-size: 0.9em;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-top: 0.5em;
+}
+
+/* Ability Table Overrides */
+.ability-table { 
+    width: 100%; 
+    text-align: center; 
+    border-collapse: collapse; 
+    margin-bottom: 0.5em; 
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 1000px) {
+    .monster-header {
+        margin-top: 4rem; 
+    }
+
+    .monster-detail-layout { 
+        display: flex !important; 
+        flex-direction: column !important;
+        gap: 2rem !important;
+    }
+    
+    .left-col, .right-col {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .stat-row-split {
+        grid-template-columns: 1fr;
+    }
+}
+
