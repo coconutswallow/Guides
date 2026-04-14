@@ -53,9 +53,9 @@ export async function renderDashboard(container) {
                     <td><span class="status-badge ${statusClass}">${m.status || 'Draft'}</span></td>
                     <td>${new Date(m.updated_at).toLocaleDateString()}</td>
                     <td>
-                        ${m.status === 'Pending'
-                    ? '<span class="status-badge status-pending" style="font-size: 0.7rem;">Pending Review</span>'
-                    : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">Edit</a>`
+                        ${['Pending', 'Queued'].includes(m.status)
+                    ? `<span class="status-badge status-${m.status.toLowerCase()}" style="font-size: 0.7rem;">${m.status === 'Pending' ? 'Pending Review' : 'Queued for Patch'}</span>`
+                    : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">${m.status === 'Archived' ? 'View' : 'Edit'}</a>`
                 }
                         ${m.status === 'Approved' ? `<a href="${(window.MONSTER_EDITOR_CONFIG?.baseUrl || '/') + 'monsters/#/' + m.slug}" target="_blank" class="btn btn-sm btn-outline-secondary">View Live</a>` : ''}
                     </td>
@@ -68,13 +68,6 @@ export async function renderDashboard(container) {
     container.innerHTML = html;
 }
 
-/**
- * Orchestrates the full render of the editor form.
- * @param {HTMLElement} container - The element to render into.
- * @param {Object} currentMonster - Current monster data object.
- * @param {Object} lookups - Data lookup tables.
- * @param {string} defaultCreator - Default name for creator field.
- */
 export function renderEditor(container, currentMonster, lookups, defaultCreator) {
     container.innerHTML = getEditorTemplate(currentMonster, lookups, defaultCreator);
 }
@@ -88,7 +81,11 @@ export function renderEditor(container, currentMonster, lookups, defaultCreator)
  */
 export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
     const isNew = !currentMonster.row_id;
-    const isLocked = ['Pending', 'Approved'].includes(currentMonster.status);
+    const isLocked = ['Pending', 'Queued', 'Approved', 'Archived'].includes(currentMonster.status);
+    const lockReason = currentMonster.status === 'Pending' ? 'Pending Review' 
+                     : currentMonster.status === 'Queued' ? 'Queued for Patch'
+                     : currentMonster.status === 'Approved' ? 'Approved'
+                     : 'Archived';
 
     return `
         <div class="editor-toolbar" style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; position: sticky; top: 100px; background: var(--color-bg-page); padding: 1rem 0; z-index: 100; border-bottom: 1px solid var(--color-border);">
@@ -99,16 +96,19 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
                 ${!isNew ? `<span class="status-badge status-${(currentMonster.status || 'draft').toLowerCase()}">${currentMonster.status || 'Draft'}</span>` : '<span class="status-badge status-draft">Draft</span>'}
             </h2>
             <div id="save-status" style="font-size: 0.8rem; color: var(--color-text-secondary);"></div>
-            <button type="button" id="btn-save" class="btn btn-save" ${isLocked ? 'disabled title="Monster is locked while Pending or Approved"' : ''}>Save Draft</button>
+            <button type="button" id="btn-save" class="btn btn-save" ${isLocked ? `disabled title="Monster is locked (${lockReason})"` : ''}>Save Draft</button>
             <button type="button" id="btn-preview" class="btn btn-preview">Preview Statblock</button>
-            <button type="button" id="btn-submit" class="btn btn-submit" ${isLocked ? 'disabled title="Monster is locked while Pending or Approved"' : ''}>Submit for Approval</button>
+            <button type="button" id="btn-submit" class="btn btn-submit" ${isLocked ? `disabled title="Monster is locked (${lockReason})"` : ''}>Submit for Review</button>
             ${currentMonster.status === 'Approved' ? '<button type="button" id="btn-version" class="btn btn-outline-primary" style="margin-left: auto;">Save as New Version</button>' : ''}
         </div>
 
         ${isLocked ? `
             <div class="alert alert-warning" style="margin-bottom: 2rem;">
-                <strong>Locked:</strong> This monster is currently <strong>${currentMonster.status}</strong> and cannot be edited. 
-                ${currentMonster.status === 'Pending' ? 'If you need to make changes, please wait for staff review or contact Admin.' : 'Approved monsters are locked to maintain consistency in the compendium.'}
+                <strong>Locked:</strong> This monster version is currently <strong>${currentMonster.status}</strong> and cannot be edited. 
+                ${currentMonster.status === 'Pending' ? 'If you need to make changes, please wait for staff review or contact Admin.' : 
+                  currentMonster.status === 'Queued' ? 'This version is accepted and waiting to be merged into the next patch release.' :
+                  currentMonster.status === 'Archived' ? 'This is an archived older version and is read-only.' :
+                  'Approved monsters are locked to maintain consistency in the compendium.'}
             </div>
         ` : ''}
 

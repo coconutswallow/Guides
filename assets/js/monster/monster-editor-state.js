@@ -2,6 +2,7 @@
  * monster-editor-state.js
  * Logic for managing monster editor state, validation, and auto-save timers.
  * Location: \assets\js\monster\monster-editor-state.js
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 
 /**
@@ -56,7 +57,7 @@ export function createEmptyMonster() {
  */
 export function syncMonsterFromForm(form, currentMonster) {
     if (!form || !currentMonster) return;
-    
+
     const formData = new FormData(form);
 
     currentMonster.name = formData.get('name');
@@ -143,7 +144,7 @@ export function validateMonster(currentMonster) {
 
     if (currentMonster.features) {
         currentMonster.features.forEach((f, i) => {
-            if (!f.name && !f.description) return; 
+            if (!f.name && !f.description) return;
             if (!f.name || f.name.trim() === '') {
                 errors.push(`${f.type || 'Feature'} #${i + 1} is missing a name.`);
             }
@@ -180,7 +181,7 @@ export function resetAutoSave(currentMonster, saveCallback, delay = 30000) {
 
     autoSaveTimeout = setTimeout(() => {
         console.log('[MonsterEditor] Triggering Auto-save...');
-        saveCallback(true); 
+        saveCallback(true);
     }, delay);
 }
 
@@ -211,13 +212,13 @@ export function getLocalCache(slug) {
         const raw = localStorage.getItem(`monster_draft_cache_${slug || 'new'}`);
         if (!raw) return null;
         const cache = JSON.parse(raw);
-        
+
         // Expire cache after 24 hours
         if (Date.now() - cache.timestamp > 86400000) {
             localStorage.removeItem(`monster_draft_cache_${slug || 'new'}`);
             return null;
         }
-        
+
         return cache.data;
     } catch (e) {
         return null;

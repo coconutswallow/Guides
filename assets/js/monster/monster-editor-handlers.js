@@ -195,7 +195,7 @@ export function attachEditorEvents(container, currentMonster, lookups) {
  */
 export async function handleSave(currentMonster, silent = false) {
     const statusDiv = document.getElementById('save-status');
-    if (!statusDiv || ['Pending', 'Approved'].includes(currentMonster?.status)) return;
+    if (!statusDiv || ['Pending', 'Queued', 'Approved', 'Archived'].includes(currentMonster?.status)) return;
 
     if (!silent) statusDiv.textContent = 'Saving...';
     syncMonsterFromForm(document.getElementById('monster-form'), currentMonster);

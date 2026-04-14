@@ -10,7 +10,8 @@ import { checkAccess } from '../auth-check.js';
 import {
     getPendingMonsters,
     approveMonster,
-    rejectMonster
+    rejectMonster,
+    addToPatchQueue
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
 
@@ -129,7 +130,8 @@ function showReview(monster) {
                 <p><strong>Slug:</strong> ${monster.slug}</p>
                 
                 <div class="decision-box" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
-                    <button id="btn-approve" class="btn btn-approve" style="width: 100%; margin-bottom: 0.8rem;">Approve & Publish</button>
+                    <button id="btn-approve" class="btn btn-approve" style="width: 100%; margin-bottom: 0.8rem; font-weight: bold;">Approve & Publish</button>
+                    <button id="btn-queue" class="btn btn-queue" style="width: 100%; margin-bottom: 0.8rem;">Add to Patch Queue</button>
                     <button id="btn-reject" class="btn btn-reject" style="width: 100%;">Reject (Send to Drafts)</button>
                 </div>
                 <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="btn btn-sm btn-outline-secondary" style="margin-top: 1.5rem; width: 100%;">Back to Top</button>
@@ -146,6 +148,7 @@ function showReview(monster) {
 
     // Decision Listeners
     target.querySelector('#btn-approve').addEventListener('click', () => handleDecision('approve'));
+    target.querySelector('#btn-queue').addEventListener('click', () => handleDecision('queue'));
     target.querySelector('#btn-reject').addEventListener('click', () => handleDecision('reject'));
 
     // Scroll to review panel
@@ -165,10 +168,13 @@ async function handleDecision(type) {
     try {
         if (type === 'approve') {
             await approveMonster(currentReview.row_id, user.id);
-            alert('Monster Approved!');
+            alert('Monster Approved & Published!');
+        } else if (type === 'queue') {
+            await addToPatchQueue(currentReview.row_id, user.id);
+            alert('Monster added to Patch Queue.');
         } else {
             await rejectMonster(currentReview.row_id, user.id);
-            alert('Monster Rejected.');
+            alert('Monster Rejected (Sent back to Drafts).');
         }
 
         // Refresh queue

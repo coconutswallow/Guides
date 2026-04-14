@@ -319,7 +319,8 @@ export async function getPendingMonsters() {
  * @returns {Promise<Object>} The approved monster record.
  */
 export async function approveMonster(rowId, reviewerId) {
-    const { data: pending, error: fetchErr } = await supabase
+    // 1. Fetch the target monster to get its monster_id and metadata
+    const { data: target, error: fetchErr } = await supabase
         .from('monsters')
         .select('*')
         .eq('row_id', rowId)
@@ -327,27 +328,33 @@ export async function approveMonster(rowId, reviewerId) {
 
     if (fetchErr) throw fetchErr;
 
-    const { data: oldApproved } = await supabase
+    // 2. Check for any currently live/approved versions of the same monster
+    const { data: oldVersions } = await supabase
         .from('monsters')
         .select('row_id, slug')
-        .eq('monster_id', pending.monster_id)
-        .eq('status', 'Approved')
-        .maybeSingle();
+        .eq('monster_id', target.monster_id)
+        .or('status.eq.Approved,is_live.eq.true')
+        .neq('row_id', rowId); // Don't archive itself if it was already somehow live
 
-    if (oldApproved) {
-        const archivedSlug = `${oldApproved.slug}-archived-${oldApproved.row_id.substring(0, 8)}`;
-        await supabase
-            .from('monsters')
-            .update({
-                status: 'Archived',
-                is_live: false,
-                slug: archivedSlug,
-                archived_at: new Date().toISOString()
-            })
-            .eq('row_id', oldApproved.row_id);
+    // 3. Archive older versions
+    if (oldVersions && oldVersions.length > 0) {
+        for (const old of oldVersions) {
+            const archivedSlug = `${old.slug}-archived-${old.row_id.substring(0, 8)}`;
+            await supabase
+                .from('monsters')
+                .update({
+                    status: 'Archived',
+                    is_live: false,
+                    slug: archivedSlug,
+                    archived_at: new Date().toISOString()
+                })
+                .eq('row_id', old.row_id);
+        }
     }
 
-    const cleanSlug = pending.slug.replace(/-v\d+(\.\d+)?$/, '');
+    // 4. Update the target monster to Approved & Live
+    // We strip version suffixes (e.g. -v2.0) from the slug when publishing live.
+    const cleanSlug = target.slug.replace(/-v\d+(\.\d+)?$/, '');
 
     const { data, error } = await supabase
         .from('monsters')
@@ -355,6 +362,28 @@ export async function approveMonster(rowId, reviewerId) {
             status: 'Approved',
             is_live: true,
             slug: cleanSlug,
+            reviewer_id: reviewerId
+        })
+        .eq('row_id', rowId)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+/**
+ * Moves a monster submission to the Patch Queue.
+ * @param {string} rowId - The UUID of the monster row.
+ * @param {string} reviewerId - The Supabase Auth ID of the reviewer.
+ * @returns {Promise<Object>} The updated monster record.
+ */
+export async function addToPatchQueue(rowId, reviewerId) {
+    const { data, error } = await supabase
+        .from('monsters')
+        .update({
+            status: 'Queued',
+            is_live: false,
             reviewer_id: reviewerId
         })
         .eq('row_id', rowId)
