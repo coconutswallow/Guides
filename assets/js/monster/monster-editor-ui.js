@@ -2,6 +2,7 @@
  * monster-editor-ui.js
  * Component for generating and rendering the Monster Editor UI templates.
  * Location: \assets\js\monster\monster-editor-ui.js
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 
 import { supabase } from '../supabaseClient.js';
@@ -53,9 +54,9 @@ export async function renderDashboard(container) {
                     <td>${new Date(m.updated_at).toLocaleDateString()}</td>
                     <td>
                         ${m.status === 'Pending'
-                            ? '<span class="status-badge status-pending" style="font-size: 0.7rem;">Pending Review</span>'
-                            : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">Edit</a>`
-                        }
+                    ? '<span class="status-badge status-pending" style="font-size: 0.7rem;">Pending Review</span>'
+                    : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">Edit</a>`
+                }
                         ${m.status === 'Approved' ? `<a href="${(window.MONSTER_EDITOR_CONFIG?.baseUrl || '/') + 'monsters/#/' + m.slug}" target="_blank" class="btn btn-sm btn-outline-secondary">View Live</a>` : ''}
                     </td>
                 </tr>
@@ -436,7 +437,7 @@ export function renderFeatureList(currentMonster) {
     };
 
     renderBucket(buckets.traits, 'traits-container', true);
-    renderBucket(buckets.actions, 'actions-container', false); 
+    renderBucket(buckets.actions, 'actions-container', false);
     renderBucket(buckets.legendary, 'legendary-container', true);
     renderBucket(buckets.lair, 'lair-container', true);
     renderBucket(buckets.regional, 'regional-container', true);

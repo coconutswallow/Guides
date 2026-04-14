@@ -2,14 +2,15 @@
  * monster-approvals.js
  * Controller for the staff Approval queue.
  * Location: \assets\js\monster\monster-approvals.js
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 
 import { supabase } from '../supabaseClient.js';
 import { checkAccess } from '../auth-check.js';
-import { 
-    getPendingMonsters, 
-    approveMonster, 
-    rejectMonster 
+import {
+    getPendingMonsters,
+    approveMonster,
+    rejectMonster
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
 
@@ -28,7 +29,7 @@ async function init() {
      */
     window.handlePageAuth = async (user) => {
         const container = document.getElementById('approvals-app');
-        
+
         if (!user) {
             container.innerHTML = `
                 <div class="alert alert-info" style="margin-top: 2rem;">
@@ -61,7 +62,7 @@ async function init() {
  */
 async function renderQueue(container) {
     container.innerHTML = '<div class="loading">Fetching queue...</div>';
-    
+
     pendingQueue = await getPendingMonsters();
 
     let html = `
@@ -119,7 +120,7 @@ async function renderQueue(container) {
 function showReview(monster) {
     currentReview = monster;
     const target = document.getElementById('review-target');
-    
+
     target.innerHTML = `
         <div class="review-panel">
             <div class="review-sidebar">
@@ -158,7 +159,7 @@ function showReview(monster) {
  */
 async function handleDecision(type) {
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!confirm(`Are you sure you want to ${type} this monster?`)) return;
 
     try {
@@ -169,7 +170,7 @@ async function handleDecision(type) {
             await rejectMonster(currentReview.row_id, user.id);
             alert('Monster Rejected.');
         }
-        
+
         // Refresh queue
         renderQueue(document.getElementById('approvals-app'));
     } catch (err) {

@@ -2,6 +2,7 @@
  * monster-service.js
  * Service to interact with Supabase for Monster data.
  * Location: \assets\js\monster\monster-service.js
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 import { supabase } from '../supabaseClient.js';
 import { logError } from '../error-logger.js';
@@ -14,7 +15,7 @@ export async function getMonsters() {
         .select('name, slug, species, cr, image_url, row_id, size, usage, alignment, creator_discord_id, creator')
         .eq('is_live', true)
         .order('name');
-    
+
     if (error) {
         logError('monster-service', `Error fetching monsters: ${error.message}`);
         return [];
@@ -25,7 +26,7 @@ export async function getMonsters() {
 export async function getMonsterBySlug(slug) {
     let { data: monster, error } = await supabase
         .from('monsters')
-        .select('*, creator_discord_id::text, creator') 
+        .select('*, creator_discord_id::text, creator')
         .eq('slug', slug)
         .single();
 
@@ -87,7 +88,7 @@ export async function saveMonsterDraft(monsterData, features = []) {
         .select('discord_id, display_name')
         .eq('user_id', user.id)
         .single();
-    
+
     if (userError || !userData) {
         logError('monster-service', `Unauthorized: User ${user.id} not found in discord_users.`);
         throw new Error('User profile not found. Please contact staff or re-sync your Discord.');
@@ -103,13 +104,13 @@ export async function saveMonsterDraft(monsterData, features = []) {
     };
 
     if (isNew) {
-        delete payload.row_id; 
+        delete payload.row_id;
         payload.monster_id = payload.monster_id || crypto.randomUUID();
         payload.version = payload.version || '1.0';
         payload.created_at = now;
         payload.creator_discord_id = discordId;
         payload.creator = displayName;
-        payload.is_live = false; 
+        payload.is_live = false;
     } else {
         delete payload.creator_discord_id;
         delete payload.creator;
@@ -138,7 +139,7 @@ export async function saveMonsterDraft(monsterData, features = []) {
             .from('monster_features')
             .select('id')
             .eq('parent_row_id', savedMonster.row_id);
-            
+
         if (fetchErr) throw new Error(`Could not fetch existing features: ${fetchErr.message}`);
 
         const dbIds = (dbFeats || []).map(f => f.id);
@@ -150,7 +151,7 @@ export async function saveMonsterDraft(monsterData, features = []) {
                 .from('monster_features')
                 .delete()
                 .in('id', deletedIds);
-                
+
             if (delErr) throw new Error(`Failed to delete removed features: ${delErr.message}`);
         }
     }
@@ -193,7 +194,7 @@ export async function createNewVersion(sourceRowId) {
         .select('*')
         .eq('row_id', sourceRowId)
         .single();
-    
+
     if (sourceErr) throw sourceErr;
 
     const { data: existingDraft } = await supabase
@@ -209,7 +210,7 @@ export async function createNewVersion(sourceRowId) {
 
     const currentVersion = parseFloat(source.version || '1.0');
     const newVersion = (currentVersion + 1.0).toFixed(1);
-    
+
     const newMonster = { ...source };
     delete newMonster.row_id;
     delete newMonster.created_at;
@@ -217,10 +218,10 @@ export async function createNewVersion(sourceRowId) {
     delete newMonster.submitted_at;
     delete newMonster.archived_at;
     delete newMonster.reviewer_notes;
-    
-    const baseSlug = source.slug.replace(/-v\d+(\.\d+)?$/, ''); 
+
+    const baseSlug = source.slug.replace(/-v\d+(\.\d+)?$/, '');
     newMonster.slug = `${baseSlug}-v${newVersion}`;
-    
+
     newMonster.version = newVersion;
     newMonster.status = 'Draft';
     newMonster.is_live = false;
@@ -251,7 +252,7 @@ export async function createNewVersion(sourceRowId) {
         const { error: featErr } = await supabase
             .from('monster_features')
             .insert(clonedFeatures);
-            
+
         if (featErr) console.error('[MonsterService] Error cloning features:', featErr);
     }
 
@@ -266,10 +267,10 @@ export async function createNewVersion(sourceRowId) {
 export async function submitMonsterForApproval(rowId) {
     const { data, error } = await supabase
         .from('monsters')
-        .update({ 
-            status: 'Pending', 
-            submitted_at: new Date().toISOString(), 
-            is_live: false 
+        .update({
+            status: 'Pending',
+            submitted_at: new Date().toISOString(),
+            is_live: false
         })
         .eq('row_id', rowId)
         .select()
@@ -295,7 +296,7 @@ export async function getPendingMonsters() {
         `)
         .eq('status', 'Pending')
         .order('submitted_at', { ascending: true });
-    
+
     if (data) {
         data.forEach(m => {
             if (m.features) {
@@ -323,7 +324,7 @@ export async function approveMonster(rowId, reviewerId) {
         .select('*')
         .eq('row_id', rowId)
         .single();
-    
+
     if (fetchErr) throw fetchErr;
 
     const { data: oldApproved } = await supabase
@@ -337,9 +338,9 @@ export async function approveMonster(rowId, reviewerId) {
         const archivedSlug = `${oldApproved.slug}-archived-${oldApproved.row_id.substring(0, 8)}`;
         await supabase
             .from('monsters')
-            .update({ 
-                status: 'Archived', 
-                is_live: false, 
+            .update({
+                status: 'Archived',
+                is_live: false,
                 slug: archivedSlug,
                 archived_at: new Date().toISOString()
             })
@@ -350,9 +351,9 @@ export async function approveMonster(rowId, reviewerId) {
 
     const { data, error } = await supabase
         .from('monsters')
-        .update({ 
-            status: 'Approved', 
-            is_live: true, 
+        .update({
+            status: 'Approved',
+            is_live: true,
             slug: cleanSlug,
             reviewer_id: reviewerId
         })
@@ -373,9 +374,9 @@ export async function approveMonster(rowId, reviewerId) {
 export async function rejectMonster(rowId, reviewerId) {
     const { data, error } = await supabase
         .from('monsters')
-        .update({ 
-            status: 'Draft', 
-            is_live: false, 
+        .update({
+            status: 'Draft',
+            is_live: false,
             reviewer_id: reviewerId
         })
         .eq('row_id', rowId)
@@ -398,7 +399,7 @@ export async function getMonsterLookups() {
         .select('data')
         .eq('type', 'monster')
         .single();
-    
+
     if (error || !data) {
         logError('monster-service', `Error fetching lookups: ${error?.message || 'No data'}`);
         return null;
@@ -407,7 +408,7 @@ export async function getMonsterLookups() {
     if (typeof data.data === 'string') {
         return JSON.parse(data.data);
     }
-    
+
     return data.data;
 }
 

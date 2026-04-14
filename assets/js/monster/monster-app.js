@@ -5,10 +5,10 @@
  */
 
 // Import the client config (Go up one level)
-import { supabase } from '../supabaseClient.js'; 
+import { supabase } from '../supabaseClient.js';
 
 // Import Views (Look in current folder's 'views' subfolder)
-import { renderMonsterLibrary } from './views/monster-library.js'; 
+import { renderMonsterLibrary } from './views/monster-library.js';
 import { renderMonsterDetail } from './views/monster-detail.js';
 
 // --- Router Configuration ---
@@ -23,7 +23,7 @@ const routes = {
  */
 function getRouteInfo() {
     const hash = window.location.hash.slice(1) || '/';
-    
+
     // 1. Exact Match
     if (routes[hash]) {
         return { handler: routes[hash], params: {} };
@@ -68,7 +68,7 @@ async function handleRoute() {
 
     // Clear current content
     app.innerHTML = '';
-    
+
     // Render the new view
     await handler(app, params);
 }
@@ -78,13 +78,13 @@ async function handleRoute() {
 function init() {
     window.addEventListener('hashchange', handleRoute);
     window.addEventListener('load', handleRoute);
-    
+
     // Internal link delegation
     document.body.addEventListener('click', e => {
         const link = e.target.closest('[data-link]');
         if (link) {
             e.preventDefault();
-            window.location.hash = link.getAttribute('href'); 
+            window.location.hash = link.getAttribute('href');
         }
     });
 }

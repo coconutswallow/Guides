@@ -3,22 +3,23 @@
  * Main orchestrator for the Monster Compendium Editor.
  * This file handles routing and cross-module coordination.
  * Location: \assets\js\monster\monster-editor.js
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 
 import { supabase } from '../supabaseClient.js';
 import { checkAccess } from '../auth-check.js';
 import { getMonsterBySlug, getMyMonsters, getMonsterLookups } from './monster-service.js';
-import { 
-    renderDashboard, 
+import {
+    renderDashboard,
     renderEditor as renderEditorUI,
     renderFeatureList,
     initMarkdownWidget
 } from './monster-editor-ui.js';
 import { attachEditorEvents, handleSave, handlePreview, handleSubmit } from './monster-editor-handlers.js';
-import { 
-    createEmptyMonster, 
-    getLocalCache, 
-    clearLocalCache 
+import {
+    createEmptyMonster,
+    getLocalCache,
+    clearLocalCache
 } from './monster-editor-state.js';
 
 let lookups = null;
@@ -98,7 +99,7 @@ async function renderEditor(container, slug) {
 
     if (slug) {
         currentMonster = await getMonsterBySlug(slug);
-        
+
         // Safety: If not found in public view, try fetching from user's drafts
         if (!currentMonster) {
             const { data: { user } } = await supabase.auth.getUser();
@@ -121,7 +122,7 @@ async function renderEditor(container, slug) {
     }
 
     const defaultCreator = window.authManager?.user?.user_metadata?.full_name || '';
-    
+
     // 1. Render UI components
     renderEditorUI(container, currentMonster, lookups, defaultCreator);
 

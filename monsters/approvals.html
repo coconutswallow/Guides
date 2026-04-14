@@ -3,6 +3,7 @@ layout: default
 title: Monster Approvals
 permalink: /monsters/approvals/
 ---
+<!-- https://github.com/hawthorneguild/HawthorneTeams/issues/7-->
 
 <link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
 
@@ -32,7 +33,10 @@ permalink: /monsters/approvals/
 <script type="module" src="{{ '/assets/js/monster/monster-approvals.js' | relative_url }}"></script>
 
 <style>
-    .queue-container { margin-top: 2rem; }
+    .queue-container {
+        margin-top: 2rem;
+    }
+
     .review-panel {
         display: grid;
         grid-template-columns: 350px 1fr;
@@ -41,6 +45,7 @@ permalink: /monsters/approvals/
         border-top: 2px solid var(--color-border);
         padding-top: 2rem;
     }
+
     .review-sidebar {
         background: var(--color-bg-light);
         padding: 1.5rem;
@@ -49,15 +54,18 @@ permalink: /monsters/approvals/
         position: sticky;
         top: 100px;
     }
+
     .review-statblock {
         background: var(--color-bg-page);
         padding: 1rem;
     }
+
     .decision-box {
         margin-top: 1.5rem;
         padding-top: 1.5rem;
         border-top: 1px solid var(--color-border);
     }
+
     textarea[name="reviewer_notes"] {
         width: 100%;
         margin-bottom: 1rem;
@@ -66,6 +74,17 @@ permalink: /monsters/approvals/
         color: var(--color-text);
         border: 1px solid var(--color-border);
     }
-    .btn-approve { background: var(--palette-role-full-dm); color: white; width: 100%; margin-bottom: 0.5rem; }
-    .btn-reject { background: var(--palette-alert-danger-border); color: white; width: 100%; }
+
+    .btn-approve {
+        background: var(--palette-role-full-dm);
+        color: white;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-reject {
+        background: var(--palette-alert-danger-border);
+        color: white;
+        width: 100%;
+    }
 </style>
