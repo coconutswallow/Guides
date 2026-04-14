@@ -600,6 +600,27 @@ blockquote.stat-block hr {
     width: 100%;
 }
 
+/* Asymmetrical 2-column layout: Lore (flexible) | Statblock (fixed) */
+.monster-detail-layout.has-lore {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 450px;
+    gap: 4rem;
+    align-items: start;
+}
+
+.monster-detail-layout .left-col {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+
+/* Single column layout for monsters without lore */
+.monster-detail-layout.no-lore {
+    display: block;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .stat-row, .stat-row-split {
     margin: 6px 0; 
     font-size: 1em;
@@ -650,9 +671,9 @@ blockquote.stat-block hr {
     }
 
     .monster-detail-layout { 
-        display: flex !important; 
-        flex-direction: column !important;
-        gap: 2rem !important;
+        display: flex; 
+        flex-direction: column;
+        gap: 2rem;
     }
     
     .left-col, .right-col {
@@ -668,3 +689,80 @@ blockquote.stat-block hr {
     }
 }
 
+
+/* ============================================ */
+/* PREVIEW MODAL STYLES */
+/* ============================================ */
+
+#preview-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.85); /* Darken surroundings */
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s ease;
+}
+
+#preview-modal .modal-content {
+    background: transparent;
+    margin: 40px auto;
+    padding: 0;
+    width: 95%;
+    max-width: 1400px;
+    position: relative;
+    border: none;
+    z-index: 2001; /* Force above backdrop */
+}
+
+#preview-modal .close-modal {
+    position: fixed;
+    right: 30px;
+    top: 30px;
+    color: #fff;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2005; /* Highest layer */
+    text-shadow: 0 0 15px rgba(0,0,0,0.8);
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+#preview-modal .close-modal:hover {
+    transform: scale(1.2);
+    color: var(--color-primary);
+}
+
+/* Ensure the preview content feels like a real monster page */
+#preview-target {
+    padding-bottom: 100px;
+}
+
+#preview-target .monster-page {
+    background: var(--statblock-page-bg) var(--statblock-texture);
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    border-radius: 8px;
+    min-height: 200px;
+}
+
+#preview-target .page {
+    margin-top: 0 !important;
+    animation: slideIn 0.3s ease-out;
+    background: transparent !important; /* Let .monster-page parent handle it */
+    box-shadow: none !important;
+}
+
+#preview-target .monster-detail-layout.has-lore {
+    grid-template-columns: 1fr 45%;
+    gap: 3rem; /* Tighter gap for better layout in modal */
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

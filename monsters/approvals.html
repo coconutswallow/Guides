@@ -1,0 +1,71 @@
+---
+layout: default
+title: Monster Approvals
+permalink: /monsters/approvals/
+---
+
+<link rel="stylesheet" href="{{ '/assets/css/statblock.css' | relative_url }}">
+
+<div class="page page-wide">
+    <div id="auth-container">
+        {% include auth-header.html %}
+    </div>
+    <div id="approvals-app">
+        <div class="loading">
+            <h3>Checking Staff Access...</h3>
+            <p>Please login with Discord to access the moderation queue. Only Staff can approve monsters.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Load Marked.js for markdown support -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Provide Jekyll context to JS -->
+<script>
+    window.MONSTER_EDITOR_CONFIG = {
+        baseUrl: "{{ '/' | relative_url }}"
+    };
+</script>
+
+<!-- Main Approvals Logic -->
+<script type="module" src="{{ '/assets/js/monster/monster-approvals.js' | relative_url }}"></script>
+
+<style>
+    .queue-container { margin-top: 2rem; }
+    .review-panel {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+        border-top: 2px solid var(--color-border);
+        padding-top: 2rem;
+    }
+    .review-sidebar {
+        background: var(--color-bg-light);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        height: min-content;
+        position: sticky;
+        top: 100px;
+    }
+    .review-statblock {
+        background: var(--color-bg-page);
+        padding: 1rem;
+    }
+    .decision-box {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--color-border);
+    }
+    textarea[name="reviewer_notes"] {
+        width: 100%;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        background: var(--color-bg-page);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+    }
+    .btn-approve { background: var(--palette-role-full-dm); color: white; width: 100%; margin-bottom: 0.5rem; }
+    .btn-reject { background: var(--palette-alert-danger-border); color: white; width: 100%; }
+</style>

@@ -1,0 +1,253 @@
+---
+layout: default
+title: Monster Compendium Editor
+permalink: /monsters/editor/
+extra_css:
+  - /assets/css/statblock.css
+---
+
+<div class="page page-wide">
+    <div id="auth-container">
+        {% include auth-header.html %}
+    </div>
+    <div id="editor-app">
+        <div class="loading">
+            <h3>Checking Access...</h3>
+            <p>Please login with Discord to access the monster editor. Only DMs can submit or edit monsters.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Load Marked.js for markdown support in descriptions -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Provide Jekyll context to JS -->
+<script>
+    window.MONSTER_EDITOR_CONFIG = {
+        baseUrl: "{{ '/' | relative_url }}"
+    };
+</script>
+
+<!-- Main Editor Logic -->
+<script type="module" src="{{ '/assets/js/monster/monster-editor.js' | relative_url }}"></script>
+
+<style>
+    /* Editor Specific Styles */
+    .editor-dashboard { margin-top: 2rem; }
+    .status-badge {
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .status-draft { background: var(--palette-neutral-gray-300); color: #333; }
+    .status-pending { background: var(--palette-role-auditor); color: #fff; }
+    .status-approved { background: var(--palette-role-full-dm); color: #fff; }
+    
+    .form-section {
+        background: var(--color-bg-light);
+        border: 5px double var(--color-primary);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .form-section h3 { 
+        margin-top: 0; 
+        font-family: 'Marcellus SC', serif;
+        color: var(--color-primary);
+        border-bottom: 1px solid var(--color-primary); 
+        padding-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { 
+        display: block; 
+        font-weight: bold; 
+        margin-bottom: 0.3rem; 
+        color: var(--color-primary);
+        font-family: 'Marcellus SC', serif;
+        font-size: 0.9rem;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-page);
+        color: var(--color-text);
+        border-radius: 4px;
+        font-family: 'Alegreya Sans', sans-serif;
+        font-size: 1.05rem;
+    }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; }
+    
+    .form-control[readonly] {
+        background: var(--color-bg-medium);
+        cursor: default;
+        border-style: dashed;
+        color: var(--color-text-secondary);
+    }
+    .form-control.is-invalid {
+        border-color: var(--palette-alert-danger-border);
+        box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+    }
+    
+    .feature-card {
+        background: var(--color-bg-medium);
+        border: 1px solid var(--color-border);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    .feature-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .close-modal {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        font-size: 2.5rem;
+        cursor: pointer;
+        color: white;
+        z-index: 2005;
+        text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    button, .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 4px;
+        font-family: 'Marcellus SC', serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        display: inline-block;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    button:hover:not(:disabled), .btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    button:disabled, .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-save { background: var(--palette-role-lore); color: white; }
+    .btn-preview { background: var(--palette-brand-highlight); color: #333; }
+    .btn-submit { background: var(--palette-role-full-dm); color: white; }
+    .btn-delete { background: var(--palette-alert-danger-border); color: white; }
+    
+    .btn-outline-primary {
+        background: transparent !important;
+        border: 2px solid var(--color-primary) !important;
+        color: var(--color-primary) !important;
+    }
+    .btn-outline-primary:hover {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    /* Ability Table Editor (2024 Style) */
+    .ability-table-editor {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background: var(--color-bg-medium);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .ability-table-editor th {
+        background: var(--color-primary);
+        color: white;
+        font-family: 'Marcellus SC', serif;
+        font-size: 0.8rem;
+        padding: 5px;
+        text-transform: uppercase;
+    }
+    .ability-table-editor td {
+        padding: 10px 5px;
+        text-align: center;
+        border-bottom: 1px solid var(--color-border);
+    }
+    .attr-label {
+        font-family: 'Marcellus SC', serif;
+        font-weight: bold;
+        color: var(--color-primary);
+        font-size: 1.1rem;
+        border-right: 1px solid var(--color-border);
+        background: rgba(0,0,0,0.05);
+    }
+    .attr-mod {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: var(--color-text-secondary);
+        width: 50px;
+    }
+    .attr-score {
+        width: 60px !important;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .ability-table-editor input.form-control {
+        padding: 0.4rem;
+        font-size: 1rem;
+    }
+    /* Markdown Widget Styling (Ported from markdown-widget.html) */
+    .md-widget-container { 
+        border: 2px solid var(--color-border); 
+        border-radius: var(--border-radius); 
+        background: var(--color-bg-light); 
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+    .md-header {
+        background: var(--color-bg-medium);
+        border-bottom: 2px solid var(--color-border);
+        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    }
+    .md-tabs { display: flex; }
+    .md-tab {
+        background: transparent; border: none; padding: 12px 15px;
+        cursor: pointer; font-weight: bold; color: var(--color-text-secondary);
+        border-bottom: 3px solid transparent; font-family: var(--font-header);
+        text-transform: uppercase; font-size: 0.8rem;
+    }
+    .md-tab:hover { color: var(--color-primary); background: rgba(0,0,0,0.05); }
+    .md-tab.active { 
+        border-bottom-color: var(--color-primary); color: var(--color-primary); 
+        background: var(--color-bg-light);
+    }
+    .md-tools { display: flex; gap: 4px; padding: 4px; align-items: center; }
+    .md-tools button {
+        background: var(--color-bg-page); border: 1px solid var(--color-border);
+        border-radius: 4px; padding: 4px 6px; cursor: pointer;
+        color: var(--color-text); min-width: 28px; font-size: 0.75rem;
+    }
+    .md-tools button:hover { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+    .md-sep { color: var(--color-border); margin: 0 4px; }
+    
+    .md-textarea { 
+        width: 100%; border: none; padding: 12px; 
+        resize: vertical; outline: none; font-family: 'Courier New', monospace; 
+        font-size: 14px; line-height: 1.5; background: var(--color-bg-page); 
+        color: var(--color-text); display: block;
+    }
+    .md-preview-box { 
+        padding: 15px; background: var(--color-bg-light); 
+        color: var(--color-text); overflow-y: auto;
+    }
+    .md-preview-box img { max-width: 100%; }
+</style>
