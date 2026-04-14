@@ -9,8 +9,8 @@
  * @param {number} score 
  * @returns {number}
  */
-export function calculateMod(score) { 
-    return Math.floor(((parseInt(score) || 10) - 10) / 2); 
+export function calculateMod(score) {
+    return Math.floor(((parseInt(score) || 10) - 10) / 2);
 }
 
 /**
@@ -36,12 +36,12 @@ export function calculatePB(cr) {
  * @returns {number}
  */
 export function calculateXP(cr) {
-    const table = { 
-        "0": 10, "0.125": 25, "0.25": 50, "0.5": 100, "1": 200, "2": 450, "3": 700, "4": 1100, 
-        "5": 1800, "6": 2300, "7": 2900, "8": 3900, "9": 5000, "10": 5900, "11": 7200, "12": 8400, 
-        "13": 10000, "14": 11500, "15": 13000, "16": 15000, "17": 18000, "18": 20000, "19": 22000, 
-        "20": 25000, "21": 33000, "22": 41000, "23": 50000, "24": 62000, "25": 75000, "26": 90000, 
-        "27": 105000, "28": 120000, "29": 135000, "30": 155000 
+    const table = {
+        "0": 10, "0.125": 25, "0.25": 50, "0.5": 100, "1": 200, "2": 450, "3": 700, "4": 1100,
+        "5": 1800, "6": 2300, "7": 2900, "8": 3900, "9": 5000, "10": 5900, "11": 7200, "12": 8400,
+        "13": 10000, "14": 11500, "15": 13000, "16": 15000, "17": 18000, "18": 20000, "19": 22000,
+        "20": 25000, "21": 33000, "22": 41000, "23": 50000, "24": 62000, "25": 75000, "26": 90000,
+        "27": 105000, "28": 120000, "29": 135000, "30": 155000
     };
     const key = parseFloat(cr).toString();
     return table[key] || table[cr] || 0;
@@ -52,8 +52,8 @@ export function calculateXP(cr) {
  * @param {number} val 
  * @returns {string}
  */
-export function formatSign(val) { 
-    return val >= 0 ? `+${val}` : val.toString(); 
+export function formatSign(val) {
+    return val >= 0 ? `+${val}` : val.toString();
 }
 
 /**
@@ -101,7 +101,7 @@ export function formatInitiative(dexScore, proficiency, pb) {
     } else if (proficiency === 'Expert') {
         totalBonus += (pb * 2);
     }
-    
+
     const score = 10 + totalBonus;
     return `${formatSign(totalBonus)} (${score})`;
 }
