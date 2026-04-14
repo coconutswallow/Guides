@@ -331,14 +331,14 @@ window.calculateCosts = () => {
             <th style="text-align: left;">Rework Type</th>
             <th>DTP</th>
             <th>Gold</th>
-            <th style="width: 5%;"></th>
+            <th style="width: 50px;"></th>
         `;
     } else {
         // Variable-cost rework (A-la-carte)
         thead.innerHTML = `
             <th style="text-align: left;">Detailed Change Description</th>
             <th style="width: 120px;"># Changes</th>
-            <th style="width: 5%;"></th>
+            <th style="width: 50px;"></th>
         `;
     }
 
@@ -360,19 +360,19 @@ window.calculateCosts = () => {
             // Variable-cost row (editable for manual adjustments)
             row.innerHTML = `
                 <td style="text-align: left;">
-                    <input type="text" class="text-input cost-change" 
+                    <input type="text" class="form-control cost-change" 
                            value="${c.change}" 
-                           style="width: 100%; font-size: 0.85em;">
+                           style="font-size: 0.85em;">
                 </td>
                 <td>
-                    <input type="number" class="text-input cost-num-changes" 
+                    <input type="number" class="form-control cost-num-changes" 
                            value="${c.count}" 
                            onchange="window.updateTotalCost()">
                 </td>
                 <td>
-                    <button type="button" class="button" 
+                    <button type="button" class="remove-class-btn" 
                             onclick="window.deleteCostRow(this)" 
-                            style="background-color: #c0392b; color: #fff; padding: 4px 8px;">×</button>
+                            title="Delete Row">×</button>
                 </td>
             `;
         }
@@ -612,6 +612,8 @@ window.performLoad = async (id) => {
         // Recalculate costs
         window.calculateCosts();
 
+        alert("Rework successfully loaded!");
+
     } catch (e) {
         alert("Load failed: " + e.message);
     }
@@ -635,9 +637,15 @@ window.performLoad = async (id) => {
  */
 window.saveRework = async () => {
     try {
-        // Get and format Discord ID
-        let discordId = document.getElementById('manual-discord-id')?.value || "Unknown";
-        if (discordId !== "Unknown" && !discordId.startsWith('@')) {
+        // Get and validate Discord ID
+        let discordId = document.getElementById('manual-discord-id')?.value.trim() || "";
+        if (!discordId) {
+            alert("Discord ID is required to save.");
+            return;
+        }
+
+        // Auto-format Discord ID with @ prefix
+        if (!discordId.startsWith('@')) {
             discordId = '@' + discordId;
             document.getElementById('manual-discord-id').value = discordId;
         }
@@ -645,6 +653,12 @@ window.saveRework = async () => {
         // Scrape character data
         const oldC = scrapeColumn('original');
         const newC = scrapeColumn('new');
+
+        // Validate Original Character Name
+        if (!oldC.name || oldC.name.trim() === "") {
+            alert("Original Character Name is required to save.");
+            return;
+        }
 
         // Build payload
         const payload = {
@@ -663,7 +677,7 @@ window.saveRework = async () => {
         // Update UI with new/updated ID
         document.getElementById('current-rework-id').value = res.id;
 
-        alert(`Rework saved successfully! ID: ${res.id}`);
+        alert(`Rework saved successfully as "${oldC.name}"!\n\nRework ID: ${res.id}`);
 
         // Refresh the load dropdown
         await window.fetchReworks();

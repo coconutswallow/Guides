@@ -309,7 +309,7 @@ export function renderBaseAttributes(colId) {
     <table class="stat-table">
         <thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead>
         <tbody>
-            <tr>${ATTRIBUTES.map(a => `<td><select id="attr-${colId}-${a}" class="text-input" style="width: 100%;" onchange="window.calculatePointBuy('${colId}')">${generateOptions(10)}</select></td>`).join('')}</tr>
+            <tr>${ATTRIBUTES.map(a => `<td><select id="attr-${colId}-${a}" class="form-control" onchange="window.calculatePointBuy('${colId}')">${generateOptions(10)}</select></td>`).join('')}</tr>
         </tbody>
     </table>`;
 
@@ -389,14 +389,14 @@ export function renderFeatureRows(containerId, count = 4) {
 
     // Generate the feature rows HTML
     container.innerHTML = Array(count).fill(0).map(() => `
-        <div class="feature-row" style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px;">
-            <select class="text-input feature-type">
+        <div class="feature-row">
+            <select class="form-control feature-type-select feature-type">
                 <option value="none">None</option>
                 <option value="language">Language</option>
                 <option value="skill">Skill</option>
                 <option value="tool proficiency">Tool Proficiency</option>
             </select>
-            <input type="text" class="text-input feature-name" placeholder="Feature Name">
+            <input type="text" class="form-control feature-name-input feature-name" placeholder="Feature Name">
         </div>`).join('');
 }
 
@@ -510,21 +510,34 @@ export function addClassRow(colId, init = null) {
     const block = document.createElement('div');
     block.className = 'class-block';
     block.innerHTML = `
-        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
-            <select class="text-input version-select" style="flex: 1;">
-                <option value="">Version</option>
-                <option value="2014">2014</option>
-                <option value="2024">2024</option>
-            </select>
-            <select class="text-input class-select" style="flex: 2;">
-                <option value="">Class</option>
-            </select>
-            <select class="text-input subclass-select" style="flex: 2;" disabled>
-                <option value="">Subclass</option>
-            </select>
-            <input type="number" class="text-input level-input" placeholder="Level" min="1" max="20" style="flex: 1;">
-            <button type="button" class="button" onclick="window.removeClassRow(this)" style="background-color: #c0392b; color: #fff;">Remove</button>
-        </div>`;
+        <div class="grid-6" style="align-items: end;">
+            <div class="form-group" style="grid-column: span 1; margin-bottom:0;">
+                <label style="font-size:0.75rem;">Ver</label>
+                <select class="form-control version-select">
+                    <option value="">-</option>
+                    <option value="2014">2014</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <div class="form-group" style="grid-column: span 2; margin-bottom:0;">
+                <label style="font-size:0.75rem;">Class</label>
+                <select class="form-control class-select">
+                    <option value="">Class</option>
+                </select>
+            </div>
+            <div class="form-group" style="grid-column: span 1; margin-bottom:0;">
+                <label style="font-size:0.75rem;">Lvl</label>
+                <input type="number" class="form-control level-input" placeholder="Lvl" min="1" max="20">
+            </div>
+            <div class="form-group" style="grid-column: span 2; margin-bottom:0;">
+                <label style="font-size:0.75rem;">Subclass</label>
+                <select class="form-control subclass-select" disabled>
+                    <option value="">Subclass</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="remove-class-btn" onclick="window.removeClassRow(this)" 
+            style="position: absolute; top: -10px; right: -10px;" title="Remove Class">×</button>`;
     container.appendChild(block);
 
     // Get references to the selects
@@ -672,28 +685,31 @@ export function generateFeatCards(colId, saved = null) {
             if (milestone > lvl) return;  // Skip if level not reached
 
             const card = document.createElement('div');
-            card.className = 'card feat-card';
+            card.className = 'form-section feat-card';
             card.innerHTML = `
-                <h3 class="card-title">${cls} - Lvl ${milestone} ASI/Feat</h3>
-                <input type="text" class="text-input feat-name" placeholder="Feat Name">
+                <h3>${cls} - Lvl ${milestone} ASI/Feat</h3>
+                <div class="form-group">
+                    <label>Feat Name</label>
+                    <input type="text" class="form-control feat-name" placeholder="Enter feat name...">
+                </div>
                 <table class="stat-table">
                     <thead><tr>${ATTRIBUTES.map(a => `<th>${a}</th>`).join('')}</tr></thead>
                     <tbody>
-                        <tr>${ATTRIBUTES.map(a => `<td><select data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr>
+                        <tr>${ATTRIBUTES.map(a => `<td><select class="form-control" data-attr="${a}"><option value="0">0</option><option value="1">+1</option><option value="2">+2</option></select></td>`).join('')}</tr>
                     </tbody>
                 </table>
-                <div style="margin-top: 10px;">
-                    <label class="input-label" style="font-size:0.8em">Feat Features</label>
+                <div style="margin-top: 1rem;">
+                    <label style="font-size:0.8rem; opacity:0.8; margin-bottom:0.5rem; display:block;">Feat Features</label>
                     <div class="feat-features-container">
                         ${[1, 2, 3].map(() => `
-                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px;">
-                                <select class="text-input feat-feature-type">
+                            <div class="feature-row">
+                                <select class="form-control feature-type-select feat-feature-type">
                                     <option value="none">None</option>
                                     <option value="language">Language</option>
                                     <option value="skill">Skill</option>
                                     <option value="tool proficiency">Tool Proficiency</option>
                                 </select>
-                                <input type="text" class="text-input feat-feature-name" placeholder="Feature Name">
+                                <input type="text" class="form-control feature-name-input feat-feature-name" placeholder="Feature Name">
                             </div>
                         `).join('')}
                     </div>
@@ -751,9 +767,9 @@ export function addCostRow(change = "", count = 0) {
     const tbody = document.getElementById('cost-table-body');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="text-input cost-change" value="${change}" style="width: 100%;"></td>
-        <td><input type="number" class="text-input cost-num-changes" value="${count}" min="0" style="width: 100%;" onchange="window.updateTotalCost()"></td>
-        <td><button type="button" class="button" onclick="window.deleteCostRow(this)" style="background-color: #c0392b; color: #fff; padding: 4px 8px;">×</button></td>`;
+        <td><input type="text" class="form-control cost-change" value="${change}"></td>
+        <td><input type="number" class="form-control cost-num-changes" value="${count}" min="0" onchange="window.updateTotalCost()"></td>
+        <td><button type="button" class="remove-class-btn" onclick="window.deleteCostRow(this)" title="Delete Row">×</button></td>`;
     tbody.appendChild(row);
     window.updateTotalCost();
 }

@@ -1,0 +1,518 @@
+---
+layout: default
+title: Character Rework Tool
+code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
+
+---
+
+<link rel="stylesheet" href="{{ '/assets/css/rework.css' | relative_url }}">
+
+<div class="page">
+    <h1 class="column-header" style="border-bottom:none; margin-bottom:1rem;">Character Rework Tool</h1>
+
+    <!-- Rework Configuration Section -->
+    <div class="form-section">
+        <h3>Rework Configuration</h3>
+
+        <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+                <label>Discord ID</label>
+                <input type="text" id="manual-discord-id" class="form-control" placeholder="@username">
+            </div>
+            <div class="form-group">
+                <label>Select Rework Type</label>
+                <select id="rework-type" class="form-control" onchange="window.calculateCosts()">
+                    <option value="">-- Select Rework Type --</option>
+                    <option value="2024-update">2024 Update Rework</option>
+                    <option value="level-5-below">Level 5 or below Rework</option>
+                    <option value="t2-checkpoint">T2 Checkpoint Rework</option>
+                    <option value="t3-checkpoint">T3 Checkpoint Rework</option>
+                    <option value="t4-checkpoint">T4 Checkpoint Rework</option>
+                    <option value="story">Story Rework</option>
+                    <option value="alacarte">A-la-carte Rework</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid-6" style="align-items: end; gap: 10px; margin-bottom: 1.5rem;">
+            <div style="grid-column: span 1;">
+                <button class="btn btn-save" onclick="window.saveRework()" style="width: 100%;">Save</button>
+            </div>
+            <div style="grid-column: span 3;">
+                <select id="load-rework-select" class="form-control">
+                    <option value="">-- Load My Saved Rework --</option>
+                </select>
+            </div>
+            <div style="grid-column: span 1;">
+                <button class="btn btn-primary" onclick="window.loadSelectedRework()" style="width: 100%;">Load</button>
+            </div>
+            <div style="grid-column: span 1;">
+                <button class="btn btn-delete" onclick="window.deleteRework()" style="width: 100%;">Delete</button>
+            </div>
+        </div>
+
+        <!-- Hidden ID for JS tracking -->
+        <input type="hidden" id="current-rework-id" value="">
+
+        <div class="info-box" style="margin-top: 1.5rem; margin-bottom: 0;">
+            <p style="margin: 0 0 8px 0; font-size: 0.9rem;"><strong>Data & Sync Info:</strong></p>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; opacity: 0.8;">
+                <li>The "Load My Saved Rework" dropdown is local to this device only.</li>
+                <li>Only you and Auditors/Auditor Apprentices can view your saved reworks.</li>
+                <li>Reworks will be deleted after 90 days</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="window.switchTab('input')">Input</button>
+        <button class="tab-btn" onclick="window.switchTab('cost')">Cost Calculations</button>
+        <button class="tab-btn" onclick="window.switchTab('output')">Output</button>
+    </div>
+
+    <div id="tab-input" class="tab-content active">
+        <div class="respec-container">
+            <!-- Headers -->
+            <h2 class="column-header" style="margin-bottom:0;">Original Character</h2>
+            <h2 class="column-header" style="margin-bottom:0;">New Character</h2>
+
+            <!-- Character Info Section -->
+            <div class="form-section">
+                <h3>Character Info</h3>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Character Name</label></div>
+                    <input type="text" class="form-control" id="name-original" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Base Attributes (27 Point Buy)</label></div>
+                    <div id="attrs-container-original"></div>
+                    <div id="points-original" class="points-display">27 / 27 Pts</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Character Info</h3>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Character Name</label><button type="button" class="copy-link"
+                            onclick="window.copyValue('name-original', 'name-new')">Copy from Original</button></div>
+                    <input type="text" class="form-control" id="name-new" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Base Attributes</label><button type="button" class="copy-link"
+                            onclick="window.copyAttributes()">Copy from Original</button>
+                    </div>
+                    <div id="attrs-container-new"></div>
+                    <div id="points-new" class="points-display">27 / 27 Pts</div>
+                </div>
+            </div>
+
+            <!-- Race/Species Section -->
+            <div class="form-section">
+                <h3>Race/Species</h3>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Race/Species</label></div>
+                    <input type="text" class="form-control" id="race-original" placeholder="Race Details">
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Racial Bonuses</label></div>
+                    <div id="race-mod-container-original">
+                        <table class="stat-table">
+                            <thead>
+                                <tr>
+                                    <th>STR</th>
+                                    <th>DEX</th>
+                                    <th>CON</th>
+                                    <th>INT</th>
+                                    <th>WIS</th>
+                                    <th>CHA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><select class="form-control mod-select-race" data-col="original"
+                                            data-attr="STR">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="original"
+                                            data-attr="DEX">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="original"
+                                            data-attr="CON">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="original"
+                                            data-attr="INT">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="original"
+                                            data-attr="WIS">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="original"
+                                            data-attr="CHA">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Racial Features</label></div>
+                    <div id="race-features-container-original"></div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Race/Species</h3>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Race/Species</label><button type="button" class="copy-link"
+                            onclick="window.copyValue('race-original', 'race-new')">Copy from Original</button></div>
+                    <input type="text" class="form-control" id="race-new" placeholder="Race Details">
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Racial Bonuses</label><button type="button" class="copy-link"
+                            onclick="window.copyMods('race')">Copy from Original</button></div>
+                    <div id="race-mod-container-new">
+                        <table class="stat-table">
+                            <thead>
+                                <tr>
+                                    <th>STR</th>
+                                    <th>DEX</th>
+                                    <th>CON</th>
+                                    <th>INT</th>
+                                    <th>WIS</th>
+                                    <th>CHA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><select class="form-control mod-select-race" data-col="new" data-attr="STR">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="new" data-attr="DEX">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="new" data-attr="CON">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="new" data-attr="INT">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="new" data-attr="WIS">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-race" data-col="new" data-attr="CHA">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Racial Features</label><button type="button" class="copy-link"
+                            onclick="window.copyFeatures('race')">Copy from Original</button>
+                    </div>
+                    <div id="race-features-container-new"></div>
+                </div>
+            </div>
+
+            <!-- Origin (Background) Section -->
+            <div class="form-section">
+                <h3>Origin (Background)</h3>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Origin Name</label></div>
+                    <input type="text" class="form-control" id="bg-original" placeholder="e.g. Acolyte">
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Origin Features</label></div>
+                    <div id="origin-features-container-original"></div>
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Origin Feat</label></div>
+                    <input type="text" class="form-control" id="orig-feat-original" placeholder="Feat Name"
+                        style="margin-bottom:1rem;">
+                    <div class="field-header-row"><label style="font-size:0.8rem; opacity:0.8;">Origin Feat
+                            Modifiers</label></div>
+                    <div id="origin-mod-container-original">
+                        <table class="stat-table">
+                            <thead>
+                                <tr>
+                                    <th>STR</th>
+                                    <th>DEX</th>
+                                    <th>CON</th>
+                                    <th>INT</th>
+                                    <th>WIS</th>
+                                    <th>CHA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><select class="form-control mod-select-origin" data-col="original"
+                                            data-attr="STR">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="original"
+                                            data-attr="DEX">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="original"
+                                            data-attr="CON">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="original"
+                                            data-attr="INT">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="original"
+                                            data-attr="WIS">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="original"
+                                            data-attr="CHA">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="field-header-row" style="margin-top:1rem;"><label
+                            style="font-size:0.8rem; opacity:0.8;">Origin Feat Features</label></div>
+                    <div id="origin-feat-features-container-original"></div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Origin (Background)</h3>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Origin Name</label><button type="button" class="copy-link"
+                            onclick="window.copyValue('bg-original', 'bg-new')">Copy from Original</button></div>
+                    <input type="text" class="form-control" id="bg-new" placeholder="e.g. Acolyte">
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Origin Features</label><button type="button" class="copy-link"
+                            onclick="window.copyFeatures('origin')">Copy from Original</button>
+                    </div>
+                    <div id="origin-features-container-new"></div>
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Origin Feat</label><button type="button" class="copy-link"
+                            onclick="window.copyValue('orig-feat-original', 'orig-feat-new')">Copy from
+                            Original</button></div>
+                    <input type="text" class="form-control" id="orig-feat-new" placeholder="Feat Name"
+                        style="margin-bottom:1rem;">
+                    <div class="field-header-row"><label style="font-size:0.8rem; opacity:0.8;">Origin Feat
+                            Modifiers</label><button type="button" class="copy-link"
+                            onclick="window.copyMods('origin')">Copy from Original</button></div>
+                    <div id="origin-mod-container-new">
+                        <table class="stat-table">
+                            <thead>
+                                <tr>
+                                    <th>STR</th>
+                                    <th>DEX</th>
+                                    <th>CON</th>
+                                    <th>INT</th>
+                                    <th>WIS</th>
+                                    <th>CHA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><select class="form-control mod-select-origin" data-col="new" data-attr="STR">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="new" data-attr="DEX">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="new" data-attr="CON">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="new" data-attr="INT">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="new" data-attr="WIS">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                    <td><select class="form-control mod-select-origin" data-col="new" data-attr="CHA">
+                                            <option value="0">0</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="field-header-row" style="margin-top:1rem;"><label
+                            style="font-size:0.8rem; opacity:0.8;">Origin Feat Features</label><button type="button"
+                            class="copy-link" onclick="window.copyFeatures('origin-feat')">Copy from Original</button>
+                    </div>
+                    <div id="origin-feat-features-container-new"></div>
+                </div>
+            </div>
+
+            <!-- Classes Section -->
+            <div class="form-section">
+                <h3>Classes</h3>
+                <div id="classes-container-original"></div>
+                <button type="button" class="btn btn-outline" onclick="window.addClassRow('original')"
+                    style="width:100%;">+ Add Class</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Classes</h3>
+                <div id="classes-container-new"></div>
+                <button type="button" class="btn btn-outline" onclick="window.addClassRow('new')" style="width:100%;">+
+                    Add Class</button>
+            </div>
+
+            <!-- Feats Containers (Dynamic) -->
+            <div id="feats-container-original"></div>
+            <div id="feats-container-new"></div>
+        </div>
+    </div>
+
+    <div id="tab-cost" class="tab-content">
+        <h2 class="column-header">Cost Calculations</h2>
+
+        <div class="form-section">
+            <h3 onclick="window.toggleAccordion('cost-info')" style="cursor: pointer; user-select: none;">
+                <span id="cost-info-icon">▼</span> Cost Information
+            </h3>
+            <div id="cost-info-content" style="margin-bottom: 20px; line-height: 1.6;">
+                <p style="margin-bottom: 10px;"><strong>Costs are based on the type of change:</strong></p>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li><strong>2024 Update Rework</strong> (0 cost)</li>
+                    <li><strong>Any rework before level 6</strong> (0 cost)</li>
+                    <li><strong>Checkpoint Rework</strong> (cost based on tier)</li>
+                    <li><strong>Story Rework</strong> (cost based on tier)</li>
+                    <li><strong>A-la-carte Rework</strong> (cost on a per-change basis)
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Changing 1 class level, species, background, or feat/ASI: <strong>1 change each</strong>
+                            </li>
+                            <li>Changing language/tool/skill proficiency: <strong>1 change</strong></li>
+                            <li>Changing subclass: <strong>1 change per class level</strong> with subclass features</li>
+                            <li>Changing starting ability scores or character identity: <strong>2 changes</strong></li>
+                            <li><strong>2014 to 2024 (or vice versa)</strong>: <strong>1 change</strong> (must switch
+                                all options to equivalent)</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="info-box" style="background-color: rgba(255, 193, 7, 0.1); border-left-color: #ffc107;">
+                    <strong>Note:</strong> These calculations are a <strong>draft</strong>. It is <u>your
+                        responsibility</u> to ensure accuracy. If you need help, copy the Rework ID and ping an Auditor.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Cost Breakdown</h3>
+
+            <div id="cost-error"
+                style="display: none; padding: 10px; background-color: #fee; border: 1px solid #c00; border-radius: 4px; margin-bottom: 15px; color: #c00;">
+            </div>
+
+            <table class="stat-table" id="cost-table" style="margin-bottom: 10px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Detailed Change Description</th>
+                        <th style="width: 120px;"># Changes</th>
+                        <th style="width: 50px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="cost-table-body"></tbody>
+            </table>
+
+            <button type="button" class="btn btn-outline" onclick="window.addCostRow()"
+                style="width:100%; margin-bottom:1.5rem;">+ Add Manual Row</button>
+
+            <div class="cost-summary-card">
+                <div class="cost-summary-item">
+                    <span>Total Changes</span>
+                    <strong id="total-changes">0</strong>
+                </div>
+                <div class="cost-summary-item">
+                    <span>Total DTP Cost</span>
+                    <strong id="total-dtp">0</strong>
+                </div>
+                <div class="cost-summary-item">
+                    <span>Total Gold Cost</span>
+                    <strong id="total-gold">0 GP</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Final Rework Details</h3>
+            <div class="form-group">
+                <label>GP/DTP Costs (Summary)</label>
+                <input type="text" id="rework-cost" class="form-control" placeholder="e.g. 500 GP / 10 DTP">
+            </div>
+            <div class="form-group">
+                <label>Notes for Auditors</label>
+                <textarea id="rework-notes" class="form-control" style="min-height: 100px;"
+                    placeholder="Explain your choices here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-output" class="tab-content">
+        <h2 class="column-header">Rework Request Form</h2>
+        <div class="form-section">
+            <h3>Discord Output</h3>
+            <p style="margin-bottom:1.5rem; opacity:0.8;">Copy the generated block below and paste it into the Rework
+                Log channel on Discord.</p>
+            {% include discord-output.html id="output-text" channel_name="#Character-Rework-Log"
+            channel_url="https://discord.com/channels/308324031478890497/1094052066898518057" %}
+        </div>
+    </div>
+</div>
+
+<script type="module" src="{{ '/assets/js/rework/rework-main.js' | relative_url }}"></script>

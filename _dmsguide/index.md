@@ -2,10 +2,11 @@
 layout: doc
 title: "Contents"
 order: 1
-hide_from_nav: true  
+hide_from_nav: true
+background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg  
 ---
 
-![Player's Guide Cover](https://images.squarespace-cdn.com/content/v1/592dff77e6f2e11e077a7dd4/1497302429671-X4WO248YRRWZGEYBZ5U2/image-asset.jpeg?format=1000w)
+![Dungeon Master's Guide Cover](https://images.squarespace-cdn.com/content/v1/592dff77e6f2e11e077a7dd4/1497302429671-X4WO248YRRWZGEYBZ5U2/image-asset.jpeg)
 <span class="image-caption"><a href="https://www.toddlockwood.com/dungeons-and-dragons#/tsr-jam/">Art by Wizards of the Coast (TSR Jam)</a></span>
 
 

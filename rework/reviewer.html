@@ -1,0 +1,126 @@
+---
+layout: default
+title: Character Rework Reviewer
+code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
+---
+
+<link rel="stylesheet" href="{{ '/assets/css/rework.css' | relative_url }}">
+
+<style>
+/* Reviewer specific styling */
+.reviewer-wrapper {
+    margin-top: 2rem;
+}
+
+.reviewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid var(--color-primary);
+    padding-bottom: 1rem;
+}
+
+.reviewer-header h1 {
+    margin: 0;
+    font-family: 'Marcellus SC', serif;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--color-bg-medium);
+    border: 1px solid var(--color-border);
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+}
+
+#access-denied {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--color-bg-light);
+    border: 5px double var(--palette-alert-danger-border);
+    border-radius: 12px;
+    margin-top: 4rem;
+}
+
+#access-denied h2 {
+    color: var(--palette-alert-danger-border);
+    font-family: 'Marcellus SC', serif;
+    margin-bottom: 1rem;
+}
+
+#reviewer-content {
+    display: none; /* Shown after auth/RBAC ok */
+}
+
+.stat-table th {
+    text-align: center;
+}
+
+.stat-table td {
+    vertical-align: middle;
+}
+</style>
+
+<div class="reviewer-container">
+    <div id="auth-container" style="margin-bottom: 2rem;">
+        {% include auth-header.html %}
+    </div>
+
+    <!-- Loading State -->
+    <div id="reviewer-loading" style="text-align: center; padding: 4rem;">
+        <p>Verifying access permissions...</p>
+    </div>
+    
+    <!-- Access Denied Message -->
+    <div id="access-denied">
+        <h2>Access Denied</h2>
+        <p>You do not have the required permissions to access the Character Rework Reviewer portal.</p>
+        <p style="margin-top: 1.5rem;">
+            <a href="{{ '/staff/' | relative_url }}" class="btn btn-outline">Back to Staff Portal</a>
+        </p>
+    </div>
+
+    <!-- Reviewer Dashboard -->
+    <div id="reviewer-content" class="reviewer-wrapper">
+        <div class="reviewer-header">
+            <h1>Rework Log Reviewer</h1>
+            <div>
+                <a href="{{ '/staff/' | relative_url }}" class="btn btn-outline" style="font-size: 0.85rem;">Back to Staff Portal</a>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Recent Rework Logs</h3>
+            
+            <table class="stat-table">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">ID</th>
+                        <th style="text-align: left;">Character Name</th>
+                        <th style="text-align: left;">Discord ID</th>
+                        <th>Type</th>
+                        <th style="width: 180px;">Last Updated</th>
+                        <th style="width: 100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rework-log-list">
+                    <!-- Logs populated via rework-reviewer.js -->
+                </tbody>
+            </table>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--color-border);">
+                <button class="btn btn-delete" onclick="window.handleCleanup()" style="font-size: 0.85rem;">Cleanup Logs (>90 Days)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="{{ '/assets/js/rework/rework-reviewer.js' | relative_url }}"></script>

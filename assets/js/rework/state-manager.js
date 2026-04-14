@@ -257,6 +257,30 @@ export async function fetchMyReworks() {
 }
 
 /**
+ * Fetches ALL reworks from the database.
+ * 
+ * Used by the Reviewer page for auditors to see all submissions.
+ * Restricted by database RLS, but logic-wise this is the "Admin" fetch.
+ * 
+ * @async
+ * @returns {Promise<Array>} Array of all rework records
+ */
+export async function fetchAllReworks() {
+    try {
+        const { data, error } = await supabase
+            .from('rework')
+            .select('id, character_name, discord_id, rework_type, updated_at')
+            .order('updated_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+    } catch (err) {
+        console.error("Error fetching all reworks:", err);
+        return [];
+    }
+}
+
+/**
  * Loads a complete rework record from Supabase by ID.
  * 
  * This function:
@@ -415,5 +439,36 @@ export async function deleteReworkById(id) {
     // Clear state if this was the current rework
     if (state.currentReworkId === id) {
         state.currentReworkId = null;
+    }
+}
+
+/**
+ * Deletes all rework logs older than a specified number of days.
+ * 
+ * Used for database maintenance and to enforce data retention policies.
+ * 
+ * @async
+ * @param {number} days - Number of days to keep (logs older than this will be deleted)
+ * @returns {Promise<number>} Number of deleted records
+ */
+export async function cleanupOldReworks(days) {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    const cutoffStr = cutoffDate.toISOString();
+
+    console.log(`Cleaning up logs older than ${days} days (Cutoff: ${cutoffStr})...`);
+
+    try {
+        const { data, error, count } = await supabase
+            .from('rework')
+            .delete({ count: 'exact' }) // Request exact count of deleted rows
+            .lt('updated_at', cutoffStr);
+
+        if (error) throw error;
+        
+        return count || 0;
+    } catch (err) {
+        console.error("Error during cleanup:", err);
+        throw err;
     }
 }

@@ -42,19 +42,55 @@ title: Staff Portal
   }
 
   .access-denied {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 3rem 2rem;
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
     text-align: center;
-    padding: 5rem 2rem;
-    background-color: var(--color-bg-light);
-    border: 3px solid var(--palette-alert-danger-border);
-    border-radius: 12px;
-    margin-top: 2rem;
     box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .access-denied:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Decorative top border similar to statblocks */
+  .access-denied::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
   }
 
   .access-denied h2 {
-    color: var(--palette-alert-danger-border);
-    font-size: 2rem;
+    color: var(--color-primary);
+    font-family: var(--font-header);
+    font-size: 2.2rem;
     margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    padding: 0;
+  }
+
+  .access-denied p {
+    font-size: 1.15rem;
+    color: var(--color-text);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .login-prompt {
+    font-weight: 700;
+    color: var(--color-primary);
   }
 
   /* Dashboard Layout */
@@ -203,16 +239,14 @@ title: Staff Portal
 
 <div class="staff-container">
   <div class="staff-header">
-    <h1>🛠️ Staff Portal</h1>
+    <h1>Staff Portal</h1>
     {% include auth-header.html %}
   </div>
 
-  <!-- Access Denied Message -->
   <div id="access-denied" class="access-denied" style="display: none;">
-    <h2>⛔ Access Denied</h2>
-    <p>You need to be logged in with <strong>Staff</strong> or <strong>Staff Apprentice</strong> permissions to access
-      the Staff Portal.</p>
-    <p>Please log in to access this page.</p>
+    <h2>Staff Only</h2>
+    <p>This section is intended for Staff only. If you are a member of the Hawthorne Staff, please login to access the
+      pages.</p>
   </div>
 
   <!-- Staff Interface -->
@@ -221,46 +255,50 @@ title: Staff Portal
     <div class="dashboard-grid">
       <!-- SECTION: SITE CONTENT -->
       <section class="dashboard-section">
-        <h2>📜 Site Content</h2>
+        <h2>Site Content</h2>
         <div class="tool-grid">
           <!-- Tool: Static Content Editor -->
           <div class="tool-card">
             <div class="tool-header">
               <h3 class="tool-title">Static Content Editor</h3>
-              <span class="status-badge status-active">Active</span>
             </div>
-            <p class="tool-description">Update static pages (Guides, Adventure Locations, FAQ, Timelines).</p>
+            <p class="tool-description">Use the DecapBridge CMS to edit static pages (Guides, Adventure Locations,
+              FAQ).</p>
             <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">User-specific (as assigned by
+              <span class="access-label">Access: <span class="access-roles">User-specific (as assigned by
                   Admin)</span></span>
               <a href="{{ '/page-admin/' | relative_url }}" class="tool-button">Open Editor</a>
             </div>
           </div>
-          <!-- Tool: Map Editor -->
+
+          <!-- Tool: Editor Help -->
           <div class="tool-card">
             <div class="tool-header">
-              <h3 class="tool-title">Faerun Map Editor</h3>
-              <span class="status-badge status-active">Active</span>
+              <h3 class="tool-title">Content Editor Help</h3>
             </div>
-            <p class="tool-description">Update pins on the Faerun Map.</p>
+            <p class="tool-description">Guides and documentation for using the Decap CMS and formatting with Markdown.
+            </p>
             <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">Lore, Lore Apprentice,
-                  Admin</span></span>
-              <a href="{{ '/page-admin/' | relative_url }}" class="tool-button">Open Editor</a>
+              <span class="access-label">Access: <span class="access-roles">All Staff</span></span>
+              <div class="tool-button-group"
+                style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                <a href="{{ '/help/site-editor/' | relative_url }}" class="tool-button" style="margin-top: 0;">Site
+                  Editor Guide</a>
+                <a href="{{ '/help/markdown/' | relative_url }}" class="tool-button" style="margin-top: 0;">Markdown
+                  Guide</a>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Tool: Timeline Editor -->
+
+          <!-- Tool: DecapBridge Admin -->
           <div class="tool-card">
             <div class="tool-header">
-              <h3 class="tool-title">Timeline Editor</h3>
-              <span class="status-badge status-active">Active</span>
+              <h3 class="tool-title">DecapBridge Admin</h3>
             </div>
-            <p class="tool-description">Update the Hawthorne Timeline content.</p>
+            <p class="tool-description">Maintain DecapBridge settings and manage user invites to edit static pages.</p>
             <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">Lore, Lore Apprentice,
-                  Admin</span></span>
-              <a href="{{ '/page-admin/' | relative_url }}" class="tool-button">Open Editor</a>
+              <span class="access-label">Access: <span class="access-roles">Admin</span></span>
+              <a href="https://decapbridge.com/auth/login" class="tool-button">Manage Settings</a>
             </div>
           </div>
         </div>
@@ -268,78 +306,50 @@ title: Staff Portal
 
       <!-- SECTION: ROLE SPECIFIC -->
       <section class="dashboard-section">
-        <h2>⚔️ Role Specific Tools</h2>
+        <h2>Review Community Submissions</h2>
         <div class="tool-grid">
           <!-- Tool: Home Brew Reviewer -->
-          <div class="tool-card disabled">
+          <div class="tool-card">
             <div class="tool-header">
-              <h3 class="tool-title">Review Homebrews</h3>
-              <span class="status-badge status-disabled">Coming Soon</span>
+              <h3 class="tool-title">Review Monster Homebrews</h3>
             </div>
-            <p class="tool-description">Review and approve DM-submitted homebrew creations (starting with monsters,
-              items to follow).</p>
+            <p class="tool-description">Review and approve DM-submitted homebrew monster creations</p>
             <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">Lore, Rules, Admin</span></span>
-              <a href="#" class="tool-button inactive">Inactive</a>
+              <span class="access-label">Access: <span class="access-roles">Lore, Rules, Admin</span></span>
+              <a href="{{ '/monsters/approvals/' | relative_url }}" class="tool-button">Open Review Queue</a>
             </div>
           </div>
 
           <!-- Tool: Rework Reviewer -->
-          <div class="tool-card disabled">
+          <div class="tool-card">
             <div class="tool-header">
               <h3 class="tool-title">Rework Reviewer</h3>
-              <span class="status-badge status-disabled">Coming Soon</span>
             </div>
-            <p class="tool-description">Review Player Rework submissions in the character tool.</p>
+            <p class="tool-description">Review Player Rework submissions.</p>
             <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">Auditor</span></span>
-              <a href="#" class="tool-button inactive">Inactive</a>
+              <span class="access-label">Access: <span class="access-roles">Auditors, Admins</span></span>
+              <a href="{{ '/rework/reviewer' | relative_url }}" class="tool-button">Open Reviewer</a>
             </div>
           </div>
 
-          <!-- Tool: DM Logs -->
-          <div class="tool-card disabled">
-            <div class="tool-header">
-              <h3 class="tool-title">DM Logs</h3>
-              <span class="status-badge status-disabled">Planned</span>
-            </div>
-            <p class="tool-description">DM Logs formatted specifically for Record Keepers.</p>
-            <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">Record Keeper</span></span>
-              <a href="#" class="tool-button inactive">Inactive</a>
-            </div>
-          </div>
         </div>
       </section>
 
-      <!-- SECTION: ADMIN -->
+      <!-- SECTION: OTHERS -->
       <section class="dashboard-section">
-        <h2>🛡️ System Administration</h2>
+        <h2>Others</h2>
         <div class="tool-grid">
-          <!-- Tool: DecapBridge Admin -->
+
+          <!-- Tool: DM Tool -->
           <div class="tool-card">
             <div class="tool-header">
-              <h3 class="tool-title">DecapBridge Admin</h3>
-              <span class="status-badge status-active">Active</span>
+              <h3 class="tool-title">DM Tool Lookup Tables</h3>
             </div>
-            <p class="tool-description">Maintain DecapBridge settings and manage user invites.</p>
+            <p class="tool-description">Update DM Tool lookups, including active events and incentives</p>
             <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">Admin</span></span>
-              <a href="https://decapbridge.com/auth/login" class="tool-button">Manage Settings</a>
-            </div>
-          </div>
-
-          <!-- Tool: Events -->
-          <div class="tool-card disabled">
-            <div class="tool-header">
-              <h3 class="tool-title">Events</h3>
-              <span class="status-badge status-disabled">Planned</span>
-            </div>
-            <p class="tool-description">Add and manage events selectable from the DM tool
-            <p>
-            <div class="tool-meta">
-              <span class="access-label">🔑 Access: <span class="access-roles">Admin</span></span>
-              <a href="#" class="tool-button inactive">Inactive</a>
+              <span class="access-label">Access: <span class="access-roles">Admin</span></span>
+              <a href="https://docs.google.com/spreadsheets/d/1rvsdZJnVGTQaN060dXq81Pd1PPUYV95_rmA4qOxMvII/edit?usp=sharing"
+                class="tool-button">Open Lookups</a>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 # AI Context Files
 .context/
+.agent/
 
 # vscode settings
 .vscode/
@@ -9,6 +10,7 @@
 
 # Site
 _site/
+.jekyll-cache/
 
 
 # Node / Testing (Local Only)

@@ -67,9 +67,12 @@ async function renderQueue(container) {
     pendingQueue = await getPendingMonsters();
 
     let html = `
-        <div class="editor-header">
-            <h2>Approval Queue</h2>
-            <p>${pendingQueue.length} monster(s) awaiting review.</p>
+        <div class="editor-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h2 style="margin: 0;">Approval Queue</h2>
+                <p style="margin: 0;">${pendingQueue.length} monster(s) awaiting review.</p>
+            </div>
+            <a href="/Guides/staff/" class="btn btn-outline" style="font-size: 0.85rem;">Back to Staff Portal</a>
         </div>
         <div class="queue-container">
             <table class="table">

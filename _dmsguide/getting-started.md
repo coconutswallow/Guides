@@ -2,7 +2,7 @@
 title: Getting Started
 layout: doc
 order: 5
-background_image: /assets/images/tavern_brawl.jpg
+background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg
 ---
 Welcome Dungeon Masters! This document provides all of the information and rules you’ll need to know for DMing on the Hawthorne Guild 5th edition D&D server.
 
