@@ -32,7 +32,7 @@ export async function renderMonsterLibrary(container) {
         
         <div style="margin-bottom: 1.5rem;">
             <p>The monsters in this compendium have been created by various members of the community of the Hawthorne Dungeons & Dragons Guild. The credits are listed on the footer of the monster stat block.</p>
-            <p><em>(A tool to create and submit your own monsters is coming soon!)</em></p>
+            <p>You can use this <a href="/Guides/monsters/editor/"><b>Monster Creator Tool</b></a> to create and submit your own monsters for community use!</p>
         </div>
         
         <div class="filter-container" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; align-items: flex-end; width: 100%;">
@@ -95,7 +95,7 @@ export async function renderMonsterLibrary(container) {
         const usage = document.getElementById('usage-filter').value;
         const species = document.getElementById('species-filter').value;
         const size = document.getElementById('size-filter').value;
-        
+
         const minVal = document.getElementById('cr-min').value;
         const maxVal = document.getElementById('cr-max').value;
         const minCR = minVal === '' ? NaN : parseFloat(minVal);
@@ -107,7 +107,7 @@ export async function renderMonsterLibrary(container) {
             const matchesUsage = !usage || m.usage === usage;
             const matchesSpecies = !species || m.species === species;
             const matchesSize = !size || m.size === size;
-            
+
             const crVal = parseFloat(m.cr);
             const matchesMin = isNaN(minCR) || crVal >= minCR;
             const matchesMax = isNaN(maxCR) || crVal <= maxCR;
@@ -119,21 +119,21 @@ export async function renderMonsterLibrary(container) {
     };
 
     // 7. Attach Event Listeners
-    if(document.getElementById('name-search')) {
+    if (document.getElementById('name-search')) {
         const inputs = [
-            'name-search', 'usage-filter', 'species-filter', 
+            'name-search', 'usage-filter', 'species-filter',
             'cr-min', 'cr-max', 'size-filter'
         ];
-        
+
         inputs.forEach(id => {
             const el = document.getElementById(id);
-            if(el) el.addEventListener('input', handleFilter);
+            if (el) el.addEventListener('input', handleFilter);
         });
 
         document.getElementById('reset-filters').addEventListener('click', () => {
             inputs.forEach(id => {
                 const el = document.getElementById(id);
-                if(el) el.value = '';
+                if (el) el.value = '';
             });
             handleFilter();
         });
@@ -143,11 +143,11 @@ export async function renderMonsterLibrary(container) {
 function renderGrid(monsters) {
     const grid = document.getElementById('monster-grid');
     const countLabel = document.getElementById('monster-count');
-    
+
     if (!grid) return;
 
     countLabel.textContent = `Showing ${monsters.length} monsters`;
-    
+
     if (monsters.length === 0) {
         grid.innerHTML = '<p>No monsters found matching your criteria.</p>';
         return;
@@ -155,12 +155,12 @@ function renderGrid(monsters) {
 
     grid.innerHTML = monsters.map(m => `
         <div class="monster-card">
-            ${m.image_url ? 
-                `<div class="monster-card-image">
+            ${m.image_url ?
+            `<div class="monster-card-image">
                     <img src="${m.image_url}" alt="${m.name}" loading="lazy">
-                 </div>` 
-                : ''
-            }
+                 </div>`
+            : ''
+        }
             
             <div class="monster-card-content">
                 <h3><a href="#/${m.slug}">${m.name}</a></h3>

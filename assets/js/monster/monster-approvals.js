@@ -2,6 +2,7 @@
  * monster-approvals.js
  * Controller for the staff Approval queue.
  * Location: \assets\js\monster\monster-approvals.js
+ * 
  * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 

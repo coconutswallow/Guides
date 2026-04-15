@@ -2,24 +2,26 @@
  * monster-editor-handlers.js
  * Event listeners and button action handlers for the Monster Editor.
  * Location: \assets\js\monster\monster-editor-handlers.js
+ * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 
 import { supabase } from '../supabaseClient.js';
 import { logError } from '../error-logger.js';
-import { 
-    saveMonsterDraft, 
-    submitMonsterForApproval, 
+import {
+    saveMonsterDraft,
+    submitMonsterForApproval,
     isSlugUnique,
-    createNewVersion 
+    createNewVersion
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
 import { calculatePB, calculateXP } from './monster-utils.js';
 import { renderFeatureList } from './monster-editor-ui.js';
-import { 
-    syncMonsterFromForm, 
-    validateMonster, 
+import {
+    syncMonsterFromForm,
+    validateMonster,
     resetAutoSave,
-    clearLocalCache 
+    clearLocalCache
 } from './monster-editor-state.js';
 
 /**
@@ -41,7 +43,7 @@ export function attachEditorEvents(container, currentMonster, lookups) {
     };
     document.addEventListener('visibilitychange', onVisibilityChange);
     // Cleanup reference for future re-init? Not strict in this SPA but good practice
-    container.dataset.visibilityHandler = 'true'; 
+    container.dataset.visibilityHandler = 'true';
 
     // 1. Name -> Slug Auto-gen
     const nameInput = container.querySelector('input[name="name"]');
@@ -210,7 +212,7 @@ export async function handleSave(currentMonster, silent = false) {
         const saved = await saveMonsterDraft(currentMonster, currentMonster.features);
         currentMonster.row_id = saved.row_id;
         if (saved.features) currentMonster.features = saved.features;
-        
+
         // Success: Clear local cache for this monster as DB is now source of truth
         clearLocalCache(currentMonster.slug);
 
@@ -257,7 +259,7 @@ export async function handlePreview(currentMonster) {
 export async function handleSubmit(currentMonster) {
     if (!confirm('Submit for staff approval? You will not be able to edit it until it is reviewed.')) return;
     try {
-        await handleSave(currentMonster, false); 
+        await handleSave(currentMonster, false);
         await submitMonsterForApproval(currentMonster.row_id);
         alert('Submitted successfully!');
         window.location.hash = '#/';

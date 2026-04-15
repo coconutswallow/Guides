@@ -2,7 +2,9 @@
  * monster-editor-state.js
  * Logic for managing monster editor state, validation, and auto-save timers.
  * Location: \assets\js\monster\monster-editor-state.js
+* 
  * https://github.com/hawthorneguild/HawthorneTeams/issues/7
+ 
  */
 
 /**

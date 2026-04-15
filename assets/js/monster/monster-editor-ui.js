@@ -2,6 +2,7 @@
  * monster-editor-ui.js
  * Component for generating and rendering the Monster Editor UI templates.
  * Location: \assets\js\monster\monster-editor-ui.js
+ * 
  * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 
@@ -82,10 +83,10 @@ export function renderEditor(container, currentMonster, lookups, defaultCreator)
 export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
     const isNew = !currentMonster.row_id;
     const isLocked = ['Pending', 'Queued', 'Approved', 'Archived'].includes(currentMonster.status);
-    const lockReason = currentMonster.status === 'Pending' ? 'Pending Review' 
-                     : currentMonster.status === 'Queued' ? 'Queued for Patch'
-                     : currentMonster.status === 'Approved' ? 'Approved'
-                     : 'Archived';
+    const lockReason = currentMonster.status === 'Pending' ? 'Pending Review'
+        : currentMonster.status === 'Queued' ? 'Queued for Patch'
+            : currentMonster.status === 'Approved' ? 'Approved'
+                : 'Archived';
 
     return `
         <div class="editor-toolbar" style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; position: sticky; top: 100px; background: var(--color-bg-page); padding: 1rem 0; z-index: 100; border-bottom: 1px solid var(--color-border);">
@@ -105,10 +106,10 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
         ${isLocked ? `
             <div class="alert alert-warning" style="margin-bottom: 2rem;">
                 <strong>Locked:</strong> This monster version is currently <strong>${currentMonster.status}</strong> and cannot be edited. 
-                ${currentMonster.status === 'Pending' ? 'If you need to make changes, please wait for staff review or contact Admin.' : 
-                  currentMonster.status === 'Queued' ? 'This version is accepted and waiting to be merged into the next patch release.' :
-                  currentMonster.status === 'Archived' ? 'This is an archived older version and is read-only.' :
-                  'Approved monsters are locked to maintain consistency in the compendium.'}
+                ${currentMonster.status === 'Pending' ? 'If you need to make changes, please wait for staff review or contact Admin.' :
+                currentMonster.status === 'Queued' ? 'This version is accepted and waiting to be merged into the next patch release.' :
+                    currentMonster.status === 'Archived' ? 'This is an archived older version and is read-only.' :
+                        'Approved monsters are locked to maintain consistency in the compendium.'}
             </div>
         ` : ''}
 

@@ -3,6 +3,7 @@
  * Main orchestrator for the Monster Compendium Editor.
  * This file handles routing and cross-module coordination.
  * Location: \assets\js\monster\monster-editor.js
+ * 
  * https://github.com/hawthorneguild/HawthorneTeams/issues/7
  */
 
