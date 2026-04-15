@@ -24,6 +24,38 @@ import {
     clearLocalCache
 } from './monster-editor-state.js';
 
+function ensurePreviewModalElements() {
+    let modal = document.getElementById('preview-modal');
+    let target = document.getElementById('preview-target');
+
+    if (modal && target) return { modal, target };
+
+    modal = document.createElement('div');
+    modal.id = 'preview-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-modal" id="preview-close" aria-label="Close preview">&times;</span>
+            <div id="preview-target"></div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    target = modal.querySelector('#preview-target');
+    const closeBtn = modal.querySelector('#preview-close');
+
+    closeBtn?.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    return { modal, target };
+}
+
 /**
  * Attaches all event listeners for the editor form.
  * @param {HTMLElement} container - The main editor container.
@@ -231,9 +263,7 @@ export async function handleSave(currentMonster, silent = false) {
 export async function handlePreview(currentMonster) {
     try {
         syncMonsterFromForm(document.getElementById('monster-form'), currentMonster);
-        const modal = document.getElementById('preview-modal');
-        const target = document.getElementById('preview-target');
-        if (!modal || !target) return;
+        const { modal, target } = ensurePreviewModalElements();
 
         modal.style.display = 'block';
         target.innerHTML = `
