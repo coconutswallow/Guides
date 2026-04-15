@@ -447,7 +447,7 @@ blockquote.stat-block hr {
   color: var(--color-text);
   padding: 2em 1em;
   margin-top: 2em;
-  background: var(--color-bg-light);
+  background: transparent;
   border: none;
   border-radius: 0;
   text-align: justify; /* Book-like text alignment */
@@ -657,12 +657,98 @@ blockquote.stat-block hr {
 }
 
 /* Ability Table Overrides */
+.ability-table-wrapper,
+.vitals-container,
+.stats-container {
+    break-inside: avoid-column;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 1.2rem;
+}
+
 .ability-table { 
     width: 100%; 
     text-align: center; 
     border-collapse: collapse; 
-    margin-bottom: 0.5em; 
 }
+
+/* ============================================ */
+/* 2-COLUMN LAYOUT MODIFIER */
+/* ============================================ */
+
+/* When toggled, the layout becomes a single vertical column */
+.monster-detail-layout.force-2-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: none !important; /* Expansion for no-lore monsters */
+    margin: 0 !important;
+}
+
+/* Statblock takes full width on top */
+.monster-detail-layout.force-2-col .right-col {
+    width: 100% !important;
+    max-width: 100% !important;
+    order: 1;
+}
+
+/* Lore/Images move below */
+.monster-detail-layout.force-2-col .left-col {
+    width: 100% !important;
+    max-width: 100% !important;
+    order: 2;
+    margin-top: 1rem;
+}
+
+/* Enable columns inside the statblock card for desktop */
+@media (min-width: 1001px) {
+    .stat-block.statblock-2-col {
+        column-count: 2;
+        column-gap: 3rem;
+        column-rule: none;
+        padding-bottom: 12px;
+    }
+
+    /* Elements that should span both columns */
+    .stat-block.statblock-2-col h2,
+    .stat-block.statblock-2-col p:first-of-type,
+    .stat-block.statblock-2-col .statblock-creator {
+        column-span: all;
+    }
+
+    /* Hide all horizontal rules in 2-column mode to favor header borders */
+    .stat-block.statblock-2-col hr {
+        display: none !important;
+    }
+
+    /* Prevent headers from being orphaned at column bottoms */
+    .stat-block.statblock-2-col h3 {
+        break-after: avoid-column;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .feature-bucket {
+        break-inside: auto; /* Allow bucket to split */
+    }
+
+    .feature-item {
+        break-inside: avoid-column;
+        margin-bottom: 0.8rem;
+    }
+
+    .feature-bucket h3 + .feature-item {
+        break-before: avoid-column;
+    }
+}
+
+/* Adjust toggle button style */
+.layout-toggle-btn:hover {
+    background: var(--color-primary) !important;
+    color: white !important;
+    border-color: var(--color-primary) !important;
+}
+
 
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 1000px) {

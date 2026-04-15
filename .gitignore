@@ -20,3 +20,4 @@ package-lock.json
 vitest.config.js
 test/*.test.js
 
+temp/

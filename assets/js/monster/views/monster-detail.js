@@ -59,8 +59,9 @@ export function renderMonsterStatblock(container, monster) {
         }
 
         // --- LAYOUT LOGIC ---
-        const hasLeftContent = monster.image_url || monster.description || monster.additional_info;
+        const hasLeftContent = !!(monster.image_url || monster.description || monster.additional_info);
         const layoutClass = hasLeftContent ? 'has-lore' : 'no-lore';
+        let is2Col = !hasLeftContent; // Default to 2-col if no lore/image content exists
         
         // Calculations
         const pb = calculatePB(monster.cr);
@@ -90,9 +91,10 @@ export function renderMonsterStatblock(container, monster) {
     const alignmentText = monster.alignment_prefix 
         ? `${monster.alignment_prefix} ${monster.alignment}` 
         : monster.alignment;
+    const monster_type_line = `<p><em>${monster.size || 'Medium'} ${monster.species || 'Humanoid'}, ${alignmentText}</em></p>`;
 
     const template = `
-        <div class="monster-detail-layout ${layoutClass}">
+        <div class="monster-detail-layout ${layoutClass} ${is2Col ? 'force-2-col' : ''}">
             
             ${hasLeftContent ? `
             <div class="left-col">
@@ -117,10 +119,9 @@ export function renderMonsterStatblock(container, monster) {
             ` : ''}
 
             <div class="right-col"> 
-                <blockquote class="stat-block">
+                <blockquote class="stat-block ${is2Col ? 'statblock-2-col' : ''}">
                     <h2>${monster.name || 'Unnamed Monster'}</h2>
-                    <p><em>${monster.size || 'Medium'} ${monster.species || 'Humanoid'}, ${alignmentText}</em></p>
-                    <hr>
+                    ${monster_type_line}
                     
                     <div class="stats-container">
                         <div class="stat-row-split">
@@ -141,9 +142,7 @@ export function renderMonsterStatblock(container, monster) {
                         </div>
                     </div>
 
-                    <hr>
                     ${abilitiesHTML}
-                    <hr>
 
                     <div class="vitals-container">
                         ${vuln ? `<div class="stat-row"><strong>Damage Vulnerabilities</strong> ${vuln}</div>` : ''}
@@ -167,11 +166,9 @@ export function renderMonsterStatblock(container, monster) {
                         </div>
                     </div>
 
-                    <hr>
-
                     <!-- FEATURES SECTIONS -->
                     <div class="features-container">
-                        ${renderFeatureBucket(features.Trait)}
+                        ${renderFeatureBucket(features.Trait, 'Traits')}
                         ${renderFeatureBucket(features.Action, 'Actions')}
                         ${renderFeatureBucket(features.Bonus, 'Bonus Actions')}
                         ${renderFeatureBucket(features.Reaction, 'Reactions')}
@@ -201,11 +198,37 @@ export function renderMonsterStatblock(container, monster) {
                         </div>
                     ` : ''}
                 </blockquote>
+                <div class="statblock-controls" style="margin-top: 1rem; text-align: right;">
+                    <button type="button" class="btn btn-sm layout-toggle-btn" style="background: var(--color-bg-medium); color: var(--color-text); border: 1px solid var(--color-border); cursor: pointer; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem; font-family: var(--font-body);">
+                        ${is2Col ? 'Switch to 1-Column Statblock' : 'Switch to 2-Column Statblock'}
+                    </button>
+                </div>
             </div>
         </div>
     `;
 
         container.innerHTML = template;
+
+        // --- ATTACH TOGGLE LOGIC ---
+        const toggleBtn = container.querySelector('.layout-toggle-btn');
+        const layoutContainer = container.querySelector('.monster-detail-layout');
+        const statblockCard = container.querySelector('.stat-block');
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                is2Col = !is2Col;
+                
+                layoutContainer.classList.toggle('force-2-col', is2Col);
+                statblockCard.classList.toggle('statblock-2-col', is2Col);
+                
+                toggleBtn.textContent = is2Col ? 'Switch to 1-Column Statblock' : 'Switch to 2-Column Statblock';
+                
+                // Optional: Scroll to top of statblock if switching to 2-col to show the header
+                if (is2Col) {
+                    statblockCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        }
     } catch (err) {
         console.error("Render Error:", err);
         container.innerHTML = `<div class="alert alert-danger" style="color:red; padding:20px; font-weight:bold;">Render Crash: ${err.message}<br><br>${err.stack}</div>`;
@@ -234,27 +257,29 @@ function renderAbilityTable(scores, saves, pb) {
     const data = abilities.reduce((acc, attr) => ({...acc, [attr]: getCellData(attr)}), {});
 
     return `
-    <table class="ability-table">
-        <thead>
-            <tr>
-                <th></th><th>Score</th><th>Mod</th><th>Save</th>
-                <th></th><th>Score</th><th>Mod</th><th>Save</th>
-                <th></th><th>Score</th><th>Mod</th><th>Save</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>STR</strong></td><td>${data.STR.score}</td><td>${data.STR.mod}</td><td>${data.STR.save}</td>
-                <td><strong>DEX</strong></td><td>${data.DEX.score}</td><td>${data.DEX.mod}</td><td>${data.DEX.save}</td>
-                <td><strong>CON</strong></td><td>${data.CON.score}</td><td>${data.CON.mod}</td><td>${data.CON.save}</td>
-            </tr>
-            <tr>
-                <td><strong>INT</strong></td><td>${data.INT.score}</td><td>${data.INT.mod}</td><td>${data.INT.save}</td>
-                <td><strong>WIS</strong></td><td>${data.WIS.score}</td><td>${data.WIS.mod}</td><td>${data.WIS.save}</td>
-                <td><strong>CHA</strong></td><td>${data.CHA.score}</td><td>${data.CHA.mod}</td><td>${data.CHA.save}</td>
-            </tr>
-        </tbody>
-    </table>`;
+    <div class="ability-table-wrapper">
+        <table class="ability-table">
+            <thead>
+                <tr>
+                    <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                    <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                    <th></th><th>Score</th><th>Mod</th><th>Save</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>STR</strong></td><td>${data.STR.score}</td><td>${data.STR.mod}</td><td>${data.STR.save}</td>
+                    <td><strong>DEX</strong></td><td>${data.DEX.score}</td><td>${data.DEX.mod}</td><td>${data.DEX.save}</td>
+                    <td><strong>CON</strong></td><td>${data.CON.score}</td><td>${data.CON.mod}</td><td>${data.CON.save}</td>
+                </tr>
+                <tr>
+                    <td><strong>INT</strong></td><td>${data.INT.score}</td><td>${data.INT.mod}</td><td>${data.INT.save}</td>
+                    <td><strong>WIS</strong></td><td>${data.WIS.score}</td><td>${data.WIS.mod}</td><td>${data.WIS.save}</td>
+                    <td><strong>CHA</strong></td><td>${data.CHA.score}</td><td>${data.CHA.mod}</td><td>${data.CHA.save}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>`;
 }
 
 /**
@@ -266,8 +291,10 @@ function renderAbilityTable(scores, saves, pb) {
 function renderFeatureBucket(list, title) {
     if (!list || list.length === 0) return '';
     return `
-        ${title ? `<h3>${title}</h3>` : ''}
-        ${renderFeatureList(list)}
+        <div class="feature-bucket">
+            ${title ? `<h3>${title}</h3>` : ''}
+            ${renderFeatureList(list)}
+        </div>
     `;
 }
 
