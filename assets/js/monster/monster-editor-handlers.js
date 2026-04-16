@@ -24,6 +24,8 @@ import {
     clearLocalCache
 } from './monster-editor-state.js';
 
+let activeVisibilityHandler = null;
+
 function ensurePreviewModalElements() {
     let modal = document.getElementById('preview-modal');
     let target = document.getElementById('preview-target');
@@ -66,15 +68,18 @@ export function attachEditorEvents(container, currentMonster, lookups) {
     const form = container.querySelector('#monster-form');
     if (!form) return;
 
-    // 0. Tab Visibility Autosave
-    const onVisibilityChange = () => {
+    // 0. Tab Visibility Autosave — Deduplicate to prevent multiple listeners
+    if (activeVisibilityHandler) {
+        document.removeEventListener('visibilitychange', activeVisibilityHandler);
+    }
+    activeVisibilityHandler = () => {
         if (document.visibilityState === 'hidden') {
             console.log('[MonsterEditor] Page hidden, triggering emergency auto-save.');
             handleSave(currentMonster, true);
         }
     };
-    document.addEventListener('visibilitychange', onVisibilityChange);
-    // Cleanup reference for future re-init? Not strict in this SPA but good practice
+    document.addEventListener('visibilitychange', activeVisibilityHandler);
+    
     container.dataset.visibilityHandler = 'true';
 
     // 1. Name -> Slug Auto-gen
@@ -177,13 +182,28 @@ export function attachEditorEvents(container, currentMonster, lookups) {
         if (accordionHeader && !e.target.closest('button')) {
             const body = accordionHeader.nextElementSibling;
             const icon = accordionHeader.querySelector('.accordion-icon');
-            body.style.display = body.style.display === 'none' ? 'block' : 'none';
-            icon.style.transform = body.style.display === 'none' ? 'rotate(-90deg)' : 'rotate(0deg)';
+            const card = accordionHeader.closest('.feature-card');
+            const index = parseInt(card?.dataset.index);
+            const feat = currentMonster.features[index];
+
+            const isOpening = body.style.display === 'none';
+            body.style.display = isOpening ? 'block' : 'none';
+            icon.style.transform = isOpening ? 'rotate(0deg)' : 'rotate(-90deg)';
+            
+            // Persist the expansion state in the data object
+            if (feat) {
+                feat.expanded = isOpening;
+            }
             return;
         }
 
         if (e.target.classList.contains('btn-add-grouped')) {
-            currentMonster.features.push({ name: '', type: e.target.dataset.type, description: '' });
+            currentMonster.features.push({ 
+                name: '', 
+                type: e.target.dataset.type, 
+                description: '',
+                expanded: true // Default new features to OPEN
+            });
             renderFeatureList(currentMonster);
             return;
         }
@@ -241,15 +261,30 @@ export async function handleSave(currentMonster, silent = false) {
     }
 
     try {
+        // Record current expansion states before save overwrites the features array
+        const expansionStates = currentMonster.features.map(f => f.expanded);
+
         const saved = await saveMonsterDraft(currentMonster, currentMonster.features);
         currentMonster.row_id = saved.row_id;
-        if (saved.features) currentMonster.features = saved.features;
+        
+        if (saved.features) {
+            // Restore expanded state flags to the new objects from the server
+            currentMonster.features = saved.features.map((f, i) => ({
+                ...f,
+                expanded: expansionStates[i] || false
+            }));
+        }
 
         // Success: Clear local cache for this monster as DB is now source of truth
         clearLocalCache(currentMonster.slug);
 
         statusDiv.textContent = `${silent ? 'Auto-sync' : 'Saved'} • ${new Date().toLocaleTimeString()}`;
-        if (window.location.hash === '#/new') window.location.hash = `#/edit/${saved.slug}`;
+        
+        // ONLY change the hash if it's a manual save (silent = false)
+        // This prevents the router from re-rendering and losing focus during auto-saves.
+        if (!silent && window.location.hash === '#/new') {
+            window.location.hash = `#/edit/${saved.slug}`;
+        }
     } catch (err) {
         logError('monster-editor', `Save error: ${err.message}`);
         if (!silent) statusDiv.textContent = 'Error saving!';

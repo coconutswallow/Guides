@@ -399,11 +399,13 @@ export function renderFeatureList(currentMonster) {
             .map((f, i) => ({ ...f, originalIndex: i }))
             .filter(f => types.some(t => t.toLowerCase() === (f.type || '').toLowerCase()));
 
-        container.innerHTML = filtered.map((f, i) => `
+        container.innerHTML = filtered.map((f, i) => {
+            const isExpanded = f.expanded === true;
+            return `
             <div class="feature-card accordion-card" data-index="${f.originalIndex}" style="padding: 0; overflow: hidden; margin-bottom: 1rem; border: 1px solid var(--color-border); border-radius: 4px;">
                 <div class="accordion-header" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; background: var(--color-bg-light); border-bottom: 1px solid var(--color-border); font-family: 'Marcellus SC', serif; color: var(--color-primary);">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span class="accordion-icon" style="transform: rotate(-90deg); transition: transform 0.2s;">▼</span>
+                        <span class="accordion-icon" style="transform: ${isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)'}; transition: transform 0.2s;">▼</span>
                         <span style="font-weight: bold;">${hideType ? '' : f.type + ': '}${f.name || '(Unnamed)'}</span>
                     </div>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -412,7 +414,7 @@ export function renderFeatureList(currentMonster) {
                         <button type="button" class="btn btn-sm btn-outline-primary feat-remove" style="padding: 2px 8px; font-size: 0.8rem;">Remove</button>
                     </div>
                 </div>
-                <div class="accordion-body" style="display: none; padding: 1rem; background: var(--color-bg-page);">
+                <div class="accordion-body" style="display: ${isExpanded ? 'block' : 'none'}; padding: 1rem; background: var(--color-bg-page);">
                     <div class="${hideType ? 'form-group' : 'grid-2'}">
                         ${!hideType ? `
                              <div class="form-group">
@@ -431,7 +433,8 @@ export function renderFeatureList(currentMonster) {
                     </div>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Initialize widgets
         container.querySelectorAll('.md-widget-container').forEach(widget => initMarkdownWidget(widget));
