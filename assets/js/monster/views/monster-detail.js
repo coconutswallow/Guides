@@ -61,7 +61,8 @@ export function renderMonsterStatblock(container, monster) {
         // --- LAYOUT LOGIC ---
         const hasLeftContent = !!(monster.image_url || monster.description || monster.additional_info);
         const layoutClass = hasLeftContent ? 'has-lore' : 'no-lore';
-        let is2Col = !hasLeftContent; // Default to 2-col if no lore/image content exists
+        // Default to 1-column if lore exists, otherwise default to 2-column (even if image/info exist)
+        let is2Col = !(monster.description && monster.description.trim());
         
         // Calculations
         const pb = calculatePB(monster.cr);

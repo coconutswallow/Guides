@@ -157,7 +157,10 @@ export async function saveMonsterDraft(monsterData, features = []) {
     }
 
     if (features.length > 0) {
-        const featurePayload = features.map((f, index) => {
+        const toUpdate = [];
+        const toInsert = [];
+
+        features.forEach((f, index) => {
             const payloadRow = {
                 name: (f.name || '').trim(),
                 type: f.type || 'Trait',
@@ -165,17 +168,36 @@ export async function saveMonsterDraft(monsterData, features = []) {
                 parent_row_id: savedMonster.row_id,
                 display_order: index
             };
-            if (f.id) payloadRow.id = f.id;
-            return payloadRow;
+            if (f.id) {
+                payloadRow.id = f.id;
+                toUpdate.push(payloadRow);
+            } else {
+                toInsert.push(payloadRow);
+            }
         });
 
-        const { data: returnFeats, error: featError } = await supabase
-            .from('monster_features')
-            .upsert(featurePayload)
-            .select('*');
+        // 1. Perform Updates (Features with existing IDs)
+        if (toUpdate.length > 0) {
+            const { data: updated, error: updateErr } = await supabase
+                .from('monster_features')
+                .upsert(toUpdate)
+                .select('*');
+            if (updateErr) throw updateErr;
+            upsertedFeatures.push(...(updated || []));
+        }
 
-        if (featError) throw featError;
-        upsertedFeatures = returnFeats || [];
+        // 2. Perform Inserts (New features without IDs)
+        if (toInsert.length > 0) {
+            const { data: inserted, error: insertErr } = await supabase
+                .from('monster_features')
+                .insert(toInsert)
+                .select('*');
+            if (insertErr) throw insertErr;
+            upsertedFeatures.push(...(inserted || []));
+        }
+
+        // Sort by display order to maintain consistency
+        upsertedFeatures.sort((a, b) => a.display_order - b.display_order);
     }
 
     savedMonster.features = upsertedFeatures;
@@ -236,15 +258,18 @@ export async function createNewVersion(sourceRowId) {
 
     if (insertErr) throw insertErr;
 
-    const { data: features } = await supabase
+    const { data: features, error: fetchFeatErr } = await supabase
         .from('monster_features')
         .select('*')
         .eq('parent_row_id', sourceRowId);
+
+    if (fetchFeatErr) throw fetchFeatErr;
 
     if (features && features.length > 0) {
         const clonedFeatures = features.map(f => {
             const clone = { ...f };
             delete clone.id;
+            delete clone.created_at; 
             clone.parent_row_id = savedMonster.row_id;
             return clone;
         });
@@ -253,7 +278,7 @@ export async function createNewVersion(sourceRowId) {
             .from('monster_features')
             .insert(clonedFeatures);
 
-        if (featErr) console.error('[MonsterService] Error cloning features:', featErr);
+        if (featErr) throw featErr;
     }
 
     return savedMonster.slug;
@@ -307,6 +332,36 @@ export async function getPendingMonsters() {
 
     if (error) {
         logError('monster-service', `Error fetching pending queue: ${error.message}`);
+        return [];
+    }
+    return data;
+}
+
+/**
+ * Fetches the queue of monsters in the Patch Queue (Queued).
+ * @returns {Promise<Object[]>} Array of queued monster objects with features attached.
+ */
+export async function getQueuedMonsters() {
+    const { data, error } = await supabase
+        .from('monsters')
+        .select(`
+            *,
+            creator_discord_id::text,
+            features:monster_features(*)
+        `)
+        .eq('status', 'Queued')
+        .order('updated_at', { ascending: true });
+
+    if (data) {
+        data.forEach(m => {
+            if (m.features) {
+                m.features.sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+            }
+        });
+    }
+
+    if (error) {
+        logError('monster-service', `Error fetching patch queue: ${error.message}`);
         return [];
     }
     return data;

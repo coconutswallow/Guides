@@ -10,6 +10,7 @@ import { supabase } from '../supabaseClient.js';
 import { checkAccess } from '../auth-check.js';
 import {
     getPendingMonsters,
+    getQueuedMonsters,
     approveMonster,
     rejectMonster,
     addToPatchQueue
@@ -17,6 +18,7 @@ import {
 import { renderMonsterStatblock } from './views/monster-detail.js';
 
 let pendingQueue = [];
+let patchQueue = [];
 let currentReview = null;
 
 /**
@@ -58,38 +60,44 @@ async function init() {
 }
 
 /**
- * Fetches the pending queue from the service and renders the dashboard table.
+ * Fetches the pending and patch queues from the service and renders the dashboard.
  * @param {HTMLElement} container - The main application container.
  * @returns {Promise<void>}
  */
 async function renderQueue(container) {
-    container.innerHTML = '<div class="loading">Fetching queue...</div>';
+    container.innerHTML = '<div class="loading">Fetching queue data...</div>';
 
-    pendingQueue = await getPendingMonsters();
+    [pendingQueue, patchQueue] = await Promise.all([
+        getPendingMonsters(),
+        getQueuedMonsters()
+    ]);
 
     let html = `
         <div class="editor-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <div>
-                <h2 style="margin: 0;">Approval Queue</h2>
-                <p style="margin: 0;">${pendingQueue.length} monster(s) awaiting review.</p>
+                <h2 style="margin: 0;">Monster Moderation</h2>
+                <p style="margin: 0;">${pendingQueue.length} pending reviews | ${patchQueue.length} queued for next patch.</p>
             </div>
             <a href="/Guides/staff/" class="btn btn-outline" style="font-size: 0.85rem;">Back to Staff Portal</a>
         </div>
-        <div class="queue-container">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Monster</th>
-                        <th>Creator</th>
-                        <th>Submitted</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+
+        <section class="queue-section">
+            <h3>Approval Queue (Pending)</h3>
+            <div class="queue-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Monster</th>
+                            <th>Creator</th>
+                            <th>Submitted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
     `;
 
     if (pendingQueue.length === 0) {
-        html += '<tr><td colspan="4" class="text-center">Queue is empty. Nice work!</td></tr>';
+        html += '<tr><td colspan="4" class="text-center">Pending queue is empty.</td></tr>';
     } else {
         pendingQueue.forEach((m, i) => {
             html += `
@@ -105,16 +113,71 @@ async function renderQueue(container) {
         });
     }
 
+    html += `
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="queue-section" style="margin-top: 4rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Patch Queue (Scheduled)</h3>
+                ${patchQueue.length > 0 ? `<button id="btn-activate-queued" class="btn btn-approve btn-sm" style="width: auto;">Activate Queued Submissions</button>` : ''}
+            </div>
+            <div class="queue-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Monster</th>
+                            <th>Creator</th>
+                            <th>Queued At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+
+    if (patchQueue.length === 0) {
+        html += '<tr><td colspan="4" class="text-center">Patch queue is empty. Use "Add to Patch Queue" during review.</td></tr>';
+    } else {
+        patchQueue.forEach((m, i) => {
+            html += `
+                <tr>
+                    <td><strong>${m.name}</strong> (CR ${m.cr})</td>
+                    <td><code>${m.creator || m.creator_discord_id}</code></td>
+                    <td>${new Date(m.updated_at).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary btn-review-patch" data-index="${i}">Review</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
     html += '</tbody></table></div><div id="review-target"></div>';
     container.innerHTML = html;
 
-    // Listen for review button
+    // Listeners: Pending Reviews
     container.querySelectorAll('.btn-review').forEach(btn => {
         btn.addEventListener('click', e => {
             const index = e.target.dataset.index;
             showReview(pendingQueue[index]);
         });
     });
+
+    // Listeners: Patch Reviews (Reuse same showReview but it needs context)
+    container.querySelectorAll('.btn-review-patch').forEach(btn => {
+        btn.addEventListener('click', e => {
+            const index = e.target.dataset.index;
+            showReview(patchQueue[index]);
+        });
+    });
+
+    // Batch Activation Listener
+    const btnActivate = document.getElementById('btn-activate-queued');
+    if (btnActivate) {
+        btnActivate.addEventListener('click', () => handleBatchActivation());
+    }
 }
 
 /**
@@ -161,7 +224,7 @@ function showReview(monster) {
 
 /**
  * Processes the approval or rejection of a monster submission.
- * @param {string} type - Either 'approve' or 'reject'.
+ * @param {string} type - Either 'approve', 'queue', or 'reject'.
  * @returns {Promise<void>}
  */
 async function handleDecision(type) {
@@ -181,10 +244,63 @@ async function handleDecision(type) {
             alert('Monster Rejected (Sent back to Drafts).');
         }
 
-        // Refresh queue
+        // Refresh lists
         renderQueue(document.getElementById('approvals-app'));
     } catch (err) {
         alert('Error: ' + err.message);
+    }
+}
+
+/**
+ * Iterates through all monsters in the Patch Queue and activates them.
+ * Includes archiving previous versions automatically via approveMonster.
+ * @returns {Promise<void>}
+ */
+async function handleBatchActivation() {
+    if (patchQueue.length === 0) return;
+
+    const count = patchQueue.length;
+    const msg = `This will activate ALL ${count} monsters in the Patch Queue.\n\n` +
+                `Actions per monster:\n` +
+                `- Set to 'Approved' & 'Live'\n` +
+                `- Clean slug (remove -vX.X suffix)\n` +
+                `- Archive any previous approved versions\n\n` +
+                `Do you want to proceed?`;
+
+    if (!confirm(msg)) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    const btnTranslate = document.getElementById('btn-activate-queued');
+    const originalText = btnTranslate.textContent;
+    btnTranslate.disabled = true;
+
+    try {
+        let successCount = 0;
+        let failCount = 0;
+
+        for (let i = 0; i < patchQueue.length; i++) {
+            const m = patchQueue[i];
+            btnTranslate.textContent = `Activating [${i + 1}/${count}]...`;
+            
+            try {
+                await approveMonster(m.row_id, user.id);
+                successCount++;
+            } catch (err) {
+                console.error(`Failed to activate ${m.name}:`, err);
+                failCount++;
+            }
+        }
+
+        alert(`Batch completion: ${successCount} activated, ${failCount} failed.`);
+        renderQueue(document.getElementById('approvals-app'));
+
+    } catch (err) {
+        alert('Fatal Error during batch process: ' + err.message);
+    } finally {
+        if (btnTranslate) {
+            btnTranslate.disabled = false;
+            btnTranslate.textContent = originalText;
+        }
     }
 }
 
