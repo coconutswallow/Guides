@@ -522,7 +522,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     if (dmCollaborators) output += `**DM Collaborators:**\n${dmCollaborators}\n\n`;
     if (sessionNotes) output += `**Notes:**\n${sessionNotes}\n\n`;
 
-    output += `|| DM Tool Tracker: ${sessionId} ||\n\n`;
+    output += `|| DMTracker: ${sessionId} ||\n\n`;
 
     const summaryHeader = `**Session Summary:**\n`;
     const summaryContent = sessionSummary || 'N/A';
