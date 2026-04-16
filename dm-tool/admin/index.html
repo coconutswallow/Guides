@@ -1,0 +1,119 @@
+---
+layout: default
+title: DM Tool | Admin
+extra_css:
+- /assets/css/dm-tool.css
+- /assets/css/admin.css
+---
+
+{% comment %}
+@file dm-tool/admin/index.html
+@description The main entry point for the DM-Tool Administrative Dashboard.
+Provides interfaces for managing Events and Lookups configuration.
+Requires 'Engineer' or 'Admin' Discord roles.
+{% endcomment %}
+
+<div id="admin-auth-guard" class="auth-guard">
+    <div class="card" style="text-align: center; max-width: 450px;">
+        <h2 style="color: var(--color-primary);">🔒 Restrictive Access</h2>
+        <p>You must be logged in as an <strong>Engineer</strong> or <strong>Admin</strong> to access this page.</p>
+        
+        <div class="auth-header-container" style="margin: 1.5rem 0; display: flex; justify-content: center;">
+            {% include auth-header.html %}
+        </div>
+
+        <div id="auth-loading-spinner" style="margin: 1rem 0;">Checking authorization...</div>
+        <div id="auth-failed-msg" class="hidden" style="color: var(--palette-alert-danger-action); font-weight: bold; margin-top: 1rem;">
+            Access Denied. Your account does not have the required permissions.
+        </div>
+    </div>
+</div>
+
+<div class="admin-container">
+    <header class="dashboard-header">
+        <h1>DM Tool Administration</h1>
+        <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
+            <div class="auth-header-container">
+                {% include auth-header.html %}
+            </div>
+            <a href="{{ '/staff/' | relative_url }}" class="button button-secondary">Back to Staff</a>
+        </div>
+    </header>
+
+    <nav class="admin-tabs">
+        <button class="admin-tab active" data-tab="events">Events Management</button>
+        <button class="admin-tab" data-tab="lookups">Lookups Configuration</button>
+    </nav>
+
+    <!-- SECTION: EVENTS -->
+    <section id="section-events" class="admin-section active">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Server Events</h2>
+            <button class="button" onclick="document.getElementById('modal-add-event').showModal()">+ Add New Event</button>
+        </div>
+        
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Name</th>
+                        <th>Description</th>
+                        <th style="width: 15%;">Status</th>
+                        <th style="width: 20%;">Created At</th>
+                        <th style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="events-table-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 2rem;">Loading events...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SECTION: LOOKUPS -->
+    <section id="section-lookups" class="admin-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>DM-Tool Configuration (Lookups)</h2>
+            <p style="color: var(--color-text-secondary); font-style: italic;">Updates here affect pings, XP rates, and gold calculations sitewide.</p>
+        </div>
+
+        <div id="lookups-form-container" class="lookup-form-grid">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                Loading configuration data...
+            </div>
+        </div>
+
+        <div class="admin-actions-bar">
+            <span id="save-status-msg" style="align-self: center; font-weight: bold;"></span>
+            <button class="button button-secondary" id="btn-reset-lookups">Reset Changes</button>
+            <button class="button" id="btn-save-lookups">Save Configuration</button>
+        </div>
+    </section>
+</div>
+
+<!-- MODAL: ADD EVENT -->
+<dialog id="modal-add-event">
+    <h2 class="card-title">Add New Server Event</h2>
+    <form id="form-add-event" method="dialog">
+        <div class="form-group">
+            <label>Event Name <span class="req">*</span></label>
+            <input type="text" id="new-event-name" required placeholder="e.g. Midwinter Miracle 2026">
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+            <label>Description (Optional)</label>
+            <textarea id="new-event-desc" rows="3" placeholder="Brief details about the event..."></textarea>
+        </div>
+        <div class="form-group" style="margin-top: 1rem; display: flex; align-items: center; gap: 10px;">
+            <input type="checkbox" id="new-event-active" checked>
+            <label style="margin: 0;">Set as Active immediately</label>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 2rem;">
+            <button type="button" class="button button-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="button">Create Event</button>
+        </div>
+    </form>
+</dialog>
+
+<script type="module" src="{{ '/assets/js/dm-tool/admin.js' | relative_url }}"></script>

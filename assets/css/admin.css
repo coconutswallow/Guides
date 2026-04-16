@@ -1,0 +1,389 @@
+/**
+ * @file admin.css
+ * @description Styles for the DM-Tool Admin interface. Includes layouts for 
+ * dashboard tabs, dynamic lookup forms, and event management tables.
+ * @module AdminStyles
+ *
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
+ */
+
+:root {
+    --admin-primary: var(--color-primary);
+    --admin-secondary: var(--color-secondary);
+    --admin-bg: var(--color-bg-page);
+    --admin-card-bg: var(--color-bg-light);
+    --admin-border: var(--color-border);
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.auth-header-container {
+    flex-shrink: 0;
+}
+
+.dashboard-header, .header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--admin-border);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dashboard-header h1, .header-main h1 {
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Auth Guard Overlay */
+.auth-guard {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-page);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.auth-guard.hidden {
+    display: none;
+}
+
+/* Tab Navigation */
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--admin-border);
+}
+
+.admin-tab {
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    font-family: var(--font-header);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+}
+
+.admin-tab:hover {
+    color: var(--admin-primary);
+    background: var(--palette-bg-hover-light);
+}
+
+.admin-tab.active {
+    color: var(--admin-primary);
+    background: var(--admin-card-bg);
+    border-color: var(--admin-border);
+    margin-bottom: -2px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Sections */
+.admin-section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.admin-section.active {
+    display: block;
+}
+
+/* Lookup Form Layout */
+.lookup-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.lookup-card {
+    background: var(--admin-card-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lookup-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.lookup-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: var(--admin-primary);
+    border-bottom: 1px solid var(--admin-border);
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.2rem;
+}
+
+/* Inputs within Lookup Cards */
+.lookup-group {
+    margin-bottom: 1rem;
+}
+
+.lookup-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.lookup-input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--admin-border);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--color-text);
+    font-family: inherit;
+}
+
+.lookup-input:focus {
+    border-color: var(--admin-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(88, 24, 13, 0.1);
+}
+
+/* Nested Grid for small fields */
+.nested-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-items: end;
+}
+
+.tier-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    border-bottom: 1px solid var(--admin-border);
+    padding: 0.8rem 0;
+}
+
+.tier-row:last-child {
+    border-bottom: none;
+}
+
+.tier-label {
+    font-weight: bold;
+    color: var(--admin-primary);
+    font-family: var(--font-header);
+    font-size: 1.1rem;
+}
+
+/* Incentive Editors */
+.incentive-table {
+    width: 100%;
+}
+
+.incentive-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 40px;
+    gap: 10px;
+    margin-bottom: 0.8rem;
+    align-items: center;
+}
+
+.incentive-row.dm-type {
+    grid-template-columns: 1fr 100px 100px 40px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    transition: transform 0.1s ease;
+}
+
+.btn-icon:hover {
+    transform: scale(1.2);
+}
+
+.btn-add-row {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border: 1px dashed var(--admin-border);
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+}
+
+.btn-add-row:hover {
+    background: var(--palette-bg-hover-light);
+    color: var(--admin-primary);
+    border-color: var(--admin-primary);
+}
+
+/* Events Table */
+.admin-table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--admin-border);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background: var(--admin-primary);
+    color: #fff;
+    text-align: left;
+    padding: 1rem;
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tr:hover {
+    background: var(--palette-bg-hover-light);
+}
+
+/* Badges */
+.badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-active {
+    background: var(--palette-alert-success-bg-light);
+    color: var(--palette-alert-success-border);
+}
+
+.badge-inactive {
+    background: var(--palette-alert-danger-bg-light);
+    color: var(--palette-alert-danger-border);
+}
+
+/* Floating Save Button */
+.admin-actions-bar {
+    position: sticky;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--admin-border);
+    margin-top: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+.search-container {
+    flex: 1;
+    max-width: 400px;
+}
+
+.actions-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .lookup-input {
+    background: var(--palette-bg-row-dark);
+}
+
+[data-theme="dark"] .admin-actions-bar {
+    background: rgba(26, 26, 26, 0.8);
+}
+/* --- Admin Modal & Forms --- */
+.admin-modal {
+    border: none;
+    border-radius: 12px;
+    padding: 0;
+    max-width: 600px;
+    width: 90%;
+    background: var(--color-bg-light);
+    box-shadow: var(--shadow-xl);
+}
+
+.admin-modal::backdrop {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    padding: 2rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.status-msg {
+    font-size: 0.9rem;
+    font-weight: 600;
+}

@@ -328,8 +328,10 @@ title: Staff Portal
             </div>
             <p class="tool-description">Review Player Rework submissions.</p>
             <div class="tool-meta">
-              <span class="access-label">Access: <span class="access-roles">Auditors, Admin</span></span>
+              <span class="access-label">Access: <span class="access-roles">Auditors, Admin, Engineer</span></span>
               <a href="{{ '/rework/reviewer' | relative_url }}" class="tool-button">Open Review Queue</a>
+              <a href="{{ '/rework/admin/' | relative_url }}" class="tool-button" style="margin-top: 0.5rem;">Open
+                Rework Class Admin</a>
             </div>
           </div>
 
@@ -344,13 +346,29 @@ title: Staff Portal
           <!-- Tool: DM Tool -->
           <div class="tool-card">
             <div class="tool-header">
-              <h3 class="tool-title">DM Tool Lookup Tables</h3>
+              <h3 class="tool-title">DM Tool Lookups</h3>
             </div>
-            <p class="tool-description">Update DM Tool lookups, including active events and incentives</p>
+            <p class="tool-description">Update DM Tool lookups, including active events and incentives. Both the GSheet
+              and Web interfaces will need to be updated.</p>
             <div class="tool-meta">
-              <span class="access-label">Access: <span class="access-roles">Admin</span></span>
+              <span class="access-label">Access: <span class="access-roles">Admin, Engineer</span></span>
               <a href="https://docs.google.com/spreadsheets/d/1rvsdZJnVGTQaN060dXq81Pd1PPUYV95_rmA4qOxMvII/edit?usp=sharing"
-                class="tool-button">Open Lookups Config</a>
+                class="tool-button">Open GSheet DM Tool Admin</a>
+              <a href="{{ '/dm-tool/admin/' | relative_url }}" class="tool-button" style="margin-top: 0.5rem;">Open Web
+                DM Tool Admin</a>
+            </div>
+          </div>
+          <!-- Tool: Rework Config -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <h3 class="tool-title">Rework Configuration</h3>
+            </div>
+            <p class="tool-description">Configure the global database of classes, subclasses, and version-specific ASI
+              levels used by the rework tool. <br><b>Note:</b> Configuration of the rework costs is too complex for
+              table config and is stored in code.</p>
+            <div class="tool-meta">
+              <span class="access-label">Access: <span class="access-roles">Admin, Engineer</span></span>
+              <a href="{{ '/rework/admin/' | relative_url }}" class="tool-button">Open Rework Class Admin</a>
             </div>
           </div>
         </div>

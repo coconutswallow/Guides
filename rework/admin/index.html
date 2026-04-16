@@ -1,0 +1,107 @@
+---
+layout: default
+title: Rework | Class Admin
+extra_css:
+- /assets/css/admin.css
+---
+
+{% comment %}
+@file rework/admin/index.html
+@description The administrative gateway for managing the Character Rework class/subclass lookup data.
+Provides a searchable data table and inline editor for ASI progression.
+Requires 'Engineer' or 'Admin' Discord roles.
+
+https://github.com/hawthorneguild/HawthorneTeams/issues/8
+{% endcomment %}
+
+<div id="admin-auth-guard" class="auth-guard">
+    <div class="card" style="text-align: center; max-width: 450px;">
+        <h2 style="color: var(--color-primary);">🔒 Restrictive Access</h2>
+        <p>You must be signed in with an authorized role (Engineer or Admin) to access this dashboard.</p>
+        <div id="auth-loading-spinner" class="spinner" style="margin: 20px auto;"></div>
+        <p id="auth-failed-msg" class="hidden" style="color: var(--palette-alert-danger-action); font-weight: bold;">
+            Access Denied. Your account does not have the required permissions.
+        </p>
+    </div>
+</div>
+
+<div id="admin-dashboard" class="staff-container hidden">
+    <header class="admin-header">
+        <div class="header-main">
+            <h1>Rework Class Admin</h1>
+            <div class="header-actions">
+                <div class="auth-header-container">
+                    {% include auth-header.html %}
+                </div>
+                <a href="{{ '/staff/' | relative_url }}" class="button button-secondary">Back to Staff</a>
+            </div>
+        </div>
+        
+        <div class="admin-actions-bar">
+            <div class="search-container">
+                <input type="text" id="class-search" placeholder="Search classes, subclasses, or versions..." class="lookup-input">
+            </div>
+            <div class="actions-right">
+                <span id="save-status-msg" class="status-msg"></span>
+                <button id="btn-add-class" class="button button-primary">Add New Class</button>
+                <button id="btn-save-data" class="button button-secondary">Save Configuration</button>
+                <button id="btn-reset-data" class="button btn-danger-outline">Reset Changes</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Class Name</th>
+                            <th>Subclass</th>
+                            <th>Version</th>
+                            <th>ASI Levels</th>
+                            <th style="width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class-table-body">
+                        <!-- Dynamically populated -->
+                        <tr><td colspan="5" style="text-align:center;">Loading character data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Add/Edit Modal (Optional but cleaner for this many fields) -->
+<dialog id="modal-class-editor" class="admin-modal">
+    <div class="modal-content card">
+        <h2 id="modal-title">Edit Class Entry</h2>
+        <form id="form-class-editor">
+            <input type="hidden" id="edit-index">
+            <div class="form-group">
+                <label for="edit-class">Class Name</label>
+                <input type="text" id="edit-class" required class="lookup-input">
+            </div>
+            <div class="form-group">
+                <label for="edit-subclass">Subclass</label>
+                <input type="text" id="edit-subclass" required class="lookup-input">
+            </div>
+            <div class="form-group">
+                <label for="edit-version">Version (e.g. 2014, 2024)</label>
+                <input type="number" id="edit-version" required class="lookup-input">
+            </div>
+            <div class="form-group">
+                <label for="edit-asi">ASI Levels (comma separated)</label>
+                <input type="text" id="edit-asi" required class="lookup-input" placeholder="4, 8, 12, 16, 19">
+                <small>The levels at which this class receives Ability Score Improvements.</small>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="button button-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+                <button type="submit" class="button button-primary">Apply Changes</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<script type="module" src="{{ '/assets/js/rework/admin.js' | relative_url }}"></script>

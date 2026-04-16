@@ -11,6 +11,8 @@
  * - LocalStorage operations for tracking saved rework IDs
  * - Supabase database operations for CRUD on rework records
  * - Character data lookup table initialization
+ *   
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
  * 
  * @module state-manager
  */
@@ -465,7 +467,7 @@ export async function cleanupOldReworks(days) {
             .lt('updated_at', cutoffStr);
 
         if (error) throw error;
-        
+
         return count || 0;
     } catch (err) {
         console.error("Error during cleanup:", err);
