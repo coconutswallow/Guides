@@ -22,3 +22,5 @@ Welcome Dungeon Masters! This document provides all of the information and rules
     {% endif %}
   {% endfor %}
 </ul>
+
+<span class="image-caption">Background Image: <a href="https://www.pexels.com/photo/set-of-colorful-dices-on-desk-with-pencils-and-toys-3857508/">Set of colorful dices on desk with pencils and toys by Will Wright</a></span>
