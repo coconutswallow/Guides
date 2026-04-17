@@ -22,25 +22,96 @@ extra_css:
         </div>
 
         <div class="ac-toolbar">
+            <div class="ac-tabs-bar">
+                <div class="ac-tabs" id="ac-tabs-container">
+                    <button class="ac-tab active" data-tab="races">Races</button>
+                    <button class="ac-tab" data-tab="classes">Classes</button>
+                    <button class="ac-tab" data-tab="bastions">Bastions</button>
+                    <button class="ac-tab disabled" data-tab="tab3" title="Coming soon">Tab 4</button>
+                    <!-- Add more tabs as they are developed -->
+                </div>
+            </div>
             <div class="ac-search-bar">
                 <div class="ac-search-wrapper">
                     <i class="search-icon">🔍</i>
                     <input type="text" id="ac-global-search" placeholder="Search content..." class="ac-search-input">
                 </div>
             </div>
-            <div class="ac-tabs-bar">
-                <div class="ac-tabs" id="ac-tabs-container">
-                    <button class="ac-tab active" data-tab="bastions">Bastions</button>
-                    <button class="ac-tab disabled" data-tab="tab2" title="Coming soon">Tab 2</button>
-                    <button class="ac-tab disabled" data-tab="tab3" title="Coming soon">Tab 3</button>
-                    <!-- Add more tabs as they are developed -->
-                </div>
-            </div>
         </div>
     </header>
 
     <main class="ac-content">
-        <div id="ac-view-bastions" class="ac-view active">
+        <!-- Races View (Default) -->
+        <div id="ac-view-races" class="ac-view active">
+            <div class="ac-table-header">
+                <div class="ac-filters" id="races-filters">
+                    <!-- Dynamic filters like Source, Ability will go here -->
+                </div>
+                <div class="ac-stats" id="races-stats">
+                    <!-- Row count, etc. -->
+                </div>
+            </div>
+
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="races-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">Race</th>
+                            <th class="col-subrace">Subrace</th>
+                            <th class="col-size hide-mobile">Size</th>
+                            <th class="col-speed hide-tablet">Speed</th>
+                            <th class="col-asi">ASI</th>
+                            <th class="col-language hide-tablet">Languages</th>
+                            <th class="col-source hide-mobile">Source</th>
+                        </tr>
+                    </thead>
+                    <tbody id="races-tbody">
+                        <tr>
+                            <td colspan="7" class="ac-loading">
+                                <div class="spinner"></div>
+                                <span>Rallying Races...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Classes View -->
+        <div id="ac-view-classes" class="ac-view">
+            <div class="ac-table-header">
+                <div class="ac-filters" id="classes-filters">
+                    <!-- Dynamic filters like Hit Die will go here -->
+                </div>
+                <div class="ac-stats" id="classes-stats">
+                    <!-- Row count, etc. -->
+                </div>
+            </div>
+
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="classes-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">Class</th>
+                            <th class="col-subclass">Subclass</th>
+                            <th class="col-hitdie">Die</th>
+                            <th class="col-multiclass hide-tablet">Multi-Req</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classes-tbody">
+                        <tr>
+                            <td colspan="4" class="ac-loading">
+                                <div class="spinner"></div>
+                                <span>Preparing Classes...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Bastions View -->
+        <div id="ac-view-bastions" class="ac-view">
             <div class="ac-table-header">
                 <div class="ac-filters" id="bastions-filters">
                     <!-- Dynamic filters like Category, Size, etc. will go here -->

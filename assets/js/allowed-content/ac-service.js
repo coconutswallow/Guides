@@ -83,3 +83,43 @@ export async function getCategoryNotes(categoryId) {
     const cat = categories.find(c => c.id === categoryId);
     return cat ? cat.notes : null;
 }
+
+/**
+ * Fetches all Races from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of race objects
+ */
+export async function getRaces() {
+    const { data, error } = await supabase
+        .from('ac_races')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching races:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Classes from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of class objects
+ */
+export async function getClasses() {
+    const { data, error } = await supabase
+        .from('ac_classes')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching classes:', error);
+        return [];
+    }
+
+    return data;
+}

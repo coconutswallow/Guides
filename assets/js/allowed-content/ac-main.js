@@ -9,7 +9,9 @@
  * - Event delegation for common UI elements
  */
 
-import { initBastions } from './ac-bastions.js';
+import { initBastions, filterBastions } from './ac-bastions.js';
+import { initRaces, filterRaces } from './ac-races.js';
+import { initClasses, filterClasses } from './ac-classes.js';
 import { initTooltips } from './ac-ui-utils.js';
 
 /**
@@ -32,8 +34,20 @@ async function init() {
         };
     }
 
-    // Default to initializing the first tab (Bastions)
-    await initBastions();
+    // Set up global search router
+    const searchInput = document.getElementById('ac-global-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+            const term = e.target.value;
+            if (activeTab === 'races') filterRaces(term);
+            if (activeTab === 'classes') filterClasses(term);
+            if (activeTab === 'bastions') filterBastions(term);
+        });
+    }
+
+    // Default to initializing the first tab (Races)
+    await initRaces();
     
     console.log('AC UI: Ready.');
 }
@@ -64,8 +78,11 @@ function setupTabHandlers() {
             if (targetView) targetView.classList.add('active');
             
             // Initialize tab-specific logic if not already done
-            // (For now, just Bastions is implemented)
-            if (targetTab === 'bastions') {
+            if (targetTab === 'races') {
+                await initRaces();
+            } else if (targetTab === 'classes') {
+                await initClasses();
+            } else if (targetTab === 'bastions') {
                 await initBastions();
             }
         });

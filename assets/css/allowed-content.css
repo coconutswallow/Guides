@@ -19,6 +19,14 @@
     color: var(--color-text);
 }
 
+.ac-view {
+    display: none;
+}
+
+.ac-view.active {
+    display: block;
+}
+
 .ac-header {
     margin-bottom: var(--spacing-md);
     display: flex;
@@ -222,6 +230,15 @@
 .col-category { width: 120px; }
 .col-name { font-weight: 700; color: var(--color-primary); }
 .col-cost-gp, .col-cost-dtp { width: 100px; text-align: center; }
+
+/* Race specific columns */
+.col-subrace { opacity: 0.8; font-style: italic; }
+.col-asi { font-family: monospace; font-size: 0.85rem; color: var(--color-secondary); }
+
+/* Class specific columns */
+.col-subclass { opacity: 0.8; font-style: italic; }
+.col-hitdie { width: 80px; text-align: center; font-weight: 700; color: var(--color-secondary); }
+.col-multiclass { font-size: 0.85rem; opacity: 0.7; }
 
 /* Responsive Hiding */
 @media (max-width: 1024px) {

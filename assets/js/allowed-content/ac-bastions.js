@@ -97,6 +97,11 @@ function showBastionDetail(bastion) {
             <h2 class="detail-title">${esc(bastion.name)}</h2>
         </div>
 
+        <div class="category-notes-box" style="margin-top: 0; margin-bottom: 2rem;">
+            <h5>${esc(bastion.category?.name)}</h5>
+            <p style="font-size: 0.9rem; opacity: 0.8; white-space: pre-wrap;">${esc(bastion.category?.notes)}</p>
+        </div>
+
         <div class="detail-grid">
             <div class="detail-item">
                 <label>Source</label>
@@ -135,11 +140,6 @@ function showBastionDetail(bastion) {
             <p style="white-space: pre-wrap;">${esc(bastion.notes_advice)}</p>
         </div>
         ` : ''}
-
-        <div class="category-notes-box">
-            <h5>About ${esc(bastion.category?.name)}</h5>
-            <p style="font-size: 0.9rem; opacity: 0.8; white-space: pre-wrap;">${esc(bastion.category?.notes)}</p>
-        </div>
     `;
 
     openModal(html);
@@ -167,12 +167,8 @@ export function filterBastions(searchTerm) {
 
 /**
  * Sets up global handlers for the Bastions view.
+ * (Search logic is now handled by ac-main for consistency)
  */
 function setupEventHandlers() {
-    const searchInput = document.getElementById('ac-global-search');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            filterBastions(e.target.value);
-        });
-    }
+    // Handled in ac-main.js
 }
