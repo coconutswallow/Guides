@@ -231,7 +231,7 @@ body_class: "my-class" # Adds a custom CSS class to the
 
         <ul id="search-results"></ul>
 
-        <div class="page {% if page.toc %}page-wide{% endif %}">
+        <div class="page {% if page.toc %}page-wide{% endif %} {% if page.full_width %}page-full{% endif %}">
             {{ content }}
         </div>
 

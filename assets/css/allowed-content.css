@@ -240,6 +240,13 @@
 .col-hitdie { width: 80px; text-align: center; font-weight: 700; color: var(--color-secondary); }
 .col-multiclass { font-size: 0.85rem; opacity: 0.7; }
 
+/* Snippet Columns */
+.col-traits, .col-description, .col-expanded, .col-notes, .col-advice {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    max-width: 300px;
+}
+
 /* Responsive Hiding */
 @media (max-width: 1024px) {
     .hide-tablet { display: none; }

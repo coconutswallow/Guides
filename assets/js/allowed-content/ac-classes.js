@@ -10,7 +10,7 @@
  */
 
 import { getClasses } from './ac-service.js';
-import { openModal, esc } from './ac-ui-utils.js';
+import { openModal, esc, formatSnippet } from './ac-ui-utils.js';
 
 let allClasses = [];
 let filteredClasses = [];
@@ -53,6 +53,8 @@ function renderClassTable() {
             <td class="col-subclass">${esc(c.subclass)}</td>
             <td class="col-hitdie">${esc(c.hit_die || '—')}</td>
             <td class="col-multiclass hide-tablet">${formatMulticlassShort(c.multiclassing)}</td>
+            <td class="col-expanded hide-mobile">${formatSnippet(c.expanded_options)}</td>
+            <td class="col-advice hide-tablet">${formatSnippet(c.rage_advice)}</td>
         </tr>
     `).join('');
 

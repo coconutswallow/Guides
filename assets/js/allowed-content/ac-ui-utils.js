@@ -77,3 +77,18 @@ export function esc(str) {
     div.textContent = str;
     return div.innerHTML;
 }
+
+/**
+ * Creates a shortened snippet of a string for table previews.
+ * 
+ * @param {string} str - Raw string
+ * @param {number} length - Maximum length before truncation
+ * @returns {string} Sanitized and truncated string
+ */
+export function formatSnippet(str, length = 50) {
+    if (!str) return '—';
+    // Remove newlines and extra spaces for clean preview
+    let clean = str.replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ').trim();
+    if (clean.length <= length) return esc(clean);
+    return esc(clean.substring(0, length)) + '...';
+}

@@ -680,6 +680,11 @@ tbody tr:hover {
   /* This unlocks the width when ToC is present */
 }
 
+.page.page-full {
+  max-width: none;
+  padding: 0;
+}
+
 /* ============================================
    9. SITE HEADER
    ============================================ */

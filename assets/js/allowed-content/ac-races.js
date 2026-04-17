@@ -10,7 +10,7 @@
  */
 
 import { getRaces } from './ac-service.js';
-import { openModal, esc } from './ac-ui-utils.js';
+import { openModal, esc, formatSnippet } from './ac-ui-utils.js';
 
 let allRaces = [];
 let filteredRaces = [];
@@ -55,11 +55,14 @@ function renderRaceTable() {
             <td class="col-speed hide-tablet">${esc(r.speed)}</td>
             <td class="col-asi">${formatASI(r)}</td>
             <td class="col-language hide-tablet">${esc(r.language || '—')}</td>
+            <td class="col-traits hide-mobile">${formatSnippet(r.extra)}</td>
+            <td class="col-notes hide-tablet">${formatSnippet(r.rage_advice)}</td>
             <td class="col-source hide-mobile">${esc(r.source)}</td>
         </tr>
     `).join('');
 
     // Attach row click listeners
+
     tbody.querySelectorAll('tr').forEach(row => {
         row.addEventListener('click', () => {
             const raceId = row.dataset.id;

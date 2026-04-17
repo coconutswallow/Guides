@@ -10,7 +10,7 @@
  */
 
 import { getBastions } from './ac-service.js';
-import { openModal, esc } from './ac-ui-utils.js';
+import { openModal, esc, formatSnippet } from './ac-ui-utils.js';
 
 let allBastions = [];
 let filteredBastions = [];
@@ -69,6 +69,8 @@ function renderBastionTable() {
             <td class="col-prereq hide-tablet">${esc(b.building_prerequisite || '—')}</td>
             <td class="col-cost-gp">${esc(b.cost_gp)}</td>
             <td class="col-cost-dtp">${esc(b.cost_dtp)}</td>
+            <td class="col-description hide-mobile">${formatSnippet(b.description)}</td>
+            <td class="col-notes hide-tablet">${formatSnippet(b.notes_advice)}</td>
             <td class="col-order hide-mobile">${esc(b.order || '—')}</td>
         </tr>
     `).join('');
