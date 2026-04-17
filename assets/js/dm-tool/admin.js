@@ -3,6 +3,8 @@
  * @description DM-Tool Admin Controller. Handles RLS-restricted functions for managing 
  * events and lookup data. Provides a dynamic form interface for nested JSONB configuration.
  * @module AdminController
+ * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/6
  */
 
 import { supabase } from '../supabaseClient.js';
@@ -160,7 +162,7 @@ const handleAddEvent = async (e) => {
             .insert([{ name, description, is_active }]);
 
         if (error) throw error;
-        
+
         document.getElementById('modal-add-event').close();
         e.target.reset();
         fetchEvents();
@@ -390,7 +392,7 @@ window.adminController = {
     updateLookup: (path, value) => {
         const parts = path.split('.');
         let current = currentLookups.data;
-        
+
         for (let i = 0; i < parts.length - 1; i++) {
             current = current[parts[i]];
         }
@@ -402,7 +404,7 @@ window.adminController = {
         if (!newName || oldName === newName) return;
         const root = type === 'player' ? 'player incentives' : 'DM incentives';
         const data = currentLookups.data[root];
-        
+
         if (data[newName]) {
             alert("An incentive with this name already exists.");
             renderLookupsForm(); // Reset UI
@@ -417,7 +419,7 @@ window.adminController = {
     updateIncentive: (type, name, field, value) => {
         const root = type === 'player' ? 'player incentives' : 'DM incentives';
         const data = currentLookups.data[root];
-        
+
         if (type === 'player') {
             data[name] = parseInt(value) || 0;
         } else {
@@ -429,7 +431,7 @@ window.adminController = {
         const root = type === 'player' ? 'player incentives' : 'DM incentives';
         const data = currentLookups.data[root];
         const newName = "New " + (type === 'player' ? "Player" : "DM") + " Incentive " + (Object.keys(data).length + 1);
-        
+
         if (type === 'player') {
             data[newName] = 0;
         } else {

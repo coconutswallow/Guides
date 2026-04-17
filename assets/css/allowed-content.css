@@ -1,0 +1,406 @@
+/**
+ * ================================================================
+ * ALLOWED CONTENT (AC) STYLES
+ * ================================================================
+ * 
+ * Provides high-density, responsive, and premium UI styles for 
+ * character resource tables and detail views.
+ * 
+ * Includes:
+ * - Glassmorphism modal effects
+ * - Responsive table hiding logic
+ * - Custom tab navigation
+ * - Search and filter styling
+ */
+
+/* Container Layout */
+.ac-container {
+    padding: var(--spacing-sm);
+    color: var(--color-text);
+}
+
+.ac-header {
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.ac-header-main h1 {
+    margin-bottom: 0.2rem;
+}
+
+.ac-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.ac-instructions {
+    background: rgba(var(--palette-brand-highlight), 0.1);
+    border-left: 4px solid var(--palette-brand-highlight);
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    display: inline-block;
+    color: var(--color-text);
+}
+
+.inst-highlight {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* Toolbar (Tabs & Search) */
+.ac-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(var(--palette-bg-card-light), 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.ac-search-bar {
+    width: 100%;
+}
+
+.ac-search-wrapper {
+    position: relative;
+    max-width: 600px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.ac-search-input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.ac-search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--palette-brand-main), 0.1);
+}
+
+/* Tabs Bar */
+.ac-tabs-bar {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) transparent;
+}
+
+.ac-tabs-bar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.ac-tabs-bar::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 10px;
+}
+
+.ac-tabs {
+    display: flex;
+    gap: 0.6rem;
+    padding-bottom: 0.5rem; /* Space for scrollbar */
+    min-width: max-content;
+}
+
+.ac-tab {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-light);
+    color: var(--color-text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.ac-tab:hover:not(.disabled) {
+    background: var(--color-table-hover);
+    color: var(--color-primary);
+}
+
+.ac-tab.active {
+    background: var(--color-primary);
+    color: var(--color-bg-light);
+    border-color: var(--color-primary);
+}
+
+.ac-tab.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Table Design */
+.ac-table-wrapper {
+    overflow-x: auto;
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+}
+
+.ac-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.ac-table th {
+    background: var(--color-primary);
+    color: var(--palette-neutral-white);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.ac-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer;
+    position: relative;
+}
+
+.ac-table tbody tr:hover {
+    background: var(--color-table-hover);
+}
+
+.name-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.row-hover-icon {
+    opacity: 0;
+    transition: all 0.2s;
+    transform: translateX(-5px);
+    font-size: 0.8rem;
+    background: var(--color-secondary);
+    color: var(--color-bg-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.ac-table tbody tr:hover .row-hover-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Custom Column Widths */
+.col-category { width: 120px; }
+.col-name { font-weight: 700; color: var(--color-primary); }
+.col-cost-gp, .col-cost-dtp { width: 100px; text-align: center; }
+
+/* Responsive Hiding */
+@media (max-width: 1024px) {
+    .hide-tablet { display: none; }
+}
+
+@media (max-width: 768px) {
+    .hide-mobile { display: none; }
+    .ac-controls { flex-direction: column; align-items: stretch; }
+}
+
+/* Category Lookup / Tooltip-like effect */
+.category-lookup {
+    cursor: help;
+    padding-bottom: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.info-icon {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    color: var(--color-primary);
+    transition: opacity 0.2s;
+}
+
+.category-lookup:hover .info-icon {
+    opacity: 1;
+}
+
+/* Loading Spinner */
+.ac-loading {
+    text-align: center;
+    padding: 3rem !important;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(var(--palette-brand-main), 0.1);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Premium Modal */
+.ac-modal {
+    border: none;
+    padding: 0;
+    background: transparent;
+    max-width: 800px;
+    width: 90%;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.ac-modal::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+}
+
+.ac-modal-content {
+    background: var(--color-bg-light);
+    position: relative;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.ac-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: color 0.2s;
+}
+
+.ac-modal-close:hover {
+    color: var(--color-primary);
+}
+
+/* Detail View Components */
+.detail-header {
+    border-bottom: 3px solid var(--color-primary);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-title {
+    font-size: 2.2rem;
+    margin: 0;
+}
+
+.detail-category {
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    background: var(--color-bg-medium);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.detail-item label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.7;
+    margin-bottom: 0.3rem;
+}
+
+.detail-item value {
+    font-size: 1.1rem;
+    color: var(--color-text);
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section h4 {
+    border-left: 4px solid var(--color-secondary);
+    padding-left: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.category-notes-box {
+    background: rgba(var(--palette-brand-highlight), 0.1);
+    border: 1px solid var(--palette-brand-highlight);
+    padding: 1.5rem;
+    border-radius: 8px;
+    font-style: italic;
+    margin-top: 2rem;
+}
+
+/* Tooltip Styles (for Category Hover) */
+.ac-tooltip {
+    position: fixed;
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-primary);
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    max-width: 350px;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(10px);
+}
+
+.ac-tooltip.active {
+    opacity: 1;
+}
+
+.ac-tooltip h5 {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.3rem;
+}

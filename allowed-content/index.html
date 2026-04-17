@@ -1,0 +1,92 @@
+---
+layout: default
+title: Allowed Content
+background_image: /assets/images/tavern_brawl.jpg
+extra_css:
+- /assets/css/allowed-content.css
+---
+
+<div class="ac-container">
+    <header class="ac-header">
+        <div class="ac-header-main">
+            <h1>Allowed Content</h1>
+            <p class="ac-subtitle">This is the quick-searcheable copy of the Allowed Content spreadsheet. Please refer
+                to the <a
+                    href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Official
+                    Allowed Content</a> spreadsheet for full details.</p>
+            <div class="ac-instructions">
+                <span>💡 <strong>Tips:</strong> Hover over fields with the ⓘ icon for more information or notes related
+                    to that category. Click any <span class="inst-highlight">Row</span> for to expand any rows for full
+                    details.</span>
+            </div>
+        </div>
+
+        <div class="ac-toolbar">
+            <div class="ac-search-bar">
+                <div class="ac-search-wrapper">
+                    <i class="search-icon">🔍</i>
+                    <input type="text" id="ac-global-search" placeholder="Search content..." class="ac-search-input">
+                </div>
+            </div>
+            <div class="ac-tabs-bar">
+                <div class="ac-tabs" id="ac-tabs-container">
+                    <button class="ac-tab active" data-tab="bastions">Bastions</button>
+                    <button class="ac-tab disabled" data-tab="tab2" title="Coming soon">Tab 2</button>
+                    <button class="ac-tab disabled" data-tab="tab3" title="Coming soon">Tab 3</button>
+                    <!-- Add more tabs as they are developed -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="ac-content">
+        <div id="ac-view-bastions" class="ac-view active">
+            <div class="ac-table-header">
+                <div class="ac-filters" id="bastions-filters">
+                    <!-- Dynamic filters like Category, Size, etc. will go here -->
+                </div>
+                <div class="ac-stats" id="bastions-stats">
+                    <!-- Row count, etc. -->
+                </div>
+            </div>
+
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="bastions-table">
+                    <thead>
+                        <tr>
+                            <th class="col-category">Category</th>
+                            <th class="col-name">Name</th>
+                            <th class="col-source hide-mobile">Source</th>
+                            <th class="col-size hide-tablet">Size</th>
+                            <th class="col-prereq hide-tablet">Prerequisite</th>
+                            <th class="col-cost-gp">GP Cost</th>
+                            <th class="col-cost-dtp">DTP Cost</th>
+                            <th class="col-order hide-mobile">Order</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bastions-tbody">
+                        <tr>
+                            <td colspan="8" class="ac-loading">
+                                <div class="spinner"></div>
+                                <span>Discovering Bastions...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Premium Detail Modal -->
+<dialog id="ac-detail-modal" class="ac-modal">
+    <div class="ac-modal-content">
+        <button class="ac-modal-close" id="ac-modal-close">&times;</button>
+        <div id="ac-detail-body">
+            <!-- Populated dynamically -->
+        </div>
+    </div>
+</dialog>
+
+<!-- Scripts -->
+<script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}"></script>

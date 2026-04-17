@@ -9,6 +9,9 @@
  * character rework calculator application. These include attribute
  * lists, point-buy costs, pricing tiers, and rework type identifiers.
  * 
+ *   
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ 
  * @module rework-constants
  */
 
@@ -42,7 +45,7 @@ export const ATTRIBUTES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
  * POINT_COSTS[14] // Returns 7 (it costs 7 points to have a 14)
  * POINT_COSTS[8]  // Returns 0 (8 is the baseline, costs nothing)
  */
-export const POINT_COSTS = { 
+export const POINT_COSTS = {
     8: 0,   // Baseline - no cost
     9: 1,   // +1 point
     10: 2,  // +2 points
@@ -72,15 +75,15 @@ export const POINT_COSTS = {
  * TIER_FIXED_COSTS.T3 // { gold: 2400, dtp: 180 }
  */
 export const TIER_FIXED_COSTS = {
-    T2: { 
+    T2: {
         gold: 820,  // Gold cost for Tier 2 reworks
         dtp: 150    // Downtime points for Tier 2 reworks
     },
-    T3: { 
+    T3: {
         gold: 2400, // Gold cost for Tier 3 reworks
         dtp: 180    // Downtime points for Tier 3 reworks
     },
-    T4: { 
+    T4: {
         gold: 4250, // Gold cost for Tier 4 reworks
         dtp: 260    // Downtime points for Tier 4 reworks
     }
@@ -110,12 +113,12 @@ export const TIER_FIXED_COSTS = {
  * // Returns: { min: 11, max: 12, gold: 630, dtp: 40 }
  */
 export const ALACARTE_TIERS = [
-    { min: 1,  max: 5,  gold: 0,    dtp: 0  },  // N/A - Use free rework instead
-    { min: 6,  max: 6,  gold: 160,  dtp: 30 },  // Level 6
-    { min: 7,  max: 8,  gold: 270,  dtp: 30 },  // Levels 7-8
-    { min: 9,  max: 10, gold: 400,  dtp: 30 },  // Levels 9-10
-    { min: 11, max: 12, gold: 630,  dtp: 40 },  // Levels 11-12 (Tier 3 start)
-    { min: 13, max: 14, gold: 810,  dtp: 40 },  // Levels 13-14
+    { min: 1, max: 5, gold: 0, dtp: 0 },  // N/A - Use free rework instead
+    { min: 6, max: 6, gold: 160, dtp: 30 },  // Level 6
+    { min: 7, max: 8, gold: 270, dtp: 30 },  // Levels 7-8
+    { min: 9, max: 10, gold: 400, dtp: 30 },  // Levels 9-10
+    { min: 11, max: 12, gold: 630, dtp: 40 },  // Levels 11-12 (Tier 3 start)
+    { min: 13, max: 14, gold: 810, dtp: 40 },  // Levels 13-14
     { min: 15, max: 16, gold: 1030, dtp: 40 },  // Levels 15-16
     { min: 17, max: 18, gold: 1270, dtp: 50 },  // Levels 17-18 (Tier 4 start)
     { min: 19, max: 20, gold: 1530, dtp: 50 }   // Levels 19-20 (max level)

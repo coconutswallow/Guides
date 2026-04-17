@@ -17,6 +17,8 @@
  * 
  * This module wires together all the other modules and exposes
  * functions to the global window object for HTML onclick handlers.
+ *   
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
  * 
  * @module rework-main
  */

@@ -14,6 +14,9 @@
  * - Auditor
  * - Engineer
  * 
+ *   
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ * 
  * @module rework-reviewer
  */
 
@@ -67,10 +70,10 @@ function renderLogList(reworks) {
 
     reworks.forEach(r => {
         const row = document.createElement('tr');
-        
+
         // Format date
-        const dateStr = new Date(r.updated_at).toLocaleDateString() + ' ' + 
-                        new Date(r.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const dateStr = new Date(r.updated_at).toLocaleDateString() + ' ' +
+            new Date(r.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         // Map rework type to human-readable label
         const typeLabels = {
@@ -169,7 +172,7 @@ window.handlePageAuth = async (user) => {
             // Authorized
             if (reviewerContent) reviewerContent.style.display = 'block';
             if (accessDenied) accessDenied.style.display = 'none';
-            
+
             // Trigger data load
             window.initReviewer();
         } else {
@@ -192,7 +195,7 @@ window.handlePageAuth = async (user) => {
  * Handle race condition where authManager might initialize BEFORE
  * this module is fully loaded.
  */
-(async function() {
+(async function () {
     // Wait for authManager to be available on window
     let polls = 0;
     while (!window.authManager && polls < 50) {

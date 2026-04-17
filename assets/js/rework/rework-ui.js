@@ -11,6 +11,8 @@
  * - Dynamic UI rendering (attributes, classes, feats, features)
  * - Output string generation for Discord
  * 
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ *
  * @module rework-ui
  */
 
