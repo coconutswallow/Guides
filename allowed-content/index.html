@@ -15,7 +15,7 @@ extra_css:
                     href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Official
                     Allowed Content</a> spreadsheet for full details.</p>
             <div class="ac-instructions">
-                <span>💡 <strong>Tips:</strong> Hover over fields with the ⓘ icon for more information or notes related
+                <span>Hover over fields with the ⓘ icon for more information or notes related
                     to that category. Click any <span class="inst-highlight">Row</span> for to expand any rows for full
                     details.</span>
             </div>
@@ -24,10 +24,11 @@ extra_css:
         <div class="ac-toolbar">
             <div class="ac-tabs-bar">
                 <div class="ac-tabs" id="ac-tabs-container">
-                    <button class="ac-tab active" data-tab="races">Races</button>
+                    <button class="ac-tab" data-tab="races">Races</button>
                     <button class="ac-tab" data-tab="classes">Classes</button>
+                    <button class="ac-tab" data-tab="backgrounds">Backgrounds</button>
+                    <button class="ac-tab" data-tab="feats">Feats</button>
                     <button class="ac-tab" data-tab="bastions">Bastions</button>
-                    <button class="ac-tab disabled" data-tab="tab3" title="Coming soon">Tab 4</button>
                     <!-- Add more tabs as they are developed -->
                 </div>
             </div>
@@ -69,7 +70,7 @@ extra_css:
                     </thead>
                     <tbody id="races-tbody">
                         <tr>
-                            <td colspan="7" class="ac-loading">
+                            <td colspan="9" class="ac-loading">
                                 <div class="spinner"></div>
                                 <span>Rallying Races...</span>
                             </td>
@@ -103,10 +104,68 @@ extra_css:
                         </tr>
                     </thead>
                     <tbody id="classes-tbody">
+                        <!-- Classes rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: BACKGROUNDS -->
+        <div id="ac-view-backgrounds" class="ac-view">
+            <div class="ac-table-header">
+                <div class="ac-filters" id="backgrounds-filters">
+                    <!-- Dynamic filters will go here -->
+                </div>
+                <div class="ac-stats" id="backgrounds-stats">
+                    <!-- Row count, etc. -->
+                </div>
+            </div>
+
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="backgrounds-table">
+                    <thead>
                         <tr>
-                            <td colspan="4" class="ac-loading">
+                            <th class="col-name">Name</th>
+                            <th class="col-source hide-mobile">Source</th>
+                            <th class="col-feature hide-mobile">Feature</th>
+                            <th class="col-notes hide-tablet">Notes / Advice</th>
+                        </tr>
+                    </thead>
+                    <tbody id="backgrounds-tbody">
+                        <!-- Backgrounds rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: FEATS -->
+        <div id="ac-view-feats" class="ac-view">
+            <div class="ac-table-header">
+                <div class="ac-filters" id="feats-filters">
+                    <!-- Dynamic filters will go here -->
+                </div>
+                <div class="ac-stats" id="feats-stats">
+                    <!-- Row count, etc. -->
+                </div>
+            </div>
+
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="feats-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">Name</th>
+                            <th class="col-category hide-mobile">Category</th>
+                            <th class="col-prereq hide-tablet">Prerequisite</th>
+                            <th class="col-asi">ASI</th>
+                            <th class="col-notes hide-tablet">Notes / Advice</th>
+                            <th class="col-source hide-mobile">Source</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feats-tbody">
+                        <tr>
+                            <td colspan="6" class="ac-loading">
                                 <div class="spinner"></div>
-                                <span>Preparing Classes...</span>
+                                <span>Forging Feats...</span>
                             </td>
                         </tr>
                     </tbody>
@@ -114,7 +173,7 @@ extra_css:
             </div>
         </div>
 
-        <!-- Bastions View -->
+        <!-- VIEW: BASTIONS -->
         <div id="ac-view-bastions" class="ac-view">
             <div class="ac-table-header">
                 <div class="ac-filters" id="bastions-filters">
@@ -143,7 +202,7 @@ extra_css:
                     </thead>
                     <tbody id="bastions-tbody">
                         <tr>
-                            <td colspan="8" class="ac-loading">
+                            <td colspan="10" class="ac-loading">
                                 <div class="spinner"></div>
                                 <span>Discovering Bastions...</span>
                             </td>
@@ -167,3 +226,7 @@ extra_css:
 
 <!-- Scripts -->
 <script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-classes.js' | relative_url }}"></script>
+    <script type="module" src="{{ '/assets/js/allowed-content/ac-backgrounds.js' | relative_url }}"></script>
+    <script type="module" src="{{ '/assets/js/allowed-content/ac-feats.js' | relative_url }}"></script>
+    <script type="module" src="{{ '/assets/js/allowed-content/ac-bastions.js' | relative_url }}"></script>

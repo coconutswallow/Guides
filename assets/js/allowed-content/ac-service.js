@@ -123,3 +123,43 @@ export async function getClasses() {
 
     return data;
 }
+
+/**
+ * Fetches all Backgrounds from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of background objects
+ */
+export async function getBackgrounds() {
+    const { data, error } = await supabase
+        .from('ac_backgrounds')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching backgrounds:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Feats from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of feat objects
+ */
+export async function getFeats() {
+    const { data, error } = await supabase
+        .from('ac_feats')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching feats:', error);
+        return [];
+    }
+
+    return data;
+}

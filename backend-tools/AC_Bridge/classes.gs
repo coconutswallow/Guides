@@ -1,7 +1,104 @@
+const CLASSES_SOURCE_SHEET_ID   = "1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY";  // the ID from the source sheet's URL
+const CLASSES_SOURCE_SHEET_NAME = "Classes";                 // tab name in the source sheet
+const CLASSES_NORMALIZED_SHEET  = "Classes";                 // tab name in the destination sheet
+
+const CLASSES_COLUMNS = {
+  CLASS:         0,
+  SUBCLASS:      1,
+  HIT_DIE:       2,
+  MULTICLASSING: 3,
+  EXPANDED_OPT:  4,
+  // CLASSES_COLUMNS 5 through 9 are empty/skipped based on the sheet layout
+  RAGE_ADVICE:   10,
+};
+
+function normalizeClasses() {
+  const sourceSS = SpreadsheetApp.openById(CLASSES_SOURCE_SHEET_ID);
+  const source   = sourceSS.getSheetByName(CLASSES_SOURCE_SHEET_NAME);
+
+  if (!source) {
+    SpreadsheetApp.getUi().alert(`Tab "${CLASSES_SOURCE_SHEET_NAME}" not found in source sheet.`);
+    return;
+  }
+
+  const data = source.getDataRange().getValues();
+  const normalized = [];
+
+  // Create the standard header row for the normalized sheet
+  normalized.push([
+    "Class", "Subclass", "Hit Die", "Multiclassing", "Expanded Class Options (TCE)", "Rage Advice"
+  ]);
+
+  let currentClass         = "";
+  let currentHitDie        = "";
+  let currentMulticlassing = "";
+  let currentExpandedOpt   = "";
+  let currentClassAdvice   = ""; // Used to pass parent class 'Rage Advice' to its subclasses
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    
+    // Safely parse the CLASSES_COLUMNS, falling back to empty strings if out-of-bounds
+    const cls    = String(row[CLASSES_COLUMNS.CLASS] || "").trim();
+    const subcls = String(row[CLASSES_COLUMNS.SUBCLASS] || "").trim();
+
+    // Skip the header rows from the raw sheet
+    if (cls === "Class" && subcls === "Subclass") continue;
+
+    // Grab parent-level fields when a new Class is declared.
+    // Unlike Races, we reset these entirely per class to avoid bleeding missing fields to the next class.
+    if (cls !== "") {
+      currentClass         = cls;
+      currentHitDie        = String(row[CLASSES_COLUMNS.HIT_DIE] || "").trim();
+      currentMulticlassing = String(row[CLASSES_COLUMNS.MULTICLASSING] || "").trim();
+      currentExpandedOpt   = String(row[CLASSES_COLUMNS.EXPANDED_OPT] || "").trim();
+      currentClassAdvice   = String(row[CLASSES_COLUMNS.RAGE_ADVICE] || "").trim();
+    }
+
+    // Skip the placeholder parent row 
+    if (subcls === "(choose one)") continue;
+
+    // Skip fully empty rows
+    if (currentClass === "" && subcls === "") continue;
+
+    // Subclasses can have their own Rage Advice (e.g. Battlerager). 
+    // If they do, use it; otherwise, inherit the parent class's general notes/advice.
+    let advice = String(row[CLASSES_COLUMNS.RAGE_ADVICE] || "").trim();
+    if (advice === "" && currentClassAdvice !== "") {
+      advice = currentClassAdvice;
+    }
+
+    normalized.push([
+      currentClass,
+      subcls,
+      currentHitDie,
+      currentMulticlassing,
+      currentExpandedOpt,
+      advice
+    ]);
+  }
+
+  // Write to Normalized sheet in this workbook (create if missing)
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let normSheet = ss.getSheetByName(CLASSES_NORMALIZED_SHEET);
+  if (!normSheet) {
+    normSheet = ss.insertSheet(CLASSES_NORMALIZED_SHEET);
+  } else {
+    normSheet.clearContents();
+  }
+
+  // Set the normalized data range
+  normSheet.getRange(1, 1, normalized.length, normalized[0].length)
+    .setValues(normalized);
+
+  SpreadsheetApp.getUi().alert(
+    `Done! ${normalized.length - 1} rows written to "${CLASSES_NORMALIZED_SHEET}".`
+  );
+}
 // ==============================================================================
 // Configuration
 // ==============================================================================
-const CLASSES_SHEET_NAME = "Normalized Classes"; // Matches the output of your normalizer script
+const CLASSES_SHEET_NAME = "Classes"; // Matches the output of your normalizer script
 
 // Securely fetch the exact same secrets you already set up
 const classScriptProps = PropertiesService.getScriptProperties();

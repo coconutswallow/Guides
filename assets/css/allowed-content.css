@@ -233,7 +233,9 @@
 
 /* Race specific columns */
 .col-subrace { opacity: 0.8; font-style: italic; }
-.col-asi { font-family: monospace; font-size: 0.85rem; color: var(--color-secondary); }
+.col-asi, .col-prereq { font-family: monospace; font-size: 0.85rem; color: var(--color-secondary); }
+.col-asi { width: 180px; }
+.col-prereq { min-width: 250px; max-width: 450px; }
 
 /* Class specific columns */
 .col-subclass { opacity: 0.8; font-style: italic; }
@@ -241,7 +243,7 @@
 .col-multiclass { font-size: 0.85rem; opacity: 0.7; }
 
 /* Snippet Columns */
-.col-traits, .col-description, .col-expanded, .col-notes, .col-advice {
+.col-traits, .col-description, .col-expanded, .col-notes, .col-advice, .col-feature {
     font-size: 0.85rem;
     color: var(--color-text-secondary);
     max-width: 300px;

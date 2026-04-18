@@ -9,9 +9,11 @@
  * - Event delegation for common UI elements
  */
 
-import { initBastions, filterBastions } from './ac-bastions.js';
 import { initRaces, filterRaces } from './ac-races.js';
 import { initClasses, filterClasses } from './ac-classes.js';
+import { initBackgrounds, filterBackgrounds } from './ac-backgrounds.js';
+import { initFeats, filterFeats } from './ac-feats.js';
+import { initBastions, filterBastions } from './ac-bastions.js';
 import { initTooltips } from './ac-ui-utils.js';
 
 /**
@@ -40,9 +42,23 @@ async function init() {
         searchInput.addEventListener('input', (e) => {
             const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
             const term = e.target.value;
-            if (activeTab === 'races') filterRaces(term);
-            if (activeTab === 'classes') filterClasses(term);
-            if (activeTab === 'bastions') filterBastions(term);
+            switch (activeTab) {
+                case 'races':
+                    filterRaces(term);
+                    break;
+                case 'classes':
+                    filterClasses(term);
+                    break;
+                case 'backgrounds':
+                    filterBackgrounds(term);
+                    break;
+                case 'feats':
+                    filterFeats(term);
+                    break;
+                case 'bastions':
+                    filterBastions(term);
+                    break;
+            }
         });
     }
 
@@ -82,6 +98,10 @@ function setupTabHandlers() {
                 await initRaces();
             } else if (targetTab === 'classes') {
                 await initClasses();
+            } else if (targetTab === 'backgrounds') {
+                await initBackgrounds();
+            } else if (targetTab === 'feats') {
+                await initFeats();
             } else if (targetTab === 'bastions') {
                 await initBastions();
             }
