@@ -1,14 +1,17 @@
 /**
- * AC SERVICE MODULE (Updated: 2026-04-17 20:05)
  * ================================================================
  * AC SERVICE MODULE
  * ================================================================
  * 
- * Handles all data fetching and state management for the Allowed 
- * Content UI. Interfaces with Supabase to retrieve bastions, 
- * categories, and other future content sets.
+ * Central data access layer for the Allowed Content dashboard.
  * 
- * Includes simple caching logic to reduce network load.
+ * Responsibilities:
+ * - Interfacing with Supabase for all content retrieval.
+ * - Implementing pagination bypass via `fetchAll` for large datasets.
+ * - Providing a unified API for feature modules to consume data.
+ * - Managing simple session-based caching for static categories.
+ * 
+ * @module ACService
  */
 
 import { supabase } from '../supabaseClient.js';

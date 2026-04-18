@@ -3,8 +3,16 @@
  * AC UI UTILITIES
  * ================================================================
  * 
- * Reusable UI components and helpers for the Allowed Content UI.
- * Handles modals, tooltips, and general DOM manipulation.
+ * Shared UI logic and presentation helpers for the Allowed Content 
+ * dashboard.
+ * 
+ * Responsibilities:
+ * - Managing the global detail modal.
+ * - Implementing mouse-follow tooltips for metadata previews.
+ * - Sanitizing user/database content for safe HTML rendering.
+ * - Formatting long text snippets for compact table views.
+ * 
+ * @module ACUIUtils
  */
 
 /**

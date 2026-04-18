@@ -3,10 +3,14 @@
  * AC FEATS MODULE
  * ================================================================
  * 
- * Logic for the Feats content set. Handles:
- * - Table rendering and formatting
- * - Feat-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for character feats.
+ * 
+ * Responsibilities:
+ * - Rendering feat names, categories, and ability score increases (ASI).
+ * - Handling search and filtering for feat prerequisites and effects.
+ * - Displaying detailed feat metadata in modals.
+ * 
+ * @module ACFeats
  */
 
 import { getFeats } from './ac-service.js';

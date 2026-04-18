@@ -3,11 +3,15 @@
  * AC BASTIONS MODULE
  * ================================================================
  * 
- * Logic for the Bastions content set. Handles:
- * - Table rendering with grouping by Category
- * - Section headers with Category rules/notes
- * - Bastion-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for Bastion facilities (2024 rules).
+ * 
+ * Responsibilities:
+ * - Rendering bastion facilities categorized by type (Basic, Special).
+ * - Implementing 2-tier scrolling navigation and empty category handling.
+ * - Handling search and filtering for level requirements and prerequisites.
+ * - Integration with the global detail modal for facility rules.
+ * 
+ * @module ACBastions
  */
 
 import { getBastions } from './ac-service.js';

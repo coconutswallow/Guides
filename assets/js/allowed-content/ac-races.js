@@ -3,10 +3,14 @@
  * AC RACES MODULE
  * ================================================================
  * 
- * Logic for the Races content set. Handles:
- * - Table rendering and formatting
- * - Race-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for player races.
+ * 
+ * Responsibilities:
+ * - Rendering character race options and features.
+ * - Handling search and filtering for race traits.
+ * - Displaying detailed race metadata in modals.
+ * 
+ * @module ACRaces
  */
 
 import { getRaces } from './ac-service.js';

@@ -3,10 +3,15 @@
  * AC MAIN CONTROLLER
  * ================================================================
  * 
- * Orchestrates the Allowed Content UI. Handles:
- * - Tab switching logic
- * - Global initialization
- * - Event delegation for common UI elements
+ * Orchestrator for the Allowed Content dashboard.
+ * 
+ * Responsibilities:
+ * - Bootstrapping the application on `DOMContentLoaded`.
+ * - Managing tab-based navigation and deep-linking via URL hashes.
+ * - Delegating global search inputs to active feature modules.
+ * - Handling core UI interactions (modals, tooltips).
+ * 
+ * @module ACMain
  */
 
 import { initRaces, filterRaces } from './ac-races.js';

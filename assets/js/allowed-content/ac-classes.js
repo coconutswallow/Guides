@@ -3,10 +3,14 @@
  * AC CLASSES MODULE
  * ================================================================
  * 
- * Logic for the Classes content set. Handles:
- * - Table rendering and formatting
- * - Class-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for character classes and subclasses.
+ * 
+ * Responsibilities:
+ * - Rendering class options, hit dice, and multiclass requirements.
+ * - Processing expanded class options and specialized advice.
+ * - Handling class-specific search queries.
+ * 
+ * @module ACClasses
  */
 
 import { getClasses } from './ac-service.js';

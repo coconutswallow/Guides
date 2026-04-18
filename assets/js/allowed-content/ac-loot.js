@@ -3,12 +3,15 @@
  * AC LOOT MODULE
  * ================================================================
  * 
- * Logic for the Loot content set. Handles:
- * - Table rendering grouped by Category
- * - Explicit rendering of empty categories (headers/notes only)
- * - Loot-specific filtering and search
- * - Record detail generation
- * - 3-Tier Dynamic Navigation
+ * Data handling and presentation for the Loot content set.
+ * 
+ * Responsibilities:
+ * - Rendering tiered loot tables (Rolled/Select Loot).
+ * - Implementing the 3-tier hierarchy (Usage > Tier > Category).
+ * - Extracting simplified Tier labels (T0-T4) from category names.
+ * - Handling loot-specific search and item detail display.
+ * 
+ * @module ACLoot
  */
 
 import { getLoot, getLootCategories } from './ac-service.js';
@@ -50,11 +53,18 @@ export async function initLoot() {
     // Pre-parse categories for tiered navigation
     lootCategories = categories.map(cat => {
         const parts = cat.name.split(' - ').map(p => p.trim());
+        const rawTier2 = parts[1] || 'General';
+        
+        // Extract T0-T4 from parts[1] if present, e.g. "T1 Items" -> "T1"
+        const tierMatch = rawTier2.match(/(T[0-4])/i);
+        const tierLabel = tierMatch ? tierMatch[1].toUpperCase() : rawTier2;
+
         return {
             ...cat,
             tier1: parts[0] || 'Unknown',
-            tier2: parts[1] || 'General',
-            tier3: parts[2] || parts[1] || parts[0] // Fallback for simple names
+            tier2: tierLabel,
+            tier2_full: rawTier2, // Keep original for filtering if needed
+            tier3: parts[2] || (parts[1] && !tierMatch ? parts[1] : parts[0]) 
         };
     });
 
@@ -188,7 +198,7 @@ function renderLootNavigation() {
 
         ${currentTier1 ? `
             <div class="ac-shortcuts-row">
-                <span class="nav-label">Series:</span>
+                <span class="nav-label">Tier:</span>
                 <div class="ac-shortcuts ac-shortcuts-tier2">
                     <button class="ac-shortcut-chip ${!currentTier2 ? 'active' : ''}" data-type="tier2" data-value="">All</button>
                     ${tier2Options.map(opt => `
@@ -202,7 +212,7 @@ function renderLootNavigation() {
 
         ${currentTier2 ? `
             <div class="ac-shortcuts-row">
-                <span class="nav-label">Source:</span>
+                <span class="nav-label">Category:</span>
                 <div class="ac-shortcuts ac-shortcuts-tier3">
                     ${tier3Options.map(cat => `
                         <button class="ac-shortcut-chip" data-type="scroll" data-target="loot-section-${cat.id}">

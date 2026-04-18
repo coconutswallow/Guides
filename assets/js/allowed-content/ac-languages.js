@@ -3,10 +3,14 @@
  * AC LANGUAGES MODULE
  * ================================================================
  * 
- * Logic for the Languages content set. Handles:
- * - Table rendering with grouping by Language Type
- * - Language-specific filtering and search
- * - Record detail generation in modals
+ * Data handling and presentation for languages.
+ * 
+ * Responsibilities:
+ * - Rendering language tables categorized by type (Standard, Exotic, Rare).
+ * - Implementing 2-tier scrolling navigation for language types.
+ * - Handling search and filtering for language origins and speakers.
+ * 
+ * @module ACLanguages
  */
 
 import { getLanguages } from './ac-service.js';

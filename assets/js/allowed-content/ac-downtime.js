@@ -3,11 +3,14 @@
  * AC DOWNTIME MODULE
  * ================================================================
  * 
- * Logic for the Downtime content set. Handles:
- * - Table rendering with grouping by Category
- * - Section headers with Category rules/notes
- * - Downtime-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for Downtime activities.
+ * 
+ * Responsibilities:
+ * - Rendering downtime activities categorized by type (Training, Crafting, etc.).
+ * - Implementing category scrolling and global search integration.
+ * - Displaying detailed rules and mechanical outcomes in modals.
+ * 
+ * @module ACDowntime
  */
 
 import { getDowntime } from './ac-service.js';

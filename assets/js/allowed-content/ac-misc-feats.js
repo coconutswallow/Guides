@@ -1,12 +1,17 @@
 /**
  * ================================================================
- * AC MISC CLASS FEATS MODULE
+ * AC MISC FEATS MODULE
  * ================================================================
  * 
- * Logic for the Misc Class Feats content set. Handles:
- * - Table rendering for Fighting Styles, Infusions, and Invocations
- * - Multi-table filtering and search
- * - detail generation for each type
+ * Data handling and presentation for Fighting Styles, Infusions, 
+ * and Invocations.
+ * 
+ * Responsibilities:
+ * - Rendering specialized feat tables for Fighting Styles, Infusions, and Invocations.
+ * - Handling search and filtering across these disparate datasets.
+ * - Displaying detailed metadata for miscellaneous class features.
+ * 
+ * @module ACMiscFeats
  */
 
 import { getFightingStyles, getArtificerInfusions, getEldritchInvocations } from './ac-service.js';

@@ -3,12 +3,15 @@
  * AC SOURCES MODULE
  * ================================================================
  * 
- * Logic for the Sources content set. Handles:
- * - Table rendering grouped by Category
- * - Explicit rendering of empty categories (headers/notes only)
- * - Source-specific filtering and search
- * - Record detail generation
- * - 3-Tier Drill-down Navigation
+ * Data handling and presentation for the Sources content set.
+ * 
+ * Responsibilities:
+ * - Rendering the hierarchical source catalog.
+ * - Implementing 3-tier navigation (Usage > Series > Group).
+ * - Handling source-specific search and detail display.
+ * - Integration with the Resource link metadata.
+ * 
+ * @module ACSources
  */
 
 import { getSources, getSourceCategories } from './ac-service.js';

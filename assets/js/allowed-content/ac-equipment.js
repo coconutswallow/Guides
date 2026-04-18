@@ -3,11 +3,14 @@
  * AC EQUIPMENT MODULE
  * ================================================================
  * 
- * Logic for the Equipment content set. Handles:
- * - Table rendering with grouping by Category
- * - Section headers with Category rules/notes
- * - Equipment-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for standard equipment and gear.
+ * 
+ * Responsibilities:
+ * - Rendering equipment tables categorized by gear type (Armor, Weapons, Tools).
+ * - Implementing category scrolling and global search integration.
+ * - Displaying high-density descriptions and cost metadata for items.
+ * 
+ * @module ACEquipment
  */
 
 import { getEquipment } from './ac-service.js';

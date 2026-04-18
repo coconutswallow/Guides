@@ -3,10 +3,14 @@
  * AC SPELLS MODULE
  * ================================================================
  * 
- * Logic for the Spells content set. Handles:
- * - Table rendering and formatting
- * - Spell-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for character spells.
+ * 
+ * Responsibilities:
+ * - Rendering spell lists, levels, and school categories.
+ * - Handling search and filtering for spell effects and components.
+ * - Displaying detailed spell metadata in modals.
+ * 
+ * @module ACSpells
  */
 
 import { getSpells } from './ac-service.js';

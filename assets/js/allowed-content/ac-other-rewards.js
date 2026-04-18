@@ -3,11 +3,15 @@
  * AC OTHER REWARDS MODULE
  * ================================================================
  * 
- * Logic for the Other Rewards content set. Handles:
- * - Table rendering grouped by Category
- * - Explicit rendering of empty categories (headers/notes only)
- * - Reward-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for unconventional rewards (Charms, 
+ * Blessings, Supernatural Gifts).
+ * 
+ * Responsibilities:
+ * - Rendering specialized reward tables categorized by gift type.
+ * - Implementing category scrolling and global search integration.
+ * - Displaying high-density descriptions for unique reward mechanics.
+ * 
+ * @module ACOtherRewards
  */
 
 import { getOtherRewards, getOtherRewardsCategories } from './ac-service.js';

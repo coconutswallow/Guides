@@ -3,12 +3,14 @@
  * AC MONSTERS MODULE
  * ================================================================
  * 
- * Logic for the Monsters content set. Handles:
- * - Table rendering grouped by Category
- * - Explicit rendering of empty categories (headers/notes only)
- * - Monster-specific filtering and search
- * - Record detail generation
- * - 3-Tier Drill-down Navigation for categories
+ * Data handling and presentation for the Monsters content set.
+ * 
+ * Responsibilities:
+ * - Rendering the searchable monster bestiary.
+ * - Implementing 3-tier navigation for monster types and sources.
+ * - Handling monster-specific filtering and detailed statblock display.
+ * 
+ * @module ACMonsters
  */
 
 import { getMonsters, getMonsterCategories } from './ac-service.js';

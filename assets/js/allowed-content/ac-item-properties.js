@@ -3,11 +3,15 @@
  * AC ITEM PROPERTIES MODULE
  * ================================================================
  * 
- * Logic for the Item Properties content set. Handles:
- * - Table rendering grouped by Category
- * - Explicit rendering of empty categories (headers/notes only)
- * - Property-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for Item Properties and Mastery 
+ * properties (2024 rules).
+ * 
+ * Responsibilities:
+ * - Rendering specialized property tables categorized by item type.
+ * - Implementing category scrolling and global search integration.
+ * - Displaying detailed property mechanics and rules in modals.
+ * 
+ * @module ACItemProperties
  */
 
 import { getItemProperties, getItemPropertiesCategories } from './ac-service.js';

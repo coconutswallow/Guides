@@ -3,10 +3,14 @@
  * AC BACKGROUNDS MODULE
  * ================================================================
  * 
- * Logic for the Backgrounds content set. Handles:
- * - Table rendering and formatting
- * - Background-specific filtering and search
- * - Record detail generation
+ * Data handling and presentation for player backgrounds.
+ * 
+ * Responsibilities:
+ * - Rendering background options, skill proficiencies, and equipment.
+ * - Handling search and filtering for background features.
+ * - Displaying detailed background metadata in modals.
+ * 
+ * @module ACBackgrounds
  */
 
 import { getBackgrounds } from './ac-service.js';
