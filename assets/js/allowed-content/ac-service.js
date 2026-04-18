@@ -20,6 +20,42 @@ const CACHE = {
 };
 
 /**
+ * Common helper to fetch all rows from a table by bypassing the 1000-row limit.
+ * 
+ * @param {string} table - Table name
+ * @param {string} select - Selection string
+ * @param {Array} orders - Array of order objects { column, ascending }
+ * @returns {Promise<Array>} All rows fetched
+ */
+async function fetchAll(table, select = '*', orders = []) {
+    console.log(`Supabase: Fetching all from ${table}...`);
+    let allData = [];
+    let from = 0;
+    let step = 1000;
+    let finished = false;
+
+    while (!finished) {
+        let query = supabase.from(table).select(select).range(from, from + step - 1);
+        
+        // Apply orders
+        orders.forEach(o => {
+            query = query.order(o.column, { ascending: o.ascending ?? true });
+        });
+
+        const { data, error } = await query;
+        if (error) throw error;
+        
+        allData = allData.concat(data);
+        if (data.length < step) {
+            finished = true;
+        } else {
+            from += step;
+        }
+    }
+    return allData;
+}
+
+/**
  * Fetches all Bastion Categories from Supabase.
  * Results are cached for the duration of the session.
  * 
@@ -81,7 +117,6 @@ export async function getBastions() {
  */
 export async function getCategoryNotes(categoryId) {
     const categories = await getBastionCategories();
-    const cat = categories.find(c => c.id === categoryId);
     return cat ? cat.notes : null;
 }
 
@@ -151,18 +186,15 @@ export async function getBackgrounds() {
  * @returns {Promise<Array>} Array of feat objects
  */
 export async function getFeats() {
-    const { data, error } = await supabase
-        .from('ac_feats')
-        .select('*')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
-
-    if (error) {
+    try {
+        return await fetchAll('ac_feats', '*', [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
         console.error('Error fetching feats:', error);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -231,18 +263,15 @@ export async function getEldritchInvocations() {
  * @returns {Promise<Array>} Array of spell objects
  */
 export async function getSpells() {
-    const { data, error } = await supabase
-        .from('ac_spells')
-        .select('*')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
-
-    if (error) {
+    try {
+        return await fetchAll('ac_spells', '*', [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
         console.error('Error fetching spells:', error);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -271,4 +300,287 @@ export async function getLanguages() {
     }
 
     return data;
+}
+
+/**
+ * Fetches all Equipment from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of equipment objects
+ */
+export async function getEquipment() {
+    try {
+        return await fetchAll('ac_equipment', `
+            *,
+            category:category_id (
+                id,
+                name,
+                notes,
+                display_order
+            )
+        `, [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
+        console.error('Error fetching equipment:', error);
+        return [];
+    }
+}
+
+/**
+ * Fetches all Downtime Activities from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of downtime objects
+ */
+export async function getDowntime() {
+    const { data, error } = await supabase
+        .from('ac_downtime')
+        .select(`
+            *,
+            category:category_id (
+                id,
+                name,
+                notes,
+                display_order
+            )
+        `)
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching downtime:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Loot Categories from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of category objects
+ */
+export async function getLootCategories() {
+    const { data, error } = await supabase
+        .from('ac_loot_categories')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching loot categories:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Loot Items from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of loot objects
+ */
+export async function getLoot() {
+    try {
+        return await fetchAll('ac_loot', `
+            *,
+            category_id,
+            category:category_id (
+                id,
+                name,
+                notes,
+                display_order
+            )
+        `, [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
+        console.error('Error fetching loot:', error);
+        return [];
+    }
+}
+
+/**
+ * Fetch all Other Rewards Categories from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of category objects
+ */
+export async function getOtherRewardsCategories() {
+    const { data, error } = await supabase
+        .from('ac_other_rewards_categories')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching other rewards categories:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetch all Other Rewards from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of reward objects
+ */
+export async function getOtherRewards() {
+    try {
+        return await fetchAll('ac_other_rewards', `
+            *,
+            category_id,
+            category:category_id (
+                id,
+                name,
+                notes,
+                display_order
+            )
+        `, [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
+        console.error('Error fetching other rewards (check if table exists):', error);
+        return [];
+    }
+}
+
+/**
+ * Fetch all Item Properties Categories from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of category objects
+ */
+export async function getItemPropertiesCategories() {
+    const { data, error } = await supabase
+        .from('ac_item_properties_categories')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching item properties categories:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetch all Item Properties from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of property objects
+ */
+export async function getItemProperties() {
+    try {
+        return await fetchAll('ac_item_properties', `
+            *,
+            category_id,
+            category:category_id (
+                id,
+                name,
+                notes,
+                display_order
+            )
+        `, [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
+        console.error('Error fetching item properties:', error);
+        return [];
+    }
+}
+
+/**
+ * Fetch all Monster Categories from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of category objects
+ */
+export async function getMonsterCategories() {
+    const { data, error } = await supabase
+        .from('ac_monsters_categories')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching monster categories:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetch all Monsters from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of monster objects
+ */
+export async function getMonsters() {
+    try {
+        return await fetchAll('ac_monsters', `
+            *,
+            category_id,
+            category:category_id (
+                id,
+                name,
+                notes,
+                display_order
+            )
+        `, [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
+        console.error('Error fetching monsters (check if table exists):', error);
+        return [];
+    }
+}
+
+/**
+ * Fetch all Source Categories from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of category objects
+ */
+export async function getSourceCategories() {
+    const { data, error } = await supabase
+        .from('ac_sources_categories')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching source categories:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetch all Sources from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of source objects
+ */
+export async function getSources() {
+    try {
+        return await fetchAll('ac_sources', `
+            *,
+            category_id,
+            category:category_id (
+                id,
+                name,
+                notes,
+                display_order
+            )
+        `, [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
+        console.error('Error fetching sources:', error);
+        return [];
+    }
 }

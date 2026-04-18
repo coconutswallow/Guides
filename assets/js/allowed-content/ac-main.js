@@ -12,11 +12,18 @@
 import { initRaces, filterRaces } from './ac-races.js';
 import { initClasses, filterClasses } from './ac-classes.js';
 import { initBackgrounds, filterBackgrounds } from './ac-backgrounds.js';
+import { initLanguages, filterLanguages } from './ac-languages.js';
 import { initFeats, filterFeats } from './ac-feats.js';
 import { initSpells, filterSpells } from './ac-spells.js';
-import { initLanguages, filterLanguages } from './ac-languages.js';
 import { initMiscFeats, filterMiscFeats } from './ac-misc-feats.js';
+import { initEquipment, filterEquipment } from './ac-equipment.js';
+import { initDowntime, filterDowntime } from './ac-downtime.js';
 import { initBastions, filterBastions } from './ac-bastions.js';
+import { initLoot, filterLoot } from './ac-loot.js';
+import { initOtherRewards, filterOtherRewards } from './ac-other-rewards.js';
+import { initItemProperties, filterItemProperties } from './ac-item-properties.js';
+import { initMonsters, filterMonsters } from './ac-monsters.js';
+import { initSources, filterSources } from './ac-sources.js';
 import { initTooltips } from './ac-ui-utils.js';
 
 /**
@@ -55,20 +62,41 @@ async function init() {
                 case 'backgrounds':
                     filterBackgrounds(term);
                     break;
+                case 'languages':
+                    filterLanguages(term);
+                    break;
                 case 'feats':
                     filterFeats(term);
                     break;
                 case 'spells':
                     filterSpells(term);
                     break;
-                case 'languages':
-                    filterLanguages(term);
-                    break;
                 case 'misc-feats':
                     filterMiscFeats(term);
                     break;
+                case 'equipment':
+                    filterEquipment(term);
+                    break;
+                case 'downtime':
+                    filterDowntime(term);
+                    break;
                 case 'bastions':
                     filterBastions(term);
+                    break;
+                case 'loot':
+                    filterLoot(term);
+                    break;
+                case 'other-rewards':
+                    filterOtherRewards(term);
+                    break;
+                case 'item-properties':
+                    filterItemProperties(term);
+                    break;
+                case 'monsters':
+                    filterMonsters(term);
+                    break;
+                case 'sources':
+                    filterSources(term);
                     break;
             }
         });
@@ -80,7 +108,7 @@ async function init() {
         await switchTab(hash, false);
     } else {
         // Default to first tab
-        await switchTab('races', false);
+        await switchTab('sources', false);
     }
 
     // Listen for hash changes (back/forward navigation)
@@ -103,8 +131,8 @@ async function switchTab(targetTab, updateHash = true) {
     const tabBtn = Array.from(tabs).find(t => t.dataset.tab === targetTab);
     
     if (!tabBtn || tabBtn.classList.contains('disabled')) {
-        // Fallback to races if invalid tab
-        if (targetTab !== 'races') switchTab('races', false);
+        // Fallback to sources if invalid tab
+        if (targetTab !== 'sources') switchTab('sources', false);
         return;
     }
 
@@ -124,7 +152,7 @@ async function switchTab(targetTab, updateHash = true) {
     
     const targetView = document.getElementById(`ac-view-${targetTab}`);
     if (targetView) targetView.classList.add('active');
-
+ 
     // Update URL hash if requested
     if (updateHash) {
         window.location.hash = targetTab;
@@ -141,20 +169,41 @@ async function switchTab(targetTab, updateHash = true) {
         case 'backgrounds':
             await initBackgrounds();
             break;
+        case 'languages':
+            await initLanguages();
+            break;
         case 'feats':
             await initFeats();
             break;
         case 'spells':
             await initSpells();
             break;
-        case 'languages':
-            await initLanguages();
-            break;
         case 'misc-feats':
             await initMiscFeats();
             break;
+        case 'equipment':
+            await initEquipment();
+            break;
+        case 'downtime':
+            await initDowntime();
+            break;
         case 'bastions':
             await initBastions();
+            break;
+        case 'loot':
+            await initLoot();
+            break;
+        case 'other-rewards':
+            await initOtherRewards();
+            break;
+        case 'item-properties':
+            await initItemProperties();
+            break;
+        case 'monsters':
+            await initMonsters();
+            break;
+        case 'sources':
+            await initSources();
             break;
     }
 }

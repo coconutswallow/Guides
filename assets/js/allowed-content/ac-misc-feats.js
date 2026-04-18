@@ -48,9 +48,43 @@ export async function initMiscFeats() {
  * Renders all three tables in the view.
  */
 function renderAllTables() {
+    renderShortcuts();
     renderFightingStyles();
     renderArtificerInfusions();
     renderEldritchInvocations();
+}
+
+/**
+ * Renders the shortcut jump links.
+ */
+function renderShortcuts() {
+    const container = document.getElementById('misc-feats-shortcuts');
+    if (!container) return;
+
+    const sections = [
+        { id: 'section-fs', label: 'Fighting Styles' },
+        { id: 'section-ai', label: 'Artificer Infusions' },
+        { id: 'section-ei', label: 'Eldritch Invocations' }
+    ];
+
+    container.innerHTML = `
+        <div class="ac-shortcuts">
+            ${sections.map(s => `
+                <button class="ac-shortcut-chip" data-target="${s.id}">
+                    ${s.label}
+                </button>
+            `).join('')}
+        </div>
+    `;
+
+    container.querySelectorAll('.ac-shortcut-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const element = document.getElementById(chip.dataset.target);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
 }
 
 /**

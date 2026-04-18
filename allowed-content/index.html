@@ -24,14 +24,21 @@ extra_css:
         <div class="ac-toolbar">
             <div class="ac-tabs-bar">
                 <div class="ac-tabs" id="ac-tabs-container">
+                    <button class="ac-tab" data-tab="sources">Sources</button>
                     <button class="ac-tab" data-tab="races">Races</button>
                     <button class="ac-tab" data-tab="classes">Classes</button>
                     <button class="ac-tab" data-tab="backgrounds">Backgrounds</button>
-                    <button class="ac-tab" data-tab="feats">Feats</button>
-                    <button class="ac-tab" data-tab="misc-feats">Misc Class Feats</button>
-                    <button class="ac-tab" data-tab="spells">Spells</button>
                     <button class="ac-tab" data-tab="languages">Languages</button>
+                    <button class="ac-tab" data-tab="feats">Feats</button>
+                    <button class="ac-tab" data-tab="spells">Spells</button>
+                    <button class="ac-tab" data-tab="misc-feats">Misc Class Features</button>
+                    <button class="ac-tab" data-tab="equipment">Equipment</button>
+                    <button class="ac-tab" data-tab="downtime">Downtime</button>
                     <button class="ac-tab" data-tab="bastions">Bastions</button>
+                    <button class="ac-tab" data-tab="loot">Loot</button>
+                    <button class="ac-tab" data-tab="other-rewards">Other Rewards</button>
+                    <button class="ac-tab" data-tab="item-properties">Item Properties</button>
+                    <button class="ac-tab" data-tab="monsters">Monsters</button>
                     <!-- Add more tabs as they are developed -->
                 </div>
             </div>
@@ -45,8 +52,16 @@ extra_css:
     </header>
 
     <main class="ac-content">
-        <!-- Races View (Default) -->
-        <div id="ac-view-races" class="ac-view active">
+        <!-- Sources View (Default) -->
+        <div id="ac-view-sources" class="ac-view active">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Sources...</span>
+            </div>
+        </div>
+
+        <!-- Races View -->
+        <div id="ac-view-races" class="ac-view">
             <div class="ac-table-header">
                 <div class="ac-filters" id="races-filters">
                     <!-- Dynamic filters like Source, Ability will go here -->
@@ -187,8 +202,10 @@ extra_css:
 
         <!-- VIEW: MISC CLASS FEATS -->
         <div id="ac-view-misc-feats" class="ac-view">
+            <div id="misc-feats-shortcuts"></div>
+            
             <!-- Section: Fighting Styles -->
-            <div class="ac-table-header">
+            <div class="ac-table-header" id="section-fs">
                 <div class="ac-section-title">
                     <h2>Fighting Styles</h2>
                 </div>
@@ -209,7 +226,7 @@ extra_css:
             </div>
 
             <!-- Section: Artificer Infusions -->
-            <div class="ac-table-header" style="margin-top: 2rem;">
+            <div class="ac-table-header" id="section-ai" style="margin-top: 2rem;">
                 <div class="ac-section-title">
                     <h2>Artificer Infusions</h2>
                 </div>
@@ -232,7 +249,7 @@ extra_css:
             </div>
 
             <!-- Section: Eldritch Invocations -->
-            <div class="ac-table-header" style="margin-top: 2rem;">
+            <div class="ac-table-header" id="section-ei" style="margin-top: 2rem;">
                 <div class="ac-section-title">
                     <h2>Eldritch Invocations</h2>
                 </div>
@@ -296,6 +313,60 @@ extra_css:
                 <span>Deciphering Languages...</span>
             </div>
         </div>
+
+        <!-- VIEW: EQUIPMENT -->
+        <div id="ac-view-equipment" class="ac-view">
+            <!-- Content will be injected by ac-equipment.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Equipment...</span>
+            </div>
+        </div>
+
+        <!-- VIEW: DOWNTIME -->
+        <div id="ac-view-downtime" class="ac-view">
+            <!-- Content will be injected by ac-downtime.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Scheduling Downtime...</span>
+            </div>
+        </div>
+
+        <!-- VIEW: LOOT -->
+        <div id="ac-view-loot" class="ac-view">
+            <!-- Content will be injected by ac-loot.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Hoarding Loot...</span>
+            </div>
+        </div>
+
+        <!-- VIEW: OTHER REWARDS -->
+        <div id="ac-view-other-rewards" class="ac-view">
+            <!-- Content will be injected by ac-other-rewards.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Gathering Rewards...</span>
+            </div>
+        </div>
+
+        <!-- VIEW: ITEM PROPERTIES -->
+        <div id="ac-view-item-properties" class="ac-view">
+            <!-- Content will be injected by ac-item-properties.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Identifying Properties...</span>
+            </div>
+        </div>
+
+        <!-- VIEW: MONSTERS -->
+        <div id="ac-view-monsters" class="ac-view">
+            <!-- Content will be injected by ac-monsters.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Summoning Monsters...</span>
+            </div>
+        </div>
     </main>
 </div>
 
@@ -318,3 +389,10 @@ extra_css:
 <script type="module" src="{{ '/assets/js/allowed-content/ac-spells.js' | relative_url }}"></script>
 <script type="module" src="{{ '/assets/js/allowed-content/ac-languages.js' | relative_url }}"></script>
 <script type="module" src="{{ '/assets/js/allowed-content/ac-bastions.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-loot.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-other-rewards.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-item-properties.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-sources.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-monsters.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-equipment.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-downtime.js' | relative_url }}"></script>

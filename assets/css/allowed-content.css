@@ -111,25 +111,17 @@
 /* Tabs Bar */
 .ac-tabs-bar {
     width: 100%;
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-primary) transparent;
 }
 
 .ac-tabs-bar::-webkit-scrollbar {
-    height: 4px;
-}
-
-.ac-tabs-bar::-webkit-scrollbar-thumb {
-    background: var(--color-primary);
-    border-radius: 10px;
+    display: none;
 }
 
 .ac-tabs {
     display: flex;
-    gap: 0.6rem;
-    padding-bottom: 0.5rem; /* Space for scrollbar */
-    min-width: max-content;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding-bottom: 0.5rem;
 }
 
 .ac-tab {
@@ -429,4 +421,123 @@
     margin-bottom: 0.5rem;
     border-bottom: 1px solid var(--color-border);
     padding-bottom: 0.3rem;
+}
+.ac-section-group {
+    margin-bottom: 3rem;
+}
+.ac-section-title, .ac-table-header[id] {
+    scroll-margin-top: 220px; /* Offset for dashboard header + spacing */
+}
+
+/* 3-Tier Navigation Layout */
+.ac-monster-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ac-shortcuts-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-label {
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    min-width: 100px;
+    opacity: 0.8;
+}
+
+/* Shortcut Chips for Section Navigation */
+.ac-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+    padding: 0.4rem 0;
+}
+
+.ac-shortcuts-tier2 {
+    margin-left: 1.5rem;
+}
+
+.ac-shortcuts-tier3 {
+    margin-left: 3rem;
+}
+
+.ac-shortcut-chip {
+    padding: 0.4rem 0.8rem;
+    background: var(--color-bg-medium);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.ac-shortcut-chip:hover {
+    background: var(--color-table-hover);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.ac-shortcut-chip.active {
+    background: var(--color-primary);
+    color: var(--color-bg-light);
+    border-color: var(--color-primary);
+}
+
+.ac-shortcut-chip i {
+    font-style: normal;
+    margin-right: 4px;
+    opacity: 0.6;
+}
+
+/* Source Name Link Styling */
+.source-name-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+
+.source-name-link:hover {
+    color: var(--color-secondary);
+    text-decoration: underline;
+}
+
+.title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.title-link:hover {
+    text-decoration: underline;
+}
+
+.detail-link-sub {
+    margin-top: 0.2rem;
+}
+
+.source-url-link {
+    font-size: 0.9rem;
+    color: var(--color-secondary);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: all 0.2s;
+    word-break: break-all;
+}
+
+.source-url-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+    color: var(--color-primary);
 }

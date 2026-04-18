@@ -94,11 +94,36 @@ function renderBastions() {
     // Sort groups based on their display_order
     const sortedGroupNames = Object.keys(groups).sort((a, b) => groups[a].order - groups[b].order);
 
+    // Render Shortcut Chips
+    const filtersContainer = document.getElementById('bastions-filters');
+    if (filtersContainer) {
+        filtersContainer.innerHTML = `
+            <div class="ac-shortcuts">
+                ${sortedGroupNames.map(name => `
+                    <button class="ac-shortcut-chip" data-target="bastion-section-${name.toLowerCase().replace(/\s+/g, '-')}">
+                        ${esc(name)}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+
+        filtersContainer.querySelectorAll('.ac-shortcut-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const targetId = chip.dataset.target;
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    }
+
     content.innerHTML = sortedGroupNames.map(groupName => {
         const group = groups[groupName];
+        const sectionId = `bastion-section-${groupName.toLowerCase().replace(/\s+/g, '-')}`;
         return `
             <div class="ac-section-group">
-                <div class="ac-section-title">
+                <div class="ac-section-title" id="${sectionId}">
                     <h2>${esc(group.name)}</h2>
                     ${group.notes ? `<p class="section-desc">${esc(group.notes)}</p>` : ''}
                 </div>
