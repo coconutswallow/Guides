@@ -163,3 +163,63 @@ export async function getFeats() {
 
     return data;
 }
+
+/**
+ * Fetches all Fighting Styles from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of fighting style objects
+ */
+export async function getFightingStyles() {
+    const { data, error } = await supabase
+        .from('ac_fighting_styles')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching fighting styles:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Artificer Infusions from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of infusion objects
+ */
+export async function getArtificerInfusions() {
+    const { data, error } = await supabase
+        .from('ac_artificer_infusions')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching artificer infusions:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Eldritch Invocations from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of invocation objects
+ */
+export async function getEldritchInvocations() {
+    const { data, error } = await supabase
+        .from('ac_eldritch_invocations')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching eldritch invocations:', error);
+        return [];
+    }
+
+    return data;
+}

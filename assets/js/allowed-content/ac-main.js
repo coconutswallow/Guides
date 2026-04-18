@@ -13,6 +13,7 @@ import { initRaces, filterRaces } from './ac-races.js';
 import { initClasses, filterClasses } from './ac-classes.js';
 import { initBackgrounds, filterBackgrounds } from './ac-backgrounds.js';
 import { initFeats, filterFeats } from './ac-feats.js';
+import { initMiscFeats, filterMiscFeats } from './ac-misc-feats.js';
 import { initBastions, filterBastions } from './ac-bastions.js';
 import { initTooltips } from './ac-ui-utils.js';
 
@@ -54,6 +55,9 @@ async function init() {
                     break;
                 case 'feats':
                     filterFeats(term);
+                    break;
+                case 'misc-feats':
+                    filterMiscFeats(term);
                     break;
                 case 'bastions':
                     filterBastions(term);
@@ -102,6 +106,8 @@ function setupTabHandlers() {
                 await initBackgrounds();
             } else if (targetTab === 'feats') {
                 await initFeats();
+            } else if (targetTab === 'misc-feats') {
+                await initMiscFeats();
             } else if (targetTab === 'bastions') {
                 await initBastions();
             }

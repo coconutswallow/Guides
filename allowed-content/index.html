@@ -10,7 +10,7 @@ extra_css:
     <header class="ac-header">
         <div class="ac-header-main">
             <h1>Allowed Content</h1>
-            <p class="ac-subtitle">This is the quick-searcheable copy of the Allowed Content spreadsheet. Please refer
+            <p class="ac-subtitle">This is the quick web-based copy of the Allowed Content spreadsheet. Please refer
                 to the <a
                     href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Official
                     Allowed Content</a> spreadsheet for full details.</p>
@@ -28,6 +28,7 @@ extra_css:
                     <button class="ac-tab" data-tab="classes">Classes</button>
                     <button class="ac-tab" data-tab="backgrounds">Backgrounds</button>
                     <button class="ac-tab" data-tab="feats">Feats</button>
+                    <button class="ac-tab" data-tab="misc-feats">Misc Class Feats</button>
                     <button class="ac-tab" data-tab="bastions">Bastions</button>
                     <!-- Add more tabs as they are developed -->
                 </div>
@@ -211,6 +212,76 @@ extra_css:
                 </table>
             </div>
         </div>
+
+        <!-- VIEW: MISC CLASS FEATS -->
+        <div id="ac-view-misc-feats" class="ac-view">
+            <!-- Section: Fighting Styles -->
+            <div class="ac-table-header">
+                <div class="ac-section-title">
+                    <h2>Fighting Styles</h2>
+                </div>
+                <div class="ac-stats" id="fs-stats"></div>
+            </div>
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="fs-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">Style Name</th>
+                            <th class="col-classes">Classes</th>
+                            <th class="col-source hide-mobile">Source</th>
+                            <th class="col-notes">Notes / Advice</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fs-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Section: Artificer Infusions -->
+            <div class="ac-table-header" style="margin-top: 2rem;">
+                <div class="ac-section-title">
+                    <h2>Artificer Infusions</h2>
+                </div>
+                <div class="ac-stats" id="ai-stats"></div>
+            </div>
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="ai-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">Infusion Name</th>
+                            <th class="col-item-prereq">Item Prerequisite</th>
+                            <th class="col-attunement hide-mobile">Attunement</th>
+                            <th class="col-level hide-mobile">Level</th>
+                            <th class="col-source hide-mobile">Source</th>
+                            <th class="col-notes">Notes / Advice</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ai-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Section: Eldritch Invocations -->
+            <div class="ac-table-header" style="margin-top: 2rem;">
+                <div class="ac-section-title">
+                    <h2>Eldritch Invocations</h2>
+                </div>
+                <div class="ac-stats" id="ei-stats"></div>
+            </div>
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="ei-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">Invocation</th>
+                            <th class="col-pact-prereq">Pact Prereq</th>
+                            <th class="col-other-prereq hide-mobile">Other Prereq</th>
+                            <th class="col-level hide-mobile">Level</th>
+                            <th class="col-source hide-mobile">Source</th>
+                            <th class="col-notes">Notes / Advice</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ei-tbody"></tbody>
+                </table>
+            </div>
+        </div>
     </main>
 </div>
 
@@ -227,6 +298,7 @@ extra_css:
 <!-- Scripts -->
 <script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}"></script>
 <script type="module" src="{{ '/assets/js/allowed-content/ac-classes.js' | relative_url }}"></script>
-    <script type="module" src="{{ '/assets/js/allowed-content/ac-backgrounds.js' | relative_url }}"></script>
-    <script type="module" src="{{ '/assets/js/allowed-content/ac-feats.js' | relative_url }}"></script>
-    <script type="module" src="{{ '/assets/js/allowed-content/ac-bastions.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-backgrounds.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-feats.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-misc-feats.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-bastions.js' | relative_url }}"></script>
