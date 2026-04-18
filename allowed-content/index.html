@@ -15,8 +15,8 @@ extra_css:
                     href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Official
                     Allowed Content</a> spreadsheet for full details.</p>
             <div class="ac-instructions">
-                <span>Hover over fields with the ⓘ icon for more information or notes related
-                    to that category. Click any <span class="inst-highlight">Row</span> for to expand any rows for full
+                <span>Depending on the size of your display, not all fields may be visible. Click any <span
+                        class="inst-highlight">Row</span> to expand and view full
                     details.</span>
             </div>
         </div>
@@ -29,6 +29,8 @@ extra_css:
                     <button class="ac-tab" data-tab="backgrounds">Backgrounds</button>
                     <button class="ac-tab" data-tab="feats">Feats</button>
                     <button class="ac-tab" data-tab="misc-feats">Misc Class Feats</button>
+                    <button class="ac-tab" data-tab="spells">Spells</button>
+                    <button class="ac-tab" data-tab="languages">Languages</button>
                     <button class="ac-tab" data-tab="bastions">Bastions</button>
                     <!-- Add more tabs as they are developed -->
                 </div>
@@ -176,40 +178,10 @@ extra_css:
 
         <!-- VIEW: BASTIONS -->
         <div id="ac-view-bastions" class="ac-view">
-            <div class="ac-table-header">
-                <div class="ac-filters" id="bastions-filters">
-                    <!-- Dynamic filters like Category, Size, etc. will go here -->
-                </div>
-                <div class="ac-stats" id="bastions-stats">
-                    <!-- Row count, etc. -->
-                </div>
-            </div>
-
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="bastions-table">
-                    <thead>
-                        <tr>
-                            <th class="col-category">Category</th>
-                            <th class="col-name">Name</th>
-                            <th class="col-source hide-mobile">Source</th>
-                            <th class="col-size hide-tablet">Size</th>
-                            <th class="col-prereq hide-tablet">Prerequisite</th>
-                            <th class="col-cost-gp">GP Cost</th>
-                            <th class="col-cost-dtp">DTP Cost</th>
-                            <th class="col-description hide-mobile">Description</th>
-                            <th class="col-notes hide-tablet">Rule Notes</th>
-                            <th class="col-order hide-mobile">Order</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bastions-tbody">
-                        <tr>
-                            <td colspan="10" class="ac-loading">
-                                <div class="spinner"></div>
-                                <span>Discovering Bastions...</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Content will be injected by ac-bastions.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Discovering Bastions...</span>
             </div>
         </div>
 
@@ -282,6 +254,48 @@ extra_css:
                 </table>
             </div>
         </div>
+
+        <!-- VIEW: SPELLS -->
+        <div id="ac-view-spells" class="ac-view">
+            <div class="ac-table-header">
+                <div class="ac-filters" id="spells-filters">
+                    <!-- Dynamic filters will go here -->
+                </div>
+                <div class="ac-stats" id="spells-stats">
+                    <!-- Row count, etc. -->
+                </div>
+            </div>
+
+            <div class="ac-table-wrapper">
+                <table class="ac-table" id="spells-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">Spell Name</th>
+                            <th class="col-source hide-mobile">Source</th>
+                            <th class="col-notes hide-tablet">Notes</th>
+                            <th class="col-advice hide-tablet">Rage Advice</th>
+                        </tr>
+                    </thead>
+                    <tbody id="spells-tbody">
+                        <tr>
+                            <td colspan="4" class="ac-loading">
+                                <div class="spinner"></div>
+                                <span>Attuning Spells...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: LANGUAGES -->
+        <div id="ac-view-languages" class="ac-view">
+            <!-- Content will be injected by ac-languages.js -->
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Deciphering Languages...</span>
+            </div>
+        </div>
     </main>
 </div>
 
@@ -301,4 +315,6 @@ extra_css:
 <script type="module" src="{{ '/assets/js/allowed-content/ac-backgrounds.js' | relative_url }}"></script>
 <script type="module" src="{{ '/assets/js/allowed-content/ac-feats.js' | relative_url }}"></script>
 <script type="module" src="{{ '/assets/js/allowed-content/ac-misc-feats.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-spells.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-languages.js' | relative_url }}"></script>
 <script type="module" src="{{ '/assets/js/allowed-content/ac-bastions.js' | relative_url }}"></script>

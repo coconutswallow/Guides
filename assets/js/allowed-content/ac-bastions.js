@@ -4,7 +4,8 @@
  * ================================================================
  * 
  * Logic for the Bastions content set. Handles:
- * - Table rendering and formatting
+ * - Table rendering with grouping by Category
+ * - Section headers with Category rules/notes
  * - Bastion-specific filtering and search
  * - Record detail generation
  */
@@ -19,13 +20,23 @@ let filteredBastions = [];
  * Initializes the Bastions view.
  */
 export async function initBastions() {
-    const tbody = document.getElementById('bastions-tbody');
-    if (!tbody) return;
+    const container = document.getElementById('ac-view-bastions');
+    if (!container) return;
+
+    // Show loading state if empty
+    if (allBastions.length === 0) {
+        container.innerHTML = `
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Discovering Bastions...</span>
+            </div>
+        `;
+    }
 
     // Fetch data
     allBastions = await getBastions();
     
-    // Sort by Category Display Order, then by Name
+    // Initial sort by Category Display Order, then by Name
     allBastions.sort((a, b) => {
         const orderA = a.category?.display_order ?? 999;
         const orderB = b.category?.display_order ?? 999;
@@ -35,51 +46,106 @@ export async function initBastions() {
 
     filteredBastions = [...allBastions];
 
-    renderBastionTable();
-    setupEventHandlers();
+    renderBastions();
 }
 
 /**
- * Renders the Bastions table with the current filtered dataset.
+ * Renders the Bastions view, grouping them by their Category.
  */
-function renderBastionTable() {
-    const tbody = document.getElementById('bastions-tbody');
-    if (!tbody) return;
+function renderBastions() {
+    const container = document.getElementById('ac-view-bastions');
+    if (!container) return;
+
+    // Clear and build header area
+    container.innerHTML = `
+        <div class="ac-table-header">
+            <div class="ac-filters" id="bastions-filters">
+                <!-- Reserved for future specific filters -->
+            </div>
+            <div class="ac-stats" id="bastions-stats">
+                ${filteredBastions.length} Bastions found
+            </div>
+        </div>
+        <div id="bastions-content" class="ac-sections-container"></div>
+    `;
+
+    const content = document.getElementById('bastions-content');
 
     if (filteredBastions.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 2rem;">No bastions found matching your search.</td></tr>';
+        content.innerHTML = '<div class="ac-no-results">No bastions found matching your search.</div>';
         return;
     }
 
-    tbody.innerHTML = filteredBastions.map(b => `
-        <tr data-id="${b.id}">
-            <td class="col-category">
-                <span class="category-lookup" data-tooltip="<h5>${esc(b.category?.name)}</h5>${esc(b.category?.notes)}">
-                    ${esc(b.category?.name)} <span class="info-icon">ⓘ</span>
-                </span>
-            </td>
-            <td class="col-name">
-                <div class="name-cell">
-                    <span>${esc(b.name)}</span>
-                    <span class="row-hover-icon">Details →</span>
+    // Group bastions by category
+    const groups = {};
+    filteredBastions.forEach(b => {
+        const catName = b.category ? b.category.name : 'Other';
+        if (!groups[catName]) {
+            groups[catName] = {
+                name: catName,
+                notes: b.category ? b.category.notes : '',
+                order: b.category ? b.category.display_order : 999,
+                items: []
+            };
+        }
+        groups[catName].items.push(b);
+    });
+
+    // Sort groups based on their display_order
+    const sortedGroupNames = Object.keys(groups).sort((a, b) => groups[a].order - groups[b].order);
+
+    content.innerHTML = sortedGroupNames.map(groupName => {
+        const group = groups[groupName];
+        return `
+            <div class="ac-section-group">
+                <div class="ac-section-title">
+                    <h2>${esc(group.name)}</h2>
+                    ${group.notes ? `<p class="section-desc">${esc(group.notes)}</p>` : ''}
                 </div>
-            </td>
-            <td class="col-source hide-mobile">${esc(b.source)}</td>
-            <td class="col-size hide-tablet">${esc(b.size)}</td>
-            <td class="col-prereq hide-tablet">${esc(b.building_prerequisite || '—')}</td>
-            <td class="col-cost-gp">${esc(b.cost_gp)}</td>
-            <td class="col-cost-dtp">${esc(b.cost_dtp)}</td>
-            <td class="col-description hide-mobile">${formatSnippet(b.description)}</td>
-            <td class="col-notes hide-tablet">${formatSnippet(b.notes_advice)}</td>
-            <td class="col-order hide-mobile">${esc(b.order || '—')}</td>
-        </tr>
-    `).join('');
+                <div class="ac-table-wrapper">
+                    <table class="ac-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">Name</th>
+                                <th class="col-source hide-mobile">Source</th>
+                                <th class="col-size hide-tablet">Size</th>
+                                <th class="col-prereq hide-tablet">Prerequisite</th>
+                                <th class="col-cost-gp">GP Cost</th>
+                                <th class="col-cost-dtp">DTP Cost</th>
+                                <th class="col-description hide-mobile">Description</th>
+                                <th class="col-notes hide-tablet">Rule Notes</th>
+                                <th class="col-order hide-mobile">Order</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${group.items.map(b => `
+                                <tr data-id="${b.id}">
+                                    <td class="col-name">
+                                        <div class="name-cell">
+                                            <span>${esc(b.name)}</span>
+                                            <span class="row-hover-icon">Details →</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-source hide-mobile">${esc(b.source)}</td>
+                                    <td class="col-size hide-tablet">${esc(b.size)}</td>
+                                    <td class="col-prereq hide-tablet">${esc(b.building_prerequisite || '—')}</td>
+                                    <td class="col-cost-gp">${esc(b.cost_gp)}</td>
+                                    <td class="col-cost-dtp">${esc(b.cost_dtp)}</td>
+                                    <td class="col-description hide-mobile">${formatSnippet(b.description)}</td>
+                                    <td class="col-notes hide-tablet">${formatSnippet(b.notes_advice)}</td>
+                                    <td class="col-order hide-mobile">${esc(b.order || '—')}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }).join('');
 
     // Attach row click listeners
-    tbody.querySelectorAll('tr').forEach(row => {
-        row.addEventListener('click', (e) => {
-            // Don't trigger if category lookup span was clicked
-            if (e.target.closest('.category-lookup')) return;
+    content.querySelectorAll('tr[data-id]').forEach(row => {
+        row.addEventListener('click', () => {
             const bastionId = row.dataset.id;
             const bastion = allBastions.find(b => b.id === bastionId);
             if (bastion) showBastionDetail(bastion);
@@ -97,11 +163,6 @@ function showBastionDetail(bastion) {
         <div class="detail-header">
             <span class="detail-category">${esc(bastion.category?.name)}</span>
             <h2 class="detail-title">${esc(bastion.name)}</h2>
-        </div>
-
-        <div class="category-notes-box" style="margin-top: 0; margin-bottom: 2rem;">
-            <h5>${esc(bastion.category?.name)}</h5>
-            <p style="font-size: 0.9rem; opacity: 0.8; white-space: pre-wrap;">${esc(bastion.category?.notes)}</p>
         </div>
 
         <div class="detail-grid">
@@ -139,7 +200,7 @@ function showBastionDetail(bastion) {
         ${bastion.notes_advice ? `
         <div class="detail-section">
             <h4>Notes / Advice</h4>
-            <p style="white-space: pre-wrap;">${esc(bastion.notes_advice)}</p>
+            <div class="advice-content" style="white-space: pre-wrap;">${esc(bastion.notes_advice)}</div>
         </div>
         ` : ''}
     `;
@@ -161,16 +222,9 @@ export function filterBastions(searchTerm) {
             b.name.toLowerCase().includes(lower) ||
             b.category?.name.toLowerCase().includes(lower) ||
             b.description?.toLowerCase().includes(lower) ||
-            b.source?.toLowerCase().includes(lower)
+            b.source?.toLowerCase().includes(lower) ||
+            b.notes_advice?.toLowerCase().includes(lower)
         );
     }
-    renderBastionTable();
-}
-
-/**
- * Sets up global handlers for the Bastions view.
- * (Search logic is now handled by ac-main for consistency)
- */
-function setupEventHandlers() {
-    // Handled in ac-main.js
+    renderBastions();
 }

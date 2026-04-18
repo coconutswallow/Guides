@@ -13,6 +13,8 @@ import { initRaces, filterRaces } from './ac-races.js';
 import { initClasses, filterClasses } from './ac-classes.js';
 import { initBackgrounds, filterBackgrounds } from './ac-backgrounds.js';
 import { initFeats, filterFeats } from './ac-feats.js';
+import { initSpells, filterSpells } from './ac-spells.js';
+import { initLanguages, filterLanguages } from './ac-languages.js';
 import { initMiscFeats, filterMiscFeats } from './ac-misc-feats.js';
 import { initBastions, filterBastions } from './ac-bastions.js';
 import { initTooltips } from './ac-ui-utils.js';
@@ -56,6 +58,12 @@ async function init() {
                 case 'feats':
                     filterFeats(term);
                     break;
+                case 'spells':
+                    filterSpells(term);
+                    break;
+                case 'languages':
+                    filterLanguages(term);
+                    break;
                 case 'misc-feats':
                     filterMiscFeats(term);
                     break;
@@ -66,10 +74,89 @@ async function init() {
         });
     }
 
-    // Default to initializing the first tab (Races)
-    await initRaces();
+    // Handle initial routing (deep links)
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        await switchTab(hash, false);
+    } else {
+        // Default to first tab
+        await switchTab('races', false);
+    }
+
+    // Listen for hash changes (back/forward navigation)
+    window.addEventListener('hashchange', () => {
+        const newHash = window.location.hash.substring(1);
+        if (newHash) switchTab(newHash, false);
+    });
     
     console.log('AC UI: Ready.');
+}
+
+/**
+ * Switch to a specific tab and optionally update the URL hash.
+ * 
+ * @param {string} targetTab - The tab ID to switch to (e.g., 'races', 'bastions')
+ * @param {boolean} updateHash - Whether to update the URL fragment
+ */
+async function switchTab(targetTab, updateHash = true) {
+    const tabs = document.querySelectorAll('.ac-tab');
+    const tabBtn = Array.from(tabs).find(t => t.dataset.tab === targetTab);
+    
+    if (!tabBtn || tabBtn.classList.contains('disabled')) {
+        // Fallback to races if invalid tab
+        if (targetTab !== 'races') switchTab('races', false);
+        return;
+    }
+
+    // If already active and not a fresh hash change, skip
+    if (tabBtn.classList.contains('active') && !updateHash) return;
+
+    console.log(`AC UI: Switching to ${targetTab}`);
+    
+    // Update active tab UI
+    tabs.forEach(t => t.classList.remove('active'));
+    tabBtn.classList.add('active');
+    
+    // Hide all views, show target view
+    document.querySelectorAll('.ac-view').forEach(view => {
+        view.classList.remove('active');
+    });
+    
+    const targetView = document.getElementById(`ac-view-${targetTab}`);
+    if (targetView) targetView.classList.add('active');
+
+    // Update URL hash if requested
+    if (updateHash) {
+        window.location.hash = targetTab;
+    }
+    
+    // Initialize tab-specific logic if not already done
+    switch (targetTab) {
+        case 'races':
+            await initRaces();
+            break;
+        case 'classes':
+            await initClasses();
+            break;
+        case 'backgrounds':
+            await initBackgrounds();
+            break;
+        case 'feats':
+            await initFeats();
+            break;
+        case 'spells':
+            await initSpells();
+            break;
+        case 'languages':
+            await initLanguages();
+            break;
+        case 'misc-feats':
+            await initMiscFeats();
+            break;
+        case 'bastions':
+            await initBastions();
+            break;
+    }
 }
 
 /**
@@ -79,38 +166,8 @@ function setupTabHandlers() {
     const tabs = document.querySelectorAll('.ac-tab');
     
     tabs.forEach(tab => {
-        tab.addEventListener('click', async () => {
-            if (tab.classList.contains('active') || tab.classList.contains('disabled')) return;
-            
-            const targetTab = tab.dataset.tab;
-            console.log(`AC UI: Switching to ${targetTab}`);
-            
-            // Update active tab UI
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            // Hide all views, show target view
-            document.querySelectorAll('.ac-view').forEach(view => {
-                view.classList.remove('active');
-            });
-            
-            const targetView = document.getElementById(`ac-view-${targetTab}`);
-            if (targetView) targetView.classList.add('active');
-            
-            // Initialize tab-specific logic if not already done
-            if (targetTab === 'races') {
-                await initRaces();
-            } else if (targetTab === 'classes') {
-                await initClasses();
-            } else if (targetTab === 'backgrounds') {
-                await initBackgrounds();
-            } else if (targetTab === 'feats') {
-                await initFeats();
-            } else if (targetTab === 'misc-feats') {
-                await initMiscFeats();
-            } else if (targetTab === 'bastions') {
-                await initBastions();
-            }
+        tab.addEventListener('click', () => {
+            switchTab(tab.dataset.tab, true);
         });
     });
 }

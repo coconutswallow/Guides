@@ -1,4 +1,5 @@
 /**
+ * AC SERVICE MODULE (Updated: 2026-04-17 20:05)
  * ================================================================
  * AC SERVICE MODULE
  * ================================================================
@@ -218,6 +219,54 @@ export async function getEldritchInvocations() {
 
     if (error) {
         console.error('Error fetching eldritch invocations:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Spells from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of spell objects
+ */
+export async function getSpells() {
+    const { data, error } = await supabase
+        .from('ac_spells')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching spells:', error);
+        return [];
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Languages from Supabase, including joined category info.
+ * 
+ * @returns {Promise<Array>} Array of language objects
+ */
+export async function getLanguages() {
+    const { data, error } = await supabase
+        .from('ac_languages')
+        .select(`
+            *,
+            language_type:type_id (
+                id,
+                name,
+                description,
+                display_order
+            )
+        `)
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching languages:', error);
         return [];
     }
 

@@ -1,0 +1,49 @@
+-- ==============================================================================
+-- 1. Create the Language Types Table
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.ac_language_types (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- ==============================================================================
+-- 2. Create the Languages Table (With Foreign Key)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.ac_languages (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    type_id UUID REFERENCES public.ac_language_types(id),
+    script TEXT,
+    origin TEXT,
+    typical_speakers TEXT,
+    notes TEXT,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- ==============================================================================
+-- 3. Triggers for updated_at timestamps
+-- ==============================================================================
+DROP TRIGGER IF EXISTS set_updated_at ON public.ac_language_types;
+CREATE TRIGGER set_updated_at BEFORE UPDATE ON public.ac_language_types
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS set_updated_at ON public.ac_languages;
+CREATE TRIGGER set_updated_at BEFORE UPDATE ON public.ac_languages
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+-- ==============================================================================
+-- 4. Enable Row Level Security (RLS) & Policies
+-- ==============================================================================
+ALTER TABLE public.ac_language_types ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to ac_language_types" ON public.ac_language_types FOR SELECT USING (true);
+CREATE POLICY "Allow service_role to manage ac_language_types" ON public.ac_language_types FOR ALL TO service_role USING (true) WITH CHECK (true);
+
+ALTER TABLE public.ac_languages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to ac_languages" ON public.ac_languages FOR SELECT USING (true);
+CREATE POLICY "Allow service_role to manage ac_languages" ON public.ac_languages FOR ALL TO service_role USING (true) WITH CHECK (true);
