@@ -66,11 +66,17 @@ function renderShortcuts() {
     const container = document.getElementById('misc-feats-shortcuts');
     if (!container) return;
 
+    // Filter sections to only those that have items
     const sections = [
-        { id: 'section-fs', label: 'Fighting Styles' },
-        { id: 'section-ai', label: 'Artificer Infusions' },
-        { id: 'section-ei', label: 'Eldritch Invocations' }
-    ];
+        { id: 'section-fs', label: 'Fighting Styles', count: filteredFS.length },
+        { id: 'section-ai', label: 'Artificer Infusions', count: filteredAI.length },
+        { id: 'section-ei', label: 'Eldritch Invocations', count: filteredEI.length }
+    ].filter(s => s.count > 0);
+
+    if (sections.length === 0) {
+        container.innerHTML = '<div class="ac-no-results" style="padding: 1rem;">No class features found matching your search.</div>';
+        return;
+    }
 
     container.innerHTML = `
         <div class="ac-shortcuts">
@@ -98,14 +104,19 @@ function renderShortcuts() {
 function renderFightingStyles() {
     const tbody = document.getElementById('fs-tbody');
     const stats = document.getElementById('fs-stats');
-    if (!tbody) return;
-
-    stats.textContent = `${filteredFS.length} Styles`;
+    const sectionHeader = document.getElementById('section-fs');
+    const tableWrapper = tbody.closest('.ac-table-wrapper');
 
     if (filteredFS.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="ac-no-results">No fighting styles found.</td></tr>';
+        if (sectionHeader) sectionHeader.style.display = 'none';
+        if (tableWrapper) tableWrapper.style.display = 'none';
         return;
     }
+
+    if (sectionHeader) sectionHeader.style.display = '';
+    if (tableWrapper) tableWrapper.style.display = '';
+
+    if (stats) stats.textContent = `${filteredFS.length} Styles`;
 
     tbody.innerHTML = filteredFS.map(s => `
         <tr data-id="${s.id}" data-type="fs">
@@ -125,14 +136,19 @@ function renderFightingStyles() {
 function renderArtificerInfusions() {
     const tbody = document.getElementById('ai-tbody');
     const stats = document.getElementById('ai-stats');
-    if (!tbody) return;
-
-    stats.textContent = `${filteredAI.length} Infusions`;
+    const sectionHeader = document.getElementById('section-ai');
+    const tableWrapper = tbody.closest('.ac-table-wrapper');
 
     if (filteredAI.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="ac-no-results">No infusions found.</td></tr>';
+        if (sectionHeader) sectionHeader.style.display = 'none';
+        if (tableWrapper) tableWrapper.style.display = 'none';
         return;
     }
+
+    if (sectionHeader) sectionHeader.style.display = '';
+    if (tableWrapper) tableWrapper.style.display = '';
+
+    if (stats) stats.textContent = `${filteredAI.length} Infusions`;
 
     tbody.innerHTML = filteredAI.map(i => `
         <tr data-id="${i.id}" data-type="ai">
@@ -154,14 +170,19 @@ function renderArtificerInfusions() {
 function renderEldritchInvocations() {
     const tbody = document.getElementById('ei-tbody');
     const stats = document.getElementById('ei-stats');
-    if (!tbody) return;
-
-    stats.textContent = `${filteredEI.length} Invocations`;
+    const sectionHeader = document.getElementById('section-ei');
+    const tableWrapper = tbody.closest('.ac-table-wrapper');
 
     if (filteredEI.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="ac-no-results">No invocations found.</td></tr>';
+        if (sectionHeader) sectionHeader.style.display = 'none';
+        if (tableWrapper) tableWrapper.style.display = 'none';
         return;
     }
+
+    if (sectionHeader) sectionHeader.style.display = '';
+    if (tableWrapper) tableWrapper.style.display = '';
+
+    if (stats) stats.textContent = `${filteredEI.length} Invocations`;
 
     tbody.innerHTML = filteredEI.map(v => `
         <tr data-id="${v.id}" data-type="ei">

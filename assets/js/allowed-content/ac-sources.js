@@ -87,10 +87,6 @@ function renderSources() {
         <div id="sources-content" class="ac-sections-container"></div>
     `;
 
-    renderSourcesNavigation();
-
-    const content = document.getElementById('sources-content');
-
     // Create a map of category ID -> array of filtered items
     const itemMap = {};
     filteredSources.forEach(item => {
@@ -102,8 +98,21 @@ function renderSources() {
         }
     });
 
-    // Render all categories sequentially
-    content.innerHTML = sourceCategories.map(cat => {
+    renderSourcesNavigation(itemMap);
+
+    const content = document.getElementById('sources-content');
+    if (!content) return;
+
+    // Filter categories to only those that have items matching the current search
+    const activeCategories = sourceCategories.filter(cat => (itemMap[cat.id] || []).length > 0);
+
+    if (activeCategories.length === 0) {
+        content.innerHTML = '<div class="ac-no-results">No sources found matching your search.</div>';
+        return;
+    }
+
+    // Render active categories sequentially
+    content.innerHTML = activeCategories.map(cat => {
         const items = itemMap[cat.id] || [];
         const sectionId = `sources-section-${cat.id}`;
         
@@ -114,43 +123,41 @@ function renderSources() {
                     ${cat.notes ? `<div class="section-desc" style="white-space: pre-wrap;">${esc(cat.notes)}</div>` : ''}
                 </div>
                 
-                ${items.length > 0 ? `
-                    <div class="ac-table-wrapper">
-                        <table class="ac-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-name">Source</th>
-                                    <th class="col-abbr">Abbr.</th>
-                                    <th class="col-type hide-mobile">Type</th>
-                                    <th class="col-ruleset hide-tablet">Ruleset</th>
-                                    <th class="col-allowed-content hide-mobile">Allowed Content</th>
-                                    <th class="col-notes">Notes / Advice</th>
+                <div class="ac-table-wrapper">
+                    <table class="ac-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">Source</th>
+                                <th class="col-abbr">Abbr.</th>
+                                <th class="col-type hide-mobile">Type</th>
+                                <th class="col-ruleset hide-tablet">Ruleset</th>
+                                <th class="col-allowed-content hide-mobile">Allowed Content</th>
+                                <th class="col-notes">Notes / Advice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${items.map(item => `
+                                <tr data-id="${item.id}">
+                                    <td class="col-name">
+                                        <div class="name-cell">
+                                            ${item.link ? `
+                                                <a href="${esc(item.link)}" target="_blank" class="source-name-link" onclick="event.stopPropagation()">
+                                                    ${esc(item.name)}
+                                                </a>
+                                            ` : `<span>${esc(item.name)}</span>`}
+                                            <span class="row-hover-icon">Details →</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-abbr">${esc(item.abbreviation || '—')}</td>
+                                    <td class="col-type hide-mobile">${esc(item.type || '—')}</td>
+                                    <td class="col-ruleset hide-tablet">${esc(item.ruleset || '—')}</td>
+                                    <td class="col-allowed-content hide-mobile">${formatSnippet(item.allowed_content)}</td>
+                                    <td class="col-notes">${formatSnippet(item.notes_advice)}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                ${items.map(item => `
-                                    <tr data-id="${item.id}">
-                                        <td class="col-name">
-                                            <div class="name-cell">
-                                                ${item.link ? `
-                                                    <a href="${esc(item.link)}" target="_blank" class="source-name-link" onclick="event.stopPropagation()">
-                                                        ${esc(item.name)}
-                                                    </a>
-                                                ` : `<span>${esc(item.name)}</span>`}
-                                                <span class="row-hover-icon">Details →</span>
-                                            </div>
-                                        </td>
-                                        <td class="col-abbr">${esc(item.abbreviation || '—')}</td>
-                                        <td class="col-type hide-mobile">${esc(item.type || '—')}</td>
-                                        <td class="col-ruleset hide-tablet">${esc(item.ruleset || '—')}</td>
-                                        <td class="col-allowed-content hide-mobile">${formatSnippet(item.allowed_content)}</td>
-                                        <td class="col-notes">${formatSnippet(item.notes_advice)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                ` : ''}
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         `;
     }).join('');
@@ -167,8 +174,9 @@ function renderSources() {
 
 /**
  * Renders the 3-tier drill-down navigation for Sources.
+ * @param {Object} itemMap - Map of category ID to filtered items.
  */
-function renderSourcesNavigation() {
+function renderSourcesNavigation(itemMap = {}) {
     const navContainer = document.getElementById('sources-nav');
     if (!navContainer) return;
 
@@ -176,8 +184,14 @@ function renderSourcesNavigation() {
     const tier2Options = currentTier1 
         ? [...new Set(sourceCategories.filter(c => c.tier1 === currentTier1).map(c => c.tier2))].sort()
         : [];
+    
+    // Filter tier 3 options by both navigation selection AND if they have matching items
     const tier3Options = (currentTier1 && currentTier2)
-        ? sourceCategories.filter(c => c.tier1 === currentTier1 && c.tier2 === currentTier2)
+        ? sourceCategories.filter(c => 
+            c.tier1 === currentTier1 && 
+            c.tier2 === currentTier2 &&
+            (itemMap[c.id] || []).length > 0
+          )
         : [];
 
     navContainer.innerHTML = `
@@ -207,7 +221,7 @@ function renderSourcesNavigation() {
             </div>
         ` : ''}
 
-        ${currentTier2 ? `
+        ${currentTier1 && currentTier2 && tier3Options.length > 0 ? `
             <div class="ac-shortcuts-row">
                 <span class="nav-label">Source Group:</span>
                 <div class="ac-shortcuts ac-shortcuts-tier3">

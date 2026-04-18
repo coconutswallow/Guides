@@ -86,10 +86,6 @@ function renderMonsters() {
         <div id="monster-content" class="ac-sections-container"></div>
     `;
 
-    renderMonsterNavigation();
-
-    const content = document.getElementById('monster-content');
-
     // Create a map of category ID -> array of filtered items
     const itemMap = {};
     filteredMonsters.forEach(item => {
@@ -101,8 +97,21 @@ function renderMonsters() {
         }
     });
 
-    // Render all categories sequentially
-    content.innerHTML = monsterCategories.map(cat => {
+    renderMonsterNavigation(itemMap);
+
+    const content = document.getElementById('monster-content');
+    if (!content) return;
+
+    // Filter categories to only those that have items matching the current search
+    const activeCategories = monsterCategories.filter(cat => (itemMap[cat.id] || []).length > 0);
+
+    if (activeCategories.length === 0) {
+        content.innerHTML = '<div class="ac-no-results">No monsters found matching your search.</div>';
+        return;
+    }
+
+    // Render active categories sequentially
+    content.innerHTML = activeCategories.map(cat => {
         const items = itemMap[cat.id] || [];
         const sectionId = `monster-section-${cat.id}`;
         
@@ -113,39 +122,37 @@ function renderMonsters() {
                     ${cat.notes ? `<div class="section-desc" style="white-space: pre-wrap;">${esc(cat.notes)}</div>` : ''}
                 </div>
                 
-                ${items.length > 0 ? `
-                    <div class="ac-table-wrapper">
-                        <table class="ac-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-name">Monster Name</th>
-                                    <th class="col-source hide-mobile">Source</th>
-                                    <th class="col-class hide-tablet">Classification</th>
-                                    <th class="col-cr">CR</th>
-                                    <th class="col-type hide-tablet">Creature Type</th>
-                                    <th class="col-notes">Notes / Advice</th>
+                <div class="ac-table-wrapper">
+                    <table class="ac-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">Monster Name</th>
+                                <th class="col-source hide-mobile">Source</th>
+                                <th class="col-class hide-tablet">Classification</th>
+                                <th class="col-cr">CR</th>
+                                <th class="col-type hide-tablet">Creature Type</th>
+                                <th class="col-notes">Notes / Advice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${items.map(item => `
+                                <tr data-id="${item.id}">
+                                    <td class="col-name">
+                                        <div class="name-cell">
+                                            <span>${esc(item.name)}</span>
+                                            <span class="row-hover-icon">Details →</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-source hide-mobile">${esc(item.source)}</td>
+                                    <td class="col-class hide-tablet">${esc(item.classification || '—')}</td>
+                                    <td class="col-cr">${esc(item.cr || '—')}</td>
+                                    <td class="col-type hide-tablet">${esc(item.creature_type || '—')}</td>
+                                    <td class="col-notes">${formatSnippet(item.notes_advice)}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                ${items.map(item => `
-                                    <tr data-id="${item.id}">
-                                        <td class="col-name">
-                                            <div class="name-cell">
-                                                <span>${esc(item.name)}</span>
-                                                <span class="row-hover-icon">Details →</span>
-                                            </div>
-                                        </td>
-                                        <td class="col-source hide-mobile">${esc(item.source)}</td>
-                                        <td class="col-class hide-tablet">${esc(item.classification || '—')}</td>
-                                        <td class="col-cr">${esc(item.cr || '—')}</td>
-                                        <td class="col-type hide-tablet">${esc(item.creature_type || '—')}</td>
-                                        <td class="col-notes">${formatSnippet(item.notes_advice)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                ` : ''}
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         `;
     }).join('');
@@ -162,8 +169,9 @@ function renderMonsters() {
 
 /**
  * Renders the 3-tier drill-down navigation.
+ * @param {Object} itemMap - Map of category ID to filtered items.
  */
-function renderMonsterNavigation() {
+function renderMonsterNavigation(itemMap = {}) {
     const navContainer = document.getElementById('monster-nav');
     if (!navContainer) return;
 
@@ -175,9 +183,13 @@ function renderMonsterNavigation() {
         ? [...new Set(monsterCategories.filter(c => c.tier1 === currentTier1).map(c => c.tier2))].sort()
         : [];
 
-    // 3. Get Tier 3 options based on current Selections
+    // 3. Get Tier 3 options based on current Selections AND if they have matching items
     const tier3Options = (currentTier1 && currentTier2)
-        ? monsterCategories.filter(c => c.tier1 === currentTier1 && c.tier2 === currentTier2)
+        ? monsterCategories.filter(c => 
+            c.tier1 === currentTier1 && 
+            c.tier2 === currentTier2 &&
+            (itemMap[c.id] || []).length > 0
+          )
         : [];
 
     navContainer.innerHTML = `
@@ -210,7 +222,7 @@ function renderMonsterNavigation() {
         ` : ''}
 
         <!-- Row 3: Sources (Conditional) -->
-        ${currentTier2 ? `
+        ${currentTier1 && currentTier2 && tier3Options.length > 0 ? `
             <div class="ac-shortcuts-row">
                 <span class="nav-label">Source:</span>
                 <div class="ac-shortcuts ac-shortcuts-tier3">

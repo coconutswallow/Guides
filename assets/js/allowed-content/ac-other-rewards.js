@@ -116,8 +116,16 @@ function renderOtherRewards() {
         });
     }
 
-    // Render all categories sequentially
-    content.innerHTML = rewardCategories.map(cat => {
+    // Filter categories to only those that have items matching the current search
+    const activeCategories = rewardCategories.filter(cat => (itemMap[cat.id] || []).length > 0);
+
+    if (activeCategories.length === 0) {
+        content.innerHTML = '<div class="ac-no-results">No rewards found matching your search.</div>';
+        return;
+    }
+
+    // Render active categories sequentially
+    content.innerHTML = activeCategories.map(cat => {
         const items = itemMap[cat.id] || [];
         const sectionId = `reward-section-${cat.id}`;
         
@@ -128,39 +136,37 @@ function renderOtherRewards() {
                     ${cat.notes ? `<div class="section-desc" style="white-space: pre-wrap;">${esc(cat.notes)}</div>` : ''}
                 </div>
                 
-                ${items.length > 0 ? `
-                    <div class="ac-table-wrapper">
-                        <table class="ac-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-name">Reward Name</th>
-                                    <th class="col-source hide-mobile">Source</th>
-                                    <th class="col-type hide-tablet">Type</th>
-                                    <th class="col-tier hide-tablet">Tier</th>
-                                    <th class="col-description hide-mobile">Description</th>
-                                    <th class="col-notes">Notes / Advice</th>
+                <div class="ac-table-wrapper">
+                    <table class="ac-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">Reward Name</th>
+                                <th class="col-source hide-mobile">Source</th>
+                                <th class="col-type hide-tablet">Type</th>
+                                <th class="col-tier hide-tablet">Tier</th>
+                                <th class="col-description hide-mobile">Description</th>
+                                <th class="col-notes">Notes / Advice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${items.map(item => `
+                                <tr data-id="${item.id}">
+                                    <td class="col-name">
+                                        <div class="name-cell">
+                                            <span>${esc(item.name)}</span>
+                                            <span class="row-hover-icon">Details →</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-source hide-mobile">${esc(item.source)}</td>
+                                    <td class="col-type hide-tablet">${esc(item.type || '—')}</td>
+                                    <td class="col-tier hide-tablet">${esc(item.tier || '—')}</td>
+                                    <td class="col-description hide-mobile">${formatSnippet(item.description)}</td>
+                                    <td class="col-notes">${formatSnippet(item.notes_advice)}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                ${items.map(item => `
-                                    <tr data-id="${item.id}">
-                                        <td class="col-name">
-                                            <div class="name-cell">
-                                                <span>${esc(item.name)}</span>
-                                                <span class="row-hover-icon">Details →</span>
-                                            </div>
-                                        </td>
-                                        <td class="col-source hide-mobile">${esc(item.source)}</td>
-                                        <td class="col-type hide-tablet">${esc(item.type || '—')}</td>
-                                        <td class="col-tier hide-tablet">${esc(item.tier || '—')}</td>
-                                        <td class="col-description hide-mobile">${formatSnippet(item.description)}</td>
-                                        <td class="col-notes">${formatSnippet(item.notes_advice)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                ` : ''}
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         `;
     }).join('');
