@@ -14,7 +14,7 @@
  */
 
 import { getMonsters, getMonsterCategories } from './ac-service.js';
-import { openModal, esc, formatSnippet } from './ac-ui-utils.js';
+import { openModal, esc, formatSnippet, getUniqueSortedLabels } from './ac-ui-utils.js';
 
 let allMonsters = [];
 let monsterCategories = [];
@@ -55,8 +55,9 @@ export async function initMonsters() {
         return {
             ...cat,
             tier1: parts[0] || 'Unknown',
-            tier2: parts[1] || 'General',
-            tier3: parts[2] || parts[1] || parts[0] // Fallback for simple names
+            tier2: (parts[1] && parts[1].toLowerCase() !== 'general') ? parts[1] : null,
+            tier2_full: parts[1] || parts[0], // Keep original for jump labels
+            tier3: (parts[2] && parts[2].toLowerCase() !== 'general') ? parts[2] : null
         };
     });
 
@@ -102,8 +103,12 @@ function renderMonsters() {
     const content = document.getElementById('monster-content');
     if (!content) return;
 
-    // Filter categories to only those that have items matching the current search
-    const activeCategories = monsterCategories.filter(cat => (itemMap[cat.id] || []).length > 0);
+    // Filter categories to only those that have items matching the current search AND selection
+    const activeCategories = monsterCategories.filter(cat => {
+        if (currentTier1 && cat.tier1 !== currentTier1) return false;
+        if (currentTier2 && cat.tier2 !== currentTier2) return false;
+        return (itemMap[cat.id] || []).length > 0;
+    });
 
     if (activeCategories.length === 0) {
         content.innerHTML = '<div class="ac-no-results">No monsters found matching your search.</div>';
@@ -175,25 +180,36 @@ function renderMonsterNavigation(itemMap = {}) {
     const navContainer = document.getElementById('monster-nav');
     if (!navContainer) return;
 
-    // 1. Get Tier 1 options
-    const tier1Options = [...new Set(monsterCategories.map(c => c.tier1))].sort();
-
-    // 2. Get Tier 2 options based on current Selection
+    // Filter chips to those that actually have items
+    const tier1Options = getUniqueSortedLabels(monsterCategories, 'tier1');
     const tier2Options = currentTier1 
-        ? [...new Set(monsterCategories.filter(c => c.tier1 === currentTier1).map(c => c.tier2))].sort()
+        ? getUniqueSortedLabels(monsterCategories.filter(c => c.tier1 === currentTier1), 'tier2')
         : [];
+    
+    // Dynamic Jump-links (Navigation Index)
+    let jumpOptions = [];
+    let jumpLabel = "Navigation:";
 
-    // 3. Get Tier 3 options based on current Selections AND if they have matching items
-    const tier3Options = (currentTier1 && currentTier2)
-        ? monsterCategories.filter(c => 
+    if (currentTier1 && currentTier2) {
+        // Specific Tier 2 selected -> Jump to Tier 3 sub-categories
+        jumpLabel = "Source:";
+        jumpOptions = monsterCategories.filter(c => 
             c.tier1 === currentTier1 && 
-            c.tier2 === currentTier2 &&
+            c.tier2 === currentTier2 && 
+            c.tier3 &&
             (itemMap[c.id] || []).length > 0
-          )
-        : [];
+        ).map(c => ({ label: c.tier3, target: `monster-section-${c.id}` }));
+    } else if (currentTier1) {
+        // Tier 1 selected, Tier 2 is "All" -> Jump to Tier 2 group starts
+        jumpLabel = "Jump to:";
+        const t2Labels = getUniqueSortedLabels(monsterCategories.filter(c => c.tier1 === currentTier1), 'tier2_full');
+        jumpOptions = t2Labels.map(t2 => {
+            const firstCat = monsterCategories.find(c => c.tier1 === currentTier1 && c.tier2_full === t2);
+            return { label: t2, target: `monster-section-${firstCat.id}` };
+        });
+    }
 
     navContainer.innerHTML = `
-        <!-- Row 1: Tiers -->
         <div class="ac-shortcuts-row">
             <span class="nav-label">Usage:</span>
             <div class="ac-shortcuts">
@@ -206,8 +222,7 @@ function renderMonsterNavigation(itemMap = {}) {
             </div>
         </div>
 
-        <!-- Row 2: Groupings (Conditional) -->
-        ${currentTier1 ? `
+        ${currentTier1 && tier2Options.length > 0 ? `
             <div class="ac-shortcuts-row">
                 <span class="nav-label">Series:</span>
                 <div class="ac-shortcuts ac-shortcuts-tier2">
@@ -221,14 +236,13 @@ function renderMonsterNavigation(itemMap = {}) {
             </div>
         ` : ''}
 
-        <!-- Row 3: Sources (Conditional) -->
-        ${currentTier1 && currentTier2 && tier3Options.length > 0 ? `
+        ${jumpOptions.length > 0 ? `
             <div class="ac-shortcuts-row">
-                <span class="nav-label">Source:</span>
+                <span class="nav-label">${jumpLabel}</span>
                 <div class="ac-shortcuts ac-shortcuts-tier3">
-                    ${tier3Options.map(cat => `
-                        <button class="ac-shortcut-chip" data-type="scroll" data-target="monster-section-${cat.id}">
-                            ${esc(cat.tier3)}
+                    ${jumpOptions.map(opt => `
+                        <button class="ac-shortcut-chip" data-type="scroll" data-target="${opt.target}">
+                            ${esc(opt.label)}
                         </button>
                     `).join('')}
                 </div>

@@ -15,7 +15,7 @@
  */
 
 import { getSources, getSourceCategories } from './ac-service.js';
-import { openModal, esc, formatSnippet } from './ac-ui-utils.js';
+import { openModal, esc, formatSnippet, getUniqueSortedLabels } from './ac-ui-utils.js';
 
 let allSources = [];
 let sourceCategories = [];
@@ -56,8 +56,9 @@ export async function initSources() {
         return {
             ...cat,
             tier1: parts[0] || 'Unknown',
-            tier2: parts[1] || 'General',
-            tier3: parts[2] || parts[1] || parts[0]
+            tier2: (parts[1] && parts[1].toLowerCase() !== 'general') ? parts[1] : null,
+            tier2_full: parts[1] || parts[0], // Keep original for jump labels
+            tier3: (parts[2] && parts[2].toLowerCase() !== 'general') ? parts[2] : null
         };
     });
 
@@ -103,8 +104,12 @@ function renderSources() {
     const content = document.getElementById('sources-content');
     if (!content) return;
 
-    // Filter categories to only those that have items matching the current search
-    const activeCategories = sourceCategories.filter(cat => (itemMap[cat.id] || []).length > 0);
+    // Filter categories to only those that have items matching the current search AND selection
+    const activeCategories = sourceCategories.filter(cat => {
+        if (currentTier1 && cat.tier1 !== currentTier1) return false;
+        if (currentTier2 && cat.tier2 !== currentTier2) return false;
+        return (itemMap[cat.id] || []).length > 0;
+    });
 
     if (activeCategories.length === 0) {
         content.innerHTML = '<div class="ac-no-results">No sources found matching your search.</div>';
@@ -180,19 +185,34 @@ function renderSourcesNavigation(itemMap = {}) {
     const navContainer = document.getElementById('sources-nav');
     if (!navContainer) return;
 
-    const tier1Options = [...new Set(sourceCategories.map(c => c.tier1))].sort();
+    // Filter chips to those that actually have items
+    const tier1Options = getUniqueSortedLabels(sourceCategories, 'tier1');
     const tier2Options = currentTier1 
-        ? [...new Set(sourceCategories.filter(c => c.tier1 === currentTier1).map(c => c.tier2))].sort()
+        ? getUniqueSortedLabels(sourceCategories.filter(c => c.tier1 === currentTier1), 'tier2')
         : [];
     
-    // Filter tier 3 options by both navigation selection AND if they have matching items
-    const tier3Options = (currentTier1 && currentTier2)
-        ? sourceCategories.filter(c => 
+    // Dynamic Jump-links (Navigation Index)
+    let jumpOptions = [];
+    let jumpLabel = "Navigation:";
+
+    if (currentTier1 && currentTier2) {
+        // Specific Tier 2 selected -> Jump to Tier 3 sub-categories
+        jumpLabel = "Source Group:";
+        jumpOptions = sourceCategories.filter(c => 
             c.tier1 === currentTier1 && 
-            c.tier2 === currentTier2 &&
+            c.tier2 === currentTier2 && 
+            c.tier3 &&
             (itemMap[c.id] || []).length > 0
-          )
-        : [];
+        ).map(c => ({ label: c.tier3, target: `sources-section-${c.id}` }));
+    } else if (currentTier1) {
+        // Tier 1 selected, Tier 2 is "All" -> Jump to Tier 2 group starts
+        jumpLabel = "Jump to:";
+        const t2Labels = getUniqueSortedLabels(sourceCategories.filter(c => c.tier1 === currentTier1), 'tier2_full');
+        jumpOptions = t2Labels.map(t2 => {
+            const firstCat = sourceCategories.find(c => c.tier1 === currentTier1 && c.tier2_full === t2);
+            return { label: t2, target: `sources-section-${firstCat.id}` };
+        });
+    }
 
     navContainer.innerHTML = `
         <div class="ac-shortcuts-row">
@@ -207,7 +227,7 @@ function renderSourcesNavigation(itemMap = {}) {
             </div>
         </div>
 
-        ${currentTier1 ? `
+        ${currentTier1 && tier2Options.length > 0 ? `
             <div class="ac-shortcuts-row">
                 <span class="nav-label">Series:</span>
                 <div class="ac-shortcuts ac-shortcuts-tier2">
@@ -221,13 +241,13 @@ function renderSourcesNavigation(itemMap = {}) {
             </div>
         ` : ''}
 
-        ${currentTier1 && currentTier2 && tier3Options.length > 0 ? `
+        ${jumpOptions.length > 0 ? `
             <div class="ac-shortcuts-row">
-                <span class="nav-label">Source Group:</span>
+                <span class="nav-label">${jumpLabel}</span>
                 <div class="ac-shortcuts ac-shortcuts-tier3">
-                    ${tier3Options.map(cat => `
-                        <button class="ac-shortcut-chip" data-type="scroll" data-target="sources-section-${cat.id}">
-                            ${esc(cat.tier3)}
+                    ${jumpOptions.map(opt => `
+                        <button class="ac-shortcut-chip" data-type="scroll" data-target="${opt.target}">
+                            ${esc(opt.label)}
                         </button>
                     `).join('')}
                 </div>

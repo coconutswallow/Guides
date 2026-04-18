@@ -15,7 +15,7 @@
  */
 
 import { getLoot, getLootCategories } from './ac-service.js';
-import { openModal, esc, formatSnippet } from './ac-ui-utils.js';
+import { openModal, esc, formatSnippet, getUniqueSortedLabels } from './ac-ui-utils.js';
 
 let allLoot = [];
 let lootCategories = [];
@@ -62,9 +62,9 @@ export async function initLoot() {
         return {
             ...cat,
             tier1: parts[0] || 'Unknown',
-            tier2: tierLabel,
-            tier2_full: rawTier2, // Keep original for filtering if needed
-            tier3: parts[2] || (parts[1] && !tierMatch ? parts[1] : parts[0]) 
+            tier2: (parts[1] && parts[1].toLowerCase() !== 'general') ? tierLabel : null,
+            tier2_full: parts[1] || parts[0], // Keep original for filtering if needed
+            tier3: (parts[2] && parts[2].toLowerCase() !== 'general') ? parts[2] : null 
         };
     });
 
@@ -110,8 +110,12 @@ function renderLoot() {
     const content = document.getElementById('loot-content');
     if (!content) return;
 
-    // Filter categories to only those that have items matching the current search
-    const activeCategories = lootCategories.filter(cat => (itemMap[cat.id] || []).length > 0);
+    // Filter categories to only those that have items matching the current search AND current selection
+    const activeCategories = lootCategories.filter(cat => {
+        if (currentTier1 && cat.tier1 !== currentTier1) return false;
+        if (currentTier2 && cat.tier2 !== currentTier2) return false;
+        return (itemMap[cat.id] || []).length > 0;
+    });
 
     if (activeCategories.length === 0) {
         content.innerHTML = '<div class="ac-no-results">No loot found matching your search.</div>';
@@ -183,19 +187,34 @@ function renderLootNavigation(itemMap = {}) {
     const navContainer = document.getElementById('loot-nav');
     if (!navContainer) return;
 
-    const tier1Options = [...new Set(lootCategories.map(c => c.tier1))].sort();
+    // Filter chips to those that actually have items
+    const tier1Options = getUniqueSortedLabels(lootCategories, 'tier1');
     const tier2Options = currentTier1 
-        ? [...new Set(lootCategories.filter(c => c.tier1 === currentTier1).map(c => c.tier2))].sort()
+        ? getUniqueSortedLabels(lootCategories.filter(c => c.tier1 === currentTier1), 'tier2')
         : [];
     
-    // Filter tier 3 options by both navigation selection AND if they have matching items in itemMap
-    const tier3Options = (currentTier1 && currentTier2)
-        ? lootCategories.filter(c => 
+    // Dynamic Jump-links (Navigation Index)
+    let jumpOptions = [];
+    let jumpLabel = "Navigation:";
+
+    if (currentTier1 && currentTier2) {
+        // Specific Tier 2 selected -> Jump to Tier 3 sub-categories
+        jumpLabel = "Category:";
+        jumpOptions = lootCategories.filter(c => 
             c.tier1 === currentTier1 && 
             c.tier2 === currentTier2 && 
+            c.tier3 &&
             (itemMap[c.id] || []).length > 0
-          )
-        : [];
+        ).map(c => ({ label: c.tier3, target: `loot-section-${c.id}` }));
+    } else if (currentTier1) {
+        // Tier 1 selected, Tier 2 is "All" -> Jump to Tier 2 group starts
+        jumpLabel = "Jump to:";
+        const t2Labels = getUniqueSortedLabels(lootCategories.filter(c => c.tier1 === currentTier1), 'tier2_full');
+        jumpOptions = t2Labels.map(t2 => {
+            const firstCat = lootCategories.find(c => c.tier1 === currentTier1 && c.tier2_full === t2);
+            return { label: t2, target: `loot-section-${firstCat.id}` };
+        });
+    }
 
     navContainer.innerHTML = `
         <div class="ac-shortcuts-row">
@@ -210,7 +229,7 @@ function renderLootNavigation(itemMap = {}) {
             </div>
         </div>
 
-        ${currentTier1 ? `
+        ${currentTier1 && tier2Options.length > 0 ? `
             <div class="ac-shortcuts-row">
                 <span class="nav-label">Tier:</span>
                 <div class="ac-shortcuts ac-shortcuts-tier2">
@@ -224,13 +243,13 @@ function renderLootNavigation(itemMap = {}) {
             </div>
         ` : ''}
 
-        ${currentTier1 && currentTier2 && tier3Options.length > 0 ? `
+        ${jumpOptions.length > 0 ? `
             <div class="ac-shortcuts-row">
-                <span class="nav-label">Category:</span>
+                <span class="nav-label">${jumpLabel}</span>
                 <div class="ac-shortcuts ac-shortcuts-tier3">
-                    ${tier3Options.map(cat => `
-                        <button class="ac-shortcut-chip" data-type="scroll" data-target="loot-section-${cat.id}">
-                            ${esc(cat.tier3)}
+                    ${jumpOptions.map(opt => `
+                        <button class="ac-shortcut-chip" data-type="scroll" data-target="${opt.target}">
+                            ${esc(opt.label)}
                         </button>
                     `).join('')}
                 </div>

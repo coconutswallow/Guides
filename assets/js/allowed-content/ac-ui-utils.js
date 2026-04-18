@@ -100,3 +100,33 @@ export function formatSnippet(str, length = 50) {
     if (clean.length <= length) return esc(clean);
     return esc(clean.substring(0, length)) + '...';
 }
+/**
+ * Extracts unique labels from an array of items and sorts them by their minimum order value.
+ * This ensures that hierarchical navigation chips respect the database sort order.
+ * 
+ * @param {Array<Object>} items - Array of objects containing labels and order values
+ * @param {string} labelField - The field to extract unique labels from (e.g., 'tier1')
+ * @param {string} orderField - The field to sort by (e.g., 'display_order')
+ * @returns {Array<string>} Unique labels sorted by their minimum order value
+ */
+export function getUniqueSortedLabels(items, labelField, orderField = 'display_order') {
+    // 1. Group by label and find min order
+    const labelMap = {};
+    items.forEach(item => {
+        const label = item[labelField];
+        if (!label) return;
+        
+        const order = item[orderField] ?? 999;
+        if (labelMap[label] === undefined || order < labelMap[label]) {
+            labelMap[label] = order;
+        }
+    });
+
+    // 2. Sort labels by their min order, then alphabetically for ties
+    return Object.keys(labelMap).sort((a, b) => {
+        const orderA = labelMap[a];
+        const orderB = labelMap[b];
+        if (orderA !== orderB) return orderA - orderB;
+        return a.localeCompare(b);
+    });
+}
