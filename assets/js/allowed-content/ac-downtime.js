@@ -1,221 +1,341 @@
-/**
- * ================================================================
- * AC DOWNTIME MODULE
- * ================================================================
- * 
- * Data handling and presentation for Downtime activities.
- * 
- * Responsibilities:
- * - Rendering downtime activities categorized by type (Training, Crafting, etc.).
- * - Implementing category scrolling and global search integration.
- * - Displaying detailed rules and mechanical outcomes in modals.
- * 
- * @module ACDowntime
- */
+// ==============================================================================
+// Configuration
+// ==============================================================================
+const DT_SOURCE_SHEET_ID = "1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY";
+const DT_SOURCE_SHEET_NAME = "Downtime";
+const DT_CATS_SHEET_NAME = "Downtime Categories";
+const DT_ITEMS_SHEET_NAME = "Normalized Downtime";
 
-import { getDowntime } from './ac-service.js';
-import { openModal, esc, formatSnippet } from './ac-ui-utils.js';
-
-let allDowntime = [];
-let filteredDowntime = [];
-
-/**
- * Initializes the Downtime view.
- */
-export async function initDowntime() {
-    const container = document.getElementById('ac-view-downtime');
-    if (!container) return;
-
-    // Show loading state if empty
-    if (allDowntime.length === 0) {
-        container.innerHTML = `
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Scheduling Downtime...</span>
-            </div>
-        `;
+const dtScriptProps = PropertiesService.getScriptProperties();
+const DT_ENV = {
+    DEV: {
+        URL: dtScriptProps.getProperty("SUPABASE_DEV_URL"),
+        KEY: dtScriptProps.getProperty("SUPABASE_DEV_KEY")
+    },
+    PROD: {
+        URL: dtScriptProps.getProperty("SUPABASE_PROD_URL"),
+        KEY: dtScriptProps.getProperty("SUPABASE_PROD_KEY")
     }
+};
 
-    allDowntime = await getDowntime();
-    filteredDowntime = [...allDowntime];
-
-    renderDowntime();
+// ==============================================================================
+// Create Custom Menu Items
+// ==============================================================================
+function onOpen() {
+    const ui = SpreadsheetApp.getUi();
+    ui.createMenu('Database Sync')
+        .addItem('🚀 Sync Downtime to DEV', 'syncDowntimeToDev')
+        .addItem('🚨 Sync Downtime to PROD', 'syncDowntimeToProd')
+        .addToUi();
 }
 
-/**
- * Renders the Downtime view, grouping items by their Category.
- */
-function renderDowntime() {
-    const container = document.getElementById('ac-view-downtime');
-    if (!container) return;
+// ==============================================================================
+// 1. Normalizer (NOW WITH MARKDOWN LINK PRESERVATION)
+// ==============================================================================
+function normalizeDowntime() {
+    const sourceSS = SpreadsheetApp.openById(DT_SOURCE_SHEET_ID);
+    const source = sourceSS.getSheetByName(DT_SOURCE_SHEET_NAME);
 
-    // Clear and build header area
-    container.innerHTML = `
-        <div class="ac-table-header">
-            <div class="ac-filters" id="downtime-filters"></div>
-            <div class="ac-stats" id="downtime-stats">
-                ${filteredDowntime.length} Activities found
-            </div>
-        </div>
-        <div id="downtime-content" class="ac-sections-container"></div>
-    `;
-
-    const content = document.getElementById('downtime-content');
-
-    if (filteredDowntime.length === 0) {
-        content.innerHTML = '<div class="ac-no-results">No downtime activities found matching your search.</div>';
+    if (!source) {
+        SpreadsheetApp.getUi().alert(`Tab "${DT_SOURCE_SHEET_NAME}" not found in source sheet.`);
         return;
     }
 
-    // Group items by category
-    const groups = {};
-    filteredDowntime.forEach(item => {
-        const catName = item.category ? item.category.name : 'Other';
-        if (!groups[catName]) {
-            groups[catName] = {
-                name: catName,
-                notes: item.category ? item.category.notes : '',
-                order: item.category ? item.category.display_order : 999,
-                items: []
-            };
+    // Grab BOTH the display text and the underlying Rich Text (metadata) for links
+    const range = source.getDataRange();
+    const data = range.getDisplayValues();
+    const richData = range.getRichTextValues();
+
+    // Arrays for the two normalized tables
+    const categoriesData = [["Category", "Notes"]];
+    const itemsData = [
+        ["Category", "Name of Activity", "Gold", "DTP Cost", "Description", "Notes / Rage Advice"]
+    ];
+
+    let state = "SEARCHING_CATEGORY";
+    let currentCategory = "";
+    let currentNotes = "";
+
+    for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        const richRow = richData[i]; // Get the rich text for this specific row
+
+        // Parse the standard columns
+        const c0 = String(row[0] || "").trim(); // Name of Activity
+        const c2 = String(row[2] || "").trim(); // Gold
+        const c3 = String(row[3] || "").trim(); // DTP Cost
+
+        // 1. Skip Link Navigation rows
+        if (c0.startsWith("Jump to")) continue;
+
+        // 2. A fully blank row triggers a reset to find the next category
+        if (c0 === "" && c2 === "" && c3 === "" && String(row[4] || "").trim() === "") {
+            state = "SEARCHING_CATEGORY";
+            continue;
         }
-        groups[catName].items.push(item);
-    });
 
-    // Sort groups based on their display_order
-    const sortedGroupNames = Object.keys(groups).sort((a, b) => groups[a].order - groups[b].order);
+        // 3. Subcategory detection
+        if (state === "DATA" && c0 !== "" && c2 === "" && c3 === "") {
+            state = "SEARCHING_CATEGORY";
+        }
 
-    // Render Shortcut Chips
-    const filtersContainer = document.getElementById('downtime-filters');
-    if (filtersContainer) {
-        filtersContainer.innerHTML = `
-            <div class="ac-shortcuts">
-                ${sortedGroupNames.map(name => `
-                    <button class="ac-shortcut-chip" data-target="dt-section-${name.toLowerCase().replace(/\s+/g, '-')}">
-                        ${esc(name)}
-                    </button>
-                `).join('')}
-            </div>
-        `;
+        // 4. STATE: Finding a Category Header
+        if (state === "SEARCHING_CATEGORY") {
+            if (c0 !== "" && c2 === "" && c3 === "") {
+                currentCategory = c0.split("(Go to")[0].trim(); // Clean up navigation text
+                currentNotes = "";
+                categoriesData.push([currentCategory, currentNotes]);
+                state = "CATEGORY_NOTES";
+                continue;
+            }
 
-        filtersContainer.querySelectorAll('.ac-shortcut-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const targetId = chip.dataset.target;
-                const element = document.getElementById(targetId);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (c0 === "Name of Activity") {
+                state = "DATA";
+                continue;
+            }
+        }
+
+        // 5. STATE: Reading Notes beneath the Category
+        if (state === "CATEGORY_NOTES") {
+            if (c0 === "Name of Activity") {
+                state = "DATA";
+                continue; // Skip the header itself
+            } else if (c0 !== "" && c2 === "" && c3 === "") {
+                // Run the category note through the markdown converter!
+                const noteText = richTextToMarkdown(richRow[0]).trim();
+
+                if (currentNotes === "") {
+                    currentNotes = noteText;
+                } else {
+                    currentNotes += "\n\n" + noteText;
                 }
-            });
+
+                categoriesData[categoriesData.length - 1][1] = currentNotes;
+                continue;
+            } else if (c0 !== "" && (c2 !== "" || c3 !== "")) {
+                // FIX: Found an activity (has Gold or DTP) but no "Name of Activity" header. 
+                // Switch to DATA state and let it fall through to the block below!
+                state = "DATA";
+            }
+        }
+
+        // 6. STATE: Extracting standard rows
+        if (state === "DATA") {
+            if (c0 === "Name of Activity") {
+                continue;
+            }
+
+            // Store the real Item Data and convert Descriptions/Notes to Markdown!
+            if (c0 !== "" && c0 !== "nan") {
+                itemsData.push([
+                    currentCategory,
+                    c0,
+                    c2,
+                    c3,
+                    richTextToMarkdown(richRow[4]).trim(), // Description with links
+                    richTextToMarkdown(richRow[9]).trim()  // Notes with links
+                ]);
+            }
+        }
+    }
+
+    // Write to destination workbook
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    function insertData(sheetName, dataArray) {
+        if (dataArray.length === 0) return;
+        let sheet = ss.getSheetByName(sheetName);
+        if (!sheet) sheet = ss.insertSheet(sheetName);
+        else sheet.clearContents();
+        sheet.getRange(1, 1, dataArray.length, dataArray[0].length).setValues(dataArray);
+    }
+
+    insertData(DT_CATS_SHEET_NAME, categoriesData);
+    insertData(DT_ITEMS_SHEET_NAME, itemsData);
+
+    SpreadsheetApp.getUi().alert(
+        `Done! Exported ${categoriesData.length - 1} Categories and ${itemsData.length - 1} Downtime Activities.`
+    );
+}
+
+// ==============================================================================
+// 2. Entry Points for Sync
+// ==============================================================================
+function syncDowntimeToDev() {
+    if (!DT_ENV.DEV.URL || !DT_ENV.DEV.KEY) throw new Error("Missing Dev Script Properties.");
+    console.log("Starting Downtime sync to DEVELOPMENT...");
+    runDowntimeSync(DT_ENV.DEV.URL, DT_ENV.DEV.KEY, "DEVELOPMENT");
+}
+
+function syncDowntimeToProd() {
+    if (!DT_ENV.PROD.URL || !DT_ENV.PROD.KEY) throw new Error("Missing Prod Script Properties.");
+    console.log("Starting Downtime sync to PRODUCTION...");
+    runDowntimeSync(DT_ENV.PROD.URL, DT_ENV.PROD.KEY, "PRODUCTION");
+}
+
+// ==============================================================================
+// 3. Main Sync Orchestrator
+// ==============================================================================
+function runDowntimeSync(apiUrl, apiKey, envName) {
+    try {
+        const catsPushed = syncDowntimeCategories(apiUrl, apiKey);
+        console.log(`Downtime Categories Upserted: ${catsPushed}`);
+
+        const categoryMap = fetchDowntimeCategoryMap(apiUrl, apiKey);
+
+        const itemsPushed = syncDowntimeData(apiUrl, apiKey, categoryMap);
+        console.log(`Downtime Activities Upserted: ${itemsPushed}`);
+        console.log(`✅ Sync Complete [${envName}]!`);
+
+        try {
+            SpreadsheetApp.getActiveSpreadsheet().toast(`Categories: ${catsPushed} | Activities: ${itemsPushed}`, `✅ Sync Complete [${envName}]`);
+        } catch (e) { }
+
+    } catch (error) {
+        console.error(`❌ Error during sync to ${envName}: ${error.message}`);
+        try {
+            SpreadsheetApp.getActiveSpreadsheet().toast(`${error.message}`, `❌ Sync Error [${envName}]`, 10);
+        } catch (e) { }
+    }
+}
+
+// ==============================================================================
+// 4. Sync Downtime Categories
+// ==============================================================================
+function syncDowntimeCategories(apiUrl, apiKey) {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DT_CATS_SHEET_NAME);
+    if (!sheet) throw new Error(`Sheet "${DT_CATS_SHEET_NAME}" not found.`);
+
+    const data = sheet.getDataRange().getDisplayValues();
+    const payload = [];
+
+    for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        if (!row[0]) continue;
+
+        payload.push({
+            name: row[0],
+            notes: row[1] || null,
+            display_order: i
         });
     }
 
-    content.innerHTML = sortedGroupNames.map(groupName => {
-        const group = groups[groupName];
-        const sectionId = `dt-section-${groupName.toLowerCase().replace(/\s+/g, '-')}`;
-        return `
-            <div class="ac-section-group">
-                <div class="ac-section-title" id="${sectionId}">
-                    <h2>${esc(group.name)}</h2>
-                    ${group.notes ? `<div class="section-desc" style="white-space: pre-wrap;">${esc(group.notes)}</div>` : ''}
-                </div>
-                <div class="ac-table-wrapper">
-                    <table class="ac-table">
-                        <thead>
-                            <tr>
-                                <th class="col-name">Activity</th>
-                                <th class="col-gold">Gold Cost</th>
-                                <th class="col-dtp">DTP Cost</th>
-                                <th class="col-description hide-mobile">Description</th>
-                                <th class="col-notes hide-tablet">Notes / Advice</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${group.items.map(item => `
-                                <tr data-id="${item.id}">
-                                    <td class="col-name">
-                                        <div class="name-cell">
-                                            <span>${esc(item.name)}</span>
-                                            <span class="row-hover-icon">Details →</span>
-                                        </div>
-                                    </td>
-                                    <td class="col-gold">${esc(item.gold_cost || '—')}</td>
-                                    <td class="col-dtp">${esc(item.dtp_cost || '—')}</td>
-                                    <td class="col-description hide-mobile">${formatSnippet(item.description)}</td>
-                                    <td class="col-notes hide-tablet">${formatSnippet(item.notes_advice)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    // Attach row click listeners
-    content.querySelectorAll('tr[data-id]').forEach(row => {
-        row.addEventListener('click', () => {
-            const id = row.dataset.id;
-            const item = allDowntime.find(i => i.id === id);
-            if (item) showDowntimeDetail(item);
-        });
-    });
+    if (payload.length === 0) return 0;
+    supabaseUpsertDowntime(apiUrl, apiKey, "ac_downtime_categories", payload, "name");
+    return payload.length;
 }
 
-/**
- * Filters the downtime dataset based on a search term.
- * 
- * @param {string} term - The search string
- */
-export function filterDowntime(term) {
-    if (!term) {
-        filteredDowntime = [...allDowntime];
-    } else {
-        const lower = term.toLowerCase();
-        filteredDowntime = allDowntime.filter(i => 
-            i.name.toLowerCase().includes(lower) ||
-            i.category?.name.toLowerCase().includes(lower) ||
-            i.description?.toLowerCase().includes(lower) ||
-            i.notes_advice?.toLowerCase().includes(lower)
-        );
+// ==============================================================================
+// 5. Fetch Category UUID Mapping
+// ==============================================================================
+function fetchDowntimeCategoryMap(apiUrl, apiKey) {
+    const endpoint = `${apiUrl}/rest/v1/ac_downtime_categories?select=id,name`;
+
+    const options = {
+        method: "get",
+        headers: {
+            "apikey": apiKey,
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+        },
+        muteHttpExceptions: true
+    };
+
+    const response = UrlFetchApp.fetch(endpoint, options);
+    if (response.getResponseCode() >= 400) {
+        throw new Error(`Failed to fetch mapping: ${response.getContentText()}`);
     }
-    renderDowntime();
+
+    const json = JSON.parse(response.getContentText());
+    const map = {};
+    json.forEach(c => map[c.name] = c.id);
+    return map;
 }
 
-/**
- * Shows the full detail for a specific Downtime activity in a modal.
- * 
- * @param {Object} item - The downtime record
- */
-function showDowntimeDetail(item) {
-    const html = `
-        <div class="detail-header">
-            <span class="detail-category">${esc(item.category?.name || 'Downtime')}</span>
-            <h2 class="detail-title">${esc(item.name)}</h2>
-        </div>
+// ==============================================================================
+// 6. Sync Downtime Data
+// ==============================================================================
+function syncDowntimeData(apiUrl, apiKey, categoryMap) {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DT_ITEMS_SHEET_NAME);
+    if (!sheet) throw new Error(`Sheet "${DT_ITEMS_SHEET_NAME}" not found.`);
 
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Gold Cost</label>
-                <value>${esc(item.gold_cost || '—')}</value>
-            </div>
-            <div class="detail-item">
-                <label>DTP Cost</label>
-                <value>${esc(item.dtp_cost || '—')}</value>
-            </div>
-        </div>
+    const data = sheet.getDataRange().getDisplayValues();
+    const payload = [];
 
-        <div class="detail-section">
-            <h4>Description</h4>
-            <p style="white-space: pre-wrap;">${esc(item.description || 'No description available.')}</p>
-        </div>
+    for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        if (!row[1]) continue;
 
-        ${item.notes_advice ? `
-        <div class="detail-section">
-            <h4>Notes / Advice</h4>
-            <div class="advice-content" style="white-space: pre-wrap;">${esc(item.notes_advice)}</div>
-        </div>
-        ` : ''}
-    `;
+        const categoryName = row[0];
+        const categoryId = categoryMap[categoryName] || null;
 
-    openModal(html);
+        if (!categoryId) {
+            console.warn(`Warning: Could not find UUID for category "${categoryName}" for item "${row[1]}"`);
+        }
+
+        payload.push({
+            category_id: categoryId,
+            name: row[1],
+            gold_cost: row[2] || null,
+            dtp_cost: row[3] || null,
+            description: row[4] || null,
+            notes_advice: row[5] || null,
+            display_order: i
+        });
+    }
+
+    if (payload.length === 0) return 0;
+    supabaseUpsertDowntime(apiUrl, apiKey, "ac_downtime", payload, "name");
+    return payload.length;
+}
+
+// ==============================================================================
+// 7. Helper: Supabase Upsert
+// ==============================================================================
+function supabaseUpsertDowntime(apiUrl, apiKey, tableName, payloadArray, conflictCols) {
+    const endpoint = `${apiUrl}/rest/v1/${tableName}?on_conflict=${conflictCols}`;
+
+    const options = {
+        method: "post",
+        headers: {
+            "apikey": apiKey,
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal, resolution=merge-duplicates"
+        },
+        payload: JSON.stringify(payloadArray),
+        muteHttpExceptions: true
+    };
+
+    const response = UrlFetchApp.fetch(endpoint, options);
+
+    if (response.getResponseCode() >= 400) {
+        throw new Error(`Supabase Upsert Error on ${tableName}: ${response.getContentText()}`);
+    }
+}
+
+// ==============================================================================
+// 8. Helper: Convert Google Sheet Rich Text to Markdown Links
+// ==============================================================================
+function richTextToMarkdown(richTextValue) {
+    if (!richTextValue) return "";
+
+    const text = richTextValue.getText();
+    if (!text) return "";
+
+    const runs = richTextValue.getRuns();
+    let markdown = "";
+
+    for (let i = 0; i < runs.length; i++) {
+        const runText = runs[i].getText();
+        const runUrl = runs[i].getLinkUrl();
+
+        if (runUrl) {
+            markdown += `[${runText}](${runUrl})`;
+        } else {
+            markdown += runText;
+        }
+    }
+
+    return markdown;
 }
