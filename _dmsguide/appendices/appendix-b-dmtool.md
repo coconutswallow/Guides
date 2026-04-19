@@ -1,17 +1,27 @@
 ---
-title: Appendix B - The DM Tool
+title: Appendix B - The DM Tools
 layout: doc
 order: 120
 background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg  
 ---
 
-## Hawthorne DM Tool v5
+## Hawthorne DM Tools
 
-The DM Tool is a Google Sheet tool that is intended to make it easier for DMs to run games on the server - from setting up your initial game listing, to calculating your DM incentives, to logging your session log and MAL record.  It is **not mandatory** to use, but once you get used to it, should make it much faster to run games as a DM on this server.
+The  DM Tools are intended to make it easier for DMs to run games on the server - from setting up your initial game listing, to calculating your DM incentives, to logging your session log and MAL record.  They are **not mandatory** to use, but once you get used to it, should make it much faster to run games as a DM on this server.
+
+We have **two versions** of the DM Tool for you to use:
+
+<strong>OPTION 1: [The DM Tool (Google Sheet)](#hawthorne-dm-tool-google-sheet-v5)</strong> - This is the original DM Tool made in Google Sheets.  It has been used by DMs for hundreds of games, but its design is limited to what can be done using Google Sheets.  
+
+<strong>OPTION 2: [The DM Tool (Web App)](#hawthorne-dm-tool-web-app)</strong> - This is a new version of the tool built directly in the Hawthorne website, with <b>more powerful features</b> and <b>more built-in help</b> for new DMs, and improved <b>time-saving features</b> such as templates and unlimited multi-session support.  It requires Discord Login so that it can save the game session details.
+
+### Hawthorne DM Tool (Google Sheet) v5
+
+The  DM Tool is a Google Sheet tool that is intended to make it easier for DMs to run games on the server - from setting up your initial game listing, to calculating your DM incentives, to logging your session log and MAL record.  It is **not mandatory** to use, but once you get used to it, should make it much faster to run games as a DM on this server.
 
 [Link to the DM Tool](https://docs.google.com/spreadsheets/d/1sKasPVinv2-EIaxulSf0z2d4ka3ompbLs4Xo9agS99I/copy?usp=sharing)
 
-### Core Features
+#### Core Features
 
 * Generates the templates for Session Listing and Session Ads or when you are setting up the game
 * Auto-calculates the # of sessions parts based on total number of hours.
@@ -20,7 +30,7 @@ The DM Tool is a Google Sheet tool that is intended to make it easier for DMs to
 * Auto generates the DM MAL record for copy-and-pasting
 * Auto generates loot-declarations
 
-### Version 5 Updates (September, 2025)
+#### Version 5 Updates (September, 2025)
 
 * Removed all extra spaces and rows in the session logs.  Now the session log automatically adjusts the rows based on # of players, and no more extra invisible tabs and spaces to delete!
 
@@ -32,13 +42,13 @@ The DM Tool is a Google Sheet tool that is intended to make it easier for DMs to
 
 * Added Player Notes for addition notes for players (e.g. spell casted, lasting conditions, etc.) 
 
-### Note:  Multi-session Support
+#### Note:  Multi-session Support
 
 The DM tool can handle up to 5-part multi-sessions (up to 20.5 hours of gameplay) with a different tab for each session (labled Part 1, Part 2, Part 3), etc.
 
 To make it less intimidating for new DMs, Parts 2-5 are hidden by default.  If you do run a multi-session game, there are 2 options:
 
-#### Option 1: Automated Multi-session Tabs
+##### Option 1: Automated Multi-session Tabs
 Click on the **[Enable Multi-session]** button.  This activates a script that only needs to be run once, but the script will auto-hide and un-hide tabs based on number of hours.  
 
 <img src="{{ '/assets/images/DMT-1.png' | relative_url }}" alt="DM Tool - Enable Multi-session Button" class="hierarchy-image" style="flex: 0 0 25%;">
@@ -59,7 +69,23 @@ It will tell you the script is installed and the "parts" tabs will hide and unhi
 
 Once this is done, you should not need to install the script again for future games.  The script will remain installed in your google account.
 
-#### Option 2: Manually Unhide Tabs
+##### Option 2: Manually Unhide Tabs
 If you don't feel comfortable authorising the script (perfectly understandable!), you can unhide the tab using the hamburger menu (icon: 3 horizontal lines) at the bottom left of the gsheet (circled) which shows all tabs, and you can manually unhide Part 2, Part 3, etc. as needed.
 
 <img src="{{ '/assets/images/DMT-4.png' | relative_url }}" alt="DM Tool - Enable Multi-session Button" class="hierarchy-image" style="flex: 0 0 25%;">
+
+### Hawthorne DM Tool (Web App)
+
+This is a new version of the tool re-built from the ground up, with more powerful features and more built-in help for new DMs.  Key features include:
+
+This tool is intended to make it easy for you to DM in the Hawthorne Server from initial game listing to logging your session.
+
+* <b>Game Setup</b>: Setup your game details for the Game Listing and Ad, with buttons to copy to clipboard to quickly post into discord.
+* <b>Templates</b>: Save templates to quickly load your game setup without re-entering everything again.
+* <b>Loot & Incentive Calculations</b>: Manage loot rolls and incentives for players and yourself
+* <b>Session Details</b>: Create the session log details to post to #session-log
+* <b>MAL</b>: Copy-Paste your session details into your MAL
+* <b>Multi-session support</b>: Function to create a copy for next session and auto-updates games played stats for incentive calculations
+* <b>Player Input Pages</b>: Don't want to log all of the player data yourself? Send them a link and let them update it for you!
+
+You can find the all new DM Tool here: [DM Tool](../../../dm-tool/)
