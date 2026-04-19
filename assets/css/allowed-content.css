@@ -241,6 +241,18 @@
     max-width: 300px;
 }
 
+[data-theme="dark"] .col-traits, 
+[data-theme="dark"] .col-description, 
+[data-theme="dark"] .col-expanded, 
+[data-theme="dark"] .col-notes, 
+[data-theme="dark"] .col-advice, 
+[data-theme="dark"] .col-feature {
+    color: var(--color-text) !important;
+}
+
+
+
+
 /* Responsive Hiding */
 @media (max-width: 1024px) {
     .hide-tablet { display: none; }
@@ -309,6 +321,7 @@
 
 .ac-modal-content {
     background: var(--color-bg-light);
+    color: var(--color-text);
     position: relative;
     padding: 2.5rem;
     border-radius: 12px;
@@ -316,6 +329,7 @@
     max-height: 90vh;
     overflow-y: auto;
 }
+
 
 .ac-modal-close {
     position: absolute;
@@ -385,6 +399,13 @@
     padding-left: 0.8rem;
     margin-bottom: 1rem;
 }
+
+.advice-content {
+    color: var(--color-text);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
 
 .category-notes-box {
     background: rgba(var(--palette-brand-highlight), 0.1);
@@ -541,3 +562,28 @@
     text-decoration: underline;
     color: var(--color-primary);
 }
+
+/* ================================================================
+   THEME OVERRIDES (Dark Mode Visibility Fixes)
+   ================================================================ */
+
+[data-theme="dark"] .row-hover-icon {
+    background: var(--color-primary) !important;
+    color: #1a1a12 !important; /* Extremely dark brown for contrast */
+    border: 1px solid var(--color-primary) !important;
+}
+
+[data-theme="dark"] .ac-modal-content,
+[data-theme="dark"] .ac-modal-content *,
+[data-theme="dark"] .detail-section,
+[data-theme="dark"] .detail-section *,
+[data-theme="dark"] .advice-content,
+[data-theme="dark"] .advice-content *,
+[data-theme="dark"] .detail-item value {
+    color: var(--color-text) !important;
+}
+
+
+
+
+
