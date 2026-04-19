@@ -40,6 +40,7 @@ These are the raw color values.
 |`--palette-brand-accent-darker`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #8b1a0f; color: #FDF1DC; border-radius: 4px; ">#8b1a0f</span>|For gradients|
 |`--palette-brand-highlight`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #C0AD6A; color: #2c2c2c; border-radius: 4px; ">#C0AD6A</span>|Gold, for special accents|
 |`--palette-bg-page-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #fffef9fa; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#fffef9fa</span>|Off-white page background|
+
 |`--palette-bg-card-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #FDF1DC; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#FDF1DC</span>|Cream for cards, tables|
 |`--palette-bg-row-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #F5E6D3; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#F5E6D3</span>|Light tan for alternating rows|
 |`--palette-bg-hover-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #F0E0C8; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#F0E0C8</span>|For table row hover|
@@ -79,12 +80,26 @@ These are the raw color values.
 |`--palette-neutral-gray-600`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1e1e1e; color: #FDF1DC; border-radius: 4px; ">#1e1e1e</span>|Code bg (light)|
 |`--palette-neutral-gray-700`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #dad1ca; color: #2c2c2c; border-radius: 4px; ">#dad1ca</span>|Statblock modifier (light)|
 |`--palette-alert-info-border`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #3498db; color: #FDF1DC; border-radius: 4px; ">#3498db</span>|Info border (shared)|
+|`--palette-alert-info-bg-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e3f2fd; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#e3f2fd</span>|Info background (light)|
 |`--palette-alert-warning-border`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #f39c12; color: #FDF1DC; border-radius: 4px; ">#f39c12</span>|Warning border (shared)|
+|`--palette-alert-warning-bg-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #fff3cd; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#fff3cd</span>|Warning background (light)|
 |`--palette-alert-danger-border`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #e74c3c; color: #FDF1DC; border-radius: 4px; ">#e74c3c</span>|Danger border (shared)|
+|`--palette-alert-danger-bg-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #f8d7da; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#f8d7da</span>|Danger background (light)|
 |`--palette-alert-danger-action`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #c00; color: #FDF1DC; border-radius: 4px; ">#c00</span>|Danger action (shared)|
 |`--palette-alert-danger-action-hover`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #a00; color: #FDF1DC; border-radius: 4px; ">#a00</span>|Danger action hover (shared)|
 |`--palette-alert-success-border`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #27ae60; color: #FDF1DC; border-radius: 4px; ">#27ae60</span>|Success border (shared)|
+|`--palette-alert-success-bg-light`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #d4edda; color: #2c2c2c; border-radius: 4px; border: 1px solid #ddd;">#d4edda</span>|Success background (light)|
 |`--palette-alert-success-action`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #0a0; color: #FDF1DC; border-radius: 4px; ">#0a0</span>|Success action (shared)|
+|`--palette-role-trial-dm`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #25c059; color: #2c2c2c; border-radius: 4px; ">#25c059</span>|Trial DM role color|
+|`--palette-role-full-dm`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1a7939; color: #FDF1DC; border-radius: 4px; ">#1a7939</span>|Full DM role color|
+|`--palette-role-auditor`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #ff9900; color: #2c2c2c; border-radius: 4px; ">#ff9900</span>|Auditor role color|
+|`--palette-role-lore`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1f628e; color: #FDF1DC; border-radius: 4px; ">#1f628e</span>|Lore Team role color|
+|`--palette-role-pr`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #ffd966; color: #2c2c2c; border-radius: 4px; ">#ffd966</span>|PR Team role color|
+|`--palette-role-rules`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #f975f2; color: #2c2c2c; border-radius: 4px; ">#f975f2</span>|Rules Team role color|
+|`--palette-role-engineer`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1abc9c; color: #2c2c2c; border-radius: 4px; ">#1abc9c</span>|Engineer role color|
+|`--palette-role-admins`|<span style="display:inline-block; width:100%; padding:0.5em 0; text-align:center; background-color: #1c1c1c; color: #FDF1DC; border-radius: 4px; ">#1c1c1c</span>|Admin role color|
+
+
 
 ## Layer 2: The Theme (Semantic Roles)
 
@@ -103,12 +118,13 @@ This table shows how the semantic variables (what you use in your code) are mapp
 |`--color-bg-page`|`var(--palette-bg-page-light)`|`var(--palette-bg-page-dark)`|
 |`--color-bg-light`|`var(--palette-bg-card-light)`|`var(--palette-bg-card-dark)`|
 |`--color-bg-medium`|`var(--palette-bg-row-light)`|`var(--palette-bg-row-dark)`|
-|`--color-bg-page-container`|`var(--palette-bg-hover-light)`|`var(--palette-bg-row-dark)`|
-|`--color-link`|`var(--color-secondary)`|`var(--color-primary)`|
+|`--color-bg-page-container`|`var(--palette-bg-page-light)`|`var(--palette-bg-page-dark)`|
+|`--color-link`|`var(--color-secondary)`|`var(--color-secondary)`|
 |`--color-link-hover`|`var(--color-border)`|`var(--color-primary)`|
 |`--color-btn-text`|`var(--color-bg-light)`|`var(--color-bg-light)`|
 |`--color-btn-hover-text`|`var(--color-bg-light)`|`var(--color-bg-light)`|
 |`--color-card-button-text`|`var(--color-bg-light)`|`var(--color-bg-light)`|
+
 
 ### UI Components
 
@@ -167,13 +183,13 @@ This table shows how the semantic variables (what you use in your code) are mapp
 |   |   |   |
 |---|---|---|
 |**Theme Variable**|**Light Mode Map**|**Dark Mode Map**|
-|`--statblock-bg-image`|`url('/Guides/assets/images/fieldguide-back.png')`|_(Inherited)_|
+|`--statblock-bg-image`|`url('/assets/images/fieldguide-back.png')`|`url('/Guides/assets/images/fieldguide-back.png')`|
 |`--statblock-page-bg`|`var(--palette-neutral-white)`|`var(--color-header-bg-start)`|
-|`--statblock-body-bg`|`#000000`|`var(--color-bg-page)`|
+|`--statblock-body-bg`|`var(--palette-bg-page-dark)`|`var(--color-bg-page)`|
 |`--statblock-texture`|`url('data:image/png;base64,...')`|`none`|
 |`--statblock-modifier-bg`|`var(--palette-neutral-gray-700)`|`rgba(90, 74, 58, 0.3)`|
-|`--statblock-box-shadow`|`rgba(0, 0, 0, 0.25)`|`rgba(0, 0, 0, 0.5)`|
-|`--statblock-card-shadow`|`rgba(0, 0, 0, 0.2)`|`rgba(0, 0, 0, 0.4)`|
-|`--statblock-card-hover-shadow`|`rgba(0, 0, 0, 0.3)`|`rgba(0, 0, 0, 0.6)`|
-|`--statblock-image-shadow`|`rgba(0, 0, 0, 0.2)`|`rgba(0, 0, 0, 0.4)`|
+|`--statblock-box-shadow`|`var(--shadow-color-statblock-light)`|`var(--shadow-color-statblock-dark)`|
+|`--statblock-card-shadow`|`var(--shadow-color-statblock-card-light)`|`var(--shadow-color-statblock-card-dark)`|
+|`--statblock-card-hover-shadow`|`var(--shadow-color-statblock-card-hover-light)`|`var(--shadow-color-statblock-card-hover-dark)`|
+|`--statblock-image-shadow`|`var(--shadow-color-statblock-card-light)`|`var(--shadow-color-statblock-card-dark)`|
 |`--statblock-header-text`|`var(--color-bg-light)`|`var(--color-bg-light)`|
