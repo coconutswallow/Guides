@@ -105,8 +105,26 @@
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2em;
-  margin-top: 2em;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* ============================================ */
+/* RESPONSIVE DESIGN - TABLET */
+/* ============================================ */
+@media (max-width: 1200px) {
+  .card-grid {
+    /* Auto-fit handles column reduction automatically */
+  }
+}
+
+/* ============================================ */
+/* RESPONSIVE DESIGN - MOBILE */
+/* ============================================ */
+@media (max-width: 768px) {
+  .card-grid {
+    gap: 1.5em;
+  }
 }
 
 
@@ -271,7 +289,6 @@
 
   /* Single column layout for cards on mobile */
   .card-grid {
-    grid-template-columns: 1fr;
     gap: 1.5em;
     /* Slightly tighter spacing */
   }

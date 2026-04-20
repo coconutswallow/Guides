@@ -1,0 +1,72 @@
+- title: "Home"
+  url: "/"
+
+- title: "Rules & Roles"
+  collection: rules
+
+- title: "Server Lore"
+  collection: lore
+  sections:
+    - title: "About Hawthorne"
+      url: /lore/
+    - title: "Hawthorne Kanka"
+      url: https://app.kanka.io/w/35403
+
+- title: "Allowed Content"
+  url: /allowed-content/
+
+- title: "FAQ"
+  url: /faq.html
+
+# --- For Players Section ---
+- title: "Player's Guide"
+  collection: playersguide
+  sections:
+    - title: "Appendices"
+      folder: "playersguide/appendices"
+
+- title: "Hawthorne Arcana"
+  collection: arcana
+  sections:
+    - title: "Contents"
+      url: /arcana/
+
+- title: "Player Tools"
+  url: /player-tools/
+
+- title: "Player Resources"
+  collection: player_resources
+  sections:
+    - title: "Contents"
+      url: /player-resources/
+
+# --- For DMs Section ---
+- title: "DM's Guide"
+  collection: dmsguide
+  sections:
+    - title: "Appendices"
+      folder: "dmsguide/appendices"
+
+- title: "Field Guide"
+  type: dropdown
+  sections:
+    - title: "Monster Compendium"
+      url: /field-guide/monsters/
+    - title: "Adventure Locations"
+      url: /field-guide/adventure-locations/
+
+- title: "DM Tool"
+  url: /dm-tool/
+
+- title: "DM Resources"
+  collection: dm_resources
+  sections:
+    - title: "Contents"
+      url: /dm-resources/
+
+# --- Meta ---
+- title: "Site Info"
+  collection: resources
+  sections:
+    - title: "Contents"
+      url: /resources/

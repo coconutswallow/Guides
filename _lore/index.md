@@ -1,9 +1,13 @@
 ---
-title: About Hawthorne
 layout: doc
-order: 5
+title: "About Hawthorne"
+order: 0
+hide_from_nav: true
+toc: true
+permalink: /lore/
 background_image: /assets/images/tavern_brawl.jpg
 ---
+
 ## Hawthorne Guild: A History
 
 In 1491 DR, the drow sorceress Irisen Rhuvali and her adventuring companions established a settlement near the Delimbyr River and the Greypeak Mountains, for the purposes of creating a new adventurers’ guild. What started as a haphazard collection of tents and makeshift homes occupied by adventurers and villagers soon became the town of Lerwick, home of the newly created Hawthorne Guild.
@@ -28,7 +32,7 @@ The city’s Campus District contains Hawthorne University and the Children of M
 
 Hawthorne is ruled by a council under the leadership of the current guild leader, Bael “Blank” Kaenerra.  While Hawthorne’s individual adventurers largely act independently at their own discretion, the guild itself enjoys good relations with the Emerald Enclave, the Order of the Gauntlet, and the city of New Nivix as a result of mutual assistance offered during past events, including the fight against the titan Bohu.
 
-### Hawthorne Location on Faerun's Sword Coast
+## Hawthorne Location on Faerun's Sword Coast
 
 <iframe 
     src="{{ '/maps/map-viewer.html' | relative_url }}?map=Hawthorne-Location" 
@@ -49,6 +53,7 @@ Hawthorne is ruled by a council under the leadership of the current guild leader
   </div>  
   <img src="{{ '/assets/thumbnails/guild-badge-300.png' | relative_url }}" alt="Description" class="hierarchy-image" style="flex: 0 0 25%;">
 </div>
+
 The city of Hawthorne has a list of laws that guild members are nominally expected to know and follow, but enforcement of specific laws can vary and often is relaxed owing to the rowdy antics that adventurers can often get up to. However, all guild members are expected to adhere to the following guidelines that make up the guild’s code of conduct:
 
 * Cooperate with other guild members on missions.
@@ -58,9 +63,15 @@ The city of Hawthorne has a list of laws that guild members are nominally expect
 
 Flagrant or repeated violations of the guild’s code of conduct can be grounds for imprisonment, exile, or even execution. Beyond that, the guild tolerates a wide array of activities from its members.
 
-> **IMPORTANT**
->
+> <strong>IMPORTANT!</strong><br>
 > In addition to the guild rules above, please also ensure you have fully read and agree to the [Server Rules](/Guides/rules/server-rules)
 
+## Hawthorne Kanka
 
+The [Hawthorne Kanka](https://app.kanka.io/w/35403) is a community-contributed wiki with additional lore, character information, and world-building details.
 
+## Hawthorne Timelines
+
+**Historical timelines of major events are coming soon!** 
+
+Hawthorne DMs: To contribute to this page, please join the [Hawthorne Timelines Community Project](https://discord.com/channels/308324031478890497/1449115251688603648) on Discord.

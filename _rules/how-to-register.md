@@ -1,7 +1,7 @@
 ---
 title: How to Register
 layout: doc
-order: 90
+order: 70
 ---
 Now that you've read all the rules, it's time to register as an adventurer!  Here are the steps:
 

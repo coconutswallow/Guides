@@ -39,25 +39,35 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
       <a href="{{ 'rules/index/' | relative_url }}" class="card-button">Read Rules</a>
     </div>
 
-    <!-- CARD: About Hawthorne -->
+    <!-- CARD: Server Lore -->
     <div class="feature-card">
-      <h4>About Hawthorne</h4>
-      <a href="{{ 'playersguide/about-hawthorne/' | relative_url }}">
+      <h4>Server Lore</h4>
+      <a href="{{ 'lore/' | relative_url }}">
         <img src="{{ '/assets/thumbnails/guild-badge-300.png' | relative_url }}" alt="Hawthorne Map"
           class="card-thumbnail">
       </a>
-      <p>About the Hawthorne City, its history, and the Hawthorne Guild</p>
-      <a href="{{ 'playersguide/about-hawthorne/' | relative_url }}" class="card-button">Learn More</a>
+      <p>The history and lore of the Hawthorne Guild and the major events that have shaped it</p>
+      <a href="{{ 'lore/' | relative_url }}" class="card-button">Learn More</a>
     </div>
 
-    <!-- CARD: Important Links & Channels -->
+    <!-- CARD: Allowed Content -->
     <div class="feature-card">
-      <h4>Important Links</h4>
-      <a href="{{ 'resources/important-links' | relative_url }}">
-        <img src="{{ '/assets/thumbnails/portal-300.jpg' | relative_url }}" alt="Portal" class="card-thumbnail">
+      <h4>Allowed Content</h4>
+      <a href="{{ 'allowed-content/' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/fieldguide-small.png' | relative_url }}" alt="Portal" class="card-thumbnail">
       </a>
-      <p>Important Links and Channels</p>
-      <a href="{{ 'resources/important-links' | relative_url }}" class="card-button">Quick Links</a>
+      <p>Dashboard for allowed sources, monsters, and items</p>
+      <a href="{{ 'allowed-content/' | relative_url }}" class="card-button">View Content</a>
+    </div>
+
+    <!-- CARD: FAQ -->
+    <div class="feature-card">
+      <h4>FAQ</h4>
+      <a href="{{ 'faq.html' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/faq-300.jpg' | relative_url }}" alt="FAQ" class="card-thumbnail">
+      </a>
+      <p>Frequently asked questions about the server and gameplay</p>
+      <a href="{{ 'faq.html' | relative_url }}" class="card-button">View FAQ</a>
     </div>
   </div>
 </div>
@@ -76,7 +86,8 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
     <div class="feature-card">
       <h4>Player's Guide</h4>
       <a href="{{ 'playersguide/index/' | relative_url }}">
-        <img src="{{ '/assets/thumbnails/players-300.png' | relative_url }}" alt="Player's Guide" class="card-thumbnail">
+        <img src="{{ '/assets/thumbnails/players-300.png' | relative_url }}" alt="Player's Guide"
+          class="card-thumbnail">
       </a>
       <p>Everything you need to know to create characters and play on the Hawthorne D&D 5e Server</p>
       <a href="{{ 'playersguide/index/' | relative_url }}" class="card-button">Read Guide</a>
@@ -85,23 +96,33 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
     <!-- CARD: Hawthorne Arcana (Homebrew Content) -->
     <div class="feature-card">
       <h4>Hawthorne Arcana</h4>
-      <a href="https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view">
-        <img src="{{ '/assets/thumbnails/arcana-300.png' | relative_url }}" alt="Player's Guide" class="card-thumbnail">
+      <a href="{{ 'arcana/' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/arcana-300.png' | relative_url }}" alt="Hawthorne Arcana"
+          class="card-thumbnail">
       </a>
-      <p>Server approved homebrew races, classes, spells, and equipment</p>
-      <!-- External link to Google Drive document -->
-      <a href="https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view" class="card-button">View
-        Arcana</a>
+      <p>Server approved homebrew races, classes, subclasses, spells, and equipment</p>
+      <a href="{{ 'arcana/' | relative_url }}" class="card-button">View Arcana</a>
     </div>
 
-    <!-- CARD: FAQ -->
+    <!-- CARD: Player Tools -->
     <div class="feature-card">
-      <h4>FAQ</h4>
-      <a href="{{ 'faq.html' | relative_url }}">
-        <img src="{{ '/assets/thumbnails/faq-300.jpg' | relative_url }}" alt="FAQ" class="card-thumbnail">
+      <h4>Player Tools</h4>
+      <a href="{{ 'player-tools/' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/portal-300.jpg' | relative_url }}" alt="Player Tools" class="card-thumbnail">
       </a>
-      <p>Frequently asked questions</p>
-      <a href="{{ 'faq.html' | relative_url }}" class="card-button">FAQ</a>
+      <p>Utility tools for character management, including the Rework Tool</p>
+      <a href="{{ 'player-tools/' | relative_url }}" class="card-button">Open Tools</a>
+    </div>
+
+    <!-- CARD: Player Resources -->
+    <div class="feature-card">
+      <h4>Player Resources</h4>
+      <a href="{{ 'player-resources/' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/hawthorne-map-300.jpg' | relative_url }}" alt="Resources"
+          class="card-thumbnail">
+      </a>
+      <p>Additional downloads and links to external D&D resources</p>
+      <a href="{{ 'player-resources/' | relative_url }}" class="card-button">View Resources</a>
     </div>
   </div>
 </div>
@@ -126,26 +147,36 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
       <a href="{{ 'dmsguide/index/' | relative_url }}" class="card-button">Read Guide</a>
     </div>
 
-    <!-- CARD: Monster Compendium -->
+    <!-- CARD: Field Guide -->
     <div class="feature-card">
-      <h4>Monster Compendium</h4>
-      <a href="{{ '/monsters/' | relative_url }}">
-        <img src="{{ '/assets/thumbnails/fieldguide-small.png' | relative_url }}" alt="Monster Compendium"
+      <h4>Field Guide</h4>
+      <a href="{{ 'field-guide/' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/fieldguide-small.png' | relative_url }}" alt="Field Guide"
           class="card-thumbnail">
       </a>
-      <p>Community created homebrew monsters for DM use</p>
-      <a href="{{ '/monsters/' | relative_url }}" class="card-button">View Monsters</a>
+      <p>Approved Adventure Locations and Homebrew Monsters for DMs to use in their games</p>
+      <a href="{{ 'field-guide/' | relative_url }}" class="card-button">Open Guide</a>
     </div>
 
-    <!-- CARD: Adventure Locations -->
+    <!-- CARD: DM Tool -->
     <div class="feature-card">
-      <h4>Adventure Locations</h4>
-      <a href="{{ '/fieldguide/index' | relative_url }}">
-        <img src="{{ '/assets/thumbnails/white-blue-red-clouds-300.jpg' | relative_url }}" alt="Adventure Locations"
+      <h4>DM Tool</h4>
+      <a href="{{ 'dm-tool/' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/portal-300.jpg' | relative_url }}" alt="DM Tool" class="card-thumbnail">
+      </a>
+      <p>Web-based helper for calculated loot and managing games</p>
+      <a href="{{ 'dm-tool/' | relative_url }}" class="card-button">Launch Tool</a>
+    </div>
+
+    <!-- CARD: DM Resources -->
+    <div class="feature-card">
+      <h4>DM Resources</h4>
+      <a href="{{ 'dm-resources/' | relative_url }}">
+        <img src="{{ '/assets/thumbnails/white-blue-red-clouds-300.jpg' | relative_url }}" alt="DM Resources"
           class="card-thumbnail">
       </a>
-      <p>Locations adapted for Hawthorne Adventures in the Forgotten Realms Setting</p>
-      <a href="{{ '/fieldguide/index' | relative_url }}" class="card-button">View Locations</a>
+      <p>Tools, templates and helpful links for Hawthorne DMs</p>
+      <a href="{{ 'dm-resources/' | relative_url }}" class="card-button">View Resources</a>
     </div>
   </div>
 </div>
@@ -181,5 +212,4 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
   .feature-card a:hover .card-thumbnail {
     transform: scale(1.05);
   }
-
 </style>
