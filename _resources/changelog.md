@@ -18,6 +18,7 @@ permalink: /resources/changelog/
 * Player Resource page added for some additional D&D tools and resources for players
 * Adventure Locations and the Hawthorne Monster Compendium have been recombined into the Hawthorne Field Guide in the main menu
 * DM Resources page added for some additional D&D tools and resources for DMs
+* Staff Portal for administrative tasks
 
 ### New Interactive Tools
 * The new **Allowed Content** is synced with the spreadsheet, with improved search and drill-down capabilities and is now mobile friendly!

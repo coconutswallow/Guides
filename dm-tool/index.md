@@ -1,7 +1,7 @@
 ---
-title: Appendix B - The DM Tools
+title: The DM Tools
 layout: doc
-order: 120
+order: 11
 background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg  
 ---
 
@@ -9,11 +9,11 @@ background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.
 
 The  DM Tools are intended to make it easier for DMs to run games on the server - from setting up your initial game listing, to calculating your DM incentives, to logging your session log and MAL record.  They are **not mandatory** to use, but once you get used to it, should make it much faster to run games as a DM on this server.
 
-We have **two versions** of the DM Tool for you to use:
+| Tool Version | Description | Access |
+| :--- | :--- | :--- |
+| **Google Sheet (v5)** | The original DM Tool developed in Google Sheets. Tried and tested for hundreds of games. | [Open Google Sheet](https://docs.google.com/spreadsheets/d/1sKasPVinv2-EIaxulSf0z2d4ka3ompbLs4Xo9agS99I/copy?usp=sharing) |
+| **Web Application** | Modern version built into the site with templates, multi-session support, and player input pages. | [Launch Web Tool](web-dmt.html) |
 
-<strong>OPTION 1: [The DM Tool (Google Sheet)](#hawthorne-dm-tool-google-sheet-v5)</strong> - This is the original DM Tool made in Google Sheets.  It has been used by DMs for hundreds of games, but its design is limited to what can be done using Google Sheets.  
-
-<strong>OPTION 2: [The DM Tool (Web App)](#hawthorne-dm-tool-web-app)</strong> - This is a new version of the tool built directly in the Hawthorne website, with <b>more powerful features</b> and <b>more built-in help</b> for new DMs, and improved <b>time-saving features</b> such as templates and unlimited multi-session support.  It requires Discord Login so that it can save the game session details.
 
 ### Hawthorne DM Tool (Google Sheet) v5
 
@@ -88,4 +88,4 @@ This tool is intended to make it easy for you to DM in the Hawthorne Server from
 * <b>Multi-session support</b>: Function to create a copy for next session and auto-updates games played stats for incentive calculations
 * <b>Player Input Pages</b>: Don't want to log all of the player data yourself? Send them a link and let them update it for you!
 
-You can find the all new DM Tool here: [DM Tool](../../../dm-tool/)
+You can find the all new DM Tool here: [Launch Web DM Tool](web-dmt.html)

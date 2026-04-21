@@ -14,9 +14,16 @@ order: 80
 - [The Dungeon Master - Art by MoulinBleu](https://www.deviantart.com/moulinbleu/art/the-Dungeon-Master-365881616)
 - [Candlekeep Mysteries - Art by ClintCearley](https://www.deviantart.com/clintcearley/art/Candlekeep-Mysteries-Dungeons-and-Dragons-928409928)
 - [Adventurer Traverses the landscape 2 - Art by Tirinium1 ](https://www.deviantart.com/tirinium1/art/The-adventurers-party-traverses-the-landscape-2-1219674888)
-- [White Blue Red clouds by Hangmoon Alexander Komorov](https://hangmoon.artstation.com/projects/qmGVy)
 - [The Contract - Art by Exphrasis](https://www.deviantart.com/exphrasis/art/The-Contract-624868109)
 - [Magic the Gathering - OmenPath Arc concept art - Art by Leon Tukker](https://www.artstation.com/artwork/XgWyKD)
+- [Board Game Dice on Table in Strategic Play - Art by Beatriz Braga](https://www.pexels.com/photo/board-game-dice-on-table-in-strategic-play-30324909/)
+- [Grimm's Spell: Stand Alone Scene from "Lythe the Witch" - Art by Ryan Grady](https://www.artstation.com/artwork/nEbe34)
+- [Treasure Room - Art by Antonis Papantoniou](https://www.artstation.com/artwork/8dRYn)
+- [Rasputin the Wizard - Art by Anthony Catillaz](https://www.artstation.com/artwork/YBoRaX)
+
+
+
+
 
 ### Background and Embedded Images
 Additional image credits are credited within specific pages as well.

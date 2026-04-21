@@ -70,7 +70,7 @@ Flagrant or repeated violations of the guild’s code of conduct can be grounds 
 
 The [Hawthorne Kanka](https://app.kanka.io/w/35403) is a community-contributed wiki with additional lore, character information, and world-building details.
 
-## Hawthorne Timelines
+## Hawthorne Event Timelines
 
 **Historical timelines of major events are coming soon!** 
 

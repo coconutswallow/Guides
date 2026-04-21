@@ -1,0 +1,249 @@
+/* ============================================
+   PLAYER RESOURCES: AVRAE COMMAND REFERENCE
+   Premium tool aesthetic for Avrae syntax
+   ============================================ */
+
+/* Tool Layout */
+.avrae-tool-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Control Section (Search & Filters) */
+.avrae-controls {
+    background: var(--color-bg-light);
+    border: 5px double var(--color-primary);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.avrae-search-input {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-page);
+    color: var(--color-text);
+    border-radius: 8px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-size: 1.1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.avrae-search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(88, 24, 13, 0.1);
+}
+
+.filter-toggles {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Generic Tool Button (Adopted from Premium Standards) */
+.tool-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-family: 'Marcellus SC', serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-medium);
+    color: var(--color-text);
+}
+
+.tool-btn:hover {
+    background: var(--color-bg-hover-light);
+    transform: translateY(-1px);
+}
+
+.tool-btn.active {
+    background: var(--palette-brand-main);
+    color: white;
+    border-color: var(--palette-brand-main);
+}
+
+/* Command List Styling */
+.avrae-list-container {
+    margin-top: 2rem;
+}
+
+.avrae-header-row {
+    display: grid;
+    grid-template-columns: 250px 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--color-primary);
+    color: white;
+    font-family: 'Marcellus SC', serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Accordion Headers */
+.accordion-header {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1.5rem;
+    background: var(--color-bg-medium);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    cursor: pointer;
+    font-family: 'Marcellus SC', serif;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.accordion-header:hover {
+    background: var(--color-bg-hover-light);
+}
+
+.accordion-header::after {
+    content: '▼';
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+}
+
+.accordion-header.active::after {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    display: none;
+    background: var(--color-bg-page);
+    border: 1px solid var(--color-border);
+    border-top: none;
+}
+
+.accordion-content.open {
+    display: block;
+}
+
+/* Command Rows */
+.cmd-row {
+    display: grid;
+    grid-template-columns: 250px 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.2s;
+}
+
+.cmd-row:hover {
+    background: var(--color-bg-medium);
+}
+
+.cmd-title {
+    font-weight: bold;
+    color: var(--color-primary);
+    font-family: 'Marcellus SC', serif;
+    margin-bottom: 0.25rem;
+}
+
+.cmd-note-text {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+.col-code {
+    font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace;
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.05);
+    padding: 0.5rem;
+    border-radius: 4px;
+    align-self: start;
+    word-break: break-all;
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.modal-content {
+    background: var(--color-bg-light);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 5px double var(--color-primary);
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+}
+
+.modal-content img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 4px;
+}
+
+.demo-link-small {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 800px) {
+    .avrae-header-row {
+        display: none;
+    }
+
+    .cmd-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .col-code::before {
+        content: attr(data-label) ": ";
+        font-weight: bold;
+        font-family: 'Marcellus SC', serif;
+        color: var(--color-primary);
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .col-code {
+    background: rgba(255,255,255,0.05);
+}
+
+[data-theme="dark"] .tool-btn:not(.active) {
+    background: var(--color-bg-card-dark);
+}
+[data-theme="dark"] .avrae-header-row,
+[data-theme="dark"] .avrae-header-row span {
+    color: var(--palette-neutral-gray-600) !important;
+}
