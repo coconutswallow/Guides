@@ -1,16 +1,13 @@
 ---
 layout: doc
-title: "Contents"
+title: "DM Resources"
 order: 1
 hide_from_nav: true
 permalink: /dm-resources/
-background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
+background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg
 ---
 
-![DM Resources Cover]({{ '/assets/thumbnails/dmg-300.png' | relative_url }})
-<span class="image-caption">Hawthorne Guild: DM Resources</span>
-
-Welcome to the DM Resources hub. This section provides tools, templates, and additional documentation specifically for Dungeon Masters.
+This DM resource section contains helpful resources for DMs on the Hawthorne Guild server.  
 
 {% assign sorted_resources = site.dm_resources | sort: 'order' %}
 <ul>
@@ -22,4 +19,6 @@ Welcome to the DM Resources hub. This section provides tools, templates, and add
     {% endif %}
   {% endfor %}
 </ul>
+
+<strong>Note:</strong> Some resources are external to the Hawthorne Guild and changes to those resources are outside of our control. If you find a broken link, please contact a member of the staff.
 

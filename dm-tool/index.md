@@ -11,8 +11,8 @@ The  DM Tools are intended to make it easier for DMs to run games on the server 
 
 | Tool Version | Description | Access |
 | :--- | :--- | :--- |
-| **Google Sheet (v5)** | The original DM Tool developed in Google Sheets. Tried and tested for hundreds of games. | [Open Google Sheet](https://docs.google.com/spreadsheets/d/1sKasPVinv2-EIaxulSf0z2d4ka3ompbLs4Xo9agS99I/copy?usp=sharing) |
-| **Web Application** | Modern version built into the site with templates, multi-session support, and player input pages. | [Launch Web Tool](web-dmt.html) |
+| **Google Sheet (v5)** | The original DM Tool developed in Google Sheets. Tried and tested for hundreds of games. ( [details](#hawthorne-dm-tool-google-sheet-v5) ) | [Open Google Sheet](https://docs.google.com/spreadsheets/d/1sKasPVinv2-EIaxulSf0z2d4ka3ompbLs4Xo9agS99I/copy?usp=sharing) |
+| **Web Application** | Modern version built into the site with templates, multi-session support, and player input pages. ( [details](#hawthorne-dm-tool-web-app) ) | [Launch Web Tool](web-dmt.html) |
 
 
 ### Hawthorne DM Tool (Google Sheet) v5
@@ -78,8 +78,6 @@ If you don't feel comfortable authorising the script (perfectly understandable!)
 
 This is a new version of the tool re-built from the ground up, with more powerful features and more built-in help for new DMs.  Key features include:
 
-This tool is intended to make it easy for you to DM in the Hawthorne Server from initial game listing to logging your session.
-
 * <b>Game Setup</b>: Setup your game details for the Game Listing and Ad, with buttons to copy to clipboard to quickly post into discord.
 * <b>Templates</b>: Save templates to quickly load your game setup without re-entering everything again.
 * <b>Loot & Incentive Calculations</b>: Manage loot rolls and incentives for players and yourself
@@ -87,5 +85,7 @@ This tool is intended to make it easy for you to DM in the Hawthorne Server from
 * <b>MAL</b>: Copy-Paste your session details into your MAL
 * <b>Multi-session support</b>: Function to create a copy for next session and auto-updates games played stats for incentive calculations
 * <b>Player Input Pages</b>: Don't want to log all of the player data yourself? Send them a link and let them update it for you!
+
+<img src="{{ '/assets/images/web-dmt.png' | relative_url }}" alt="DM Tool - Web App" class="hierarchy-image" style="flex: 0 0 25%;">
 
 You can find the all new DM Tool here: [Launch Web DM Tool](web-dmt.html)

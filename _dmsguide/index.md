@@ -3,6 +3,7 @@ layout: doc
 title: "Contents"
 order: 1
 hide_from_nav: true
+permalink: /dmsguide/
 background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg  
 ---
 

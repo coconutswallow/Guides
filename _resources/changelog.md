@@ -22,6 +22,8 @@ permalink: /resources/changelog/
 
 ### New Interactive Tools
 * The new **Allowed Content** is synced with the spreadsheet, with improved search and drill-down capabilities and is now mobile friendly!
+* **Equipment Purchase Tool** to pick equipment purchases from the AC and generate the #downtime-log and MAL entries automatically
+
 * **Character Rework tool** (BETA) a new tool to assist with creating the Rework Requests and calculating rework costs.
 * **Monster Statblock Creator tool** a new tool for DMs to add homebrew monster statblocks for server use and a workflow for staff to approve and publish.
 * **Web DM Tool** in addition to the Google Sheet DM tool, we now have a web version with more powerful features for both new and experienced DMs.

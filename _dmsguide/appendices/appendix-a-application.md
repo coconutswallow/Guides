@@ -3,7 +3,7 @@ title: Appendix A - Full DM and Homebrew Tag Application
 layout: doc
 order: 101
 toc: true
-background_image: /assets/images/tavern_brawl.jpg
+background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg
 ---
 
 ## Full DM Tag Application

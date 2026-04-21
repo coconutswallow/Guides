@@ -2,7 +2,8 @@
 layout: doc
 title: "Contents"
 order: 100
-background_image:
+background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg
+permalink: /dmsguide/appendices/
 hide_from_nav: true  
 ---
 

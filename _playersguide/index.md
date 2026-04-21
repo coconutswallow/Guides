@@ -3,6 +3,7 @@ layout: doc
 title: "Contents"
 order: 1
 background_image:
+permalink: /playersguide/
 hide_from_nav: true  
 ---
 

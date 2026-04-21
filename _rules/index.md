@@ -2,6 +2,7 @@
 layout: doc
 title: "Welcome to Hawthorne"
 order: 1
+permalink: /rules/
 hide_from_nav: true 
 background_image: 
 ---

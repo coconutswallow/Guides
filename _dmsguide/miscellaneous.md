@@ -3,7 +3,7 @@ title: Miscellaneous
 layout: doc
 order: 40
 toc: false
-background_image: /assets/images/tavern_brawl.jpg
+background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg
 ---
 ### DM Workshops
 

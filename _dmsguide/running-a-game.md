@@ -3,7 +3,7 @@ title: Running a Game
 layout: doc
 order: 30
 toc: true
-background_image: /assets/images/tavern_brawl.jpg
+background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg
 ---
 
 ## Setup
