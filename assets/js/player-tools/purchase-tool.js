@@ -19,6 +19,48 @@ let filteredEquipment = [];
 let cart = [];
 let activeCategory = 'all';
 
+// Exception Items
+const NA_ITEMS = [
+    'Tuning Fork (Other Planes)',
+    'Other Costly Components',
+    'Potion of Greater Healing',
+    'Potion of Superior Healing',
+    'Potion of Supreme Healing',
+    'Blod Stone',
+    'Keycharm',
+    'Planar Puzzle Cube'
+];
+
+const VARIABLE_ITEMS = [
+    'Barding',
+    'Adamantine Weapons',
+    'Silvered Weapons',
+    'Vehicle'
+];
+
+function getItemStatus(item) {
+    const cost = item.cost_gp;
+
+    // Check NA list or explicit null cost
+    if (NA_ITEMS.some(name => item.name.toLowerCase().includes(name.toLowerCase())) || cost === null) {
+        return 'NA';
+    }
+
+    // Determine if it's a variable cost:
+    // - In the explicit VARIABLE_ITEMS list
+    // - Cost is exactly 0
+    // - Cost is a string that is not a simple number (e.g., "10% of a vehicle's gold cost GP")
+    const isExplicitVariable = VARIABLE_ITEMS.some(name => item.name.toLowerCase().includes(name.toLowerCase()));
+    const isZero = cost === 0;
+    const isNonNumericString = (typeof cost === 'string' && isNaN(Number(cost.trim())));
+
+    if (isExplicitVariable || isZero || isNonNumericString) {
+        return 'VARIABLE';
+    }
+
+    return 'STANDARD';
+}
+
 /**
  * Initializes the purchase tool
  */
@@ -32,12 +74,26 @@ async function init() {
         
         renderCategories();
         renderCatalog();
+        populateBaseItemList();
         setupEventListeners();
         validateForm(); // Initial check
     } catch (error) {
         logError('purchase-tool', `Failed to initialize: ${error.message}`, 'critical');
         catalogContainer.innerHTML = '<div class="ac-error">Failed to load equipment catalog. Please refresh.</div>';
     }
+}
+
+/**
+ * Populates the auto-complete datalist for special items
+ */
+function populateBaseItemList() {
+    const datalist = document.getElementById('base-item-list');
+    if (!datalist) return;
+
+    // Use all item names, unique and sorted
+    const names = [...new Set(allEquipment.map(item => item.name))].sort();
+    
+    datalist.innerHTML = names.map(name => `<option value="${esc(name)}">`).join('');
 }
 
 /**
@@ -97,27 +153,43 @@ function renderCatalog() {
                     <tr>
                         <th class="col-name">Item</th>
                         <th class="col-cost">Cost</th>
-                        <th class="col-weight hide-mobile">Weight</th>
                         <th class="col-qty">Add to Cart</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${filteredEquipment.map(item => {
+                        const status = getItemStatus(item);
                         const price = item.cost_gp || 0;
+                        
+                        let costHtml = `<strong>${price} GP</strong>`;
+                        let controlsHtml = `
+                            <div class="table-qty-container">
+                                <input type="number" class="qty-input" value="1" min="1" id="qty-${item.id}">
+                                <button class="table-add-btn" onclick="window.addToCart('${item.id}')">Add</button>
+                            </div>
+                        `;
+
+                        if (status === 'NA') {
+                            costHtml = `<span class="na-cost">N/A</span>`;
+                            controlsHtml = `<div class="status-disabled" title="This item is craftable or has special acquisition rules.">N/A</div>`;
+                        } else if (status === 'VARIABLE') {
+                            // Show the instruction text from the database
+                            costHtml = `<span class="variable-instruction">${esc(item.cost_gp || 'Special')}</span>`;
+                            controlsHtml = `
+                                <div class="table-qty-container">
+                                    <button class="table-add-btn special-add-btn" onclick="window.openSpecialModal('${item.id}')">Configure & Add</button>
+                                </div>
+                            `;
+                        }
+
                         return `
-                            <tr>
+                            <tr class="item-row-${status.toLowerCase()}">
                                 <td class="col-name">
                                     <div style="font-weight: 700;">${esc(item.name)}</div>
                                     <div style="font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.2;">${esc(item.category?.name || 'Equipment')}</div>
                                 </td>
-                                <td class="col-cost"><strong>${price} GP</strong></td>
-                                <td class="col-weight hide-mobile">${item.weight_lbs ? `${esc(item.weight_lbs)} lbs` : '—'}</td>
-                                <td class="col-qty">
-                                    <div class="table-qty-container">
-                                        <input type="number" class="qty-input" value="1" min="1" id="qty-${item.id}">
-                                        <button class="table-add-btn" onclick="window.addToCart('${item.id}')">Add</button>
-                                    </div>
-                                </td>
+                                <td class="col-cost">${costHtml}</td>
+                                <td class="col-qty">${controlsHtml}</td>
                             </tr>
                         `;
                     }).join('')}
@@ -125,6 +197,85 @@ function renderCatalog() {
             </table>
         </div>
     `;
+}
+
+/**
+ * Opens the Special Item configuration modal
+ * @param {string} id - The item ID
+ */
+let currentSpecialItem = null;
+
+window.openSpecialModal = function(id) {
+    const item = allEquipment.find(i => i.id === id);
+    if (!item) return;
+
+    currentSpecialItem = item;
+    
+    const modal = document.getElementById('special-item-modal');
+    document.getElementById('special-item-name').textContent = item.name;
+    document.getElementById('special-cost-info').textContent = item.cost_gp || 'See instructions below';
+    document.getElementById('special-weight-info').textContent = item.weight_lbs || 'N/A';
+    
+    // Reset inputs
+    document.getElementById('special-cost-input').value = '';
+    document.getElementById('special-note-input').value = '';
+    document.getElementById('special-validation-msg').style.display = 'none';
+    
+    const costDisplay = document.getElementById('base-item-cost-display');
+    if (costDisplay) {
+        costDisplay.textContent = '';
+        costDisplay.style.opacity = '0';
+    }
+    
+    modal.showModal();
+};
+
+/**
+ * Handles confirmation from the special item modal
+ */
+function handleConfirmSpecialAdd() {
+    if (!currentSpecialItem) return;
+
+    const costInput = document.getElementById('special-cost-input');
+    const noteInput = document.getElementById('special-note-input');
+    const validationMsg = document.getElementById('special-validation-msg');
+
+    const costValue = parseFloat(costInput.value);
+    const noteValue = noteInput.value.trim();
+
+    if (isNaN(costValue) || costValue < 0 || noteValue === "") {
+        if (validationMsg) validationMsg.style.display = 'block';
+        return;
+    }
+
+    // Add to cart with custom values
+    addToCartWithCustom(currentSpecialItem, costValue, noteValue);
+    
+    // Close modal
+    document.getElementById('special-item-modal').close();
+    currentSpecialItem = null;
+}
+
+/**
+ * Adds an item to the cart with custom cost and name/note
+ */
+function addToCartWithCustom(item, customCost, note) {
+    const finalName = `${item.name} (${note})`;
+    
+    const existingCartItem = cart.find(i => i.name === finalName && i.cost_gp === customCost);
+    if (existingCartItem) {
+        existingCartItem.quantity += 1;
+    } else {
+        cart.push({
+            id: item.id,
+            name: finalName,
+            cost_gp: customCost,
+            quantity: 1
+        });
+    }
+
+    renderCart();
+    validateForm();
 }
 
 /**
@@ -186,26 +337,56 @@ window.addToCart = function(id) {
     const item = allEquipment.find(i => i.id === id);
     if (!item) return;
 
+    const status = getItemStatus(item);
     const qtyInput = document.getElementById(`qty-${id}`);
     const quantity = parseInt(qtyInput?.value || '1', 10);
 
     if (isNaN(quantity) || quantity < 1) return;
 
-    const existingCartItem = cart.find(i => i.id === id);
+    // Handle Custom Cost and Note for Variable Items
+    let finalCost = item.cost_gp || 0;
+    let finalName = item.name;
+
+    if (status === 'VARIABLE') {
+        const costInput = document.getElementById(`cost-${id}`);
+        const noteInput = document.getElementById(`note-${id}`);
+        
+        const customCost = parseFloat(costInput?.value);
+        if (isNaN(customCost) || customCost < 0) {
+            costInput?.focus();
+            costInput?.classList.add('invalid');
+            setTimeout(() => costInput?.classList.remove('invalid'), 2000);
+            return; 
+        }
+        finalCost = customCost;
+        
+        if (noteInput?.value.trim()) {
+            finalName = `${item.name} (${noteInput.value.trim()})`;
+        }
+    }
+
+    // Check uniqueness by name and cost (since same ID can have different variations)
+    const existingCartItem = cart.find(i => i.name === finalName && i.cost_gp === finalCost);
     if (existingCartItem) {
         existingCartItem.quantity += quantity;
     } else {
         cart.push({
             id: item.id,
-            name: item.name,
-            cost_gp: item.cost_gp || 0,
+            name: finalName,
+            cost_gp: finalCost,
             quantity: quantity
         });
     }
 
     renderCart();
     validateForm();
-    qtyInput.value = 1; // Reset input
+    
+    // Reset inputs
+    if (qtyInput) qtyInput.value = 1;
+    const costInput = document.getElementById(`cost-${id}`);
+    const noteInput = document.getElementById(`note-${id}`);
+    if (costInput) costInput.value = '';
+    if (noteInput) noteInput.value = '';
     
     // Pulse feedback on cart
     const countDisplay = document.getElementById('cart-count');
@@ -220,10 +401,10 @@ window.addToCart = function(id) {
 };
 
 /**
- * Removes an item from the cart
+ * Removes an item from the cart by index
  */
-window.removeFromCart = function(id) {
-    cart = cart.filter(item => item.id !== id);
+window.removeFromCart = function(index) {
+    cart.splice(index, 1);
     renderCart();
     validateForm();
 };
@@ -248,7 +429,7 @@ function renderCart() {
     let total = 0;
     let itemCount = 0;
 
-    container.innerHTML = cart.map(item => {
+    container.innerHTML = cart.map((item, index) => {
         const subtotal = item.cost_gp * item.quantity;
         total += subtotal;
         itemCount += item.quantity;
@@ -257,7 +438,7 @@ function renderCart() {
             <div class="cart-item">
                 <span class="cart-item-name" title="${esc(item.name)}">${item.quantity}x ${esc(item.name)}</span>
                 <span style="color: var(--color-primary); font-weight: bold;">${subtotal} GP</span>
-                <span class="cart-item-remove" onclick="window.removeFromCart('${item.id}')" title="Remove">&times;</span>
+                <span class="cart-item-remove" onclick="window.removeFromCart(${index})" title="Remove">&times;</span>
             </div>
         `;
     }).join('');
@@ -283,6 +464,23 @@ function setupEventListeners() {
     });
 
     document.getElementById('open-checkout-modal')?.addEventListener('click', handleOpenModal);
+    document.getElementById('confirm-special-add')?.addEventListener('click', handleConfirmSpecialAdd);
+
+    // Special note auto-complete lookup
+    document.getElementById('special-note-input')?.addEventListener('input', (e) => {
+        const val = e.target.value;
+        const display = document.getElementById('base-item-cost-display');
+        if (!display) return;
+        
+        const item = allEquipment.find(i => i.name === val);
+        if (item) {
+            display.textContent = `Base Cost: ${item.cost_gp || 'Special'} GP`;
+            display.style.opacity = '1';
+        } else {
+            display.textContent = '';
+            display.style.opacity = '0';
+        }
+    });
 }
 
 /**
@@ -311,7 +509,7 @@ function handleOpenModal() {
     const itemsList = cart.map(item => item.quantity > 1 ? `${item.quantity}x ${item.name}` : item.name).join(', ');
     const totalSpent = cart.reduce((sum, item) => sum + (item.cost_gp * item.quantity), 0);
     
-    discordPreview.textContent = `${playerName} as ${charName}(level ${level}) purchases ${itemsList} and spends ${totalSpent} gold.`;
+    discordPreview.textContent = `${playerName} as ${charName}(${level}) purchases ${itemsList} and spends ${totalSpent} gold.`;
 
     // Generate GSheet Output
     const now = new Date();

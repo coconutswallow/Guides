@@ -122,4 +122,43 @@ extra_js:
     </div>
 </dialog>
 
+<!-- Special Item Configuration Modal -->
+<dialog id="special-item-modal" class="purchase-modal special-modal">
+    <div class="modal-header">
+        <h2>Configure Special Item</h2>
+        <button class="modal-close" onclick="document.getElementById('special-item-modal').close()">&times;</button>
+    </div>
+    <div class="modal-content">
+        <div class="special-item-info">
+            <h3 id="special-item-name">Item Name</h3>
+            <div class="instruction-box">
+                <p><strong>Cost Instructions:</strong> <span id="special-cost-info"></span></p>
+                <p><strong>Weight Instructions:</strong> <span id="special-weight-info"></span></p>
+            </div>
+        </div>
+
+        <div class="tool-section no-border">
+            <div class="info-group">
+                <label for="special-note-input">Base Item / Details <span style="color:red">*</span></label>
+                <input type="text" id="special-note-input" placeholder="e.g. Plate Armor, Longsword" list="base-item-list">
+                <datalist id="base-item-list">
+                    <!-- Options populated via JS -->
+                </datalist>
+                <div id="base-item-cost-display" style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--color-primary); font-weight: bold; min-height: 1.2rem;"></div>
+            </div>
+            <div class="info-group">
+                <label for="special-cost-input">Calculated GP Cost <span style="color:red">*</span></label>
+                <input type="number" id="special-cost-input" placeholder="Enter final GP cost">
+            </div>
+            <div id="special-validation-msg" style="color: var(--palette-alert-danger-border); font-size: 0.8rem; height: 1rem; margin-bottom: 1rem; display: none;">
+                Please fill all required fields
+            </div>
+        </div>
+    </div>
+    <div class="modal-actions">
+        <button class="btn-close-modal" onclick="document.getElementById('special-item-modal').close()">Cancel</button>
+        <button id="confirm-special-add" class="btn-checkout btn-primary" style="width: auto; margin-bottom: 0; padding: 0.6rem 2rem;">Add to Cart</button>
+    </div>
+</dialog>
+
 <script type="module" src="{{ '/assets/js/player-tools/purchase-tool.js' | relative_url }}"></script>
