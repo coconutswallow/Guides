@@ -34,4 +34,4 @@ If you are new to playing online, here are some tutorials for the most common pl
 3. Ask questions!
 
 
-<i>This content was compile by community members @Don2347 and @Coconut</i>
+<i>This content was compiled by community members @Don2347 and @Coconutswallow</i>

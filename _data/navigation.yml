@@ -27,18 +27,18 @@
 
 - title: "Hawthorne Arcana"
   collection: arcana
-  sections:
-    - title: "Contents"
-      url: /arcana/
 
 - title: "Player Tools"
-  url: /player-tools/
+  sections:
+    - title: "Contents"
+      url: /player-tools/
+    - title: "Purchase Tool"
+      url: /player-tools/purchases/
+    - title: "Rework Tool"
+      url: /player-tools/rework/
 
 - title: "Player Resources"
   collection: player_resources
-  sections:
-    - title: "Contents"
-      url: /player-resources/
 
 # --- For DMs Section ---
 - title: "DM's Guide"
@@ -60,13 +60,7 @@
 
 - title: "DM Resources"
   collection: dm_resources
-  sections:
-    - title: "Contents"
-      url: /dm-resources/
 
 # --- Meta ---
 - title: "Site Info"
   collection: resources
-  sections:
-    - title: "Contents"
-      url: /resources/

@@ -11,14 +11,16 @@ permalink: /resources/changelog/
 ## Version 1.1.0 (TBD)
 
 ### Content Updates
-* About Hawthorne has been renamed to Server Lore, with the preparation for the new Hawthorne Guild timelines (coming soon) and the Hawthorn Kanka
+* About Hawthorne has been renamed to Server Lore, with the preparation for the new Hawthorne Guild timelines (coming soon) and link to the Hawthorn Kanka
 * Created a web version of the Allowed Content spreadsheet
+* Bastion appendix now includes a video from a Bastion Workshop
 * Hawthorne Arcana has been converted to web format
 * Player Tools page added with a new tool to assist with Rework requests
 * Player Resource page added for some additional D&D tools and resources for players
 * Adventure Locations and the Hawthorne Monster Compendium have been recombined into the Hawthorne Field Guide in the main menu
 * DM Resources page added for some additional D&D tools and resources for DMs
-* Staff Portal for administrative tasks
+* Staff Portal added for administrative tasks
+
 
 ### New Interactive Tools
 * The new **Allowed Content** is synced with the spreadsheet, with improved search and drill-down capabilities and is now mobile friendly!

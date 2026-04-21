@@ -3,6 +3,7 @@ layout: doc
 title: "Appendix: Bastions"
 order: 91
 background_image: /assets/images/tavern_brawl.jpg
+toc: true
 ---
 A Bastion is a location that belongs to a Player Character - essentially their home - providing a place to call their own and opens opportunities to them such as crafting, summoning aid, and a range of other activities.
 
@@ -65,3 +66,17 @@ The following statblocks are intended for use with the War Room Special Facility
 
 <img src="{{ '/assets/images/bastion-1.png' | relative_url }}" alt="Bastion Statblock" class="image-size-60">
 <img src="{{ '/assets/images/bastion-2.png' | relative_url }}" alt="Bastion Mounted Army Statblock" class="image-size-60">
+
+## Bastion Workshop (Video)
+
+<iframe 
+    src="https://www.youtube.com/embed/fyJgTgWQS9Y" 
+    class="responsive-video-frame" 
+    title="YouTube video player" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    referrerpolicy="strict-origin-when-cross-origin" 
+    allowfullscreen>
+</iframe>
+
+<span class="image-caption">Recording of a Bastion Workshop led by @149thomas</span>

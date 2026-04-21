@@ -2428,19 +2428,49 @@ img+.image-caption {
 }
 
 /* Responsive Iframe Container */
-.responsive-map-frame {
+.responsive-map-frame,
+.responsive-video-frame {
   width: 100%;
-  border: none;
+  border: 2px solid var(--color-border);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
 
+.responsive-map-frame {
   /* Default: Cinematic Widescreen */
   aspect-ratio: 21 / 9;
+}
+
+.responsive-video-frame {
+  width: 100%;
+  max-width: 1100px; /* Large but fits within standard doc layout comfortably */
+  display: block;
+  margin: 3rem auto; /* More vertical breathing room */
+  aspect-ratio: 16 / 9;
+  border: 2px solid var(--color-primary); /* Primary gold/maroon border */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(192, 173, 106, 0.2); /* Enhanced shadow with subtle gold glow */
+}
+
+@media (max-width: 1100px) {
+  .responsive-video-frame {
+    max-width: 100%;
+    margin: 2rem 0;
+  }
 }
 
 @media (max-width: 768px) {
   .responsive-map-frame {
     /* Mobile: Make it square for easier dragging */
     aspect-ratio: 1 / 1;
+  }
+
+  .responsive-video-frame {
+    /* Mobile: Ensure it touches edges for maximum visibility */
+    aspect-ratio: 16 / 9;
+    border-radius: 0;
+    width: calc(100% + 2 * var(--spacing-sm));
+    margin-left: calc(-1 * var(--spacing-sm));
+    border-left: none;
+    border-right: none;
   }
 }
