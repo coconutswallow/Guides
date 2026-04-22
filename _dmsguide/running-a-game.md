@@ -28,7 +28,7 @@ This doesn’t mean that the PCs can’t potentially encounter a threat far abov
 
 ### Player Character Resources
 
-As per the [Player Guidelines](/Guides/player-guidelines/index/), PCs can bring into games creatures they control due to a core class feature (e.g. a Beast Master’s animal companion or an Artificer’s mechanical servant) or from the Find Familiar, Find Steed, or related spells. Any other summons or creatures they control can be brought into a game only if you allow it as the DM (e.g. a Simulacrum or a creature under the effects of Planar Binding).      
+As per the [Player Guidelines](/Guides/playersguide/), PCs can bring into games creatures they control due to a core class feature (e.g. a Beast Master’s animal companion or an Artificer’s mechanical servant) or from the Find Familiar, Find Steed, or related spells. Any other summons or creatures they control can be brought into a game only if you allow it as the DM (e.g. a Simulacrum or a creature under the effects of Planar Binding).      
 
 Additionally, PCs can receive outside assistance in a game (e.g. a PC not in the game casting a spell on behalf of the party) only if you allow it
 
@@ -61,7 +61,7 @@ At the end of a game, the PCs gain Experience Points (XP) and Downtime Points (D
 
 #### Consequences and Story Outcomes
 
-Note if any PCs died or other consequences occurred (e.g. lycanthropy), following the the [Player Guidelines](/Guides/player-guidelines/index/).  You can also give PCs a <b>Story Outcome</b> due to session events. Story Outcomes summarize either a positive or negative narrative outcome of the game. For example, friendly NPCs in the region will shelter the PC if they pass by in later adventures. Alternatively, a faction becomes Hostile to the PC and will try to attack them in future adventures. Story Outcomes only come into play in future games at the discretion of the presiding DM. If a Story Outcome has a mechanical effect, it shouldn’t exceed the gold and loot allotment for the game or have a significant mechanical effect greater than a minor item property (in Fair Game). More mechanically significant Story Outcomes require a Rules request in [#dm-requests](https://discord.com/channels/308324031478890497/617831110260424776).
+Note if any PCs died or other consequences occurred (e.g. lycanthropy), following the the [Player Guidelines](/Guides/playersguide/).  You can also give PCs a <b>Story Outcome</b> due to session events. Story Outcomes summarize either a positive or negative narrative outcome of the game. For example, friendly NPCs in the region will shelter the PC if they pass by in later adventures. Alternatively, a faction becomes Hostile to the PC and will try to attack them in future adventures. Story Outcomes only come into play in future games at the discretion of the presiding DM. If a Story Outcome has a mechanical effect, it shouldn’t exceed the gold and loot allotment for the game or have a significant mechanical effect greater than a minor item property (in Fair Game). More mechanically significant Story Outcomes require a Rules request in [#dm-requests](https://discord.com/channels/308324031478890497/617831110260424776).
 
 #### Session Logs
 
@@ -80,7 +80,7 @@ After you have posted the session log for the game, you can select and apply the
 
 - Your selected DMPC earns the same amount of DTP as the PCs in the game
 - Your selected DMPC earns XP per session hour and gold for their level as per the table below. For XP, you earn half the listed amount for a half hour.
-- Your selected DMPC gains a Loot Reward: you can either (a) select a T0 item in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=1722048058) (following the guidelines for predetermining T0 consumables if selecting a consumable) (b) roll a random loot roll for your DMPC’s level in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) using the pinned format (treat the number of players as 1 and the APL = your DMPC’s level) or (c) gain either 1 Renown or 1 Piety for a group or faith the DMPC already has 1+ Renown or Piety with.
+- Your selected DMPC gains a Loot Reward: you can either (a) select a T0 item in [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}) (following the guidelines for predetermining T0 consumables if selecting a consumable) (b) roll a random loot roll for your DMPC’s level in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) using the pinned format (treat the number of players as 1 and the APL = your DMPC’s level) or (c) gain either 1 Renown or 1 Piety for a group or faith the DMPC already has 1+ Renown or Piety with.
 - DM Gold and DM Loot is only obtained for sessions that last 3+ hours.
 
 ### DM XP and Gold
@@ -115,6 +115,6 @@ Besides regular DM rewards, DMs can also obtain additional rewards to encourage 
 | **Tour de Tiers** | Run at least one game for each <b>tier of play</b> in the span of a calendar month | For the last game in the series, gain the full DM rewards of an <b>additional</b> 3 hour game (XP, DTP, GP, and Loot) |
 
 > <strong>Completing Jump Start</strong>
-> On your 10th and <b>final</b> Jump Start game, you can create a new level 11 PC of your choice. In addition to their normal starting equipment from their background and starting class, they start with an additional 6000 GP and your choice of 2 T0 items, 3 T1 items, and 1 T2 item from [Allowed Content: Loot (Rolled Loot)](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=1722048058#rangeid=948421051). The items can have Fair Game properties in [Allowed Content: Item Properties](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=25845300#gid=25845300). <b>These items can’t be sold or traded.</b> Log this information in the game’s session log.
+> On your 10th and <b>final</b> Jump Start game, you can create a new level 11 PC of your choice. In addition to their normal starting equipment from their background and starting class, they start with an additional 6000 GP and your choice of 2 T0 items, 3 T1 items, and 1 T2 item from [Allowed Content: Loot (Rolled Loot)]({{ '/allowed-content/#loot' | relative_url }}). The items can have Fair Game properties in [Allowed Content: Item Properties]({{ '/allowed-content/#item-properties' | relative_url }}). <b>These items can’t be sold or traded.</b> Log this information in the game’s session log.
 
 DM Incentives only apply to games that last 3+ hours.  DM Incentives that add to a “Loot Pool” let you to add additional items to your DM Loot roll, but you select <b>one</b> item among the list. To claim a DM incentive, clearly note the name of it in your session log. Different DM incentives can stack as the same game can qualify for more than one DM incentive if it fulfills the requirements of each.

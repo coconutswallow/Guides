@@ -7,11 +7,11 @@ toc: true
 ---
 A Bastion is a location that belongs to a Player Character - essentially their home - providing a place to call their own and opens opportunities to them such as crafting, summoning aid, and a range of other activities.
 
-Player characters can acquire and use Bastions as described in the 2024 Dungeon Master’s Guide and as follows. See <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> for more details.
+Player characters can acquire and use Bastions as described in the 2024 Dungeon Master’s Guide and as follows. See <a href="{{ '/allowed-content/#bastions' | relative_url }}">Allowed Content</a> for more details.
 
 ## Building Bastions
 
-Bastions aren’t gained from levelling up, but instead must be built in downtime using gold and DTP, with costs listed in <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> for more details. 
+Bastions aren’t gained from levelling up, but instead must be built in downtime using gold and DTP, with costs listed in <a href="{{ '/allowed-content/#bastions' | relative_url }}">Allowed Content</a> for more details. 
 
 Your initial Bastion must consist of two Basic Facilities (one Cramped and one Roomy) and two Special Facilities. Building a basic Bastion with these facilities will generally cost 3500 GP and 155 DTP.
 

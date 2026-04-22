@@ -13,7 +13,7 @@ All DTP and gold expenditure must be logged in <a href="https://discord.com/chan
 
 ## Downtime Activities
 
-The following is a summary of available Downtime Activities. For details on each activity, refer to the Downtime sheet of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> document.
+The following is a summary of available Downtime Activities. For details on each activity, refer to the Downtime sheet of the <a href="{{ '/allowed-content/#downtime' | relative_url }}">Allowed Content</a> document.
 
 ### Buying and Selling
 
@@ -27,7 +27,7 @@ You can trade items with other PCs. Only PCs in the same location can trade with
 
 ### Bastions
 
-You can construct and use a Bastion and its facilities. See [Appendix: Bastions](/Guides/playersguide/appendices/bastions/) and <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> for details.
+You can construct and use a Bastion and its facilities. See [Appendix: Bastions](/Guides/playersguide/appendices/bastions/) and <a href="{{ '/allowed-content/#bastions' | relative_url }}">Allowed Content</a> for details.
 
 ### Crafting
 
@@ -35,7 +35,7 @@ You can craft equipment and magic items. Except where otherwise stated, crafting
 
 Only T1 or below items are craftable.
 
-See <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> under Equipment or Loot to see crafting requirements per item.
+See <a href="{{ '/allowed-content/#equipment' | relative_url }}">Allowed Content</a> under Equipment or Loot to see crafting requirements per item.
 
 ### Research
 

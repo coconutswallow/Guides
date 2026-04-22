@@ -12,7 +12,7 @@ All games ran on the server must fit within the server’s setting of the D&D 5e
 
 ### Lore and Impact
 
-You should consult relevant lore before running games.  The server uses the 5e Forgotten Realms setting and broader D&D multiverse, taking official 5e sourcebooks from most recent to oldest as primary source material, with major server specific lore found in [#resources](https://discord.com/channels/308324031478890497/617817564554199100) (including [Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view), the [Hawthorne Adventure Locations](/Guides/fieldguide/index/) and the [Hawthorne Monster Compendium](/Guides/monsters/index/)). 
+You should consult relevant lore before running games.  The server uses the 5e Forgotten Realms setting and broader D&D multiverse, taking official 5e sourcebooks from most recent to oldest as primary source material, with major server specific lore found in [#resources](https://discord.com/channels/308324031478890497/617817564554199100) (including [Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view), the [Hawthorne Adventure Locations](/Guides/field-guide/adventure-locations/) and the [Hawthorne Monster Compendium](/Guides/field-guide/monsters/)). 
 
 Older edition material from most recent to oldest can also be referred to as supplemental source material, with 5e sources taking priority. If you have any questions regarding relevant lore, you can consult fellow DMs and Lore Consultants in [#dm-chat](https://discord.com/channels/308324031478890497/617838916929847315) and [#lore-discussion](https://discord.com/channels/308324031478890497/617820732587507763).
 
@@ -36,7 +36,7 @@ Also consider the following for games in other worlds:
 
 - Avoid sweeping changes to that world’s setting and major named NPCs that prevent their intended use by other DMs without consulting other DMs and Lore.
 - The unique elements that make up a setting’s identity should be retained and not homogenize with  other settings: Ravenloft can’t become a setting of sunshine and roses, and you can’t have PCs adventure in Eberron and come back to Toril to try to establish lightning rails across Faerûn.
-- Any elements unique to another setting remain in that setting, and any usable items brought back must be in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=828640940#gid=828640940). Recovered technology or other items unique to another setting can’t be replicated or used in another setting to achieve effects beyond that setting’s scope. If you ever have questions regarding this for an adventure of yours, reach out to a <span class="role-lore">Lore Consultant</span> for feedback.
+- Any elements unique to another setting remain in that setting, and any usable items brought back must be in [Allowed Content]({{ '/allowed-content/' | relative_url }}). Recovered technology or other items unique to another setting can’t be replicated or used in another setting to achieve effects beyond that setting’s scope. If you ever have questions regarding this for an adventure of yours, reach out to a <span class="role-lore">Lore Consultant</span> for feedback.
 
 ### Multisessions and Campaigns
 Besides running oneshots, you can choose to run a connected series of games as a multisession or campaign on the server, either featuring a set list of “locked in” PCs (who can’t join other adventures while in the multisession) or as an open series of games for PCs to drop in and out at your discretion. <b>Loot and rewards can persist between individual games of a multisession</b>: loot you may have selected or rolled for one game of a multisession can be found in a later game in that multisession.
@@ -47,11 +47,11 @@ You are free to run published adventure modules on the server, making any adjust
 
 ## Monsters
 
-The most common type of challenge that PCs will face are monsters, typically encountered during combat. When selecting monsters for your adventure, the list of all allowed monsters on the server can be found in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=828640940#gid=828640940). Any DM can use any of the monsters in the Fair Game category, but <span class="role-full-dm">Full DM Only</span> monsters can only be used by <span class="role-full-dm">Full DMs</span>. Either way, please be sure to review a monster’s statblock and associated lore if you plan to include it in an adventure. The official game rules provides guidance on how to select and balance combat encounters, but feel free to reach out to fellow DMs in [#dm-chat](https://discord.com/channels/308324031478890497/617838916929847315) or Lore and Rules if you have questions or need assistance.
+The most common type of challenge that PCs will face are monsters, typically encountered during combat. When selecting monsters for your adventure, the list of all allowed monsters on the server can be found in [Allowed Content]({{ '/allowed-content/#monsters' | relative_url }}). Any DM can use any of the monsters in the Fair Game category, but <span class="role-full-dm">Full DM Only</span> monsters can only be used by <span class="role-full-dm">Full DMs</span>. Either way, please be sure to review a monster’s statblock and associated lore if you plan to include it in an adventure. The official game rules provides guidance on how to select and balance combat encounters, but feel free to reach out to fellow DMs in [#dm-chat](https://discord.com/channels/308324031478890497/617838916929847315) or Lore and Rules if you have questions or need assistance.
 
 ### Customizing Monsters
 
-You can reflavor monsters in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=828640940#gid=828640940), provided there are no significant mechanical changes and the reflavor makes narrative sense. You can also use existing official guidelines on customizing monsters:
+You can reflavor monsters in [Allowed Content]({{ '/allowed-content/#monsters' | relative_url }}), provided there are no significant mechanical changes and the reflavor makes narrative sense. You can also use existing official guidelines on customizing monsters:
 
 - Any feature from Monster Features table that doesn’t affect CR (2014 Dungeon Master’s Guide, p. 279)
 - Customizing an NPC (2014 Monster Manual p. 342)
@@ -73,7 +73,7 @@ As a result of overcoming challenges when adventuring, PCs can find and acquire 
 
 ### Gold and Other Treasure
 
-Currency, gems, art objects, [equipment](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632), and other items which have a gold value can be found in an adventure. The maximum gold allotment per player for a single game is below, depending on the Average Party Level (APL): the average level of all PCs, as rounded using the normal mathematical rules. For multisessions, the gold allotment can be pooled across games.
+Currency, gems, art objects, [equipment]({{ '/allowed-content/#equipment' | relative_url }}), and other items which have a gold value can be found in an adventure. The maximum gold allotment per player for a single game is below, depending on the Average Party Level (APL): the average level of all PCs, as rounded using the normal mathematical rules. For multisessions, the gold allotment can be pooled across games.
 
 | Average Party Level | Maximum Gold Reward |
 | :---: | :--- |
@@ -104,11 +104,11 @@ Each session has a number of <b>item slots</b> equal to the number of players in
 | **T4+** | APL 17+ multisession of 5+ games | 1 item slot (<span class="role-full-dm">Full DM Only</span>). Up to 1 T4+ item per APL 17+ multisession of 5+ games. |
 | **Tier S** | APL 20 multisession of 8+ games | 1 item slot (<span class="role-full-dm">Full DM Only</span>). Up to 1 Tier S item per APL 20 multisession of 8+ games. |
 
-All loot that can be awarded on the server can be found in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632) and any loot for the session must be indicated in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) using the pinned format and can be posted anytime before or during the game. When selecting loot for your game, you can choose to <b>roll, predetermine, or use a combination</b>:
+All loot that can be awarded on the server can be found in [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}) and any loot for the session must be indicated in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) using the pinned format and can be posted anytime before or during the game. When selecting loot for your game, you can choose to <b>roll, predetermine, or use a combination</b>:
 
 - If you are <b>rolling</b> for loot, use the pinned format in [#treasure-log](https://discord.com/channels/308324031478890497/617808735770902718) and the bot command:  <code>/hgenloot [# of players] [APL]</code>
 
-- If you are <b>predetermining</b> loot, you can fill the item slots with items up to the party’s tier of play (e.g. up to T2 items for APL 5 - 10 games), selecting from T0 - T4 loot in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632) from either Rolled or Select Loot. <b>No more than half of the game’s item slots (rounded down) can be permanent items.</b>
+- If you are <b>predetermining</b> loot, you can fill the item slots with items up to the party’s tier of play (e.g. up to T2 items for APL 5 - 10 games), selecting from T0 - T4 loot in [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}) from either Rolled or Select Loot. <b>No more than half of the game’s item slots (rounded down) can be permanent items.</b>
 
 - For a <b>combined</b> approach, predetermine some of the game’s item slots and roll for the rest. Use the command parameters <code>predetermined_perms</code> and <code>predetermined_cons</code> for the number of predetermined permanents or consumables if any.
 
@@ -116,19 +116,19 @@ Loot rolled for a given game can’t be awarded in other games and must be rolle
 
 #### Tier 0 (T0) Loot
 T0 Loot is bonus loot you can add to any game and doesn’t count against the game’s item slots, with a number of bonus slots as per the table. The maximum number of duplicates for a given T0 consumable per item slot is up to 4 (up to 15 for ammunition), except as
-noted otherwise. See [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632) for details.
+noted otherwise. See [Allowed Content]({{ '/allowed-content/#item-properties' | relative_url }}) for details.
 
 #### Tier 1 (T1) to Tier 4 (T4) Loot
 
-T1 to T4 loot takes up a game’s <b>item slots</b>, and a game can’t award loot of a tier greater than the game’s tier of play (as determined by the game’s APL). The maximum number of duplicates for a given T1 to T4 consumable per item slot is up to 3 (up to 20 for ammunition), except where noted otherwise. See [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632) for details. Any DM can predetermine T0 to T2 items, but only <span class="role-fulldm">Full DMs</span> can predetermine <b>T3</b> or <b>T4</b> items. In addition, for <b>APL 17+ games</b>, you can add <b>bonus T1 loot</b> to the game by rolling for the same item slots but at APL 4 and selecting 1 T1 permanent or 2 slots worth of T1 consumables to add as bonus loot. Alternatively, you can predetermine the same to add as bonus loot.
+T1 to T4 loot takes up a game’s <b>item slots</b>, and a game can’t award loot of a tier greater than the game’s tier of play (as determined by the game’s APL). The maximum number of duplicates for a given T1 to T4 consumable per item slot is up to 3 (up to 20 for ammunition), except where noted otherwise. See [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}) for details. Any DM can predetermine T0 to T2 items, but only <span class="role-fulldm">Full DMs</span> can predetermine <b>T3</b> or <b>T4</b> items. In addition, for <b>APL 17+ games</b>, you can add <b>bonus T1 loot</b> to the game by rolling for the same item slots but at APL 4 and selecting 1 T1 permanent or 2 slots worth of T1 consumables to add as bonus loot. Alternatively, you can predetermine the same to add as bonus loot.
 
 #### Multisession Loot
 
-Unlike T0 to T4 loot, multisession loot is only awarded as part of a multisession with a minimum required APL and number of sessions. Multisession loot uses item slots as normal but also requires a multisession of the appropriate APL and length to award. <b>Tier 1+ (T1+), Tier 2+ (T2+), Tier 3+ (T3+), Tier 4+ (T4+)</b>, and <b>Tier S items</b> each have their own minimum APL and session requirements as per the preceding table. Only <span class="role-fulldm">Full DMs</span> can award multisession loot, and a list of all available multisession loot is in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632).
+Unlike T0 to T4 loot, multisession loot is only awarded as part of a multisession with a minimum required APL and number of sessions. Multisession loot uses item slots as normal but also requires a multisession of the appropriate APL and length to award. <b>Tier 1+ (T1+), Tier 2+ (T2+), Tier 3+ (T3+), Tier 4+ (T4+)</b>, and <b>Tier S items</b> each have their own minimum APL and session requirements as per the preceding table. Only <span class="role-fulldm">Full DMs</span> can award multisession loot, and a list of all available multisession loot is in [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}).
 
 #### Additional Properties
 
-You can add minor item properties to items you award as described in the 2014/2024 Dungeon Master’s Guide (some properties can only be used by Full DMs), and Full DMs can use the rules for Sentient Magic Items to award sentient items. For full details, refer to the associated sheet in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632).
+You can add minor item properties to items you award as described in the 2014/2024 Dungeon Master’s Guide (some properties can only be used by Full DMs), and Full DMs can use the rules for Sentient Magic Items to award sentient items. For full details, refer to the associated sheet in [Allowed Content]({{ '/allowed-content/#item-properties' | relative_url }}).
 
 #### Trinkets
 
@@ -136,7 +136,7 @@ You can add trinkets to your game, using official WOTC 5e sourcebook tables, whi
 
 ### Other Loot and Rewards
 
-The following is a summary of other rewards you can use in your games. For details on each, refer to the relevant sections of the [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632) document.
+The following is a summary of other rewards you can use in your games. For details on each, refer to the relevant sections of the [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }}) document.
 
 #### Homebrew Items
 
@@ -148,7 +148,7 @@ You can submit a request in [#dm-requests](https://discord.com/channels/30832403
 
 #### Deck of Many Things
 
-While PCs can’t acquire the <i>Deck of Many Things</i> (nor the <i>Deck of Many More Things</i> or <i>Deck of Wonder</i>), you can use these Decks as part of adventures, with any lasting effects of a Deck localized to the adventure and expiring and reverting at the adventure’s conclusion. You can award PCs <b>individual cards</b> of a deck as described in <i>Book of Many Things</i> and further detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632) for their loot tiers and their use.
+While PCs can’t acquire the <i>Deck of Many Things</i> (nor the <i>Deck of Many More Things</i> or <i>Deck of Wonder</i>), you can use these Decks as part of adventures, with any lasting effects of a Deck localized to the adventure and expiring and reverting at the adventure’s conclusion. You can award PCs <b>individual cards</b> of a deck as described in <i>Book of Many Things</i> and further detailed in [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }}) for their loot tiers and their use.
 
 #### Relics of Emergence (Full DM Only)
 
@@ -157,11 +157,11 @@ While PCs can’t acquire the <i>Deck of Many Things</i> (nor the <i>Deck of Man
 #### Hoard Magic Items (Full DM Only)
 
 <b>Hoard Magic Items</b> (from <i>Fizban’s Treasury of Dragons</i>) are evolving items that <span class="role-full-dm">Full DMs</span> can award and that can exist in four states corresponding to a dragon’s age category: <b>Slumbering</b> (any age), <b>Stirring</b> (young), <b>Wakened</b> (adult), and <b>Ascendant</b> (ancient).
-Hoard Magic Items use the normal loot distribution  rules and can be upgraded as detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632), as based on the written rules for them described in Fizban’s Treasury of Dragons.
+Hoard Magic Items use the normal loot distribution  rules and can be upgraded as detailed in [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}), as based on the written rules for them described in Fizban’s Treasury of Dragons.
 
 #### Supernatural Rewards
 
-<b>Supernatural Rewards</b> are acquirable extraordinary abilities which come in the following types and as further detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632):
+<b>Supernatural Rewards</b> are acquirable extraordinary abilities which come in the following types and as further detailed in [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }}):
 
 - <b>Dark Gifts</b> provide both benefits and detriments after contact with dark supernatural forces. Dark Gifts don’t count against a game’s item slots, but a character can only ever have <b>one</b> Dark Gift at a time: they must choose to keep or replace a Dark Gift if they ever acquire a new one.
 - <b>Supernatural Gifts</b> are permanent abilities obtained after performing great deeds or contacting powerful supernatural forces. Only <span class="role-full-dm">Full DMs</span> can award Supernatural Gifts, which use the normal item distribution rules as the equivalent of permanent items. A PC can only benefit from a number of Supernatural Gifts whose combined tier is no greater than their Proficiency Bonus, choosing which combination is active after finishing a Long Rest. For example, a level 11 character (PB +4) could benefit from two T2 Supernatural Gifts or 1 T1 Supernatural Gift and 1 T3 Supernatural Gift.
@@ -171,20 +171,20 @@ Hoard Magic Items use the normal loot distribution  rules and can be upgraded as
 
 #### Marks of Prestige
 
-Marks of Prestige are rewards reflecting a PC’s fame and prestige due to their deeds, as detailed in the 2014 and 2024 Dungeon Master’s Guide and detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632) with the following types available as written: Letter of Recommendation, Medal, Parcel of Land, Special Favor, Special Right, Stronghold, or Title.
+Marks of Prestige are rewards reflecting a PC’s fame and prestige due to their deeds, as detailed in the 2014 and 2024 Dungeon Master’s Guide and detailed in [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }}) with the following types available as written: Letter of Recommendation, Medal, Parcel of Land, Special Favor, Special Right, Stronghold, or Title.
 Marks of Prestige <b>don’t</b> take up a game’s item slots.
 
 > A PC that obtains a parcel of land or a stronghold in a world location in this way can use it to establish a Bastion as
-described in Appendix B of the Player Guidelnes.
+described in Appendix B of the Player Guidelines.
 
 #### Mounts
 
-In addition to the Mounts listed in Equipment in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632), specific creatures can be acquired as mounts from adventures only. Acquiring such mounts follows the normal item distribution rules, with mounts treated as the equivalent of permanent items (1 mount per item slot). You can use the previous rules on Customizing Monsters for any mount you award.
+In addition to the Mounts listed in Equipment in [Allowed Content]({{ '/allowed-content/#equipment' | relative_url }}), specific creatures can be acquired as mounts from adventures only. Acquiring such mounts follows the normal item distribution rules, with mounts treated as the equivalent of permanent items (1 mount per item slot). You can use the previous rules on Customizing Monsters for any mount you award.
 
 
 #### Renown
 
-Renown reflects a PC’s standing with a group as detailed in the 2014 and 2024 Dungeon Master’s Guide and as further detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632). PCs start out with a Renown score of 0 but can accrue Renown with respect to a group. Upon achieving specific ranks within a group (dependent on the PC’s Renown score, level, and number of group missions completed), they can gain access to <b>Renown Perks</b>, which <b>don’t</b> count against a game’s item slots. The nature of a Renown Perk is at your discretion provided their effects don’t persist beyond the adventure. You can otherwise submit a Rules request for more mechanically significant Renown Perks that persist beyond the game.
+Renown reflects a PC’s standing with a group as detailed in the 2014 and 2024 Dungeon Master’s Guide and as further detailed in [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }}). PCs start out with a Renown score of 0 but can accrue Renown with respect to a group. Upon achieving specific ranks within a group (dependent on the PC’s Renown score, level, and number of group missions completed), they can gain access to <b>Renown Perks</b>, which <b>don’t</b> count against a game’s item slots. The nature of a Renown Perk is at your discretion provided their effects don’t persist beyond the adventure. You can otherwise submit a Rules request for more mechanically significant Renown Perks that persist beyond the game.
 
 ## Recruitment
 

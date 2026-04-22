@@ -3,6 +3,7 @@ layout: doc
 title: "Players Guide Appendices"
 order: 89
 background_image:
+permalink: /playersguide/appendices/
 hide_from_nav: true  
 ---
 

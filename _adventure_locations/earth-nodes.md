@@ -463,7 +463,7 @@ A creature can't empower themselves in the same way again until 24 hours pass, a
 
 ## Node Supernatural Gifts
 
-Earth nodes and other kinds of nodes create a number of different magical effects. However, accessing the full suite of powers associated with nodes requires extraordinary sense and training in using a node's magics. Whether as a result of extensive exposure and study to the magic of nodes or due to other special circumstances, creatures that possess the **Node Spellcasting** or **Node Manifestation** Supernatural Gifts are able to take advantage of the full breadth of capabilities afforded by earth nodes and other kinds of nodes. These Supernatural Gifts follow the rules associated with the acquisition and use of Supernatural Gifts, as can be found in the [Allowed Content](https://drive.google.com/open?id=1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY)
+Earth nodes and other kinds of nodes create a number of different magical effects. However, accessing the full suite of powers associated with nodes requires extraordinary sense and training in using a node's magics. Whether as a result of extensive exposure and study to the magic of nodes or due to other special circumstances, creatures that possess the **Node Spellcasting** or **Node Manifestation** Supernatural Gifts are able to take advantage of the full breadth of capabilities afforded by earth nodes and other kinds of nodes. These Supernatural Gifts follow the rules associated with the acquisition and use of Supernatural Gifts, as can be found in the [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }})
 
 ### Node Spellcasting
 
