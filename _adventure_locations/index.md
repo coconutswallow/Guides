@@ -22,6 +22,3 @@ Welcome to the Adventure Locations archive. These regions have been specifically
     {% endif %}
   {% endfor %}
 </ul>
-
-> [!TIP]
-> DMs can use these locations as foundations for their own narrative arcs or one-shot adventures.
