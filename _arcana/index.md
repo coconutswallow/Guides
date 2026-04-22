@@ -15,6 +15,3 @@ Welcome to the Hawthorne Arcana! This collection houses all approved homebrew co
 <ul>
   <!-- Articles will be listed here as they are migrated -->
 </ul>
-
-> [!NOTE]
-> We are currently migrating content from the original Hawthorne Arcana PDF. Stay tuned for updates as we build out this digital library!
