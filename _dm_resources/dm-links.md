@@ -1,6 +1,7 @@
 ---
 layout: doc
 title: Useful Links for DMs
+order: 10
 permalink: /dm-resources/useful-links/
 background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg
 ---

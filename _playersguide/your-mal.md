@@ -33,10 +33,14 @@ Once you've created your first character sheet, you should add the character in 
 
 ![Example Character Creation MAL]({{ '/assets/images/mal-character-creation.jpg' | relative_url }})
 
+[Here is an example of the MAL with a Level 5 and a Level 3 character](https://docs.google.com/spreadsheets/d/1B7ohM8UP4NEtI36kTfADbXIWS8i50Vf8/edit?usp=sharing&ouid=114847167637753116444&rtpof=true&sd=true)
+
 ---
 
 ### Initial Equipment purchases
 
 Your character comes with initial gold and equipment based on the rules of the PHB.  You can purchase everything under the Equipment Tab of the <a href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Allowed Content</a> (some conditions may apply - please read the item details).  In order to do so, you will need to make an entry in both your MAL and declare the transaction in <a href="https://discord.com/channels/308324031478890497/617830376257093640">#downtime-logs</a>.
+
+
 
 See the next page for examples of how to log an equipment purchase.
