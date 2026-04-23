@@ -58,7 +58,7 @@ export async function renderDashboard(container) {
                     ? `<span class="status-badge status-${m.status.toLowerCase()}" style="font-size: 0.7rem;">${m.status === 'Pending' ? 'Pending Review' : 'Queued for Patch'}</span>`
                     : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">${m.status === 'Archived' ? 'View' : 'Edit'}</a>`
                 }
-                        ${m.status === 'Approved' ? `<a href="${(window.MONSTER_EDITOR_CONFIG?.baseUrl || '/') + 'monsters/#/' + m.slug}" target="_blank" class="btn btn-sm btn-outline-secondary">View Live</a>` : ''}
+                        ${m.status === 'Approved' ? `<a href="${(window.MONSTER_EDITOR_CONFIG?.baseUrl || '/Guides/') + 'monsters/#/' + m.slug}" target="_blank" class="btn btn-sm btn-outline-secondary">View Live</a>` : ''}
                     </td>
                 </tr>
             `;

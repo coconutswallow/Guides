@@ -13,12 +13,12 @@ Welcome to the Field Guide. This section contains essential resources for Dungeo
   <!-- CARD: Monster Compendium -->
   <div class="feature-card">
     <h4>Monster Compendium</h4>
-    <a href="{{ '/field-guide/monsters/' | relative_url }}">
+    <a href="{{ '/monsters/' | relative_url }}">
       <img src="{{ '/assets/thumbnails/fieldguide-small.png' | relative_url }}" alt="Monster Compendium"
         class="card-thumbnail">
     </a>
     <p>A collection of server-approved homebrew monsters with statblocks.</p>
-    <a href="{{ '/field-guide/monsters/' | relative_url }}" class="card-button">View Compendium</a>
+    <a href="{{ '/monsters/' | relative_url }}" class="card-button">View Compendium</a>
   </div>
 
   <!-- CARD: Adventure Locations -->

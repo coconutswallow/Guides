@@ -32,7 +32,7 @@ export async function renderMonsterLibrary(container) {
         
         <div style="margin-bottom: 1.5rem;">
             <p>The monsters in this compendium have been created by various members of the community of the Hawthorne Dungeons & Dragons Guild. The credits are listed on the footer of the monster stat block.</p>
-            <p>You can use this <a href="/Guides/field-guide/monsters/editor/"><b>Monster Creator Tool</b></a> to create and submit your own monsters for community use!</p>
+            <p>You can use this <a href="/Guides/monsters/editor/"><b>Monster Creator Tool</b></a> to create and submit your own monsters for community use!</p>
         </div>
         
         <div class="filter-container" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; align-items: flex-end; width: 100%;">
