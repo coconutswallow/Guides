@@ -7,13 +7,11 @@ permalink: /resources/
 background_image: 
 ---
 
-{% assign sorted_guides = site.resources | sort: 'order' %}
+{% assign sorted_resources = site.resources | where_exp: "item", "item.hide_from_nav != true" | sort: 'order' %}
 <ul>
-  {% for doc in sorted_guides %}
-    {% if doc.url != page.url %}
-      <li>
-        <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
-      </li>
-    {% endif %}
+  {% for res in sorted_resources %}
+    <li>
+      <a href="{{ res.url | relative_url }}">{{ res.title }}</a>
+    </li>
   {% endfor %}
 </ul>

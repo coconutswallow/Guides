@@ -42,7 +42,7 @@ layout: default
 
         {% if page.collection %}
         <nav class="doc-footer-nav">
-            {% assign collection_items = site[page.collection] | sort: 'order' %}
+            {% assign collection_items = site[page.collection] | where_exp: "item", "item.hide_from_nav != true" | sort: 'order' %}
             {% assign current_index_0 = -1 %}
 
             {% for item in collection_items %}

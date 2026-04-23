@@ -7,7 +7,7 @@ background_image: /assets/images/tavern_brawl.jpg
 
 ### Equipment Purchases
 
-You can purchase everything under the <b>Equipment</b> Tab of the <a href="{{ '/allowed-content/#equipment' | relative_url }}">Allowed Content</a> (some conditions may apply - please read the item details).  
+You can purchase everything under the <b>Equipment</b> Tab of the <a href="{{ '/allowed-content/#equipment' | relative_url }}">Allowed Content</a> from NPCs (some conditions may apply - please read the item details).  
 
 Items not listed under the Equipment Tab (e.g. magical items) can only be purchased from other players or recieved as loot from adventures.
 

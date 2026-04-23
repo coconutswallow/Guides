@@ -13,14 +13,12 @@ background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.
 
 Welcome Dungeon Masters! This document provides all of the information and rules you’ll need to know for DMing on the Hawthorne Guild 5th edition D&D server.
 
-{% assign sorted_guides = site.dmsguide | sort: 'order' %}
+{% assign sorted_guides = site.dmsguide | where_exp: "item", "item.hide_from_nav != true" | sort: 'order' %}
 <ul>
   {% for doc in sorted_guides %}
-    {% if doc.url != page.url %}
-      <li>
-        <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
-      </li>
-    {% endif %}
+    <li>
+      <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+    </li>
   {% endfor %}
 </ul>
 
