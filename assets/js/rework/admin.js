@@ -5,6 +5,7 @@
  * @module ReworkAdmin
  * 
  * https://github.com/hawthorneguild/HawthorneTeams/issues/8
+ * https://github.com/hawthorneguild/HawthorneTeams/issues/56    
  */
 
 import { supabase } from '../supabaseClient.js';
@@ -104,18 +105,18 @@ const fetchData = async () => {
             .single();
 
         if (error) throw error;
-        
+
         dbRecord = data;
         let rawData = data.data;
-        
+
         // Handle serialized JSON string if present (fallback for specific DB formats)
         if (typeof rawData === 'string') {
-            try { rawData = JSON.parse(rawData); } catch(e) {}
+            try { rawData = JSON.parse(rawData); } catch (e) { }
         }
-        
+
         originalData = rawData || [];
         characterData = JSON.parse(JSON.stringify(originalData));
-        
+
         renderTable();
     } catch (e) {
         logError('rework-admin', `Fetch Error: ${e.message}`);
@@ -141,7 +142,7 @@ const renderTable = () => {
     ui.tableBody.innerHTML = filtered.map((item, idx) => {
         // Find actual index in global array
         const globalIdx = characterData.indexOf(item);
-        
+
         return `
             <tr>
                 <td><strong>${item.class}</strong></td>
@@ -173,7 +174,7 @@ const saveData = async () => {
             .eq('id', dbRecord.id);
 
         if (error) throw error;
-        
+
         originalData = JSON.parse(JSON.stringify(characterData));
         showStatus("Configuration saved successfully!", "var(--palette-role-full-dm)");
     } catch (e) {
@@ -213,7 +214,7 @@ const showEditor = (index = -1) => {
 const handleFormSubmit = (e) => {
     e.preventDefault();
     const index = parseInt(document.getElementById('edit-index').value);
-    
+
     // Parse the ASI string back to an array of numbers
     const asiStr = document.getElementById('edit-asi').value;
     const asiArr = asiStr.split(',')
