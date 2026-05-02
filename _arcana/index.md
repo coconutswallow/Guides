@@ -4,14 +4,24 @@ title: "Contents"
 order: 1
 hide_from_nav: true
 permalink: /arcana/
-background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
 
 ![Hawthorne Arcana Cover]({{ '/assets/thumbnails/arcana-300.png' | relative_url }})
 <span class="image-caption">Hawthorne Arcana: Approved Homebrew Content</span>
 
-Welcome to the Hawthorne Arcana! This collection houses all approved homebrew content for the Hawthorne Guild, including races, classes, subclasses, spells, and equipment.
+Hawthorne Arcana is a curated collection of server legal homebrew, presenting new or revised character options for players as party of Allowed Content and amendments to existing sourcebooks to provide guidance to DMs and to fit within the server's setting.
 
+The contents of Hawthorne Arcana are subject to change, to be noticed when a change is implemented. Both DMs and players should familiarize themselves with the contents present in this document
+
+{% assign sorted_arcana = site.arcana | where_exp: "item", "item.hide_from_nav != true" | sort: 'order' %}
 <ul>
-  <!-- Articles will be listed here as they are migrated -->
+  {% for doc in sorted_arcana %}
+    <li>
+      <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+    </li>
+  {% endfor %}
 </ul>
+
+## Credit
+
+This release has been created by Luolang using the Homebrewery in collaboration with Lore Consultants, Rules Architects, and Players of the Hawthorne Dungeons & Dragons Guild. Additional content and reference material obtained from Guildmaster's Guide to Ravnica.

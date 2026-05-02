@@ -5,10 +5,10 @@ order: 100
 permalink: /resources/changelog/
 ---
 
-## Version 2024-04.1 (2 April 2026)
+## Version 2026-04.1 (2 April 2026)
 * Initial launch of the Hawthorne Guild website.
 
-## Version 1.1.0 (TBD)
+## Version 2026-06.01 (TBD)
 
 ### Content Updates
 * About Hawthorne has been renamed to Server Lore, with the preparation for the new Hawthorne Guild timelines (coming soon) and link to the Hawthorn Kanka
