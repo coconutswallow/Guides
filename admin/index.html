@@ -4,6 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
+  <script>
+    // Dynamically load the correct configuration based on the environment
+    const hostname = window.location.hostname;
+    const isProd = hostname === 'hawthorneguild.github.io';
+    const configFile = isProd ? 'config.yml' : 'config-test.yml';
+    
+    // Decap CMS looks for the cms-config-url link tag to find its configuration
+    document.write('<link href="' + configFile + '" type="text/yaml" rel="cms-config-url">');
+    console.log('[Decap CMS] Loading config: ' + configFile);
+  </script>
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
