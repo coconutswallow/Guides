@@ -424,7 +424,11 @@ export function renderFeatureList(currentMonster) {
                         ` : ''}
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control feat-name" value="${f.name || ''}" placeholder="e.g. ${f.type === 'Reaction' ? 'Opportunist' : 'Multiattack'}">
+                            <input type="text" class="form-control feat-name" value="${f.name || ''}" placeholder="e.g. ${
+                                f.type === 'Trait' ? 'Keen Senses' : 
+                                f.type === 'Reaction' ? 'Opportunist' : 
+                                'Multiattack'
+                            }">
                         </div>
                     </div>
                     <div class="form-group">
