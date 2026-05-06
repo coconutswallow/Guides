@@ -15,7 +15,7 @@ import {
     createNewVersion
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
-import { calculatePB, calculateXP } from './monster-utils.js';
+import { calculatePB, calculateXP, calculateMod, formatInitiative } from './monster-utils.js';
 import { renderFeatureList } from './monster-editor-ui.js';
 import {
     syncMonsterFromForm,
@@ -85,6 +85,19 @@ export function attachEditorEvents(container, currentMonster, lookups) {
     // 1. Name -> Slug Auto-gen
     const nameInput = container.querySelector('input[name="name"]');
     const slugInput = container.querySelector('input[name="slug"]');
+
+    // Handle manual overrides for auto-calculated fields
+    form.querySelectorAll('.save-override, input[name="hp_modifier"]').forEach(input => {
+        input.addEventListener('input', () => {
+            if (input.value !== '') {
+                input.dataset.manual = 'true';
+            } else {
+                delete input.dataset.manual;
+                updateCalculatedStats(); 
+            }
+        });
+    });
+
     nameInput?.addEventListener('input', () => {
         const slug = nameInput.value.toLowerCase()
             .trim()
@@ -100,17 +113,12 @@ export function attachEditorEvents(container, currentMonster, lookups) {
 
     // 1.5. HP & Combat Stat Calculations
     const updateCalculatedStats = () => {
-        const cr = form.cr.value;
+        const cr = form.elements['cr']?.value || '0';
         const pb = calculatePB(cr);
 
-        // HP
-        const num = parseInt(form.hit_dice_num.value) || 0;
-        const size = parseInt(form.hit_dice_size.value) || 0;
-        const mod = parseInt(form.hp_modifier.value) || 0;
-        const average = Math.floor(num * (size / 2 + 0.5) + mod);
-        form.querySelector('#hp-average').value = `${num}d${size}${mod !== 0 ? (mod >= 0 ? '+' : '') + mod : ''} (${average})`;
-
         // Ability Mods & Saves
+        let dexScore = 10;
+        let conMod = 0;
         container.querySelectorAll('.attr-score').forEach(input => {
             const attr = input.name.split('_')[1];
             const modTarget = container.querySelector(`#mod-${attr}`);
@@ -118,26 +126,46 @@ export function attachEditorEvents(container, currentMonster, lookups) {
             const profCheck = container.querySelector(`.save-prof[data-attr="${attr}"]`);
 
             const score = parseInt(input.value) || 10;
-            const m = Math.floor((score - 10) / 2);
+            if (attr === 'DEX') dexScore = score;
+            const m = calculateMod(score);
+            if (attr === 'CON') conMod = m;
 
             if (modTarget) modTarget.textContent = m >= 0 ? `+${m}` : m;
             if (saveTarget && !saveTarget.dataset.manual) {
-                const total = m + (profCheck.checked ? pb : 0);
+                const total = m + (profCheck && profCheck.checked ? pb : 0);
                 saveTarget.placeholder = total >= 0 ? `+${total}` : total;
             }
         });
 
+        // HP
+        const num = parseInt(form.elements['hit_dice_num']?.value) || 0;
+        const size = parseInt(form.elements['hit_dice_size']?.value) || 0;
+        const hpModInput = form.elements['hp_modifier'];
+        
+        if (hpModInput && !hpModInput.dataset.manual) {
+            hpModInput.value = conMod * num;
+        }
+        
+        const mod = parseInt(hpModInput?.value) || 0;
+        const average = Math.floor(num * (size / 2 + 0.5) + mod);
+        const hpPreview = form.querySelector('#hp-average');
+        if (hpPreview) {
+            hpPreview.value = `${num}d${size}${mod !== 0 ? (mod >= 0 ? '+' : '') + mod : ''} (${average})`;
+        }
+
         // Initiative
-        const dexMod = Math.floor(((parseInt(form.ability_DEX.value) || 10) - 10) / 2);
-        const initProf = form.init_prof.value;
-        let totalInit = dexMod;
-        if (initProf === 'Proficient') totalInit += pb;
-        else if (initProf === 'Expert') totalInit += (pb * 2);
-        form.querySelector('#init-preview').value = `${totalInit >= 0 ? '+' : ''}${totalInit} (${10 + totalInit})`;
+        const initProf = form.elements['init_prof']?.value || 'None';
+        const initPreview = form.querySelector('#init-preview');
+        if (initPreview) {
+            initPreview.value = formatInitiative(dexScore, initProf, pb);
+        }
 
         // Overviews
-        form.querySelector('#pb-preview').value = `+${pb}`;
-        form.querySelector('#xp-preview').value = calculateXP(cr).toLocaleString() + ' XP';
+        const pbPreview = form.querySelector('#pb-preview');
+        if (pbPreview) pbPreview.value = `+${pb}`;
+        
+        const xpPreview = form.querySelector('#xp-preview');
+        if (xpPreview) xpPreview.value = calculateXP(cr).toLocaleString() + ' XP';
     };
 
     form.addEventListener('input', () => {
