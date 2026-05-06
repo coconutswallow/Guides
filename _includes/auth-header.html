@@ -30,6 +30,10 @@
         
         <div class="auth-user-info">
             <span id="user-name" class="auth-name">Adventurer</span>
+            <div id="auth-nav" class="auth-sub-nav" style="display:none;">
+                <a id="nav-editor" href="{{ '/monsters/editor/' | relative_url }}" style="display:none;">Editor</a>
+                <a id="nav-approvals" href="{{ '/monsters/approvals/' | relative_url }}" style="display:none;">Approvals</a>
+            </div>
         </div>
         
         <button id="logout-btn" class="auth-btn auth-btn-logout" title="Sign Out" aria-label="Sign Out">
@@ -191,6 +195,8 @@
      * @param {string} userId - The Supabase/Discord user ID.
      */
     const checkRolesAndShowNav = async (userId) => {
+        if (!ui.nav) return; // Exit if nav elements are missing from the DOM
+
         try {
             const { data, error } = await window.authManager.client
                 .from('discord_users')
@@ -205,8 +211,8 @@
 
                 if (isDM || isAdmin) {
                     ui.nav.style.display = 'flex';
-                    if (isDM) ui.navEditor.style.display = 'inline';
-                    if (isAdmin) ui.navApprovals.style.display = 'inline';
+                    if (isDM && ui.navEditor) ui.navEditor.style.display = 'inline';
+                    if (isAdmin && ui.navApprovals) ui.navApprovals.style.display = 'inline';
                 }
             }
         } catch (e) {
@@ -225,17 +231,17 @@
 
         if (!user) {
             // Logged out state
-            ui.loginBtn.style.display = 'inline-flex';
-            ui.profile.style.display = 'none';
+            if(ui.loginBtn) ui.loginBtn.style.display = 'inline-flex';
+            if(ui.profile) ui.profile.style.display = 'none';
         } else {
             // Logged in state
-            ui.loginBtn.style.display = 'none';
-            ui.profile.style.display = 'flex';
+            if(ui.loginBtn) ui.loginBtn.style.display = 'none';
+            if(ui.profile) ui.profile.style.display = 'flex';
 
             // Use Supabase/Discord metadata
-            ui.name.textContent = user.user_metadata?.full_name || 'Adventurer';
+            if(ui.name) ui.name.textContent = user.user_metadata?.full_name || 'Adventurer';
 
-            if (user.user_metadata?.avatar_url) {
+            if (user.user_metadata?.avatar_url && ui.avatar) {
                 ui.avatar.src = user.user_metadata.avatar_url;
                 ui.avatar.style.display = 'block';
             }
