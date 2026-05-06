@@ -3,6 +3,7 @@ layout: doc
 title: "Contents"
 order: 1
 hide_from_nav: true
+category: "Arcana"
 background_image: "/assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg"
 permalink: /arcana/
 ---
