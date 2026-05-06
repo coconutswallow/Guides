@@ -4,6 +4,7 @@ title: "Returned"
 order: 14
 category: "Arcana"
 hide_from_nav: false
+
 permalink: /arcana/returned/
 --- 
 
