@@ -104,6 +104,15 @@
     background: var(--color-primary);
     color: white;
 }
+.btn-outline-danger {
+    background: transparent;
+    border: 2px solid var(--palette-alert-danger-border);
+    color: var(--palette-alert-danger-border);
+}
+.btn-outline-danger:hover {
+    background: var(--palette-alert-danger-border);
+    color: white;
+}
 
 /* --- TABS --- */
 .tab-nav {

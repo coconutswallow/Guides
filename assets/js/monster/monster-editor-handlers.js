@@ -12,7 +12,8 @@ import {
     saveMonsterDraft,
     submitMonsterForApproval,
     isSlugUnique,
-    createNewVersion
+    createNewVersion,
+    deleteMonster
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
 import { calculatePB, calculateXP, calculateMod, formatInitiative } from './monster-utils.js';
@@ -203,6 +204,7 @@ export function attachEditorEvents(container, currentMonster, lookups) {
     container.querySelector('#btn-preview')?.addEventListener('click', () => handlePreview(currentMonster));
     container.querySelector('#btn-submit')?.addEventListener('click', () => handleSubmit(currentMonster));
     container.querySelector('#btn-version')?.addEventListener('click', () => handleCreateNewVersion(currentMonster));
+    container.querySelector('#btn-delete-draft')?.addEventListener('click', () => handleDeleteDraft(currentMonster));
 
     // 4. Feature Management (Delegated)
     form.addEventListener('click', (e) => {
@@ -372,6 +374,29 @@ async function handleCreateNewVersion(currentMonster) {
         window.location.hash = `#/edit/${newSlug}`;
     } catch (err) {
         alert('Failed to version: ' + err.message);
+    }
+}
+
+/**
+ * Handles the deletion of a monster draft.
+ * @param {Object} currentMonster - The monster data.
+ */
+export async function handleDeleteDraft(currentMonster) {
+    if (!currentMonster.row_id) return; // Cannot delete unsaved
+    if (currentMonster.status !== 'Draft') {
+        alert('Only monsters in Draft status can be deleted.');
+        return;
+    }
+
+    if (!confirm(`Are you sure you want to delete "${currentMonster.name}"? This action cannot be undone.`)) return;
+
+    try {
+        await deleteMonster(currentMonster.row_id);
+        clearLocalCache(currentMonster.slug);
+        alert('Monster deleted.');
+        window.location.hash = '#/';
+    } catch (err) {
+        alert('Deletion failed: ' + err.message);
     }
 }
 

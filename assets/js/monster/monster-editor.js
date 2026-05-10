@@ -9,7 +9,7 @@
 
 import { supabase } from '../supabaseClient.js';
 import { checkAccess } from '../auth-check.js';
-import { getMonsterBySlug, getMyMonsters, getMonsterLookups } from './monster-service.js';
+import { getMonsterBySlug, getMyMonsters, getMonsterLookups, deleteMonster } from './monster-service.js';
 import {
     renderDashboard,
     renderEditor as renderEditorUI,
@@ -78,7 +78,25 @@ async function handleRoute() {
     const hash = window.location.hash.slice(1) || '/';
 
     if (hash === '/') {
-        renderDashboard(container);
+        await renderDashboard(container);
+        
+        // Handle dashboard-specific actions (e.g. Delete button)
+        container.querySelectorAll('.btn-delete-row').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const rowId = e.target.dataset.rowId;
+                const name = e.target.dataset.name;
+                const slug = e.target.dataset.slug;
+                if (confirm(`Delete draft "${name}"? This cannot be undone.`)) {
+                    try {
+                        await deleteMonster(rowId);
+                        clearLocalCache(slug);
+                        handleRoute(); // Refresh
+                    } catch (err) {
+                        alert('Delete failed: ' + err.message);
+                    }
+                }
+            });
+        });
     } else if (hash === '/new') {
         renderEditor(container, null);
     } else if (hash.startsWith('/edit/')) {

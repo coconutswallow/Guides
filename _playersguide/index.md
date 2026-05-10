@@ -18,3 +18,5 @@ hide_from_nav: true
     </li>
   {% endfor %}
 </ul>
+
+If you are **new to D&D**, please check out the [New to D&D Resources]({{ 'player-resources/new-to-dnd/' | relative_url }}) for beginner D&D resources to help you get started.

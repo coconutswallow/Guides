@@ -497,7 +497,37 @@ export async function getMonsterLookups() {
 }
 
 /**
+ * Deletes a monster draft and all its associated features.
+ * @param {string} rowId - The UUID of the monster row to delete.
+ * @returns {Promise<void>}
+ */
+export async function deleteMonster(rowId) {
+    // 1. Delete features first to avoid FK issues if cascade isn't set
+    const { error: featError } = await supabase
+        .from('monster_features')
+        .delete()
+        .eq('parent_row_id', rowId);
+
+    if (featError) {
+        logError('monster-service', `Error deleting features for monster ${rowId}: ${featError.message}`);
+        throw featError;
+    }
+
+    // 2. Delete the monster
+    const { error } = await supabase
+        .from('monsters')
+        .delete()
+        .eq('row_id', rowId);
+
+    if (error) {
+        logError('monster-service', `Error deleting monster ${rowId}: ${error.message}`);
+        throw error;
+    }
+}
+
+/**
  * Checks if a slug is already taken by another monster.
+
  * @param {string} slug - The URL-friendly identifier to check.
  * @param {string|null} [excludeRowId=null] - UUID of a row to ignore (e.g., when updating an existing row).
  * @returns {Promise<boolean>} True if the slug is unique.

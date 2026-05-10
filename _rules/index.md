@@ -19,3 +19,5 @@ Please take a moment to review the server rules below, then jump in and join our
     </li>
   {% endfor %}
 </ul>
+
+Once you've reviewed the rules, please review the <a href="{{ 'playersguide/' | relative_url }}">Player's Guide</a> to get started.

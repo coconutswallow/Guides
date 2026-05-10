@@ -50,3 +50,6 @@ order: 80
 |[#art-share](https://discord.com/channels/308324031478890497/617853544610922515)|to share and view D&D related art|
 |[#patch-notes](https://discord.com/channels/308324031478890497/617817659555446814)|for server changelogs and feedback|
 |[#suggestions-log](https://discord.com/channels/308324031478890497/617788648439676929)|to post server suggestions|
+
+
+**Next:** Review the <a href="{{ 'playersguide/' | relative_url }}">Player's Guide</a> to get started.
