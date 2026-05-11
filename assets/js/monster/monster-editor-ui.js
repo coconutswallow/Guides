@@ -429,6 +429,9 @@ export function renderFeatureList(currentMonster) {
                             <input type="text" class="form-control feat-name" value="${f.name || ''}" placeholder="e.g. ${
                                 f.type === 'Trait' ? 'Keen Senses' : 
                                 f.type === 'Reaction' ? 'Opportunist' : 
+                                (f.type || '').toLowerCase().includes('legendary') ? 'Detect' :
+                                (f.type || '').toLowerCase().includes('lair') ? 'Mist Veil' :
+                                (f.type || '').toLowerCase().includes('regional') ? 'Difficult Terrain' :
                                 'Multiattack'
                             }">
                         </div>
