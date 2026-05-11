@@ -174,21 +174,21 @@ export function renderMonsterStatblock(container, monster) {
                         ${renderFeatureBucket(features.Bonus, 'Bonus Actions')}
                         ${renderFeatureBucket(features.Reaction, 'Reactions')}
                         
-                        ${features.Legendary.length > 0 ? `
+                        ${(features.Legendary.length > 0 || monster.legendary_header) ? `
                             <h3>Legendary Actions</h3>
-                            ${monster.legendary_header ? `<p><em>${monster.legendary_header}</em></p>` : ''}
+                            ${monster.legendary_header ? `<div class="feature-header-description"><em>${parseMarkdown(monster.legendary_header)}</em></div>` : ''}
                             ${renderFeatureList(features.Legendary)}
                         ` : ''}
 
-                        ${features.Lair.length > 0 ? `
+                        ${(features.Lair.length > 0 || monster.lair_header) ? `
                             <h3>Lair Actions</h3>
-                            ${monster.lair_header ? `<p><em>${monster.lair_header}</em></p>` : ''}
+                            ${monster.lair_header ? `<div class="feature-header-description"><em>${parseMarkdown(monster.lair_header)}</em></div>` : ''}
                             ${renderFeatureList(features.Lair)}
                         ` : ''}
 
-                        ${features.Regional.length > 0 ? `
+                        ${(features.Regional.length > 0 || monster.regional_header) ? `
                             <h3>Regional Effects</h3>
-                            ${monster.regional_header ? `<p><em>${monster.regional_header}</em></p>` : ''}
+                            ${monster.regional_header ? `<div class="feature-header-description"><em>${parseMarkdown(monster.regional_header)}</em></div>` : ''}
                             ${renderFeatureList(features.Regional)}
                         ` : ''}
                     </div>
