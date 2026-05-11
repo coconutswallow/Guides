@@ -173,24 +173,9 @@ export function renderMonsterStatblock(container, monster) {
                         ${renderFeatureBucket(features.Action, 'Actions')}
                         ${renderFeatureBucket(features.Bonus, 'Bonus Actions')}
                         ${renderFeatureBucket(features.Reaction, 'Reactions')}
-                        
-                        ${(features.Legendary.length > 0 || monster.legendary_header) ? `
-                            <h3>Legendary Actions</h3>
-                            ${monster.legendary_header ? `<div class="feature-header-description"><em>${parseMarkdown(monster.legendary_header)}</em></div>` : ''}
-                            ${renderFeatureList(features.Legendary)}
-                        ` : ''}
-
-                        ${(features.Lair.length > 0 || monster.lair_header) ? `
-                            <h3>Lair Actions</h3>
-                            ${monster.lair_header ? `<div class="feature-header-description"><em>${parseMarkdown(monster.lair_header)}</em></div>` : ''}
-                            ${renderFeatureList(features.Lair)}
-                        ` : ''}
-
-                        ${(features.Regional.length > 0 || monster.regional_header) ? `
-                            <h3>Regional Effects</h3>
-                            ${monster.regional_header ? `<div class="feature-header-description"><em>${parseMarkdown(monster.regional_header)}</em></div>` : ''}
-                            ${renderFeatureList(features.Regional)}
-                        ` : ''}
+                        ${renderFeatureBucket(features.Legendary, 'Legendary Actions', monster.legendary_header)}
+                        ${renderFeatureBucket(features.Lair, 'Lair Actions', monster.lair_header)}
+                        ${renderFeatureBucket(features.Regional, 'Regional Effects', monster.regional_header)}
                     </div>
 
                     ${monster.creator_display_name ? `
@@ -284,16 +269,18 @@ function renderAbilityTable(scores, saves, pb) {
 }
 
 /**
- * Renders a bucket of features with an optional title.
+ * Renders a bucket of features with an optional title and header.
  * @param {Object[]} list - Array of feature objects.
- * @param {string} [title] - Optional title for the bucket.
+ * @param {string} [title] - Optional title for the bucket (e.g. "Actions").
+ * @param {string} [header] - Optional intro text for the section (Markdown).
  * @returns {string} HTML string.
  */
-function renderFeatureBucket(list, title) {
-    if (!list || list.length === 0) return '';
+function renderFeatureBucket(list, title, header) {
+    if ((!list || list.length === 0) && !header) return '';
     return `
         <div class="feature-bucket">
             ${title ? `<h3>${title}</h3>` : ''}
+            ${header ? `<div class="feature-header-description"><em>${parseMarkdown(header)}</em></div>` : ''}
             ${renderFeatureList(list)}
         </div>
     `;
