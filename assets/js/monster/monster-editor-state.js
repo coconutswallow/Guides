@@ -169,9 +169,9 @@ let autoSaveTimeout = null;
  * Also triggers an immediate sync to localStorage for rapid recovery.
  * @param {Object} currentMonster - The monster being edited.
  * @param {Function} saveCallback - The function to call when the timer expires.
- * @param {number} [delay=30000] - Delay in milliseconds (default 30s).
+ * @param {number} [delay=15000] - Delay in milliseconds (default 15s).
  */
-export function resetAutoSave(currentMonster, saveCallback, delay = 30000) {
+export function resetAutoSave(currentMonster, saveCallback, delay = 15000) {
     if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
 
     // Backup to localStorage immediately on input

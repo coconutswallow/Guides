@@ -80,6 +80,16 @@ export function attachEditorEvents(container, currentMonster, lookups) {
         }
     };
     document.addEventListener('visibilitychange', activeVisibilityHandler);
+
+    // 0.5. Prevent accidental navigation loss
+    window.onbeforeunload = (e) => {
+        const statusDiv = document.getElementById('save-status');
+        // If the status div shows "Saving...", "Error", or is empty (unsaved), warn the user
+        if (statusDiv && (statusDiv.textContent.includes('Saving') || statusDiv.textContent === '')) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    };
     
     container.dataset.visibilityHandler = 'true';
 
@@ -178,6 +188,10 @@ export function attachEditorEvents(container, currentMonster, lookups) {
     container.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const targetId = e.currentTarget.getAttribute('data-tab');
+            
+            // Sync and Auto-save before switching views to ensure no data loss
+            handleSave(currentMonster, true);
+
             sessionStorage.setItem('monster_editor_active_tab', targetId);
             container.querySelectorAll('.editor-tab-pane').forEach(p => p.style.display = 'none');
             container.querySelectorAll('.tab-btn').forEach(b => {
