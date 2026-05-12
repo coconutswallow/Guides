@@ -24,7 +24,17 @@ There are six Staff teams:
 
 * <span class="role-admin">**Admins**</span> oversee the running and management of the server in collaboration with the other Staff teams.
 
+#### Interesting In Joining Staff?
+
+If you are interested in joining staff, please reach out to the Admin team:
+
+- For Player Relations, reach out to **Kathy** (@kathcaly)
+- For Auditors, reach out to **Espy** (@espy42)
+- For Rules and Engineering, reach out to **Luolang** (@luolang)
+- For Lore, reach out to **Gene** (@monoxideatwork)
+
 ### Channel Roles
 <p>In the Channels & Roles feature in discord, you can select and change what you would like to be pinged for, including game advertising (by type and character tier) or other such as text role-play.</p>
 
 ![Server Roles](\Guides\assets\images\server-roles.png)
+
