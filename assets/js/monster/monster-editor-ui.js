@@ -92,17 +92,19 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
     return `
         <div class="editor-toolbar" style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; position: sticky; top: 100px; background: var(--color-bg-page); padding: 1rem 0; z-index: 100; border-bottom: 1px solid var(--color-border);">
             <a href="#/" class="btn">← Back</a>
-            <h2 style="margin: 0; flex-grow: 1; display: flex; align-items: center; gap: 1rem;">
+            <h2 style="margin: 0; flex-grow: 1; display: flex; align-items: center; gap: 1rem; border: none;">
                 ${isNew ? 'New Monster' : 'Edit: ' + currentMonster.name}
                 ${!isNew ? `<span class="version-tag" style="background: var(--color-bg-medium); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; color: var(--color-text-secondary);">v${currentMonster.version || '1.0'}</span>` : ''}
                 ${!isNew ? `<span class="status-badge status-${(currentMonster.status || 'draft').toLowerCase()}">${currentMonster.status || 'Draft'}</span>` : '<span class="status-badge status-draft">Draft</span>'}
             </h2>
-            <div id="save-status" style="font-size: 0.8rem; color: var(--color-text-secondary);"></div>
-            <button type="button" id="btn-save" class="btn btn-save" ${isLocked ? `disabled title="Monster is locked (${lockReason})"` : ''}>Save Draft</button>
-            <button type="button" id="btn-preview" class="btn btn-preview">Preview Statblock</button>
-            <button type="button" id="btn-submit" class="btn btn-submit" ${isLocked ? `disabled title="Monster is locked (${lockReason})"` : ''}>Submit for Review</button>
-            ${!isNew && currentMonster.status === 'Draft' ? '<button type="button" id="btn-delete-draft" class="btn btn-outline-danger">Delete Draft</button>' : ''}
-            ${currentMonster.status === 'Approved' ? '<button type="button" id="btn-version" class="btn btn-outline-primary" style="margin-left: auto;">Save as New Version</button>' : ''}
+            <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
+                <button type="button" id="btn-save" class="btn btn-save" style="font-size: 0.85rem; padding: 0.5rem 1rem;" ${isLocked ? `disabled title="Monster is locked (${lockReason})"` : ''}>Save Draft</button>
+                <div id="save-status" style="position: absolute; top: 100%; font-size: 0.65rem; color: var(--color-text-secondary); font-style: italic; white-space: nowrap; margin-top: 2px;"></div>
+            </div>
+            <button type="button" id="btn-preview" class="btn btn-preview" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Preview Statblock</button>
+            <button type="button" id="btn-submit" class="btn btn-submit" style="font-size: 0.85rem; padding: 0.5rem 1rem;" ${isLocked ? `disabled title="Monster is locked (${lockReason})"` : ''}>Submit for Review</button>
+            ${!isNew && currentMonster.status === 'Draft' ? '<button type="button" id="btn-delete-draft" class="btn btn-outline-danger" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Delete Draft</button>' : ''}
+            ${currentMonster.status === 'Approved' ? '<button type="button" id="btn-version" class="btn btn-outline-primary" style="margin-left: auto; font-size: 0.85rem; padding: 0.5rem 1rem;">Save as New Version</button>' : ''}
         </div>
 
         ${isLocked ? `

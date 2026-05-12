@@ -334,7 +334,7 @@ export async function handleSave(currentMonster, silent = false) {
         // Success: Clear local cache for this monster as DB is now source of truth
         clearLocalCache(currentMonster.slug);
 
-        statusDiv.textContent = `${silent ? 'Auto-sync' : 'Saved'} • ${new Date().toLocaleTimeString()}`;
+        statusDiv.textContent = silent ? 'Auto-sync complete' : `Saved • ${new Date().toLocaleTimeString()}`;
         
         // ONLY change the hash if it's a manual save (silent = false)
         // This prevents the router from re-rendering and losing focus during auto-saves.
