@@ -16,7 +16,7 @@ import {
     deleteMonster
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
-import { calculatePB, calculateXP, calculateMod, formatInitiative } from './monster-utils.js';
+import { calculatePB, calculateXP, calculateMod, formatInitiative, calculatePassivePerception } from './monster-utils.js';
 import { renderFeatureList } from './monster-editor-ui.js';
 import {
     syncMonsterFromForm,
@@ -129,6 +129,7 @@ export function attachEditorEvents(container, currentMonster, lookups) {
 
         // Ability Mods & Saves
         let dexScore = 10;
+        let wisScore = 10;
         let conMod = 0;
         container.querySelectorAll('.attr-score').forEach(input => {
             const attr = input.name.split('_')[1];
@@ -138,6 +139,7 @@ export function attachEditorEvents(container, currentMonster, lookups) {
 
             const score = parseInt(input.value) || 10;
             if (attr === 'DEX') dexScore = score;
+            if (attr === 'WIS') wisScore = score;
             const m = calculateMod(score);
             if (attr === 'CON') conMod = m;
 
@@ -171,6 +173,13 @@ export function attachEditorEvents(container, currentMonster, lookups) {
             initPreview.value = formatInitiative(dexScore, initProf, pb);
         }
 
+        // Passive Perception
+        const passivePercProf = form.elements['passive_perc_prof']?.value || 'None';
+        const passivePercPreview = form.querySelector('#passive-perc-preview');
+        if (passivePercPreview) {
+            passivePercPreview.value = calculatePassivePerception(wisScore, passivePercProf, pb);
+        }
+
         // Overviews
         const pbPreview = form.querySelector('#pb-preview');
         if (pbPreview) pbPreview.value = `+${pb}`;
@@ -183,6 +192,9 @@ export function attachEditorEvents(container, currentMonster, lookups) {
         updateCalculatedStats();
         resetAutoSave(currentMonster, (silent) => handleSave(currentMonster, silent));
     });
+
+    // Run initial calculation
+    updateCalculatedStats();
 
     // 2. Tab Switching
     container.querySelectorAll('.tab-btn').forEach(btn => {

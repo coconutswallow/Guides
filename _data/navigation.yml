@@ -51,7 +51,7 @@
   type: dropdown
   sections:
     - title: "Monster Compendium"
-      url: /field-guide/monsters/
+      url: /monsters/
     - title: "Adventure Locations"
       url: /field-guide/adventure-locations/
 

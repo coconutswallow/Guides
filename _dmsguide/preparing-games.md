@@ -12,7 +12,7 @@ All games ran on the server must fit within the server’s setting of the D&D 5e
 
 ### Lore and Impact
 
-You should consult relevant lore before running games.  The server uses the 5e Forgotten Realms setting and broader D&D multiverse, taking official 5e sourcebooks from most recent to oldest as primary source material, with major server specific lore found in [#resources](https://discord.com/channels/308324031478890497/617817564554199100) (including [Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view), the [Hawthorne Adventure Locations](/Guides/field-guide/adventure-locations/) and the [Hawthorne Monster Compendium](/Guides/field-guide/monsters/)). 
+You should consult relevant lore before running games.  The server uses the 5e Forgotten Realms setting and broader D&D multiverse, taking official 5e sourcebooks from most recent to oldest as primary source material, with major server specific lore found in [#resources](https://discord.com/channels/308324031478890497/617817564554199100) (including [Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view), the [Hawthorne Adventure Locations]({{ '/field-guide/adventure-locations/' | relative_url }}) and the [Hawthorne Monster Compendium]({{ '/monsters/' | relative_url }})). 
 
 Older edition material from most recent to oldest can also be referred to as supplemental source material, with 5e sources taking priority. If you have any questions regarding relevant lore, you can consult fellow DMs and Lore Consultants in [#dm-chat](https://discord.com/channels/308324031478890497/617838916929847315) and [#lore-discussion](https://discord.com/channels/308324031478890497/617820732587507763).
 

@@ -36,8 +36,8 @@ Read through this document to familiarize yourself with the rules on DMing on th
 | [DM Registration](https://docs.google.com/forms/d/e/1FAIpQLSeSJFrWH_ZFCBa_TndvhqhJsNDtVoKb4hAt7X2v07D-4lLTbw/viewform) | Form to register as a Trial DM |
 | [Hawthorne Player Guidelines](/Guides/playersguide/) | Guidelines for all server members |
 | [Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view) | Player facing server homebrew |
-| [Hawthorne Adventure Locations](/Guides/field-guide/adventure-locations/) | Server homebrew locations for DMs |
-| [Hawthorne Monster Compendium](/Guides/field-guide/monsters/) | Server homebrew monsters for DMs |
+| [Hawthorne Adventure Locations]({{ '/field-guide/adventure-locations/' | relative_url }}) | Server homebrew locations for DMs |
+| [Hawthorne Monster Compendium]({{ '/monsters/' | relative_url }}) | Server homebrew monsters for DMs |
 | [Hawthorne Kanka](https://kanka.io/en/hawthorne) | DM curated server wiki and lore |
 
 ### Important Channels

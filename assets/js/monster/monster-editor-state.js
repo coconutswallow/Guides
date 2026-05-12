@@ -37,6 +37,7 @@ export function createEmptyMonster() {
         senses: '',
         languages: '',
         init_prof: 'None',
+        passive_perc_prof: 'None',
         features: [],
         legendary_header: '',
         lair_header: '',
@@ -78,6 +79,7 @@ export function syncMonsterFromForm(form, currentMonster) {
     currentMonster.hp_modifier = parseInt(formData.get('hp_modifier')) || 0;
     currentMonster.speed = formData.get('speed');
     currentMonster.init_prof = formData.get('init_prof');
+    currentMonster.passive_perc_prof = formData.get('passive_perc_prof');
 
     currentMonster.skills = formData.get('skills');
     currentMonster.damage_vulnerabilities = formData.get('damage_vulnerabilities');

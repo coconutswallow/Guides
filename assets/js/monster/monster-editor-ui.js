@@ -246,41 +246,39 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
 
             <div class="form-section">
                 <h3>Attributes</h3>
-                <div style="display: grid; grid-template-columns: 80px 1fr; gap: 1rem;">
+                <div style="display: grid; grid-template-columns: 80px 1fr 100px 100px 100px 160px; gap: 1rem;">
                     <div class="form-group">
                         <label>AC</label>
-                        <input type="number" name="ac" class="form-control" value="${currentMonster.ac || 10}">
+                        <input type="number" name="ac" class="form-control" value="${currentMonster.ac || 10}" style="text-align: center; font-weight: bold;">
                     </div>
                     <div class="form-group">
                         <label>Conditional AC (e.g. "Natural Armor")</label>
                         <input type="text" name="conditional_ac" class="form-control" value="${currentMonster.conditional_ac || ''}">
                     </div>
-                </div>
-                <div class="grid-4">
                     <div class="form-group">
-                        <label>HP Num Dice</label>
-                        <input type="number" name="hit_dice_num" class="form-control" value="${currentMonster.hit_dice_num || 1}">
+                        <label>HP Dice</label>
+                        <input type="number" name="hit_dice_num" class="form-control" value="${currentMonster.hit_dice_num || 1}" style="text-align: center;">
                     </div>
                     <div class="form-group">
-                        <label>HP Die Size</label>
+                        <label>Die Size</label>
                         <select name="hit_dice_size" class="form-control">${renderOptions([4, 6, 8, 10, 12, 20], currentMonster.hit_dice_size)}</select>
                     </div>
                     <div class="form-group">
-                        <label>HP Modifier</label>
-                        <input type="number" name="hp_modifier" class="form-control" value="${currentMonster.hp_modifier || 0}">
+                        <label>HP Mod.</label>
+                        <input type="number" name="hp_modifier" class="form-control" value="${currentMonster.hp_modifier || 0}" style="text-align: center;">
                     </div>
                     <div class="form-group">
-                        <label>Average HP (Preview)</label>
-                        <input type="text" id="hp-average" class="form-control" value="0" readonly tabindex="-1">
+                        <label>Average HP</label>
+                        <input type="text" id="hp-average" class="form-control" value="0" readonly tabindex="-1" style="text-align: center; font-weight: bold; background: rgba(0,0,0,0.05);">
                     </div>
                 </div>
-                <div class="grid-3" style="margin-top: 1rem;">
+                <div style="display: grid; grid-template-columns: 150px 200px 1fr; gap: 1rem; margin-top: 1rem;">
                     <div class="form-group">
-                        <label>Speed</label>
-                        <input type="text" name="speed" class="form-control" value="${currentMonster.speed || '30 ft.'}">
+                        <label>Initiative</label>
+                        <input type="text" id="init-preview" class="form-control" value="0" readonly tabindex="-1" style="text-align: center; font-weight: bold;">
                     </div>
                     <div class="form-group">
-                        <label>Initiative Proficiency</label>
+                        <label>Initiative Prof.</label>
                         <select name="init_prof" class="form-control">
                             <option value="None" ${currentMonster.init_prof === 'None' ? 'selected' : ''}>None</option>
                             <option value="Proficient" ${currentMonster.init_prof === 'Proficient' ? 'selected' : ''}>Proficient</option>
@@ -288,19 +286,31 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Initiative Preview</label>
-                        <input type="text" id="init-preview" class="form-control" value="0" readonly tabindex="-1">
+                        <label>Speed</label>
+                        <input type="text" name="speed" class="form-control" value="${currentMonster.speed || '30 ft.'}">
                     </div>
                 </div>
-                <div class="grid-2" style="margin-top: 1rem;">
+                <div style="display: grid; grid-template-columns: 150px 200px 1fr; gap: 1rem; margin-top: 1rem;">
                     <div class="form-group">
-                        <label>Proficient Skills</label>
-                        <input type="text" name="skills" class="form-control" value="${currentMonster.skills || ''}" placeholder="Arcana +5, Stealth +7">
+                        <label>Passive Perception</label>
+                        <input type="text" id="passive-perc-preview" class="form-control" value="10" readonly tabindex="-1" style="text-align: center; font-weight: bold;">
                     </div>
                     <div class="form-group">
-                        <label>Special Senses</label>
-                        <input type="text" name="senses" class="form-control" value="${currentMonster.senses || ''}" placeholder="darkvision 60 ft., passive Perception 12">
+                        <label>Passive Perception Prof.</label>
+                        <select name="passive_perc_prof" class="form-control">
+                            <option value="None" ${currentMonster.passive_perc_prof === 'None' ? 'selected' : ''}>None</option>
+                            <option value="Proficient" ${currentMonster.passive_perc_prof === 'Proficient' ? 'selected' : ''}>Proficient</option>
+                            <option value="Expert" ${currentMonster.passive_perc_prof === 'Expert' ? 'selected' : ''}>Expert</option>
+                        </select>
                     </div>
+                    <div class="form-group">
+                        <label>Other Senses</label>
+                        <input type="text" name="senses" class="form-control" value="${currentMonster.senses || ''}" placeholder="darkvision 60 ft.">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Proficient Skills</label>
+                    <input type="text" name="skills" class="form-control" value="${currentMonster.skills || ''}" placeholder="Arcana +5, Stealth +7">
                 </div>
                 <div class="form-group">
                     <label>Known Languages</label>

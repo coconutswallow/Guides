@@ -107,6 +107,26 @@ export function formatInitiative(dexScore, proficiency, pb) {
 }
 
 /**
+ * Calculates Passive Perception as: 10 + WIS mod + (PB * multiplier)
+ * @param {number} wisScore 
+ * @param {string} proficiency 
+ * @param {number} pb 
+ * @returns {number}
+ */
+export function calculatePassivePerception(wisScore, proficiency, pb) {
+    const wisMod = calculateMod(wisScore || 10);
+    let totalBonus = wisMod;
+
+    if (proficiency === 'Proficient') {
+        totalBonus += pb;
+    } else if (proficiency === 'Expert') {
+        totalBonus += (pb * 2);
+    }
+
+    return 10 + totalBonus;
+}
+
+/**
  * Escapes HTML characters to prevent XSS.
  * @param {string} str 
  * @returns {string}

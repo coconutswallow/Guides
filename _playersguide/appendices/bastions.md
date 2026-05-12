@@ -65,10 +65,10 @@ The previous Hawthorne Housing and Hawthorne Hirelings documents are retired. Pl
 The following statblocks are intended for use with the War Room Special Facility.
 
 <img src="{{ '/assets/images/bastion-1.png' | relative_url }}" alt="Bastion Statblock" class="image-size-60">
-<br>[Army Statblock](/Guides/field-guide/monsters/#/army)
+<br>[Army Statblock]({{ '/monsters/#/army' | relative_url }})
 
 <img src="{{ '/assets/images/bastion-2.png' | relative_url }}" alt="Bastion Mounted Army Statblock" class="image-size-60">
-<br>[Mounted Army Statblock](/Guides/field-guide/monsters/#/mounted-army)
+<br>[Mounted Army Statblock]({{ '/monsters/#/mounted-army' | relative_url }})
 
 ## Bastion Workshop (Video)
 

@@ -5,7 +5,8 @@ import {
     calculateMod, 
     formatSign, 
     calculateHPString, 
-    formatInitiative 
+    formatInitiative,
+    calculatePassivePerception
 } from '../monster-utils.js';
 
 /**
@@ -152,7 +153,11 @@ export function renderMonsterStatblock(container, monster) {
                         ${conImm ? `<div class="stat-row"><strong>Condition Immunities</strong> ${conImm}</div>` : ''}
                         
                         <div class="stat-row">
-                            <strong>Senses</strong> ${monster.senses || 'passive Perception 10'}
+                            <strong>Senses</strong> ${(() => {
+                                const passive = calculatePassivePerception(monster.ability_scores?.WIS || 10, monster.passive_perc_prof, pb);
+                                const rawSenses = (monster.senses || '').split(',').filter(s => !s.toLowerCase().includes('passive perception')).join(',').trim();
+                                return rawSenses ? `${rawSenses}, passive Perception ${passive}` : `passive Perception ${passive}`;
+                            })()}
                         </div>
                         <div class="stat-row">
                             <strong>Languages</strong> ${monster.languages || '—'}
