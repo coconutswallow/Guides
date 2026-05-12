@@ -244,7 +244,7 @@
   --statblock-bg-image: url('/assets/images/fieldguide-back.png');
   --statblock-page-bg: var(--palette-neutral-white);
   --statblock-body-bg: var(--palette-bg-page-dark);
-  --statblock-texture: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5EkJggg==');
+  --statblock-texture: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHklEQVQoU2NkYGD4z4AEWBhgAhiKcJoFNROXQpxmAQBYNAUMcJ4P0gAAAABJRU5EkJggg==");
   --statblock-modifier-bg: var(--palette-neutral-gray-700);
   --statblock-box-shadow: var(--shadow-color-statblock-light);
   --statblock-card-shadow: var(--shadow-color-statblock-card-light);

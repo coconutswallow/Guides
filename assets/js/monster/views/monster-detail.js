@@ -285,7 +285,7 @@ function renderFeatureBucket(list, title, header) {
     return `
         <div class="feature-bucket">
             ${title ? `<h3>${title}</h3>` : ''}
-            ${header ? `<div class="feature-header-description"><em>${parseMarkdown(header)}</em></div>` : ''}
+            ${header ? `<div class="feature-header-description">${parseMarkdown(header)}</div>` : ''}
             ${renderFeatureList(list)}
         </div>
     `;

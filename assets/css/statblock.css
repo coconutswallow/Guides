@@ -729,11 +729,27 @@ blockquote.stat-block hr {
     }
 
     .feature-bucket {
-        break-inside: auto; /* Allow bucket to split */
+        display: inline-block;
+        width: 100%;
+        break-inside: avoid-column;
+        -webkit-column-break-inside: avoid;
+        margin-bottom: 0.5rem;
+    }
+
+    .feature-header-description {
+        font-style: italic;
+        padding-left: 8px;
+        margin-bottom: 10px;
+    }
+
+    .feature-header-description p {
+        margin: 0;
+        display: inline;
     }
 
     .feature-item {
         break-inside: avoid-column;
+        -webkit-column-break-inside: avoid;
         margin-bottom: 0.8rem;
     }
 
