@@ -24,7 +24,7 @@ There are six Staff teams:
 
 * <span class="role-admin">**Admins**</span> oversee the running and management of the server in collaboration with the other Staff teams.
 
-#### Interesting In Joining Staff?
+#### Interested in Joining Staff?
 
 If you are interested in joining staff, please reach out to the Admin team:
 
