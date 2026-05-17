@@ -44,7 +44,7 @@ async function init() {
             return;
         }
 
-        const hasAccess = await checkAccess(user.id, ['Full DM', 'Monster Admin']);
+        const hasAccess = await checkAccess(user.id, ['Lore', 'Rules', 'Admin', 'Monster Admin']);
         if (!hasAccess) {
             container.innerHTML = `
                 <div class="alert alert-danger" style="margin-top: 2rem;">
@@ -261,11 +261,11 @@ async function handleBatchActivation() {
 
     const count = patchQueue.length;
     const msg = `This will activate ALL ${count} monsters in the Patch Queue.\n\n` +
-                `Actions per monster:\n` +
-                `- Set to 'Approved' & 'Live'\n` +
-                `- Clean slug (remove -vX.X suffix)\n` +
-                `- Archive any previous approved versions\n\n` +
-                `Do you want to proceed?`;
+        `Actions per monster:\n` +
+        `- Set to 'Approved' & 'Live'\n` +
+        `- Clean slug (remove -vX.X suffix)\n` +
+        `- Archive any previous approved versions\n\n` +
+        `Do you want to proceed?`;
 
     if (!confirm(msg)) return;
 
@@ -281,7 +281,7 @@ async function handleBatchActivation() {
         for (let i = 0; i < patchQueue.length; i++) {
             const m = patchQueue[i];
             btnTranslate.textContent = `Activating [${i + 1}/${count}]...`;
-            
+
             try {
                 await approveMonster(m.row_id, user.id);
                 successCount++;
