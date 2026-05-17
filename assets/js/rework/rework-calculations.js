@@ -436,16 +436,25 @@ export function computeReworkCosts(type, oldChar, newChar) {
         }
 
         // --------------------------------------------------------
-        // CHANGE DETECTION 4: Origin/Background Change
+        // CHANGE DETECTION 4a: Background Change
         // --------------------------------------------------------
-        // Checks background, origin feat, and origin features
-        if (oldChar.bg !== newChar.bg ||
-            oldChar.origin_feat !== newChar.origin_feat ||
+        if (oldChar.bg !== newChar.bg) {
+            costs.push({
+                change: `Background Change: ${oldChar.bg || 'None'} → ${newChar.bg || 'None'}`,
+                count: 1  // Background changes cost 1 unit
+            });
+        }
+
+        // --------------------------------------------------------
+        // CHANGE DETECTION 4b: Origin Feat / Features Change
+        // --------------------------------------------------------
+        // Checks origin feat and origin features
+        if (oldChar.origin_feat !== newChar.origin_feat ||
             !areFeaturesEqual(oldChar.origin_features, newChar.origin_features)) {
 
             costs.push({
-                change: `Origin Change: ${oldChar.bg || 'None'} → ${newChar.bg || 'None'}`,
-                count: 1  // Origin changes cost 1 unit
+                change: `Origin Feat Change: ${oldChar.origin_feat || 'None'} → ${newChar.origin_feat || 'None'}`,
+                count: 1  // Origin feat changes cost 1 unit
             });
         }
 
@@ -463,59 +472,44 @@ export function computeReworkCosts(type, oldChar, newChar) {
             `${c.class} (${c.subclass || 'None'})`
         ).join('/');
 
-        // Determine if the build has changed
-        // Must check: class count, names, subclasses, versions, AND levels
-        let buildChanged = oldClasses.length !== newClasses.length;
+        // Calculate how many actual class levels were changed
+        const oldMap = {};
+        oldClasses.forEach(c => {
+            const key = `${c.class}|${c.subclass || 'None'}|${c.version}`;
+            oldMap[key] = (oldMap[key] || 0) + (parseInt(c.level) || 0);
+        });
 
-        if (!buildChanged) {
-            // Same number of classes - check each one in detail
-            for (let i = 0; i < oldClasses.length; i++) {
-                if (oldClasses[i].class !== newClasses[i].class ||
-                    oldClasses[i].subclass !== newClasses[i].subclass ||
-                    oldClasses[i].version !== newClasses[i].version ||
-                    oldClasses[i].level !== newClasses[i].level) {
-                    buildChanged = true;
-                    break;
-                }
-            }
-        }
+        const newMap = {};
+        newClasses.forEach(c => {
+            const key = `${c.class}|${c.subclass || 'None'}|${c.version}`;
+            newMap[key] = (newMap[key] || 0) + (parseInt(c.level) || 0);
+        });
 
-        if (buildChanged) {
-            // Build changed - recalculate all feat cards
-            // Each ASI/feat milestone counts as one change
+        let diffSum = 0;
+        const allKeys = new Set([...Object.keys(oldMap), ...Object.keys(newMap)]);
+        allKeys.forEach(key => {
+            const oldL = oldMap[key] || 0;
+            const newL = newMap[key] || 0;
+            diffSum += Math.abs(oldL - newL);
+        });
 
-            let featCardCount = 0;
+        // Since replacing 1 level of Class A with Class B adds 1 to A's diff and 1 to B's diff,
+        // the total levels changed is diffSum / 2.
+        const levelsChanged = Math.ceil(diffSum / 2);
 
-            newChar.classes.forEach(classObj => {
-                // Look up this class/subclass in the character data
-                let data = characterData.find(r =>
-                    r.version === classObj.version &&
-                    r.class === classObj.class &&
-                    r.subclass === classObj.subclass
-                ) || characterData.find(r =>
-                    r.version === classObj.version &&
-                    r.class === classObj.class
-                );
-
-                // Get ASI levels (default to standard if not found)
-                const asiLevels = data?.ASI || [4, 8, 12, 16, 19];
-
-                // Count how many ASI milestones this class has reached
-                featCardCount += asiLevels.filter(milestone =>
-                    milestone <= (parseInt(classObj.level) || 0)
-                ).length;
-            });
-
+        if (levelsChanged > 0) {
+            // They changed their build, charge them for the class levels altered.
+            // Any feats replaced as part of these new class levels are included for free.
             costs.push({
-                change: `Class/Level Shift: ${oldStr} → ${newStr} (${featCardCount} feat cards affected)`,
-                count: featCardCount
+                change: `Class/Level Shift: ${oldStr} → ${newStr}`,
+                count: levelsChanged
             });
 
         } else {
             // --------------------------------------------------------
             // CHANGE DETECTION 5b: Individual Feat/ASI Changes
             // --------------------------------------------------------
-            // Build didn't change, so check individual feat modifications
+            // Build didn't change (or just reordered), so check individual feat modifications
 
             const oldFeats = oldChar.feats || [];
             const newFeats = newChar.feats || [];

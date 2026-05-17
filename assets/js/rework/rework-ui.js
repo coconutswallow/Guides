@@ -147,6 +147,7 @@ export function scrapeColumn(colId) {
     // Return complete character object
     // --------------------------------------------------------
     return {
+        ruleset: getV(`ruleset-${colId}`),
         name: getV(`name-${colId}`),
         race: getV(`race-${colId}`),
         race_features: scrapeFeatures(`race-features-container-${colId}`),
@@ -203,8 +204,11 @@ export function populateColumn(colId, data) {
     };
 
     // --------------------------------------------------------
-    // Populate basic text inputs
+    // Populate basic text inputs and dropdowns
     // --------------------------------------------------------
+    setV(`ruleset-${colId}`, data.ruleset || '2014');
+    window.toggleRuleset(colId); // Update UI visibility based on ruleset
+
     setV(`name-${colId}`, data.name);
     setV(`race-${colId}`, data.race);
     setV(`bg-${colId}`, data.bg);
@@ -925,3 +929,36 @@ ${notes ? notes + '\n' : ''}Cost: ${cost}
 <@&474659626193780751> <@&554463237924716545>
 \`\`\``;
 }
+
+// ================================================================
+// UI TOGGLES
+// ================================================================
+
+/**
+ * Toggles the visibility of Race vs Origin attribute modifiers 
+ * based on the selected base ruleset (2014 vs 2024).
+ * Also wipes hidden stat bonuses to 0 to prevent secret stats.
+ * 
+ * @param {string} colId - Column identifier ('original' or 'new')
+ */
+window.toggleRuleset = function(colId) {
+    const ruleset = document.getElementById(`ruleset-${colId}`)?.value || '2014';
+    const raceBonusGroup = document.getElementById(`race-bonus-group-${colId}`);
+    const originBonusGroup = document.getElementById(`origin-bonus-group-${colId}`);
+
+    if (ruleset === '2014') {
+        if (raceBonusGroup) raceBonusGroup.style.display = '';
+        if (originBonusGroup) {
+            originBonusGroup.style.display = 'none';
+            // Wipe hidden origin stats to 0
+            document.querySelectorAll(`.mod-select-origin[data-col="${colId}"]`).forEach(s => s.value = '0');
+        }
+    } else {
+        if (raceBonusGroup) {
+            raceBonusGroup.style.display = 'none';
+            // Wipe hidden race stats to 0
+            document.querySelectorAll(`.mod-select-race[data-col="${colId}"]`).forEach(s => s.value = '0');
+        }
+        if (originBonusGroup) originBonusGroup.style.display = '';
+    }
+};

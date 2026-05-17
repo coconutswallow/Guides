@@ -84,6 +84,13 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
                     <input type="text" class="form-control" id="name-original" placeholder="Name">
                 </div>
                 <div class="form-group">
+                    <div class="field-header-row"><label>Base Ruleset</label></div>
+                    <select id="ruleset-original" class="form-control" onchange="window.toggleRuleset('original')">
+                        <option value="2014">2014 (Race Stats)</option>
+                        <option value="2024">2024 (Origin Stats)</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <div class="field-header-row"><label>Base Attributes (27 Point Buy)</label></div>
                     <div id="attrs-container-original"></div>
                     <div id="points-original" class="points-display">27 / 27 Pts</div>
@@ -96,6 +103,14 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
                     <div class="field-header-row"><label>Character Name</label><button type="button" class="copy-link"
                             onclick="window.copyValue('name-original', 'name-new')">Copy from Original</button></div>
                     <input type="text" class="form-control" id="name-new" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <div class="field-header-row"><label>Base Ruleset</label><button type="button" class="copy-link"
+                            onclick="window.copyValue('ruleset-original', 'ruleset-new'); window.toggleRuleset('new');">Copy from Original</button></div>
+                    <select id="ruleset-new" class="form-control" onchange="window.toggleRuleset('new')">
+                        <option value="2014">2014 (Race Stats)</option>
+                        <option value="2024">2024 (Origin Stats)</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <div class="field-header-row"><label>Base Attributes</label><button type="button" class="copy-link"
@@ -113,7 +128,7 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
                     <div class="field-header-row"><label>Race/Species</label></div>
                     <input type="text" class="form-control" id="race-original" placeholder="Race Details">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="race-bonus-group-original">
                     <div class="field-header-row"><label>Racial Bonuses</label></div>
                     <div id="race-mod-container-original">
                         <table class="stat-table">
@@ -183,7 +198,7 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
                             onclick="window.copyValue('race-original', 'race-new')">Copy from Original</button></div>
                     <input type="text" class="form-control" id="race-new" placeholder="Race Details">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="race-bonus-group-new">
                     <div class="field-header-row"><label>Racial Bonuses</label><button type="button" class="copy-link"
                             onclick="window.copyMods('race')">Copy from Original</button></div>
                     <div id="race-mod-container-new">
@@ -258,6 +273,8 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
                     <div class="field-header-row"><label>Origin Feat</label></div>
                     <input type="text" class="form-control" id="orig-feat-original" placeholder="Feat Name"
                         style="margin-bottom:1rem;">
+                </div>
+                <div class="form-group" id="origin-bonus-group-original" style="display:none;">
                     <div class="field-header-row"><label style="font-size:0.8rem; opacity:0.8;">Origin Feat
                             Modifiers</label></div>
                     <div id="origin-mod-container-original">
@@ -339,6 +356,8 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/8
                             Original</button></div>
                     <input type="text" class="form-control" id="orig-feat-new" placeholder="Feat Name"
                         style="margin-bottom:1rem;">
+                </div>
+                <div class="form-group" id="origin-bonus-group-new" style="display:none;">
                     <div class="field-header-row"><label style="font-size:0.8rem; opacity:0.8;">Origin Feat
                             Modifiers</label><button type="button" class="copy-link"
                             onclick="window.copyMods('origin')">Copy from Original</button></div>
