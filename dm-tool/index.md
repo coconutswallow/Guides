@@ -5,9 +5,11 @@ order: 11
 background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.jpeg  
 ---
 
-## Hawthorne DM Tools
+## Hawthorne DM Tools (2 options)
 
 The  DM Tools are intended to make it easier for DMs to run games on the server - from setting up your initial game listing, to calculating your DM incentives, to logging your session log and MAL record.  They are **not mandatory** to use, but once you get used to it, should make it much faster to run games as a DM on this server.
+
+We have 2 versions of the DM Tools:  a Google Sheet version, and a web application version - which has more built-in support for new DMs.  See the links below:
 
 | Tool Version | Description | Access |
 | :--- | :--- | :--- |
