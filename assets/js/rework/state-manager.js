@@ -301,6 +301,9 @@ export async function fetchAllReworks() {
  * console.log('Loaded:', rework.character_name);
  */
 export async function loadReworkById(id) {
+    // Wait for the Supabase session to restore from localStorage asynchronously
+    await supabase.auth.getSession();
+
     // Fetch the complete record
     const { data, error } = await supabase
         .from('rework')
@@ -357,6 +360,9 @@ export async function loadReworkById(id) {
  * console.log('Saved with ID:', result.id);
  */
 export async function saveReworkToDb(payload) {
+    // Wait for the Supabase session to restore from localStorage asynchronously
+    await supabase.auth.getSession();
+
     // Add current timestamp
     payload.updated_at = new Date().toISOString();
 
@@ -427,6 +433,9 @@ export async function saveReworkToDb(payload) {
  * console.log('Rework deleted');
  */
 export async function deleteReworkById(id) {
+    // Wait for the Supabase session to restore from localStorage asynchronously
+    await supabase.auth.getSession();
+
     // Delete from Supabase
     const { error } = await supabase
         .from('rework')

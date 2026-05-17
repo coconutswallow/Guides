@@ -130,7 +130,7 @@ window.handleCleanup = async () => {
  */
 window.viewRework = (id) => {
     // Redirect to index.html with the ID as a query parameter
-    window.location.href = `./index.html?id=${id}`;
+    window.location.href = `../index.html?id=${id}`;
 };
 
 /**
