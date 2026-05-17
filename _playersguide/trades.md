@@ -1,10 +1,9 @@
 ---
+title: Buying, Selling, and Trading
 layout: doc
-title: "Buying, Selling, and Trading"
 order: 12
 background_image: /assets/images/tavern_brawl.jpg
 ---
-
 ### Equipment Purchases
 
 You can purchase everything under the <b>Equipment</b> Tab of the <a href="{{ '/allowed-content/#equipment' | relative_url }}">Allowed Content</a> from NPCs (some conditions may apply - please read the item details).  
@@ -25,7 +24,7 @@ Example:
 
 2 - Make an entry in your MAL:
 
-![Equipment Purchase Downtime Log]({{ '/assets/images/mal-equipment-purchase.png' | relative_url }})
+![Equipment Purchase Downtime Log](/Guides/assets/images/mal-equipment-purchase2.png)
 
 3 - In the inventory section of your MAL, add your equipment:
 
@@ -34,7 +33,6 @@ Example:
 #### Making equipment purchases in-session:
 
 If making a purchase in-session, you would log that purchase as part of your final session log entry.  Add the purchased item(s) with your items gains, and subtract the cost of your purchase from your gold rewards.
-
 
 #### Selling Equipment
 
@@ -49,4 +47,3 @@ You can trade items with other PCs. Only PCs in the same location can trade with
 You can list your items for trade in <a href="https://discord.com/channels/308324031478890497/617822091164516405">#trade-listing</a>.  But please observe the <a href="https://discord.com/channels/308324031478890497/617822091164516405/1424311899843068005">rules for posts</a> in this channel.
 
 **Note**: You can’t trade gold or equipment that can be sold for gold between your PCs, even by proxy or cross character trade (such as trading an item from one of your PCs and receiving an item on another PC).
-
