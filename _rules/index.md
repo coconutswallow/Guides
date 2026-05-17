@@ -1,13 +1,11 @@
 ---
 layout: doc
-title: "Rules"
+title: "Rules & Registration"
 order: 1
 permalink: /rules/
 hide_from_nav: true 
-background_image: 
+background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
-
-## Welcome to Hawthorne!
 
 Welcome to the Hawthorne Guild! We’re a D&D 5e community set in a persistent Forgotten Realms world, offering both one-shots and ongoing campaigns.
 

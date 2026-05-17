@@ -2,6 +2,7 @@
 layout: doc
 title: "Server Rules"
 order: 10
+background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
 ## Basic Rules
 1. Be nice and treat each other with respect.

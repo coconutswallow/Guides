@@ -2,7 +2,7 @@
 title: How to Register
 layout: doc
 order: 70
-background_image: /Guides/assets/images/tavern_brawl.jpg
+background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
 Now that you've read all the rules, it's time to register as an adventurer!  Here are the steps:
 

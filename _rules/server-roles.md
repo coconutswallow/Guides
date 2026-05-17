@@ -2,6 +2,7 @@
 layout: doc
 title: "Server Roles and Hierarchy"
 order: 21
+background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
 
 ## Server Roles and Hierarchy

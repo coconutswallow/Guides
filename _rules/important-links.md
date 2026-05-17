@@ -2,6 +2,7 @@
 layout: doc
 title: "Important Links"
 order: 80
+background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
 
 ## Important Links
