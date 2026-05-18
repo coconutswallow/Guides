@@ -38,8 +38,6 @@ Gnolls start fighting among one another once they are spawned where they engage 
 
 Some gnoll practices might seem strange, such as the gnoll propensity for scavenging. At its most basic level, this tendency leads many gnolls to collect trophies that remind them of past victories, items sometimes grisly though just as often simple and mundane, gnoll trackers sometimes use this to their benefit, keeping scraps of clothing or other objects with the scent of their prey on them, which they use to point them in the direction of their quarry.
 
-This release has been created by Luolang using the Homebrewery in collaboration with Lore Consultants, Rules Architects, and Players of the Hawthorne Dungeons & Dragons Guild. Additional content and reference material obtained from Guildmaster's Guide to Ravnica.
-
 This tendency can lead to the even more alien gnoll practice of carrion eating. Unlike most races, gnolls have few, if any, qualms about eating the dead of other races. When gnolls strike a village they do not only leave no survivors but no corpses, eating most of those whom they don't take as slaves. There are even indications that some gnolls take this practice a step further, actually raiding graveyards for fresh corpses on which to feed.
 
 
