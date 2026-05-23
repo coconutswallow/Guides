@@ -19,4 +19,9 @@ hide_from_nav: true
   {% endfor %}
 </ul>
 
-If you are **new to D&D**, please check out the [New to D&D Resources]({{ 'player-resources/new-to-dnd/' | relative_url }}) for beginner D&D resources to help you get started.
+
+## New to Hawthorne?
+
+If you are **new to the Hawthorne Guild**, please review our <a href="{{ 'rules/' | relative_url }}">Rules and Registration</a> first.
+
+If you are **new to D&D**, you are welcome to check out the [New to D&D Resources]({{ 'player-resources/new-to-dnd/' | relative_url }}) for beginner D&D resources to help you get started.

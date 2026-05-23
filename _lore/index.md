@@ -10,6 +10,17 @@ background_image: /assets/images/tavern_brawl.jpg
 
 ## Hawthorne Guild: A History
 
+<div class="audio-container" style="background: var(--color-bg-light); border: 2px solid var(--color-border); padding: 1.25rem; margin: 2rem 0; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 0.75rem; max-width: 480px;">
+  <span style="font-family: var(--font-header); font-weight: 700; font-size: 1.15em; color: var(--color-primary); text-transform: uppercase;">
+    🔊 Listen: Hawthorne Guild History (narrated by @Lina304)
+  </span>
+  <audio controls style="width: 100%;">
+    <source src="{{ '/assets/audio/hawthistory.mp3' | relative_url }}" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</div>
+
+
 In 1491 DR, the drow sorceress Irisen Rhuvali and her adventuring companions established a settlement near the Delimbyr River and the Greypeak Mountains, for the purposes of creating a new adventurers’ guild. What started as a haphazard collection of tents and makeshift homes occupied by adventurers and villagers soon became the town of Lerwick, home of the newly created Hawthorne Guild.
 
 Lerwick steadily grew as adventurers flocked to join the guild, with the guild and its adventurers tackling threats in the region in its early days. Over the next two years, it became a notable force in the Savage Frontier.  However, in 1494 DR, the guild faced an unprecedented threat: it was learned that the Split Tooth Mountain at the heart of the Greypeak Mountains in truth contained the titan Bohu, one of the primordial beings who had warred with the gods at the dawn of the universe.
