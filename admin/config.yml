@@ -86,7 +86,7 @@ collections:
 
   - name: "lore"
     label: "Server Lore"
-    folder: "lore"
+    folder: "_lore"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -97,7 +97,7 @@ collections:
 
   - name: "arcana"
     label: "Arcana"
-    folder: "arcana"
+    folder: "_arcana"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -108,7 +108,7 @@ collections:
 
   - name: "field_guide"
     label: "Field Guide"
-    folder: "field-guide/adventure-locations"
+    folder: "_adventure_locations"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -119,7 +119,7 @@ collections:
 
   - name: "player_resources"
     label: "Player Resources"
-    folder: "player-resources"
+    folder: "_player_resources"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -130,7 +130,7 @@ collections:
 
   - name: "dm_resources"
     label: "DM Resources"
-    folder: "dm-resources"
+    folder: "_dm_resources"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
