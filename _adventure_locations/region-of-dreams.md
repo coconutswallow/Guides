@@ -47,7 +47,7 @@ While wandering on a plane, it is possible to ‘’walk in’’ a ruptured dre
 
 Planar travelers can come across and ‘’walk into’’ a ruptured dreamscape. These travelers who pass through the tattered edges of a ruptured dreamscape physically enter into the dream contained within, and they are therefore subject to the environment and conditions of that particular dream. (For more information on this subject see [Dreamscape Ruptures](#dreamscape-ruptures) above) Although this method doesn't allow to reach the Region of Dreams itself, it allows for an individual to experience what it's like to wander within a dreamscape.
 
-[Back to Table of Contents](#table-of-contents)
+<sub>[Back to Table of Contents](#table-of-contents)</sub>
 
 ## 2. Planar Traits
 
