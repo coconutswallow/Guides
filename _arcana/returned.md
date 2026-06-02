@@ -45,7 +45,7 @@ Replace the Ability Score increase with increasing Strength and Charisma scores 
 
 ### Returned Tiefling (UA)
 
-An installment of Unearthed Arcana, \[That Old Black Magic](https://media.wizards.com/2015/downloads/dnd/07_UA_That_Old_Black_Magic.pdf), includes a version of the tiefling that uses subraces. Use that article to determine the modifications to the base traits, but use this Subrace instead of the options provided in the article.
+An installment of Unearthed Arcana, <a href="https://media.wizards.com/2015/downloads/dnd/07_UA_That_Old_Black_Magic.pdf">That Old Black Magic</a>, includes a version of the tiefling that uses subraces. Use that article to determine the modifications to the base traits, but use this Subrace instead of the options provided in the article.
 
 ### Personality
 
