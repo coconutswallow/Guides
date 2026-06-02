@@ -176,9 +176,9 @@ On a success, the creature can cast the associated spells from the earth node us
 
 ***Sample Earth Node Spells***
 
-<table style="text-align:center;" border=1>
+<table style="text-align:center;" border=1 width="100%;">
 
-<tr><th>Earth Node Class /<br> Maximum Spell Level</th><th>Example Spell</th></tr>
+<tr><th width="35%;">Earth Node Class /<br> Maximum Spell Level</th><th width="65%;">Example Spell</th></tr>
 
 <tr><td>1</td><td>earth tremor</td></tr>
 
