@@ -47,7 +47,7 @@ While wandering on a plane, it is possible to ‘’walk in’’ a ruptured dre
 
 Planar travelers can come across and ‘’walk into’’ a ruptured dreamscape. These travelers who pass through the tattered edges of a ruptured dreamscape physically enter into the dream contained within, and they are therefore subject to the environment and conditions of that particular dream. (For more information on this subject see [Dreamscape Ruptures](#dreamscape-ruptures) above) Although this method doesn't allow to reach the Region of Dreams itself, it allows for an individual to experience what it's like to wander within a dreamscape.
 
-<sub>([Back to Table of Contents](#table-of-contents))</sub>
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 2. Planar Traits
 
@@ -73,7 +73,7 @@ Dreamscapes within the Region of Dreams are strongly tied to their dreamers. Thu
 
 Spells can be cast normally in a dream, but aren’t actually cast by the physical body. This means any spell slots expended while dreaming is regained upon waking up and the prepared spell list hasn’t been modified. Similarly, any spell that was still in effect immediately ends when the dreamer leaves the Region of Dreams.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 3. Inhabitants
 
@@ -99,7 +99,7 @@ container for the Quori's spirit. These instances are uncommon, but when a Quori
 The Kalashtar are the descendants from humanoids who have offered their bodies as sanctuaries for a Quori wishing to escape the Region of Dreams or the Demiplane of Nightmares. This quori spirit is passed down the bloodline and will remain as long as one of the descendants of the original humanoid is alive. Although, this was quite uncommon, eventually it led down to a group of individuals who shared their bodies with the spirit of a Quori, thus creating the race known as the Kalashtar. The Kalashtar
 aren't native to the Region of Dreams by default, but some can be found wandering the Region of Dreams, seeking to learn more about the quori spirit residing within their body. The quori spirit is able to communicate with its host through dreams and visions. Kalashtar are usually seen as wise, spiritual and compassionate, but they also appear somewhat alien to others given their dual mind.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 4. Movement and Combat
 
@@ -111,7 +111,7 @@ The passage between dreamscapes happens gradually. As the traveler approaches th
 
 When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the nearest dreamscape.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 5. Reaching the Region of Dreams
 
@@ -149,7 +149,7 @@ Although this forsaken place doesn’t allow one to travel directly to the Regio
 
 Given the Demiplane of Nightmares is adjacent to the Region of Dreams, a traveler could move from one to the other.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 6. Interaction with Other Planes
 
@@ -186,7 +186,7 @@ The sleeper then wakes up the next day without feeling rested and must succeed o
 
 Moreover, a whole group of people sleeping during a dreamstorm could experience the same dream, which often results in mass hysteria and widespread paranoia.  Within the Realms, such occurence is often attributed to a dark omen or an augury of impending doom.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 7. The Dreamheart
   
@@ -203,7 +203,7 @@ A Dreamheart Tempest is a violent winding storm of chaotic raw energy which is h
 
 Like any storm, each Dreamheart Tempest has an eye. A traveler can visit the Eye of a Dreamheart Tempest, but each visitor comes away with a completely different understanding of what hides within the Eye. Some meet deities, others find long-dead loved ones, and others achieve unparalleled personal insight. Of course, these meetings are more akin to visions or illusions rather than an actual meeting, but that isn't perfectly clear to the visitors of the Eye.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 8. Demiplane of Nightmares
 
@@ -233,7 +233,7 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 
 > Players can enter the Region of Dreams physically or as their dream-self when they are asleep. When asleep, at a DM discretion, PCs could become aware that they are in a dream and have an adventure in the Region of Dreams as their dream-self. Please be aware that unless PCs enter the Region of Dreams physically, they cannot gain, nor lose items and they cannot learn spells.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ---
 ## 9. References
@@ -253,7 +253,7 @@ documentation that has been used to inspire and create this document.
 ***D&D 5th edition***
 * Crawford, Jeremy, et al. Eberron: Rising from the Last War.  Wizards of the Coast, 2019. pp. 29 - 31, 229, 305 - 307.
 
-[Back to Table of Contents](#table-of-contents)
+[(Back to Table of Contents)](#table-of-contents)
 
 ---
 
