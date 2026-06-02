@@ -7,7 +7,9 @@ hide_from_nav: false
 background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/battlerager/
 ---
- 
+ ![BattleRager](https://images.squarespace-cdn.com/content/v1/53ef08c8e4b015b9c369bddd/1411812816826-47O9NUFSR5UC6UVPMCFI/image-asset.jpeg)
+
+<span class="image-caption"><a href="https://www.deviantart.com/nerdhaven/art/Battlerager-678635671">Battlerager by Nerdhaven @ Deviantart</a></span>
 
 ## Barbarian: Path of the Battlerager Revised
 
