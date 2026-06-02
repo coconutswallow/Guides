@@ -80,4 +80,4 @@ An installment of Unearthed Arcana, <a href="https://media.wizards.com/2015/down
 
 ### Credits
 
-Created by Greenjuice and Wild
+Created by Greenjuice and Wild.
