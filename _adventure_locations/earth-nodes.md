@@ -368,8 +368,8 @@ The specifics of how an evil node affects the region it is within as well as cre
 
 #### *Sample Evil Node Spells*
 
-| Earth Node Class / Maximum Spell Level | Evil Node Spell |
-|:---:|:---|
+| Earth Node Class / <br> Maximum Spell Level | Evil Node Spell |
+|:---:|:---------:|
 | 1 | inflict wounds |
 | 2 | ray of enfeeblement |
 | 3 | animate dead |
@@ -433,8 +433,8 @@ These portals last indefinitely but otherwise behave similarly to and have prope
 
 #### *Sample Shadow Node Spells*
 
-| Earth Node Class / Maximum Spell Level | Shadow Node Spell |
-|:---:|:---|
+| Earth Node Class / <br> Maximum Spell Level | Shadow Node Spell |
+|:---:|:------|
 | 1 | silent image |
 | 2 | darkness |
 | 3 | summon shadowspawn |
