@@ -176,9 +176,9 @@ On a success, the creature can cast the associated spells from the earth node us
 
 ***Sample Earth Node Spells***
 
-<table style="text-align:center;" border=1 width="100%;">
+<table style="text-align:center; width: 100%;" border=1>
 
-<tr><th width="35%;">Earth Node Class /<br> Maximum Spell Level</th><th width="65%;">Example Spell</th></tr>
+<tr><th style="width: 40%;">Earth Node Class /<br> Maximum Spell Level</th><th style="width: 60%;">Example Spell</th></tr>
 
 <tr><td>1</td><td>earth tremor</td></tr>
 
@@ -202,9 +202,9 @@ A creature with levels in the Mystic class can still gain access to the spells g
 
 #### *Mystic Psi Points Consumed Per Spell Level*
 
-<table style="text-align:center;" border=1>
+<table style="text-align:center; width: 100%;" border=1>
 
-<tr><th>Spell Level of Granted Spell </th><th>Psi Points Required to Cast</th></tr>
+<tr><th style="width: 40%;">Spell Level of Granted Spell </th><th style="width: 60%;">Psi Points Required to Cast</th></tr>
 
 <tr><td>1st</td><td>2 psi points</td></tr>
 
