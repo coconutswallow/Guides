@@ -15,6 +15,18 @@ dreaming or not. Its edges expand and contract continuously as dreamers sleep an
 ![Dreamland](https://cdna.artstation.com/p/assets/images/images/005/220/398/large/hangmoon-alexander-komarov-dreamland.jpg?1489427215)
 <span class="image-caption"><a href="https://hangmoon.artstation.com/projects/lKLok">Dreamland by Hangmoon Alexander Komarov</a></span>
 
+## Table of Contents 
+1. [Dreamscapes](#1-dreamscapes)
+2. [Planar Traits](#2-planar-traits)
+3. [Inhabitants](#3-inhabitants)
+4. [Movement and Combat](#4-movement-and-combat)
+5. [Reaching the Region of Dreams](#5-reaching-the-region-of-dreams)
+6. [Interaction with Other Planes](#6-interaction-with-other-planes)
+7. [The Dreamheart](#7-the-dreamheart)
+8. [Demiplane of Nightmares](#8-demiplane-of-ightmares)
+9. [References](#9-references)
+10. [Credits](#10-credits)
+
 ## 1. Dreamscapes
 
 Within the Region of Dreams, dreamers participate in separate and extremely personal dream scenes of their own subconscious creation: the dreamscape. 
@@ -31,9 +43,11 @@ In extremely rare cases, a dreamscape can rupture, sending its pieces, dream-cre
 
 While wandering on a plane, it is possible to ‘’walk in’’ a ruptured dreamscape. These ruptures usually appear as tattered 10-to-80-foot diameter openings. Those who have experienced Dreamscape Ruptures can attest to the dangers of these anomalies.
 
-#### Ruptured Dreamscape
+##### Ruptured Dreamscape
 
 Planar travelers can come across and ‘’walk into’’ a ruptured dreamscape. These travelers who pass through the tattered edges of a ruptured dreamscape physically enter into the dream contained within, and they are therefore subject to the environment and conditions of that particular dream. (For more information on this subject see [Dreamscape Ruptures](#dreamscape-ruptures) above) Although this method doesn't allow to reach the Region of Dreams itself, it allows for an individual to experience what it's like to wander within a dreamscape.
+
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 2. Planar Traits
 
@@ -59,6 +73,8 @@ Dreamscapes within the Region of Dreams are strongly tied to their dreamers. Thu
 
 Spells can be cast normally in a dream, but aren’t actually cast by the physical body. This means any spell slots expended while dreaming is regained upon waking up and the prepared spell list hasn’t been modified. Similarly, any spell that was still in effect immediately ends when the dreamer leaves the Region of Dreams.
 
+[(Back to Table of Contents)](#table-of-contents)
+
 ## 3. Inhabitants
 
 A wide variety of creatures can be found within the Region of Dreams. The creatures living within the dreamscapes are created through the whim of the dreamer. Whether it is an adorable bunny, or a horrifying cluster of the most grotesque creatures prancing around; anything is possible.
@@ -83,6 +99,8 @@ container for the Quori's spirit. These instances are uncommon, but when a Quori
 The Kalashtar are the descendants from humanoids who have offered their bodies as sanctuaries for a Quori wishing to escape the Region of Dreams or the Demiplane of Nightmares. This quori spirit is passed down the bloodline and will remain as long as one of the descendants of the original humanoid is alive. Although, this was quite uncommon, eventually it led down to a group of individuals who shared their bodies with the spirit of a Quori, thus creating the race known as the Kalashtar. The Kalashtar
 aren't native to the Region of Dreams by default, but some can be found wandering the Region of Dreams, seeking to learn more about the quori spirit residing within their body. The quori spirit is able to communicate with its host through dreams and visions. Kalashtar are usually seen as wise, spiritual and compassionate, but they also appear somewhat alien to others given their dual mind.
 
+[(Back to Table of Contents)](#table-of-contents)
+
 ## 4. Movement and Combat
 
 Usually, movement within the Region of Dreams and within a dreamscape is similar to that of the Material Plane. Evidently, this can vary from dreamscape to dreamscape. For example, in one dreamscape, it could be possible to travel only by flying, while in another, it could be done only by swimming. 
@@ -92,6 +110,8 @@ Traveling between dreamscapes is done only by those who have entered the Region 
 The passage between dreamscapes happens gradually. As the traveler approaches the border of the dreamscape, the surroundings slowly fade away from the previous dreamscape and become more and more like the destination dreamscape until the traveler has passed completely into the new dreamscape.  
 
 When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the nearest dreamscape.
+
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 5. Reaching the Region of Dreams
 
@@ -129,6 +149,8 @@ Although this forsaken place doesn’t allow one to travel directly to the Regio
 
 Given the Demiplane of Nightmares is adjacent to the Region of Dreams, a traveler could move from one to the other.
 
+[(Back to Table of Contents)](#table-of-contents)
+
 ## 6. Interaction with Other Planes
 
 When falling asleep, a creature manifests a ‘’dream-self’’, an echo of the self that moves through the mental landscape of
@@ -164,6 +186,8 @@ The sleeper then wakes up the next day without feeling rested and must succeed o
 
 Moreover, a whole group of people sleeping during a dreamstorm could experience the same dream, which often results in mass hysteria and widespread paranoia.  Within the Realms, such occurence is often attributed to a dark omen or an augury of impending doom.
 
+[(Back to Table of Contents)](#table-of-contents)
+
 ## 7. The Dreamheart
   
 The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
@@ -178,6 +202,8 @@ A Dreamheart Tempest is a violent winding storm of chaotic raw energy which is h
 #### The Eye of the Tempest
 
 Like any storm, each Dreamheart Tempest has an eye. A traveler can visit the Eye of a Dreamheart Tempest, but each visitor comes away with a completely different understanding of what hides within the Eye. Some meet deities, others find long-dead loved ones, and others achieve unparalleled personal insight. Of course, these meetings are more akin to visions or illusions rather than an actual meeting, but that isn't perfectly clear to the visitors of the Eye.
+
+[(Back to Table of Contents)](#table-of-contents)
 
 ## 8. Demiplane of Nightmares
 
@@ -207,6 +233,8 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 
 > Players can enter the Region of Dreams physically or as their dream-self when they are asleep. When asleep, at a DM discretion, PCs could become aware that they are in a dream and have an adventure in the Region of Dreams as their dream-self. Please be aware that unless PCs enter the Region of Dreams physically, they cannot gain, nor lose items and they cannot learn spells.
 
+[(Back to Table of Contents)](#table-of-contents)
+
 ---
 ## 9. References
 This document is an adaptation of various materials regarding the Region of Dreams made for our server and serves as canon for server play. Here is a list of the various
@@ -224,6 +252,8 @@ documentation that has been used to inspire and create this document.
 
 ***D&D 5th edition***
 * Crawford, Jeremy, et al. Eberron: Rising from the Last War.  Wizards of the Coast, 2019. pp. 29 - 31, 229, 305 - 307.
+
+[(Back to Table of Contents)](#table-of-contents)
 
 ---
 
