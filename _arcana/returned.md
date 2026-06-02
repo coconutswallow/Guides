@@ -77,3 +77,7 @@ An installment of Unearthed Arcana, <a href="https://media.wizards.com/2015/down
 | 2   | Your shadow is blurry, and ever-changing. It instills a sense of dread in those around you. |
 | 3   | The air around you is unusually still. Your hair and clothes resist the wind.               |
 | 4   | The air around you is always damp.                                                          |
+
+### Credits
+
+Created by Greenjuice and Wild
