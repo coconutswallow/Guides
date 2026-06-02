@@ -44,3 +44,6 @@ You can use this feature two times, and you regain all expended uses of it when 
 ![Purple Dragon Knight](https://cdnb.artstation.com/p/assets/images/images/016/362/869/large/oana-dascalu-10-small.jpg?1551882477)
 
 <span class="image-caption"><a href="https://oanadascalu.artstation.com/projects/W2gXmQ">LadyKnight by oana dascalu</a></span>
+
+### Credits
+Created by Alicia.
