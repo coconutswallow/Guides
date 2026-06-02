@@ -433,7 +433,7 @@ These portals last indefinitely but otherwise behave similarly to and have prope
 
 #### *Sample Shadow Node Spells*
 
-| Earth Node Class / <br> Maximum Spell Level | Shadow Node Spell |
+|  <div style="width:250px">Earth Node Class / <br> Maximum Spell Level</div>| Shadow Node Spell |
 |:---:|:------:|
 | 1 | silent image |
 | 2 | darkness |
