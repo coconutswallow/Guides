@@ -47,7 +47,7 @@ While wandering on a plane, it is possible to ‘’walk in’’ a ruptured dre
 
 Planar travelers can come across and ‘’walk into’’ a ruptured dreamscape. These travelers who pass through the tattered edges of a ruptured dreamscape physically enter into the dream contained within, and they are therefore subject to the environment and conditions of that particular dream. (For more information on this subject see [Dreamscape Ruptures](#dreamscape-ruptures) above) Although this method doesn't allow to reach the Region of Dreams itself, it allows for an individual to experience what it's like to wander within a dreamscape.
 
-[^Back to Table of Contents^](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ## 2. Planar Traits
 
@@ -73,7 +73,7 @@ Dreamscapes within the Region of Dreams are strongly tied to their dreamers. Thu
 
 Spells can be cast normally in a dream, but aren’t actually cast by the physical body. This means any spell slots expended while dreaming is regained upon waking up and the prepared spell list hasn’t been modified. Similarly, any spell that was still in effect immediately ends when the dreamer leaves the Region of Dreams.
 
-^[Back to Table of Contents](#table-of-contents)^
+[Back to Table of Contents](#table-of-contents)
 
 ## 3. Inhabitants
 
