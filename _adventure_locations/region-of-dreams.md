@@ -1,6 +1,6 @@
 ---
+title: Region of Dreams
 layout: doc
-title: "Region of Dreams"
 order: 10
 toc: true
 background_image: https://cdnb.artstation.com/p/assets/images/images/008/506/207/large/hangmoon-alexander-komarov-white-blue-red-clouds.jpg?1513196001
@@ -14,6 +14,12 @@ dreaming or not. Its edges expand and contract continuously as dreamers sleep an
 
 ![Dreamland](https://cdna.artstation.com/p/assets/images/images/005/220/398/large/hangmoon-alexander-komarov-dreamland.jpg?1489427215)
 <span class="image-caption"><a href="https://hangmoon.artstation.com/projects/lKLok">Dreamland by Hangmoon Alexander Komarov</a></span>
+
+## Table of Contents 
+1. [Dreamscapes](#Dreamscapes)
+2. [Planar Traits](#planar-traits)
+3. [Inhabitants](#inhabitants)
+
 
 ## Dreamscapes
 
