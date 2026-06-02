@@ -7,10 +7,6 @@ hide_from_nav: false
 background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/purple-dragon-knight/
 ---
-![Lady Knight by oana dascalu @ Artstation](/Guides/assets/images/oana-dascalu-10-small-custom-.jpg "Lady Knight by oana dascalu @ Artstation")
-
-<a href="https://oanadascalu.artstation.com/projects/W2gXmQ">Art by oana dascalu @ Artstation</a>
-
 ## Fighter: Purple Dragon Knight Revised
 
 > Purple Dragon knights are warriors who hail from the kingdom of Cormyr. Pledged to protect the crown, they take the fight against evil beyond their kingdom's borders. They are tasked with wandering the land as knights errant, relying on their judgment, bravery, and fidelity to the code of chivalry to guide them in defeating evildoers.
