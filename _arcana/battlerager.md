@@ -1,12 +1,13 @@
 ---
+title: Battlerager
 layout: doc
-title: "Battlerager"
 order: 15
-category: "Arcana"
+category: Arcana
 hide_from_nav: false
-background_image: "/assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg"
+background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/battlerager/
---- 
+---
+ 
 
 ## Barbarian: Path of the Battlerager Revised
 
@@ -43,4 +44,8 @@ Once per turn while wearing spiked armor and raging, if you use the Dash action 
 ### Spiked Retribution
 
 Starting at 14th level, if you are wearing spiked armour, are raging, and are not incapacitated, and a creature within 5 feet of you hits you with a melee attack, the attacker takes piercing damage, equal to your Strength modifier. If you are raging, this damage is increased by an amount equal to your rage damage.
+
+### Credits
+Created by Kal and Alicia in collaboration with Lore Consultants, Rules
+Architects, and Players of the Hawthorne Dungeons & Dragons Guild.
 
