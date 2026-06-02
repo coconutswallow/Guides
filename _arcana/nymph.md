@@ -103,4 +103,5 @@ Naiads have inherited through their fey ancestry a love of tricks and games, and
 Once you use this trait, you can't use it again until you finish a long rest.
 
 ### Credits
-Created by Alicia
+
+Created by Alicia.
