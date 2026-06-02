@@ -99,6 +99,5 @@ Naiads have inherited through their fey ancestry a love of tricks and games, and
 * **Coolskin.** Due to the liquid nature of your body, you have resistance to Fire damage.
 * **Shape Body.** While completely submerged in water, you can spend an action to grow one size category larger or smaller. This effect lasts until you exit the water completely or choose to end this effect as an action.
 * **Swim.** You have a swimming speed of 30 feet.
-* **Purify.** When you are partially submerged in water, you can spend an action to meditate and purify yourself. This action requires concentration. If your concentration has been maintained by the start of your next turn, you may remove one condition currently affecting you from the following conditions: blinded, deafened, frightened, or poisoned. 
-
+* **Purify.** When you are partially submerged in water, you can spend an action to meditate and purify yourself. This action requires concentration. If your concentration has been maintained by the start of your next turn, you may remove one condition currently affecting you from the following conditions: blinded, deafened, frightened, or poisoned. <br>
 Once you use this trait, you can't use it again until you finish a long rest.
