@@ -254,11 +254,12 @@ documentation that has been used to inspire and create this document.
 * Crawford, Jeremy, et al. Eberron: Rising from the Last War.  Wizards of the Coast, 2019. pp. 29 - 31, 229, 305 - 307.
 
 [Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Credits
 
-> *This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
+This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
 ---
 
