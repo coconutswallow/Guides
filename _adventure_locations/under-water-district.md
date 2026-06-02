@@ -100,7 +100,6 @@ Rezzo has a great sense of self-importance, and considers himself, as well as ot
 
 ## 4. Additional Information
 
-
 ### Minor Properties
 
 If a DM wishes to add an extra minor property to one of the items obtained in the Elemental Plane of Water, or have their origins in the Elemental Plane of Water, it is possible to select a property from the list. The items must follow the guidelines for minor properties in the Hawthorne DM Guidelines.
@@ -120,26 +119,26 @@ If a DM wishes to add an extra minor property to one of the items obtained in th
 | 9 | ***Deep Diver.*** The wielder of this item can spend twice as long as normal swimming underwater at depths greater than 100 feet below the surface. |
 | 10 | ***Bubbly.*** While holding this item, a constant stream of small bubbles emerge from the bearer's body. Each bubble pops after a few seconds and has no other effect.| 
 
-##### Additional Reading 
+## 5. Additional Reading 
 For DMs wanting to learn more about the Inner Planes and the Elemental Plane of Water, we recommend reading the following material for inspiration.
 
-###### **AD&D 2nd edition**
+#### **AD&D 2nd edition**
 
 - Baur, Wolfgang and Steve Kurtz. *Monstrous Compendium Al-Qadim Appendix.* TSR, 1992. pp. 
 - Baur, Wolfgang. *Secrets of the Lamp.* TSR, 1993. pp. 23 - 24.
 - Beach, Tim, et al. *Monstrous Manual.* TSR, 1993. pp. 126 - 129.
 - Cook, Monte and William W. Conners. *The Inner Planes.* TSR, 1998. pp. 50 - 59. 
 
-###### **D&D 3rd edition**
+#### **D&D 3rd edition**
 
 - Cordell, Bruce, et al. *Manual of the Planes.* Wizards of the Coast, 2001. pp. 77 - 80, 172 - 174.
 
-###### **D&D 4th Edition**
+#### **D&D 4th Edition**
 
 - Hyatt, Doug. "Bestiary: The Dao and the Marid." *Dungeon* 199. Wizards of the Coast, February 2012. pp. 56 - 59.
 - Pozas, Claudio. "Elemental Patrons and Palaces." *Dragon* 408. Wizards of the Coast, February 2012. pp. 19 - 27. 
 	
-###### **D&D 5th Edition**
+#### **D&D 5th Edition**
 
 - Crawford, Jeremy, et al. *Dungeon Master's Guide.* Wizards of the Coast, 2014. pp. 52 - 57.
 - Crawford, Jeremy, et al. *Monster Manual.* Wizards of the Coast, 2014. pp. 141 - 146.
@@ -147,7 +146,7 @@ For DMs wanting to learn more about the Inner Planes and the Elemental Plane of 
  
 ---
 
-## 5. Credits
+## 6. Credits
 
 This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.
 
