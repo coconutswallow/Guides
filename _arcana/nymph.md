@@ -57,7 +57,6 @@ Your nymph character has the following racial traits.
 * **Speak with Nature.** You can communicate with trees, bushes, flowers, and rivers as if they were beasts. They do not have words, but you can understand their basic needs, desires, and traumas.
 * **Languages.** You can speak, read, and write Common, Sylvan, and one other language spoken by your mortal parent.
 
-
 ## Alseides Nymph
 
 The alseides have the shape of a humanoid. As children, however, they are born of seeds and into bushes or flowers. As they grow, should they survive, they learn how to take on a more humanoid appearance inspired by their mortal parentage. Even in their humanoid form, the alseides have traits that clearly give away their appearance. Hair in the form of flower petals, ivy, thorns or weeds; and skin soft like a petal and in a wide variety of bright and beautiful colours.
