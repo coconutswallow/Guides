@@ -18,14 +18,14 @@ dreaming or not. Its edges expand and contract continuously as dreamers sleep an
 ## Table of Contents 
 1. [Dreamscapes](#1-dreamscapes)
 2. [Planar Traits](#2-planar-traits)
-3. [Inhabitants](#inhabitants)
-4. [Movement and Combat](#movement-and-combat)
-5. [Reaching the Region of Dreams](#reaching-the-region-of-dreams)
-6. [Interaction with Other Planes](#interaction-with-other-planes)
-7. [The Dreamheart](#the-dreamheart)
-8. [Demiplane of Nightmares](#demiplane-of-ightmares)
-9. [References](#references)
-10. [Credits](#credits)
+3. [Inhabitants](#3-inhabitants)
+4. [Movement and Combat](#4-movement-and-combat)
+5. [Reaching the Region of Dreams](#5-reaching-the-region-of-dreams)
+6. [Interaction with Other Planes](#6-interaction-with-other-planes)
+7. [The Dreamheart](#7-the-dreamheart)
+8. [Demiplane of Nightmares](#8-demiplane-of-ightmares)
+9. [References](#9-references)
+10. [Credits](#10-credits)
 
 ## 1. Dreamscapes
 
@@ -47,7 +47,7 @@ While wandering on a plane, it is possible to ‘’walk in’’ a ruptured dre
 
 Planar travelers can come across and ‘’walk into’’ a ruptured dreamscape. These travelers who pass through the tattered edges of a ruptured dreamscape physically enter into the dream contained within, and they are therefore subject to the environment and conditions of that particular dream. (For more information on this subject see [Dreamscape Ruptures](#dreamscape-ruptures) above) Although this method doesn't allow to reach the Region of Dreams itself, it allows for an individual to experience what it's like to wander within a dreamscape.
 
-[Back to Table of Contents](#table-of-contents)
+[^Back to Table of Contents^](#table-of-contents)
 
 ## 2. Planar Traits
 
@@ -73,7 +73,7 @@ Dreamscapes within the Region of Dreams are strongly tied to their dreamers. Thu
 
 Spells can be cast normally in a dream, but aren’t actually cast by the physical body. This means any spell slots expended while dreaming is regained upon waking up and the prepared spell list hasn’t been modified. Similarly, any spell that was still in effect immediately ends when the dreamer leaves the Region of Dreams.
 
-[Back to Table of Contents](#table-of-contents)
+^[Back to Table of Contents](#table-of-contents)^
 
 ## 3. Inhabitants
 
