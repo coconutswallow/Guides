@@ -16,8 +16,8 @@ dreaming or not. Its edges expand and contract continuously as dreamers sleep an
 <span class="image-caption"><a href="https://hangmoon.artstation.com/projects/lKLok">Dreamland by Hangmoon Alexander Komarov</a></span>
 
 ## Table of Contents 
-1. [Dreamscapes](#1.-dreamscapes)
-2. [Planar Traits](#planar-traits)
+1. [Dreamscapes](#1-dreamscapes)
+2. [Planar Traits](#2-planar-traits)
 3. [Inhabitants](#inhabitants)
 4. [Movement and Combat](#movement-and-combat)
 5. [Reaching the Region of Dreams](#reaching-the-region-of-dreams)
