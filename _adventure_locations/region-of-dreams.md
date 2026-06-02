@@ -16,7 +16,7 @@ dreaming or not. Its edges expand and contract continuously as dreamers sleep an
 <span class="image-caption"><a href="https://hangmoon.artstation.com/projects/lKLok">Dreamland by Hangmoon Alexander Komarov</a></span>
 
 ## Table of Contents 
-1. [Dreamscapes](#Dreamscapes)
+1. [Dreamscapes](#1.-dreamscapes)
 2. [Planar Traits](#planar-traits)
 3. [Inhabitants](#inhabitants)
 4. [Movement and Combat](#movement-and-combat)
@@ -27,7 +27,7 @@ dreaming or not. Its edges expand and contract continuously as dreamers sleep an
 9. [References](#references)
 10. [Credits](#credits)
 
-## Dreamscapes
+## 1. Dreamscapes
 
 Within the Region of Dreams, dreamers participate in separate and extremely personal dream scenes of their own subconscious creation: the dreamscape. 
 
@@ -49,7 +49,7 @@ Planar travelers can come across and ‘’walk into’’ a ruptured dreamscape
 
 [Back to Table of Contents](#table-of-contents)
 
-## Planar Traits
+## 2. Planar Traits
 
 The Region of Dreams is of a mildly neutral alignment and has the following traits:
 
@@ -75,7 +75,7 @@ Spells can be cast normally in a dream, but aren’t actually cast by the physic
 
 [Back to Table of Contents](#table-of-contents)
 
-## Inhabitants
+## 3. Inhabitants
 
 A wide variety of creatures can be found within the Region of Dreams. The creatures living within the dreamscapes are created through the whim of the dreamer. Whether it is an adorable bunny, or a horrifying cluster of the most grotesque creatures prancing around; anything is possible.
 
@@ -101,7 +101,7 @@ aren't native to the Region of Dreams by default, but some can be found wanderin
 
 [Back to Table of Contents](#table-of-contents)
 
-## Movement and Combat
+## 4. Movement and Combat
 
 Usually, movement within the Region of Dreams and within a dreamscape is similar to that of the Material Plane. Evidently, this can vary from dreamscape to dreamscape. For example, in one dreamscape, it could be possible to travel only by flying, while in another, it could be done only by swimming. 
 
@@ -113,7 +113,7 @@ When a dreamer wakes up, the dreamscape bursts and any visitor is sent into the 
 
 [Back to Table of Contents](#table-of-contents)
 
-## Reaching the Region of Dreams
+## 5. Reaching the Region of Dreams
 
 ![]({{'/assets/images/hangmoon-alexander-komarov-sail-away.jpg' | relative_url }})
 <span class="image-caption"><a href="https://hangmoon.artstation.com/projects/qxa4a">Sail Away by Hangmoon Alexander Komarov</a></span>
@@ -151,7 +151,7 @@ Given the Demiplane of Nightmares is adjacent to the Region of Dreams, a travele
 
 [Back to Table of Contents](#table-of-contents)
 
-## Interaction with Other Planes
+## 6. Interaction with Other Planes
 
 When falling asleep, a creature manifests a ‘’dream-self’’, an echo of the self that moves through the mental landscape of
 the Regions of the Dream. This dream-self is a reflection of reality and is like the individual’s true self, with possible few
@@ -188,7 +188,7 @@ Moreover, a whole group of people sleeping during a dreamstorm could experience 
 
 [Back to Table of Contents](#table-of-contents)
 
-## The Dreamheart
+## 7. The Dreamheart
   
 The dreamscapes, in all their infinite numbers, are only the edge of the Region of Dreams. They border the Dreamheart, a realm where dreamers can die in their dreams while their body is on another plane. The Dreamheart is a combination of all the dream-born landscapes and creatures that grow and vanish without any logical explanation. It is a chaotic place, where parts of some dreamscapes that were pulled in the Dreamheart after its dreamer wakes up, float adrift sometimes merged with one another.  No one account can accurately encompass the Dreamheart, much as no dreamer can completely understand all dreams.
 
@@ -205,7 +205,7 @@ Like any storm, each Dreamheart Tempest has an eye. A traveler can visit the Eye
 
 [Back to Table of Contents](#table-of-contents)
 
-## Demiplane of Nightmares
+## 8. Demiplane of Nightmares
 
 Although it is called the Region of Dreams, the dreamscapes within it sometimes contain vile creatures, landscapes and images, charged with dark emotions. Sometimes, these elements rampage from dreamscape to dreamscape, giving rise to terrible nightmares. Whether these nightmares originate from dreamers’ dark thoughts or have been birthed by the near presence of the Demiplane of Nightmares is unclear, but one thing remains certain: the Demiplane of Nightmares is a place where one’s darkest thoughts and fears become reality. 
 
@@ -236,7 +236,7 @@ Those who have found their way out of the Demiplane of Dread say that the dark p
 [Back to Table of Contents](#table-of-contents)
 
 ---
-## References
+## 9. References
 This document is an adaptation of various materials regarding the Region of Dreams made for our server and serves as canon for server play. Here is a list of the various
 documentation that has been used to inspire and create this document.
 
@@ -257,7 +257,7 @@ documentation that has been used to inspire and create this document.
 
 ---
 
-## Credits
+## 10. Credits
 
 This document has been created by Kathy in collaboration with Luolang and the Lore Consultants of the Hawthorne Dungeons & Dragons Guild.*
 
