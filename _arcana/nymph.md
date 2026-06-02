@@ -48,23 +48,14 @@ friends one can have.
 Your nymph character has the following racial traits.
 
 * **Ability Score Increase.** Your Wisdom score increases by 2.
-
 * **Age.** Nymphs reach adulthood around the same time as humans, but can live far longer at around 250 years.
-
 * **Darkvision.** You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray.
-
 * **Fey.** Your creature type is Fey.
-
 * **Size.** Your Size is Small or Medium.
-
 * **Speed.** Your base walking speed is 25 feet.
-
 * **Natural Armor.** Due to the shape of your body, you are ill-suited to wearing armor. Your AC equals 12 + your Dexterity modifier. You gain no benefit from wearing armor, but if you are using a shield, you can apply the shield's bonus as normal.
-
 * **Speak with Nature.** You can communicate with trees, bushes, flowers, and rivers as if they were beasts. They do not have words, but you can understand their basic needs, desires, and traumas.
-
 * **Languages.** You can speak, read, and write Common, Sylvan, and one other language spoken by your mortal parent.
-
 
 
 ## Alseides Nymph
