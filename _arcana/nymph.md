@@ -101,3 +101,6 @@ Naiads have inherited through their fey ancestry a love of tricks and games, and
 * **Swim.** You have a swimming speed of 30 feet.
 * **Purify.** When you are partially submerged in water, you can spend an action to meditate and purify yourself. This action requires concentration. If your concentration has been maintained by the start of your next turn, you may remove one condition currently affecting you from the following conditions: blinded, deafened, frightened, or poisoned. <br>
 Once you use this trait, you can't use it again until you finish a long rest.
+
+### Credits
+Created by Alicia
