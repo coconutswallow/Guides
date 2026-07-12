@@ -21,3 +21,7 @@ vitest.config.js
 test/*.test.js
 
 temp/
+
+# Generated schema docs
+schema.md
+schema.csv

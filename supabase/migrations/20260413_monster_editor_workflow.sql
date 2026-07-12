@@ -4,6 +4,8 @@
  * Location: /migrations/20260413_monster_editor_workflow.sql
  */
 
+-- 2026-07-12:  Executed in PROD
+
 -- 1. Ensure columns for review workflow exist
 ALTER TABLE monsters 
 ADD COLUMN IF NOT EXISTS reviewer_notes TEXT,

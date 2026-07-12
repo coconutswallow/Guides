@@ -2,6 +2,8 @@
 -- Date: 2026-04-14
 -- Description: Ensures Staff and Monster Admins can SELECT (view) all monsters and features, which is 
 -- required for successful upsert/update operations and moderation workflows.
+-- 2026-07-12:  Executed in PROD
+
 
 -- 1. Update Monster Table SELECT Policy
 DROP POLICY IF EXISTS "Users can view own or approved monsters" ON monsters;

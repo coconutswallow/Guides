@@ -2,6 +2,8 @@
 -- Date: 2026-04-13
 -- Description: Enables RLS on Monsters and Features, allowing creators and staff to manage content.
 
+-- 2026-07-12:  Executed in PROD
+
 -- 1. Enable RLS on primary tables
 ALTER TABLE monsters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE monster_features ENABLE ROW LEVEL SECURITY;

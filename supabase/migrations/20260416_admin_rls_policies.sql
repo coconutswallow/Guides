@@ -5,6 +5,9 @@
 
 -- https://github.com/hawthorneguild/HawthorneTeams/issues/6
 
+-- 2026-07-12:  Executed in PROD
+
+
 -- 1. Enable RLS
 ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE lookups ENABLE ROW LEVEL SECURITY;

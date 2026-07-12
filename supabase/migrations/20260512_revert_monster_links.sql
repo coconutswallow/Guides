@@ -2,6 +2,8 @@
 -- Date: 2026-05-12
 -- Description: Reverts hardcoded links in 'additional_info' to match the current site hierarchy (/monsters/).
 
+-- 2026-07-12:  Executed in PROD
+
 UPDATE monsters
 SET additional_info = REPLACE(
     REPLACE(

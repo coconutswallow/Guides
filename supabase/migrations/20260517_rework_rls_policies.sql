@@ -3,6 +3,8 @@
 -- Description: Enables RLS on 'rework' table and configures read, write, update, and delete access.
 -- Grants SELECT and DELETE permissions to the creator and specified staff reviewer roles (Admin, Auditor, Auditor Apprentice, Engineer).
 
+-- 2026-07-12:  Executed in PROD
+
 -- 1. Enable Row Level Security
 ALTER TABLE IF EXISTS rework ENABLE ROW LEVEL SECURITY;
 

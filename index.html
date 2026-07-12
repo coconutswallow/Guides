@@ -15,6 +15,81 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
   </p>
 </div>
 
+<!-- Load Marked.js for markdown support -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+  #server-msg-container p:last-child {
+    margin-bottom: 0;
+  }
+</style>
+
+<!-- Active server messages banner -->
+<div id="server-msg-container" style="display: none; margin: -1.5em 0 3em 0; padding: 1.2em 1.5em; background: var(--color-bg-light); border: 2px solid var(--color-border); border-left: 5px solid var(--color-primary); border-radius: var(--border-radius); font-size: 1.05em; color: var(--color-text); line-height: 1.6;"></div>
+
+<script type="module">
+  import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
+
+  async function loadActiveMessages() {
+    try {
+      // Get current date in local time zone (YYYY-MM-DD format)
+      const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+      const localToday = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 10);
+
+      // Query database for active messages
+      const { data, error } = await supabase
+        .from('server_msg')
+        .select('message')
+        .lte('start_date', localToday)
+        .gte('end_date', localToday);
+
+      if (error) {
+        console.error('[Server Messages] Error fetching messages:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const container = document.getElementById('server-msg-container');
+        if (container) {
+          container.innerHTML = '';
+          data.forEach((item, index) => {
+            if (index > 0) {
+              const hr = document.createElement('hr');
+              hr.style.margin = '1em 0';
+              hr.style.border = 'none';
+              hr.style.borderTop = '1px solid var(--color-border)';
+              container.appendChild(hr);
+            }
+            const msgDiv = document.createElement('div');
+            if (typeof marked !== 'undefined') {
+              msgDiv.innerHTML = marked.parse(item.message);
+            } else if (typeof window.marked !== 'undefined') {
+              msgDiv.innerHTML = window.marked.parse(item.message);
+            } else {
+              msgDiv.style.whiteSpace = 'pre-wrap';
+              msgDiv.textContent = item.message;
+            }
+            container.appendChild(msgDiv);
+          });
+          container.style.display = 'block';
+        }
+      }
+    } catch (err) {
+      console.error('[Server Messages] Unexpected error:', err);
+    }
+  }
+
+  // Run on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadActiveMessages);
+  } else {
+    loadActiveMessages();
+  }
+</script>
+
+
+
+
 <!-- ============================================ -->
 <!-- GETTING STARTED SECTION -->
 <!-- ============================================ -->

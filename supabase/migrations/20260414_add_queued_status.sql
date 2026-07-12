@@ -4,6 +4,8 @@
  * Location: /migrations/20260414_add_queued_status.sql
  */
 
+-- 2026-07-12:  Executed in PROD
+
 -- 1. Add new states to the monster_status enum
 -- Note: ALTER TYPE ... ADD VALUE cannot be run inside a transaction block in some Postgres versions.
 ALTER TYPE monster_status ADD VALUE IF NOT EXISTS 'Queued' AFTER 'Pending';

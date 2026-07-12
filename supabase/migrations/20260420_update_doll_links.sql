@@ -3,6 +3,10 @@
 -- Description: Updates hardcoded links in 'additional_info' (Other Notes) to match the new site hierarchy (/field-guide/monsters/).
 
 -- This handles links to the Dollmaker, porcelain doll, and swarm from within each other's documentation.
+
+-- 2026-07-12:  Executed in PROD
+
+
 UPDATE monsters
 SET additional_info = REPLACE(
     REPLACE(

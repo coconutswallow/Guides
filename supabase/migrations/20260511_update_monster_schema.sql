@@ -9,6 +9,8 @@
 -- Try to add each value (Postgres will error if it already exists, so we ignore errors or run individually)
 -- Alternatively, we can use a more robust script if supported.
 
+-- 2026-07-12:  Executed in PROD
+
 -- For Supabase/Postgres 12+:
 ALTER TYPE feature_type ADD VALUE IF NOT EXISTS 'Trait';
 ALTER TYPE feature_type ADD VALUE IF NOT EXISTS 'Action';
