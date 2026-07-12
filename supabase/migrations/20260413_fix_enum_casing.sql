@@ -1,3 +1,5 @@
+-- 2026-07-12:  Executed in PROD
+
 -- 1. Remove dependencies that block type modification
 ALTER TABLE monsters ALTER COLUMN status DROP DEFAULT;
 DROP POLICY IF EXISTS "Users can view own or approved monsters" ON monsters;

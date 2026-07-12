@@ -1,3 +1,5 @@
+-- 2026-07-12:  Error in executing in PRD (already correct)
+
 ALTER TABLE public.discord_users 
 ALTER COLUMN site_admin SET DEFAULT false;
 

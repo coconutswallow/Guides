@@ -4,6 +4,8 @@
 -- This ensures that users with these roles (who are authorized in the frontend) can also manage 
 -- content in the database.
 
+-- 2026-07-12:  Executed in PROD
+
 -- 1. Update Monster Table SELECT Policy
 DROP POLICY IF EXISTS "Users can view own or approved monsters" ON monsters;
 CREATE POLICY "Users can view own or approved monsters" 
