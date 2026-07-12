@@ -1,12 +1,13 @@
 ---
+title: Artificer-Wizard
 layout: doc
-title: "Artificer-Wizard"
 order: 17
-category: "Arcana"
+category: Arcana
 hide_from_nav: false
-background_image: "/assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg"
+background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/artificer-wizard/
---- 
+---
+ 
 
 Artificers are a key part of the world of Eberron. They illustrate the evolution of magic from a wild, unpredictable force to one that is becoming available to the masses. Magic items are part of everyday life in the Five Nations of Khorvaire; with an artificer in your party, they become part of every adventuring expedition.
 
@@ -91,12 +92,11 @@ You can create a number of these magic items equal to your proficiency bonus; cr
 * Wand of secrets
 * Wind fan
 
-## Credits
+### Credits
 
-### Eberron Revised
-This release has been created by Luolang, Rexen, and Goose using Homebrewery in collaboration with the
-Administrators, Lore Consultants, Rules Architects and Players of the Hawthorne Dungeons & Dragons Guild.
+#### Eberron Revised
+Created by Luolang, Rexen, and Goose in collaboration with the Administrators, Lore Consultants, Rules Architects and Players of the Hawthorne Dungeons & Dragons Guild.
 
-### Sources
+#### Sources
 Unearthed Arcana: Eberron - Mike Mearls
 Wayfinder's Guide to Eberron - Keith Baker

@@ -1,12 +1,13 @@
 ---
-layout: doc
 title: "Monk: Way of Serenity"
+layout: doc
 order: 16
-category: "Arcana"
+category: Arcana
 hide_from_nav: false
-background_image: "/assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg"
+background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/serenity-monk/
---- 
+---
+ 
 
 ## Monk: Way of Serenity
 
@@ -57,9 +58,9 @@ If the creature attempts to cast a spell with a casting time of 1 action, roll a
 
 This effect lasts until the end of your next turn.
 
-## Credits
+### Credits
 
-This release was created using Homebrewery by Dimglow in collaboration with the Rules Architects, Lore Consultants, and Players of the Hawthorne Dungeon & Dragons Guild.
+Created by Dimglow in collaboration with the Rules Architects, Lore Consultants, and Players of the Hawthorne Dungeon & Dragons Guild.
 
 Adapted and inspired from the Way of Tranquility Unearthed Arcana release and adapted to fit our server and setting.
 

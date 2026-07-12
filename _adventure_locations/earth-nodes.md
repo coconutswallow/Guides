@@ -17,13 +17,13 @@ For players, this document presents information regarding earth nodes as you may
 This document describes a variety of mechanics associated with earth nodes, including their use in adventures and in downtime. A player character can **only** interact with and utilize the properties of an earth node in an adventure or during downtime given the permission of and as supervised by the DM that is utilizing the earth node in their storylines.
 
 
-## Features of Earth Nodes
+## 1. Features of Earth Nodes
 
 Beneath the earth, pools, and streams of invisible power sometimes collect and cross into a single location, creating an underground nexus of magical energy. Such areas are known as **earth nodes**. An earth node is not by itself visible to ordinary sight, but earth nodes are often located in places that are beautiful or bizarre. As an example, a large geode or an underground cavern in the Underdark might contain an earth node within it, but such sights aren't always present. 
 
 The power of an earth node isn't limited by physical boundaries. Some earth nodes lie within large underground caverns, while others exist entirely within solid rock. Still other earth nodes may have a portion that lies within a cave or tunnel, while the rest extends into stone. Some earth nodes may extend partly or even fully into the surface above. 
 
-## Properties of Earth Nodes
+## 2. Properties of Earth Nodes
 
 Earth nodes come in different levels of strength and extent as indicated by their class. The higher a given earth node's class, the more powerful the earth node is. The majority of earth nodes fall between class 1 and class 5, as weaker earth nodes are more common. It is believed that half of all earth nodes are class 1, one-quarter are class 2, and the majority of the remainder are class 3 or class 4.
 
@@ -73,7 +73,7 @@ The table below describes various associated properties of an earth node.
 
 </td></tr></table>
 
-## Sensing Earth Nodes
+## 3. Sensing Earth Nodes
 
 Earth nodes themselves are invisible to ordinary perception, but they can be detected as a sense of magic in the area. Any creature that approaches within 30 feet of an earth node or that enters the area can make a passive or active check (DC 15) as described below to notice the earth node and to recognize it as an earth node. 
 
@@ -91,14 +91,14 @@ For example, a class 3 earth node has 3 layers: an inner, middle, and outer laye
 
 The *commune with nature* spell can also be used to locate (but not map out) any earth nodes within the spell's range.
 
-## Studying Earth Nodes
+## 4. Studying Earth Nodes
 
 Utilizing some of the powers associated with an earth node requires one to spend time and effort in study of a particular earth node and learning its specific pattern of magical energy. This can occur in the following two ways:
 
 * A creature that is aware of a given earth node can become **proficient** in their understanding of that earth node's pattern of magical energy by spending a short rest within the area while studying its pattern of magical energy. At the end of the short rest, the creature can make an Intelligence (Arcana) check against the node DC of the earth node. On a success, the creature commits the earth node to memory as if it were the sigil sequence of a teleportation circle.
 * A creature with the **Node Spellcasting** Supernatural Gift that is also **proficient** in their understanding of a specific earth node's pattern of magical energy can additionally acquire **expertise** in their understanding of that earth node's pattern of magical energy. The creature can study the energies of a given earth node for a number of workweeks of downtime while in the area of the earth node, spending at least 8 hours each day engaged in the activity. At the end of each workweek, the creature must make an Arcana check using their spellcasting ability against the node DC of the earth node. The creature must acquire a number of total successes in this way equal to the earth node's class rating. Each failure on this check reduces the number of accumulated successes by 1, but cannot reduce it below zero. For example, studying a class 3 earth node in this way requires 3 successful Arcana checks over a minimum of 3 workweeks but could require more if failures occur.
 
-## Powers of Earth Nodes
+## 5. Powers of Earth Nodes
 
 Earth nodes are nexuses of magical energy, enhancing spellcasting and creating other magical effects. Those aware of an earth node are capable of taking advantage of its powers and capabilities. 
 
@@ -176,9 +176,9 @@ On a success, the creature can cast the associated spells from the earth node us
 
 ***Sample Earth Node Spells***
 
-<table style="text-align:center;" border=1>
+<table style="text-align:center; width: 100%;" border=1>
 
-<tr><th>Earth Node Class /<br> Maximum Spell Level</th><th>Example Spell</th></tr>
+<tr><th style="width: 40%;">Earth Node Class /<br> Maximum Spell Level</th><th style="width: 60%;">Example Spell</th></tr>
 
 <tr><td>1</td><td>earth tremor</td></tr>
 
@@ -202,9 +202,9 @@ A creature with levels in the Mystic class can still gain access to the spells g
 
 #### *Mystic Psi Points Consumed Per Spell Level*
 
-<table style="text-align:center;" border=1>
+<table style="text-align:center; width: 100%;" border=1>
 
-<tr><th>Spell Level of Granted Spell </th><th>Psi Points Required to Cast</th></tr>
+<tr><th style="width: 40%;">Spell Level of Granted Spell </th><th style="width: 60%;">Psi Points Required to Cast</th></tr>
 
 <tr><td>1st</td><td>2 psi points</td></tr>
 
@@ -236,8 +236,7 @@ This power can only be used by creatures with the **Node Spellcasting** Supernat
 
 This "node lock" can only be removed by means of a *dispel magic* spell in the area of the earth node, targeting a magical effect as if attempting to dispel a spell of the same level as the class rating of the earth node. For example, attempting use the *dispel magic* spell on a node lock present in a class 4 earth node would be treated as if trying to dispel a 4th-level spell.
 
-## Modifying Earth Nodes
-
+## 6. Modifying Earth Nodes
 
 <div class="image-text-wrapper">
   <div class="hierarchy-explanation" style="flex: 1; min-width: 0;">
@@ -264,9 +263,7 @@ It is possible for an earth node to naturally repair itself over time, with a ty
 
 In the case of the earth node's destruction, it typically reconstitutes itself as a class 1 earth node within 1 mile of the original node after 2d10 days.
   
-
-
-## Creating Earth Nodes
+## 7. Creating Earth Nodes
 
 The following section is intended to provide background information and guidelines for DMs looking to incorporate artificially created earth nodes as part of their storylines and is not intended to allow for the creation of artificial earth nodes by player characters. 
 
@@ -278,16 +275,16 @@ The following describes the most common procedure by which a spellcaster with th
 
 The earth node slowly grows in size and strength over time, with a new layer added after a number of years equal to 2 x (the earth node's current class rating), up to that of a class 5 earth node. For example, it would take a class 1 earth node 2 years to reach class 2, then 4 years to reach class 3, then 6 years to reach class 4, and then 8 years to reach class 5 (for a total of 20 years). The earth node functions as akin to any other earth node as described in this document and is subject to potential modification, damage, and destruction in the same ways. Improving the size and strength of an artificially created earth node in this way beyond class 5 requires even more esoteric knowledge and powerful magic beyond the scope of this ritual. 
 
-## Other Properties of Earth Nodes
+## 8. Other Properties of Earth Nodes
 
 Besides the properties and powers of earth nodes as mentioned and described above, it is possible for earth nodes to have other properties or idiosyncrasies as determined by the DM. Perhaps a particular earth node lacks some of the properties above, or grants additional powers, or may require a specific ritual to access. A DM should feel free to customize or alter the specifics of a particular earth node of their creation as suits their storyline beyond the guidelines mentioned in this document.
 
-## Earth Nodes on Other Planes of Existence
+## 9. Earth Nodes on Other Planes of Existence
 
 Besides earth nodes encountered on the Material Plane, other planes of existence can also contain earth nodes, most commonly the Feywild and the Shadowfell as reflections of the Material Plane. At times, an earth node in the Material Plane may be linked to a mirroring earth node on the Feywild or the Shadowfell. Earth nodes are also common in the Elemental Plane of Earth, wherever streams of magical energy form a nexus of power. Such earth nodes have many of the same properties and powers associated with earth nodes on the Material Plane, but often carry additional properties tied to the plane of existence in which they reside. For example, an earth node in the Feywild might act as a wild magic zone.
 
 
-## Other Kinds of Nodes
+## 10. Other Kinds of Nodes
 
 Earth nodes are the most common kind of node that are encountered, but other kinds of nodes exist that act as nexuses of magical energy. The following describe some other kinds of nodes known to exist. These nodes have many of the same properties and powers as associated with earth nodes, but also have important features that distinguish them from earth nodes or other kinds of nodes.
 
@@ -371,8 +368,8 @@ The specifics of how an evil node affects the region it is within as well as cre
 
 #### *Sample Evil Node Spells*
 
-| Earth Node Class / Maximum Spell Level | Evil Node Spell |
-|:---:|:---|
+| Earth Node Class / <br> Maximum Spell Level | Evil Node Spell |
+|:---:|:---------:|
 | 1 | inflict wounds |
 | 2 | ray of enfeeblement |
 | 3 | animate dead |
@@ -436,8 +433,8 @@ These portals last indefinitely but otherwise behave similarly to and have prope
 
 #### *Sample Shadow Node Spells*
 
-| Earth Node Class / Maximum Spell Level | Shadow Node Spell |
-|:---:|:---|
+|Earth Node Class / <br> Maximum Spell Level| Shadow Node Spell |
+|:---:|:------:|
 | 1 | silent image |
 | 2 | darkness |
 | 3 | summon shadowspawn |
@@ -461,7 +458,7 @@ A creature can't empower themselves in the same way again until 24 hours pass, a
 
 **Creating Shadow Nodes** <br>The creation of a shadow node can be accomplished by certain powerful entities with an intimate connection to the Shadowfell, such as balhannoths or darkweavers, using their own ability to warp and modify the environment so as to invoke the power of the Shadowfell. Spellcasters that are skilled and knowledgeable in shadow magic can utilize specific rituals akin to the *Node Genesis* ritual as a means by which to establish a shadow node in an appropriate location.
 
-## Node Supernatural Gifts
+## 11. Node Supernatural Gifts
 
 Earth nodes and other kinds of nodes create a number of different magical effects. However, accessing the full suite of powers associated with nodes requires extraordinary sense and training in using a node's magics. Whether as a result of extensive exposure and study to the magic of nodes or due to other special circumstances, creatures that possess the **Node Spellcasting** or **Node Manifestation** Supernatural Gifts are able to take advantage of the full breadth of capabilities afforded by earth nodes and other kinds of nodes. These Supernatural Gifts follow the rules associated with the acquisition and use of Supernatural Gifts, as can be found in the [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }})
 
@@ -508,7 +505,7 @@ You have learned to attune your senses and psionic powers to the magic of nodes:
 
 <br>
 
-## Sources and Additional Reading
+## 12. Sources and Additional Reading
 
 The content contained in this document is adapted from the following source material listed below.
 
@@ -520,7 +517,7 @@ The content contained in this document is adapted from the following source mate
 
 <br>
 
-## Earth Nodes At a Glance
+## 13. Earth Nodes At a Glance
 
 The following summarizes information regarding the powers and properties of earth nodes. It serves as a "cheat sheet" and reference for players and DMs. For full details, refer to the section and corresponding to the entries below. For information regarding the modification or creation of nodes, refer to the corresponding sections of this document in detail. 
 
@@ -539,7 +536,7 @@ The following summarizes information regarding the powers and properties of eart
 
 <br>
 
-## Earth Node Master Table
+## 14. Earth Node Master Table
 
 The table below summarizes the different quantities associated with earth nodes as mentioned and detailed in the document thus far, for use by players and DMs. For full information, players and DMs should refer to the associated sections of the document.
 
@@ -579,8 +576,7 @@ The table below summarizes the different quantities associated with earth nodes 
 
 \- **Time to Map.** This value indicates the typical amount of time it takes to fully map out an earth node's boundaries and layers, without factoring in additional time due to physical barriers or other obstacles.
 
-
-## Credits
+## 15. Credits
 
 *This document has been created by Luolang  in collaboration with the Lore Consultants and Rules Architects of the Hawthorne Dungeons & Dragons Guild.*
 

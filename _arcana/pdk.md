@@ -1,13 +1,12 @@
 ---
+title: Purple Dragon Knight
 layout: doc
-title: "Purple Dragon Knight"
 order: 15
-category: "Arcana"
+category: Arcana
 hide_from_nav: false
-background_image: "/assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg"
+background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/purple-dragon-knight/
---- 
-
+---
 ## Fighter: Purple Dragon Knight Revised
 
 > Purple Dragon knights are warriors who hail from the kingdom of Cormyr. Pledged to protect the crown, they take the fight against evil beyond their kingdom's borders. They are tasked with wandering the land as knights errant, relying on their judgment, bravery, and fidelity to the code of chivalry to guide them in defeating evildoers.
@@ -16,7 +15,7 @@ permalink: /arcana/purple-dragon-knight/
 >
 > A knight prefers to lead through deeds, not words. As a knight spearheads an attack, the knight's actions can awaken reserves of courage and conviction in allies that they never suspected they had.
 >
-> --- Sword Coast Adventurer's Guide
+> \--- Sword Coast Adventurer's Guide
 
 Purple Dragon knights are tied to a specific order of Cormyrean knighthood. Banneret serves as the generic name for this archetype if you use it in other campaign settings or to model warlords other than Purple Dragon knights.
 
@@ -43,4 +42,8 @@ Starting at 18th level, you can spend an action rallying the resolve of your all
 You can use this feature two times, and you regain all expended uses of it when you finish a long rest.
 
 ![Purple Dragon Knight](https://cdnb.artstation.com/p/assets/images/images/016/362/869/large/oana-dascalu-10-small.jpg?1551882477)
-<span class="image-caption"><a href="https://oanadascalu.artstation.com/projects/W2gXmQ">LadyKnight by oana dascalu</a></span>  
+
+<span class="image-caption"><a href="https://oanadascalu.artstation.com/projects/W2gXmQ">LadyKnight by oana dascalu</a></span>
+
+### Credits
+Created by Alicia.

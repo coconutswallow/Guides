@@ -1,12 +1,15 @@
 ---
+title: Battlerager
 layout: doc
-title: "Battlerager"
 order: 15
-category: "Arcana"
+category: Arcana
 hide_from_nav: false
-background_image: "/assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg"
+background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/battlerager/
---- 
+---
+![Battlerager by Nerdhaven @ Deviantart](/Guides/assets/images/battlerager_by_nerdhaven_db81imv-fullview.jpg "Battlerager by Nerdhaven @ Deviantart")
+
+ <span class="image-caption"><a href="https://www.deviantart.com/nerdhaven/art/Battlerager-678635671">Battlerager by Nerdhaven @ Deviantart</a></span>
 
 ## Barbarian: Path of the Battlerager Revised
 
@@ -27,8 +30,8 @@ Additionally, while you are wearing spiked armour and raging, you can instead us
 
 At 6th level, if you have brewer's supplies, you can concoct a single Gutbuster when you finish a long rest. This potent, dwarven concoction is made of cave fisher venom and heady liquors. As an action, you can drink this potion and gain the following benefits for one minute if you are a Battlerager:
 
-- Having 0 hit points doesn't knock you unconscious. You still must make death saving throws, and you suffer the normal effects of taking damage while at 0 hit points.
-- You double your rage bonus for your attacks and the temporary hitpoints gained from Reckless Abandon. The concoction becomes inert if not used before you finish your next long rest
+* Having 0 hit points doesn't knock you unconscious. You still must make death saving throws, and you suffer the normal effects of taking damage while at 0 hit points.
+* You double your rage bonus for your attacks and the temporary hitpoints gained from Reckless Abandon. The concoction becomes inert if not used before you finish your next long rest
 
 ### Reckless Abandon
 
@@ -44,3 +47,7 @@ Once per turn while wearing spiked armor and raging, if you use the Dash action 
 
 Starting at 14th level, if you are wearing spiked armour, are raging, and are not incapacitated, and a creature within 5 feet of you hits you with a melee attack, the attacker takes piercing damage, equal to your Strength modifier. If you are raging, this damage is increased by an amount equal to your rage damage.
 
+### Credits
+
+Created by Kal and Alicia in collaboration with Lore Consultants, Rules
+Architects, and Players of the Hawthorne Dungeons & Dragons Guild.

@@ -1,13 +1,12 @@
 ---
+title: Nymph
 layout: doc
-title: "Nymph"
 order: 13
-category: "Arcana"
+category: Arcana
 hide_from_nav: false
-background_image: "/assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg"
+background_image: /assets/images/the_dungeon_master_by_moulinbleu_d61u428-fullview.jpg
 permalink: /arcana/nymph/
 ---
-
 Some believe that every tree, bush, and pond in the material plane are connected to the Feywild, and that each contain a Spirit whose sole duty is to protect it. Whether or not this vastness of Fey is accurate or not, it is at least true that some trees, bushes, and ponds are connected to spirits of the Feywild. It is also true that on occasion, their sense of duty is overtaken by curiosity towards mortals, and mortals are overtaken by the qualities in the Spirit they find seductive. The children of these unions are nymphs, who have no sworn duty, but maintain their connection to nature.
 
 ### Body of Nature
@@ -33,16 +32,30 @@ friends one can have.
 
 ### Nymph Quirks
 
-| d8 | Nymph Quirk |
-|:---:|:---|
-| 1 | I am utterly serene, even in the face of disaster. |
-| 2 | I feel tremendous empathy for all who suffer. |
-| 3 | I'm oblivious to etiquette and social expectations. |
-| 4 | I express affection or contempt in ways that are unfamiliar to others. |
-| 5 | My curiosity tends to get me in trouble. |
-| 6 | I have an overwhelming sense of duty to protect nature. |
-| 7 | I feel most at home in the wild. |
-| 8 | I easily get lost in conversation whilst speaking with plants. |
+| d8  | Nymph Quirk                                                            |
+| --- | ---------------------------------------------------------------------- |
+| 1   | I am utterly serene, even in the face of disaster.                     |
+| 2   | I feel tremendous empathy for all who suffer.                          |
+| 3   | I'm oblivious to etiquette and social expectations.                    |
+| 4   | I express affection or contempt in ways that are unfamiliar to others. |
+| 5   | My curiosity tends to get me in trouble.                               |
+| 6   | I have an overwhelming sense of duty to protect nature.                |
+| 7   | I feel most at home in the wild.                                       |
+| 8   | I easily get lost in conversation whilst speaking with plants.         |
+
+### Nymph Traits
+
+Your nymph character has the following racial traits.
+
+* **Ability Score Increase.** Your Wisdom score increases by 2.
+* **Age.** Nymphs reach adulthood around the same time as humans, but can live far longer at around 250 years.
+* **Darkvision.** You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray.
+* **Fey.** Your creature type is Fey.
+* **Size.** Your Size is Small or Medium.
+* **Speed.** Your base walking speed is 25 feet.
+* **Natural Armor.** Due to the shape of your body, you are ill-suited to wearing armor. Your AC equals 12 + your Dexterity modifier. You gain no benefit from wearing armor, but if you are using a shield, you can apply the shield's bonus as normal.
+* **Speak with Nature.** You can communicate with trees, bushes, flowers, and rivers as if they were beasts. They do not have words, but you can understand their basic needs, desires, and traumas.
+* **Languages.** You can speak, read, and write Common, Sylvan, and one other language spoken by your mortal parent.
 
 ## Alseides Nymph
 
@@ -54,13 +67,13 @@ Alseides have the unique ability among nymphs to spread their pollen, and this h
 * **Pollinate.** You can use your action to send out a burst of pollen in a 15 ft. cone. Your herbal ancestry determines the type of the burst. When you use your pollination ability, each creature in the area of the burst must make a saving throw, the type of which is determined by your herbal ancestry. The DC for this saving throw equals 8 + your Constitution modifier + your proficiency bonus. A creature gains the listed condition on a failed save until the end of their next turn. An Undead creature or Construct automatically succeeds on this saving throw. Once you use this trait, you can't use it again until you complete a long rest.
 * **Herbal Ancestry.** Choose one type of herb or flower from the Herbal Ancestry table. Your pollination attack is determined by the herb type, as shown in the table.
 
-| Herb/Flower | Condition Type | Pollination |
-| :--- | :--- | :--- |
-| Chamomile | Movement speed halved | 15 ft. cone (Con. save) |
-| Hogweed | Blinded | 15 ft. cone (Con. save) |
-| Nightshade | Frightened | 15 ft. cone (Wis. save) |
-| Rose | Charmed | 15 ft. cone (Wis. save) |
-| Wolfsbane | Poisoned | 15 ft. cone (Con. save) |
+| Herb/Flower | Condition Type        | Pollination             |
+| ----------- | --------------------- | ----------------------- |
+| Chamomile   | Movement speed halved | 15 ft. cone (Con. save) |
+| Hogweed     | Blinded               | 15 ft. cone (Con. save) |
+| Nightshade  | Frightened            | 15 ft. cone (Wis. save) |
+| Rose        | Charmed               | 15 ft. cone (Wis. save) |
+| Wolfsbane   | Poisoned              | 15 ft. cone (Con. save) |
 
 ## Dendryad Nymph
 
@@ -69,6 +82,7 @@ Born from a mortal and the soul of a tree, the dendryad takes much from its fore
 * **Ability Score Increase.** Your Dexterity score increases by 1.
 * **Tree Step.** Your climb speed is equal to your walking speed. In addition, once per short rest if you are standing next to a tree you can spend a bonus action to teleport to another within 30 feet of you if it is at least Medium size. You appear in an unoccupied space within 5 feet of the tree using their roots as a way to transport yourself magically.
 * **Rooted Body.** You are able to spread roots from your feet to better hold yourself steady. While in natural terrain you may as an action root yourself to the ground. While rooted your movement speed is zero and you gain 2 temporary hit points per character level. Additionally, you gain the following effects:
+
   * You cannot be pushed or made prone.
   * You have advantage on any ability check or saving throw to resist being grappled or restrained.
   * You may spend an action to unroot yourself, losing the above effects and any temporary hit points gained by this trait.
@@ -85,6 +99,9 @@ Naiads have inherited through their fey ancestry a love of tricks and games, and
 * **Coolskin.** Due to the liquid nature of your body, you have resistance to Fire damage.
 * **Shape Body.** While completely submerged in water, you can spend an action to grow one size category larger or smaller. This effect lasts until you exit the water completely or choose to end this effect as an action.
 * **Swim.** You have a swimming speed of 30 feet.
-* **Purify.** When you are partially submerged in water, you can spend an action to meditate and purify yourself. This action requires concentration. If your concentration has been maintained by the start of your next turn, you may remove one condition currently affecting you from the following conditions: blinded, deafened, frightened, or poisoned. 
-
+* **Purify.** When you are partially submerged in water, you can spend an action to meditate and purify yourself. This action requires concentration. If your concentration has been maintained by the start of your next turn, you may remove one condition currently affecting you from the following conditions: blinded, deafened, frightened, or poisoned. <br>
 Once you use this trait, you can't use it again until you finish a long rest.
+
+### Credits
+
+Created by Alicia.
