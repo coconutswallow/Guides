@@ -13,7 +13,8 @@
       url: https://app.kanka.io/w/35403
 
 - title: "Allowed Content"
-  url: /allowed-content/
+  url: "https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632"
+  # -- url: /allowed-content/
 
 - title: "FAQ"
   url: /faq.html

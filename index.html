@@ -25,7 +25,9 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 </style>
 
 <!-- Active server messages banner -->
-<div id="server-msg-container" style="display: none; margin: -1.5em 0 3em 0; padding: 1.2em 1.5em; background: var(--color-bg-light); border: 2px solid var(--color-border); border-left: 5px solid var(--color-primary); border-radius: var(--border-radius); font-size: 1.05em; color: var(--color-text); line-height: 1.6;"></div>
+<div id="server-msg-container"
+  style="display: none; margin: -1.5em 0 3em 0; padding: 1.2em 1.5em; background: var(--color-bg-light); border: 2px solid var(--color-border); border-left: 5px solid var(--color-primary); border-radius: var(--border-radius); font-size: 1.05em; color: var(--color-text); line-height: 1.6;">
+</div>
 
 <script type="module">
   import { supabase } from "{{ '/assets/js/supabaseClient.js' | relative_url }}";
@@ -128,11 +130,14 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
     <!-- CARD: Allowed Content -->
     <div class="feature-card">
       <h4>Allowed Content</h4>
-      <a href="{{ 'allowed-content/' | relative_url }}">
-        <img src="{{ '/assets/thumbnails/antonis-papantoniou-treasure-room-300.jpg' | relative_url }}" alt="Portal"
-          class="card-thumbnail">
+      <!-- <a href="{{ 'allowed-content/' | relative_url }}"> -->
+      <a
+        href="{'https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=867745632#gid=867745632'}"></a>
+      <img src="{{ '/assets/thumbnails/antonis-papantoniou-treasure-room-300.jpg' | relative_url }}" alt="Portal"
+        class="card-thumbnail">
       </a>
-      <p>Dashboard for allowed sources, monsters, and items</p>
+      <p>Your complete source for the allowed D&D content to be used in the Hawthorne Guild games. This links to the
+        Google Sheet (mobile friendly web version coming soon!)</p>
       <a href="{{ 'allowed-content/' | relative_url }}" class="card-button">View Content</a>
     </div>
 
