@@ -22,4 +22,4 @@ background_image: https://images.pexels.com/photos/3857508/pexels-photo-3857508.
 |World Maps|	|[Interactive Sword Coast Map](https://www.aidedd.org/atlas/index.php?map=R&l=1)|	|Sword Coast Map (actually expands to all of Faerun)|
 |World Maps|	|[Forgotten Maps](https://forgottenmaps.web.app/map/Faerun)|	|Another Faerun Map (this one includes the Underdark!) but requires google login|
 
-<strong>Note:</strong> The resources listed above are external to the Hawthorne Guild and changes to those resources are outside of our control. If you find an issue with any of the resources linked above, please contact a member of the staff.
+<strong>Note:</strong> The resources listed above are external to the Hawthorne Guild and changes to those resources are outside of our control. If you find an issue with any of the resources linked above (or have a suggested link to add), please contact <b>@coconutswallow</b>.
