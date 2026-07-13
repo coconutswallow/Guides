@@ -1,8 +1,8 @@
 ---
 layout: doc
-title: "Appendix: DnD Beyond Settings"
-order: 92
-background_image: /assets/images/tavern_brawl.jpg
+title: "DnD Beyond Settings"
+order: 3
+background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 ---
 
 ## D&D Beyond Character Sheet: Recommended Settings

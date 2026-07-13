@@ -15,3 +15,6 @@ hide_from_nav: true
     </li>
   {% endfor %}
 </ul>
+
+If you are new to playing D&D, please also visit <a href="{{ 'player-resources/' | relative_url }}">Player Resources</a> for some online resources on D&D rules in general.
+
