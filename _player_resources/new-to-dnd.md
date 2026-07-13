@@ -1,6 +1,7 @@
 ---
 layout: doc
 title: New to D&D? Resources to get you started
+background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 order: 2
 ---
 
