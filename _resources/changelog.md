@@ -8,7 +8,6 @@ permalink: /resources/changelog/
 ## Version 2026-06.1
 
 ### Content Updates
-* About Hawthorne has been renamed to Server Lore, with the preparation for the new Hawthorne Guild timelines (coming soon) and link to the Hawthorn Kanka
 * Player's Guide: Bastion appendix now includes a video from a Bastion Workshop
 * Hawthorne Arcana has been converted to web format
 * Player Tools: page added with a new tools (see interactive tools below)
