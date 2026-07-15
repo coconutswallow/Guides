@@ -40,6 +40,8 @@ function init() {
                 <div class="alert alert-info" style="margin-top: 2rem;">
                     <h3>Editor Access</h3>
                     <p>Please login with Discord to access the monster editor. Only DMs can submit or edit monsters.</p>
+                    <p><b>Note:</b> This tool is in BETA. For feedback or questions on the tool, please reach out to @coconutswallow. </p>
+                    
                 </div>`;
             return;
         }
@@ -79,7 +81,7 @@ async function handleRoute() {
 
     if (hash === '/') {
         await renderDashboard(container);
-        
+
         // Handle dashboard-specific actions (e.g. Delete button)
         container.querySelectorAll('.btn-delete-row').forEach(btn => {
             btn.addEventListener('click', async (e) => {
