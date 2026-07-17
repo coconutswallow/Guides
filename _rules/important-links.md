@@ -13,7 +13,7 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
 |[Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857)|List of usable content on the server|
 |[DM Registration](https://docs.google.com/forms/d/e/1FAIpQLSeSJFrWH_ZFCBa_TndvhqhJsNDtVoKb4hAt7X2v07D-4lLTbw/viewform)|Form to register as a Trial DM|
 |[Hawthorne Award Nomination](https://docs.google.com/forms/d/e/1FAIpQLScHdywQI2i9Kqs0jOfqma31x1VzUvLO7BjjO5qDlq8_L42MUg/viewform)|Form to nominate a community member for a Hawthorne Award|
-|[Hawthorne Incident Report](https://docs.google.com/forms/d/e/1FAIpQLSfAKWb9rl_w2IRZ6zXKJZ42Kez3C4aTZtwkfTjhSUWuciKwHw/viewform)|Form to report an incident to be reviewed by the PR team|
+|[Hawthorne Player Relations Request](https://docs.google.com/forms/d/e/1FAIpQLSfu-u8UcS1dtd_nRfaEN8pKqN1VRh3xG-FjCircqAT6OcLWvw/viewform?usp=dialog)|Form to report an incident to be reviewed by the PR team|
 
 ## Important Discord Commands
 
