@@ -33,10 +33,11 @@
   sections:
     - title: "Contents"
       url: /player-tools/
-    - title: "Purchase Tool"
-      url: /player-tools/purchases/
     - title: "Rework Tool"
       url: /player-tools/rework/
+
+ #  - title: "Purchase Tool"
+ #     url: /player-tools/purchases/
 
 - title: "Player Resources"
   collection: player_resources
