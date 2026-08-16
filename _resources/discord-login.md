@@ -42,16 +42,15 @@ If yes, then the following is saved into Hawthorne's Database
 ## Technical Overview
 
 ## Website Technical Overview
-The Hawthorne Site uses a serverless architecture - __all code is processed on the user's browser__.  
- it is a static website with javascript hosted on Github using [Github Pages](https://docs.github.com/en/pages).  
+The Hawthorne Site uses a serverless architecture - __all code is processed on the user's browser__.  It is a static website with javascript hosted on Github using [Github Pages](https://docs.github.com/en/pages).  
  
- So any code that is run, runs on user's computer, and the only time it is run is when a user accesses the parts of the website that needs access.  There is no back-end server that uses the discord login at any other time.  The developer cannot access any information other than what is saved (detailed below) because the authentication happens on the user's browser. 
+ So any code that is run, runs on user's computer, and the only time it is run is when a user accesses the parts of the website that needs access.  There is no back-end server that uses the discord login at any other time.  The developer cannot access any information other than what is saved (detailed below) because the authentication happens on the user's browser upon login.
   
 ## Supabase Database
 
 The only "back-end" component is [Supabase](https://supabase.com/) database.  This database is used to store the interactive parts of the website, such as (the monster compendium, session logs, rework logs).  Supabase uses row-level security by default (and how we've implemented the database) - meaning each row piece of data is checked against the rules of who has access to the information.  
 
-Supabase also provides built-in connectors to the Discord OAuth (so we don't need to build the code from scratch).
+Supabase also provides built-in connectors to the Discord OAuth to handle the authentication checks (so we don't need to build the code from scratch, reducing chance of defects).
 
 ## Technical Details of the Login
 
@@ -63,7 +62,8 @@ During login, the application currently:
 4. Retrieves the user's member record for the Hawthorne Guild.
 5. If Yes, saves Hawthorne nickname and role IDs for account linking and authorization.
 
-All of this is done inside the user's browser.
+
+**All of this is done inside the user's browser.**
 
 ### OAuth permissions
 
@@ -110,7 +110,8 @@ return Array.isArray(guilds) &&
     guilds.some(guild => guild.id === REQUIRED_GUILD_ID);
 ```
 
-What this means is that the user's guild list is never accessed by the code.  It asks the Discord Oauth to give access, and then it checks if the user belongs to <code>REQUIRED_GUILD_ID</code> (Hawthorne's Guild ID).
+
+Translated into non-technical terms, there is no code that accesses the user's guild list.  It asks the Discord Oauth to get access to the guild list (which is loaded in the user's browser), and then asks the if the user belongs to <code>REQUIRED_GUILD_ID</code> (Hawthorne's Guild ID).
 
 This logic is all done on the user's browser in real-time.  
 
@@ -143,7 +144,7 @@ const { error } = await this.client.rpc('link_discord_account', {
 });
 ```
 
-The application does not use this endpoint to retrieve another guild, another member, or a complete guild member list.  
+The application does not use this endpoint to retrieve another guild, or any personal information about the user.  
 
 ## Data intentionally saved
 
@@ -184,7 +185,7 @@ Short answer is no.  This was implemented as a way to make it easier for users s
 - Allows saving and loading of DM Tool sessions without needing to create a new user ID, login, etc.
 - Allows loading of the display name in the session logs
 
-From a technical standpoint, this implementation was chosen because 1) it allowed the developer to use Supabase' built-in Discord OAuth connector - which is safer than coding from scratch and 2) to accomodate the serverless architecture which means we can't run code in a back-end server (because it doesn't exist)
+From a technical standpoint, this implementation was chosen because 1) it allowed the developer to use Supabase' built-in Discord OAuth connector - which is safer than coding from scratch and 2) to accomodate the serverless architecture which means we can't run code in a back-end server (because it the server doesn't exist)
 
 ## What if I am still uncomfortable with the login?
 
