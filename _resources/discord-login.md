@@ -10,6 +10,10 @@ Certain features of the website uses the Discord Oauth login to enable interacti
 
 It is **very reasonable** that a member may have concern regarding the collection and usage of their personal information.  This page is intended to provide the details of **what information is collected, why it is used, and what is being stored**.
 
+## Important Note:
+
+> All logged-in features of the site is optional.  If you do not wish to login, it is not mandatory. 
+>
 
 ## Overview of the Discord Login
 
@@ -182,11 +186,17 @@ Short answer is no.  This was implemented as a way to make it easier for users s
 - Allows saving and loading of DM Tool sessions without needing to create a new user ID, login, etc.
 - Allows loading of the display name in the session logs
 
-From a technical standpoint, this implementation was chosen because 
 
-1) it allowed the developer to use Supabase' built-in Discord OAuth connector - which is safer than coding from scratch and 
-2) to accomodate the serverless architecture which means we can't run code in a back-end server (because it the server doesn't exist)
+From a technical standpoint, this implementation was chosen because: 
 
-## What if I am still uncomfortable with the login?
+1) it allowed the developer to use Supabase' built-in Discord OAuth connector - which is safer than coding custom login/authentication (security risk)  
+2) to accomodate the serverless architecture which means we can't run code in a back-end application server (because the server doesn't exist)
 
-All logged-in features of the site is optional.  If you do not wish to login, it is not mandatory.  
+
+## Disclaimer
+
+The Hawthorne Engineers (as are all Staff and Admin) are **volunteers** who are trying our best to provide a positive experience so that more time can be spent in game DMing or playing and less time on admin.
+
+We are making best effort to implement the site with integrity, and test it so that there are no issues or bugs.  But we are not professional engineers - if there are any issues, bugs, or design flaws (or recommendations for improvement), please contact us and we'll do the best that we can to rectify.
+
+Thanks for your understanding.
