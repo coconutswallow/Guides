@@ -32,7 +32,7 @@ Specifically this information is accessed upon login:
 * Discord ID
 * If the user belongs to the Hawthorne Guild
 
-If yes the following is saved into Hawthorne's Database
+If yes, then the following is saved into Hawthorne's Database
 * Your Discord ID
 * Your Display Name
 * Your Hawthorne roles (e.g. "Adventurer", "Full DM", "Staff")
@@ -69,7 +69,7 @@ All of this is done inside the user's browser.
 
 The login starts in `assets/js/auth-manager.js` by asking Discord for two permissions:
 
-<```js>
+```js
 async login() {
     const cleanUrl = window.location.origin + window.location.pathname;
     await this.client.auth.signInWithOAuth({
@@ -84,8 +84,8 @@ async login() {
 
 These scopes have distinct purposes:
 
-- `guilds` permits the current code to check the user's guild list and check for the Hawthorne Guild ID.
-- `guilds.members.read` permits the current code to retrieve the user's own member record, including nickname and roles, for the Hawthorne Guild.
+- `guilds` permits the Oauth to check the user's guild list and check for the Hawthorne Guild ID.
+- `guilds.members.read` permits the code to retrieve the user's own member record, including nickname and roles, for the Hawthorne Guild.
 
 These permissions do not give the website permission to read Discord messages, direct messages, friends, contacts, or channel content.
 
@@ -188,4 +188,4 @@ From a technical standpoint, this implementation was chosen because 1) it allowe
 
 ## What if I am still uncomfortable with the login?
 
-All features of the site is optional.  If you do not wish to login, it is not mandatory.
+All logged-in features of the site is optional.  If you do not wish to login, it is not mandatory.  
