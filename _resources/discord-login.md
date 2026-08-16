@@ -12,8 +12,8 @@ It is **very reasonable** that a member may have concern regarding the collectio
 
 ## Important Note:
 
-> All logged-in features of the site is optional.  If you do not wish to login, it is not mandatory. 
->
+**All logged-in features of the site is optional.  If you do not wish to login, it is not mandatory. **
+
 
 ## Overview of the Discord Login
 
