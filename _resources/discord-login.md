@@ -110,10 +110,7 @@ return Array.isArray(guilds) &&
     guilds.some(guild => guild.id === REQUIRED_GUILD_ID);
 ```
 
-
-Translated into non-technical terms, there is no code that accesses the user's guild list.  It asks the Discord Oauth to get access to the guild list (which is loaded in the user's browser), and then asks the if the user belongs to <code>REQUIRED_GUILD_ID</code> (Hawthorne's Guild ID).
-
-This logic is all done on the user's browser in real-time.  
+ This code checks if the <code>REQUIRED_GUILD_ID</code> (Hawthorne's Guild ID) is inside the list of the user's Guild list, but doesn't read any of the Guild contents specifically.  This logic is all done on the user's browser in real-time.  
 
 ### Hawthorne member and role lookup
 
