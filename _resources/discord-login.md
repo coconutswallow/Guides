@@ -69,7 +69,7 @@ All of this is done inside the user's browser.
 
 The login starts in `assets/js/auth-manager.js` by asking Discord for two permissions:
 
-```js
+<```js>
 async login() {
     const cleanUrl = window.location.origin + window.location.pathname;
     await this.client.auth.signInWithOAuth({
@@ -108,6 +108,7 @@ const r = await fetch('https://discord.com/api/users/@me/guilds', {
 const guilds = await r.json();
 return Array.isArray(guilds) &&
     guilds.some(guild => guild.id === REQUIRED_GUILD_ID);
+```
 
 What this means is that the user's guild list is never accessed by the code.  It asks the Discord Oauth to give access, and then it checks if the user belongs to <code>REQUIRED_GUILD_ID</code> (Hawthorne's Guild ID).
 
@@ -171,9 +172,9 @@ The saved fields are:
 | --- | --- |
 | `discord_id` | Links the authenticated account to the correct Discord identity. |
 | `user_id` | Links the Discord identity to the user's Supabase authentication account. |
-| `display_name` | Displays or attributes website activity using the Hawthorne nickname or Discord display name. |
-| `roles` | Authorizes role-gated website features using mapped Hawthorne role names. |
-| `last_seen` | Determines when Discord membership and roles should be checked again. |
+| `display_name` | The user's the Hawthorne nickname or Discord display name. |
+| `roles` | The user's Hawthorne roles. |
+| `last_seen` | The last time the user logged into the site (to check if re-login is required). |
 
 
 ## Is Discord Login necessary?
