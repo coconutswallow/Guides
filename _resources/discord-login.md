@@ -8,7 +8,7 @@ order: 100
 
 Certain features of the website uses the Discord Oauth login to enable interactive features intended to improve the user experience for playing on the Hawthorne Server.  This allows features such as the ability to save and load your own content, and allows us to control access to site content that should be restricted to specific roles (e.g. Staff to support site administration, or DMs to access the DM Tool).
 
-It is **very reasonable** that a member may have concern regarding the collection and usage of their personal information.  This page is intended to provide the details of *what information is collected, why it is used, and what is being stored*.
+It is **very reasonable** that a member may have concern regarding the collection and usage of their personal information.  This page is intended to provide the details of **what information is collected, why it is used, and what is being stored**.
 
 
 ## Overview of the Discord Login
@@ -185,7 +185,10 @@ Short answer is no.  This was implemented as a way to make it easier for users s
 - Allows saving and loading of DM Tool sessions without needing to create a new user ID, login, etc.
 - Allows loading of the display name in the session logs
 
-From a technical standpoint, this implementation was chosen because 1) it allowed the developer to use Supabase' built-in Discord OAuth connector - which is safer than coding from scratch and 2) to accomodate the serverless architecture which means we can't run code in a back-end server (because it the server doesn't exist)
+From a technical standpoint, this implementation was chosen because 
+
+1) it allowed the developer to use Supabase' built-in Discord OAuth connector - which is safer than coding from scratch and 
+2) to accomodate the serverless architecture which means we can't run code in a back-end server (because it the server doesn't exist)
 
 ## What if I am still uncomfortable with the login?
 
