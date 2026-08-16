@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Credits"
-order: 80
+order: 30
 ---
 
 ## Image Credits

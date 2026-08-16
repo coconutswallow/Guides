@@ -13,6 +13,7 @@ Hawthorne Guild is a Discord-based multiplayer DnD 5e server comprising players 
 We collect the following information through Discord:
 
 - Discord Username
+- Discord ID (numeric ID)
 - Email (Discord)
 - Any messages posted on the Hawthorne Guild Discord
 - Any information publicly available via your Google or Discord accounts will also be visible to us.

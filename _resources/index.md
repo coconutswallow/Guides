@@ -3,15 +3,16 @@ layout: doc
 title: "Contents"
 order: 1
 hide_from_nav: true 
-permalink: /resources/
 background_image: 
 ---
 
-{% assign sorted_resources = site.resources | where_exp: "item", "item.hide_from_nav != true" | sort: 'order' %}
+{% assign sorted_guides = site.resources | sort: 'order' %}
 <ul>
-  {% for res in sorted_resources %}
-    <li>
-      <a href="{{ res.url | relative_url }}">{{ res.title }}</a>
-    </li>
+  {% for doc in sorted_guides %}
+    {% if doc.url != page.url and doc.hide_from_nav != true %}
+      <li>
+        <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+      </li>
+    {% endif %}
   {% endfor %}
 </ul>

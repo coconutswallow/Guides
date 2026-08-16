@@ -62,31 +62,7 @@ collections:
 
   - name: "dms_guide"
     label: "DM's Guide"
-    folder: "_dmsguide"
-    create: true
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Show Table of Contents", name: "toc", widget: "boolean", default: false }
-      - { label: "Body", name: "body", widget: "markdown" }
-    
-  - name: "dms_appendices"
-    label: "DM's Guide Appendices"
-    folder: "_dmsguide/appendices"
-    create: true
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Show Table of Contents", name: "toc", widget: "boolean", default: false }
-      - { label: "Body", name: "body", widget: "markdown" }
-
-  - name: "lore"
-    label: "About Hawthorne"
-    folder: "_lore"
+    folder: "_dms_guide"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -108,29 +84,7 @@ collections:
 
   - name: "field_guide"
     label: "Field Guide"
-    folder: "_adventure_locations"
-    create: true
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
-
-  - name: "player_resources"
-    label: "Player Resources"
-    folder: "_player_resources"
-    create: true
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Layout", name: "layout", widget: "string", default: "doc" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 0 }
-      - { label: "Background Image", name: "background_image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
-
-  - name: "dm_resources"
-    label: "DM Resources"
-    folder: "_dm_resources"
+    folder: "_fieldguide"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -151,7 +105,7 @@ collections:
       - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "resources"
-    label: "General Resources (_resources)"
+    label: "Resources"
     folder: "_resources"
     create: true
     fields:
