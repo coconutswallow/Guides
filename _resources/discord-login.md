@@ -114,7 +114,7 @@ return Array.isArray(guilds) &&
 
 ### Hawthorne member and role lookup
 
-After confirming that the Hawthorne Guild appears in the list, the application requests the user's member record for that guild only:
+After confirming that the Hawthorne Guild appears in the list, the application requests the user's member record for <code>REQUIRED_GUILD_ID</code> (Hawthorne's Guild ID) only:
 
 ```js
 const r = await fetch(
