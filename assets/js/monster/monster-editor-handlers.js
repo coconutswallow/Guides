@@ -69,6 +69,56 @@ export function attachEditorEvents(container, currentMonster, lookups) {
     const form = container.querySelector('#monster-form');
     if (!form) return;
 
+    // Editable Species combo box. The options are supplied by the existing
+    // lookups record (type = "monster", data.species); the input remains free
+    // text so authors can still enter a custom species.
+    const speciesInput = form.querySelector('input[name="species"]');
+    const speciesToggle = form.querySelector('#species-toggle');
+    const speciesOptions = form.querySelector('#species-options');
+    const setSpeciesOptionsOpen = (isOpen) => {
+        if (!speciesOptions) return;
+        speciesOptions.hidden = !isOpen;
+        speciesInput?.setAttribute('aria-expanded', String(isOpen));
+        speciesToggle?.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    const filterSpeciesOptions = () => {
+        const filter = speciesInput?.value.trim().toLocaleLowerCase() || '';
+        speciesOptions?.querySelectorAll('.species-option').forEach(option => {
+            option.hidden = Boolean(filter) && !option.dataset.value.toLocaleLowerCase().includes(filter);
+        });
+    };
+
+    speciesInput?.addEventListener('focus', () => {
+        filterSpeciesOptions();
+        setSpeciesOptionsOpen(true);
+    });
+    speciesInput?.addEventListener('input', () => {
+        filterSpeciesOptions();
+        setSpeciesOptionsOpen(true);
+    });
+    speciesToggle?.addEventListener('click', () => {
+        const isOpening = speciesOptions?.hidden;
+        filterSpeciesOptions();
+        setSpeciesOptionsOpen(isOpening);
+        if (isOpening) speciesInput?.focus();
+    });
+    speciesOptions?.addEventListener('click', (event) => {
+        const option = event.target.closest('.species-option');
+        if (!option || !speciesInput) return;
+        speciesInput.value = option.dataset.value;
+        speciesInput.dispatchEvent(new Event('input', { bubbles: true }));
+        setSpeciesOptionsOpen(false);
+    });
+
+    if (container._speciesComboOutsideHandler) {
+        document.removeEventListener('pointerdown', container._speciesComboOutsideHandler);
+    }
+    container._speciesComboOutsideHandler = (event) => {
+        if (!container.contains(event.target)) setSpeciesOptionsOpen(false);
+    };
+    document.addEventListener('pointerdown', container._speciesComboOutsideHandler);
+
     // 0. Tab Visibility Autosave — Deduplicate to prevent multiple listeners
     if (activeVisibilityHandler) {
         document.removeEventListener('visibilitychange', activeVisibilityHandler);

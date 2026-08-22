@@ -148,11 +148,14 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
                         <select name="size" class="form-control">${renderOptions(lookups?.sizes, currentMonster.size)}</select>
                     </div>
                     <div class="form-group">
-                        <label>Species (Can overwrite with custom text)</label>
-                        <input type="text" name="species" list="species-list" class="form-control" value="${currentMonster.species || ''}" placeholder="e.g. Humanoid">
-                        <datalist id="species-list">
-                            ${lookups?.species?.map(s => `<option value="${s.value}">${s.value}</option>`).join('')}
-                        </datalist>
+                        <label for="monster-species">Species (select or enter custom text)</label>
+                        <div class="editable-combobox" style="position: relative; display: flex;">
+                            <input id="monster-species" type="text" name="species" class="form-control" value="${currentMonster.species || ''}" placeholder="e.g. Humanoid" role="combobox" aria-autocomplete="list" aria-controls="species-options" aria-expanded="false" autocomplete="off" style="padding-right: 2.5rem;">
+                            <button type="button" id="species-toggle" aria-label="Show species options" aria-controls="species-options" aria-expanded="false" style="position: absolute; right: 0; top: 0; bottom: 0; width: 2.25rem; border: 0; border-left: 1px solid var(--color-border); background: transparent; color: var(--color-text-secondary); cursor: pointer;">▾</button>
+                            <div id="species-options" role="listbox" hidden style="position: absolute; top: calc(100% + 2px); left: 0; right: 0; z-index: 200; max-height: 14rem; overflow-y: auto; background: var(--color-bg-page); border: 1px solid var(--color-border); border-radius: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);">
+                                ${lookups?.species?.map(s => `<button type="button" class="species-option" role="option" data-value="${s.value}" style="display: block; width: 100%; padding: 0.5rem 0.75rem; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer;">${s.value}</button>`).join('')}
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Alignment Prefix (optional)</label>
