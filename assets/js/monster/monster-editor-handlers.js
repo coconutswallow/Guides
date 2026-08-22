@@ -190,6 +190,9 @@ export function attachEditorEvents(container, currentMonster, lookups) {
 
     form.addEventListener('input', () => {
         updateCalculatedStats();
+        // Keep the in-memory object current before resetAutoSave writes its
+        // immediate localStorage recovery copy.
+        syncMonsterFromForm(form, currentMonster);
         resetAutoSave(currentMonster, (silent) => handleSave(currentMonster, silent));
     });
 

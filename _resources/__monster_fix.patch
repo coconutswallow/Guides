@@ -1,0 +1,65 @@
+*** Begin Patch
+*** Update File: //snas/Share/Howard/1-PROJECTS/Git/Coconut/Guides/assets/js/monster/monster-editor.js
+@@
+ let lookups = null;
+ let currentMonster = null;
++let initializedUserId = null;
+@@
+     window.handlePageAuth = async (user) => {
+         const container = document.getElementById('editor-app');
+         if (!container) return;
+@@
+         if (!user) {
++            initializedUserId = null;
+@@
+             return;
+         }
++
++        // Supabase can emit SIGNED_IN again when a background tab is resumed.
++        // Do not rebuild an active editor for the same authenticated user: doing
++        // so replaces the form DOM and discards any changes that are still local.
++        if (initializedUserId === user.id) return;
+@@
+         if (!hasAccess) {
++            initializedUserId = null;
+@@
+             return;
+         }
+@@
+         window.removeEventListener('hashchange', handleRoute);
+         window.addEventListener('hashchange', handleRoute);
++        initializedUserId = user.id;
+         handleRoute();
+*** Update File: //snas/Share/Howard/1-PROJECTS/Git/Coconut/Guides/assets/js/monster/monster-editor-handlers.js
+@@
+     form.addEventListener('input', () => {
+         updateCalculatedStats();
++        // Keep the in-memory object current before resetAutoSave writes its
++        // immediate localStorage recovery copy.
++        syncMonsterFromForm(form, currentMonster);
+         resetAutoSave(currentMonster, (silent) => handleSave(currentMonster, silent));
+     });
+*** Update File: //snas/Share/Howard/1-PROJECTS/Git/Coconut/Guides/assets/js/monster/monster-service.js
+@@
+-    let { data: savedData, error: monsterError } = await supabase
+-        .from('monsters')
+-        .upsert(payload, { onConflict: 'slug' })
+-        .select('row_id, slug');
++    // A new draft must never update an existing row merely because its slug
++    // collides. Besides being surprising, that sends the request through the
++    // UPDATE RLS policy and previously surfaced as an opaque 403.
++    const saveQuery = isNew
++        ? supabase.from('monsters').insert(payload)
++        : supabase.from('monsters').update(payload).eq('row_id', monsterFields.row_id);
++
++    let { data: savedData, error: monsterError } = await saveQuery
++        .select('row_id, slug');
+@@
+-    if (monsterError) throw monsterError;
++    if (monsterError) {
++        if (monsterError.code === '23505') {
++            throw new Error('That monster slug is already in use. Please choose a different name or slug.');
++        }
++        throw monsterError;
++    }
+*** End Patch

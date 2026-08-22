@@ -25,6 +25,7 @@ import {
 
 let lookups = null;
 let currentMonster = null;
+let initializedUserId = null;
 
 /**
  * Entry point. Sets up the auth transition hook.
@@ -38,6 +39,7 @@ function init() {
         if (!container) return;
 
         if (!user) {
+            initializedUserId = null;
             container.innerHTML = `
                 <div class="alert alert-info" style="margin-top: 2rem;">
                     <h3>Editor Access</h3>
@@ -49,8 +51,14 @@ function init() {
             return;
         }
 
+        // Supabase can emit SIGNED_IN again when a background tab is resumed.
+        // Do not rebuild an active editor for the same authenticated user: doing
+        // so replaces the form DOM and discards any changes that are still local.
+        if (initializedUserId === user.id) return;
+
         const hasAccess = await checkAccess(user.id, ['Trial DM', 'Full DM', 'Monster Admin']);
         if (!hasAccess) {
+            initializedUserId = null;
             container.innerHTML = `
                 <div class="alert alert-danger" style="margin-top: 2rem;">
                     <h3>Access Denied</h3>
@@ -65,6 +73,7 @@ function init() {
 
         window.removeEventListener('hashchange', handleRoute);
         window.addEventListener('hashchange', handleRoute);
+        initializedUserId = user.id;
         handleRoute();
     };
 

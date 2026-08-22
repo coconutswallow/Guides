@@ -117,9 +117,14 @@ export async function saveMonsterDraft(monsterData, features = []) {
         delete payload.created_at;
     }
 
-    let { data: savedData, error: monsterError } = await supabase
-        .from('monsters')
-        .upsert(payload, { onConflict: 'slug' })
+    // A new draft must never update an existing row merely because its slug
+    // collides. Besides being surprising, that sends the request through the
+    // UPDATE RLS policy and previously surfaced as an opaque 403.
+    const saveQuery = isNew
+        ? supabase.from('monsters').insert(payload)
+        : supabase.from('monsters').update(payload).eq('row_id', monsterFields.row_id);
+
+    let { data: savedData, error: monsterError } = await saveQuery
         .select('row_id, slug');
 
     if (!savedData && !monsterError && isNew) {
@@ -127,7 +132,12 @@ export async function saveMonsterDraft(monsterData, features = []) {
         if (recovered) savedData = [recovered];
     }
 
-    if (monsterError) throw monsterError;
+    if (monsterError) {
+        if (monsterError.code === '23505') {
+            throw new Error('That monster slug is already in use. Please choose a different name or slug.');
+        }
+        throw monsterError;
+    }
 
     const savedMonster = Array.isArray(savedData) ? savedData[0] : savedData;
     if (!savedMonster) throw new Error('Failed to retrieve saved monster record.');
@@ -473,6 +483,20 @@ export async function rejectMonster(rowId, reviewerId) {
 
 // --- LOOKUPS ---
 
+const DEFAULT_MONSTER_SPECIES = [
+    'Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental',
+    'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'
+].map(value => ({ value }));
+
+function normalizeMonsterLookups(rawLookups) {
+    const lookups = rawLookups && typeof rawLookups === 'object' ? rawLookups : {};
+    const species = Array.isArray(lookups.species) && lookups.species.length
+        ? lookups.species
+        : DEFAULT_MONSTER_SPECIES;
+
+    return { ...lookups, species };
+}
+
 /**
  * Fetches metadata lookups (species, sizes, CRs) from the database.
  * @returns {Promise<Object|null>} The combined lookup tables object.
@@ -486,14 +510,18 @@ export async function getMonsterLookups() {
 
     if (error || !data) {
         logError('monster-service', `Error fetching lookups: ${error?.message || 'No data'}`);
-        return null;
+        return normalizeMonsterLookups(null);
     }
 
-    if (typeof data.data === 'string') {
-        return JSON.parse(data.data);
+    try {
+        const lookupData = typeof data.data === 'string'
+            ? JSON.parse(data.data)
+            : data.data;
+        return normalizeMonsterLookups(lookupData);
+    } catch (error) {
+        logError('monster-service', `Error parsing monster lookups: ${error.message}`);
+        return normalizeMonsterLookups(null);
     }
-
-    return data.data;
 }
 
 /**
