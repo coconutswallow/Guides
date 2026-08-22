@@ -109,11 +109,14 @@ export async function saveMonsterDraft(monsterData, features = []) {
         payload.version = payload.version || '1.0';
         payload.created_at = now;
         payload.creator_discord_id = discordId;
-        payload.creator = displayName;
+        // Keep a creator name entered in the form; use the Discord display
+        // name only as the default for a blank field.
+        payload.creator = payload.creator?.trim() || displayName;
         payload.is_live = false;
     } else {
+        // The Discord ID determines ownership and must remain immutable, but
+        // a draft's displayed creator name is intentionally editable.
         delete payload.creator_discord_id;
-        delete payload.creator;
         delete payload.created_at;
     }
 
