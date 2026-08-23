@@ -44,7 +44,7 @@ async function init() {
             return;
         }
 
-        const hasAccess = await checkAccess(user.id, ['Lore', 'Rules', 'Admin', 'Monster Admin']);
+        const hasAccess = await checkAccess(user.id, ['Lore', 'Rules', 'Admin', 'Monster Admin', 'Engineer']);
         if (!hasAccess) {
             container.innerHTML = `
                 <div class="alert alert-danger" style="margin-top: 2rem;">
