@@ -52,6 +52,7 @@ export function getFormData() {
             focus: getVal('inp-focus', state.header.focus),
             encounter_difficulty: getVal('inp-diff-encounter', state.header.encounter_difficulty),
             threat_level: getVal('inp-diff-threat', state.header.threat_level),
+            hazard_level: getVal('inp-diff-hazard', state.header.hazard_level),
             char_loss: getVal('inp-diff-loss', state.header.char_loss),
             house_rules: getVal('inp-houserules', state.header.house_rules),
             notes: getVal('inp-notes', state.header.notes),
@@ -123,6 +124,7 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-focus', fd.header.focus);
         setVal('inp-diff-encounter', fd.header.encounter_difficulty);
         setVal('inp-diff-threat', fd.header.threat_level);
+        setVal('inp-diff-hazard', fd.header.hazard_level);
         setVal('inp-diff-loss', fd.header.char_loss);
         setVal('inp-houserules', fd.header.house_rules);
         setVal('inp-notes', fd.header.notes);
