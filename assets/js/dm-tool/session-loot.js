@@ -203,11 +203,17 @@ export function updateDMLootLogic(discordId, gameRules) {
     }
 
     const gameName = state.header.title || "Untitled Game";
+    const dmCharName = state.dm.character_name || "Unnamed Character";
     const dmLvl = state.dm.level || "0";
+
+    if (isJumpstart) {
+        incentiveNames.unshift(`Jumpstart (${dmGamesVal}/10)`);
+    }
+
     const incentiveStr = incentiveNames.length > 0 ? `, Incentives: ${incentiveNames.join(', ')}` : "";
     
     // 1. Generate DM Loot Declaration Text
-    const declText = `<@${discordId}> rolls loot for Game **${gameName}**${incentiveStr}`;
+    const declText = `<@${discordId}> as ${dmCharName} (${dmLvl}) rolling DM loot for ${gameName}${incentiveStr}`;
     
     const outDecl = document.getElementById('out-dm-loot-decl');
     if (outDecl) outDecl.value = declText;
