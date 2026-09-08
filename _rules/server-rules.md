@@ -19,7 +19,6 @@ background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
    
 7. While we welcome artists and have special channels specifically for posting commissions and sharing custom art, blindly DMing community members or doing mass announcements in other channels is not tolerated and can result in a ban.
 
-
 ## Server Code of Conduct
 
 **Compliance with Discord Rules**  

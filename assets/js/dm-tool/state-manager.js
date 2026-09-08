@@ -253,6 +253,14 @@ class StateManager {
                 this.scheduleUpdate('outputs');
             });
         }
+
+        if (this.dom.dmForfeitXp) {
+            this.dom.dmForfeitXp.addEventListener('change', (e) => {
+                this.updateField('session_log.dm_rewards', 'forfeit_xp', e.target.checked);
+                this.scheduleUpdate('calculations');
+                this.scheduleUpdate('outputs');
+            });
+        }
     }
 
     getFullState() { return JSON.parse(JSON.stringify(this.state)); }

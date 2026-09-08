@@ -31,6 +31,12 @@ export function getFormData() {
     };
 
     const state = stateManager.getFullState();
+    const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
+    const dmRewards = {
+        ...state.session_log.dm_rewards,
+        // Read the checkbox from the form so an explicit false is saved too.
+        forfeit_xp: dmForfeitCheckbox ? dmForfeitCheckbox.checked : Boolean(state.session_log.dm_rewards.forfeit_xp)
+    };
 
     return {
         header: {
@@ -87,7 +93,7 @@ export function getFormData() {
             summary: getVal('session-summary', state.session_log.summary),
             dm_collaborators: getVal('inp-dm-collab', state.session_log.dm_collaborators),
             players: Rows.getSessionRosterData(),
-            dm_rewards: state.session_log.dm_rewards,
+            dm_rewards: dmRewards,
 
             // Link Fields
             dm_loot_links: getVal('inp-dm-loot-links', state.session_log.dm_loot_links),
@@ -175,6 +181,11 @@ export function populateForm(session, callbacks, options = {}) {
         // Restore Link Fields
         setVal('inp-dm-loot-links', fd.session_log.dm_loot_links);
         setVal('inp-session-log-links', fd.session_log.session_log_links);
+
+        const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
+        if (dmForfeitCheckbox) {
+            dmForfeitCheckbox.checked = fd.session_log.dm_rewards?.forfeit_xp === true;
+        }
     }
 
     const tbody = document.getElementById('roster-body');

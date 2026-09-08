@@ -271,6 +271,11 @@ function initUI() {
 }
 
 function bindEvents() {
+    const generateAllOutputs = () => {
+        IO.generateOutput();
+        IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
+    };
+
     const callbacks = {
         onUpdate: () => {
             scheduleUpdate(() => {
@@ -280,7 +285,7 @@ function bindEvents() {
                 updateHgenLogic(cachedDiscordId);
                 updateDMLootLogic(cachedDiscordId, cachedGameRules);
                 IO.updateJumpstartDisplay();
-                IO.generateOutput();
+                generateAllOutputs();
             });
         },
         onOpenModal: (btn, ctx, isDM) => UI.openIncentivesModal(btn, ctx, isDM, cachedGameRules)
@@ -306,12 +311,15 @@ function bindEvents() {
     });
 
     stateManager.onUpdate('outputs', (state) => {
-        IO.generateOutput();
+        generateAllOutputs();
     });
 
     // --- Input Delegation ---
     document.addEventListener('input', (e) => {
         const id = e.target.id;
+        // Keep the session-log preview in sync with every editable field,
+        // including fields that are not managed by StateManager.
+        IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
         if (!id) return;
 
         if (DELEGATED_INPUT_IDS.includes(id)) {
@@ -344,7 +352,7 @@ function bindEvents() {
             if (!item) return;
 
             if (item.dataset.target === 'view-session-output') {
-                IO.generateSessionLogOutput(cachedDiscordId, cachedDisplayName);
+                generateAllOutputs();
             }
             if (item.dataset.target === 'view-mal-update') {
                 IO.generateMALUpdate(cachedDisplayName);
