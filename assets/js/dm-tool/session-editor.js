@@ -712,7 +712,10 @@ function setupCalculationTriggers(callbacks) {
 
     const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
     if (dmForfeitCheckbox) {
-        dmForfeitCheckbox.addEventListener('change', () => scheduleUpdate(callbacks.onUpdate));
+        dmForfeitCheckbox.addEventListener('change', () => {
+            stateManager.updateField('session_log.dm_rewards', 'forfeit_xp', dmForfeitCheckbox.checked);
+            scheduleUpdate(callbacks.onUpdate);
+        });
     }
 
     // Modal trigger

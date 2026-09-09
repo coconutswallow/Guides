@@ -66,6 +66,7 @@ export function getFormData() {
             how_to_apply: getVal('inp-apply', state.header.how_to_apply),
             listing_url: getVal('inp-listing-url', state.header.listing_url),
             lobby_url: getVal('inp-lobby-url', state.header.lobby_url),
+            game_listing_url: getVal('inp-game-listing-url', state.header.game_listing_url),
             loot_plan: getVal('inp-loot-plan', state.header.loot_plan),
             predet_perms: getVal('inp-predet-perms', state.header.predet_perms),
             predet_cons: getVal('inp-predet-cons', state.header.predet_cons),
@@ -138,6 +139,7 @@ export function populateForm(session, callbacks, options = {}) {
         setVal('inp-apply', fd.header.how_to_apply);
         setVal('inp-listing-url', fd.header.listing_url);
         setVal('inp-lobby-url', fd.header.lobby_url);
+        setVal('inp-game-listing-url', fd.header.game_listing_url || fd.header.listing_url);
         setVal('inp-loot-plan', fd.header.loot_plan);
         setVal('inp-predet-perms', fd.header.predet_perms);
         setVal('inp-predet-cons', fd.header.predet_cons);
@@ -184,7 +186,9 @@ export function populateForm(session, callbacks, options = {}) {
 
         const dmForfeitCheckbox = document.getElementById('chk-dm-forfeit-xp');
         if (dmForfeitCheckbox) {
-            dmForfeitCheckbox.checked = fd.session_log.dm_rewards?.forfeit_xp === true;
+            const savedForfeit = fd.session_log.dm_rewards?.forfeit_xp;
+            dmForfeitCheckbox.checked = savedForfeit === true || savedForfeit === 'true';
+            stateManager.updateField('session_log.dm_rewards', 'forfeit_xp', dmForfeitCheckbox.checked);
         }
     }
 
@@ -373,7 +377,6 @@ ${state.header.game_description || "No description provided."}
     if (lobbyEl) {
         const listingUrl = document.getElementById('inp-game-listing-url')?.value
             || state.header.listing_url
-            || state.header.lobby_url
             || "N/A";
 
         const playerMentions = [];
@@ -520,7 +523,7 @@ export async function generateSessionLogOutput(dmDiscordId, dmDisplayName) {
     const playerStats = stateManager.getPlayerStats();
     let dmIncentivesList = [];
     if (state.dm.games_count !== "10+" && parseInt(state.dm.games_count) <= 10) {
-        dmIncentivesList.push("Jumpstart");
+        dmIncentivesList.push(`Jumpstart (${state.dm.games_count}/10)`);
     }
     if (playerStats.newHires > 0) dmIncentivesList.push(`New Hires x${playerStats.newHires}`);
     if (playerStats.welcomeWagon > 0) dmIncentivesList.push(`Welcome Wagon x${playerStats.welcomeWagon}`);
