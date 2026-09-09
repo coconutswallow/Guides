@@ -84,7 +84,7 @@ collections:
 
   - name: "field_guide"
     label: "Field Guide"
-    folder: "_fieldguide"
+    folder: "_adventure_locations"
     create: true
     fields:
       - { label: "Title", name: "title", widget: "string" }

@@ -116,7 +116,7 @@ Loot rolled for a given game can’t be awarded in other games and must be rolle
 
 #### Tier 0 (T0) Loot
 T0 Loot is bonus loot you can add to any game and doesn’t count against the game’s item slots, with a number of bonus slots as per the table. The maximum number of duplicates for a given T0 consumable per item slot is up to 4 (up to 15 for ammunition), except as
-noted otherwise. See [Allowed Content]({{ '/allowed-content/#item-properties' | relative_url }}) for details.
+noted otherwise. See [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?pli=1&gid=828640940#gid=828640940) for details.
 
 #### Tier 1 (T1) to Tier 4 (T4) Loot
 
@@ -124,11 +124,11 @@ T1 to T4 loot takes up a game’s <b>item slots</b>, and a game can’t award lo
 
 #### Multisession Loot
 
-Unlike T0 to T4 loot, multisession loot is only awarded as part of a multisession with a minimum required APL and number of sessions. Multisession loot uses item slots as normal but also requires a multisession of the appropriate APL and length to award. <b>Tier 1+ (T1+), Tier 2+ (T2+), Tier 3+ (T3+), Tier 4+ (T4+)</b>, and <b>Tier S items</b> each have their own minimum APL and session requirements as per the preceding table. Only <span class="role-fulldm">Full DMs</span> can award multisession loot, and a list of all available multisession loot is in [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}).
+Unlike T0 to T4 loot, multisession loot is only awarded as part of a multisession with a minimum required APL and number of sessions. Multisession loot uses item slots as normal but also requires a multisession of the appropriate APL and length to award. <b>Tier 1+ (T1+), Tier 2+ (T2+), Tier 3+ (T3+), Tier 4+ (T4+)</b>, and <b>Tier S items</b> each have their own minimum APL and session requirements as per the preceding table. Only <span class="role-fulldm">Full DMs</span> can award multisession loot, and a list of all available multisession loot is in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?pli=1&gid=828640940#gid=828640940).
 
 #### Additional Properties
 
-You can add minor item properties to items you award as described in the 2014/2024 Dungeon Master’s Guide (some properties can only be used by Full DMs), and Full DMs can use the rules for Sentient Magic Items to award sentient items. For full details, refer to the associated sheet in [Allowed Content]({{ '/allowed-content/#item-properties' | relative_url }}).
+You can add minor item properties to items you award as described in the 2014/2024 Dungeon Master’s Guide (some properties can only be used by Full DMs), and Full DMs can use the rules for Sentient Magic Items to award sentient items. For full details, refer to the associated sheet in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?pli=1&gid=828640940#gid=828640940).
 
 #### Trinkets
 
@@ -140,11 +140,13 @@ The following is a summary of other rewards you can use in your games. For detai
 
 #### Homebrew Items
 
-You can submit a request in [#dm-requests](https://discord.com/channels/308324031478890497/617831110260424776) to Rules for a homebrew magic item of your own design to award in a game. It’s recommended to use existing 5e magic items as a reference and starting point in designing an item, and the item’s final design and loot tier is collaboratively determined by you and Rules. You must also provide a session outline with the following:
+You can submit a request in [#dm-requests](https://discord.com/channels/308324031478890497/617831110260424776) to Rules for a homebrew magic item of your own design to award in a game. The process by which you can submit a homebrew item request is described in the [Homebrew Reward Request Guideline]({{ '/dmsguide/appendices/appendix-b-homebrew/' | relative_url }}).  In brief:
 
-- The session’s intended APL and number of players
-- A description of the expected events of the session and what challenges the PCs are meant to overcome
-- How the item is meant to be acquired
+* Create a thread in [#dm-collaboration](https://discord.com/channels/308324031478890497/1016350443863027723) and ping the <strong>@DM Collaborator</strong> role to provide feedback.
+* After 24+ hours, create an associated request thread in [#dm-requests](https://discord.com/channels/308324031478890497/617831110260424776) for review by Rule Apprentices.
+* After 24+ hours, Rules Architects will weigh in for any modifications prior to voting and approval
+
+The item's final design and loot tier is collaboratively determined by you and the Rules team after discussion.
 
 #### Deck of Many Things
 
@@ -157,11 +159,11 @@ While PCs can’t acquire the <i>Deck of Many Things</i> (nor the <i>Deck of Man
 #### Hoard Magic Items (Full DM Only)
 
 <b>Hoard Magic Items</b> (from <i>Fizban’s Treasury of Dragons</i>) are evolving items that <span class="role-full-dm">Full DMs</span> can award and that can exist in four states corresponding to a dragon’s age category: <b>Slumbering</b> (any age), <b>Stirring</b> (young), <b>Wakened</b> (adult), and <b>Ascendant</b> (ancient).
-Hoard Magic Items use the normal loot distribution  rules and can be upgraded as detailed in [Allowed Content]({{ '/allowed-content/#loot' | relative_url }}), as based on the written rules for them described in Fizban’s Treasury of Dragons.
+Hoard Magic Items use the normal loot distribution  rules and can be upgraded as detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?pli=1&gid=828640940#gid=828640940), as based on the written rules for them described in Fizban’s Treasury of Dragons.
 
 #### Supernatural Rewards
 
-<b>Supernatural Rewards</b> are acquirable extraordinary abilities which come in the following types and as further detailed in [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }}):
+<b>Supernatural Rewards</b> are acquirable extraordinary abilities which come in the following types and as further detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?pli=1&gid=828640940#gid=828640940):
 
 - <b>Dark Gifts</b> provide both benefits and detriments after contact with dark supernatural forces. Dark Gifts don’t count against a game’s item slots, but a character can only ever have <b>one</b> Dark Gift at a time: they must choose to keep or replace a Dark Gift if they ever acquire a new one.
 - <b>Supernatural Gifts</b> are permanent abilities obtained after performing great deeds or contacting powerful supernatural forces. Only <span class="role-full-dm">Full DMs</span> can award Supernatural Gifts, which use the normal item distribution rules as the equivalent of permanent items. A PC can only benefit from a number of Supernatural Gifts whose combined tier is no greater than their Proficiency Bonus, choosing which combination is active after finishing a Long Rest. For example, a level 11 character (PB +4) could benefit from two T2 Supernatural Gifts or 1 T1 Supernatural Gift and 1 T3 Supernatural Gift.
@@ -171,7 +173,7 @@ Hoard Magic Items use the normal loot distribution  rules and can be upgraded as
 
 #### Marks of Prestige
 
-Marks of Prestige are rewards reflecting a PC’s fame and prestige due to their deeds, as detailed in the 2014 and 2024 Dungeon Master’s Guide and detailed in [Allowed Content]({{ '/allowed-content/#other-rewards' | relative_url }}) with the following types available as written: Letter of Recommendation, Medal, Parcel of Land, Special Favor, Special Right, Stronghold, or Title.
+Marks of Prestige are rewards reflecting a PC’s fame and prestige due to their deeds, as detailed in the 2014 and 2024 Dungeon Master’s Guide and detailed in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?pli=1&gid=828640940#gid=828640940) with the following types available as written: Letter of Recommendation, Medal, Parcel of Land, Special Favor, Special Right, Stronghold, or Title.
 Marks of Prestige <b>don’t</b> take up a game’s item slots.
 
 > A PC that obtains a parcel of land or a stronghold in a world location in this way can use it to establish a Bastion as
@@ -179,7 +181,7 @@ described in Appendix B of the Player Guidelines.
 
 #### Mounts
 
-In addition to the Mounts listed in Equipment in [Allowed Content]({{ '/allowed-content/#equipment' | relative_url }}), specific creatures can be acquired as mounts from adventures only. Acquiring such mounts follows the normal item distribution rules, with mounts treated as the equivalent of permanent items (1 mount per item slot). You can use the previous rules on Customizing Monsters for any mount you award.
+In addition to the Mounts listed in Equipment in [Allowed Content](https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?pli=1&gid=828640940#gid=828640940), specific creatures can be acquired as mounts from adventures only. Acquiring such mounts follows the normal item distribution rules, with mounts treated as the equivalent of permanent items (1 mount per item slot). You can use the previous rules on Customizing Monsters for any mount you award.
 
 
 #### Renown
