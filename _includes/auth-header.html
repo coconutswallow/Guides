@@ -207,7 +207,16 @@
             if (data && data.roles) {
                 const roles = data.roles;
                 const isDM = roles.some(r => ['Trial DM', 'Full DM', 'Monster Admin'].includes(r));
-                const isAdmin = roles.some(r => ['Full DM', 'Monster Admin'].includes(r));
+                const isAdmin = roles.some(r => [
+                    'Rule Architects',
+                    'Rules Architects',
+                    'Rule Apprentice',
+                    'Lore Consultant',
+                    'Lore Apprentice',
+                    'Admin',
+                    'Engineer',
+                    'Monster Admin'
+                ].includes(r));
 
                 if (isDM || isAdmin) {
                     ui.nav.style.display = 'flex';
