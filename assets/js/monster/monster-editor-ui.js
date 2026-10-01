@@ -54,10 +54,13 @@ export async function renderDashboard(container) {
                     <td><span class="status-badge ${statusClass}">${m.status || 'Draft'}</span></td>
                     <td>${new Date(m.updated_at).toLocaleDateString()}</td>
                     <td>
-                        ${['Pending', 'Queued'].includes(m.status)
-                    ? `<span class="status-badge status-${m.status.toLowerCase()}" style="font-size: 0.7rem;">${m.status === 'Pending' ? 'Pending Review' : 'Queued for Patch'}</span>`
-                    : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">${m.status === 'Archived' ? 'View' : 'Edit'}</a>`
-                }
+                        ${m.status === 'Pending'
+                            ? `<span class="status-badge status-pending" style="font-size: 0.7rem;">Pending Review</span>
+                               <button type="button" class="btn btn-sm btn-outline-primary btn-copy-approval" data-slug="${m.slug}" data-name="${m.name}" style="margin-left: 0.4rem; padding: 0.2rem 0.6rem; font-size: 0.75rem;" title="Copy direct link for staff approvers">📋 Copy Link</button>`
+                            : m.status === 'Queued'
+                            ? `<span class="status-badge status-queued" style="font-size: 0.7rem;">Queued for Patch</span>`
+                            : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">${m.status === 'Archived' ? 'View' : 'Edit'}</a>`
+                        }
                         ${m.status === 'Draft' ? `<button class="btn btn-sm btn-outline-danger btn-delete-row" data-row-id="${m.row_id}" data-name="${m.name}" data-slug="${m.slug}" title="Delete Draft">Delete</button>` : ''}
                         ${m.status === 'Approved' ? `<a href="${(window.MONSTER_EDITOR_CONFIG?.baseUrl || '/Guides/') + 'monsters/#/' + m.slug}" target="_blank" class="btn btn-sm btn-outline-secondary">View Live</a>` : ''}
                     </td>
@@ -233,7 +236,7 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
                                 <td><input type="number" name="ability_${a}" class="form-control attr-score" value="${(currentMonster.ability_scores && currentMonster.ability_scores[a]) || 10}"></td>
                                 <td class="attr-mod" id="mod-${a}">+0</td>
                                 <td><input type="checkbox" class="save-prof" data-attr="${a}" ${currentMonster.saves?.proficiencies?.includes(a) ? 'checked' : ''}></td>
-                                <td><input type="number" name="save_${a}" class="form-control save-override" value="${(currentMonster.saves && currentMonster.saves[a]) !== null ? currentMonster.saves[a] : ''}" placeholder="Auto" style="width: 70px; margin: 0 auto; text-align: center;"></td>
+                                <td><input type="number" name="save_${a}" class="form-control save-override" value="${(currentMonster.saves && currentMonster.saves[a] != null) ? currentMonster.saves[a] : ''}" placeholder="Auto" style="width: 70px; margin: 0 auto; text-align: center;"></td>
                             `).join('')}
                         </tr>
                         <tr>
@@ -242,7 +245,7 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
                                 <td><input type="number" name="ability_${a}" class="form-control attr-score" value="${(currentMonster.ability_scores && currentMonster.ability_scores[a]) || 10}"></td>
                                 <td class="attr-mod" id="mod-${a}">+0</td>
                                 <td><input type="checkbox" class="save-prof" data-attr="${a}" ${currentMonster.saves?.proficiencies?.includes(a) ? 'checked' : ''}></td>
-                                <td><input type="number" name="save_${a}" class="form-control save-override" value="${(currentMonster.saves && currentMonster.saves[a]) !== null ? currentMonster.saves[a] : ''}" placeholder="Auto" style="width: 70px; margin: 0 auto; text-align: center;"></td>
+                                <td><input type="number" name="save_${a}" class="form-control save-override" value="${(currentMonster.saves && currentMonster.saves[a] != null) ? currentMonster.saves[a] : ''}" placeholder="Auto" style="width: 70px; margin: 0 auto; text-align: center;"></td>
                             `).join('')}
                         </tr>
                     </tbody>
@@ -415,15 +418,16 @@ export function renderFeatureList(currentMonster) {
         const filtered = currentMonster.features
             .map((f, i) => ({ ...f, originalIndex: i }))
             .filter(f => types.some(t => t.toLowerCase() === (f.type || '').toLowerCase()));
-
         container.innerHTML = filtered.map((f, i) => {
             const isExpanded = f.expanded === true;
+            const displayName = (f.name && f.name.trim()) ? f.name : '(Unnamed)';
+            const titleText = `${hideType ? '' : (f.type || 'Action') + ': '}${displayName}`;
             return `
-            <div class="feature-card accordion-card" data-index="${f.originalIndex}" style="padding: 0; overflow: hidden; margin-bottom: 1rem; border: 1px solid var(--color-border); border-radius: 4px;">
+            <div class="feature-card accordion-card" data-index="${f.originalIndex}" data-hide-type="${hideType}" style="padding: 0; overflow: hidden; margin-bottom: 1rem; border: 1px solid var(--color-border); border-radius: 4px;">
                 <div class="accordion-header" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; background: var(--color-bg-light); border-bottom: 1px solid var(--color-border); font-family: 'Marcellus SC', serif; color: var(--color-primary);">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <span class="accordion-icon" style="transform: ${isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)'}; transition: transform 0.2s;">▼</span>
-                        <span style="font-weight: bold;">${hideType ? '' : f.type + ': '}${f.name || '(Unnamed)'}</span>
+                        <span class="feature-header-title" style="font-weight: bold;">${escapeHtml(titleText)}</span>
                     </div>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
                         <button type="button" class="btn btn-sm btn-outline-primary feat-up" ${i === 0 ? 'disabled' : ''} style="padding: 2px 8px; font-size: 0.8rem;" title="Move Up">▲</button>
@@ -441,7 +445,7 @@ export function renderFeatureList(currentMonster) {
                         ` : ''}
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control feat-name" value="${f.name || ''}" placeholder="e.g. ${
+                            <input type="text" class="form-control feat-name" value="${escapeHtml(f.name || '')}" placeholder="e.g. ${
                                 f.type === 'Trait' ? 'Keen Senses' : 
                                 f.type === 'Reaction' ? 'Opportunist' : 
                                 (f.type || '').toLowerCase().includes('legendary') ? 'Detect' :
@@ -469,6 +473,33 @@ export function renderFeatureList(currentMonster) {
     renderBucket(buckets.legendary, 'legendary-container', true);
     renderBucket(buckets.lair, 'lair-container', true);
     renderBucket(buckets.regional, 'regional-container', true);
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+/**
+ * Updates the title span of a feature accordion card in the DOM.
+ * @param {HTMLElement} card - The .feature-card element.
+ * @param {Object} [feat] - Optional feature data object.
+ */
+export function updateFeatureCardHeader(card, feat) {
+    if (!card) return;
+    const titleEl = card.querySelector('.feature-header-title');
+    if (!titleEl) return;
+    const hideType = card.dataset.hideType === 'true';
+    const featType = feat?.type || card.querySelector('.feat-type')?.value || 'Action';
+    const featName = feat ? feat.name : card.querySelector('.feat-name')?.value;
+    const typePrefix = hideType ? '' : `${featType}: `;
+    const displayName = featName && featName.trim() ? featName : '(Unnamed)';
+    titleEl.textContent = `${typePrefix}${displayName}`;
 }
 
 /**

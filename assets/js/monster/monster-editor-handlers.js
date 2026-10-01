@@ -16,8 +16,8 @@ import {
     deleteMonster
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
-import { calculatePB, calculateXP, calculateMod, formatInitiative, calculatePassivePerception } from './monster-utils.js';
-import { renderFeatureList } from './monster-editor-ui.js';
+import { calculatePB, calculateXP, calculateMod, formatInitiative, calculatePassivePerception, getMonsterApprovalUrl } from './monster-utils.js';
+import { renderFeatureList, updateFeatureCardHeader } from './monster-editor-ui.js';
 import {
     syncMonsterFromForm,
     validateMonster,
@@ -149,6 +149,9 @@ export function attachEditorEvents(container, currentMonster, lookups) {
 
     // Handle manual overrides for auto-calculated fields
     form.querySelectorAll('.save-override, input[name="hp_modifier"]').forEach(input => {
+        if (input.value !== '') {
+            input.dataset.manual = 'true';
+        }
         input.addEventListener('input', () => {
             if (input.value !== '') {
                 input.dataset.manual = 'true';
@@ -238,13 +241,16 @@ export function attachEditorEvents(container, currentMonster, lookups) {
         if (xpPreview) xpPreview.value = calculateXP(cr).toLocaleString() + ' XP';
     };
 
-    form.addEventListener('input', () => {
+    const handleFormUpdate = () => {
         updateCalculatedStats();
         // Keep the in-memory object current before resetAutoSave writes its
         // immediate localStorage recovery copy.
         syncMonsterFromForm(form, currentMonster);
         resetAutoSave(currentMonster, (silent) => handleSave(currentMonster, silent));
-    });
+    };
+
+    form.addEventListener('input', handleFormUpdate);
+    form.addEventListener('change', handleFormUpdate);
 
     // Run initial calculation
     updateCalculatedStats();
@@ -299,14 +305,16 @@ export function attachEditorEvents(container, currentMonster, lookups) {
             body.style.display = isOpening ? 'block' : 'none';
             icon.style.transform = isOpening ? 'rotate(0deg)' : 'rotate(-90deg)';
             
-            // Persist the expansion state in the data object
+            // Persist the expansion state in the data object and refresh header
             if (feat) {
                 feat.expanded = isOpening;
+                updateFeatureCardHeader(card, feat);
             }
             return;
         }
 
         if (e.target.classList.contains('btn-add-grouped')) {
+            syncMonsterFromForm(form, currentMonster);
             currentMonster.features.push({ 
                 name: '', 
                 type: e.target.dataset.type, 
@@ -322,12 +330,14 @@ export function attachEditorEvents(container, currentMonster, lookups) {
         const index = parseInt(card.dataset.index);
 
         if (e.target.closest('.feat-remove') && confirm('Remove this feature?')) {
+            syncMonsterFromForm(form, currentMonster);
             currentMonster.features.splice(index, 1);
             renderFeatureList(currentMonster);
         }
 
         // Reordering logic
         if (e.target.closest('.feat-up') || e.target.closest('.feat-down')) {
+            syncMonsterFromForm(form, currentMonster);
             const dir = e.target.closest('.feat-up') ? -1 : 1;
             const swapIdx = findSiblingFeature(currentMonster, index, dir);
             if (swapIdx !== null) {
@@ -337,16 +347,36 @@ export function attachEditorEvents(container, currentMonster, lookups) {
         }
     });
 
-    // Sub-sync for features
-    form.addEventListener('input', e => {
+    // Sub-sync for features and live header updates
+    const handleFeatureSync = (e) => {
         const card = e.target.closest('.feature-card');
         if (!card) return;
-        const feat = currentMonster.features[parseInt(card.dataset.index)];
+        const feat = currentMonster.features?.[parseInt(card.dataset.index)];
         if (!feat) return;
-        if (e.target.classList.contains('feat-type')) feat.type = e.target.value;
-        if (e.target.classList.contains('feat-name')) feat.name = e.target.value;
-        if (e.target.classList.contains('md-textarea')) feat.description = e.target.value;
-    });
+
+        if (e.target.classList.contains('feat-type')) {
+            feat.type = e.target.value;
+            // Check if feature type moved between buckets (Actions vs non-Actions)
+            const hideType = card.dataset.hideType === 'true';
+            const isActionType = ['action', 'bonus action', 'reaction'].includes((feat.type || '').toLowerCase());
+            if ((!hideType && !isActionType) || (hideType && isActionType)) {
+                syncMonsterFromForm(form, currentMonster);
+                renderFeatureList(currentMonster);
+                return;
+            }
+            updateFeatureCardHeader(card, feat);
+        }
+        if (e.target.classList.contains('feat-name')) {
+            feat.name = e.target.value;
+            updateFeatureCardHeader(card, feat);
+        }
+        if (e.target.classList.contains('md-textarea')) {
+            feat.description = e.target.value;
+        }
+    };
+
+    form.addEventListener('input', handleFeatureSync);
+    form.addEventListener('change', handleFeatureSync);
 
     updateCalculatedStats();
 }
@@ -361,7 +391,13 @@ export async function handleSave(currentMonster, silent = false) {
     if (!statusDiv || ['Pending', 'Queued', 'Approved', 'Archived'].includes(currentMonster?.status)) return;
 
     if (!silent) statusDiv.textContent = 'Saving...';
-    syncMonsterFromForm(document.getElementById('monster-form'), currentMonster);
+    const form = document.getElementById('monster-form');
+    syncMonsterFromForm(form, currentMonster);
+    form?.querySelectorAll('.feature-card').forEach(card => {
+        const index = parseInt(card.dataset.index);
+        const feat = currentMonster.features?.[index];
+        if (feat) updateFeatureCardHeader(card, feat);
+    });
 
     const errors = validateMonster(currentMonster);
     if (errors.length > 0) {
@@ -435,11 +471,115 @@ export async function handleSubmit(currentMonster) {
     try {
         await handleSave(currentMonster, false);
         await submitMonsterForApproval(currentMonster.row_id);
-        alert('Submitted successfully!');
-        window.location.hash = '#/';
+        currentMonster.status = 'Pending';
+        showSubmissionSuccessModal(currentMonster);
     } catch (err) {
         alert('Submission failed: ' + err.message);
     }
+}
+
+/**
+ * Displays a modal confirming submission and providing a copyable direct link for staff approvers.
+ * 
+ * Developer Notes:
+ * - We dynamically create and append the modal to document.body rather than keeping hidden DOM nodes.
+ * - This ensures clean separation of concerns and prevents stale event listeners across submissions.
+ * - The modal offers 1-click clipboard copying with a fallback for older browsers.
+ * 
+ * @param {Object} monster - The monster data.
+ */
+export function showSubmissionSuccessModal(monster) {
+    // 1. Remove any pre-existing modal instance to prevent duplicate elements in DOM
+    let modal = document.getElementById('submission-success-modal');
+    if (modal) modal.remove();
+
+    // 2. Generate the direct URL pointing to the approvals queue with this monster's slug
+    const approvalUrl = getMonsterApprovalUrl(monster.slug);
+
+    // 3. Create the modal container element with backdrop styling
+    modal = document.createElement('div');
+    modal.id = 'submission-success-modal';
+    modal.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+    `;
+
+    modal.innerHTML = `
+        <div class="modal-card" style="background: var(--color-bg-page, #fff); color: var(--color-text, #333); max-width: 560px; width: 92%; border-radius: 8px; border: 2px solid var(--color-primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 2rem; position: relative;">
+            <button type="button" class="close-submission-modal" aria-label="Close modal" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.8rem; line-height: 1; cursor: pointer; color: var(--color-text-secondary);">&times;</button>
+            <h3 style="margin-top: 0; margin-bottom: 0.5rem; color: var(--color-primary); font-family: 'Marcellus SC', serif; font-size: 1.6rem; text-transform: uppercase;">Monster Submitted!</h3>
+            <p style="margin-bottom: 1.5rem; font-size: 1.05rem;">
+                <strong>${monster.name || 'Your monster'}</strong> has been submitted to the staff moderation queue.
+            </p>
+            <div style="background: var(--color-bg-medium, #f4f4f4); padding: 1.2rem; border-radius: 6px; border: 1px solid var(--color-border); margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: bold; margin-bottom: 0.5rem; font-family: 'Marcellus SC', serif; color: var(--color-primary); font-size: 0.95rem;">
+                    Approver Direct Link (Shortcut)
+                </label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="submission-approval-link-input" readonly value="${approvalUrl}" class="form-control" style="font-size: 0.9rem; padding: 0.5rem; width: 100%; cursor: text; background: var(--color-bg-page); color: var(--color-text); border: 1px solid var(--color-border); border-radius: 4px;" />
+                    <button type="button" id="btn-copy-approval-link" class="btn btn-primary" style="white-space: nowrap; font-size: 0.85rem; padding: 0.5rem 1rem;">Copy Link</button>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 0.6rem; margin-bottom: 0;">
+                    Share this link with staff to jump directly to this monster in the approval queue. Reviewers will still authenticate before reviewing.
+                </p>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary close-submission-modal" style="padding: 0.6rem 1.2rem;">Return to My Monsters</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const input = modal.querySelector('#submission-approval-link-input');
+    const copyBtn = modal.querySelector('#btn-copy-approval-link');
+
+    // Automatically select the text when the user clicks or focuses the input for easy manual copying
+    input?.addEventListener('focus', () => input.select());
+
+    // 4. Clipboard copy action with visual feedback and fallback
+    copyBtn?.addEventListener('click', async () => {
+        try {
+            // Modern asynchronous Clipboard API
+            await navigator.clipboard.writeText(approvalUrl);
+            copyBtn.textContent = 'Copied!';
+            copyBtn.style.background = 'var(--palette-role-full-dm, #27ae60)';
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy Link';
+                copyBtn.style.background = '';
+            }, 2000);
+        } catch (err) {
+            // Fallback for non-HTTPS or older browsers
+            input?.select();
+            document.execCommand('copy');
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy Link';
+            }, 2000);
+        }
+    });
+
+    // 5. Clean up modal from DOM and navigate back to the Creator Dashboard (#/)
+    const closeModal = () => {
+        modal.remove();
+        window.location.hash = '#/';
+    };
+
+    // Attach close listener to both the "X" button and the "Return to My Monsters" button
+    modal.querySelectorAll('.close-submission-modal').forEach(btn => {
+        btn.addEventListener('click', closeModal);
+    });
+
+    // Close when clicking on the dark backdrop outside the card
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
 }
 
 /**
@@ -481,7 +621,7 @@ export async function handleDeleteDraft(currentMonster) {
 
 // Utility for finding sibling features during reordering
 function findSiblingFeature(m, currIndex, direction) {
-    const buckets = { 'Trait': 'traits', 'Action': 'actions', 'Bonus Action': 'actions', 'Reaction': 'actions', 'Legendary Action': 'actions', 'Lair Action': 'lair', 'Regional Effect': 'regional' };
+    const buckets = { 'Trait': 'traits', 'Action': 'actions', 'Bonus Action': 'actions', 'Reaction': 'actions', 'Legendary Action': 'legendary', 'Lair Action': 'lair', 'Regional Effect': 'regional' };
     const bucket = buckets[m.features[currIndex].type];
     let i = currIndex + direction;
     while (i >= 0 && i < m.features.length) {

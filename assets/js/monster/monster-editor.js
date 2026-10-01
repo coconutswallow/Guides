@@ -22,6 +22,7 @@ import {
     getLocalCache,
     clearLocalCache
 } from './monster-editor-state.js';
+import { getMonsterApprovalUrl } from './monster-utils.js';
 
 let lookups = null;
 let currentMonster = null;
@@ -108,6 +109,27 @@ async function handleRoute() {
                     } catch (err) {
                         alert('Delete failed: ' + err.message);
                     }
+                }
+            });
+        });
+
+        // Handle copying approval links for pending monsters directly from the dashboard.
+        // This allows creators who closed the initial submission modal to easily copy the link
+        // again at any time while the monster remains in 'Pending' status.
+        container.querySelectorAll('.btn-copy-approval').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const slug = e.currentTarget.dataset.slug;
+                const approvalUrl = getMonsterApprovalUrl(slug);
+                try {
+                    await navigator.clipboard.writeText(approvalUrl);
+                    const originalText = e.currentTarget.textContent;
+                    e.currentTarget.textContent = 'Copied!';
+                    setTimeout(() => {
+                        e.currentTarget.textContent = originalText;
+                    }, 2000);
+                } catch (err) {
+                    // Fallback prompt for environments without clipboard permissions
+                    prompt('Copy this approval link for staff:', approvalUrl);
                 }
             });
         });

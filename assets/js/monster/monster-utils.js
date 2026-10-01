@@ -140,3 +140,21 @@ export function escapeHTML(str) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+/**
+ * Constructs the direct approval URL for a monster submission.
+ * This URL can be shared with staff to jump straight to reviewing this monster in the approvals queue.
+ * 
+ * Developer Notes:
+ * - `window.MONSTER_EDITOR_CONFIG.baseUrl` is injected by Jekyll templates (e.g. '/Guides/' in production, or '/' locally).
+ * - We normalize the base URL with a trailing slash to avoid missing or double-slash issues.
+ * - `encodeURIComponent` safely encodes any special characters in the slug into a valid URL query parameter.
+ * 
+ * @param {string} slug - The monster's URL slug (e.g. 'iron-golem-v1.0').
+ * @returns {string} The full absolute URL (e.g. 'https://.../Guides/monsters/approvals/?monster=iron-golem-v1.0').
+ */
+export function getMonsterApprovalUrl(slug) {
+    const rawBase = window.MONSTER_EDITOR_CONFIG?.baseUrl || '/Guides/';
+    const baseUrl = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+    return `${window.location.origin}${baseUrl}monsters/approvals/?monster=${encodeURIComponent(slug)}`;
+}

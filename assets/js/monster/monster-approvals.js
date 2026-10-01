@@ -13,7 +13,8 @@ import {
     getQueuedMonsters,
     approveMonster,
     rejectMonster,
-    addToPatchQueue
+    addToPatchQueue,
+    getMonsterBySlug
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
 
@@ -80,6 +81,7 @@ async function renderQueue(container) {
             </div>
             <a href="/Guides/staff/" class="btn btn-outline" style="font-size: 0.85rem;">Back to Staff Portal</a>
         </div>
+        <div id="queue-status-alert"></div>
 
         <section class="queue-section">
             <h3>Approval Queue (Pending)</h3>
@@ -101,7 +103,7 @@ async function renderQueue(container) {
     } else {
         pendingQueue.forEach((m, i) => {
             html += `
-                <tr>
+                <tr data-slug="${m.slug}" data-row-id="${m.row_id}">
                     <td><strong>${m.name}</strong> (CR ${m.cr})</td>
                     <td><code>${m.creator || m.creator_discord_id}</code></td>
                     <td>${new Date(m.submitted_at).toLocaleString()}</td>
@@ -142,7 +144,7 @@ async function renderQueue(container) {
     } else {
         patchQueue.forEach((m, i) => {
             html += `
-                <tr>
+                <tr data-slug="${m.slug}" data-row-id="${m.row_id}">
                     <td><strong>${m.name}</strong> (CR ${m.cr})</td>
                     <td><code>${m.creator || m.creator_discord_id}</code></td>
                     <td>${new Date(m.updated_at).toLocaleString()}</td>
@@ -178,6 +180,9 @@ async function renderQueue(container) {
     if (btnActivate) {
         btnActivate.addEventListener('click', () => handleBatchActivation());
     }
+
+    // Inspect URL query params for direct approval links
+    await checkDirectApprovalTarget();
 }
 
 /**
@@ -188,6 +193,13 @@ async function renderQueue(container) {
 function showReview(monster) {
     currentReview = monster;
     const target = document.getElementById('review-target');
+
+    // Update table row highlighting
+    document.querySelectorAll('.highlight-review-row').forEach(row => row.classList.remove('highlight-review-row'));
+    const matchedRow = document.querySelector(`tr[data-slug="${monster.slug}"], tr[data-row-id="${monster.row_id}"]`);
+    if (matchedRow) {
+        matchedRow.classList.add('highlight-review-row');
+    }
 
     target.innerHTML = `
         <div class="review-panel">
@@ -242,6 +254,11 @@ async function handleDecision(type) {
         } else {
             await rejectMonster(currentReview.row_id, user.id);
             alert('Monster Rejected (Sent back to Drafts).');
+        }
+
+        if (window.location.search) {
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
         }
 
         // Refresh lists
@@ -301,6 +318,104 @@ async function handleBatchActivation() {
             btnTranslate.disabled = false;
             btnTranslate.textContent = originalText;
         }
+    }
+}
+
+/**
+ * Inspects URL parameters (?monster= or ?id=) and automatically focuses the requested monster review.
+ * 
+ * Developer Notes:
+ * - SECURITY ORDER: This function is called from inside renderQueue(), which only executes
+ *   AFTER window.handlePageAuth() has confirmed that:
+ *     1) The user is logged in via Discord.
+ *     2) The user possesses an authorized staff role (Lore, Rules, Admin, Monster Admin, Engineer).
+ * - Therefore, this link CANNOT bypass authentication or permissions; it is strictly a UX shortcut.
+ * - We check both pendingQueue and patchQueue, matching against either the monster's unique slug
+ *   or its primary key row_id (UUID).
+ * 
+ * @returns {Promise<void>}
+ */
+async function checkDirectApprovalTarget() {
+    // Read the query parameters from the browser's current URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetKey = urlParams.get('monster') || urlParams.get('id');
+    if (!targetKey) return; // No direct link parameter present; render default queue view
+
+    const alertContainer = document.getElementById('queue-status-alert');
+
+    // 1. Check if the target monster is currently waiting in either queue
+    const matched = pendingQueue.find(m => m.slug === targetKey || m.row_id === targetKey) ||
+                    patchQueue.find(m => m.slug === targetKey || m.row_id === targetKey);
+
+    if (matched) {
+        if (alertContainer) {
+            alertContainer.innerHTML = `
+                <div class="alert alert-info" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Direct Review:</strong> Focused on submission <strong>"${matched.name}"</strong> (${matched.status}).
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="this.parentElement.remove();" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;">Dismiss</button>
+                </div>
+            `;
+        }
+
+        // Auto-open the review panel (which also highlights the corresponding row and scrolls into view)
+        showReview(matched);
+        return;
+    }
+
+    // 2. Fallback: The monster was not found in the active queues.
+    // This happens if the monster was already approved/rejected, is still a draft, or was deleted.
+    // We query Supabase directly to display an informative notice to the reviewer.
+    try {
+        // Detect whether the parameter is a UUID (row_id) or a text slug to query the correct column
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(targetKey);
+        let query = supabase.from('monsters').select('name, slug, status, row_id');
+        query = isUUID ? query.eq('row_id', targetKey) : query.eq('slug', targetKey);
+        const { data: monster } = await query.maybeSingle();
+
+        if (!alertContainer) return;
+
+        if (monster) {
+            const rawBase = window.MONSTER_EDITOR_CONFIG?.baseUrl || '/Guides/';
+            const baseUrl = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+            const liveUrl = `${baseUrl}monsters/#/${monster.slug}`;
+
+            if (monster.status === 'Approved') {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-info" style="margin-bottom: 2rem;">
+                        <strong>Direct Link Notice:</strong> Monster <strong>"${monster.name}"</strong> is already <strong>Approved & Live</strong>.
+                        <a href="${liveUrl}" target="_blank" style="margin-left: 0.5rem; text-decoration: underline; font-weight: bold;">View Live in Library &rarr;</a>
+                    </div>
+                `;
+            } else if (monster.status === 'Draft') {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-warning" style="margin-bottom: 2rem;">
+                        <strong>Direct Link Notice:</strong> Monster <strong>"${monster.name}"</strong> is currently a <strong>Draft</strong> and has not yet been submitted for staff review.
+                    </div>
+                `;
+            } else if (monster.status === 'Archived') {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-secondary" style="margin-bottom: 2rem;">
+                        <strong>Direct Link Notice:</strong> Monster <strong>"${monster.name}"</strong> is an <strong>Archived</strong> older version.
+                    </div>
+                `;
+            } else {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-info" style="margin-bottom: 2rem;">
+                        <strong>Direct Link Notice:</strong> Monster <strong>"${monster.name}"</strong> is in status <strong>${monster.status}</strong> and is not waiting in the moderation queue.
+                    </div>
+                `;
+            }
+        } else {
+            alertContainer.innerHTML = `
+                <div class="alert alert-danger" style="margin-bottom: 2rem;">
+                    <strong>Direct Link Error:</strong> Monster matching "<strong>${targetKey}</strong>" was not found in the database. It may have been deleted or the link is incorrect.
+                </div>
+            `;
+        }
+    } catch (err) {
+        console.error('Failed to verify direct approval link:', err);
     }
 }
 

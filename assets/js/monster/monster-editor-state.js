@@ -123,6 +123,28 @@ export function syncMonsterFromForm(form, currentMonster) {
     };
 
     currentMonster.saves.proficiencies = Array.from(form.querySelectorAll('.save-prof:checked')).map(cb => cb.dataset.attr);
+
+    if (currentMonster.features) {
+        form.querySelectorAll('.feature-card').forEach(card => {
+            const index = parseInt(card.dataset.index);
+            const feat = currentMonster.features[index];
+            if (!feat) return;
+
+            const typeEl = card.querySelector('.feat-type');
+            if (typeEl) feat.type = typeEl.value;
+
+            const nameEl = card.querySelector('.feat-name');
+            if (nameEl) feat.name = nameEl.value;
+
+            const descEl = card.querySelector('.md-textarea');
+            if (descEl) feat.description = descEl.value;
+
+            const body = card.querySelector('.accordion-body');
+            if (body) {
+                feat.expanded = body.style.display !== 'none';
+            }
+        });
+    }
 }
 
 /**

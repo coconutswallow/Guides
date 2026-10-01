@@ -179,7 +179,9 @@ class AuthManager {
      * Redirects the user back to the current page origin.
      */
     async login() {
-        const cleanUrl = window.location.origin + window.location.pathname;
+        // Retain both the pathname and search query parameters (e.g. ?monster=dire-wolf or ?id=uuid)
+        // so that users returning from Discord OAuth land back on the exact page and item they were accessing.
+        const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
         await this.client.auth.signInWithOAuth({
             provider: 'discord',
             options: { redirectTo: cleanUrl, scopes: 'guilds guilds.members.read' }

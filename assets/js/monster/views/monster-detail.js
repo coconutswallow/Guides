@@ -233,14 +233,35 @@ export function renderMonsterStatblock(container, monster) {
  * @param {number} pb - Proficiency Bonus.
  * @returns {string} HTML string.
  */
-function renderAbilityTable(scores, saves, pb) {
+export function renderAbilityTable(scores, saves, pb) {
     const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+    let parsedSaves = saves;
+    if (typeof parsedSaves === 'string') {
+        try {
+            parsedSaves = JSON.parse(parsedSaves);
+        } catch (e) {
+            parsedSaves = {};
+        }
+    }
+    parsedSaves = parsedSaves || {};
+
+    let parsedScores = scores;
+    if (typeof parsedScores === 'string') {
+        try {
+            parsedScores = JSON.parse(parsedScores);
+        } catch (e) {
+            parsedScores = {};
+        }
+    }
+    parsedScores = parsedScores || {};
+
     const getCellData = (attr) => {
-        const score = scores && scores[attr] ? scores[attr] : 10;
+        const score = parsedScores && parsedScores[attr] ? parsedScores[attr] : 10;
         const mod = calculateMod(score);
-        let saveMod = mod; 
-        if (saves && saves[attr] !== undefined && saves[attr] !== null) {
-            saveMod = saves[attr];
+        const isProf = Array.isArray(parsedSaves.proficiencies) && parsedSaves.proficiencies.includes(attr);
+        let saveMod = mod + (isProf ? (pb || 0) : 0);
+        if (parsedSaves[attr] !== undefined && parsedSaves[attr] !== null && parsedSaves[attr] !== '') {
+            saveMod = parseInt(parsedSaves[attr]);
         }
         return { score, mod: formatSign(mod), save: formatSign(saveMod) };
     };
