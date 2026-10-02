@@ -218,6 +218,8 @@ function showReview(monster) {
                 <h3>Staff Review</h3>
                 <p><strong>Monster:</strong> ${monster.name}</p>
                 <p><strong>Slug:</strong> ${monster.slug}</p>
+                <p><strong>Creator:</strong> <code>${monster.creator || monster.creator_discord_id || 'Unknown'}</code></p>
+                ${monster.creator_notes ? `<p><strong>Creator Notes:</strong> <em>${monster.creator_notes}</em></p>` : ''}
                 
                 <div class="decision-box" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                     <button id="btn-approve" class="btn btn-approve" style="width: 100%; margin-bottom: 0.8rem; font-weight: bold;">Approve & Publish</button>
