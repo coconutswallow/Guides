@@ -16,7 +16,7 @@ import {
     deleteMonster
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
-import { calculatePB, calculateXP, calculateMod, formatInitiative, calculatePassivePerception, getMonsterApprovalUrl } from './monster-utils.js';
+import { calculatePB, calculateXP, calculateMod, formatInitiative, calculatePassivePerception, getMonsterApprovalUrl, escapeHTML } from './monster-utils.js';
 import { renderFeatureList, updateFeatureCardHeader } from './monster-editor-ui.js';
 import {
     syncMonsterFromForm,
@@ -445,6 +445,11 @@ export async function handlePreview(currentMonster) {
         syncMonsterFromForm(document.getElementById('monster-form'), currentMonster);
         const { modal, target } = ensurePreviewModalElements();
 
+        const previewCreator = (currentMonster.creator || currentMonster.creator_display_name || '').trim();
+        const previewCreatorHtml = previewCreator
+            ? `<div class="monster-view-creator" style="margin-top: 0.5rem; font-style: italic; color: var(--color-text-secondary); font-size: 1.1rem;">Created by ${escapeHTML(previewCreator)}</div>`
+            : '';
+
         modal.style.display = 'block';
         target.innerHTML = `
             <div class="monster-page" style="padding: 3rem;">
@@ -452,6 +457,7 @@ export async function handlePreview(currentMonster) {
                     <div class="monster-view-header" style="margin-bottom: 2rem;">
                         <span class="btn" style="background: var(--color-primary); color: white; cursor: not-allowed; opacity: 0.8;">&larr; BACK</span>
                         <h1 style="margin: 0; font-family: var(--font-header); color: var(--color-primary); font-size: 2.5rem; text-transform: uppercase;">${currentMonster.name || 'Unnamed Monster'}</h1>
+                        ${previewCreatorHtml}
                     </div>
                     <div id="preview-render-inner"></div>
                 </div>

@@ -6,7 +6,8 @@ import {
     formatSign, 
     calculateHPString, 
     formatInitiative,
-    calculatePassivePerception
+    calculatePassivePerception,
+    escapeHTML
 } from '../monster-utils.js';
 
 /**
@@ -26,10 +27,16 @@ export async function renderMonsterDetail(container, { slug }) {
             return;
         }
 
+        const creator = (monster.creator || monster.creator_display_name || '').trim();
+        const creatorHtml = creator
+            ? `<div class="monster-view-creator" style="margin-top: 0.5rem; font-style: italic; color: var(--color-text-secondary); font-size: 1.1rem;">Created by ${escapeHTML(creator)}</div>`
+            : '';
+
         container.innerHTML = `
             <div class="monster-view-header" style="margin-bottom: 2rem;">
                 <a href="#/" class="btn" style="background: var(--color-primary); color: white; margin-bottom: 1rem; text-decoration: none; padding: 0.5rem 1rem; display: inline-block;">&larr; BACK TO MONSTER COMPENDIUM</a>
                 <h1 style="margin: 0; font-family: var(--font-header); color: var(--color-primary); font-size: 2.5rem; text-transform: uppercase;">${monster.name || 'Unnamed Monster'}</h1>
+                ${creatorHtml}
             </div>
             <div id="monster-statblock-container"></div>
         `; 
@@ -183,9 +190,9 @@ export function renderMonsterStatblock(container, monster) {
                         ${renderFeatureBucket(features.Regional, 'Regional Effects', monster.regional_header)}
                     </div>
 
-                    ${monster.creator_display_name ? `
+                    ${(monster.creator || monster.creator_display_name) && (monster.creator || monster.creator_display_name).trim() ? `
                         <div class="statblock-creator">
-                            Created by ${monster.creator_display_name}
+                            Created by ${escapeHTML((monster.creator || monster.creator_display_name).trim())}
                         </div>
                     ` : ''}
                 </blockquote>
