@@ -77,7 +77,12 @@ async function handleRoute() {
 
 function init() {
     window.addEventListener('hashchange', handleRoute);
-    window.addEventListener('load', handleRoute);
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', handleRoute);
+    } else {
+        handleRoute();
+    }
 
     // Internal link delegation
     document.body.addEventListener('click', e => {
