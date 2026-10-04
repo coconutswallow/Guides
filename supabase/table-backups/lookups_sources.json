@@ -1,0 +1,59 @@
+[
+  {
+    "type": "sources",
+    "data": {
+      "types": [
+        {
+          "name": "Core",
+          "display_order": 1,
+          "notes": null
+        },
+        {
+          "name": "Supplemental",
+          "display_order": 2,
+          "notes": null
+        },
+        {
+          "name": "Settings",
+          "display_order": 3,
+          "notes": null
+        },
+        {
+          "name": "Extras",
+          "display_order": 4,
+          "notes": null
+        },
+        {
+          "name": "Adventures",
+          "display_order": 5,
+          "notes": "Except for rewards listed elsewhere in Allowed Content, loot or other rewards from these adventures can typically only be acquired by playing the adventure"
+        },
+        {
+          "name": "Third Party Content",
+          "display_order": 6,
+          "notes": null
+        },
+        {
+          "name": "Unearthed Arcana",
+          "display_order": 7,
+          "notes": null
+        },
+        {
+          "name": "Hawthorne Homebrew",
+          "display_order": 8,
+          "notes": null
+        }
+      ],
+      "rulesets": [
+        {
+          "value": 2014,
+          "label": "2014"
+        },
+        {
+          "value": 2024,
+          "label": "2024"
+        }
+      ]
+    }
+  }
+]

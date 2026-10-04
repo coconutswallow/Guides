@@ -4,6 +4,8 @@
  * ================================================================
  * 
  * Orchestrator for the Allowed Content dashboard.
+ * Currently configured for Sources tab. Additional tabs will be enabled
+ * sequentially as they are developed and verified.
  * 
  * Responsibilities:
  * - Bootstrapping the application on `DOMContentLoaded`.
@@ -14,20 +16,6 @@
  * @module ACMain
  */
 
-import { initRaces, filterRaces } from './ac-races.js';
-import { initClasses, filterClasses } from './ac-classes.js';
-import { initBackgrounds, filterBackgrounds } from './ac-backgrounds.js';
-import { initLanguages, filterLanguages } from './ac-languages.js';
-import { initFeats, filterFeats } from './ac-feats.js';
-import { initSpells, filterSpells } from './ac-spells.js';
-import { initMiscFeats, filterMiscFeats } from './ac-misc-feats.js';
-import { initEquipment, filterEquipment } from './ac-equipment.js';
-import { initDowntime, filterDowntime } from './ac-downtime.js';
-import { initBastions, filterBastions } from './ac-bastions.js';
-import { initLoot, filterLoot } from './ac-loot.js';
-import { initOtherRewards, filterOtherRewards } from './ac-other-rewards.js';
-import { initItemProperties, filterItemProperties } from './ac-item-properties.js';
-import { initMonsters, filterMonsters } from './ac-monsters.js';
 import { initSources, filterSources } from './ac-sources.js';
 import { initTooltips } from './ac-ui-utils.js';
 
@@ -55,71 +43,22 @@ async function init() {
     const searchInput = document.getElementById('ac-global-search');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
-            const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+            const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab || 'sources';
             const term = e.target.value;
-            switch (activeTab) {
-                case 'races':
-                    filterRaces(term);
-                    break;
-                case 'classes':
-                    filterClasses(term);
-                    break;
-                case 'backgrounds':
-                    filterBackgrounds(term);
-                    break;
-                case 'languages':
-                    filterLanguages(term);
-                    break;
-                case 'feats':
-                    filterFeats(term);
-                    break;
-                case 'spells':
-                    filterSpells(term);
-                    break;
-                case 'misc-feats':
-                    filterMiscFeats(term);
-                    break;
-                case 'equipment':
-                    filterEquipment(term);
-                    break;
-                case 'downtime':
-                    filterDowntime(term);
-                    break;
-                case 'bastions':
-                    filterBastions(term);
-                    break;
-                case 'loot':
-                    filterLoot(term);
-                    break;
-                case 'other-rewards':
-                    filterOtherRewards(term);
-                    break;
-                case 'item-properties':
-                    filterItemProperties(term);
-                    break;
-                case 'monsters':
-                    filterMonsters(term);
-                    break;
-                case 'sources':
-                    filterSources(term);
-                    break;
+            if (activeTab === 'sources') {
+                filterSources(term);
             }
         });
     }
 
     // Handle initial routing (deep links)
     const hash = window.location.hash.substring(1);
-    if (hash) {
-        await switchTab(hash, false);
-    } else {
-        // Default to first tab
-        await switchTab('sources', false);
-    }
+    await switchTab(hash === 'sources' ? 'sources' : 'sources', false);
 
     // Listen for hash changes (back/forward navigation)
     window.addEventListener('hashchange', () => {
         const newHash = window.location.hash.substring(1);
-        if (newHash) switchTab(newHash, false);
+        if (newHash === 'sources') switchTab('sources', false);
     });
     
     console.log('AC UI: Ready.');
@@ -128,21 +67,23 @@ async function init() {
 /**
  * Switch to a specific tab and optionally update the URL hash.
  * 
- * @param {string} targetTab - The tab ID to switch to (e.g., 'races', 'bastions')
+ * @param {string} targetTab - The tab ID to switch to
  * @param {boolean} updateHash - Whether to update the URL fragment
  */
-async function switchTab(targetTab, updateHash = true) {
+async function switchTab(targetTab = 'sources', updateHash = true) {
     const tabs = document.querySelectorAll('.ac-tab');
     const tabBtn = Array.from(tabs).find(t => t.dataset.tab === targetTab);
     
     if (!tabBtn || tabBtn.classList.contains('disabled')) {
-        // Fallback to sources if invalid tab
         if (targetTab !== 'sources') switchTab('sources', false);
         return;
     }
 
-    // If already active and not a fresh hash change, skip
-    if (tabBtn.classList.contains('active') && !updateHash) return;
+    // If already active and not a fresh hash change, initialize and return
+    if (tabBtn.classList.contains('active') && !updateHash) {
+        if (targetTab === 'sources') await initSources();
+        return;
+    }
 
     console.log(`AC UI: Switching to ${targetTab}`);
     
@@ -157,59 +98,14 @@ async function switchTab(targetTab, updateHash = true) {
     
     const targetView = document.getElementById(`ac-view-${targetTab}`);
     if (targetView) targetView.classList.add('active');
- 
+
     // Update URL hash if requested
     if (updateHash) {
         window.location.hash = targetTab;
     }
     
-    // Initialize tab-specific logic if not already done
-    switch (targetTab) {
-        case 'races':
-            await initRaces();
-            break;
-        case 'classes':
-            await initClasses();
-            break;
-        case 'backgrounds':
-            await initBackgrounds();
-            break;
-        case 'languages':
-            await initLanguages();
-            break;
-        case 'feats':
-            await initFeats();
-            break;
-        case 'spells':
-            await initSpells();
-            break;
-        case 'misc-feats':
-            await initMiscFeats();
-            break;
-        case 'equipment':
-            await initEquipment();
-            break;
-        case 'downtime':
-            await initDowntime();
-            break;
-        case 'bastions':
-            await initBastions();
-            break;
-        case 'loot':
-            await initLoot();
-            break;
-        case 'other-rewards':
-            await initOtherRewards();
-            break;
-        case 'item-properties':
-            await initItemProperties();
-            break;
-        case 'monsters':
-            await initMonsters();
-            break;
-        case 'sources':
-            await initSources();
-            break;
+    if (targetTab === 'sources') {
+        await initSources();
     }
 }
 

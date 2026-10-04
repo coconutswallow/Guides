@@ -543,42 +543,48 @@ export async function getMonsters() {
 }
 
 /**
- * Fetch all Source Categories from Supabase.
+ * Fetch Source metadata (categories and rulesets) from lookups table.
+ * 
+ * @returns {Promise<Object>} Object with types and rulesets arrays
+ */
+export async function getSourceLookups() {
+    try {
+        const { data, error } = await supabase
+            .from('lookups')
+            .select('data')
+            .eq('type', 'sources')
+            .maybeSingle();
+
+        if (error || !data) {
+            console.error('Error fetching source lookups:', error);
+            return { types: [], rulesets: [] };
+        }
+        return data.data || { types: [], rulesets: [] };
+    } catch (error) {
+        console.error('Error in getSourceLookups:', error);
+        return { types: [], rulesets: [] };
+    }
+}
+
+/**
+ * Fetch all Source Categories from lookups.
+ * Backward-compatible helper returning category objects.
  * 
  * @returns {Promise<Array>} Array of category objects
  */
 export async function getSourceCategories() {
-    const { data, error } = await supabase
-        .from('ac_sources_categories')
-        .select('*')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
-
-    if (error) {
-        console.error('Error fetching source categories:', error);
-        return [];
-    }
-
-    return data;
+    const lookups = await getSourceLookups();
+    return lookups.types || [];
 }
 
 /**
- * Fetch all Sources from Supabase, including joined category info.
+ * Fetch all Sources from Supabase.
  * 
  * @returns {Promise<Array>} Array of source objects
  */
 export async function getSources() {
     try {
-        return await fetchAll('ac_sources', `
-            *,
-            category_id,
-            category:category_id (
-                id,
-                name,
-                notes,
-                display_order
-            )
-        `, [
+        return await fetchAll('ac_sources', '*', [
             { column: 'display_order', ascending: true },
             { column: 'name', ascending: true }
         ]);

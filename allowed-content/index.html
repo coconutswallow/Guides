@@ -12,9 +12,10 @@ extra_css:
             <h1>Allowed Content</h1>
             <p class="ac-subtitle">This is the quick web-based copy of the Allowed Content spreadsheet. Please refer
                 to the <a
-                    href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857">Official
+                    href="https://docs.google.com/spreadsheets/d/1fBEv1yDNTD-vwUyK6pK_oiXg2K7OiltW35iFCqxyMTY/edit?gid=552371857#gid=552371857"
+                    target="_blank" rel="noopener noreferrer">Official
                     Allowed Content</a> spreadsheet for full details. If there are any conflicts between this page and
-                the allowed content spreadsheet, the spreadsheet will be deemed the source of truth. </p>
+                the allowed content spreadsheet, the spreadsheet will be deemed the source of truth.</p>
             <div class="ac-instructions">
                 <span>Depending on the size of your display, not all fields may be visible. Click any <span
                         class="inst-highlight">Row</span> to expand and view full
@@ -25,347 +26,25 @@ extra_css:
         <div class="ac-toolbar">
             <div class="ac-tabs-bar">
                 <div class="ac-tabs" id="ac-tabs-container">
-                    <button class="ac-tab" data-tab="sources">Sources</button>
-                    <button class="ac-tab" data-tab="races">Races</button>
-                    <button class="ac-tab" data-tab="classes">Classes</button>
-                    <button class="ac-tab" data-tab="backgrounds">Backgrounds</button>
-                    <button class="ac-tab" data-tab="languages">Languages</button>
-                    <button class="ac-tab" data-tab="feats">Feats</button>
-                    <button class="ac-tab" data-tab="spells">Spells</button>
-                    <button class="ac-tab" data-tab="misc-feats">Misc Class Features</button>
-                    <button class="ac-tab" data-tab="equipment">Equipment</button>
-                    <button class="ac-tab" data-tab="downtime">Downtime</button>
-                    <button class="ac-tab" data-tab="bastions">Bastions</button>
-                    <button class="ac-tab" data-tab="loot">Loot</button>
-                    <button class="ac-tab" data-tab="other-rewards">Other Rewards</button>
-                    <button class="ac-tab" data-tab="item-properties">Item Properties</button>
-                    <button class="ac-tab" data-tab="monsters">Monsters</button>
-                    <!-- Add more tabs as they are developed -->
+                    <button class="ac-tab active" data-tab="sources">Sources</button>
+                    <!-- Additional tabs will be added sequentially as they are developed -->
                 </div>
             </div>
             <div class="ac-search-bar">
                 <div class="ac-search-wrapper">
                     <i class="search-icon">🔍</i>
-                    <input type="text" id="ac-global-search" placeholder="Search content..." class="ac-search-input">
+                    <input type="text" id="ac-global-search" placeholder="Search sources (name, abbreviation, key)..." class="ac-search-input">
                 </div>
             </div>
         </div>
     </header>
 
     <main class="ac-content">
-        <!-- Sources View (Default) -->
+        <!-- Sources View (Active) -->
         <div id="ac-view-sources" class="ac-view active">
             <div class="ac-loading">
                 <div class="spinner"></div>
                 <span>Cataloging Sources...</span>
-            </div>
-        </div>
-
-        <!-- Races View -->
-        <div id="ac-view-races" class="ac-view">
-            <div class="ac-table-header">
-                <div class="ac-filters" id="races-filters">
-                    <!-- Dynamic filters like Source, Ability will go here -->
-                </div>
-                <div class="ac-stats" id="races-stats">
-                    <!-- Row count, etc. -->
-                </div>
-            </div>
-
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="races-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Race</th>
-                            <th class="col-subrace">Subrace</th>
-                            <th class="col-size hide-mobile">Size</th>
-                            <th class="col-speed hide-tablet">Speed</th>
-                            <th class="col-asi">ASI</th>
-                            <th class="col-language hide-tablet">Languages</th>
-                            <th class="col-traits hide-mobile">Traits</th>
-                            <th class="col-notes hide-tablet">Notes</th>
-                            <th class="col-source hide-mobile">Source</th>
-                        </tr>
-                    </thead>
-                    <tbody id="races-tbody">
-                        <tr>
-                            <td colspan="9" class="ac-loading">
-                                <div class="spinner"></div>
-                                <span>Rallying Races...</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Classes View -->
-        <div id="ac-view-classes" class="ac-view">
-            <div class="ac-table-header">
-                <div class="ac-filters" id="classes-filters">
-                    <!-- Dynamic filters like Hit Die will go here -->
-                </div>
-                <div class="ac-stats" id="classes-stats">
-                    <!-- Row count, etc. -->
-                </div>
-            </div>
-
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="classes-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Class</th>
-                            <th class="col-subclass">Subclass</th>
-                            <th class="col-hitdie">Die</th>
-                            <th class="col-multiclass hide-tablet">Multi-Req</th>
-                            <th class="col-expanded hide-mobile">Expanded Ops</th>
-                            <th class="col-advice hide-tablet">Advice</th>
-                        </tr>
-                    </thead>
-                    <tbody id="classes-tbody">
-                        <!-- Classes rows injected here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- VIEW: BACKGROUNDS -->
-        <div id="ac-view-backgrounds" class="ac-view">
-            <div class="ac-table-header">
-                <div class="ac-filters" id="backgrounds-filters">
-                    <!-- Dynamic filters will go here -->
-                </div>
-                <div class="ac-stats" id="backgrounds-stats">
-                    <!-- Row count, etc. -->
-                </div>
-            </div>
-
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="backgrounds-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Name</th>
-                            <th class="col-source hide-mobile">Source</th>
-                            <th class="col-feature hide-mobile">Feature</th>
-                            <th class="col-notes hide-tablet">Notes / Advice</th>
-                        </tr>
-                    </thead>
-                    <tbody id="backgrounds-tbody">
-                        <!-- Backgrounds rows injected here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- VIEW: FEATS -->
-        <div id="ac-view-feats" class="ac-view">
-            <div class="ac-table-header">
-                <div class="ac-filters" id="feats-filters">
-                    <!-- Dynamic filters will go here -->
-                </div>
-                <div class="ac-stats" id="feats-stats">
-                    <!-- Row count, etc. -->
-                </div>
-            </div>
-
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="feats-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Name</th>
-                            <th class="col-category hide-mobile">Category</th>
-                            <th class="col-prereq hide-tablet">Prerequisite</th>
-                            <th class="col-asi">ASI</th>
-                            <th class="col-notes hide-tablet">Notes / Advice</th>
-                            <th class="col-source hide-mobile">Source</th>
-                        </tr>
-                    </thead>
-                    <tbody id="feats-tbody">
-                        <tr>
-                            <td colspan="6" class="ac-loading">
-                                <div class="spinner"></div>
-                                <span>Forging Feats...</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- VIEW: BASTIONS -->
-        <div id="ac-view-bastions" class="ac-view">
-            <!-- Content will be injected by ac-bastions.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Discovering Bastions...</span>
-            </div>
-        </div>
-
-        <!-- VIEW: MISC CLASS FEATS -->
-        <div id="ac-view-misc-feats" class="ac-view">
-            <div id="misc-feats-shortcuts"></div>
-
-            <!-- Section: Fighting Styles -->
-            <div class="ac-table-header" id="section-fs">
-                <div class="ac-section-title">
-                    <h2>Fighting Styles</h2>
-                </div>
-                <div class="ac-stats" id="fs-stats"></div>
-            </div>
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="fs-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Style Name</th>
-                            <th class="col-classes">Classes</th>
-                            <th class="col-source hide-mobile">Source</th>
-                            <th class="col-notes">Notes / Advice</th>
-                        </tr>
-                    </thead>
-                    <tbody id="fs-tbody"></tbody>
-                </table>
-            </div>
-
-            <!-- Section: Artificer Infusions -->
-            <div class="ac-table-header" id="section-ai" style="margin-top: 2rem;">
-                <div class="ac-section-title">
-                    <h2>Artificer Infusions</h2>
-                </div>
-                <div class="ac-stats" id="ai-stats"></div>
-            </div>
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="ai-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Infusion Name</th>
-                            <th class="col-item-prereq">Item Prerequisite</th>
-                            <th class="col-attunement hide-mobile">Attunement</th>
-                            <th class="col-level hide-mobile">Level</th>
-                            <th class="col-source hide-mobile">Source</th>
-                            <th class="col-notes">Notes / Advice</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ai-tbody"></tbody>
-                </table>
-            </div>
-
-            <!-- Section: Eldritch Invocations -->
-            <div class="ac-table-header" id="section-ei" style="margin-top: 2rem;">
-                <div class="ac-section-title">
-                    <h2>Eldritch Invocations</h2>
-                </div>
-                <div class="ac-stats" id="ei-stats"></div>
-            </div>
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="ei-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Invocation</th>
-                            <th class="col-pact-prereq">Pact Prereq</th>
-                            <th class="col-other-prereq hide-mobile">Other Prereq</th>
-                            <th class="col-level hide-mobile">Level</th>
-                            <th class="col-source hide-mobile">Source</th>
-                            <th class="col-notes">Notes / Advice</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ei-tbody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- VIEW: SPELLS -->
-        <div id="ac-view-spells" class="ac-view">
-            <div class="ac-table-header">
-                <div class="ac-filters" id="spells-filters">
-                    <!-- Dynamic filters will go here -->
-                </div>
-                <div class="ac-stats" id="spells-stats">
-                    <!-- Row count, etc. -->
-                </div>
-            </div>
-
-            <div class="ac-table-wrapper">
-                <table class="ac-table" id="spells-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">Spell Name</th>
-                            <th class="col-source hide-mobile">Source</th>
-                            <th class="col-notes hide-tablet">Notes</th>
-                            <th class="col-advice hide-tablet">Rage Advice</th>
-                        </tr>
-                    </thead>
-                    <tbody id="spells-tbody">
-                        <tr>
-                            <td colspan="4" class="ac-loading">
-                                <div class="spinner"></div>
-                                <span>Attuning Spells...</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- VIEW: LANGUAGES -->
-        <div id="ac-view-languages" class="ac-view">
-            <!-- Content will be injected by ac-languages.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Deciphering Languages...</span>
-            </div>
-        </div>
-
-        <!-- VIEW: EQUIPMENT -->
-        <div id="ac-view-equipment" class="ac-view">
-            <!-- Content will be injected by ac-equipment.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Cataloging Equipment...</span>
-            </div>
-        </div>
-
-        <!-- VIEW: DOWNTIME -->
-        <div id="ac-view-downtime" class="ac-view">
-            <!-- Content will be injected by ac-downtime.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Scheduling Downtime...</span>
-            </div>
-        </div>
-
-        <!-- VIEW: LOOT -->
-        <div id="ac-view-loot" class="ac-view">
-            <!-- Content will be injected by ac-loot.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Hoarding Loot...</span>
-            </div>
-        </div>
-
-        <!-- VIEW: OTHER REWARDS -->
-        <div id="ac-view-other-rewards" class="ac-view">
-            <!-- Content will be injected by ac-other-rewards.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Gathering Rewards...</span>
-            </div>
-        </div>
-
-        <!-- VIEW: ITEM PROPERTIES -->
-        <div id="ac-view-item-properties" class="ac-view">
-            <!-- Content will be injected by ac-item-properties.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Identifying Properties...</span>
-            </div>
-        </div>
-
-        <!-- VIEW: MONSTERS -->
-        <div id="ac-view-monsters" class="ac-view">
-            <!-- Content will be injected by ac-monsters.js -->
-            <div class="ac-loading">
-                <div class="spinner"></div>
-                <span>Summoning Monsters...</span>
             </div>
         </div>
     </main>
@@ -383,17 +62,3 @@ extra_css:
 
 <!-- Scripts -->
 <script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-classes.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-backgrounds.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-feats.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-misc-feats.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-spells.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-languages.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-bastions.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-loot.js?v=2' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-other-rewards.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-item-properties.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-sources.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-monsters.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-equipment.js' | relative_url }}"></script>
-<script type="module" src="{{ '/assets/js/allowed-content/ac-downtime.js' | relative_url }}"></script>
