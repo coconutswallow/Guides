@@ -421,14 +421,6 @@ async function handleInviteGeneration() {
     const inpInvite = document.getElementById('inp-invite-link');
     if (inpInvite) {
         inpInvite.value = inviteUrl;
-        try {
-            await supabase
-                .from('sessions')
-                .update({ invite_url: inviteUrl })
-                .eq('id', id);
-        } catch (e) {
-            logError('session-editor', `Could not save invite URL: ${e.message}`, 'warning');
-        }
     }
 }
 
@@ -801,10 +793,12 @@ async function loadSessionData(sessionId, callbacks) {
         if (session) {
             IO.populateForm(session, callbacks);
 
-            // Load invite link if present in DB
-            if (session.invite_url) {
-                const inpInvite = document.getElementById('inp-invite-link');
-                if (inpInvite) inpInvite.value = session.invite_url;
+            // Populate invite link input
+            const inpInvite = document.getElementById('inp-invite-link');
+            if (inpInvite) {
+                const path = window.location.pathname;
+                const directory = path.substring(0, path.lastIndexOf('/'));
+                inpInvite.value = `${window.location.origin}${directory}/player-entry.html?session_id=${sessionId}`;
             }
         }
     } catch (error) {
@@ -936,6 +930,9 @@ function initCopyGameLogic() {
             fullData.session_log.hours = 3;
             fullData.session_log.notes = "";
             fullData.session_log.summary = "";
+            if (!fullData.session_log.dm_rewards) {
+                fullData.session_log.dm_rewards = {};
+            }
             fullData.session_log.dm_rewards.loot_selected = "";
             fullData.session_log.dm_rewards.incentives = [];
 
@@ -976,15 +973,23 @@ function initCopyGameLogic() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return alert("Not logged in");
 
+            btnConfirm.disabled = true;
+            const originalConfirmText = btnConfirm.innerText;
+            btnConfirm.innerText = "Copying...";
+
             try {
-                const newSession = await createSession(user.id, newName, false);
-                if (newSession) {
-                    await saveSession(newSession.id, fullData, { title: newName });
+                const newSession = await createSession(user.id, newName, false, fullData);
+                if (newSession && newSession.id) {
                     window.location.href = `session.html?id=${newSession.id}`;
+                } else {
+                    alert("Error copying game: could not create session record.");
                 }
             } catch (e) {
-                console.error(e);
+                console.error('Error copying game:', e);
                 alert("Error copying game.");
+            } finally {
+                btnConfirm.disabled = false;
+                btnConfirm.innerText = originalConfirmText;
             }
         });
     }
@@ -1076,30 +1081,60 @@ function initTemplateLogic() {
     if (btnSaveGame) {
         btnSaveGame.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const sessionId = urlParams.get('id');
+            let sessionId = urlParams.get('id');
             const formData = IO.getFormData();
             const title = document.getElementById('header-game-name').value || "Untitled Session";
             const dateInput = document.getElementById('inp-start-datetime');
             const date = dateInput && dateInput.value ? new Date(dateInput.value).toISOString().split('T')[0] : null;
 
-            if (sessionId) {
-                await saveSession(sessionId, formData, { title, date });
-                const btn = document.getElementById('btn-save-game');
-                const originalText = btn.innerText;
-                btn.innerText = "Saved!";
-                btn.classList.add('button-success');
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.classList.remove('button-success');
-                }, 1500);
-            } else {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user) {
-                    const newS = await createSession(user.id, title);
-                    await saveSession(newS.id, formData, { title, date });
-                    window.history.pushState({}, "", `?id=${newS.id}`);
-                    alert("Session Created & Saved");
+            const btn = document.getElementById('btn-save-game');
+            const originalText = btn.innerText;
+
+            try {
+                if (sessionId) {
+                    btn.innerText = "Saving...";
+                    await saveSession(sessionId, formData, { title, date });
+                    btn.innerText = "Saved!";
+                    btn.classList.add('button-success');
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.classList.remove('button-success');
+                    }, 1500);
+                } else {
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (user) {
+                        btn.innerText = "Saving...";
+                        const newS = await createSession(user.id, title, false, formData, date);
+                        if (newS && newS.id) {
+                            sessionId = newS.id;
+                            window.history.pushState({}, "", `?id=${newS.id}`);
+
+                            // Update invite link input for the newly created session
+                            const inpInvite = document.getElementById('inp-invite-link');
+                            if (inpInvite) {
+                                const path = window.location.pathname;
+                                const directory = path.substring(0, path.lastIndexOf('/'));
+                                inpInvite.value = `${window.location.origin}${directory}/player-entry.html?session_id=${newS.id}`;
+                            }
+
+                            btn.innerText = "Saved!";
+                            btn.classList.add('button-success');
+                            setTimeout(() => {
+                                btn.innerText = originalText;
+                                btn.classList.remove('button-success');
+                            }, 1500);
+                        } else {
+                            throw new Error("Could not create session in database.");
+                        }
+                    } else {
+                        alert("Not logged in");
+                    }
                 }
+            } catch (err) {
+                console.error('Error saving session:', err);
+                alert("Error saving session: " + (err.message || "Please check your network connection."));
+                btn.innerText = originalText;
+                btn.classList.remove('button-success');
             }
         });
     }

@@ -136,25 +136,28 @@ export async function fetchTemplates(userId) {
    ========================================= */
 
 /**
- * Creates a new, blank session record in the database.
+ * Creates a new session record in the database.
+ * If formData is provided, it is saved directly on creation (via single POST request).
  */
-export async function createSession(userId, title, isTemplate = false) {
+export async function createSession(userId, title, isTemplate = false, formData = null, sessionDate = null) {
     try {
+        const defaultFormData = { 
+            header: {
+                intended_duration: "3-4 Hours",
+                party_size: "5",
+                event_tags: [] 
+            },
+            sessions: [] 
+        };
+
         const { data, error } = await supabase
             .from('session_logs')
             .insert([{
                 user_id: userId,
                 title: title,
                 is_template: isTemplate,
-                session_date: new Date().toISOString().split('T')[0],
-                form_data: { 
-                    header: {
-                        intended_duration: "3-4 Hours",
-                        party_size: "5",
-                        event_tags: [] 
-                    },
-                    sessions: [] 
-                } 
+                session_date: sessionDate || new Date().toISOString().split('T')[0],
+                form_data: formData || defaultFormData
             }])
             .select()
             .single();
@@ -182,17 +185,43 @@ export async function saveAsTemplate(userId, templateName, formData) {
 
         if (existing) {
             // Update existing template
-            const { data, error } = await supabase
-                .from('session_logs')
-                .update({
-                    form_data: formData,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', existing.id)
-                .select()
-                .single();
-            if (error) throw error;
-            return data;
+            const updatePayload = {
+                form_data: formData,
+                updated_at: new Date().toISOString()
+            };
+
+            let updateSuccess = false;
+            let updateResult = null;
+            try {
+                const { data, error } = await supabase
+                    .from('session_logs')
+                    .update(updatePayload)
+                    .eq('id', existing.id);
+
+                if (!error) {
+                    updateSuccess = true;
+                    updateResult = data;
+                }
+            } catch (patchErr) {
+                console.warn('Template update via PATCH failed, attempting fallback:', patchErr);
+            }
+
+            if (!updateSuccess) {
+                const { data, error } = await supabase
+                    .from('session_logs')
+                    .upsert({
+                        id: existing.id,
+                        user_id: userId,
+                        title: templateName,
+                        is_template: true,
+                        form_data: formData,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'id' });
+
+                if (error) throw error;
+                return data;
+            }
+            return updateResult;
         } else {
             // Create new template
             const { data, error } = await supabase
@@ -236,8 +265,9 @@ export async function loadSession(sessionId) {
 
 /**
  * Updates an existing session record with new form data and metadata.
+ * Uses PATCH (update) with automatic fallback to POST upsert if PATCH is blocked by CORS/network proxies.
  */
-export async function saveSession(sessionId, formData, metadata) {
+export async function saveSession(sessionId, formData, metadata = {}) {
     try {
         const updatePayload = {
             form_data: formData,
@@ -246,14 +276,48 @@ export async function saveSession(sessionId, formData, metadata) {
 
         if (metadata.title) updatePayload.title = metadata.title;
         if (metadata.date) updatePayload.session_date = metadata.date;
-        if (metadata.status) updatePayload.status = metadata.status;
         if (metadata.is_template !== undefined) updatePayload.is_template = metadata.is_template;
+
+        // Try standard UPDATE (PATCH) first
+        let updateSuccess = false;
+        let updateResult = null;
+        try {
+            const { data, error } = await supabase
+                .from('session_logs')
+                .update(updatePayload)
+                .eq('id', sessionId);
+
+            if (!error) {
+                updateSuccess = true;
+                updateResult = data;
+            } else {
+                console.warn('Update via PATCH returned error, attempting upsert fallback:', error);
+            }
+        } catch (patchErr) {
+            console.warn('Update via PATCH threw error (likely CORS/network restriction), attempting upsert fallback:', patchErr);
+        }
+
+        if (updateSuccess) {
+            return updateResult;
+        }
+
+        // Fallback: If PATCH is blocked by browser CORS preflight / network restrictions,
+        // use upsert via POST (resolution=merge-duplicates) which is universally allowed.
+        const { data: { user } } = await supabase.auth.getUser();
+        const upsertPayload = {
+            id: sessionId,
+            ...updatePayload
+        };
+        if (user?.id) {
+            upsertPayload.user_id = user.id;
+        }
+        if (!upsertPayload.title) {
+            upsertPayload.title = formData?.header?.title || "Untitled Session";
+        }
 
         const { data, error } = await supabase
             .from('session_logs')
-            .update(updatePayload)
-            .eq('id', sessionId)
-            .select();
+            .upsert(upsertPayload, { onConflict: 'id' });
 
         if (error) throw error;
         return data;
