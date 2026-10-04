@@ -574,14 +574,225 @@
 }
 
 [data-theme="dark"] .ac-modal-content,
-[data-theme="dark"] .ac-modal-content *,
+[data-theme="dark"] .ac-modal-content *:not(.source-url-link):not(.source-name-link),
 [data-theme="dark"] .detail-section,
-[data-theme="dark"] .detail-section *,
+[data-theme="dark"] .detail-section *:not(.source-url-link):not(.source-name-link),
 [data-theme="dark"] .advice-content,
-[data-theme="dark"] .advice-content *,
+[data-theme="dark"] .advice-content *:not(.source-url-link):not(.source-name-link),
 [data-theme="dark"] .detail-item value {
     color: var(--color-text) !important;
 }
+
+.ac-category-banner {
+    background: var(--color-bg-alt, rgba(0, 0, 0, 0.04));
+    border-left: 4px solid var(--color-primary);
+    padding: 0.85rem 1.15rem;
+    margin-bottom: 1.25rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+[data-theme="dark"] .ac-category-banner {
+    background: var(--color-card-bg, #242424);
+    border-left-color: var(--color-primary);
+}
+
+.col-notes .source-url-link,
+.advice-content .source-url-link {
+    color: var(--color-primary) !important;
+    text-decoration: underline !important;
+    font-weight: 600;
+}
+
+.col-notes .source-url-link:hover,
+.advice-content .source-url-link:hover {
+    color: var(--color-secondary) !important;
+}
+
+[data-theme="dark"] .col-notes .source-url-link,
+[data-theme="dark"] .advice-content .source-url-link {
+    color: var(--color-primary) !important;
+    text-decoration: underline !important;
+}
+
+[data-theme="dark"] .col-notes .source-url-link:hover,
+[data-theme="dark"] .advice-content .source-url-link:hover {
+    color: #ffe082 !important;
+}
+
+/* ================================================================
+   STAFF ADMIN MODE STYLES
+   ================================================================ */
+
+.ac-admin-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: var(--color-bg-alt, rgba(0, 0, 0, 0.04));
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--palette-alert-success-border, #2e7d32);
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .ac-admin-bar {
+    background: var(--color-card-bg, #242424);
+    border-color: #383838;
+    border-left-color: #4caf50;
+}
+
+.ac-admin-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.ac-admin-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.ac-btn-admin {
+    padding: 0.45rem 0.9rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+}
+
+.ac-btn-primary {
+    background: var(--color-primary);
+    color: #fff !important;
+}
+
+.ac-btn-primary:hover {
+    background: var(--palette-brand-main-darker, #45120a);
+}
+
+.ac-btn-secondary {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    color: var(--color-text) !important;
+}
+
+.ac-btn-secondary:hover {
+    border-color: var(--color-primary);
+}
+
+.ac-btn-delete {
+    background: transparent;
+    border: 1px solid var(--palette-alert-danger-action, #d32f2f);
+    color: var(--palette-alert-danger-action, #d32f2f);
+}
+
+.ac-btn-delete:hover {
+    background: var(--palette-alert-danger-action, #d32f2f);
+    color: #fff;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Edit Form inside Modal */
+.ac-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.ac-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.ac-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.ac-form-group label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+}
+
+.ac-form-input, .ac-form-select, .ac-form-textarea {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-bg-light);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+[data-theme="dark"] .ac-form-input,
+[data-theme="dark"] .ac-form-select,
+[data-theme="dark"] .ac-form-textarea {
+    background: #1e1e1e;
+    color: var(--color-text);
+    border-color: #444;
+}
+
+.ac-form-input:focus, .ac-form-select:focus, .ac-form-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(93, 24, 13, 0.15);
+}
+
+.ac-form-help {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.ac-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+}
+
+/* Toast Notifications */
+.ac-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--palette-alert-success-border, #2e7d32);
+    color: #fff;
+    padding: 0.85rem 1.35rem;
+    border-radius: 6px;
+    box-shadow: var(--shadow-lg);
+    font-size: 0.95rem;
+    font-weight: 600;
+    z-index: 10000;
+}
+
+.ac-toast.error {
+    background: var(--palette-alert-danger-action, #d32f2f);
+}
+
+
 
 
 

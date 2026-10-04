@@ -26,7 +26,11 @@ export function openModal(contentHtml) {
     if (!modal || !body) return;
 
     body.innerHTML = contentHtml;
-    modal.showModal();
+    if (typeof modal.showModal === 'function') {
+        modal.showModal();
+    } else {
+        modal.setAttribute('open', '');
+    }
 }
 
 /**
@@ -34,7 +38,13 @@ export function openModal(contentHtml) {
  */
 export function closeModal() {
     const modal = document.getElementById('ac-detail-modal');
-    if (modal) modal.close();
+    if (modal) {
+        if (typeof modal.close === 'function') {
+            modal.close();
+        } else {
+            modal.removeAttribute('open');
+        }
+    }
 }
 
 /**

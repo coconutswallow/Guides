@@ -593,3 +593,83 @@ export async function getSources() {
         return [];
     }
 }
+
+/**
+ * Updates an existing Source record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the source record
+ * @param {Object} updates - Object containing fields to update
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateSource(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_sources')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating source:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating source:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Creates a new Source record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} sourceData - Object containing new source fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createSource(sourceData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_sources')
+            .insert(sourceData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating source:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating source:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Source record from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the source to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteSource(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_sources')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting source:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting source:', err);
+        return { success: false, error: err };
+    }
+}
+
