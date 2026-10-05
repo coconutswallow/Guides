@@ -235,7 +235,7 @@ def main():
                         'ruleset': ranger_parent['ruleset'],
                         'category': category,
                         'source': r_src,
-                        'link': link,
+                        'link': None if r_src == 'PHB2014' else link,
                         'notes_advice': advice.strip() if advice else None,
                         'display_order': subclass_order
                     })
@@ -257,7 +257,7 @@ def main():
                         'ruleset': current_class['ruleset'],
                         'category': category,
                         'source': rr_src,
-                        'link': link,
+                        'link': None if rr_src == 'PHB2014' else link,
                         'notes_advice': advice.strip() if advice else None,
                         'display_order': subclass_order
                     })
@@ -270,7 +270,7 @@ def main():
                         'ruleset': s_ruleset,
                         'category': category,
                         'source': resolved_s_src,
-                        'link': link,
+                        'link': None if resolved_s_src == 'PHB2014' else link,
                         'notes_advice': advice.strip() if advice else None,
                         'display_order': subclass_order
                     })
@@ -282,6 +282,13 @@ def main():
         for s in subclasses:
             if s['name'] == 'Battlerager' and not s.get('notes_advice'):
                 s['notes_advice'] = battlerager_advice
+
+    # Revised Ranger copies hit die and multiclassing from Ranger (2014)
+    ranger_2014 = next((c for c in classes if c['name'] == 'Ranger' and c['ruleset'] == '2014'), None)
+    revised_ranger = next((c for c in classes if c['name'] == 'Revised Ranger' and c['ruleset'] == '2014'), None)
+    if ranger_2014 and revised_ranger:
+        revised_ranger['hit_die'] = ranger_2014.get('hit_die')
+        revised_ranger['multiclassing'] = ranger_2014.get('multiclassing')
 
     print(json.dumps({
         'classes': classes,
