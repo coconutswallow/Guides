@@ -322,7 +322,7 @@ VALUES
   ('UAWAW', 'SRC_0115', 'UAWAW', 'Unearthed Arcana: Warlock & Wizard', 'Unearthed Arcana', '2014', 'Subclasses (The Raven Queen Warlock)', 'All other content isn''t available', 'https://media.wizards.com/2017/dnd/downloads/20170213_Wizrd_Wrlck_UAv2_i48nf.pdf', 115),
   ('UAWA', 'SRC_0116', 'UAWA', 'Unearthed Arcana: Waterborne Adventures', 'Unearthed Arcana', '2014', 'Fighting Style (Mariner)', 'All other content isn''t available', 'https://media.wizards.com/2015/downloads/dnd/UA_Waterborne_v3.pdf', 116),
   ('UAWR', 'SRC_0117', 'UAWR', 'Unearthed Arcana: Wizard Revisited', 'Unearthed Arcana', '2014', 'Subclasses (Theurgy Wizard)', 'All other content isn''t available', 'https://media.wizards.com/2017/dnd/downloads/MJ320UAWizardVF2017.pdf', 117),
-  ('HTA', 'SRC_0118', 'HTA', 'Hawthorne Arcana', 'Hawthorne Homebrew', '2014', 'All: Backgrounds, Subclasses, Races', NULL, 'https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view', 118),
+  ('HTA', 'SRC_0118', 'HTA', 'Hawthorne Arcana', 'Hawthorne Homebrew', '2014', 'All: Backgrounds, Subclasses, Races', NULL, '/arcana/', 118),
   ('HTFG', 'SRC_0119', 'HTFG', 'Hawthorne Field Guide', 'Hawthorne Homebrew', '2014', 'All: Monsters', NULL, 'https://hawthorneguild.github.io/Guides/monsters/', 119)
 ON CONFLICT (source_key) DO UPDATE SET
   check_id = EXCLUDED.check_id,

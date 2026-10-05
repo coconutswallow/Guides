@@ -792,9 +792,514 @@
     background: var(--palette-alert-danger-action, #d32f2f);
 }
 
+/* ================================================================
+   LOOKUPS CONFIGURATION MODAL
+   ================================================================ */
 
+.ac-options-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
 
+.ac-options-header {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.75rem;
+}
 
+.ac-options-header h3 {
+    margin: 0 0 0.35rem 0;
+    font-size: 1.35rem;
+    color: var(--color-primary);
+    font-family: var(--font-header);
+}
 
+.ac-options-header p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
 
+.ac-options-nav {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0;
+}
 
+.ac-options-tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -2px;
+    font-family: inherit;
+}
+
+.ac-options-tab-btn:hover {
+    color: var(--color-primary);
+}
+
+.ac-options-tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.ac-options-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.ac-options-table-wrapper {
+    max-height: 380px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+}
+
+.ac-options-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.ac-options-table th {
+    background: var(--color-bg-alt, rgba(0, 0, 0, 0.03));
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.ac-options-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.ac-options-table tr:last-child td {
+    border-bottom: none;
+}
+
+.ac-options-table tr:hover {
+    background: var(--color-table-hover, rgba(0, 0, 0, 0.02));
+}
+
+.ac-cell-actions {
+    display: flex;
+    gap: 0.35rem;
+    justify-content: flex-end;
+}
+
+.ac-btn-icon {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    color: var(--color-text);
+}
+
+.ac-btn-icon:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.ac-btn-icon.delete:hover {
+    border-color: var(--palette-alert-danger-action, #d32f2f);
+    color: var(--palette-alert-danger-action, #d32f2f);
+}
+
+.ac-options-edit-box {
+    background: var(--color-bg-alt, rgba(0, 0, 0, 0.02));
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.ac-options-edit-box h4 {
+    margin: 0 0 1rem 0;
+    color: var(--color-primary);
+    font-size: 1.05rem;
+}
+
+[data-theme="dark"] .ac-options-table th {
+    background: #1f1f1f;
+}
+
+[data-theme="dark"] .ac-options-edit-box {
+    background: #1e1e1e;
+}
+
+[data-theme="dark"] .ac-options-table tr:hover {
+    background: #272727;
+}
+
+/* ================================================================
+ * RACES & SUBRACES UI
+ * ================================================================ */
+
+.ac-races-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg-medium, rgba(0, 0, 0, 0.02));
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.ac-races-stats {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.ac-races-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* View Switcher */
+.ac-view-toggle {
+    display: inline-flex;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--color-bg-light);
+}
+
+.ac-toggle-btn {
+    padding: 0.4rem 0.85rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.ac-toggle-btn:hover:not(.active) {
+    color: var(--color-primary);
+    background: var(--color-table-hover);
+}
+
+.ac-toggle-btn.active {
+    background: var(--color-primary);
+    color: var(--palette-neutral-white, #fff);
+}
+
+/* Source Filter Dropdown */
+.ac-source-filter-select {
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg-light);
+    color: var(--color-text);
+    font-size: 0.82rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.ac-source-filter-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* Source Badges */
+.ac-source-badge {
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font-mono, monospace);
+    background: rgba(var(--palette-brand-main, 139, 38, 20), 0.08);
+    border: 1px solid rgba(var(--palette-brand-main, 139, 38, 20), 0.25);
+    color: var(--color-primary);
+    margin: 2px 3px 2px 0;
+    cursor: help;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    line-height: 1.3;
+}
+
+.ac-source-badge:hover {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.ac-source-badge.badge-variant {
+    background: rgba(var(--palette-brand-secondary, 59, 130, 246), 0.1);
+    border-color: rgba(var(--palette-brand-secondary, 59, 130, 246), 0.3);
+    color: var(--color-secondary, #2563eb);
+}
+
+/* Subrace Chips */
+.ac-subrace-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.ac-subrace-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: var(--color-bg-medium, #f0f0f0);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.ac-subrace-chip:hover {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.ac-subrace-chip.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.ac-subrace-chip .chip-count {
+    font-size: 0.7rem;
+    opacity: 0.75;
+}
+
+/* Modal Subrace Navigation */
+.ac-modal-subrace-nav {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.ac-modal-nav-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.ac-modal-subrace-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.ac-modal-tab-btn {
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-medium, #f5f5f5);
+    color: var(--color-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.ac-modal-tab-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.ac-modal-tab-btn.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+/* Variant Breakdown in Modal */
+.ac-variant-block {
+    background: var(--color-bg-medium);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ac-variant-block h5 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--color-primary);
+    font-size: 0.95rem;
+}
+
+/* Dark mode overrides for Races components */
+[data-theme="dark"] .ac-races-toolbar {
+    background: var(--color-card-bg, #242424);
+    border-color: #383838;
+}
+
+[data-theme="dark"] .ac-view-toggle {
+    background: #1c1c1c;
+    border-color: #383838;
+}
+
+[data-theme="dark"] .ac-toggle-btn {
+    color: #aaa;
+}
+
+[data-theme="dark"] .ac-source-filter-select {
+    background: #242424;
+    color: #eee;
+    border-color: #383838;
+}
+
+[data-theme="dark"] .ac-subrace-chip {
+    background: #2a2a2a;
+    border-color: #404040;
+    color: #ddd;
+}
+
+[data-theme="dark"] .ac-modal-tab-btn {
+    background: #2a2a2a;
+    border-color: #404040;
+    color: #ddd;
+}
+
+[data-theme="dark"] .ac-variant-block {
+    background: #1f1f1f;
+    border-color: #383838;
+}
+
+/* Tag Picker Component for Multi-Source Selection */
+.ac-tag-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ac-tag-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    min-height: 34px;
+    padding: 0.35rem;
+    background: var(--color-bg-light);
+    border: 1px dashed var(--color-border);
+    border-radius: 6px;
+    align-items: center;
+}
+
+.ac-tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: rgba(var(--palette-brand-main), 0.12);
+    color: var(--color-primary);
+    border: 1px solid rgba(var(--palette-brand-main), 0.3);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.ac-tag-chip .ac-tag-remove {
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.ac-tag-chip .ac-tag-remove:hover {
+    opacity: 1;
+    color: var(--palette-alert-danger-action, #d32f2f);
+}
+
+.ac-tag-empty-msg {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-style: italic;
+    padding: 0 0.25rem;
+}
+
+/* ASI Inputs Grid */
+.ac-asi-inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .ac-asi-inputs-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.ac-asi-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.ac-asi-item label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+}
+
+.ac-asi-item input {
+    width: 100%;
+    text-align: center;
+    padding: 0.4rem 0.2rem;
+    font-weight: 600;
+}
+
+[data-theme="dark"] .ac-tag-chips-container {
+    background: #1e1e1e;
+    border-color: #404040;
+}
+
+[data-theme="dark"] .ac-tag-chip {
+    background: #33261f;
+    border-color: #634333;
+    color: #f7a884;
+}

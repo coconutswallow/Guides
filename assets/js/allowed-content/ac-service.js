@@ -120,23 +120,52 @@ export async function getBastions() {
  */
 export async function getCategoryNotes(categoryId) {
     const categories = await getBastionCategories();
+    const cat = categories.find(c => c.id === categoryId);
     return cat ? cat.notes : null;
 }
 
 /**
- * Fetches all Races from Supabase.
+ * Fetches all Races from Supabase, including joined subraces.
  * 
- * @returns {Promise<Array>} Array of race objects
+ * @returns {Promise<Array>} Array of race objects with subraces
  */
 export async function getRaces() {
     const { data, error } = await supabase
         .from('ac_races')
-        .select('*')
+        .select('*, subraces:ac_subraces(*)')
         .order('display_order', { ascending: true })
         .order('name', { ascending: true });
 
     if (error) {
         console.error('Error fetching races:', error);
+        return [];
+    }
+
+    // Ensure nested subraces are sorted by display_order
+    if (data) {
+        data.forEach(race => {
+            if (race.subraces && Array.isArray(race.subraces)) {
+                race.subraces.sort((a, b) => (Number(a.display_order) || 0) - (Number(b.display_order) || 0));
+            }
+        });
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Subraces from Supabase, including joined parent race info.
+ * 
+ * @returns {Promise<Array>} Array of subrace objects
+ */
+export async function getSubraces() {
+    const { data, error } = await supabase
+        .from('ac_subraces')
+        .select('*, race:ac_races(*)')
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching subraces:', error);
         return [];
     }
 
@@ -543,6 +572,59 @@ export async function getMonsters() {
 }
 
 /**
+ * Generic helper to fetch lookup data by type.
+ * 
+ * @param {string} type - Lookup type key (e.g. 'sources')
+ * @returns {Promise<Object|Array|null>} Lookup data payload
+ */
+export async function getLookup(type) {
+    try {
+        const { data, error } = await supabase
+            .from('lookups')
+            .select('data')
+            .eq('type', type)
+            .maybeSingle();
+
+        if (error || !data) {
+            console.error(`Error fetching lookup for '${type}':`, error);
+            return null;
+        }
+        return data.data;
+    } catch (error) {
+        console.error(`Exception in getLookup('${type}'):`, error);
+        return null;
+    }
+}
+
+/**
+ * Generic helper to update lookup data by type.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} type - Lookup type key (e.g. 'sources')
+ * @param {Object|Array} dataPayload - The JSON payload to save
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateLookup(type, dataPayload) {
+    try {
+        const { data, error } = await supabase
+            .from('lookups')
+            .update({ data: dataPayload })
+            .eq('type', type)
+            .select()
+            .single();
+
+        if (error) {
+            console.error(`Error updating lookup '${type}':`, error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error(`Exception in updateLookup('${type}'):`, err);
+        return { data: null, error: err };
+    }
+}
+
+/**
  * Fetch Source metadata (categories and rulesets) from lookups table.
  * 
  * @returns {Promise<Object>} Object with types and rulesets arrays
@@ -575,6 +657,63 @@ export async function getSourceLookups() {
 export async function getSourceCategories() {
     const lookups = await getSourceLookups();
     return lookups.types || [];
+}
+
+// ================================================================
+// In-Memory Sources Cache
+// ================================================================
+let sourcesCache = null;
+let sourcesMap = null;
+
+/**
+ * Clears the in-memory sources cache (called on mutation).
+ */
+export function clearSourcesCache() {
+    sourcesCache = null;
+    sourcesMap = null;
+}
+
+/**
+ * Fetch all Sources from Supabase with in-memory caching.
+ * 
+ * @param {boolean} [forceRefresh=false] - Force cache bypass
+ * @returns {Promise<Array>} Array of source objects
+ */
+export async function getSourcesCached(forceRefresh = false) {
+    if (forceRefresh || !sourcesCache) {
+        sourcesCache = await getSources();
+        sourcesMap = new Map();
+        for (const s of sourcesCache) {
+            if (s.source_key) sourcesMap.set(s.source_key, s);
+            if (s.abbreviation) sourcesMap.set(s.abbreviation, s);
+        }
+    }
+    return sourcesCache;
+}
+
+/**
+ * Returns a Map of all sources keyed by source_key and abbreviation.
+ * 
+ * @param {boolean} [forceRefresh=false]
+ * @returns {Promise<Map<string, Object>>}
+ */
+export async function getSourcesMap(forceRefresh = false) {
+    if (forceRefresh || !sourcesMap) {
+        await getSourcesCached(forceRefresh);
+    }
+    return sourcesMap;
+}
+
+/**
+ * Synchronous lookup for a source by key/abbreviation from the cache.
+ * Returns null if not cached yet or not found.
+ * 
+ * @param {string} key - e.g. 'MPMM', 'PHB2014', 'SCAG'
+ * @returns {Object|null}
+ */
+export function getSourceByKey(key) {
+    if (!key || !sourcesMap) return null;
+    return sourcesMap.get(key) || null;
 }
 
 /**
@@ -615,6 +754,7 @@ export async function updateSource(id, updates) {
             console.error('Error updating source:', error);
             return { data: null, error };
         }
+        clearSourcesCache();
         return { data, error: null };
     } catch (err) {
         console.error('Exception updating source:', err);
@@ -641,6 +781,7 @@ export async function createSource(sourceData) {
             console.error('Error creating source:', error);
             return { data: null, error };
         }
+        clearSourcesCache();
         return { data, error: null };
     } catch (err) {
         console.error('Exception creating source:', err);
@@ -666,9 +807,169 @@ export async function deleteSource(id) {
             console.error('Error deleting source:', error);
             return { success: false, error };
         }
+        clearSourcesCache();
         return { success: true, error: null };
     } catch (err) {
         console.error('Exception deleting source:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Race record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} raceData - Object containing new race fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createRace(raceData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_races')
+            .insert(raceData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating race:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating race:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Race record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the race to update
+ * @param {Object} updates - Object containing modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateRace(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_races')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating race:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating race:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Race record from Supabase.
+ * Cascade-deletes all associated subraces.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the race to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteRace(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_races')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting race:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting race:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Subrace record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} subraceData - Object containing new subrace fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createSubrace(subraceData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_subraces')
+            .insert(subraceData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating subrace:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating subrace:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Subrace record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the subrace to update
+ * @param {Object} updates - Object containing modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateSubrace(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_subraces')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating subrace:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating subrace:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Subrace record from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the subrace to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteSubrace(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_subraces')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting subrace:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting subrace:', err);
         return { success: false, error: err };
     }
 }

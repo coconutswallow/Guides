@@ -27,6 +27,7 @@ extra_css:
             <div class="ac-tabs-bar">
                 <div class="ac-tabs" id="ac-tabs-container">
                     <button class="ac-tab active" data-tab="sources">Sources</button>
+                    <button class="ac-tab" data-tab="races">Races</button>
                     <!-- Additional tabs will be added sequentially as they are developed -->
                 </div>
             </div>
@@ -36,8 +37,10 @@ extra_css:
                     <input type="text" id="ac-global-search" placeholder="Search sources (name, abbreviation, key)..." class="ac-search-input">
                 </div>
             </div>
-        </div>
     </header>
+
+    <!-- Staff Admin Bar Container (Rendered for Admins/Engineers across all tabs) -->
+    <div id="ac-admin-bar-container"></div>
 
     <main class="ac-content">
         <!-- Sources View (Active) -->
@@ -45,6 +48,14 @@ extra_css:
             <div class="ac-loading">
                 <div class="spinner"></div>
                 <span>Cataloging Sources...</span>
+            </div>
+        </div>
+
+        <!-- Races View -->
+        <div id="ac-view-races" class="ac-view">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Species & Lineages...</span>
             </div>
         </div>
     </main>
