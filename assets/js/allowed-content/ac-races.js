@@ -678,7 +678,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                                         <table class="ac-inline-subtable">
                                             <thead>
                                                 <tr>
-                                                    <th>Subrace / Lineage</th>
+                                                    <th>Subrace</th>
                                                     <th style="text-align: center;">Size</th>
                                                     <th style="text-align: center;">Speed</th>
                                                     <th>Language</th>
@@ -870,7 +870,7 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
 
         ${subraces.length > 1 ? `
             <div class="ac-modal-subrace-nav">
-                <div class="ac-modal-nav-title">Select Subrace / Lineage (${subraces.length} available):</div>
+                <div class="ac-modal-nav-title">Select Subrace (${subraces.length} available):</div>
                 <div class="ac-modal-subrace-tabs">
                     ${subraces.map((s, idx) => {
                         const label = getSubraceLabel(s);
@@ -1152,7 +1152,7 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null)
                     <small class="ac-form-help">Base species order will default to bottom (${getNextDisplayOrder(allRaces)})</small>
                 </div>
 
-                <!-- Step 2: Lineage / Subrace -->
+                <!-- Step 2: Subrace -->
                 <div class="ac-form-group">
                     <label for="race-input-subrace">Subrace Name</label>
                     <input type="text" id="race-input-subrace" class="ac-form-input" value="${esc(isNew ? '' : (subraceItem.subrace === 'None' ? '' : subraceItem.subrace))}" placeholder="e.g. High, Wood, or leave blank for 'None'">
