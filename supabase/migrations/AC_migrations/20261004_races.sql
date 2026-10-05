@@ -542,7 +542,7 @@ CREATE POLICY "Allow public read access to ac_subraces" ON public.ac_subraces FO
 CREATE POLICY "Allow service_role to manage ac_subraces" ON public.ac_subraces FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 -- 9. Backward-compatibility view: v_ac_races
-CREATE OR REPLACE VIEW public.v_ac_races AS
+CREATE OR REPLACE VIEW public.v_ac_races WITH (security_invoker = true) AS
 SELECT
     s.id,
     r.name AS race,

@@ -449,10 +449,6 @@ function showSourceDetail(item) {
                 <value><span class="ruleset-pill">${esc(item.ruleset || '—')}</span></value>
             </div>
             <div class="detail-item">
-                <label>Audit Check ID</label>
-                <value><code>${esc(item.check_id || '—')}</code></value>
-            </div>
-            <div class="detail-item">
                 <label>Display Order</label>
                 <value>${esc(formatDisplayOrder(item.display_order))}</value>
             </div>
@@ -536,9 +532,8 @@ export async function openSourceForm(item = null) {
     const nextOrder = isNew 
         ? getNextDisplayOrder(allSources)
         : (item.display_order ?? 1);
-    const nextCheck = isNew
-        ? getNextCheckId(allSources)
-        : (item.check_id || '');
+    const checkIdVal = isNew ? '' : (item.check_id || '');
+    const sourceKeyVal = isNew ? '' : (item.source_key || '');
 
     const typesToUse = sourceTypes.length > 0 ? sourceTypes : [
         { name: 'Core' },
@@ -563,6 +558,10 @@ export async function openSourceForm(item = null) {
         </div>
 
         <form id="ac-source-form" class="ac-edit-form">
+            <!-- Hidden / derived fields -->
+            <input type="hidden" id="src-input-key" value="${esc(sourceKeyVal)}">
+            <input type="hidden" id="src-input-check" value="${esc(checkIdVal)}">
+
             <div class="ac-form-grid">
                 <div class="ac-form-group">
                     <label for="src-input-name">Source Name *</label>
@@ -572,18 +571,6 @@ export async function openSourceForm(item = null) {
                 <div class="ac-form-group">
                     <label for="src-input-abbr">Abbreviation *</label>
                     <input type="text" id="src-input-abbr" required value="${isNew ? '' : esc(item.abbreviation || '')}" placeholder="e.g. PHB2024" class="ac-form-input">
-                </div>
-
-                <div class="ac-form-group">
-                    <label for="src-input-key">Source Key (PK) *</label>
-                    <input type="text" id="src-input-key" required value="${isNew ? '' : esc(item.source_key || '')}" placeholder="e.g. PHB2024" class="ac-form-input" ${isNew ? '' : 'readonly'}>
-                    <small class="ac-form-help">${isNew ? 'Canonical key used in references (uppercase, no spaces)' : 'Canonical primary key (immutable)'}</small>
-                </div>
-
-                <div class="ac-form-group">
-                    <label for="src-input-check">Audit Check ID *</label>
-                    <input type="text" id="src-input-check" required value="${esc(nextCheck)}" placeholder="e.g. SRC_0120" class="ac-form-input">
-                    <small class="ac-form-help">Unique audit ID</small>
                 </div>
 
                 <div class="ac-form-group">
@@ -607,29 +594,30 @@ export async function openSourceForm(item = null) {
                         `).join('')}
                     </select>
                 </div>
+            </div>
 
-                <div class="ac-form-group">
-                    <label for="src-input-order">Display Order *</label>
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <input type="number" step="any" id="src-input-order" value="${nextOrder}" class="ac-form-input" style="flex: 1;">
-                        <select id="src-input-placement" class="ac-form-select" style="flex: 1.4;" title="Placement Helper">
-                            <option value="custom">Placement: Manual</option>
-                            <option value="end" ${isNew ? 'selected' : ''}>At the End (${nextOrder})</option>
-                            <option value="start">At the Beginning (${startOrder})</option>
-                            <optgroup label="Place After...">
-                                ${sortedSources.filter(s => !item || s.id !== item.id).map(s => `
-                                    <option value="after_${s.id}">After: ${esc(s.name)} (${formatDisplayOrder(s.display_order)})</option>
-                                `).join('')}
-                            </optgroup>
-                        </select>
-                    </div>
-                    <small class="ac-form-help">Fractional indexing enabled (e.g. 10.5 to insert between 10 and 11)</small>
+            <div class="ac-form-group">
+                <label for="src-input-order">Display Order *</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="number" step="any" id="src-input-order" value="${nextOrder}" class="ac-form-input" style="flex: 1;">
+                    <select id="src-input-placement" class="ac-form-select" style="flex: 1.4;" title="Placement Helper">
+                        <option value="custom">Placement: Manual</option>
+                        <option value="end" ${isNew ? 'selected' : ''}>At the End (${nextOrder})</option>
+                        <option value="start">At the Beginning (${startOrder})</option>
+                        <optgroup label="Place After...">
+                            ${sortedSources.filter(s => !item || s.id !== item.id).map(s => `
+                                <option value="after_${s.id}">After: ${esc(s.name)} (${formatDisplayOrder(s.display_order)})</option>
+                            `).join('')}
+                        </optgroup>
+                    </select>
                 </div>
+                <small class="ac-form-help">Fractional indexing enabled (e.g. 10.5 to insert between 10 and 11)</small>
+            </div>
 
-                <div class="ac-form-group">
-                    <label for="src-input-link">Source URL / Link</label>
-                    <input type="text" id="src-input-link" value="${isNew ? '' : esc(item.link || '')}" placeholder="https://... or /arcana/" class="ac-form-input">
-                </div>
+            <div class="ac-form-group">
+                <label for="src-input-link">Source URL / Link</label>
+                <input type="text" id="src-input-link" value="${isNew ? '' : esc(item.link || '')}" placeholder="https://... or /arcana/" class="ac-form-input">
+                <small class="ac-form-help">External URL (e.g. https://...) or internal site path (e.g. /arcana/)</small>
             </div>
 
             <div class="ac-form-group">
@@ -654,26 +642,20 @@ export async function openSourceForm(item = null) {
 
     openModal(formHtml);
 
-    // Dynamic key derivation when creating a new source
-    if (isNew) {
-        let userEditedKey = false;
-        const keyInput = document.getElementById('src-input-key');
-        const abbrInput = document.getElementById('src-input-abbr');
-        const nameInput = document.getElementById('src-input-name');
+    // Dynamic key derivation from abbreviation
+    const keyInput = document.getElementById('src-input-key');
+    const abbrInput = document.getElementById('src-input-abbr');
+    const nameInput = document.getElementById('src-input-name');
 
-        keyInput?.addEventListener('input', () => {
-            userEditedKey = true;
-            keyInput.value = keyInput.value.toUpperCase();
-        });
-
-        abbrInput?.addEventListener('input', () => {
-            if (!userEditedKey && keyInput) {
+    if (abbrInput && keyInput) {
+        abbrInput.addEventListener('input', () => {
+            if (isNew || !keyInput.value) {
                 keyInput.value = deriveSourceKey(abbrInput.value);
             }
         });
 
-        abbrInput?.addEventListener('blur', () => {
-            if (!userEditedKey && keyInput && !keyInput.value && nameInput?.value) {
+        abbrInput.addEventListener('blur', () => {
+            if ((isNew || !keyInput.value) && !keyInput.value && nameInput?.value) {
                 keyInput.value = deriveSourceKey(nameInput.value);
             }
         });
@@ -727,8 +709,11 @@ export async function openSourceForm(item = null) {
 
             const name = document.getElementById('src-input-name').value.trim();
             const abbreviation = document.getElementById('src-input-abbr').value.trim();
-            const source_key = document.getElementById('src-input-key').value.trim().toUpperCase();
-            const check_id = document.getElementById('src-input-check').value.trim().toUpperCase();
+            let source_key = document.getElementById('src-input-key')?.value?.trim()?.toUpperCase();
+            if (!source_key) {
+                source_key = deriveSourceKey(abbreviation, name);
+            }
+            const check_id = document.getElementById('src-input-check')?.value?.trim()?.toUpperCase() || null;
             const type = document.getElementById('src-input-type').value;
             const ruleset = document.getElementById('src-input-ruleset').value;
             const display_order = parseFloat(document.getElementById('src-input-order').value) || 0;
@@ -737,7 +722,7 @@ export async function openSourceForm(item = null) {
             const notes_advice = document.getElementById('src-input-notes').value.trim() || null;
 
             // Form validation
-            if (!name || !abbreviation || !source_key || !check_id || !type || !ruleset) {
+            if (!name || !abbreviation || !type || !ruleset) {
                 showToast('Please fill in all required fields.', true);
                 if (submitBtn) {
                     submitBtn.disabled = false;
@@ -746,8 +731,8 @@ export async function openSourceForm(item = null) {
                 return;
             }
 
-            if (!/^[A-Z0-9_]+$/.test(source_key)) {
-                showToast('Source Key must contain only uppercase letters, numbers, and underscores (no spaces).', true);
+            if (!source_key || !/^[A-Z0-9_]+$/.test(source_key)) {
+                showToast('Could not derive a valid Source Key from abbreviation.', true);
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = isNew ? 'Create Source' : 'Save Changes';
@@ -764,14 +749,16 @@ export async function openSourceForm(item = null) {
                 return;
             }
 
-            const checkDup = allSources.find(s => (isNew || s.id !== item.id) && s.check_id?.toUpperCase() === check_id);
-            if (checkDup) {
-                showToast(`Audit Check ID "${check_id}" is already used by "${checkDup.name}".`, true);
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = isNew ? 'Create Source' : 'Save Changes';
+            if (check_id) {
+                const checkDup = allSources.find(s => (isNew || s.id !== item.id) && s.check_id?.toUpperCase() === check_id);
+                if (checkDup) {
+                    showToast(`Audit Check ID "${check_id}" is already used by "${checkDup.name}".`, true);
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = isNew ? 'Create Source' : 'Save Changes';
+                    }
+                    return;
                 }
-                return;
             }
 
             const payload = {

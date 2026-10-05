@@ -251,7 +251,109 @@
     color: var(--color-text) !important;
 }
 
+/* Sources Table specific columns */
+#sources-table .col-category {
+    width: 130px;
+    white-space: nowrap;
+}
 
+#sources-table .col-name {
+    min-width: 170px;
+    max-width: 240px;
+}
+
+#sources-table .col-abbr {
+    width: 80px;
+    text-align: center;
+}
+
+#sources-table .col-ruleset {
+    width: 80px;
+    text-align: center;
+}
+
+#sources-table .col-allowed-content {
+    width: 180px;
+    max-width: 220px;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+#sources-table .col-notes {
+    min-width: 320px;
+    max-width: none;
+    width: auto;
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+/* Races Table specific columns */
+#races-table {
+    table-layout: auto;
+    width: 100%;
+}
+
+#races-table .col-name {
+    width: 150px;
+    min-width: 130px;
+    font-weight: 700;
+}
+
+#races-table .col-subrace {
+    width: 130px;
+    min-width: 100px;
+}
+
+#races-table .col-size {
+    width: 65px;
+    text-align: center;
+}
+
+#races-table .col-speed {
+    width: 75px;
+    text-align: center;
+}
+
+#races-table .col-language {
+    width: 140px;
+    min-width: 110px;
+    font-size: 0.88rem;
+}
+
+#races-table .col-asi {
+    width: 150px;
+    min-width: 120px;
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+#races-table .col-traits {
+    width: 200px;
+    min-width: 150px;
+    max-width: 320px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+#races-table .col-sources {
+    width: 105px;
+    min-width: 85px;
+    text-align: center;
+}
+
+#races-table .col-notes {
+    min-width: 280px;
+    max-width: none;
+    width: auto;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
 
 
 /* Responsive Hiding */
