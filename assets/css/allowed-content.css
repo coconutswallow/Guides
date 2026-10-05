@@ -1505,3 +1505,117 @@
     background: #2563eb;
     color: #ffffff;
 }
+
+/* ================================================================
+   RACES VIEW SWITCHER & SIDE-BY-SIDE COMPARISON STYLES
+   ================================================================ */
+
+.ac-view-switcher {
+    display: inline-flex;
+    background: var(--color-bg-alt, rgba(0, 0, 0, 0.05));
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+}
+
+.ac-view-switcher .ac-view-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text-muted, #64748b);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.ac-view-switcher .ac-view-tab-btn:hover {
+    color: var(--color-text, #1e293b);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.ac-view-switcher .ac-view-tab-btn.active {
+    background: var(--color-bg-light, #ffffff);
+    color: var(--color-primary, #2563eb);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .ac-view-switcher {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #383838;
+}
+
+[data-theme="dark"] .ac-view-switcher .ac-view-tab-btn {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .ac-view-switcher .ac-view-tab-btn:hover {
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .ac-view-switcher .ac-view-tab-btn.active {
+    background: #242424;
+    color: #60a5fa;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Accordion Specific Badges and Chevrons */
+.badge-lineages-count {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 10px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-primary, #2563eb);
+    margin-left: 0.4rem;
+    vertical-align: middle;
+}
+
+.badge-single-lineage {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.15rem 0.45rem;
+    border-radius: 10px;
+    background: rgba(100, 116, 139, 0.1);
+    color: var(--color-text-muted, #64748b);
+    margin-left: 0.4rem;
+    vertical-align: middle;
+}
+
+[data-theme="dark"] .badge-lineages-count {
+    background: rgba(96, 165, 250, 0.15);
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .badge-single-lineage {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+}
+
+.accordion-chevron {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    font-size: 0.75rem;
+    margin-right: 0.4rem;
+    color: var(--color-text-muted, #64748b);
+    user-select: none;
+}
+
+.ac-accordion-parent-row {
+    cursor: pointer;
+}
+
+.ac-accordion-parent-row.expanded .accordion-chevron {
+    transform: rotate(90deg);
+    color: var(--color-primary, #2563eb);
+}
+
