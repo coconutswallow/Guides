@@ -110,9 +110,14 @@ SELECT
     c.source AS class_source,
     c.hit_die,
     c.multiclassing,
+    -- Expanded Class Options (TCE) applies only to the class
+    c.expanded_options AS class_expanded_options,
     c.expanded_options,
+    -- Rage Advice: explicit separation of class vs subclass advice
+    c.notes_advice AS class_notes_advice,
+    s.notes_advice AS subclass_notes_advice,
     s.link,
-    -- Notes inheritance: combines base class advice + subclass advice
+    -- Combined notes for backwards compatibility
     NULLIF(TRIM(
         CASE 
             WHEN c.notes_advice IS NOT NULL AND s.notes_advice IS NOT NULL 

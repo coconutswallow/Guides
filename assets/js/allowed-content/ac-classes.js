@@ -119,8 +119,14 @@ export function resolveInheritedClass(sub, cls) {
         sources: extractSourceKeys(resolvedSource),
         hit_die: cls.hit_die || sub.hit_die || '—',
         multiclassing: cls.multiclassing || sub.multiclassing || '—',
-        expanded_options: cls.expanded_options || sub.expanded_options || null,
-        notes_advice: combinedNotes,
+        // Expanded Class Options (TCE) always only applies to the class, not subclass
+        expanded_options: null,
+        class_expanded_options: cls.expanded_options || null,
+        // Subclass notes_advice strictly preserves the subclass's own advice
+        notes_advice: subNotes || null,
+        subclass_notes_advice: subNotes || null,
+        class_notes_advice: parentNotes || null,
+        combined_notes_advice: combinedNotes || null,
         className: cls.name,
         classRuleset: cls.ruleset,
         classSource: cls.source,
@@ -264,7 +270,9 @@ function applyFilters() {
                     return srcObj && (srcObj.name.toLowerCase().includes(term) || srcObj.abbreviation?.toLowerCase().includes(term));
                 }) ||
                 (sub.multiclassing && sub.multiclassing.toLowerCase().includes(term)) ||
-                (sub.notes_advice && sub.notes_advice.toLowerCase().includes(term))
+                (sub.notes_advice && sub.notes_advice.toLowerCase().includes(term)) ||
+                (sub.class_notes_advice && sub.class_notes_advice.toLowerCase().includes(term)) ||
+                (sub.class_expanded_options && sub.class_expanded_options.toLowerCase().includes(term))
             );
         }
         return true;
@@ -384,6 +392,37 @@ function formatNotesAdvice(text) {
     }
     const snippet = trimmed.slice(0, 160) + '…';
     return `${renderMarkdownLinks(snippet)} <span style="font-size:0.75rem; opacity:0.6; cursor:pointer;" title="Click row to view full notes">more ↗</span>`;
+}
+
+/**
+ * Formats notes/advice for Flat View, distinguishing subclass advice from class advice.
+ * 
+ * @param {Object} sub
+ * @returns {string}
+ */
+function formatFlatNotesAdvice(sub) {
+    const hasSubAdvice = Boolean(sub.notes_advice);
+    const hasClassAdvice = Boolean(sub.class_notes_advice);
+
+    if (hasSubAdvice && hasClassAdvice) {
+        return `
+            <div>${formatNotesAdvice(sub.notes_advice)}</div>
+            <div style="font-size: 0.78rem; opacity: 0.75; margin-top: 4px; padding-top: 4px; border-top: 1px dashed var(--border-subtle, rgba(0,0,0,0.1));" title="Class-level advice applies to all ${esc(sub.className)}s">
+                <span style="font-weight: 600; opacity: 0.9;">Class:</span> ${formatSnippet(sub.class_notes_advice, 45)}
+            </div>
+        `;
+    }
+    if (hasSubAdvice) {
+        return formatNotesAdvice(sub.notes_advice);
+    }
+    if (hasClassAdvice) {
+        return `
+            <div style="font-size: 0.85rem; opacity: 0.85;" title="Class-level advice applies to all ${esc(sub.className)}s">
+                <span style="font-weight: 600; opacity: 0.9;">Class:</span> ${formatNotesAdvice(sub.class_notes_advice)}
+            </div>
+        `;
+    }
+    return '<span style="opacity: 0.4;">—</span>';
 }
 
 /**
@@ -595,7 +634,7 @@ function renderFlatTable(isAdmin = false) {
                             ${esc(formatMulticlassShort(sub.multiclassing))}
                         </td>
                         <td class="col-notes">
-                            ${formatNotesAdvice(sub.notes_advice)}
+                            ${formatFlatNotesAdvice(sub)}
                         </td>
                     </tr>
                 `).join('')}
@@ -806,16 +845,25 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
 
         ${cls.expanded_options ? `
             <div class="detail-section">
-                <h4>Expanded Class Options (TCE)</h4>
+                <h4>${esc(cls.name)} Expanded Class Options (TCE)</h4>
                 <div style="white-space: pre-wrap; font-size: 0.92rem; line-height: 1.6;">${renderMarkdownLinks(cls.expanded_options)}</div>
             </div>
         ` : ''}
 
-        ${currentSub.notes_advice || cls.notes_advice ? `
+        ${cls.notes_advice ? `
             <div class="detail-section">
-                <h4>Notes & Server Rulings</h4>
+                <h4>${esc(cls.name)} Class Rulings & Advice</h4>
                 <div style="white-space: pre-wrap; font-size: 0.92rem; line-height: 1.6; color: var(--color-secondary);">
-                    ${renderMarkdownLinks(currentSub.notes_advice || cls.notes_advice)}
+                    ${renderMarkdownLinks(cls.notes_advice)}
+                </div>
+            </div>
+        ` : ''}
+
+        ${currentSub.notes_advice ? `
+            <div class="detail-section">
+                <h4>${esc(currentSub.name)} Subclass Rulings & Advice</h4>
+                <div style="white-space: pre-wrap; font-size: 0.92rem; line-height: 1.6; color: var(--color-secondary);">
+                    ${renderMarkdownLinks(currentSub.notes_advice)}
                 </div>
             </div>
         ` : ''}
