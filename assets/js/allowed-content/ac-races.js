@@ -324,6 +324,28 @@ function renderView() {
 }
 
 /**
+ * Cleanly formats racial traits and feature snippets, preserving line breaks via <br> without unwanted whitespace.
+ * 
+ * @param {string} text - Raw traits text
+ * @returns {string} Sanitized HTML string
+ */
+export function formatTraits(text) {
+    if (!text || !text.trim() || text === '—') return '—';
+    return esc(text.trim()).split(/\r?\n/).map(l => l.trim()).filter(Boolean).join('<br>');
+}
+
+/**
+ * Cleanly formats guild rulings and notes, rendering markdown links without unwanted leading whitespace.
+ * 
+ * @param {string} text - Raw notes / advice text
+ * @returns {string} Sanitized HTML string with links
+ */
+export function formatNotesAdvice(text) {
+    if (!text || !text.trim() || text === '—') return '—';
+    return renderMarkdownLinks(text);
+}
+
+/**
  * Renders the unified flat table with columns:
  * | Race/Species | Subrace | Size | Speed | Language | ASI | Extra | Source | Notes/Rage Advice |
  * All information is directly visible in the main table.
@@ -393,17 +415,9 @@ function renderRacesTable(isAdmin = false) {
                             <td class="col-asi">
                                 ${formatASI(item)}
                             </td>
-                            <td class="col-traits" style="white-space: pre-wrap; line-height: 1.45;">
-                                ${esc(item.extra || '—')}
-                            </td>
-                            <td class="col-sources" style="text-align: center;">
-                                ${renderSourceBadges(item.sources)}
-                            </td>
-                            <td class="col-notes" style="white-space: pre-wrap; line-height: 1.45;">
-                                ${item.notes_advice && item.notes_advice.trim() && item.notes_advice !== '—'
-                                    ? renderMarkdownLinks(item.notes_advice)
-                                    : '—'}
-                            </td>
+                            <td class="col-traits">${formatTraits(item.extra)}</td>
+                            <td class="col-sources" style="text-align: center;">${renderSourceBadges(item.sources)}</td>
+                            <td class="col-notes">${formatNotesAdvice(item.notes_advice)}</td>
                         </tr>
                     `;
                 }).join('')}
@@ -526,16 +540,14 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
         ${currentSub.extra ? `
             <div class="detail-section">
                 <h4>Racial Traits & Features</h4>
-                <p style="white-space: pre-wrap; line-height: 1.6;">${esc(currentSub.extra)}</p>
+                <p style="line-height: 1.6;">${formatTraits(currentSub.extra)}</p>
             </div>
         ` : ''}
 
         ${currentSub.notes_advice ? `
             <div class="detail-section">
                 <h4>Guild Notes / Rage Advice</h4>
-                <div class="advice-content" style="white-space: pre-wrap; line-height: 1.6; background: rgba(var(--palette-brand-highlight), 0.06); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--palette-brand-highlight);">
-                    ${esc(currentSub.notes_advice)}
-                </div>
+                <div class="advice-content" style="line-height: 1.6; background: rgba(var(--palette-brand-highlight), 0.06); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--palette-brand-highlight);">${formatNotesAdvice(currentSub.notes_advice)}</div>
             </div>
         ` : ''}
 

@@ -228,8 +228,13 @@ export function resolveSourceLink(rawLink = '') {
  * @returns {string} HTML string with rendered anchor tags
  */
 export function renderMarkdownLinks(text, stopPropagation = true) {
-    if (!text) return '—';
-    let safe = esc(text);
+    if (!text || !text.trim() || text === '—') return '—';
+    const cleaned = String(text)
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .join('\n')
+        .trim();
+    let safe = esc(cleaned);
     safe = safe.replace(/\r?\n/g, '<br>');
     const stopProp = stopPropagation ? ' onclick="event.stopPropagation()"' : '';
     return safe.replace(/\[([^\]]+)\]\(((?:https?:\/\/|\/|\.\/)[^\s\)\"'>]+)\)/g, (match, label, url) => {

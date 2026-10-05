@@ -272,21 +272,14 @@
     text-align: center;
 }
 
-#sources-table .col-allowed-content {
-    width: 180px;
-    max-width: 220px;
-    font-size: 0.88rem;
-    line-height: 1.4;
-    word-break: normal;
-    overflow-wrap: break-word;
-}
-
+#sources-table .col-allowed-content,
 #sources-table .col-notes {
-    min-width: 320px;
-    max-width: none;
-    width: auto;
+    width: 32%;
+    min-width: 280px;
     font-size: 0.88rem;
     line-height: 1.45;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 /* Races Table specific columns */
@@ -335,7 +328,7 @@
     max-width: 320px;
     font-size: 0.85rem;
     line-height: 1.45;
-    white-space: pre-wrap;
+    white-space: normal;
     word-break: break-word;
 }
 
@@ -351,7 +344,7 @@
     width: auto;
     font-size: 0.88rem;
     line-height: 1.45;
-    white-space: pre-wrap;
+    white-space: normal;
     word-break: break-word;
 }
 
