@@ -25,3 +25,7 @@ temp/
 # Generated schema docs
 schema.md
 schema.csv
+
+# Synology NAS metadata
+@eaDir/
+**/@eaDir/

@@ -49,7 +49,8 @@ import {
     formatSnippet, 
     renderSourceBadges, 
     extractSourceKeys,
-    renderMarkdownLinks 
+    renderMarkdownLinks,
+    resolveSourceLink
 } from './ac-ui-utils.js';
 
 export {
@@ -393,9 +394,13 @@ function formatNotesAdvice(text) {
  */
 function renderLinkBadge(link) {
     if (!link) return '<span style="opacity: 0.4;">—</span>';
+    const resolved = resolveSourceLink(link);
+    const isArcana = link.includes('/arcana/') || link.includes('arcana');
+    const label = isArcana ? 'Arcana ↗' : (link.startsWith('/') ? 'Guide ↗' : 'Document ↗');
+    const title = isArcana ? 'Open Hawthorne Arcana guide' : 'Open source document';
     return `
-        <a href="${esc(link)}" target="_blank" rel="noopener noreferrer" class="ac-link-badge" title="Open external source document" onclick="event.stopPropagation();">
-            Document ↗
+        <a href="${esc(resolved)}" target="_blank" rel="noopener noreferrer" class="ac-link-badge" title="${title}" onclick="event.stopPropagation();">
+            ${label}
         </a>
     `;
 }
@@ -735,8 +740,8 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
                         ${esc(currentSub.ruleset || cls.ruleset)} Ruleset
                     </span>
                     ${currentSub.link ? `
-                        <a href="${esc(currentSub.link)}" target="_blank" rel="noopener noreferrer" class="ac-link-badge" style="font-size: 0.85rem; padding: 3px 8px;">
-                            External Doc ↗
+                        <a href="${esc(resolveSourceLink(currentSub.link))}" target="_blank" rel="noopener noreferrer" class="ac-link-badge" style="font-size: 0.85rem; padding: 3px 8px;">
+                            ${(currentSub.link.includes('/arcana/') || currentSub.link.includes('arcana')) ? 'Arcana Guide ↗' : 'External Doc ↗'}
                         </a>
                     ` : ''}
                 </div>
@@ -930,8 +935,8 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     <input type="text" id="subclass-input-source" required class="ac-form-input" value="${esc(subclassItem?.source || 'PHB2014')}" placeholder="e.g. PHB2014, TCE, XGE, HTA">
                 </div>
                 <div class="ac-form-group">
-                    <label for="subclass-input-link">External Document Link</label>
-                    <input type="url" id="subclass-input-link" class="ac-form-input" value="${esc(subclassItem?.link || '')}" placeholder="https://drive.google.com/...">
+                    <label for="subclass-input-link">Document Link</label>
+                    <input type="text" id="subclass-input-link" class="ac-form-input" value="${esc(subclassItem?.link || '')}" placeholder="https://... or /arcana/...">
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-notes">Subclass Notes / Advice</label>
