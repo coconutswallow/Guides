@@ -180,12 +180,39 @@ export async function getSubraces() {
 export async function getClasses() {
     const { data, error } = await supabase
         .from('ac_classes')
-        .select('*')
+        .select('*, subclasses:ac_subclasses(*)')
         .order('display_order', { ascending: true })
         .order('name', { ascending: true });
 
     if (error) {
         console.error('Error fetching classes:', error);
+        return [];
+    }
+
+    if (data) {
+        data.forEach(cls => {
+            if (cls.subclasses && Array.isArray(cls.subclasses)) {
+                cls.subclasses.sort((a, b) => (Number(a.display_order) || 0) - (Number(b.display_order) || 0));
+            }
+        });
+    }
+
+    return data;
+}
+
+/**
+ * Fetches all Subclasses from Supabase with joined parent class info.
+ * 
+ * @returns {Promise<Array>} Array of subclass objects
+ */
+export async function getSubclasses() {
+    const { data, error } = await supabase
+        .from('ac_subclasses')
+        .select('*, class:ac_classes(*)')
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching subclasses:', error);
         return [];
     }
 
@@ -970,6 +997,165 @@ export async function deleteSubrace(id) {
         return { success: true, error: null };
     } catch (err) {
         console.error('Exception deleting subrace:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Class record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} classData - Object containing new class fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createClass(classData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_classes')
+            .insert(classData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating class:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating class:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Class record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the class to update
+ * @param {Object} updates - Object containing modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateClass(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_classes')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating class:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating class:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Class record from Supabase.
+ * Cascade-deletes all associated subclasses.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the class to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteClass(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_classes')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting class:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting class:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Subclass record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} subclassData - Object containing new subclass fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createSubclass(subclassData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_subclasses')
+            .insert(subclassData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating subclass:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating subclass:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Subclass record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the subclass to update
+ * @param {Object} updates - Object containing modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateSubclass(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_subclasses')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating subclass:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating subclass:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Subclass record from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the subclass to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteSubclass(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_subclasses')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting subclass:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting subclass:', err);
         return { success: false, error: err };
     }
 }

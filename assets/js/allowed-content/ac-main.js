@@ -20,6 +20,7 @@
 
 import { initSources, filterSources } from './ac-sources.js';
 import { initRaces, filterRaces } from './ac-races.js';
+import { initClasses, filterClasses, openClassForm } from './ac-classes.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
 import { initTooltips, debounce } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
@@ -78,6 +79,16 @@ export const TAB_REGISTRY = {
         adminActions: [
             { id: 'btn-add-race', label: '+ Add Race / Lineage', primary: true, event: 'ac:open-race-form' }
         ]
+    },
+    classes: {
+        id: 'classes',
+        viewId: 'ac-view-classes',
+        searchPlaceholder: 'Search classes, subclasses, rulesets, categories, sources...',
+        init: (forceRefresh) => initClasses(forceRefresh),
+        filter: (term) => filterClasses(term),
+        adminActions: [
+            { id: 'btn-add-class', label: '+ Add Class / Subclass', primary: true, event: 'ac:open-class-form' }
+        ]
     }
 };
 
@@ -116,6 +127,19 @@ async function init() {
         if (activeTab === 'races') {
             await TAB_REGISTRY.races.init(true);
         }
+    });
+
+    // Listen for classes mutations across tabs to ensure view remains synced
+    window.addEventListener('ac:classes-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'classes') {
+            await TAB_REGISTRY.classes.init(true);
+        }
+    });
+
+    // Listen for admin toolbar action to open class form
+    window.addEventListener('ac:open-class-form', () => {
+        openClassForm();
     });
 
     // Initialize common UI utilities

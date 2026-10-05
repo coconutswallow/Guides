@@ -286,15 +286,35 @@ export function getUniqueSortedLabels(items, labelField, orderField = 'display_o
 }
 
 /**
- * Renders an array of source keys into interactive source badges.
- * Resolves source metadata dynamically from the in-memory cache.
+ * Normalizes and extracts individual source keys from an array, string, or comma-separated string.
+ * Supports strings like 'ERLW, TCE', 'SCAG / XGE', or arrays like ['PHB2014', 'MPMM'].
  * 
- * @param {Array<string>} sourcesArray - Array of source keys (e.g. ['SCAG', 'MTF'])
+ * @param {Array<string>|string|null|undefined} src
+ * @returns {Array<string>}
+ */
+export function extractSourceKeys(src) {
+    if (!src) return [];
+    if (Array.isArray(src)) {
+        return src.flatMap(s => typeof s === 'string' ? s.split(/[,/]/).map(x => x.trim()).filter(Boolean) : s).filter(Boolean);
+    }
+    if (typeof src === 'string') {
+        return src.split(/[,/]/).map(s => s.trim()).filter(Boolean);
+    }
+    return [];
+}
+
+/**
+ * Renders an array or string of source keys into interactive source badges.
+ * Resolves source metadata dynamically from the in-memory cache.
+ * Supports both array format (['SCAG', 'MTF']) and string format ('TCE', 'ERLW, TCE').
+ * 
+ * @param {Array<string>|string} sourcesInput - Array of source keys or string of source(s)
  * @param {boolean} isVariant - Whether this badge is for a variant printing
  * @returns {string} HTML string of badges
  */
-export function renderSourceBadges(sourcesArray, isVariant = false) {
-    if (!sourcesArray || !Array.isArray(sourcesArray) || sourcesArray.length === 0) {
+export function renderSourceBadges(sourcesInput, isVariant = false) {
+    const sourcesArray = extractSourceKeys(sourcesInput);
+    if (!sourcesArray || sourcesArray.length === 0) {
         return '<span style="opacity:0.5;">—</span>';
     }
 

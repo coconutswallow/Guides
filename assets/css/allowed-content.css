@@ -233,6 +233,7 @@
 /* Class specific columns */
 .col-subclass { opacity: 0.8; font-style: italic; }
 .col-hitdie { width: 80px; text-align: center; font-weight: 700; color: var(--color-secondary); }
+.col-ruleset { width: 85px; text-align: center; }
 .col-multiclass { font-size: 0.85rem; opacity: 0.7; }
 
 /* Snippet Columns */
