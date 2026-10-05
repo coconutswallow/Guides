@@ -25,6 +25,15 @@ UPDATE public.ac_subclasses
 SET link = NULL
 WHERE name = 'Battlerager' AND source = 'SCAG';
 
+-- Ensure rage advice applies to both Battlerager subclasses (SCAG and HTA)
+UPDATE public.ac_subclasses
+SET notes_advice = (
+    SELECT notes_advice 
+    FROM public.ac_subclasses 
+    WHERE name = 'Battlerager' AND source = 'SCAG'
+)
+WHERE name = 'Battlerager' AND source = 'HTA';
+
 UPDATE public.ac_sources
 SET link = '/Guides/arcana/'
 WHERE source_key = 'HTA';

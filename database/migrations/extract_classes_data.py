@@ -276,6 +276,13 @@ def main():
                     })
                 subclass_order += 10.0
 
+    # Ensure rage advice applies to all Battlerager subclasses (SCAG & HTA)
+    battlerager_advice = next((s['notes_advice'] for s in subclasses if s['name'] == 'Battlerager' and s.get('notes_advice')), None)
+    if battlerager_advice:
+        for s in subclasses:
+            if s['name'] == 'Battlerager' and not s.get('notes_advice'):
+                s['notes_advice'] = battlerager_advice
+
     print(json.dumps({
         'classes': classes,
         'subclasses': subclasses
