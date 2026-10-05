@@ -201,8 +201,26 @@ export function resolveSourceLink(rawLink = '') {
         return trimmed;
     }
 
-    const base = (typeof BASE_URL !== 'undefined' ? BASE_URL : (typeof window !== 'undefined' && window.BASE_URL ? window.BASE_URL : '')) || '/Guides';
-    const cleanBase = base === '/' ? '' : base.replace(/\/$/, '');
+    // Resolve base URL from window, environment, or current location pathname
+    let base = '';
+    if (typeof window !== 'undefined') {
+        if (window.BASE_URL && window.BASE_URL !== '/') {
+            base = window.BASE_URL;
+        } else if (window.location && window.location.pathname) {
+            const match = window.location.pathname.match(/^(\/[^/]+)/);
+            if (match && match[1].toLowerCase() === '/guides') {
+                base = match[1];
+            }
+        }
+    }
+    if (!base && typeof BASE_URL !== 'undefined' && BASE_URL && BASE_URL !== '/') {
+        base = BASE_URL;
+    }
+    if (!base || base === '/') {
+        base = '/Guides';
+    }
+
+    const cleanBase = base.replace(/\/$/, '');
 
     if (trimmed.startsWith('/')) {
         if (cleanBase && !trimmed.startsWith(cleanBase + '/')) {

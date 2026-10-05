@@ -206,17 +206,17 @@ def main():
 
                 # Map Hawthorne Arcana subclasses to specific site section URLs
                 ARCANA_SUBCLASS_LINKS = {
-                    'battlerager': '/arcana/battlerager/',
-                    'purpledragonknight': '/arcana/purple-dragon-knight/',
-                    'serenity': '/arcana/serenity-monk/',
-                    'artificer': '/arcana/artificer-wizard/',
+                    'battlerager': '/Guides/arcana/battlerager/',
+                    'purpledragonknight': '/Guides/arcana/purple-dragon-knight/',
+                    'serenity': '/Guides/arcana/serenity-monk/',
+                    'artificer': '/Guides/arcana/artificer-wizard/',
                 }
                 if resolved_s_src and 'HTA' in resolved_s_src and n_s in ARCANA_SUBCLASS_LINKS:
                     link = ARCANA_SUBCLASS_LINKS[n_s]
                 elif clean_s_name == 'Battlerager' and (resolved_s_src == 'SCAG' or resolved_s_src == 'HTA'):
-                    link = '/arcana/battlerager/'
+                    link = '/Guides/arcana/battlerager/'
                 elif link and '1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC' in link:
-                    link = ARCANA_SUBCLASS_LINKS.get(n_s, '/arcana/')
+                    link = ARCANA_SUBCLASS_LINKS.get(n_s, '/Guides/arcana/')
 
                 if is_dual_ranger:
                     ranger_parent = classes[-2]

@@ -34,6 +34,9 @@ body_class: "my-class" # Adds a custom CSS class to the
         <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
         <link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
         <script type="module" src="{{ '/assets/js/heading-links.js' | relative_url }}"></script>
+        <script>
+            window.BASE_URL = "{{ site.baseurl }}";
+        </script>
 
 
         <link rel="icon" type="image/png" href="{{ '/assets/thumbnails/guild-icon.png' | relative_url }}">
@@ -270,7 +273,7 @@ body_class: "my-class" # Adds a custom CSS class to the
 
         <script>
             // 1. BASE URL DEFINITION (Guaranteed to run first for search.js)
-            const BASE_URL = "{{ site.baseurl }}";
+            const BASE_URL = window.BASE_URL || "{{ site.baseurl }}";
 
             // 2. CORE MENU TOGGLE LOGIC (Main Hamburger/Close Button)
             const menuToggle = document.getElementById('menu-toggle');
