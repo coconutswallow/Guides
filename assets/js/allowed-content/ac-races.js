@@ -93,7 +93,8 @@ import {
     esc, 
     formatSnippet, 
     renderSourceBadges, 
-    renderSourceTagPicker 
+    renderSourceTagPicker,
+    renderMarkdownLinks 
 } from './ac-ui-utils.js';
 
 export {
@@ -111,6 +112,8 @@ let availableSourceKeys = [];
 let currentViewMode = 'species'; // 'species' | 'subraces'
 let currentSearchTerm = '';
 let selectedSourceFilter = 'ALL';
+let expandedRaceIds = new Set();
+let allExpanded = false;
 
 /**
  * Calculates the next sequential check_id (e.g. 'RAC_0248') based on highest existing number.
@@ -241,6 +244,9 @@ export async function initRaces(forceRefresh = false) {
 export function filterRaces(searchTerm = '') {
     currentSearchTerm = searchTerm;
     applyFilters();
+    if (searchTerm.trim()) {
+        filteredRaces.forEach(r => expandedRaceIds.add(r.id));
+    }
     renderView();
 }
 
@@ -328,10 +334,16 @@ function renderView() {
                     <button class="ac-toggle-btn ${currentViewMode === 'species' ? 'active' : ''}" id="btn-view-species" title="Group by base species">
                         Species View (${filteredRaces.length})
                     </button>
-                    <button class="ac-toggle-btn ${currentViewMode === 'subraces' ? 'active' : ''}" id="btn-view-subraces" title="Show all individual lineages">
+                    <button class="ac-toggle-btn ${currentViewMode === 'subraces' ? 'active' : ''}" id="btn-view-subraces" title="Show all individual lineages (spreadsheet view)">
                         All Lineages (${filteredSubraces.length})
                     </button>
                 </div>
+
+                ${currentViewMode === 'species' ? `
+                    <button class="ac-toggle-btn" id="btn-toggle-all-details" title="Expand or collapse all lineage details in table">
+                        ${allExpanded ? '⊟ Collapse Details' : '⊞ Expand Lineages'}
+                    </button>
+                ` : ''}
 
                 <!-- Source Filter Dropdown -->
                 <select class="ac-source-filter-select" id="ac-races-source-filter" aria-label="Filter by Source">
@@ -356,6 +368,7 @@ function renderView() {
 
 /**
  * Renders the Species (Grouped) table view.
+ * Embeds full lineage details directly in expandable table rows for rich in-table discovery.
  */
 function renderSpeciesTable() {
     if (filteredRaces.length === 0) {
@@ -372,11 +385,11 @@ function renderSpeciesTable() {
         <table class="ac-table" id="races-species-table">
             <thead>
                 <tr>
-                    <th class="col-name" style="width: 250px;">Species / Base Race</th>
+                    <th class="col-name" style="width: 240px;">Species / Base Race</th>
                     <th class="col-subraces">Subraces & Lineages</th>
                     <th class="col-size hide-mobile" style="width: 140px;">Size & Speed</th>
                     <th class="col-asi hide-tablet">ASI Overview</th>
-                    <th class="col-sources" style="width: 200px;">Sources</th>
+                    <th class="col-sources" style="width: 180px;">Sources</th>
                 </tr>
             </thead>
             <tbody>
@@ -385,9 +398,10 @@ function renderSpeciesTable() {
                     const firstSub = subs[0] || {};
                     const sizes = Array.from(new Set(subs.map(s => s.size).filter(Boolean))).join('/') || '—';
                     const speeds = Array.from(new Set(subs.map(s => s.speed).filter(Boolean))).join('/') || '—';
+                    const isExpanded = expandedRaceIds.has(race.id);
                     
                     return `
-                        <tr data-race-id="${esc(race.id)}">
+                        <tr class="ac-species-row" data-race-id="${esc(race.id)}">
                             <td class="col-name">
                                 <div class="name-cell">
                                     <span>${esc(race.name)}</span>
@@ -397,13 +411,16 @@ function renderSpeciesTable() {
                             <td class="col-subraces">
                                 <div class="ac-subrace-chips">
                                     ${subs.map((s, idx) => {
-                                        const label = s.subrace && s.subrace !== 'None' ? s.subrace : 'Standard';
+                                        const label = getSubraceLabel(s);
                                         return `
                                             <span class="ac-subrace-chip" data-race-id="${esc(race.id)}" data-subrace-idx="${idx}" title="Click to view details for ${esc(label)}">
                                                 ${esc(label)}
                                             </span>
                                         `;
                                     }).join('')}
+                                    <button type="button" class="ac-btn-inline-toggle" data-race-id="${esc(race.id)}" title="Toggle lineage details in table">
+                                        ${isExpanded ? '▲ Hide Details' : `▼ Details (${subs.length})`}
+                                    </button>
                                 </div>
                             </td>
                             <td class="col-size hide-mobile">
@@ -416,6 +433,43 @@ function renderSpeciesTable() {
                                 ${renderSourceBadges(race.sources)}
                             </td>
                         </tr>
+                        <tr class="ac-species-drawer-row ${isExpanded ? '' : 'ac-drawer-collapsed'}" id="drawer-${esc(race.id)}" data-parent-race="${esc(race.id)}">
+                            <td colspan="5" class="ac-drawer-cell">
+                                <div class="ac-inline-subraces-wrapper">
+                                    <table class="ac-table ac-inline-subtable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 150px;">Lineage</th>
+                                                <th style="width: 80px;">Size</th>
+                                                <th style="width: 80px;">Speed</th>
+                                                <th style="width: 130px;">Language</th>
+                                                <th style="width: 150px;">ASI</th>
+                                                <th>Traits</th>
+                                                <th>Notes / Advice</th>
+                                                <th style="width: 120px;">Sources</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${subs.map((s, idx) => `
+                                                <tr class="ac-inline-subrace-row" data-race-id="${esc(race.id)}" data-subrace-idx="${idx}">
+                                                    <td>
+                                                        <strong>${esc(getSubraceLabel(s))}</strong>
+                                                        ${s.check_id ? `<br><small style="opacity:0.6; font-family:monospace;">${esc(s.check_id)}</small>` : ''}
+                                                    </td>
+                                                    <td>${esc(s.size || '—')}</td>
+                                                    <td>${esc(s.speed || '—')}${s.speed && !s.speed.includes('fly') ? ' ft' : ''}</td>
+                                                    <td>${esc(s.language || 'Common')}</td>
+                                                    <td class="col-asi">${formatASI(s)}</td>
+                                                    <td class="col-traits" style="white-space: pre-wrap; line-height: 1.4;">${esc(s.extra || '—')}</td>
+                                                    <td class="col-notes" style="white-space: pre-wrap; line-height: 1.4;">${renderMarkdownLinks(s.notes_advice || '—')}</td>
+                                                    <td>${renderSourceBadges(s.sources)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
                     `;
                 }).join('')}
             </tbody>
@@ -425,13 +479,14 @@ function renderSpeciesTable() {
 
 /**
  * Renders the All Subraces (Flat) table view.
+ * 1-to-1 parity with the original Allowed Content Excel spreadsheet.
  */
 function renderSubracesTable() {
     if (filteredSubraces.length === 0) {
         return `
             <table class="ac-table">
                 <tbody>
-                    <tr><td colspan="8" style="text-align:center; padding: 3rem;">No lineages found matching your criteria.</td></tr>
+                    <tr><td colspan="9" style="text-align:center; padding: 3rem;">No lineages found matching your criteria.</td></tr>
                 </tbody>
             </table>
         `;
@@ -441,14 +496,15 @@ function renderSubracesTable() {
         <table class="ac-table" id="races-subraces-table">
             <thead>
                 <tr>
-                    <th class="col-name" style="width: 180px;">Species</th>
-                    <th class="col-subrace" style="width: 170px;">Subrace</th>
-                    <th class="col-size hide-mobile" style="width: 90px;">Size</th>
-                    <th class="col-speed hide-tablet" style="width: 90px;">Speed</th>
-                    <th class="col-asi" style="width: 170px;">ASI</th>
+                    <th class="col-name" style="width: 170px;">Species</th>
+                    <th class="col-subrace" style="width: 160px;">Subrace / Lineage</th>
+                    <th class="col-size hide-mobile" style="width: 80px;">Size</th>
+                    <th class="col-speed hide-tablet" style="width: 80px;">Speed</th>
+                    <th class="col-language hide-mobile" style="width: 140px;">Language</th>
+                    <th class="col-asi" style="width: 160px;">ASI</th>
                     <th class="col-traits hide-mobile">Traits</th>
                     <th class="col-notes hide-tablet">Notes / Advice</th>
-                    <th class="col-sources" style="width: 160px;">Sources</th>
+                    <th class="col-sources" style="width: 150px;">Sources</th>
                 </tr>
             </thead>
             <tbody>
@@ -461,14 +517,15 @@ function renderSubracesTable() {
                             </div>
                         </td>
                         <td class="col-subrace">
-                            <strong>${esc(item.subrace && item.subrace !== 'None' ? item.subrace : 'Standard')}</strong>
-                            ${item.check_id ? `<br><small style="opacity:0.5; font-family:monospace;">${esc(item.check_id)}</small>` : ''}
+                            <strong>${esc(getSubraceLabel(item))}</strong>
+                            ${item.check_id ? `<br><small style="opacity:0.6; font-family:monospace;">${esc(item.check_id)}</small>` : ''}
                         </td>
                         <td class="col-size hide-mobile">${esc(item.size || '—')}</td>
                         <td class="col-speed hide-tablet">${esc(item.speed || '—')}${item.speed && !item.speed.includes('fly') ? ' ft' : ''}</td>
+                        <td class="col-language hide-mobile">${esc(item.language || 'Common')}</td>
                         <td class="col-asi">${formatASI(item)}</td>
-                        <td class="col-traits hide-mobile">${formatSnippet(item.extra, 70)}</td>
-                        <td class="col-notes hide-tablet">${formatSnippet(item.notes_advice, 60)}</td>
+                        <td class="col-traits hide-mobile" style="white-space: pre-wrap; line-height: 1.4;">${esc(item.extra || '—')}</td>
+                        <td class="col-notes hide-tablet" style="white-space: pre-wrap; line-height: 1.4;">${renderMarkdownLinks(item.notes_advice || '—')}</td>
                         <td class="col-sources">${renderSourceBadges(item.sources)}</td>
                     </tr>
                 `).join('')}
@@ -478,11 +535,12 @@ function renderSubracesTable() {
 }
 
 /**
- * Attaches event handlers for toolbar controls (view toggles, source filter).
+ * Attaches event handlers for toolbar controls (view toggles, expand toggle, source filter).
  */
 function setupControls() {
     const btnSpecies = document.getElementById('btn-view-species');
     const btnSubraces = document.getElementById('btn-view-subraces');
+    const btnToggleAll = document.getElementById('btn-toggle-all-details');
     const sourceSelect = document.getElementById('ac-races-source-filter');
 
     if (btnSpecies) {
@@ -500,6 +558,18 @@ function setupControls() {
                 currentViewMode = 'subraces';
                 renderView();
             }
+        };
+    }
+
+    if (btnToggleAll) {
+        btnToggleAll.onclick = () => {
+            allExpanded = !allExpanded;
+            if (allExpanded) {
+                filteredRaces.forEach(r => expandedRaceIds.add(r.id));
+            } else {
+                expandedRaceIds.clear();
+            }
+            renderView();
         };
     }
 
@@ -530,8 +600,22 @@ function attachRowListeners() {
         });
     });
 
-    // Row clicks in Species table
-    container.querySelectorAll('#races-species-table tbody tr').forEach(row => {
+    // Inline toggle button on species row -> expands / collapses drawer
+    container.querySelectorAll('.ac-btn-inline-toggle').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const raceId = btn.dataset.raceId;
+            if (expandedRaceIds.has(raceId)) {
+                expandedRaceIds.delete(raceId);
+            } else {
+                expandedRaceIds.add(raceId);
+            }
+            renderView();
+        });
+    });
+
+    // Row clicks in Species table (only for main species rows, not drawer rows)
+    container.querySelectorAll('#races-species-table tbody tr.ac-species-row').forEach(row => {
         row.addEventListener('click', () => {
             const raceId = row.dataset.raceId;
             const race = allRaces.find(r => r.id === raceId);
@@ -539,7 +623,18 @@ function attachRowListeners() {
         });
     });
 
-    // Row clicks in Subraces table
+    // Row clicks in drawer subtable -> opens modal for that lineage
+    container.querySelectorAll('.ac-inline-subrace-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const raceId = row.dataset.raceId;
+            const subIdx = parseInt(row.dataset.subraceIdx, 10) || 0;
+            const race = allRaces.find(r => r.id === raceId);
+            if (race) showRaceDetail(race, subIdx);
+        });
+    });
+
+    // Row clicks in Subraces table (All Lineages)
     container.querySelectorAll('#races-subraces-table tbody tr').forEach(row => {
         row.addEventListener('click', () => {
             const subraceId = row.dataset.subraceId;
@@ -565,7 +660,9 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
     const isAdmin = getAdminMode();
     const subraces = race.subraces || [];
     const currentSub = subraces[activeSubraceIndex] || subraces[0] || {};
-    const subraceName = currentSub.subrace && currentSub.subrace !== 'None' ? currentSub.subrace : '';
+    const subraceName = currentSub.subrace && currentSub.subrace !== 'None' 
+        ? currentSub.subrace 
+        : (subraces.length > 1 ? getSubraceLabel(currentSub) : '');
 
     const html = `
         <div class="detail-header">
@@ -594,12 +691,13 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
                 <div class="ac-modal-nav-title">Select Subrace / Lineage (${subraces.length} available):</div>
                 <div class="ac-modal-subrace-tabs">
                     ${subraces.map((s, idx) => {
-                        const label = s.subrace && s.subrace !== 'None' ? s.subrace : 'Standard';
+                        const label = getSubraceLabel(s);
                         const isActive = idx === activeSubraceIndex;
+                        const hasDistinctSources = s.sources?.length && label !== s.sources.join(', ');
                         return `
                             <button class="ac-modal-tab-btn ${isActive ? 'active' : ''}" data-idx="${idx}">
                                 <span>${esc(label)}</span>
-                                ${s.sources?.length ? `<span style="opacity: 0.7; font-size: 0.75em;">(${esc(s.sources.join(', '))})</span>` : ''}
+                                ${hasDistinctSources ? `<span style="opacity: 0.7; font-size: 0.75em;">(${esc(s.sources.join(', '))})</span>` : ''}
                             </button>
                         `;
                     }).join('')}
@@ -724,38 +822,68 @@ function renderVariantsSection(race, currentSub) {
 }
 
 /**
+ * Checks whether an ability score value is a valid numeric modifier.
+ * Filters out null, undefined, 'null', 'undefined', 'none', '-', '0', and 0.
+ * 
+ * @param {*} val - Value to check
+ * @returns {boolean} True if value is a valid modifier
+ */
+export function isValidMod(val) {
+    if (val === null || val === undefined) return false;
+    const s = String(val).trim().toLowerCase();
+    if (!s || s === 'null' || s === 'undefined' || s === 'none' || s === '-' || s === '0') return false;
+    return true;
+}
+
+/**
  * Formats Ability Score Increases into a readable string.
  * Handles both subrace records and JSON variant objects.
+ * Filters out null and zero values to prevent 'CON null' artifacts.
  * 
  * @param {Object} r - Record containing ability score values
  * @returns {string} Formatted string (e.g. "DEX +2, WIS +1")
  */
-function formatASI(r) {
+export function formatASI(r) {
     if (!r) return '—';
 
-    // Support nested asi object if present in JSON variants
+    // Support nested asi object if present in JSON variants or database
     if (r.asi && typeof r.asi === 'object') {
         if (r.asi.custom) return esc(r.asi.custom);
+        if (r.asi.choice) return esc(r.asi.choice);
         const parts = [];
         for (const [k, v] of Object.entries(r.asi)) {
-            parts.push(`${k.toUpperCase()} ${Number(v) > 0 ? '+' : ''}${v}`);
+            if (isValidMod(v)) {
+                const num = Number(v);
+                const sign = !isNaN(num) && num > 0 ? '+' : '';
+                parts.push(`${k.toUpperCase()} ${sign}${v}`);
+            }
         }
         if (parts.length > 0) return parts.join(', ');
     }
 
     const mods = [];
-    if (r.str && r.str !== '-') mods.push(`STR ${Number(r.str) > 0 ? '+' : ''}${r.str}`);
-    if (r.dex && r.dex !== '-') mods.push(`DEX ${Number(r.dex) > 0 ? '+' : ''}${r.dex}`);
-    if (r.con && r.con !== '-') mods.push(`CON ${Number(r.con) > 0 ? '+' : ''}${r.con}`);
-    
-    const intVal = r.int_stat ?? r.int;
-    if (intVal && intVal !== '-') mods.push(`INT ${Number(intVal) > 0 ? '+' : ''}${intVal}`);
-    
-    if (r.wis && r.wis !== '-') mods.push(`WIS ${Number(r.wis) > 0 ? '+' : ''}${r.wis}`);
-    if (r.cha && r.cha !== '-') mods.push(`CHA ${Number(r.cha) > 0 ? '+' : ''}${r.cha}`);
+    const stats = [
+        { label: 'STR', val: r.str },
+        { label: 'DEX', val: r.dex },
+        { label: 'CON', val: r.con },
+        { label: 'INT', val: r.int_stat ?? r.int },
+        { label: 'WIS', val: r.wis },
+        { label: 'CHA', val: r.cha }
+    ];
+
+    for (const stat of stats) {
+        if (isValidMod(stat.val)) {
+            const num = Number(stat.val);
+            const sign = !isNaN(num) && num > 0 ? '+' : '';
+            mods.push(`${stat.label} ${sign}${stat.val}`);
+        }
+    }
 
     if (mods.length === 0) {
         if (r.str === '-' || r.dex === '-') return 'Special / Custom';
+        if (r.extra && /(\+2\/\+1|\+1\/\+1\/\+1|\bASI\b.*choice|your choice)/i.test(r.extra)) {
+            return '+2/+1 or +1/+1/+1 (Choice)';
+        }
         return '—';
     }
 
@@ -1243,7 +1371,7 @@ export async function confirmAndDeleteSubrace(currentSub, race) {
     if (!currentSub || !race) return;
 
     const isOnlySubrace = (race.subraces || []).length <= 1;
-    const subLabel = currentSub.subrace && currentSub.subrace !== 'None' ? currentSub.subrace : 'Standard';
+    const subLabel = getSubraceLabel(currentSub);
 
     let msg = `Are you sure you want to delete the lineage "${subLabel}" (${currentSub.check_id || ''})?`;
     if (isOnlySubrace) {
@@ -1274,3 +1402,32 @@ export async function confirmAndDeleteSubrace(currentSub, race) {
     await initRaces();
     window.dispatchEvent(new CustomEvent('ac:races-updated'));
 }
+
+/**
+ * Resolves a human-friendly subrace/lineage label.
+ * If the subrace is defined and not 'None' / '(none)' / 'Standard', returns the subrace name.
+ * Otherwise, falls back to source abbreviation(s) (e.g. 'EEPC', 'MPMM').
+ * 
+ * @param {Object} item - Subrace record or lineage object
+ * @returns {string} Subrace name or source abbreviation label
+ */
+export function getSubraceLabel(item) {
+    if (!item) return 'Standard';
+    const sub = (item.subrace || '').trim();
+    if (sub && sub.toLowerCase() !== 'none' && sub !== '(none)' && sub.toLowerCase() !== 'standard') {
+        return sub;
+    }
+    // Determine sources from item, or parentRace if missing
+    const sources = (item.sources && item.sources.length > 0)
+        ? item.sources
+        : (item.parentRace?.sources || []);
+
+    if (sources && sources.length > 0) {
+        return sources.map(k => {
+            const src = getSourceByKey(k);
+            return src?.abbreviation || src?.source_key || k;
+        }).join(', ');
+    }
+    return sub || 'Standard';
+}
+
