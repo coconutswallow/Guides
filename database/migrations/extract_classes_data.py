@@ -213,8 +213,6 @@ def main():
                 }
                 if resolved_s_src and 'HTA' in resolved_s_src and n_s in ARCANA_SUBCLASS_LINKS:
                     link = ARCANA_SUBCLASS_LINKS[n_s]
-                elif clean_s_name == 'Battlerager' and (resolved_s_src == 'SCAG' or resolved_s_src == 'HTA'):
-                    link = '/Guides/arcana/battlerager/'
                 elif link and '1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC' in link:
                     link = ARCANA_SUBCLASS_LINKS.get(n_s, '/Guides/arcana/')
 
