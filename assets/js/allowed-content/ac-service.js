@@ -130,27 +130,32 @@ export async function getCategoryNotes(categoryId) {
  * @returns {Promise<Array>} Array of race objects with subraces
  */
 export async function getRaces() {
-    const { data, error } = await supabase
-        .from('ac_races')
-        .select('*, subraces:ac_subraces(*)')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_races')
+            .select('*, subraces:ac_subraces(*)')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching races:', error);
+        if (error) {
+            console.error('Error fetching races:', error);
+            return [];
+        }
+
+        // Ensure nested subraces are sorted by display_order
+        if (data) {
+            data.forEach(race => {
+                if (race.subraces && Array.isArray(race.subraces)) {
+                    race.subraces.sort((a, b) => (Number(a.display_order) || 0) - (Number(b.display_order) || 0));
+                }
+            });
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching races:', err);
         return [];
     }
-
-    // Ensure nested subraces are sorted by display_order
-    if (data) {
-        data.forEach(race => {
-            if (race.subraces && Array.isArray(race.subraces)) {
-                race.subraces.sort((a, b) => (Number(a.display_order) || 0) - (Number(b.display_order) || 0));
-            }
-        });
-    }
-
-    return data;
 }
 
 /**
@@ -159,17 +164,22 @@ export async function getRaces() {
  * @returns {Promise<Array>} Array of subrace objects
  */
 export async function getSubraces() {
-    const { data, error } = await supabase
-        .from('ac_subraces')
-        .select('*, race:ac_races(*)')
-        .order('display_order', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_subraces')
+            .select('*, race:ac_races(*)')
+            .order('display_order', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching subraces:', error);
+        if (error) {
+            console.error('Error fetching subraces:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching subraces:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -178,26 +188,31 @@ export async function getSubraces() {
  * @returns {Promise<Array>} Array of class objects
  */
 export async function getClasses() {
-    const { data, error } = await supabase
-        .from('ac_classes')
-        .select('*, subclasses:ac_subclasses(*)')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_classes')
+            .select('*, subclasses:ac_subclasses(*)')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching classes:', error);
+        if (error) {
+            console.error('Error fetching classes:', error);
+            return [];
+        }
+
+        if (data) {
+            data.forEach(cls => {
+                if (cls.subclasses && Array.isArray(cls.subclasses)) {
+                    cls.subclasses.sort((a, b) => (Number(a.display_order) || 0) - (Number(b.display_order) || 0));
+                }
+            });
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching classes:', err);
         return [];
     }
-
-    if (data) {
-        data.forEach(cls => {
-            if (cls.subclasses && Array.isArray(cls.subclasses)) {
-                cls.subclasses.sort((a, b) => (Number(a.display_order) || 0) - (Number(b.display_order) || 0));
-            }
-        });
-    }
-
-    return data;
 }
 
 /**
@@ -206,17 +221,22 @@ export async function getClasses() {
  * @returns {Promise<Array>} Array of subclass objects
  */
 export async function getSubclasses() {
-    const { data, error } = await supabase
-        .from('ac_subclasses')
-        .select('*, class:ac_classes(*)')
-        .order('display_order', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_subclasses')
+            .select('*, class:ac_classes(*)')
+            .order('display_order', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching subclasses:', error);
+        if (error) {
+            console.error('Error fetching subclasses:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching subclasses:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -225,18 +245,23 @@ export async function getSubclasses() {
  * @returns {Promise<Array>} Array of background objects
  */
 export async function getBackgrounds() {
-    const { data, error } = await supabase
-        .from('ac_backgrounds')
-        .select('*')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_backgrounds')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching backgrounds:', error);
+        if (error) {
+            console.error('Error fetching backgrounds:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching backgrounds:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -262,18 +287,23 @@ export async function getFeats() {
  * @returns {Promise<Array>} Array of fighting style objects
  */
 export async function getFightingStyles() {
-    const { data, error } = await supabase
-        .from('ac_fighting_styles')
-        .select('*')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_fighting_styles')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching fighting styles:', error);
+        if (error) {
+            console.error('Error fetching fighting styles:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching fighting styles:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -282,18 +312,23 @@ export async function getFightingStyles() {
  * @returns {Promise<Array>} Array of infusion objects
  */
 export async function getArtificerInfusions() {
-    const { data, error } = await supabase
-        .from('ac_artificer_infusions')
-        .select('*')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_artificer_infusions')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching artificer infusions:', error);
+        if (error) {
+            console.error('Error fetching artificer infusions:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching artificer infusions:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -302,18 +337,23 @@ export async function getArtificerInfusions() {
  * @returns {Promise<Array>} Array of invocation objects
  */
 export async function getEldritchInvocations() {
-    const { data, error } = await supabase
-        .from('ac_eldritch_invocations')
-        .select('*')
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_eldritch_invocations')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching eldritch invocations:', error);
+        if (error) {
+            console.error('Error fetching eldritch invocations:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching eldritch invocations:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -339,26 +379,31 @@ export async function getSpells() {
  * @returns {Promise<Array>} Array of language objects
  */
 export async function getLanguages() {
-    const { data, error } = await supabase
-        .from('ac_languages')
-        .select(`
-            *,
-            language_type:type_id (
-                id,
-                name,
-                description,
-                display_order
-            )
-        `)
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_languages')
+            .select(`
+                *,
+                language_type:type_id (
+                    id,
+                    name,
+                    description,
+                    display_order
+                )
+            `)
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching languages:', error);
+        if (error) {
+            console.error('Error fetching languages:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching languages:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -1238,4 +1283,519 @@ export async function deleteBackground(id) {
         return { success: false, error: err };
     }
 }
+
+/**
+ * Fetches all Language Types (classifications) from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of language type objects
+ */
+export async function getLanguageTypes() {
+    try {
+        const { data, error } = await supabase
+            .from('ac_language_types')
+            .select('*')
+            .order('display_order', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching language types:', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching language types:', err);
+        return [];
+    }
+}
+
+/**
+ * Creates a new Language record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} languageData - Language fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createLanguage(languageData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_languages')
+            .insert(languageData)
+            .select(`
+                *,
+                language_type:type_id (
+                    id,
+                    name,
+                    description,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error creating language:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating language:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Language record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the language to update
+ * @param {Object} updates - Object containing modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateLanguage(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_languages')
+            .update(updates)
+            .eq('id', id)
+            .select(`
+                *,
+                language_type:type_id (
+                    id,
+                    name,
+                    description,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error updating language:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating language:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Language record from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the language to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteLanguage(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_languages')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting language:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting language:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Feat in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} featData - Feat fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createFeat(featData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_feats')
+            .insert(featData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating feat:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating feat:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Feat in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the feat to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateFeat(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_feats')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating feat:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating feat:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Feat from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the feat to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteFeat(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_feats')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting feat:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting feat:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Fighting Style in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} styleData - Fighting Style fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createFightingStyle(styleData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_fighting_styles')
+            .insert(styleData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating fighting style:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating fighting style:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Fighting Style in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the style to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateFightingStyle(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_fighting_styles')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating fighting style:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating fighting style:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Fighting Style from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the style to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteFightingStyle(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_fighting_styles')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting fighting style:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting fighting style:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Artificer Infusion in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} infusionData - Infusion fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createArtificerInfusion(infusionData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_artificer_infusions')
+            .insert(infusionData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating artificer infusion:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating artificer infusion:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Artificer Infusion in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the infusion to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateArtificerInfusion(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_artificer_infusions')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating artificer infusion:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating artificer infusion:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes an Artificer Infusion from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the infusion to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteArtificerInfusion(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_artificer_infusions')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting artificer infusion:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting artificer infusion:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Eldritch Invocation in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} invocationData - Invocation fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createEldritchInvocation(invocationData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_eldritch_invocations')
+            .insert(invocationData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating eldritch invocation:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating eldritch invocation:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Eldritch Invocation in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the invocation to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateEldritchInvocation(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_eldritch_invocations')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating eldritch invocation:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating eldritch invocation:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes an Eldritch Invocation from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the invocation to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteEldritchInvocation(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_eldritch_invocations')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting eldritch invocation:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting eldritch invocation:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Creates a new Spell entry in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} spellData - Spell fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createSpell(spellData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_spells')
+            .insert(spellData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating spell:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating spell:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Spell entry in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the spell to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateSpell(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_spells')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating spell:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating spell:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Spell entry from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the spell to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteSpell(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_spells')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting spell:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting spell:', err);
+        return { success: false, error: err };
+    }
+}
+
+
 

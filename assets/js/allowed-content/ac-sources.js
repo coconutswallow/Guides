@@ -162,18 +162,19 @@ function applyFilters() {
             return false;
         }
 
-        // Search term filter
+        // Search term filter with short-circuit evaluation
         if (term) {
-            const matchName = item.name?.toLowerCase().includes(term);
-            const matchAbbr = item.abbreviation?.toLowerCase().includes(term);
-            const matchKey = item.source_key?.toLowerCase().includes(term);
-            const matchCheck = item.check_id?.toLowerCase().includes(term);
-            const matchType = item.type?.toLowerCase().includes(term);
-            const matchRuleset = String(item.ruleset || '').toLowerCase().includes(term);
-            const matchContent = item.allowed_content?.toLowerCase().includes(term);
-            const matchNotes = item.notes_advice?.toLowerCase().includes(term);
+            const matches = 
+                item.name?.toLowerCase().includes(term) ||
+                item.abbreviation?.toLowerCase().includes(term) ||
+                item.source_key?.toLowerCase().includes(term) ||
+                item.check_id?.toLowerCase().includes(term) ||
+                item.type?.toLowerCase().includes(term) ||
+                String(item.ruleset || '').toLowerCase().includes(term) ||
+                item.allowed_content?.toLowerCase().includes(term) ||
+                item.notes_advice?.toLowerCase().includes(term);
 
-            if (!matchName && !matchAbbr && !matchKey && !matchCheck && !matchType && !matchRuleset && !matchContent && !matchNotes) {
+            if (!matches) {
                 return false;
             }
         }
@@ -1158,12 +1159,7 @@ export function openOptionsManagerModal() {
 // Window Event Listeners for cache invalidation and admin triggers
 if (typeof window !== 'undefined') {
     window.addEventListener('ac:sources-updated', () => {
-        const container = document.getElementById('ac-view-sources');
-        if (container && container.classList.contains('active')) {
-            initSources(true);
-        } else {
-            allSources = [];
-        }
+        allSources = [];
     });
     window.addEventListener('ac:open-source-form', () => openSourceForm(null));
     window.addEventListener('ac:open-options-manager', () => openOptionsManagerModal());

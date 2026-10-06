@@ -251,12 +251,8 @@ if (typeof window !== 'undefined') {
         openRaceForm(null, null, 'race');
     });
     window.addEventListener('ac:races-updated', () => {
-        const container = document.getElementById('ac-view-races');
-        if (container && container.classList.contains('active')) {
-            initRaces(true);
-        } else {
-            allRaces = [];
-        }
+        allRaces = [];
+        allSubracesFlat = [];
     });
 }
 

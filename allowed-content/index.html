@@ -27,6 +27,10 @@ extra_css:
                     <button class="ac-tab" data-tab="races">Races</button>
                     <button class="ac-tab" data-tab="classes">Classes</button>
                     <button class="ac-tab" data-tab="backgrounds">Backgrounds</button>
+                    <button class="ac-tab" data-tab="feats">Feats</button>
+                    <button class="ac-tab" data-tab="spells">Spells</button>
+                    <button class="ac-tab" data-tab="languages">Languages</button>
+                    <button class="ac-tab" data-tab="misc-features">Misc Class Features</button>
                     <!-- Additional tabs will be added sequentially as they are developed -->
                 </div>
             </div>
@@ -36,6 +40,7 @@ extra_css:
                     <input type="text" id="ac-global-search" placeholder="Search sources (name, abbreviation, key)..." class="ac-search-input">
                 </div>
             </div>
+        </div>
     </header>
 
     <!-- Staff Admin Bar Container (Rendered for Admins/Engineers across all tabs) -->
@@ -73,6 +78,38 @@ extra_css:
                 <span>Cataloging Backgrounds...</span>
             </div>
         </div>
+
+        <!-- Feats View -->
+        <div id="ac-view-feats" class="ac-view">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Feats...</span>
+            </div>
+        </div>
+
+        <!-- Spells View -->
+        <div id="ac-view-spells" class="ac-view">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Spells & Incantations...</span>
+            </div>
+        </div>
+
+        <!-- Languages View -->
+        <div id="ac-view-languages" class="ac-view">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Languages...</span>
+            </div>
+        </div>
+
+        <!-- Misc Class Features View -->
+        <div id="ac-view-misc-features" class="ac-view">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Misc Class Features...</span>
+            </div>
+        </div>
     </main>
 </div>
 
@@ -87,4 +124,4 @@ extra_css:
 </dialog>
 
 <!-- Scripts -->
-<script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}?v=20261006_spells"></script>

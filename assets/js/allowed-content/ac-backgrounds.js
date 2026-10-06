@@ -34,7 +34,6 @@ import {
     formatDisplayOrder 
 } from './ac-order-utils.js';
 import { 
-    detectAdminSession, 
     setAdminMode, 
     getAdminMode, 
     getCurrentUser 
@@ -665,4 +664,10 @@ export async function confirmAndDeleteBackground(bg) {
         console.error('Error deleting background:', err);
         alert(`Error deleting background: ${err.message || err}`);
     }
+}
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('ac:backgrounds-updated', () => {
+        allBackgrounds = [];
+    });
 }

@@ -29,6 +29,7 @@ import { esc, getStaffPortalUrl } from './ac-ui-utils.js';
 
 let isAdmin = false;
 let currentUser = null;
+let adminSessionPromise = null;
 
 /**
  * Manually sets or overrides admin mode (useful for testing or direct routing).
@@ -39,6 +40,7 @@ let currentUser = null;
 export function setAdminMode(enabled, user = null) {
     isAdmin = !!enabled;
     currentUser = user;
+    adminSessionPromise = Promise.resolve(isAdmin);
 }
 
 /**
@@ -62,26 +64,35 @@ export function getCurrentUser() {
 /**
  * Silently detects if the current visitor has an active Supabase session
  * with 'Admin' or 'Engineer' roles from the Staff Portal.
+ * Caches the in-flight/resolved promise to avoid duplicate network roundtrips.
  * 
  * @returns {Promise<boolean>}
  */
 export async function detectAdminSession() {
-    try {
-        if (!supabase || !supabase.auth) return isAdmin;
-        const { data } = await supabase.auth.getUser();
-        const user = data?.user;
-        if (user) {
-            const hasAccess = await checkAccess(user.id, ['Admin', 'Engineer']);
-            if (hasAccess) {
-                isAdmin = true;
-                currentUser = user;
-                return true;
-            }
-        }
-    } catch (e) {
-        // Silently treat as public visitor
+    if (adminSessionPromise) {
+        return adminSessionPromise;
     }
-    return isAdmin;
+
+    adminSessionPromise = (async () => {
+        try {
+            if (!supabase || !supabase.auth) return isAdmin;
+            const { data } = await supabase.auth.getUser();
+            const user = data?.user;
+            if (user) {
+                const hasAccess = await checkAccess(user.id, ['Admin', 'Engineer']);
+                if (hasAccess) {
+                    isAdmin = true;
+                    currentUser = user;
+                    return true;
+                }
+            }
+        } catch (e) {
+            // Silently treat as public visitor
+        }
+        return isAdmin;
+    })();
+
+    return adminSessionPromise;
 }
 
 /**

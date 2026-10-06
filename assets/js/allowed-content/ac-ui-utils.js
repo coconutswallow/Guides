@@ -41,6 +41,11 @@ export function openModal(contentHtml) {
  */
 export function closeModal() {
     const modal = document.getElementById('ac-detail-modal');
+    const tooltip = document.getElementById('ac-global-tooltip');
+    if (tooltip && tooltip.parentElement !== document.body) {
+        document.body.appendChild(tooltip);
+        tooltip.classList.remove('active');
+    }
     if (modal) {
         if (typeof modal.close === 'function') {
             modal.close();
@@ -101,6 +106,11 @@ export function debounce(fn, delay = 150) {
  * Modern high-polling mice trigger `mousemove` at up to 1000Hz. Updating DOM inline styles
  * on every raw event causes layout recalculations that can drop frame rates. We throttle
  * position updates using `requestAnimationFrame` so styles only update once per screen refresh (60/120Hz).
+ * 
+ * Top Layer & Dialog Support:
+ * HTML <dialog> elements opened via showModal() enter the browser's top layer, hiding any regular
+ * document.body elements underneath. When hovering elements within a dialog, the tooltip is dynamically
+ * attached into that dialog so it renders cleanly above the dialog content.
  */
 export function initTooltips() {
     if (document.getElementById('ac-global-tooltip')) return;
@@ -113,12 +123,44 @@ export function initTooltips() {
     let active = false;
     let rafId = null;
 
+    function positionTooltip(clientX, clientY) {
+        let left = clientX + 15;
+        let top = clientY + 15;
+        const tooltipWidth = tooltip.offsetWidth || 200;
+        const tooltipHeight = tooltip.offsetHeight || 40;
+
+        if (typeof window !== 'undefined') {
+            if (window.innerWidth && left + tooltipWidth > window.innerWidth - 10) {
+                left = Math.max(10, clientX - tooltipWidth - 15);
+            }
+            if (window.innerHeight && top + tooltipHeight > window.innerHeight - 10) {
+                top = Math.max(10, clientY - tooltipHeight - 15);
+            }
+        }
+
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    }
+
     document.addEventListener('mouseover', (e) => {
         const target = e.target.closest('[data-tooltip]');
         if (target) {
-            tooltip.innerHTML = target.getAttribute('data-tooltip');
+            const tipText = target.getAttribute('data-tooltip');
+            if (!tipText) return;
+
+            // When hovering within an active <dialog>, reparent into the dialog
+            // so it is rendered inside the browser's Top Layer
+            const dialog = target.closest('dialog');
+            const targetContainer = dialog || document.body;
+            if (tooltip.parentElement !== targetContainer) {
+                targetContainer.appendChild(tooltip);
+            }
+
+            tooltip.innerHTML = tipText;
             tooltip.classList.add('active');
             active = true;
+
+            positionTooltip(e.clientX, e.clientY);
         }
     });
 
@@ -127,8 +169,7 @@ export function initTooltips() {
         // Throttle DOM style recalculations using requestAnimationFrame
         if (rafId) return;
         rafId = requestAnimationFrame(() => {
-            tooltip.style.left = (e.clientX + 15) + 'px';
-            tooltip.style.top = (e.clientY + 15) + 'px';
+            positionTooltip(e.clientX, e.clientY);
             rafId = null;
         });
     });
@@ -144,6 +185,15 @@ export function initTooltips() {
             }
         }
     });
+
+    // Reset tooltip to document.body when any dialog closes
+    document.addEventListener('close', (e) => {
+        if (e.target && e.target.tagName === 'DIALOG' && tooltip.parentElement === e.target) {
+            document.body.appendChild(tooltip);
+            tooltip.classList.remove('active');
+            active = false;
+        }
+    }, true);
 }
 
 /**
@@ -195,6 +245,10 @@ export function resolveSourceLink(rawLink = '') {
     // Security check: normalize protocol-relative URLs
     if (trimmed.startsWith('//')) {
         return `https:${trimmed}`;
+    }
+
+    if (trimmed.startsWith('#')) {
+        return trimmed;
     }
 
     if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
@@ -264,9 +318,11 @@ export function renderMarkdownLinks(text, stopPropagation = true) {
     let safe = esc(cleaned);
     safe = safe.replace(/\r?\n/g, '<br>');
     const stopProp = stopPropagation ? ' onclick="event.stopPropagation()"' : '';
-    return safe.replace(/\[([^\]]+)\]\(((?:https?:\/\/|\/|\.\/)[^\s\)\"'>]+)\)/g, (match, label, url) => {
+    return safe.replace(/\[([^\]]+)\]\(((?:https?:\/\/|\/|\.\/|#)[^\s\)\"'>]+)\)/g, (match, label, url) => {
         const cleanUrl = resolveSourceLink(url).replace(/"/g, '&quot;');
-        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="source-url-link"${stopProp}>${label}</a>`;
+        const isExternal = /^https?:\/\//i.test(cleanUrl);
+        const targetAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `<a href="${cleanUrl}"${targetAttr} class="source-url-link"${stopProp}>${label}</a>`;
     });
 }
 
@@ -449,7 +505,22 @@ export function formatExpandableText(text, maxLength = 160) {
     if (cleaned.length <= maxLength) {
         return renderMarkdownLinks(cleaned);
     }
-    const snippet = cleaned.slice(0, maxLength) + '…';
+
+    // Ensure we don't slice in the middle of a markdown link [label](url)
+    let cutoff = maxLength;
+    const linkRegex = /\[([^\]]+)\]\(((?:https?:\/\/|\/|\.\/|#)[^\s\)\"'>]+)\)/g;
+    let match;
+    while ((match = linkRegex.exec(cleaned)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        if (cutoff > start && cutoff < end) {
+            // Cutoff is inside this markdown link: slice before the link if practical, otherwise after
+            cutoff = (start > 20) ? start : end;
+            break;
+        }
+    }
+
+    const snippet = cleaned.slice(0, cutoff).trim() + '…';
     return `<span class="ac-advice-snippet">${renderMarkdownLinks(snippet)}</span><span class="ac-advice-full" style="display: none; white-space: pre-wrap;">${renderMarkdownLinks(cleaned)}</span> <button type="button" class="ac-advice-more-btn" style="background: none; border: none; padding: 0 4px; font-size: 0.78rem; color: var(--color-primary); cursor: pointer; text-decoration: underline; font-weight: 500;" title="Click to expand">more ↗</button>`;
 }
 

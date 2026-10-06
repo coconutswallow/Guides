@@ -37,7 +37,6 @@ import {
     formatDisplayOrder 
 } from './ac-order-utils.js';
 import { 
-    detectAdminSession, 
     setAdminMode, 
     getAdminMode, 
     getCurrentUser 
@@ -215,9 +214,9 @@ function applyFilters() {
 
         // 3. Source Filter
         if (selectedSourceFilter !== 'ALL') {
-            const clsSources = extractSourceKeys(cls.source || cls.sources);
+            const clsSources = cls.sources || [];
             const matchesSource = clsSources.includes(selectedSourceFilter) || 
-                (cls.resolvedSubclasses || []).some(s => extractSourceKeys(s.source || s.sources).includes(selectedSourceFilter));
+                (cls.resolvedSubclasses || []).some(s => (s.sources || []).includes(selectedSourceFilter));
             if (!matchesSource) return false;
         }
 
@@ -228,7 +227,7 @@ function applyFilters() {
                 (cls.ruleset && cls.ruleset.toLowerCase().includes(term)) ||
                 (cls.category && cls.category.toLowerCase().includes(term)) ||
                 (cls.source && cls.source.toLowerCase().includes(term)) ||
-                extractSourceKeys(cls.source || cls.sources).some(k => {
+                (cls.sources || []).some(k => {
                     const srcObj = getSourceByKey(k);
                     return srcObj && (srcObj.name.toLowerCase().includes(term) || srcObj.abbreviation?.toLowerCase().includes(term));
                 }) ||
@@ -240,7 +239,7 @@ function applyFilters() {
                 s.name.toLowerCase().includes(term) ||
                 (s.category && s.category.toLowerCase().includes(term)) ||
                 (s.source && s.source.toLowerCase().includes(term)) ||
-                extractSourceKeys(s.source || s.sources).some(k => {
+                (s.sources || []).some(k => {
                     const srcObj = getSourceByKey(k);
                     return srcObj && (srcObj.name.toLowerCase().includes(term) || srcObj.abbreviation?.toLowerCase().includes(term));
                 }) ||
@@ -257,14 +256,14 @@ function applyFilters() {
     filteredSubclasses = allSubclassesFlat.filter(sub => {
         if (selectedRulesetFilter !== 'ALL' && sub.ruleset !== selectedRulesetFilter) return false;
         if (selectedCategoryFilter !== 'ALL' && sub.category !== selectedCategoryFilter) return false;
-        if (selectedSourceFilter !== 'ALL' && !extractSourceKeys(sub.source || sub.sources).includes(selectedSourceFilter)) return false;
+        if (selectedSourceFilter !== 'ALL' && !(sub.sources || []).includes(selectedSourceFilter)) return false;
         if (term) {
             return (
                 sub.name.toLowerCase().includes(term) ||
                 (sub.className && sub.className.toLowerCase().includes(term)) ||
                 (sub.category && sub.category.toLowerCase().includes(term)) ||
                 (sub.source && sub.source.toLowerCase().includes(term)) ||
-                extractSourceKeys(sub.source || sub.sources).some(k => {
+                (sub.sources || []).some(k => {
                     const srcObj = getSourceByKey(k);
                     return srcObj && (srcObj.name.toLowerCase().includes(term) || srcObj.abbreviation?.toLowerCase().includes(term));
                 }) ||
@@ -830,33 +829,35 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
             <h2 class="detail-title" id="modal-header-title">${headerTitle}</h2>
         </div>
 
-        <form id="ac-class-form" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+        <form id="ac-class-form" class="ac-edit-form">
             ${isEditBaseClass ? `
                 <div class="ac-form-group">
                     <label for="class-input-name">Class Name *</label>
                     <input type="text" id="class-input-name" required class="ac-form-input" value="${esc(selectedParentClass?.name || '')}">
                 </div>
-                <div class="ac-form-group">
-                    <label for="class-input-ruleset">Ruleset *</label>
-                    <select id="class-input-ruleset" class="ac-form-input" required>
-                        <option value="2014" ${selectedParentClass?.ruleset === '2014' ? 'selected' : ''}>2014</option>
-                        <option value="2024" ${selectedParentClass?.ruleset === '2024' ? 'selected' : ''}>2024</option>
-                    </select>
-                </div>
-                <div class="ac-form-group">
-                    <label for="class-input-category">Category *</label>
-                    <select id="class-input-category" class="ac-form-input" required>
-                        <option value="Official" ${selectedParentClass?.category === 'Official' ? 'selected' : ''}>Official</option>
-                        <option value="Hawthorne Homebrew" ${selectedParentClass?.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
-                    </select>
-                </div>
-                <div class="ac-form-group">
-                    <label for="class-input-hitdie">Hit Die *</label>
-                    <input type="text" id="class-input-hitdie" required class="ac-form-input" value="${esc(selectedParentClass?.hit_die || 'd8')}" placeholder="d8, d10, d12, etc.">
-                </div>
-                <div class="ac-form-group">
-                    <label for="class-input-source">Source *</label>
-                    <input type="text" id="class-input-source" required class="ac-form-input" value="${esc(selectedParentClass?.source || 'PHB2014')}">
+                <div class="ac-form-grid">
+                    <div class="ac-form-group">
+                        <label for="class-input-ruleset">Ruleset *</label>
+                        <select id="class-input-ruleset" class="ac-form-input" required>
+                            <option value="2014" ${selectedParentClass?.ruleset === '2014' ? 'selected' : ''}>2014</option>
+                            <option value="2024" ${selectedParentClass?.ruleset === '2024' ? 'selected' : ''}>2024</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-category">Category *</label>
+                        <select id="class-input-category" class="ac-form-input" required>
+                            <option value="Official" ${selectedParentClass?.category === 'Official' ? 'selected' : ''}>Official</option>
+                            <option value="Hawthorne Homebrew" ${selectedParentClass?.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-hitdie">Hit Die *</label>
+                        <input type="text" id="class-input-hitdie" required class="ac-form-input" value="${esc(selectedParentClass?.hit_die || 'd8')}" placeholder="d8, d10, d12, etc.">
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-source">Source *</label>
+                        <input type="text" id="class-input-source" required class="ac-form-input" value="${esc(selectedParentClass?.source || 'PHB2014')}">
+                    </div>
                 </div>
                 <div class="ac-form-group">
                     <label for="class-input-multiclass">Multiclassing Requirements & Proficiencies</label>
@@ -886,23 +887,25 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     <label for="subclass-input-name">Subclass Name *</label>
                     <input type="text" id="subclass-input-name" required class="ac-form-input" value="${esc(subclassItem.name || '')}" placeholder="e.g. Battle Master, Berserker">
                 </div>
-                <div class="ac-form-group">
-                    <label for="subclass-input-ruleset">Ruleset *</label>
-                    <select id="subclass-input-ruleset" class="ac-form-input" required>
-                        <option value="2014" ${subclassItem.ruleset === '2014' ? 'selected' : ''}>2014</option>
-                        <option value="2024" ${subclassItem.ruleset === '2024' ? 'selected' : ''}>2024</option>
-                    </select>
-                </div>
-                <div class="ac-form-group">
-                    <label for="subclass-input-category">Category *</label>
-                    <select id="subclass-input-category" class="ac-form-input" required>
-                        <option value="Official" ${subclassItem.category === 'Official' ? 'selected' : ''}>Official</option>
-                        <option value="Hawthorne Homebrew" ${subclassItem.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
-                    </select>
-                </div>
-                <div class="ac-form-group">
-                    <label for="subclass-input-source">Source *</label>
-                    <input type="text" id="subclass-input-source" required class="ac-form-input" value="${esc(subclassItem.source || 'PHB2014')}" placeholder="e.g. PHB2014, TCE, XGE, HTA">
+                <div class="ac-form-grid">
+                    <div class="ac-form-group">
+                        <label for="subclass-input-ruleset">Ruleset *</label>
+                        <select id="subclass-input-ruleset" class="ac-form-input" required>
+                            <option value="2014" ${subclassItem.ruleset === '2014' ? 'selected' : ''}>2014</option>
+                            <option value="2024" ${subclassItem.ruleset === '2024' ? 'selected' : ''}>2024</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-category">Category *</label>
+                        <select id="subclass-input-category" class="ac-form-input" required>
+                            <option value="Official" ${subclassItem.category === 'Official' ? 'selected' : ''}>Official</option>
+                            <option value="Hawthorne Homebrew" ${subclassItem.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-source">Source *</label>
+                        <input type="text" id="subclass-input-source" required class="ac-form-input" value="${esc(subclassItem.source || 'PHB2014')}" placeholder="e.g. PHB2014, TCE, XGE, HTA">
+                    </div>
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-link">Document Link</label>
@@ -914,14 +917,14 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                 </div>
             ` : `
                 <!-- New Class or Subclass Form with Mode Toggle -->
-                <div class="ac-form-group ac-mode-toggle" style="background: var(--bg-surface-elevated, rgba(0,0,0,0.03)); padding: 0.75rem 1rem; border-radius: 6px; border: 1px solid var(--border-color, rgba(0,0,0,0.1));">
+                <div class="ac-form-group ac-mode-toggle">
                     <label style="font-weight: 600; margin-bottom: 0.4rem; display: block;">What would you like to add?</label>
-                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
-                        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500;">
+                    <div class="ac-mode-options">
+                        <label class="ac-mode-radio-label">
                             <input type="radio" name="class-form-type" id="type-radio-class" value="class" ${initialMode === 'class' ? 'checked' : ''}>
                             <span>New Base Class <small style="opacity: 0.75;">(e.g. Artificer, Blood Hunter)</small></span>
                         </label>
-                        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500;">
+                        <label class="ac-mode-radio-label">
                             <input type="radio" name="class-form-type" id="type-radio-subclass" value="subclass" ${initialMode === 'subclass' ? 'checked' : ''}>
                             <span>New Subclass <small style="opacity: 0.75;">(under an existing class)</small></span>
                         </label>
@@ -934,27 +937,29 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                         <label for="class-input-name">Class Name *</label>
                         <input type="text" id="class-input-name" required class="ac-form-input" placeholder="e.g. Blood Hunter, Artificer" ${initialMode === 'class' ? '' : 'disabled'}>
                     </div>
-                    <div class="ac-form-group">
-                        <label for="class-input-ruleset">Ruleset *</label>
-                        <select id="class-input-ruleset" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
-                            <option value="2014" selected>2014</option>
-                            <option value="2024">2024</option>
-                        </select>
-                    </div>
-                    <div class="ac-form-group">
-                        <label for="class-input-category">Category *</label>
-                        <select id="class-input-category" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
-                            <option value="Official" selected>Official</option>
-                            <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
-                        </select>
-                    </div>
-                    <div class="ac-form-group">
-                        <label for="class-input-hitdie">Hit Die *</label>
-                        <input type="text" id="class-input-hitdie" required class="ac-form-input" value="d8" placeholder="d6, d8, d10, d12" ${initialMode === 'class' ? '' : 'disabled'}>
-                    </div>
-                    <div class="ac-form-group">
-                        <label for="class-input-source">Source *</label>
-                        <input type="text" id="class-input-source" required class="ac-form-input" value="PHB2014" placeholder="e.g. PHB2014, TCE, BH2022" ${initialMode === 'class' ? '' : 'disabled'}>
+                    <div class="ac-form-grid">
+                        <div class="ac-form-group">
+                            <label for="class-input-ruleset">Ruleset *</label>
+                            <select id="class-input-ruleset" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
+                                <option value="2014" selected>2014</option>
+                                <option value="2024">2024</option>
+                            </select>
+                        </div>
+                        <div class="ac-form-group">
+                            <label for="class-input-category">Category *</label>
+                            <select id="class-input-category" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
+                                <option value="Official" selected>Official</option>
+                                <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
+                            </select>
+                        </div>
+                        <div class="ac-form-group">
+                            <label for="class-input-hitdie">Hit Die *</label>
+                            <input type="text" id="class-input-hitdie" required class="ac-form-input" value="d8" placeholder="d6, d8, d10, d12" ${initialMode === 'class' ? '' : 'disabled'}>
+                        </div>
+                        <div class="ac-form-group">
+                            <label for="class-input-source">Source *</label>
+                            <input type="text" id="class-input-source" required class="ac-form-input" value="PHB2014" placeholder="e.g. PHB2014, TCE, BH2022" ${initialMode === 'class' ? '' : 'disabled'}>
+                        </div>
                     </div>
                     <div class="ac-form-group">
                         <label for="class-input-multiclass">Multiclassing Requirements & Proficiencies</label>
@@ -992,23 +997,25 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                         <label for="subclass-input-name">Subclass Name *</label>
                         <input type="text" id="subclass-input-name" required class="ac-form-input" placeholder="e.g. Battle Master, Berserker" ${initialMode === 'subclass' ? '' : 'disabled'}>
                     </div>
-                    <div class="ac-form-group">
-                        <label for="subclass-input-ruleset">Ruleset *</label>
-                        <select id="subclass-input-ruleset" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
-                            <option value="2014" selected>2014</option>
-                            <option value="2024">2024</option>
-                        </select>
-                    </div>
-                    <div class="ac-form-group">
-                        <label for="subclass-input-category">Category *</label>
-                        <select id="subclass-input-category" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
-                            <option value="Official" selected>Official</option>
-                            <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
-                        </select>
-                    </div>
-                    <div class="ac-form-group">
-                        <label for="subclass-input-source">Source *</label>
-                        <input type="text" id="subclass-input-source" required class="ac-form-input" value="PHB2014" placeholder="e.g. PHB2014, TCE, XGE, HTA" ${initialMode === 'subclass' ? '' : 'disabled'}>
+                    <div class="ac-form-grid">
+                        <div class="ac-form-group">
+                            <label for="subclass-input-ruleset">Ruleset *</label>
+                            <select id="subclass-input-ruleset" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
+                                <option value="2014" selected>2014</option>
+                                <option value="2024">2024</option>
+                            </select>
+                        </div>
+                        <div class="ac-form-group">
+                            <label for="subclass-input-category">Category *</label>
+                            <select id="subclass-input-category" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
+                                <option value="Official" selected>Official</option>
+                                <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
+                            </select>
+                        </div>
+                        <div class="ac-form-group">
+                            <label for="subclass-input-source">Source *</label>
+                            <input type="text" id="subclass-input-source" required class="ac-form-input" value="PHB2014" placeholder="e.g. PHB2014, TCE, XGE, HTA" ${initialMode === 'subclass' ? '' : 'disabled'}>
+                        </div>
                     </div>
                     <div class="ac-form-group">
                         <label for="subclass-input-link">Document Link</label>
@@ -1021,7 +1028,7 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                 </div>
             `)}
 
-            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+            <div class="ac-form-actions">
                 <button type="button" class="ac-btn-admin ac-btn-secondary" id="class-form-cancel">Cancel</button>
                 <button type="submit" class="ac-btn-admin ac-btn-primary" id="class-form-submit">Save Changes</button>
             </div>
@@ -1216,4 +1223,11 @@ export async function confirmAndDeleteSubclass(sub, cls) {
     } catch (err) {
         alert(`Failed to delete subclass: ${err.message}`);
     }
+}
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('ac:classes-updated', () => {
+        allClasses = [];
+        allSubclassesFlat = [];
+    });
 }

@@ -16,6 +16,7 @@ These rules apply to every AI coding or verification agent working in the `Cocon
   - `DEV`: Target database configured via `SOURCE_DB_URL` in `DBSync/.env`.
   - `PRODUCTION`: Target database configured via `TARGET_DB_URL` / `PROD_DB_URL` in `DBSync/.env` (invoked with `--execute --prod`).
   - Always execute `--dry-run` first before applying migrations with `--execute`. Apply changes to both DEV and PROD environments when completing database tasks.
+- **Running Migration Log:** All migration steps, verification criteria, and execution statuses must be maintained and appended in `supabase/migrations/MIGRATION_LOG.md`.
 
 ---
 
