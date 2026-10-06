@@ -88,8 +88,7 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initClasses(forceRefresh),
         filter: (term) => filterClasses(term),
         adminActions: [
-            { id: 'btn-add-class', label: '+ Add Class', primary: true, event: 'ac:open-new-class-form' },
-            { id: 'btn-add-subclass', label: '+ Add Subclass', primary: false, event: 'ac:open-class-form' }
+            { id: 'btn-add-class-subclass', label: '+ Add Class/Subclass', primary: true, event: 'ac:open-class-form' }
         ]
     }
 };

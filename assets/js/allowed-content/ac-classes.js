@@ -301,28 +301,30 @@ function renderView() {
     const html = `
         <div class="ac-classes-container">
             <!-- Toolbar: Filters and View Controls -->
-            <div class="ac-toolbar-filters" style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0.5rem 0;">
-                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
-                    <span class="ac-count-badge" style="font-size: 0.85rem; font-weight: 600; opacity: 0.85;">
-                        Showing <strong>${filteredClasses.length}</strong> Classes (${showingSubclasses} Subclasses)
-                    </span>
+            <!-- Toolbar: Filters and View Controls -->
+            <div class="ac-classes-toolbar">
+                <div class="ac-classes-stats" id="classes-stats">
+                    Showing <strong>${filteredClasses.length}</strong> Classes 
+                    <span style="opacity: 0.7;">(${showingSubclasses} Subclasses)</span>
+                </div>
 
+                <div class="ac-classes-controls">
                     <!-- Ruleset Filter (2014 vs 2024) -->
-                    <select id="ac-classes-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset">
+                    <select id="ac-classes-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset" aria-label="Filter by Ruleset">
                         <option value="ALL" ${selectedRulesetFilter === 'ALL' ? 'selected' : ''}>All Rulesets</option>
                         <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014 Ruleset</option>
                         <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024 Ruleset</option>
                     </select>
 
                     <!-- Category Filter (Official vs Hawthorne Homebrew) -->
-                    <select id="ac-classes-category-filter" class="ac-filter-select" title="Filter by Category">
+                    <select id="ac-classes-category-filter" class="ac-filter-select" title="Filter by Category" aria-label="Filter by Category">
                         <option value="ALL" ${selectedCategoryFilter === 'ALL' ? 'selected' : ''}>All Categories</option>
                         <option value="Official" ${selectedCategoryFilter === 'Official' ? 'selected' : ''}>Official WotC</option>
                         <option value="Hawthorne Homebrew" ${selectedCategoryFilter === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
                     </select>
 
                     <!-- Source Filter -->
-                    <select id="ac-classes-source-filter" class="ac-filter-select" title="Filter by Sourcebook">
+                    <select id="ac-classes-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
                         <option value="ALL">All Sources (${availableSourceKeys.length})</option>
                         ${availableSourceKeys.map(k => {
                             const src = getSourceByKey(k);
@@ -330,10 +332,8 @@ function renderView() {
                             return `<option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(label)}</option>`;
                         }).join('')}
                     </select>
-                </div>
 
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <button id="accordion-toggle-all-classes-btn" class="ac-btn-toggle-all" title="Toggle expanding or collapsing all classes">
+                    <button type="button" id="accordion-toggle-all-classes-btn" class="ac-btn-toggle-all" title="Toggle expanding or collapsing all classes">
                         ${allExpanded ? 'Collapse All ▲' : 'Expand All ▼'}
                     </button>
                 </div>
@@ -843,7 +843,7 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
 
     const isNew = !subclassItem && !isEditBaseClass;
     let selectedParentClass = defaultParentClass || (subclassItem ? subclassItem.parentClass : null);
-    const initialMode = defaultMode || (isEditBaseClass ? 'class' : (selectedParentClass ? 'subclass' : 'class'));
+    const initialMode = defaultMode || (isEditBaseClass ? 'class' : (selectedParentClass ? 'subclass' : 'subclass'));
 
     let headerCategory = 'New Class / Subclass';
     let headerTitle = 'Add Class or Subclass';
@@ -1014,6 +1014,7 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     <div class="ac-form-group">
                         <label for="class-select-parent">Parent Class *</label>
                         <select id="class-select-parent" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
+                            <option value="" disabled ${!selectedParentClass ? 'selected' : ''}>-- Select Parent Class --</option>
                             <option value="NEW">+ Create New Base Class...</option>
                             ${allClasses.map(c => `
                                 <option value="${esc(c.id)}" ${selectedParentClass?.id === c.id ? 'selected' : ''}>
@@ -1090,6 +1091,9 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
         if (headerTitleEl) headerTitleEl.textContent = isClass ? 'Add New Base Class' : 'Add New Subclass';
         if (radioClass) radioClass.checked = isClass;
         if (radioSubclass) radioSubclass.checked = !isClass;
+        if (!isClass && parentSelect && parentSelect.value === 'NEW') {
+            parentSelect.value = '';
+        }
     }
 
     if (radioClass) radioClass.onchange = () => setFormMode('class');

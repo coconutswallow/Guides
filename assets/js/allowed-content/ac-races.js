@@ -398,12 +398,8 @@ function renderView() {
             </div>
 
             <div class="ac-races-controls">
-                <button type="button" class="ac-btn-admin ac-btn-secondary" id="accordion-toggle-all-btn" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;" title="Toggle expanding or collapsing all species">
-                    ${allExpanded ? '▲ Collapse All' : '▼ Expand All'}
-                </button>
-
                 <!-- Source Filter Dropdown -->
-                <select class="ac-source-filter-select" id="ac-races-source-filter" aria-label="Filter by Source">
+                <select class="ac-filter-select ac-source-filter-select" id="ac-races-source-filter" aria-label="Filter by Source">
                     <option value="ALL" ${selectedSourceFilter === 'ALL' ? 'selected' : ''}>All Sources (${availableSourceKeys.length})</option>
                     ${availableSourceKeys.map(k => {
                         const src = getSourceByKey(k);
@@ -411,6 +407,10 @@ function renderView() {
                         return `<option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(label)}</option>`;
                     }).join('')}
                 </select>
+
+                <button type="button" class="ac-btn-toggle-all" id="accordion-toggle-all-btn" title="Toggle expanding or collapsing all species">
+                    ${allExpanded ? 'Collapse All ▲' : 'Expand All ▼'}
+                </button>
             </div>
         </div>
 

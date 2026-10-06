@@ -118,6 +118,11 @@ export function renderAdminBar(activeTab = 'sources', tabRegistry = null) {
         actionsHtml = tabConfig.adminActions.map(action => `
             <button id="${esc(action.id)}" class="ac-btn-admin ${action.primary ? 'ac-btn-primary' : 'ac-btn-secondary'}">${esc(action.label)}</button>
         `).join('') + `<a href="${staffPortalHref}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>`;
+    } else if (activeTab === 'classes') {
+        actionsHtml = `
+            <button id="btn-add-class-subclass" class="ac-btn-admin ac-btn-primary">+ Add Class/Subclass</button>
+            <a href="${staffPortalHref}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
+        `;
     } else if (activeTab === 'races') {
         actionsHtml = `
             <button id="btn-add-race" class="ac-btn-admin ac-btn-primary">+ Add Race</button>
@@ -166,6 +171,12 @@ export function renderAdminBar(activeTab = 'sources', tabRegistry = null) {
         });
         document.getElementById('btn-manage-options')?.addEventListener('click', () => {
             window.dispatchEvent(new CustomEvent('ac:open-options-manager'));
+        });
+        document.getElementById('btn-add-class-subclass')?.addEventListener('click', () => {
+            window.dispatchEvent(new CustomEvent('ac:open-class-form'));
+        });
+        document.getElementById('btn-add-class')?.addEventListener('click', () => {
+            window.dispatchEvent(new CustomEvent('ac:open-class-form'));
         });
         document.getElementById('btn-add-race')?.addEventListener('click', () => {
             window.dispatchEvent(new CustomEvent('ac:open-new-race-form'));
