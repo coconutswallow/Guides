@@ -16,7 +16,7 @@
  *    and foreign key `race_id` linking back to `ac_races.race_id`.
  * 
  * Features:
- * - Dual view modes: "Species Overview" (grouped by species) and "All Lineages" (flat).
+ * - Accordion View: Base species with expandable drawers for multiple lineages and instant detail modals.
  * - Interactive lineage chips and modal navigation tabs.
  * - Dynamic source badges with tooltips powered by in-memory ac_sources cache.
  * - Multi-source printing/reprint variant inspector (JSON-style).
@@ -109,42 +109,28 @@ let filteredRaces = [];
 let filteredSubraces = [];
 let availableSourceKeys = [];
 
-let currentViewMode = 'flat'; // 'flat' | 'accordion'
-if (typeof localStorage !== 'undefined') {
-    try {
-        const saved = localStorage.getItem('ac_races_view_mode');
-        if (saved === 'flat' || saved === 'accordion') {
-            currentViewMode = saved;
-        }
-    } catch (e) {}
-}
+let currentViewMode = 'accordion';
 let currentSearchTerm = '';
 let selectedSourceFilter = 'ALL';
 let expandedRaceIds = new Set();
 let allExpanded = false;
 
 /**
- * Returns current Races view mode ('flat' | 'accordion').
+ * Returns current Races view mode ('accordion').
  * 
  * @returns {string} View mode
  */
 export function getViewMode() {
-    return currentViewMode;
+    return 'accordion';
 }
 
 /**
- * Sets Races view mode and triggers re-render.
+ * Sets Races view mode (settled on accordion).
  * 
- * @param {'flat'|'accordion'} mode - Target view mode
+ * @param {'accordion'} [mode] - Target view mode
  */
-export function setViewMode(mode) {
-    if (mode === 'flat' || mode === 'accordion') {
-        currentViewMode = mode;
-        if (typeof localStorage !== 'undefined') {
-            try { localStorage.setItem('ac_races_view_mode', mode); } catch (e) {}
-        }
-        renderView();
-    }
+export function setViewMode(mode = 'accordion') {
+    currentViewMode = 'accordion';
 }
 
 /**
@@ -402,12 +388,7 @@ function renderView() {
     const showingCount = filteredSubraces.length;
     const isAdmin = getAdminMode();
 
-    let tableContentHtml = '';
-    if (currentViewMode === 'accordion') {
-        tableContentHtml = renderAccordionTable(isAdmin, 'races-accordion-table');
-    } else {
-        tableContentHtml = renderRacesTable(isAdmin, 'races-table');
-    }
+    const tableContentHtml = renderAccordionTable(isAdmin, 'races-accordion-table');
 
     container.innerHTML = `
         <div class="ac-races-toolbar">
@@ -416,22 +397,10 @@ function renderView() {
                 <span style="opacity: 0.7;">(across ${totalSpecies} Species)</span>
             </div>
 
-            <!-- View Switcher Tabs -->
-            <div class="ac-view-switcher" role="radiogroup" aria-label="Races View Mode">
-                <button type="button" class="ac-view-tab-btn ${currentViewMode === 'flat' ? 'active' : ''}" data-mode="flat" id="view-mode-flat-btn" title="Option 1: Unified flat 9-column table with all lineage details visible">
-                    <span>📋</span> Option 1: Flat Merged
-                </button>
-                <button type="button" class="ac-view-tab-btn ${currentViewMode === 'accordion' ? 'active' : ''}" data-mode="accordion" id="view-mode-accordion-btn" title="Option 2: Species overview with expandable subrace accordions">
-                    <span>📂</span> Option 2: Accordion
-                </button>
-            </div>
-
             <div class="ac-races-controls">
-                ${currentViewMode !== 'flat' ? `
-                    <button type="button" class="ac-btn-admin ac-btn-secondary" id="accordion-toggle-all-btn" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
-                        ${allExpanded ? '▲ Collapse All' : '▼ Expand All'}
-                    </button>
-                ` : ''}
+                <button type="button" class="ac-btn-admin ac-btn-secondary" id="accordion-toggle-all-btn" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;" title="Toggle expanding or collapsing all species">
+                    ${allExpanded ? '▲ Collapse All' : '▼ Expand All'}
+                </button>
 
                 <!-- Source Filter Dropdown -->
                 <select class="ac-source-filter-select" id="ac-races-source-filter" aria-label="Filter by Source">
@@ -476,93 +445,9 @@ export function formatNotesAdvice(text) {
     return renderMarkdownLinks(text);
 }
 
-/**
- * Renders Option 1: Unified flat table with columns:
- * | Race/Species | Subrace | Size | Speed | Language | ASI | Extra | Source | Notes/Rage Advice |
- * Every lineage has all inherited properties resolved directly in the table.
- * 
- * @param {boolean} [isAdmin=false] - Whether staff admin mode is enabled
- * @param {string} [tableId='races-table'] - HTML table ID
- * @returns {string} Table HTML
- */
-function renderRacesTable(isAdmin = false, tableId = 'races-table') {
-    if (filteredSubraces.length === 0) {
-        return `
-            <table class="ac-table" id="${tableId}">
-                <tbody>
-                    <tr><td colspan="9" style="text-align:center; padding: 3rem;">No species or lineages found matching your criteria.</td></tr>
-                </tbody>
-            </table>
-        `;
-    }
-
-    return `
-        <table class="ac-table" id="${tableId}" data-legacy-id="races-subraces-table">
-            <thead>
-                <tr>
-                    <th class="col-name">Race / Species</th>
-                    <th class="col-subrace">Subrace</th>
-                    <th class="col-size" style="text-align: center;">Size</th>
-                    <th class="col-speed" style="text-align: center;">Speed</th>
-                    <th class="col-language">Language</th>
-                    <th class="col-asi">ASI</th>
-                    <th class="col-traits">Extra</th>
-                    <th class="col-sources" style="text-align: center;">Source</th>
-                    <th class="col-notes">Notes / Rage Advice</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${filteredSubraces.map(item => {
-                    const subLabel = (item.subrace && item.subrace.toLowerCase() !== 'none' && item.subrace !== '(none)')
-                        ? item.subrace
-                        : '—';
-
-                    let speedDisplay = '—';
-                    if (item.speed) {
-                        const s = String(item.speed).trim();
-                        if (s === '-' || s.includes('fly') || s.endsWith('ft')) {
-                            speedDisplay = s;
-                        } else {
-                            speedDisplay = `${s} ft`;
-                        }
-                    }
-
-                    return `
-                        <tr data-subrace-id="${esc(item.id)}" data-race-id="${esc(item.parentRace?.id || '')}">
-                            <td class="col-name">
-                                <div class="name-cell">
-                                    <span>${esc(item.raceName || item.parentRace?.name || '—')}</span>
-                                    <span class="row-hover-icon">${isAdmin ? 'Edit / Details →' : 'Details →'}</span>
-                                </div>
-                            </td>
-                            <td class="col-subrace">
-                                ${subLabel !== '—' ? `<strong>${esc(subLabel)}</strong>` : '<span style="opacity:0.5;">—</span>'}
-                            </td>
-                            <td class="col-size" style="text-align: center;">
-                                ${esc(item.size || '—')}
-                            </td>
-                            <td class="col-speed" style="text-align: center;">
-                                ${esc(speedDisplay)}
-                            </td>
-                            <td class="col-language">
-                                ${esc(item.language || 'Common')}
-                            </td>
-                            <td class="col-asi">
-                                ${formatASI(item)}
-                            </td>
-                            <td class="col-traits">${formatTraits(item.extra)}</td>
-                            <td class="col-sources" style="text-align: center;">${renderSourceBadges(item.sources)}</td>
-                            <td class="col-notes">${formatNotesAdvice(item.notes_advice)}</td>
-                        </tr>
-                    `;
-                }).join('')}
-            </tbody>
-        </table>
-    `;
-}
 
 /**
- * Renders Option 2: Accordion / Grouped Species View:
+ * Renders Accordion / Grouped Species View:
  * - Base Species displayed at the top level with inherited base stats.
  * - Species with subraces feature an interactive chevron and expandable drawer.
  * - Single-lineage species display directly without requiring an accordion click.
@@ -743,21 +628,6 @@ function setupControls() {
     const container = document.getElementById('ac-view-races');
     if (!container) return;
 
-    // View Switcher tab buttons
-    container.querySelectorAll('.ac-view-tab-btn').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const mode = btn.dataset.mode;
-            if (mode && mode !== currentViewMode) {
-                currentViewMode = mode;
-                if (typeof localStorage !== 'undefined') {
-                    try { localStorage.setItem('ac_races_view_mode', mode); } catch (err) {}
-                }
-                renderView();
-            }
-        };
-    });
-
     // Toggle All Accordions button
     const toggleAllBtn = document.getElementById('accordion-toggle-all-btn');
     if (toggleAllBtn) {
@@ -774,26 +644,11 @@ function setupControls() {
 }
 
 /**
- * Attaches row click listeners across flat table, accordion headers, and nested child rows.
+ * Attaches row click listeners across accordion headers and nested child rows.
  */
 function attachRowListeners() {
     const container = document.getElementById('ac-view-races');
     if (!container) return;
-
-    // 1. Flat table row clicks -> opens detail modal for that lineage
-    container.querySelectorAll('#races-table tbody tr').forEach(row => {
-        row.onclick = (e) => {
-            if (e.target.closest('a, button, .ac-source-badge')) return;
-            const subraceId = row.dataset.subraceId;
-            const subItem = allSubracesFlat.find(s => s.id === subraceId);
-            if (!subItem) return;
-            const parentRace = subItem.parentRace;
-            if (parentRace) {
-                const subIdx = (parentRace.resolvedSubraces || parentRace.subraces || []).findIndex(s => s.id === subraceId);
-                showRaceDetail(parentRace, Math.max(0, subIdx));
-            }
-        };
-    });
 
     // 2. Accordion parent row clicks -> toggle expand/collapse or open single-lineage modal
     container.querySelectorAll('.ac-accordion-parent-row').forEach(row => {

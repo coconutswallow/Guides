@@ -64,7 +64,7 @@ let filteredClasses = [];
 let filteredSubclasses = [];
 let availableSourceKeys = [];
 
-let currentViewMode = 'accordion'; // 'accordion' | 'flat'
+let currentViewMode = 'accordion';
 let expandedClassIds = new Set();
 let allExpanded = false;
 
@@ -75,22 +75,19 @@ let selectedSourceFilter = 'ALL';    // 'ALL' | specific source_key
 let currentSearchTerm = '';
 
 /**
- * Returns current view mode.
+ * Returns current view mode ('accordion').
  * @returns {string}
  */
 export function getViewMode() {
-    return currentViewMode;
+    return 'accordion';
 }
 
 /**
- * Sets view mode and triggers re-render.
- * @param {'accordion'|'flat'} mode 
+ * Sets view mode (settled on accordion).
+ * @param {'accordion'} [mode]
  */
-export function setViewMode(mode) {
-    if (mode === 'accordion' || mode === 'flat') {
-        currentViewMode = mode;
-        renderView();
-    }
+export function setViewMode(mode = 'accordion') {
+    currentViewMode = 'accordion';
 }
 
 /**
@@ -336,27 +333,15 @@ function renderView() {
                 </div>
 
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <!-- View Switcher -->
-                    <div class="ac-view-switcher" style="display: flex; background: var(--bg-surface-elevated, rgba(0,0,0,0.05)); border-radius: 6px; padding: 2px;">
-                        <button class="ac-view-tab-btn ${currentViewMode === 'accordion' ? 'active' : ''}" data-mode="accordion" title="Grouped Accordion View">
-                            📂 Accordion
-                        </button>
-                        <button class="ac-view-tab-btn ${currentViewMode === 'flat' ? 'active' : ''}" data-mode="flat" title="Flat Unified Table View">
-                            📋 Flat
-                        </button>
-                    </div>
-
-                    ${currentViewMode === 'accordion' ? `
-                        <button id="accordion-toggle-all-classes-btn" class="ac-btn-toggle-all" title="Toggle expanding or collapsing all classes">
-                            ${allExpanded ? 'Collapse All ▲' : 'Expand All ▼'}
-                        </button>
-                    ` : ''}
+                    <button id="accordion-toggle-all-classes-btn" class="ac-btn-toggle-all" title="Toggle expanding or collapsing all classes">
+                        ${allExpanded ? 'Collapse All ▲' : 'Expand All ▼'}
+                    </button>
                 </div>
             </div>
 
             <!-- Main Content Area -->
             <div id="classes-table-container">
-                ${currentViewMode === 'accordion' ? renderAccordionTable(isAdmin) : renderFlatTable(isAdmin)}
+                ${renderAccordionTable(isAdmin)}
             </div>
         </div>
     `;
@@ -395,35 +380,21 @@ function formatNotesAdvice(text) {
 }
 
 /**
- * Formats notes/advice for Flat View, distinguishing subclass advice from class advice.
+ * Formats expanded class options (TCE) with markdown links and truncation toggle for table cells.
  * 
- * @param {Object} sub
+ * @param {string} text
  * @returns {string}
  */
-function formatFlatNotesAdvice(sub) {
-    const hasSubAdvice = Boolean(sub.notes_advice);
-    const hasClassAdvice = Boolean(sub.class_notes_advice);
-
-    if (hasSubAdvice && hasClassAdvice) {
-        return `
-            <div>${formatNotesAdvice(sub.notes_advice)}</div>
-            <div style="font-size: 0.78rem; opacity: 0.75; margin-top: 4px; padding-top: 4px; border-top: 1px dashed var(--border-subtle, rgba(0,0,0,0.1));" title="Class-level advice applies to all ${esc(sub.className)}s">
-                <span style="font-weight: 600; opacity: 0.9;">Class:</span> ${formatSnippet(sub.class_notes_advice, 45)}
-            </div>
-        `;
+export function formatExpandedOptions(text) {
+    if (!text) return '<span style="opacity: 0.5;">—</span>';
+    const cleaned = text.split(/\r?\n/).map(l => l.trim()).join('\n').trim();
+    if (cleaned.length <= 120) {
+        return renderMarkdownLinks(cleaned);
     }
-    if (hasSubAdvice) {
-        return formatNotesAdvice(sub.notes_advice);
-    }
-    if (hasClassAdvice) {
-        return `
-            <div style="font-size: 0.85rem; opacity: 0.85;" title="Class-level advice applies to all ${esc(sub.className)}s">
-                <span style="font-weight: 600; opacity: 0.9;">Class:</span> ${formatNotesAdvice(sub.class_notes_advice)}
-            </div>
-        `;
-    }
-    return '<span style="opacity: 0.4;">—</span>';
+    const snippet = cleaned.slice(0, 120) + '…';
+    return `<span class="ac-advice-snippet">${renderMarkdownLinks(snippet)}</span><span class="ac-advice-full" style="display: none; white-space: pre-wrap;">${renderMarkdownLinks(cleaned)}</span> <button type="button" class="ac-advice-more-btn" style="background: none; border: none; padding: 0 4px; font-size: 0.78rem; color: var(--color-primary); cursor: pointer; text-decoration: underline; font-weight: 500;" title="Click to expand full options">more ↗</button>`;
 }
+
 
 /**
  * Renders an external document link badge if URL is present.
@@ -518,7 +489,7 @@ function renderAccordionTable(isAdmin = false) {
                                 ${esc(formatMulticlassShort(cls.multiclassing))}
                             </td>
                             <td class="col-expanded hide-mobile">
-                                ${formatSnippet(cls.expanded_options)}
+                                ${formatExpandedOptions(cls.expanded_options)}
                             </td>
                             <td class="col-notes">
                                 ${formatNotesAdvice(cls.notes_advice)}
@@ -581,77 +552,6 @@ function renderAccordionTable(isAdmin = false) {
     `;
 }
 
-/**
- * Flat Unified Table View: Renders each subclass as an individual row.
- * 
- * @param {boolean} isAdmin
- * @returns {string}
- */
-function renderFlatTable(isAdmin = false) {
-    if (filteredSubclasses.length === 0) {
-        return `
-            <table class="ac-table" id="classes-table">
-                <tbody>
-                    <tr><td colspan="9" style="text-align:center; padding: 3rem;">No subclasses found matching your criteria.</td></tr>
-                </tbody>
-            </table>
-        `;
-    }
-
-    return `
-        <table class="ac-table" id="classes-table">
-            <thead>
-                <tr>
-                    <th class="col-name">Class</th>
-                    <th class="col-ruleset" style="text-align: center;">Ruleset</th>
-                    <th class="col-subclass">Subclass</th>
-                    <th class="col-hitdie" style="text-align: center;">Hit Die</th>
-                    <th class="col-category">Category</th>
-                    <th class="col-sources" style="text-align: center;">Source</th>
-                    <th class="col-link" style="text-align: center;">Link</th>
-                    <th class="col-multiclass">Multiclassing</th>
-                    <th class="col-notes">Rage Advice</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${filteredSubclasses.map(sub => `
-                    <tr data-subclass-id="${esc(sub.id)}" data-class-id="${esc(sub.parentClass?.id || '')}">
-                        <td class="col-name">
-                            <div class="name-cell">
-                                <span>${esc(sub.className || sub.parentClass?.name || '—')}</span>
-                                <span class="row-hover-icon">${isAdmin ? 'Edit / Details →' : 'Details →'}</span>
-                            </div>
-                        </td>
-                        <td class="col-ruleset" style="text-align: center;">
-                            ${esc(sub.ruleset || '2014')}
-                        </td>
-                        <td class="col-subclass">
-                            <strong>${esc(sub.name)}</strong>
-                        </td>
-                        <td class="col-hitdie" style="text-align: center;">
-                            <strong>${esc(sub.hit_die || '—')}</strong>
-                        </td>
-                        <td class="col-category">
-                            ${esc(sub.category || 'Official')}
-                        </td>
-                        <td class="col-sources" style="text-align: center;">
-                            ${renderSourceBadges(sub.source || sub.sources || sub.parentClass?.source || sub.parentClass?.sources)}
-                        </td>
-                        <td class="col-link" style="text-align: center;">
-                            ${renderLinkBadge(sub.link)}
-                        </td>
-                        <td class="col-multiclass">
-                            ${esc(formatMulticlassShort(sub.multiclassing))}
-                        </td>
-                        <td class="col-notes">
-                            ${formatFlatNotesAdvice(sub)}
-                        </td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
-}
 
 /**
  * Attaches event listeners to toolbar filter dropdowns and buttons.
@@ -686,18 +586,6 @@ function setupControls() {
 
     const container = document.getElementById('ac-view-classes');
     if (!container) return;
-
-    // View Switcher tab buttons
-    container.querySelectorAll('.ac-view-tab-btn').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const mode = btn.dataset.mode;
-            if (mode && mode !== currentViewMode) {
-                currentViewMode = mode;
-                renderView();
-            }
-        };
-    });
 
     // Toggle All Accordions button
     const toggleAllBtn = document.getElementById('accordion-toggle-all-classes-btn');
@@ -769,19 +657,6 @@ function attachRowListeners() {
         };
     });
 
-    // 3. Flat table row clicks -> open detail modal
-    container.querySelectorAll('#classes-table tbody tr').forEach(row => {
-        row.onclick = (e) => {
-            if (e.target.closest('a, button, .ac-source-badge')) return;
-            const subclassId = row.dataset.subclassId;
-            const subItem = allSubclassesFlat.find(s => s.id === subclassId);
-            if (!subItem || !subItem.parentClass) return;
-            const parentClass = subItem.parentClass;
-            const subIdx = (parentClass.resolvedSubclasses || parentClass.subclasses || []).findIndex(s => s.id === subclassId);
-            showClassDetail(parentClass, Math.max(0, subIdx));
-        };
-    });
-
     // 4. Inline advice expand / collapse toggles
     container.querySelectorAll('.ac-advice-more-btn').forEach(btn => {
         btn.onclick = (e) => {
@@ -796,12 +671,12 @@ function attachRowListeners() {
                 full.style.display = 'none';
                 snippet.style.display = '';
                 btn.textContent = 'more ↗';
-                btn.title = 'Click to expand full advice';
+                btn.title = 'Click to expand';
             } else {
                 full.style.display = 'inline';
                 snippet.style.display = 'none';
                 btn.textContent = 'less ↖';
-                btn.title = 'Click to collapse advice';
+                btn.title = 'Click to collapse';
             }
         };
     });

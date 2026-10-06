@@ -93,7 +93,12 @@ DROP POLICY IF EXISTS "Allow service_role to manage ac_subclasses" ON public.ac_
 CREATE POLICY "Allow service_role to manage ac_subclasses" 
     ON public.ac_subclasses FOR ALL TO service_role USING (true) WITH CHECK (true);
 
--- 6. Inheritance Resolution View
+-- 6. Ensure Hawthorne Arcana source points to website section
+UPDATE public.ac_sources
+SET link = '/Guides/arcana/'
+WHERE source_key = 'HTA';
+
+-- 7. Inheritance Resolution View
 DROP VIEW IF EXISTS public.v_ac_classes CASCADE;
 
 CREATE OR REPLACE VIEW public.v_ac_classes

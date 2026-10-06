@@ -220,6 +220,10 @@ def main():
                 elif link and '1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC' in link:
                     link = ARCANA_SUBCLASS_LINKS.get(n_s, '/Guides/arcana/')
 
+                # Twilight Cleric (TCE) should not have the UA Druid PDF link
+                if n_s == 'twilight' and current_class['name'].lower() == 'cleric':
+                    link = None
+
                 if is_dual_ranger:
                     ranger_parent = classes[-2]
                     # Subclass for Ranger (2014)
