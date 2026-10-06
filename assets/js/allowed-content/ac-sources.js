@@ -45,6 +45,7 @@ import {
     esc, 
     formatSnippet, 
     resolveSourceLink, 
+    getStaffPortalUrl,
     renderMarkdownLinks, 
     showToast 
 } from './ac-ui-utils.js';
@@ -206,7 +207,7 @@ function renderSources() {
                 <div class="ac-admin-actions">
                     <button id="btn-add-source" class="ac-btn-admin ac-btn-primary">+ Add New Source</button>
                     <button id="btn-manage-options" class="ac-btn-admin ac-btn-secondary">⚙️ Configure Options</button>
-                    <a href="/staff/" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
+                    <a href="${getStaffPortalUrl()}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
                 </div>
             </div>
         ` : ''}

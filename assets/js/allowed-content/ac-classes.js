@@ -386,12 +386,12 @@ function formatMulticlassShort(text) {
  */
 function formatNotesAdvice(text) {
     if (!text) return '<span style="opacity: 0.5;">—</span>';
-    const trimmed = text.trim();
-    if (trimmed.length <= 160) {
-        return renderMarkdownLinks(trimmed);
+    const cleaned = text.split(/\r?\n/).map(l => l.trim()).join('\n').trim();
+    if (cleaned.length <= 160) {
+        return renderMarkdownLinks(cleaned);
     }
-    const snippet = trimmed.slice(0, 160) + '…';
-    return `${renderMarkdownLinks(snippet)} <span style="font-size:0.75rem; opacity:0.6; cursor:pointer;" title="Click row to view full notes">more ↗</span>`;
+    const snippet = cleaned.slice(0, 160) + '…';
+    return `<span class="ac-advice-snippet">${renderMarkdownLinks(snippet)}</span><span class="ac-advice-full" style="display: none; white-space: pre-wrap;">${renderMarkdownLinks(cleaned)}</span> <button type="button" class="ac-advice-more-btn" style="background: none; border: none; padding: 0 4px; font-size: 0.78rem; color: var(--color-primary); cursor: pointer; text-decoration: underline; font-weight: 500;" title="Click to expand full advice">more ↗</button>`;
 }
 
 /**
@@ -473,7 +473,7 @@ function renderAccordionTable(isAdmin = false) {
                     <th class="col-sources" style="text-align: center;">Source</th>
                     <th class="col-multiclass">Multiclassing</th>
                     <th class="col-expanded hide-mobile">Expanded Options</th>
-                    <th class="col-notes">Notes / Advice</th>
+                    <th class="col-notes">Rage Advice</th>
                 </tr>
             </thead>
             <tbody>
@@ -533,8 +533,11 @@ function renderAccordionTable(isAdmin = false) {
                                         <div style="font-weight: 600; color: var(--color-primary); font-size: 0.9rem;">
                                             📂 ${esc(cls.name)} (${esc(cls.ruleset)}) Subclasses (${subs.length})
                                         </div>
-                                        <div style="font-size: 0.8rem; opacity: 0.7;">
-                                            Click any subclass row to view full details and rulings
+                                        <div style="font-size: 0.8rem; opacity: 0.7; display: flex; align-items: center; gap: 0.5rem;">
+                                            ${isAdmin ? `
+                                                <button class="ac-btn-admin ac-btn-primary ac-btn-sm btn-drawer-add-subclass" data-class-id="${esc(cls.id)}" style="font-size: 0.78rem; padding: 2px 8px;">➕ Add Subclass</button>
+                                                <button class="ac-btn-admin ac-btn-secondary ac-btn-sm btn-drawer-edit-class" data-class-id="${esc(cls.id)}" style="font-size: 0.78rem; padding: 2px 8px;">⚙️ Edit Class</button>
+                                            ` : 'Click any subclass row to view full details and rulings'}
                                         </div>
                                     </div>
                                     <table class="ac-inline-subtable">
@@ -545,11 +548,18 @@ function renderAccordionTable(isAdmin = false) {
                                                 <th>Category</th>
                                                 <th style="text-align: center;">Source</th>
                                                 <th style="text-align: center;">Link</th>
-                                                <th>Subclass Notes / Advice</th>
+                                                <th>Rage Advice</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            ${subs.map((sub, sIdx) => `
+                                            ${subs.length === 0 ? `
+                                                <tr>
+                                                    <td colspan="6" style="text-align: center; opacity: 0.7; padding: 1.5rem;">
+                                                        No subclasses added yet.
+                                                        ${isAdmin ? `<br><button class="ac-btn-admin ac-btn-primary ac-btn-sm btn-drawer-add-subclass" data-class-id="${esc(cls.id)}" style="margin-top: 0.5rem;">➕ Add First Subclass</button>` : ''}
+                                                    </td>
+                                                </tr>
+                                            ` : subs.map((sub, sIdx) => `
                                                 <tr data-subclass-id="${esc(sub.id)}" data-class-id="${esc(cls.id)}" data-sub-idx="${sIdx}">
                                                     <td><strong>${esc(sub.name)}</strong></td>
                                                     <td style="text-align: center;">${esc(sub.ruleset || cls.ruleset)}</td>
@@ -600,7 +610,7 @@ function renderFlatTable(isAdmin = false) {
                     <th class="col-sources" style="text-align: center;">Source</th>
                     <th class="col-link" style="text-align: center;">Link</th>
                     <th class="col-multiclass">Multiclassing</th>
-                    <th class="col-notes">Notes / Advice</th>
+                    <th class="col-notes">Rage Advice</th>
                 </tr>
             </thead>
             <tbody>
@@ -728,6 +738,23 @@ function attachRowListeners() {
         };
     });
 
+    // Drawer action buttons (Add Subclass, Edit Class)
+    container.querySelectorAll('.btn-drawer-add-subclass').forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            const cls = allClasses.find(c => c.id === btn.dataset.classId);
+            if (cls) openClassForm(null, cls, false, 'subclass');
+        };
+    });
+
+    container.querySelectorAll('.btn-drawer-edit-class').forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            const cls = allClasses.find(c => c.id === btn.dataset.classId);
+            if (cls) openClassForm(null, cls, true);
+        };
+    });
+
     // 2. Accordion child table row clicks -> open detail modal
     container.querySelectorAll('.ac-inline-subtable tbody tr').forEach(row => {
         row.onclick = (e) => {
@@ -752,6 +779,30 @@ function attachRowListeners() {
             const parentClass = subItem.parentClass;
             const subIdx = (parentClass.resolvedSubclasses || parentClass.subclasses || []).findIndex(s => s.id === subclassId);
             showClassDetail(parentClass, Math.max(0, subIdx));
+        };
+    });
+
+    // 4. Inline advice expand / collapse toggles
+    container.querySelectorAll('.ac-advice-more-btn').forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            const parent = btn.parentElement;
+            const snippet = parent?.querySelector('.ac-advice-snippet');
+            const full = parent?.querySelector('.ac-advice-full');
+            if (!snippet || !full) return;
+
+            const isExpanded = full.style.display !== 'none';
+            if (isExpanded) {
+                full.style.display = 'none';
+                snippet.style.display = '';
+                btn.textContent = 'more ↗';
+                btn.title = 'Click to expand full advice';
+            } else {
+                full.style.display = 'inline';
+                snippet.style.display = 'none';
+                btn.textContent = 'less ↖';
+                btn.title = 'Click to collapse advice';
+            }
         };
     });
 }
@@ -792,10 +843,11 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
                 </h2>
                 ${isAdmin ? `
                     <div class="detail-actions">
-                        <button id="modal-btn-edit-subclass" class="ac-btn-admin ac-btn-secondary" title="Edit this subclass">✏️ Edit Subclass</button>
+                        ${currentSub?.id ? `<button id="modal-btn-edit-subclass" class="ac-btn-admin ac-btn-secondary" title="Edit this subclass">✏️ Edit Subclass</button>` : ''}
                         <button id="modal-btn-add-subclass" class="ac-btn-admin ac-btn-primary" title="Add a new subclass to this class">➕ Add Subclass</button>
                         <button id="modal-btn-edit-class" class="ac-btn-admin ac-btn-secondary" title="Edit base class">⚙️ Edit Class</button>
-                        <button id="modal-btn-delete-subclass" class="ac-btn-admin ac-btn-delete" title="Delete this subclass">🗑️ Delete</button>
+                        ${currentSub?.id ? `<button id="modal-btn-delete-subclass" class="ac-btn-admin ac-btn-delete" title="Delete this subclass">🗑️ Delete</button>` : ''}
+                        <button id="modal-btn-delete-class" class="ac-btn-admin ac-btn-delete" title="Delete this base class and all its subclasses">🗑️ Delete Class</button>
                     </div>
                 ` : ''}
             </div>
@@ -887,13 +939,16 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
             if (editSubBtn) editSubBtn.onclick = () => openClassForm(currentSub, cls);
 
             const addSubBtn = document.getElementById('modal-btn-add-subclass');
-            if (addSubBtn) addSubBtn.onclick = () => openClassForm(null, cls);
+            if (addSubBtn) addSubBtn.onclick = () => openClassForm(null, cls, false, 'subclass');
 
             const editClassBtn = document.getElementById('modal-btn-edit-class');
             if (editClassBtn) editClassBtn.onclick = () => openClassForm(null, cls, true);
 
             const deleteSubBtn = document.getElementById('modal-btn-delete-subclass');
             if (deleteSubBtn) deleteSubBtn.onclick = () => confirmAndDeleteSubclass(currentSub, cls);
+
+            const deleteClassBtn = document.getElementById('modal-btn-delete-class');
+            if (deleteClassBtn) deleteClassBtn.onclick = () => confirmAndDeleteClass(cls);
         }
     }
 }
@@ -904,15 +959,35 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
  * @param {Object|null} subclassItem - Existing subclass object if editing
  * @param {Object|null} defaultParentClass - Parent class object
  * @param {boolean} [isEditBaseClass=false] - True if editing base class properties
+ * @param {string|null} [defaultMode=null] - 'class' or 'subclass' if adding new
  */
-export async function openClassForm(subclassItem = null, defaultParentClass = null, isEditBaseClass = false) {
+export async function openClassForm(subclassItem = null, defaultParentClass = null, isEditBaseClass = false, defaultMode = null) {
+    if (allClasses.length === 0) {
+        allClasses = (await getClasses()) || [];
+    }
+
     const isNew = !subclassItem && !isEditBaseClass;
     let selectedParentClass = defaultParentClass || (subclassItem ? subclassItem.parentClass : null);
+    const initialMode = defaultMode || (isEditBaseClass ? 'class' : (selectedParentClass ? 'subclass' : 'class'));
+
+    let headerCategory = 'New Class / Subclass';
+    let headerTitle = 'Add Class or Subclass';
+
+    if (isEditBaseClass) {
+        headerCategory = 'Edit Base Class';
+        headerTitle = `Edit Base Class: ${esc(selectedParentClass?.name || '')}`;
+    } else if (subclassItem) {
+        headerCategory = 'Edit Subclass';
+        headerTitle = `Edit Subclass: ${esc(selectedParentClass?.name || '')} (${esc(subclassItem.name)})`;
+    } else {
+        headerCategory = initialMode === 'class' ? 'New Base Class' : 'New Subclass';
+        headerTitle = initialMode === 'class' ? 'Add New Base Class' : 'Add New Subclass';
+    }
 
     const html = `
         <div class="detail-header">
-            <span class="detail-category">${isEditBaseClass ? 'Edit Base Class' : (isNew ? 'New Class or Subclass' : 'Edit Subclass')}</span>
-            <h2 class="detail-title">${isEditBaseClass ? `Edit Base Class: ${esc(selectedParentClass?.name)}` : (isNew ? 'Add Class or Subclass' : `Edit: ${esc(selectedParentClass?.name)} (${esc(subclassItem.name)})`)}</h2>
+            <span class="detail-category" id="modal-header-category">${headerCategory}</span>
+            <h2 class="detail-title" id="modal-header-title">${headerTitle}</h2>
         </div>
 
         <form id="ac-class-form" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
@@ -929,6 +1004,13 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     </select>
                 </div>
                 <div class="ac-form-group">
+                    <label for="class-input-category">Category *</label>
+                    <select id="class-input-category" class="ac-form-input" required>
+                        <option value="Official" ${selectedParentClass?.category === 'Official' ? 'selected' : ''}>Official</option>
+                        <option value="Hawthorne Homebrew" ${selectedParentClass?.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                    </select>
+                </div>
+                <div class="ac-form-group">
                     <label for="class-input-hitdie">Hit Die *</label>
                     <input type="text" id="class-input-hitdie" required class="ac-form-input" value="${esc(selectedParentClass?.hit_die || 'd8')}" placeholder="d8, d10, d12, etc.">
                 </div>
@@ -937,7 +1019,7 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     <input type="text" id="class-input-source" required class="ac-form-input" value="${esc(selectedParentClass?.source || 'PHB2014')}">
                 </div>
                 <div class="ac-form-group">
-                    <label for="class-input-multiclass">Multiclassing</label>
+                    <label for="class-input-multiclass">Multiclassing Requirements & Proficiencies</label>
                     <textarea id="class-input-multiclass" class="ac-form-textarea" rows="3">${esc(selectedParentClass?.multiclassing || '')}</textarea>
                 </div>
                 <div class="ac-form-group">
@@ -948,8 +1030,8 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     <label for="class-input-notes">Base Notes / Advice</label>
                     <textarea id="class-input-notes" class="ac-form-textarea" rows="3">${esc(selectedParentClass?.notes_advice || '')}</textarea>
                 </div>
-            ` : `
-                <!-- Subclass Form -->
+            ` : (subclassItem ? `
+                <!-- Edit Subclass Form -->
                 <div class="ac-form-group">
                     <label for="class-select-parent">Parent Class *</label>
                     <select id="class-select-parent" class="ac-form-input" required>
@@ -962,35 +1044,141 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-name">Subclass Name *</label>
-                    <input type="text" id="subclass-input-name" required class="ac-form-input" value="${esc(subclassItem?.name || '')}" placeholder="e.g. Battle Master, Berserker">
+                    <input type="text" id="subclass-input-name" required class="ac-form-input" value="${esc(subclassItem.name || '')}" placeholder="e.g. Battle Master, Berserker">
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-ruleset">Ruleset *</label>
                     <select id="subclass-input-ruleset" class="ac-form-input" required>
-                        <option value="2014" ${subclassItem?.ruleset === '2014' ? 'selected' : ''}>2014</option>
-                        <option value="2024" ${subclassItem?.ruleset === '2024' ? 'selected' : ''}>2024</option>
+                        <option value="2014" ${subclassItem.ruleset === '2014' ? 'selected' : ''}>2014</option>
+                        <option value="2024" ${subclassItem.ruleset === '2024' ? 'selected' : ''}>2024</option>
                     </select>
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-category">Category *</label>
                     <select id="subclass-input-category" class="ac-form-input" required>
-                        <option value="Official" ${subclassItem?.category === 'Official' ? 'selected' : ''}>Official</option>
-                        <option value="Hawthorne Homebrew" ${subclassItem?.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                        <option value="Official" ${subclassItem.category === 'Official' ? 'selected' : ''}>Official</option>
+                        <option value="Hawthorne Homebrew" ${subclassItem.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
                     </select>
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-source">Source *</label>
-                    <input type="text" id="subclass-input-source" required class="ac-form-input" value="${esc(subclassItem?.source || 'PHB2014')}" placeholder="e.g. PHB2014, TCE, XGE, HTA">
+                    <input type="text" id="subclass-input-source" required class="ac-form-input" value="${esc(subclassItem.source || 'PHB2014')}" placeholder="e.g. PHB2014, TCE, XGE, HTA">
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-link">Document Link</label>
-                    <input type="text" id="subclass-input-link" class="ac-form-input" value="${esc(subclassItem?.link || '')}" placeholder="https://... or /arcana/...">
+                    <input type="text" id="subclass-input-link" class="ac-form-input" value="${esc(subclassItem.link || '')}" placeholder="https://... or /arcana/...">
                 </div>
                 <div class="ac-form-group">
                     <label for="subclass-input-notes">Subclass Notes / Advice</label>
-                    <textarea id="subclass-input-notes" class="ac-form-textarea" rows="3">${esc(subclassItem?.notes_advice || '')}</textarea>
+                    <textarea id="subclass-input-notes" class="ac-form-textarea" rows="3">${esc(subclassItem.notes_advice || '')}</textarea>
                 </div>
-            `}
+            ` : `
+                <!-- New Class or Subclass Form with Mode Toggle -->
+                <div class="ac-form-group ac-mode-toggle" style="background: var(--bg-surface-elevated, rgba(0,0,0,0.03)); padding: 0.75rem 1rem; border-radius: 6px; border: 1px solid var(--border-color, rgba(0,0,0,0.1));">
+                    <label style="font-weight: 600; margin-bottom: 0.4rem; display: block;">What would you like to add?</label>
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500;">
+                            <input type="radio" name="class-form-type" id="type-radio-class" value="class" ${initialMode === 'class' ? 'checked' : ''}>
+                            <span>New Base Class <small style="opacity: 0.75;">(e.g. Artificer, Blood Hunter)</small></span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500;">
+                            <input type="radio" name="class-form-type" id="type-radio-subclass" value="subclass" ${initialMode === 'subclass' ? 'checked' : ''}>
+                            <span>New Subclass <small style="opacity: 0.75;">(under an existing class)</small></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section: New Base Class -->
+                <div id="section-new-class" style="display: ${initialMode === 'class' ? 'flex' : 'none'}; flex-direction: column; gap: 1rem;">
+                    <div class="ac-form-group">
+                        <label for="class-input-name">Class Name *</label>
+                        <input type="text" id="class-input-name" required class="ac-form-input" placeholder="e.g. Blood Hunter, Artificer" ${initialMode === 'class' ? '' : 'disabled'}>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-ruleset">Ruleset *</label>
+                        <select id="class-input-ruleset" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
+                            <option value="2014" selected>2014</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-category">Category *</label>
+                        <select id="class-input-category" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
+                            <option value="Official" selected>Official</option>
+                            <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-hitdie">Hit Die *</label>
+                        <input type="text" id="class-input-hitdie" required class="ac-form-input" value="d8" placeholder="d6, d8, d10, d12" ${initialMode === 'class' ? '' : 'disabled'}>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-source">Source *</label>
+                        <input type="text" id="class-input-source" required class="ac-form-input" value="PHB2014" placeholder="e.g. PHB2014, TCE, BH2022" ${initialMode === 'class' ? '' : 'disabled'}>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-multiclass">Multiclassing Requirements & Proficiencies</label>
+                        <textarea id="class-input-multiclass" class="ac-form-textarea" rows="3" placeholder="Requires DEX 13, INT 13..." ${initialMode === 'class' ? '' : 'disabled'}></textarea>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-expanded">Expanded Options (TCE)</label>
+                        <textarea id="class-input-expanded" class="ac-form-textarea" rows="2" placeholder="Optional feature replacements..." ${initialMode === 'class' ? '' : 'disabled'}></textarea>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="class-input-notes">Base Notes / Advice</label>
+                        <textarea id="class-input-notes" class="ac-form-textarea" rows="3" placeholder="Guild rulings, advice..." ${initialMode === 'class' ? '' : 'disabled'}></textarea>
+                    </div>
+                    <div class="ac-form-group" style="border-top: 1px dashed var(--border-color, rgba(0,0,0,0.15)); padding-top: 0.75rem;">
+                        <label for="class-input-initial-subclass">Initial Subclass (Optional)</label>
+                        <input type="text" id="class-input-initial-subclass" class="ac-form-input" placeholder="e.g. Ghostslayer (leave blank if adding subclasses later)" ${initialMode === 'class' ? '' : 'disabled'}>
+                    </div>
+                </div>
+
+                <!-- Section: New Subclass -->
+                <div id="section-new-subclass" style="display: ${initialMode === 'subclass' ? 'flex' : 'none'}; flex-direction: column; gap: 1rem;">
+                    <div class="ac-form-group">
+                        <label for="class-select-parent">Parent Class *</label>
+                        <select id="class-select-parent" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
+                            <option value="NEW">+ Create New Base Class...</option>
+                            ${allClasses.map(c => `
+                                <option value="${esc(c.id)}" ${selectedParentClass?.id === c.id ? 'selected' : ''}>
+                                    ${esc(c.name)} (${esc(c.ruleset)})
+                                </option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-name">Subclass Name *</label>
+                        <input type="text" id="subclass-input-name" required class="ac-form-input" placeholder="e.g. Battle Master, Berserker" ${initialMode === 'subclass' ? '' : 'disabled'}>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-ruleset">Ruleset *</label>
+                        <select id="subclass-input-ruleset" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
+                            <option value="2014" selected>2014</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-category">Category *</label>
+                        <select id="subclass-input-category" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
+                            <option value="Official" selected>Official</option>
+                            <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
+                        </select>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-source">Source *</label>
+                        <input type="text" id="subclass-input-source" required class="ac-form-input" value="PHB2014" placeholder="e.g. PHB2014, TCE, XGE, HTA" ${initialMode === 'subclass' ? '' : 'disabled'}>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-link">Document Link</label>
+                        <input type="text" id="subclass-input-link" class="ac-form-input" placeholder="https://... or /arcana/..." ${initialMode === 'subclass' ? '' : 'disabled'}>
+                    </div>
+                    <div class="ac-form-group">
+                        <label for="subclass-input-notes">Subclass Notes / Advice</label>
+                        <textarea id="subclass-input-notes" class="ac-form-textarea" rows="3" ${initialMode === 'subclass' ? '' : 'disabled'}></textarea>
+                    </div>
+                </div>
+            `)}
 
             <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
                 <button type="button" class="ac-btn-admin ac-btn-secondary" id="class-form-cancel">Cancel</button>
@@ -1003,6 +1191,41 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
 
     const cancelBtn = document.getElementById('class-form-cancel');
     if (cancelBtn) cancelBtn.onclick = closeModal;
+
+    const radioClass = document.getElementById('type-radio-class');
+    const radioSubclass = document.getElementById('type-radio-subclass');
+    const parentSelect = document.getElementById('class-select-parent');
+
+    function setFormMode(mode) {
+        const isClass = mode === 'class';
+        const sectionClass = document.getElementById('section-new-class');
+        const sectionSubclass = document.getElementById('section-new-subclass');
+        const headerCatEl = document.getElementById('modal-header-category');
+        const headerTitleEl = document.getElementById('modal-header-title');
+
+        if (sectionClass) {
+            sectionClass.style.display = isClass ? 'flex' : 'none';
+            sectionClass.querySelectorAll('input, select, textarea').forEach(el => el.disabled = !isClass);
+        }
+        if (sectionSubclass) {
+            sectionSubclass.style.display = isClass ? 'none' : 'flex';
+            sectionSubclass.querySelectorAll('input, select, textarea').forEach(el => el.disabled = isClass);
+        }
+        if (headerCatEl) headerCatEl.textContent = isClass ? 'New Base Class' : 'New Subclass';
+        if (headerTitleEl) headerTitleEl.textContent = isClass ? 'Add New Base Class' : 'Add New Subclass';
+        if (radioClass) radioClass.checked = isClass;
+        if (radioSubclass) radioSubclass.checked = !isClass;
+    }
+
+    if (radioClass) radioClass.onchange = () => setFormMode('class');
+    if (radioSubclass) radioSubclass.onchange = () => setFormMode('subclass');
+    if (parentSelect) {
+        parentSelect.onchange = () => {
+            if (parentSelect.value === 'NEW') {
+                setFormMode('class');
+            }
+        };
+    }
 
     const form = document.getElementById('ac-class-form');
     if (form) {
@@ -1017,12 +1240,13 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     const ruleset = document.getElementById('class-input-ruleset').value;
                     const hit_die = document.getElementById('class-input-hitdie').value.trim();
                     const source = document.getElementById('class-input-source').value.trim();
+                    const category = document.getElementById('class-input-category')?.value || 'Official';
                     const multiclassing = document.getElementById('class-input-multiclass').value.trim();
                     const expanded_options = document.getElementById('class-input-expanded').value.trim();
                     const notes_advice = document.getElementById('class-input-notes').value.trim();
 
                     const { error } = await updateClass(selectedParentClass.id, {
-                        name, ruleset, hit_die, source, multiclassing, expanded_options, notes_advice
+                        name, ruleset, hit_die, source, category, multiclassing, expanded_options, notes_advice
                     });
                     if (error) throw error;
                 } else if (subclassItem) {
@@ -1040,23 +1264,63 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     });
                     if (error) throw error;
                 } else {
-                    // Create New Subclass
-                    const parentId = document.getElementById('class-select-parent').value;
-                    const name = document.getElementById('subclass-input-name').value.trim();
-                    const ruleset = document.getElementById('subclass-input-ruleset').value;
-                    const category = document.getElementById('subclass-input-category').value;
-                    const source = document.getElementById('subclass-input-source').value.trim();
-                    const link = document.getElementById('subclass-input-link').value.trim() || null;
-                    const notes_advice = document.getElementById('subclass-input-notes').value.trim() || null;
+                    // Creation mode
+                    const isCreatingBaseClass = radioClass ? radioClass.checked : (initialMode === 'class');
 
-                    const parentClass = allClasses.find(c => c.id === parentId);
-                    const existingSubs = parentClass ? (parentClass.subclasses || []) : [];
-                    const nextOrder = getNextDisplayOrder(existingSubs);
+                    if (isCreatingBaseClass) {
+                        const name = document.getElementById('class-input-name').value.trim();
+                        const ruleset = document.getElementById('class-input-ruleset').value;
+                        const hit_die = document.getElementById('class-input-hitdie').value.trim();
+                        const category = document.getElementById('class-input-category')?.value || 'Official';
+                        const source = document.getElementById('class-input-source').value.trim();
+                        const multiclassing = document.getElementById('class-input-multiclass').value.trim() || null;
+                        const expanded_options = document.getElementById('class-input-expanded').value.trim() || null;
+                        const notes_advice = document.getElementById('class-input-notes').value.trim() || null;
+                        const initialSub = document.getElementById('class-input-initial-subclass')?.value.trim();
 
-                    const { error } = await createSubclass({
-                        class_id: parentId, name, ruleset, category, source, link, notes_advice, display_order: nextOrder
-                    });
-                    if (error) throw error;
+                        const nextClassOrder = getNextDisplayOrder(allClasses);
+                        const { data: newClass, error: classErr } = await createClass({
+                            name, ruleset, category, hit_die, source, multiclassing, expanded_options, notes_advice, display_order: nextClassOrder
+                        });
+                        if (classErr) throw classErr;
+
+                        if (initialSub && newClass?.id) {
+                            const { error: subErr } = await createSubclass({
+                                class_id: newClass.id,
+                                name: initialSub,
+                                ruleset,
+                                category,
+                                source,
+                                link: null,
+                                notes_advice: null,
+                                display_order: 10.0
+                            });
+                            if (subErr) console.warn('Could not create initial subclass:', subErr);
+                        }
+                    } else {
+                        // Create New Subclass
+                        const parentId = document.getElementById('class-select-parent').value;
+                        if (parentId === 'NEW') {
+                            setFormMode('class');
+                            if (submitBtn) submitBtn.disabled = false;
+                            return;
+                        }
+                        const name = document.getElementById('subclass-input-name').value.trim();
+                        const ruleset = document.getElementById('subclass-input-ruleset').value;
+                        const category = document.getElementById('subclass-input-category').value;
+                        const source = document.getElementById('subclass-input-source').value.trim();
+                        const link = document.getElementById('subclass-input-link').value.trim() || null;
+                        const notes_advice = document.getElementById('subclass-input-notes').value.trim() || null;
+
+                        const parentClass = allClasses.find(c => c.id === parentId);
+                        const existingSubs = parentClass ? (parentClass.subclasses || []) : [];
+                        const nextOrder = getNextDisplayOrder(existingSubs);
+
+                        const { error } = await createSubclass({
+                            class_id: parentId, name, ruleset, category, source, link, notes_advice, display_order: nextOrder
+                        });
+                        if (error) throw error;
+                    }
                 }
 
                 closeModal();

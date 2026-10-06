@@ -80,7 +80,11 @@ def resolve_source(raw_source, valid_source_keys):
         else:
             return None
 
-    return ', '.join(resolved_parts)
+def clean_multiline(text):
+    if not text:
+        return None
+    lines = [l.strip() for l in text.splitlines()]
+    return '\n'.join(lines).strip() or None
 
 def main():
     # 1. Load valid source keys from /tmp/valid_sources.json (passed from node) or fallback
@@ -168,9 +172,9 @@ def main():
                     'category': 'Official',
                     'source': resolved_c_src,
                     'hit_die': hit_die.strip() if hit_die else None,
-                    'multiclassing': mc.strip() if mc else None,
-                    'expanded_options': exp_opt.strip() if exp_opt else None,
-                    'notes_advice': advice.strip() if advice else None,
+                    'multiclassing': clean_multiline(mc),
+                    'expanded_options': clean_multiline(exp_opt),
+                    'notes_advice': clean_multiline(advice),
                     'display_order': class_order
                 }
                 classes.append(current_class)
@@ -236,7 +240,7 @@ def main():
                         'category': category,
                         'source': r_src,
                         'link': None if r_src == 'PHB2014' else link,
-                        'notes_advice': advice.strip() if advice else None,
+                        'notes_advice': clean_multiline(advice),
                         'display_order': subclass_order
                     })
 
@@ -258,7 +262,7 @@ def main():
                         'category': category,
                         'source': rr_src,
                         'link': None if rr_src == 'PHB2014' else link,
-                        'notes_advice': advice.strip() if advice else None,
+                        'notes_advice': clean_multiline(advice),
                         'display_order': subclass_order
                     })
                 else:
@@ -271,7 +275,7 @@ def main():
                         'category': category,
                         'source': resolved_s_src,
                         'link': None if resolved_s_src == 'PHB2014' else link,
-                        'notes_advice': advice.strip() if advice else None,
+                        'notes_advice': clean_multiline(advice),
                         'display_order': subclass_order
                     })
                 subclass_order += 10.0

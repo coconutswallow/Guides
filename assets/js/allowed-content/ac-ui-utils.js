@@ -233,6 +233,15 @@ export function resolveSourceLink(rawLink = '') {
 }
 
 /**
+ * Resolves the relative or absolute URL to the Staff Portal, respecting site BASE_URL (/Guides).
+ * 
+ * @returns {string} Fully resolved Staff Portal URL (e.g. '/Guides/staff/')
+ */
+export function getStaffPortalUrl() {
+    return resolveSourceLink('/staff/');
+}
+
+/**
  * Converts markdown links `[label](url)` in text into secure HTML `<a>` tags.
  * 
  * Security Architecture:

@@ -25,7 +25,7 @@
 
 import { supabase } from '../supabaseClient.js';
 import { checkAccess } from '../auth-check.js';
-import { esc } from './ac-ui-utils.js';
+import { esc, getStaffPortalUrl } from './ac-ui-utils.js';
 
 let isAdmin = false;
 let currentUser = null;
@@ -112,21 +112,23 @@ export function renderAdminBar(activeTab = 'sources', tabRegistry = null) {
     }
 
     let actionsHtml = '';
+    const staffPortalHref = getStaffPortalUrl();
     const tabConfig = tabRegistry?.[activeTab];
     if (tabConfig?.adminActions) {
         actionsHtml = tabConfig.adminActions.map(action => `
             <button id="${esc(action.id)}" class="ac-btn-admin ${action.primary ? 'ac-btn-primary' : 'ac-btn-secondary'}">${esc(action.label)}</button>
-        `).join('') + '<a href="/staff/" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>';
+        `).join('') + `<a href="${staffPortalHref}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>`;
     } else if (activeTab === 'races') {
         actionsHtml = `
-            <button id="btn-add-race" class="ac-btn-admin ac-btn-primary">+ Add Race / Lineage</button>
-            <a href="/staff/" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
+            <button id="btn-add-race" class="ac-btn-admin ac-btn-primary">+ Add Race</button>
+            <button id="btn-add-subrace" class="ac-btn-admin ac-btn-secondary">+ Add Subrace</button>
+            <a href="${staffPortalHref}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
         `;
     } else {
         actionsHtml = `
             <button id="btn-add-source" class="ac-btn-admin ac-btn-primary">+ Add New Source</button>
             <button id="btn-manage-options" class="ac-btn-admin ac-btn-secondary">⚙️ Configure Options</button>
-            <a href="/staff/" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
+            <a href="${staffPortalHref}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
         `;
     }
 
@@ -166,6 +168,9 @@ export function renderAdminBar(activeTab = 'sources', tabRegistry = null) {
             window.dispatchEvent(new CustomEvent('ac:open-options-manager'));
         });
         document.getElementById('btn-add-race')?.addEventListener('click', () => {
+            window.dispatchEvent(new CustomEvent('ac:open-new-race-form'));
+        });
+        document.getElementById('btn-add-subrace')?.addEventListener('click', () => {
             window.dispatchEvent(new CustomEvent('ac:open-race-form'));
         });
     }

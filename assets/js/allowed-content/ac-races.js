@@ -259,7 +259,10 @@ export function getNextRaceId(races = allRaces) {
 // Global listener for opening race form from admin bar
 if (typeof window !== 'undefined') {
     window.addEventListener('ac:open-race-form', () => {
-        openRaceForm(null);
+        openRaceForm(null, null, 'subrace');
+    });
+    window.addEventListener('ac:open-new-race-form', () => {
+        openRaceForm(null, null, 'race');
     });
     window.addEventListener('ac:races-updated', () => {
         const container = document.getElementById('ac-view-races');
@@ -850,7 +853,6 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
         <div class="detail-header">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
                 <div class="detail-category">${renderSourceBadges(currentSub.sources?.length ? currentSub.sources : race.sources)}</div>
-                ${currentSub.check_id ? `<span style="font-family: monospace; font-size: 0.8rem; opacity: 0.6;">Audit Check: ${esc(currentSub.check_id)}</span>` : ''}
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
                 <h2 class="detail-title" style="margin: 0;">
@@ -930,7 +932,7 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
             openRaceForm(currentSub, race);
         });
         document.getElementById('modal-btn-add-subrace')?.addEventListener('click', () => {
-            openRaceForm(null, race);
+            openRaceForm(null, race, 'subrace');
         });
         document.getElementById('modal-btn-edit-race')?.addEventListener('click', () => {
             openEditRaceModal(race);
@@ -1076,7 +1078,7 @@ export function formatASI(r) {
  * @param {Object|null} subraceItem - Existing subrace to edit or null to create new
  * @param {Object|null} defaultParentRace - Pre-selected parent race object
  */
-export async function openRaceForm(subraceItem = null, defaultParentRace = null) {
+export async function openRaceForm(subraceItem = null, defaultParentRace = null, defaultMode = null) {
     if (allRaces.length === 0) {
         allRaces = sortByDisplayOrder((await getRaces()) || []);
     }
@@ -1107,6 +1109,7 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null)
 
     const isNew = !subraceItem;
     let selectedParentRace = defaultParentRace || (isNew ? null : (allRaces.find(r => r.race_id === subraceItem.race_id) || allRaces.find(r => r.name === subraceItem.raceName) || null));
+    const initialMode = defaultMode || (selectedParentRace ? 'subrace' : 'race');
     let selectedSources = isNew 
         ? (selectedParentRace?.sources ? [...selectedParentRace.sources] : [])
         : [...(subraceItem.sources || [])];
@@ -1120,23 +1123,54 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null)
         ? getNextRaceCheckId(allSubracesFlat)
         : (subraceItem.check_id || '');
 
+    let headerCategory = 'New Race / Lineage';
+    let headerTitle = 'Add Race or Lineage';
+
+    if (!isNew) {
+        headerCategory = 'Edit Lineage';
+        headerTitle = `Edit Lineage: ${esc(selectedParentRace?.name || '')} (${esc(subraceItem.subrace || 'None')})`;
+    } else if (initialMode === 'race') {
+        headerCategory = 'New Base Race';
+        headerTitle = 'Add New Base Race';
+    } else {
+        headerCategory = 'New Subrace / Lineage';
+        headerTitle = selectedParentRace ? `Add New Subrace: ${esc(selectedParentRace.name)}` : 'Add New Subrace';
+    }
+
     const formHtml = `
         <div class="detail-header">
             <div>
-                <span class="detail-category">${isNew ? 'New Lineage / Species' : 'Edit Lineage'}</span>
-                <h2 class="detail-title">${isNew ? 'Add Race or Lineage' : `Edit Lineage: ${esc(selectedParentRace?.name || '')} (${esc(subraceItem.subrace || 'None')})`}</h2>
+                <span class="detail-category" id="race-modal-category">${headerCategory}</span>
+                <h2 class="detail-title" id="race-modal-title">${headerTitle}</h2>
             </div>
         </div>
 
         <form id="ac-race-form" class="ac-edit-form">
             <div id="race-form-error" class="ac-form-error" style="display: none; background: rgba(211, 47, 47, 0.1); border-left: 4px solid #d32f2f; color: #d32f2f; padding: 0.75rem; border-radius: 4px; font-weight: 500;"></div>
 
+            ${isNew ? `
+                <!-- Mode Selector Toggle -->
+                <div class="ac-form-group ac-mode-toggle" style="background: var(--bg-surface-elevated, rgba(0,0,0,0.03)); padding: 0.75rem 1rem; border-radius: 6px; border: 1px solid var(--border-color, rgba(0,0,0,0.1)); margin-bottom: 1rem;">
+                    <label style="font-weight: 600; margin-bottom: 0.4rem; display: block;">What would you like to add?</label>
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500;">
+                            <input type="radio" name="race-form-type" id="type-radio-race" value="race" ${initialMode === 'race' ? 'checked' : ''}>
+                            <span>New Base Race / Species <small style="opacity: 0.75;">(e.g. Human, Elf, Owlin)</small></span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500;">
+                            <input type="radio" name="race-form-type" id="type-radio-subrace" value="subrace" ${initialMode === 'subrace' ? 'checked' : ''}>
+                            <span>New Subrace / Lineage <small style="opacity: 0.75;">(under an existing species)</small></span>
+                        </label>
+                    </div>
+                </div>
+            ` : ''}
+
             <div class="ac-form-grid">
                 <!-- Step 1: Parent Race / Species -->
-                <div class="ac-form-group">
+                <div class="ac-form-group" id="race-parent-group" style="${initialMode === 'race' && isNew ? 'display: none;' : ''}">
                     <label for="race-input-parent">Species / Base Race *</label>
                     <select id="race-input-parent" class="ac-form-select" ${!isNew ? 'disabled' : ''}>
-                        <option value="NEW" ${!selectedParentRace ? 'selected' : ''}>+ Create New Species...</option>
+                        <option value="NEW" ${(!selectedParentRace || initialMode === 'race') ? 'selected' : ''}>+ Create New Species...</option>
                         ${allRaces.map(r => `
                             <option value="${esc(r.race_id)}" ${(selectedParentRace && selectedParentRace.race_id === r.race_id) ? 'selected' : ''}>
                                 ${esc(r.name)}
@@ -1146,24 +1180,20 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null)
                 </div>
 
                 <!-- New Species Name (Conditional) -->
-                <div class="ac-form-group" id="race-new-species-group" style="${selectedParentRace ? 'display: none;' : ''}">
+                <div class="ac-form-group" id="race-new-species-group" style="${initialMode === 'race' || (!selectedParentRace && isNew) ? '' : 'display: none;'}">
                     <label for="race-input-new-name">New Species Name *</label>
-                    <input type="text" id="race-input-new-name" class="ac-form-input" placeholder="e.g. Owlin, Thri-kreen" ${!selectedParentRace ? 'required' : ''}>
+                    <input type="text" id="race-input-new-name" class="ac-form-input" placeholder="e.g. Owlin, Thri-kreen" ${(initialMode === 'race' || !selectedParentRace) && isNew ? 'required' : ''}>
                     <small class="ac-form-help">Base species order will default to bottom (${getNextDisplayOrder(allRaces)})</small>
                 </div>
 
                 <!-- Step 2: Subrace -->
-                <div class="ac-form-group">
-                    <label for="race-input-subrace">Subrace Name</label>
-                    <input type="text" id="race-input-subrace" class="ac-form-input" value="${esc(isNew ? '' : (subraceItem.subrace === 'None' ? '' : subraceItem.subrace))}" placeholder="e.g. High, Wood, or leave blank for 'None'">
-                    <small class="ac-form-help">Leave blank or 'None' if this species has no subraces</small>
+                <div class="ac-form-group" id="race-subrace-group">
+                    <label for="race-input-subrace" id="race-subrace-label">${initialMode === 'race' && isNew ? 'Subrace Name (Optional)' : 'Subrace Name'}</label>
+                    <input type="text" id="race-input-subrace" class="ac-form-input" value="${esc(isNew ? '' : (subraceItem.subrace === 'None' ? '' : subraceItem.subrace))}" placeholder="${initialMode === 'race' && isNew ? 'e.g. Standard, or leave blank if none' : 'e.g. High, Wood, or leave blank for \'None\''}">
+                    <small class="ac-form-help" id="race-subrace-help">Leave blank or 'None' if this species has no subraces</small>
                 </div>
 
-                <div class="ac-form-group">
-                    <label for="race-input-check-id">Audit Check ID *</label>
-                    <input type="text" id="race-input-check-id" required class="ac-form-input" value="${esc(nextCheckId)}" placeholder="e.g. RAC_0248">
-                    <small class="ac-form-help">Unique audit check identifier</small>
-                </div>
+                <input type="hidden" id="race-input-check-id" value="${esc(nextCheckId)}">
 
                 <!-- Step 3: Stats -->
                 <div class="ac-form-group">
@@ -1258,7 +1288,7 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null)
 
             <div class="detail-actions" style="margin-top: 1.5rem; justify-content: flex-end;">
                 <button type="button" class="ac-btn-admin ac-btn-secondary" id="race-form-cancel">Cancel</button>
-                <button type="submit" class="ac-btn-admin ac-btn-primary" id="race-form-submit">${isNew ? 'Create Race / Lineage' : 'Save Changes'}</button>
+                <button type="submit" class="ac-btn-admin ac-btn-primary" id="race-form-submit">${!isNew ? 'Save Changes' : (initialMode === 'race' ? 'Create Base Race' : 'Create Subrace')}</button>
             </div>
         </form>
     `;
@@ -1308,26 +1338,84 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null)
         });
     }
 
-    // Dynamic parent race selection changes
+    // Dynamic parent race selection changes & mode switching
     const parentSelect = document.getElementById('race-input-parent');
     const newSpeciesGroup = document.getElementById('race-new-species-group');
     const newNameInput = document.getElementById('race-input-new-name');
     const orderInput = document.getElementById('race-input-order');
+    const parentGroup = document.getElementById('race-parent-group');
+    const subraceLabel = document.getElementById('race-subrace-label');
+    const subraceInput = document.getElementById('race-input-subrace');
+    const radioRace = document.getElementById('type-radio-race');
+    const radioSubrace = document.getElementById('type-radio-subrace');
+
+    function setRaceFormMode(mode) {
+        const isRaceMode = mode === 'race';
+        const headerCat = document.getElementById('race-modal-category');
+        const headerTit = document.getElementById('race-modal-title');
+        const submitBtn = document.getElementById('race-form-submit');
+
+        if (isRaceMode) {
+            if (headerCat) headerCat.textContent = 'New Base Race';
+            if (headerTit) headerTit.textContent = 'Add New Base Race';
+            if (submitBtn) submitBtn.textContent = 'Create Base Race';
+            if (parentGroup) parentGroup.style.display = 'none';
+            if (newSpeciesGroup) newSpeciesGroup.style.display = '';
+            if (parentSelect) parentSelect.value = 'NEW';
+            if (newNameInput) newNameInput.required = true;
+            if (subraceLabel) subraceLabel.textContent = 'Subrace Name (Optional)';
+            if (subraceInput) subraceInput.placeholder = "e.g. Standard, or leave blank if none";
+            if (orderInput && isNew) orderInput.value = 1;
+        } else {
+            if (headerCat) headerCat.textContent = 'New Subrace / Lineage';
+            if (parentGroup) parentGroup.style.display = '';
+            if (newSpeciesGroup) newSpeciesGroup.style.display = 'none';
+            if (parentSelect && parentSelect.value === 'NEW') {
+                if (selectedParentRace) {
+                    parentSelect.value = selectedParentRace.race_id;
+                } else if (allRaces.length > 0) {
+                    parentSelect.value = allRaces[0].race_id;
+                }
+            }
+            const curParent = allRaces.find(r => r.race_id === parentSelect?.value);
+            if (headerTit) {
+                headerTit.textContent = curParent ? `Add New Subrace: ${curParent.name}` : 'Add New Subrace';
+            }
+            if (submitBtn) submitBtn.textContent = 'Create Subrace';
+            if (newNameInput) newNameInput.required = false;
+            if (subraceLabel) subraceLabel.textContent = 'Subrace Name';
+            if (subraceInput) subraceInput.placeholder = "e.g. High, Wood, or leave blank for 'None'";
+            if (orderInput && isNew) {
+                orderInput.value = curParent ? getNextDisplayOrder(curParent.subraces || [], 1) : 1;
+            }
+        }
+    }
+
+    if (radioRace) {
+        radioRace.addEventListener('change', () => {
+            if (radioRace.checked) setRaceFormMode('race');
+        });
+    }
+    if (radioSubrace) {
+        radioSubrace.addEventListener('change', () => {
+            if (radioSubrace.checked) setRaceFormMode('subrace');
+        });
+    }
 
     if (parentSelect) {
         parentSelect.addEventListener('change', () => {
             const isNewSpecies = parentSelect.value === 'NEW';
-            if (newSpeciesGroup) {
-                newSpeciesGroup.style.display = isNewSpecies ? '' : 'none';
-            }
-            if (newNameInput) {
-                newNameInput.required = isNewSpecies;
-            }
-            if (orderInput && isNew) {
-                if (isNewSpecies) {
-                    orderInput.value = 1;
-                } else {
-                    const chosen = allRaces.find(r => r.race_id === parentSelect.value);
+            if (isNewSpecies) {
+                if (radioRace) radioRace.checked = true;
+                setRaceFormMode('race');
+            } else {
+                if (radioSubrace) radioSubrace.checked = true;
+                const chosen = allRaces.find(r => r.race_id === parentSelect.value);
+                const headerTit = document.getElementById('race-modal-title');
+                if (headerTit && isNew) {
+                    headerTit.textContent = chosen ? `Add New Subrace: ${chosen.name}` : 'Add New Subrace';
+                }
+                if (orderInput && isNew) {
                     orderInput.value = chosen ? getNextDisplayOrder(chosen.subraces || [], 1) : 1;
                 }
             }
@@ -1360,7 +1448,7 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null)
                 return;
             }
 
-            const isNewSpecies = parentSelect?.value === 'NEW';
+            const isNewSpecies = (radioRace?.checked) || (parentSelect?.value === 'NEW');
             let targetRaceId = parentSelect?.value;
             let parentRaceRecord = null;
 
@@ -1574,7 +1662,7 @@ export async function confirmAndDeleteSubrace(currentSub, race) {
     const isOnlySubrace = (race.subraces || []).length <= 1;
     const subLabel = getSubraceLabel(currentSub);
 
-    let msg = `Are you sure you want to delete the lineage "${subLabel}" (${currentSub.check_id || ''})?`;
+    let msg = `Are you sure you want to delete the lineage "${subLabel}"?`;
     if (isOnlySubrace) {
         msg = `"${subLabel}" is the ONLY lineage for "${race.name}". Deleting it will permanently delete the base species "${race.name}" as well. Are you sure you want to proceed?`;
     }

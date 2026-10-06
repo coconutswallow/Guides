@@ -77,7 +77,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initRaces(forceRefresh),
         filter: (term) => filterRaces(term),
         adminActions: [
-            { id: 'btn-add-race', label: '+ Add Race / Lineage', primary: true, event: 'ac:open-race-form' }
+            { id: 'btn-add-race', label: '+ Add Race', primary: true, event: 'ac:open-new-race-form' },
+            { id: 'btn-add-subrace', label: '+ Add Subrace', primary: false, event: 'ac:open-race-form' }
         ]
     },
     classes: {
@@ -87,7 +88,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initClasses(forceRefresh),
         filter: (term) => filterClasses(term),
         adminActions: [
-            { id: 'btn-add-class', label: '+ Add Class / Subclass', primary: true, event: 'ac:open-class-form' }
+            { id: 'btn-add-class', label: '+ Add Class', primary: true, event: 'ac:open-new-class-form' },
+            { id: 'btn-add-subclass', label: '+ Add Subclass', primary: false, event: 'ac:open-class-form' }
         ]
     }
 };
@@ -137,9 +139,12 @@ async function init() {
         }
     });
 
-    // Listen for admin toolbar action to open class form
+    // Listen for admin toolbar actions to open class and subclass forms
     window.addEventListener('ac:open-class-form', () => {
-        openClassForm();
+        openClassForm(null, null, false, 'subclass');
+    });
+    window.addEventListener('ac:open-new-class-form', () => {
+        openClassForm(null, null, false, 'class');
     });
 
     // Initialize common UI utilities
