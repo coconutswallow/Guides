@@ -21,6 +21,7 @@
 import { initSources, filterSources } from './ac-sources.js';
 import { initRaces, filterRaces } from './ac-races.js';
 import { initClasses, filterClasses, openClassForm } from './ac-classes.js';
+import { initBackgrounds, filterBackgrounds, openBackgroundForm } from './ac-backgrounds.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
 import { initTooltips, debounce } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
@@ -90,6 +91,16 @@ export const TAB_REGISTRY = {
         adminActions: [
             { id: 'btn-add-class-subclass', label: '+ Add Class/Subclass', primary: true, event: 'ac:open-class-form' }
         ]
+    },
+    backgrounds: {
+        id: 'backgrounds',
+        viewId: 'ac-view-backgrounds',
+        searchPlaceholder: 'Search backgrounds, rulesets, features, sources...',
+        init: (forceRefresh) => initBackgrounds(forceRefresh),
+        filter: (term) => filterBackgrounds(term),
+        adminActions: [
+            { id: 'btn-add-background', label: '+ Add Background', primary: true, event: 'ac:open-background-form' }
+        ]
     }
 };
 
@@ -138,12 +149,25 @@ async function init() {
         }
     });
 
+    // Listen for backgrounds mutations across tabs to ensure view remains synced
+    window.addEventListener('ac:backgrounds-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'backgrounds') {
+            await TAB_REGISTRY.backgrounds.init(true);
+        }
+    });
+
     // Listen for admin toolbar actions to open class and subclass forms
     window.addEventListener('ac:open-class-form', () => {
         openClassForm(null, null, false, 'subclass');
     });
     window.addEventListener('ac:open-new-class-form', () => {
         openClassForm(null, null, false, 'class');
+    });
+
+    // Listen for admin toolbar action to open background form
+    window.addEventListener('ac:open-background-form', () => {
+        openBackgroundForm();
     });
 
     // Initialize common UI utilities

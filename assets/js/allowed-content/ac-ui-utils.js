@@ -429,3 +429,60 @@ export function renderSourceTagPicker({ containerEl, selectedKeys = [], availabl
 
     updateChips();
 }
+
+/**
+ * Formats long table cell text (such as features, rulings, and advice) with markdown links 
+ * and an inline, accessible "more ↗ / less ↖" toggle.
+ * 
+ * Shared Design Standards:
+ * - Content shorter than maxLength renders normally with markdown links.
+ * - Content exceeding maxLength renders an inline snippet and hidden full text,
+ *   accompanied by an inline text toggle button styled with var(--color-primary).
+ * 
+ * @param {string} text - Raw content text
+ * @param {number} [maxLength=160] - Character threshold before truncation
+ * @returns {string} HTML string with inline snippet and toggle
+ */
+export function formatExpandableText(text, maxLength = 160) {
+    if (!text || text === '—') return '<span style="opacity: 0.5;">—</span>';
+    const cleaned = String(text).split(/\r?\n/).map(l => l.trim()).join('\n').trim();
+    if (cleaned.length <= maxLength) {
+        return renderMarkdownLinks(cleaned);
+    }
+    const snippet = cleaned.slice(0, maxLength) + '…';
+    return `<span class="ac-advice-snippet">${renderMarkdownLinks(snippet)}</span><span class="ac-advice-full" style="display: none; white-space: pre-wrap;">${renderMarkdownLinks(cleaned)}</span> <button type="button" class="ac-advice-more-btn" style="background: none; border: none; padding: 0 4px; font-size: 0.78rem; color: var(--color-primary); cursor: pointer; text-decoration: underline; font-weight: 500;" title="Click to expand">more ↗</button>`;
+}
+
+/**
+ * Attaches event listeners for all inline "more ↗ / less ↖" toggle buttons within a container.
+ * Clicks call stopPropagation to avoid triggering row-click events (e.g. opening detail modals).
+ * 
+ * @param {HTMLElement} container - DOM parent containing .ac-advice-more-btn elements
+ */
+export function attachExpandableTextListeners(container) {
+    if (!container) return;
+    container.querySelectorAll('.ac-advice-more-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const parent = btn.parentElement;
+            if (!parent) return;
+            const snippet = parent.querySelector('.ac-advice-snippet');
+            const full = parent.querySelector('.ac-advice-full');
+            if (!snippet || !full) return;
+
+            const isExpanded = full.style.display !== 'none';
+            if (isExpanded) {
+                full.style.display = 'none';
+                snippet.style.display = '';
+                btn.textContent = 'more ↗';
+                btn.title = 'Click to expand';
+            } else {
+                full.style.display = 'inline';
+                snippet.style.display = 'none';
+                btn.textContent = 'less ↖';
+                btn.title = 'Click to collapse';
+            }
+        });
+    });
+}
+

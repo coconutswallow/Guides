@@ -357,12 +357,12 @@
 
 @media (max-width: 768px) {
     .hide-mobile { display: none; }
-    .ac-controls, .ac-classes-controls, .ac-races-controls { 
+    .ac-controls, .ac-classes-controls, .ac-races-controls, .ac-backgrounds-controls { 
         width: 100%;
         flex-direction: column; 
         align-items: stretch; 
     }
-    .ac-classes-toolbar, .ac-races-toolbar {
+    .ac-classes-toolbar, .ac-races-toolbar, .ac-backgrounds-toolbar {
         flex-direction: column;
         align-items: stretch;
     }
@@ -1086,7 +1086,8 @@ select.ac-form-input {
  * ================================================================ */
 
 .ac-classes-toolbar,
-.ac-races-toolbar {
+.ac-races-toolbar,
+.ac-backgrounds-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1101,7 +1102,8 @@ select.ac-form-input {
 }
 
 .ac-classes-stats,
-.ac-races-stats {
+.ac-races-stats,
+.ac-backgrounds-stats {
     font-size: 0.9rem;
     color: var(--color-text-secondary);
     font-weight: 600;
@@ -1111,13 +1113,15 @@ select.ac-form-input {
 }
 
 .ac-classes-stats strong,
-.ac-races-stats strong {
+.ac-races-stats strong,
+.ac-backgrounds-stats strong {
     color: var(--color-primary);
     font-weight: 700;
 }
 
 .ac-classes-controls,
-.ac-races-controls {
+.ac-races-controls,
+.ac-backgrounds-controls {
     display: flex;
     align-items: center;
     gap: 0.65rem;
@@ -1354,13 +1358,15 @@ select.ac-form-input {
 /* Dark mode overrides for Races components */
 /* Dark mode overrides for Races & Classes toolbar and controls */
 [data-theme="dark"] .ac-classes-toolbar,
-[data-theme="dark"] .ac-races-toolbar {
+[data-theme="dark"] .ac-races-toolbar,
+[data-theme="dark"] .ac-backgrounds-toolbar {
     background: var(--color-card-bg, #242424);
     border-color: #383838;
 }
 
 [data-theme="dark"] .ac-classes-stats strong,
-[data-theme="dark"] .ac-races-stats strong {
+[data-theme="dark"] .ac-races-stats strong,
+[data-theme="dark"] .ac-backgrounds-stats strong {
     color: var(--color-primary, #D4A574);
 }
 
@@ -1676,5 +1682,31 @@ select.ac-form-input {
 .ac-accordion-parent-row.expanded .accordion-chevron {
     transform: rotate(90deg);
     color: var(--color-primary, #2563eb);
+}
+
+/* ================================================================
+ * BACKGROUNDS UI SPECIFIC STYLES
+ * ================================================================ */
+.ac-bg-row:hover {
+    background-color: rgba(88, 24, 13, 0.04);
+}
+
+[data-theme="dark"] .ac-bg-row:hover {
+    background-color: rgba(212, 165, 116, 0.06);
+}
+
+.col-bg-name strong {
+    font-family: var(--font-header);
+    font-size: 1.05rem;
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .col-bg-name strong {
+    color: var(--color-primary, #D4A574);
+}
+
+.col-bg-feature {
+    line-height: 1.5;
+    font-size: 0.92rem;
 }
 

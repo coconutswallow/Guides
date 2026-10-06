@@ -1160,3 +1160,82 @@ export async function deleteSubclass(id) {
     }
 }
 
+/**
+ * Creates a new Background record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} backgroundData - Background fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createBackground(backgroundData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_backgrounds')
+            .insert(backgroundData)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating background:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating background:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Background record in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the background to update
+ * @param {Object} updates - Object containing modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateBackground(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_backgrounds')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating background:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating background:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Background record from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - The UUID of the background to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteBackground(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_backgrounds')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting background:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting background:', err);
+        return { success: false, error: err };
+    }
+}
+

@@ -50,7 +50,9 @@ import {
     renderSourceBadges, 
     extractSourceKeys,
     renderMarkdownLinks,
-    resolveSourceLink
+    resolveSourceLink,
+    formatExpandableText,
+    attachExpandableTextListeners
 } from './ac-ui-utils.js';
 
 export {
@@ -370,13 +372,7 @@ function formatMulticlassShort(text) {
  * @returns {string}
  */
 function formatNotesAdvice(text) {
-    if (!text) return '<span style="opacity: 0.5;">—</span>';
-    const cleaned = text.split(/\r?\n/).map(l => l.trim()).join('\n').trim();
-    if (cleaned.length <= 160) {
-        return renderMarkdownLinks(cleaned);
-    }
-    const snippet = cleaned.slice(0, 160) + '…';
-    return `<span class="ac-advice-snippet">${renderMarkdownLinks(snippet)}</span><span class="ac-advice-full" style="display: none; white-space: pre-wrap;">${renderMarkdownLinks(cleaned)}</span> <button type="button" class="ac-advice-more-btn" style="background: none; border: none; padding: 0 4px; font-size: 0.78rem; color: var(--color-primary); cursor: pointer; text-decoration: underline; font-weight: 500;" title="Click to expand full advice">more ↗</button>`;
+    return formatExpandableText(text, 160);
 }
 
 /**
@@ -386,13 +382,7 @@ function formatNotesAdvice(text) {
  * @returns {string}
  */
 export function formatExpandedOptions(text) {
-    if (!text) return '<span style="opacity: 0.5;">—</span>';
-    const cleaned = text.split(/\r?\n/).map(l => l.trim()).join('\n').trim();
-    if (cleaned.length <= 120) {
-        return renderMarkdownLinks(cleaned);
-    }
-    const snippet = cleaned.slice(0, 120) + '…';
-    return `<span class="ac-advice-snippet">${renderMarkdownLinks(snippet)}</span><span class="ac-advice-full" style="display: none; white-space: pre-wrap;">${renderMarkdownLinks(cleaned)}</span> <button type="button" class="ac-advice-more-btn" style="background: none; border: none; padding: 0 4px; font-size: 0.78rem; color: var(--color-primary); cursor: pointer; text-decoration: underline; font-weight: 500;" title="Click to expand full options">more ↗</button>`;
+    return formatExpandableText(text, 120);
 }
 
 
@@ -658,28 +648,7 @@ function attachRowListeners() {
     });
 
     // 4. Inline advice expand / collapse toggles
-    container.querySelectorAll('.ac-advice-more-btn').forEach(btn => {
-        btn.onclick = (e) => {
-            e.stopPropagation();
-            const parent = btn.parentElement;
-            const snippet = parent?.querySelector('.ac-advice-snippet');
-            const full = parent?.querySelector('.ac-advice-full');
-            if (!snippet || !full) return;
-
-            const isExpanded = full.style.display !== 'none';
-            if (isExpanded) {
-                full.style.display = 'none';
-                snippet.style.display = '';
-                btn.textContent = 'more ↗';
-                btn.title = 'Click to expand';
-            } else {
-                full.style.display = 'inline';
-                snippet.style.display = 'none';
-                btn.textContent = 'less ↖';
-                btn.title = 'Click to collapse';
-            }
-        };
-    });
+    attachExpandableTextListeners(container);
 }
 
 /**

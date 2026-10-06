@@ -123,6 +123,11 @@ export function renderAdminBar(activeTab = 'sources', tabRegistry = null) {
             <button id="btn-add-class-subclass" class="ac-btn-admin ac-btn-primary">+ Add Class/Subclass</button>
             <a href="${staffPortalHref}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
         `;
+    } else if (activeTab === 'backgrounds') {
+        actionsHtml = `
+            <button id="btn-add-background" class="ac-btn-admin ac-btn-primary">+ Add Background</button>
+            <a href="${staffPortalHref}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
+        `;
     } else if (activeTab === 'races') {
         actionsHtml = `
             <button id="btn-add-race" class="ac-btn-admin ac-btn-primary">+ Add Race</button>
@@ -177,6 +182,9 @@ export function renderAdminBar(activeTab = 'sources', tabRegistry = null) {
         });
         document.getElementById('btn-add-class')?.addEventListener('click', () => {
             window.dispatchEvent(new CustomEvent('ac:open-class-form'));
+        });
+        document.getElementById('btn-add-background')?.addEventListener('click', () => {
+            window.dispatchEvent(new CustomEvent('ac:open-background-form'));
         });
         document.getElementById('btn-add-race')?.addEventListener('click', () => {
             window.dispatchEvent(new CustomEvent('ac:open-new-race-form'));
