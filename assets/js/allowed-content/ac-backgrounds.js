@@ -472,19 +472,15 @@ export function showBackgroundDetail(bg) {
 
         <div class="detail-section">
             <h4>Background Feature</h4>
-            <div style="margin-top: 0.35rem; line-height: 1.6; white-space: pre-wrap;">
-                ${bg.feature && bg.feature.trim() !== 'N/A' 
-                    ? renderMarkdownLinks(bg.feature.trim()) 
-                    : '<span style="opacity: 0.6;">N/A (Replacement or standard background)</span>'}
-            </div>
+            <div style="margin-top: 0.35rem; line-height: 1.6; white-space: pre-wrap;">${bg.feature && bg.feature.trim() !== 'N/A' 
+                ? renderMarkdownLinks(bg.feature.trim()) 
+                : '<span style="opacity: 0.6;">N/A (Replacement or standard background)</span>'}</div>
         </div>
 
         ${bg.notes_advice && bg.notes_advice.trim() ? `
             <div class="detail-section">
                 <h4>Notes / Rage Advice</h4>
-                <div class="advice-box" style="margin-top: 0.35rem; line-height: 1.6; white-space: pre-wrap; color: var(--color-secondary);">
-                    ${renderMarkdownLinks(bg.notes_advice.trim())}
-                </div>
+                <div class="advice-box" style="margin-top: 0.35rem; line-height: 1.6; white-space: pre-wrap; color: var(--color-secondary);">${renderMarkdownLinks(bg.notes_advice.trim())}</div>
             </div>
         ` : ''}
     `;

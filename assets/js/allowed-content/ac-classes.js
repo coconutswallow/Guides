@@ -749,18 +749,14 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
         ${cls.notes_advice ? `
             <div class="detail-section">
                 <h4>${esc(cls.name)} Class Rulings & Advice</h4>
-                <div style="white-space: pre-wrap; font-size: 0.92rem; line-height: 1.6; color: var(--color-secondary);">
-                    ${renderMarkdownLinks(cls.notes_advice)}
-                </div>
+                <div style="white-space: pre-wrap; font-size: 0.92rem; line-height: 1.6; color: var(--color-secondary);">${renderMarkdownLinks(cls.notes_advice.trim())}</div>
             </div>
         ` : ''}
 
         ${currentSub.notes_advice ? `
             <div class="detail-section">
                 <h4>${esc(currentSub.name)} Subclass Rulings & Advice</h4>
-                <div style="white-space: pre-wrap; font-size: 0.92rem; line-height: 1.6; color: var(--color-secondary);">
-                    ${renderMarkdownLinks(currentSub.notes_advice)}
-                </div>
+                <div style="white-space: pre-wrap; font-size: 0.92rem; line-height: 1.6; color: var(--color-secondary);">${renderMarkdownLinks(currentSub.notes_advice.trim())}</div>
             </div>
         ` : ''}
     `;
