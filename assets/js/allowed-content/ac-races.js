@@ -57,7 +57,7 @@
  * @property {string} [wis] - Wisdom ability modifier
  * @property {string} [cha] - Charisma ability modifier
  * @property {string} [extra] - Racial traits and mechanical abilities
- * @property {string} [notes_advice] - Guild ruling notes and rage advice
+ * @property {string} [notes_advice] - Notes and rage advice
  * @property {number} display_order - Fractional sort index within parent race
  * @property {Object} [variants] - JSONB edition differences for this lineage
  * @property {Race} [parentRace] - Reference to parent species when flattened
@@ -772,7 +772,7 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
 
         ${currentSub.notes_advice ? `
             <div class="detail-section">
-                <h4>Guild Notes / Rage Advice</h4>
+                <h4>Notes / Rage Advice</h4>
                 <div class="advice-content" style="line-height: 1.6; background: rgba(var(--palette-brand-highlight), 0.06); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--palette-brand-highlight);">${formatNotesAdvice(currentSub.notes_advice)}</div>
             </div>
         ` : ''}
@@ -1137,8 +1137,8 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
             </div>
 
             <div class="ac-form-group">
-                <label for="race-input-notes">Guild Notes / Rage Advice</label>
-                <textarea id="race-input-notes" rows="3" class="ac-form-textarea" placeholder="Guild ruling, character creation guidance, Markdown links allowed...">${esc(subraceItem?.notes_advice || '')}</textarea>
+                <label for="race-input-notes">Notes / Rage Advice</label>
+                <textarea id="race-input-notes" rows="3" class="ac-form-textarea" placeholder="Notes, character creation guidance, Markdown links allowed...">${esc(subraceItem?.notes_advice || '')}</textarea>
             </div>
 
             <div class="detail-actions" style="margin-top: 1.5rem; justify-content: flex-end;">

@@ -1001,7 +1001,7 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     </div>
                     <div class="ac-form-group">
                         <label for="class-input-notes">Base Notes / Advice</label>
-                        <textarea id="class-input-notes" class="ac-form-textarea" rows="3" placeholder="Guild rulings, advice..." ${initialMode === 'class' ? '' : 'disabled'}></textarea>
+                        <textarea id="class-input-notes" class="ac-form-textarea" rows="3" placeholder="Notes, advice..." ${initialMode === 'class' ? '' : 'disabled'}></textarea>
                     </div>
                     <div class="ac-form-group" style="border-top: 1px dashed var(--border-color, rgba(0,0,0,0.15)); padding-top: 0.75rem;">
                         <label for="class-input-initial-subclass">Initial Subclass (Optional)</label>

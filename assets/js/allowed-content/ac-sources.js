@@ -33,7 +33,7 @@
  * @property {string} type - Category classification (e.g. 'Core', 'Supplemental', 'Hawthorne Homebrew')
  * @property {string|number} ruleset - Game system edition ('2014' or '2024')
  * @property {string} allowed_content - Summary of permitted content from this source
- * @property {string|null} notes_advice - Guild notes or rage advice (supports Markdown links)
+ * @property {string|null} notes_advice - Notes or rage advice (supports Markdown links)
  * @property {string|null} link - Official D&D Beyond or internal site reference URL
  * @property {number} display_order - Fractional sort index
  */
