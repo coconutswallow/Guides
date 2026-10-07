@@ -415,6 +415,12 @@ export async function getEquipment() {
     try {
         return await fetchAll('ac_equipment', `
             *,
+            equip_type:equip_type_id (
+                id,
+                name,
+                notes,
+                display_order
+            ),
             category:category_id (
                 id,
                 name,
@@ -432,31 +438,85 @@ export async function getEquipment() {
 }
 
 /**
- * Fetches all Downtime Activities from Supabase, including joined category info.
+ * Fetches all Equipment Types from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of equipment type objects
+ */
+export async function getEquipTypes() {
+    try {
+        return await fetchAll('ac_equip_type', '*', [
+            { column: 'display_order', ascending: true },
+            { column: 'name', ascending: true }
+        ]);
+    } catch (error) {
+        console.error('Error fetching equipment types:', error);
+        return [];
+    }
+}
+
+/**
+ * Fetches all Downtime Activities from Supabase, including joined category and type info.
  * 
  * @returns {Promise<Array>} Array of downtime objects
  */
 export async function getDowntime() {
-    const { data, error } = await supabase
-        .from('ac_downtime')
-        .select(`
-            *,
-            category:category_id (
-                id,
-                name,
-                notes,
-                display_order
-            )
-        `)
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('ac_downtime')
+            .select(`
+                *,
+                downtime_type:downtime_type_id (
+                    id,
+                    name,
+                    notes,
+                    description,
+                    display_order
+                ),
+                category:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching downtime:', error);
+        if (error) {
+            console.error('Error fetching downtime:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (error) {
+        console.error('Exception fetching downtime:', error);
         return [];
     }
+}
 
-    return data;
+/**
+ * Fetches all Downtime Types from Supabase.
+ * 
+ * @returns {Promise<Array>} Array of downtime type objects
+ */
+export async function getDowntimeTypes() {
+    try {
+        const { data, error } = await supabase
+            .from('ac_downtime_type')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching downtime types:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (error) {
+        console.error('Exception fetching downtime types:', error);
+        return [];
+    }
 }
 
 /**
@@ -1796,6 +1856,223 @@ export async function deleteSpell(id) {
         return { success: false, error: err };
     }
 }
+
+/**
+ * Creates a new Equipment entry in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} equipmentData - Equipment fields to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createEquipment(equipmentData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_equipment')
+            .insert(equipmentData)
+            .select(`
+                *,
+                equip_type:equip_type_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                ),
+                category:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error creating equipment:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating equipment:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Equipment entry in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the equipment to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateEquipment(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_equipment')
+            .update(updates)
+            .eq('id', id)
+            .select(`
+                *,
+                equip_type:equip_type_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                ),
+                category:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error updating equipment:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating equipment:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes an Equipment entry from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the equipment to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteEquipment(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_equipment')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting equipment:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting equipment:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Inserts a new Downtime activity into Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} downtimeData - Payload containing check_id, downtime_type_id, category_id, name, gold_cost, dtp_cost, etc.
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createDowntime(downtimeData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_downtime')
+            .insert(downtimeData)
+            .select(`
+                *,
+                downtime_type:downtime_type_id (
+                    id,
+                    name,
+                    notes,
+                    description,
+                    display_order
+                ),
+                category:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error creating downtime:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating downtime:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Downtime activity in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the downtime activity to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateDowntime(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_downtime')
+            .update(updates)
+            .eq('id', id)
+            .select(`
+                *,
+                downtime_type:downtime_type_id (
+                    id,
+                    name,
+                    notes,
+                    description,
+                    display_order
+                ),
+                category:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error updating downtime:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating downtime:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Downtime activity from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the downtime activity to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteDowntime(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_downtime')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting downtime:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting downtime:', err);
+        return { success: false, error: err };
+    }
+}
+
 
 
 

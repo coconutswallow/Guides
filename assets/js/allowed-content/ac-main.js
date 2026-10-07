@@ -26,6 +26,8 @@ import { initFeats, filterFeats, openFeatForm } from './ac-feats.js';
 import { initSpells, filterSpells, openSpellForm } from './ac-spells.js';
 import { initLanguages, filterLanguages, openLanguageForm } from './ac-languages.js';
 import { initMiscFeatures, filterMiscFeatures, openMiscFeaturePicker } from './ac-misc-features.js';
+import { initEquipment, filterEquipment, openEquipmentForm } from './ac-equipment.js';
+import { initDowntime, filterDowntime, openDowntimeForm } from './ac-downtime.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
 import { initTooltips, debounce, closeModal } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
@@ -144,6 +146,26 @@ export const TAB_REGISTRY = {
         filter: (term) => filterMiscFeatures(term),
         adminActions: [
             { id: 'btn-add-misc-feature', label: '+ Add Feature', primary: true, event: 'ac:open-misc-feature-picker' }
+        ]
+    },
+    equipment: {
+        id: 'equipment',
+        viewId: 'ac-view-equipment',
+        searchPlaceholder: 'Search equipment, weapons, armor, tools, categories, sources...',
+        init: (forceRefresh) => initEquipment(forceRefresh),
+        filter: (term) => filterEquipment(term),
+        adminActions: [
+            { id: 'btn-add-equipment', label: '+ Add Equipment', primary: true, event: 'ac:open-equipment-form' }
+        ]
+    },
+    downtime: {
+        id: 'downtime',
+        viewId: 'ac-view-downtime',
+        searchPlaceholder: 'Search downtime activities, categories, costs, rules, notes...',
+        init: (forceRefresh) => initDowntime(forceRefresh),
+        filter: (term) => filterDowntime(term),
+        adminActions: [
+            { id: 'btn-add-downtime', label: '+ Add Downtime Activity', primary: true, event: 'ac:open-downtime-form' }
         ]
     }
 };
@@ -264,6 +286,32 @@ export async function init() {
     // Listen for admin toolbar action to open misc feature picker
     window.addEventListener('ac:open-misc-feature-picker', () => {
         openMiscFeaturePicker();
+    });
+
+    // Listen for admin toolbar action to open equipment form
+    window.addEventListener('ac:open-equipment-form', () => {
+        openEquipmentForm();
+    });
+
+    // Listen for equipment mutations across tabs to ensure view remains synced
+    window.addEventListener('ac:equipment-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'equipment') {
+            await TAB_REGISTRY['equipment'].init(true);
+        }
+    });
+
+    // Listen for admin toolbar action to open downtime form
+    window.addEventListener('ac:open-downtime-form', () => {
+        openDowntimeForm();
+    });
+
+    // Listen for downtime mutations across tabs to ensure view remains synced
+    window.addEventListener('ac:downtime-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'downtime') {
+            await TAB_REGISTRY['downtime'].init(true);
+        }
     });
 
     // Initialize common UI utilities

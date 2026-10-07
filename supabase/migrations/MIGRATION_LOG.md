@@ -47,6 +47,9 @@ node supabase/migrations/run_<migration>.js --execute --prod
 | **06** | 2026-10-06 | **Languages** | `20261006_ac_languages_normalization.sql` | `run_20261006_ac_languages_normalization.js` | ✅ Applied | ✅ Applied |
 | **07** | 2026-10-06 | **Feats** | `20261006_ac_feats_normalization.sql` | `run_20261006_ac_feats_normalization.js` | ✅ Applied | ✅ Applied |
 | **08** | 2026-10-06 | **Misc Class Features**<br>(Fighting Styles, Artificer Infusions, Eldritch Invocations) | `20261006_ac_misc_class_features_normalization.sql` | `run_20261006_ac_misc_class_features_normalization.js` | ✅ Applied | ✅ Applied |
+| **09** | 2026-10-06 | **Spells** | `20261006_ac_spells_normalization.sql` | `run_20261006_ac_spells_normalization.js` | ✅ Applied | ✅ Applied |
+| **10** | 2026-10-06 | **Equipment** | `20261006_ac_equipment_normalization.sql` | `run_20261006_ac_equipment_normalization.js` | ✅ Applied | ✅ Applied |
+| **11** | 2026-10-06 | **Downtime** | `20261006_ac_downtime_normalization.sql` | `run_20261006_ac_downtime_normalization.js` | ✅ Applied | ✅ Applied |
 
 ---
 
@@ -311,6 +314,83 @@ node supabase/migrations/run_<migration>.js --execute --prod
   - Foreign key orphans: 0.
   - Display orders: 1.0 to 20.0 (20 distinct values).
   - Active RLS policies confirmed in DEV and PROD.
+
+### Step 10: Equipment (`public.ac_equip_type`, `public.ac_equipment`)
+- **Date**: 2026-10-06
+- **Source Spreadsheet**: `Allowed_Content_20261004.xlsx` (Equipment tab)
+- **Draft References**: `AC_Equip_Type.xlsx`, `AC_Equipment.xlsx`
+- **Dependencies**: Step 1 (`public.ac_sources`)
+- **Files**:
+  - `supabase/migrations/20261006_ac_equipment_normalization.sql`
+  - `supabase/migrations/run_20261006_ac_equipment_normalization.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261006_ac_equipment_normalization.js --dry-run`
+  - `node supabase/migrations/run_20261006_ac_equipment_normalization.js --execute`
+  - `node supabase/migrations/run_20261006_ac_equipment_normalization.js --dry-run --prod`
+  - `node supabase/migrations/run_20261006_ac_equipment_normalization.js --execute --prod`
+- **Key Changes**:
+  - Created normalized category table `public.ac_equip_type` with UUID primary keys, name, notes, and fractional `display_order` (`DOUBLE PRECISION`).
+  - Added compatibility view `public.ac_equipment_categories` selecting from `public.ac_equip_type` to guarantee zero breaking changes for existing code.
+  - Normalized `public.ac_equipment`:
+    - Preserved all 490 historic UUID primary keys in DEV and PRODUCTION.
+    - Added `check_id VARCHAR(32) NOT NULL UNIQUE` covering all 490 equipment items (`EQP_0001` through `EQP_0495`, with Wheat resolved at `EQP_0495` and excluding erroneous header labels `EQP_0425`..`EQP_0429`).
+    - Added foreign key `equip_type_id UUID REFERENCES public.ac_equip_type(id)` mapping all 13 types (Armor, Weapons, Tools, Adventuring Gear, Poisons, Trade Goods, Mounts, Vehicles, Vehicle Upgrades, Pets, Siege Ammunition and Weapons, Spell Components, Other Craftable Items), retaining legacy `category_id` in sync.
+    - Converted `source` to `TEXT[] NOT NULL` to support items published across multiple sourcebooks (e.g., `PHB2014, PHB2024`, `DMG2014, DMG2024`, `BGDIA, SKT`), verified against `public.ac_sources(source_key)`.
+    - Added supporting sources `HHB` (Hawthorne Homebrew) and `AC` (Allowed Content) to `public.ac_sources`.
+    - Added `ruleset VARCHAR(10) NOT NULL DEFAULT '2024'` ('2014' vs '2024') tracking edition compatibility.
+    - Updated `display_order` to `DOUBLE PRECISION` supporting fractional indexing (1.0 through 490.0).
+    - Added GIN index on `source` array (`idx_ac_equipment_source`) and B-Tree indexes on `check_id`, `equip_type_id`, `ruleset`, `display_order`.
+    - Attached `handle_updated_at()` triggers on both tables.
+    - Enabled Row Level Security (RLS) on both tables with public read access, service_role full management, and Admin/Engineer full management policies.
+    - Normalized user draft workbooks `.context/current-tasks/AC_Equip_Type.xlsx` (13 types with UUIDs, notes, and Data Dictionary) and `.context/current-tasks/AC_Equipment.xlsx` (490 items with UUIDs, restored missing weapons Club, Dagger, Greatclub, restored last 7 items, multi-source arrays, ruleset, and Data Dictionary).
+- **Verification Criteria**:
+  - `ac_equip_type` total rows: Exactly 13 in both DEV and PROD.
+  - Compatibility view `ac_equipment_categories`: Exactly 13 rows in both DEV and PROD.
+  - `ac_equipment` total rows: Exactly 490 in both DEV and PROD.
+  - Check ID audit: `EQP_0001` to `EQP_0495` (490 distinct, 0 nulls, Wheat at `EQP_0495`).
+  - Equip type foreign key orphans: 0.
+  - Ruleset split: 170 (2014) and 320 (2024).
+  - Source array integrity: 100% of source elements valid in `public.ac_sources` (0 invalid).
+  - Multi-source records: 269 items published across multiple sourcebooks.
+  - Display orders: 1.0 to 490.0 (490 distinct, fractional indexing ready).
+  - Active RLS policies confirmed in DEV and PROD across both tables.
+
+### Step 11: Downtime (`public.ac_downtime_type`, `public.ac_downtime`)
+- **Date**: 2026-10-06
+- **Source Spreadsheet**: `Allowed_Content_20261004.xlsx` (Downtime tab)
+- **Draft References**: `AC_Downtime_Type.xlsx`, `AC_Downtime.xlsx`
+- **Dependencies**: Step 1 (`public.ac_sources`)
+- **Files**:
+  - `supabase/migrations/20261006_ac_downtime_normalization.sql`
+  - `supabase/migrations/run_20261006_ac_downtime_normalization.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261006_ac_downtime_normalization.js --dry-run`
+  - `node supabase/migrations/run_20261006_ac_downtime_normalization.js --execute`
+  - `node supabase/migrations/run_20261006_ac_downtime_normalization.js --dry-run --prod`
+  - `node supabase/migrations/run_20261006_ac_downtime_normalization.js --execute --prod`
+- **Key Changes**:
+  - Created normalized category table `public.ac_downtime_type` with UUID primary keys, name, notes, description, and fractional `display_order` (`DOUBLE PRECISION`).
+  - Added compatibility view `public.ac_downtime_categories` selecting from `public.ac_downtime_type` to guarantee zero breaking changes for existing code.
+  - Normalized `public.ac_downtime`:
+    - Preserved all 128 historic UUID primary keys in DEV and PRODUCTION.
+    - Restored missing row from master spreadsheet `Jump Start Rework` (row 89 in master spreadsheet, `DTP_0052`) and `Haunted Bastions` with deterministic UUIDs, bringing total activities to exactly 130.
+    - Added `check_id VARCHAR(32) NOT NULL UNIQUE` covering all 130 downtime activities (`DT_0001` through `DT_0130`).
+    - Added foreign key `downtime_type_id UUID REFERENCES public.ac_downtime_type(id)` mapping all 13 categories (Bastions, Building a Stronghold, Buying & Selling, Crafting, Research, Reworking, Spellcasting, Spellcasting Services, Trading, Training, Traveling, Work, Miscellaneous), retaining legacy `category_id` in sync.
+    - Added mirror column `activity TEXT`.
+    - Preserved rich markdown links in notes/advice for existing records.
+    - Updated `display_order` to `DOUBLE PRECISION` supporting fractional indexing (1.0 through 130.0).
+    - Attached `handle_updated_at()` triggers on both tables.
+    - Enabled Row Level Security (RLS) on both tables with public read access, service_role full management, and Admin/Engineer full management policies.
+    - Corrected and normalized user draft workbooks `.context/current-tasks/AC_Downtime_Type.xlsx` (13 types with UUIDs, notes, and Data Dictionary) and `.context/current-tasks/AC_Downtime.xlsx` (130 activities with UUIDs, restored Jump Start Rework at DT_0052, UUID foreign keys, and Data Dictionary), and saved copies to `.context/current-tasks/Loaded/`.
+- **Verification Criteria**:
+  - `ac_downtime_type` total rows: Exactly 13 in both DEV and PROD.
+  - Compatibility view `ac_downtime_categories`: Exactly 13 rows in both DEV and PROD.
+  - `ac_downtime` total rows: Exactly 130 in both DEV and PROD.
+  - Check ID audit: `DT_0001` to `DT_0130` (130 distinct, 0 nulls, `Jump Start Rework` at `DT_0052`).
+  - Downtime type foreign key orphans: 0.
+  - Category distribution: exact 1:1 match across all 13 categories (sum = 130).
+  - Display orders: 1.0 to 130.0 (130 distinct, fractional indexing ready).
+  - Active RLS policies confirmed in DEV and PROD across both tables.
 
 ---
 

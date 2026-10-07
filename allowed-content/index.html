@@ -31,6 +31,8 @@ extra_css:
                     <button class="ac-tab" data-tab="spells">Spells</button>
                     <button class="ac-tab" data-tab="languages">Languages</button>
                     <button class="ac-tab" data-tab="misc-features">Misc Class Features</button>
+                    <button class="ac-tab" data-tab="equipment">Equipment</button>
+                    <button class="ac-tab" data-tab="downtime">Downtime</button>
                     <!-- Additional tabs will be added sequentially as they are developed -->
                 </div>
             </div>
@@ -110,6 +112,22 @@ extra_css:
                 <span>Cataloging Misc Class Features...</span>
             </div>
         </div>
+
+        <!-- Equipment View -->
+        <div id="ac-view-equipment" class="ac-view">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Equipment & Gear...</span>
+            </div>
+        </div>
+
+        <!-- Downtime View -->
+        <div id="ac-view-downtime" class="ac-view">
+            <div class="ac-loading">
+                <div class="spinner"></div>
+                <span>Cataloging Downtime Activities...</span>
+            </div>
+        </div>
     </main>
 </div>
 
@@ -124,4 +142,4 @@ extra_css:
 </dialog>
 
 <!-- Scripts -->
-<script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}?v=20261006_spells"></script>
+<script type="module" src="{{ '/assets/js/allowed-content/ac-main.js' | relative_url }}?v=20261006_downtime"></script>
