@@ -395,7 +395,6 @@ export function showSpellDetail(spell) {
             <div class="detail-header" style="margin-bottom: 1.5rem;">
                 <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
                     <span class="ruleset-pill ruleset-${esc(spell.ruleset || '2024')}">${esc(spell.ruleset || '2024')}</span>
-                    ${spell.check_id ? `<span class="check-id-badge" style="font-size: 0.8rem; background: var(--color-bg); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--color-border); font-family: monospace;">${esc(spell.check_id)}</span>` : ''}
                 </div>
                 <h2 class="detail-title" style="margin: 0 0 0.5rem 0; font-family: var(--font-header);">${esc(spell.name)}</h2>
             </div>
@@ -411,10 +410,6 @@ export function showSpellDetail(spell) {
                 <div class="detail-item">
                     <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-secondary); display: block; font-weight: 600;">Ruleset Edition</span>
                     <span style="font-weight: 600;">${esc(spell.ruleset || '2024')}</span>
-                </div>
-                <div class="detail-item">
-                    <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-secondary); display: block; font-weight: 600;">Display Order</span>
-                    <span style="font-family: monospace;">${formatDisplayOrder(spell.display_order)}</span>
                 </div>
             </div>
 

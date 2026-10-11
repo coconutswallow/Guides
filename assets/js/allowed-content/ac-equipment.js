@@ -453,7 +453,7 @@ function renderTable(isAdmin) {
                                         </div>
                                     </td>
                                     <td class="col-ruleset" style="text-align: center;">
-                                        <span class="ruleset-pill">${esc(item.ruleset)}</span>
+                                        <span class="ruleset-pill ruleset-${esc(item.ruleset)}">${esc(item.ruleset)}</span>
                                     </td>
                                     <td class="col-cost">${esc(formattedCost)}</td>
                                     <td class="col-weight">${esc(formattedWeight)}</td>
@@ -685,9 +685,6 @@ export function showEquipmentDetail(item) {
         <div class="detail-header">
             <div>
                 <span class="detail-category">${esc(typeName)}</span>
-                <span class="detail-code" style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--color-secondary);">
-                    <code>${esc(item.check_id || '—')}</code>
-                </span>
                 <h2 class="detail-title" style="margin-top: 0.25rem;">${esc(item.name)}</h2>
             </div>
             ${isAdmin ? `
@@ -701,7 +698,7 @@ export function showEquipmentDetail(item) {
         <div class="detail-grid">
             <div class="detail-item">
                 <label>Ruleset Edition</label>
-                <value><span class="ruleset-pill">${esc(item.ruleset)}</span></value>
+                <value><span class="ruleset-pill ruleset-${esc(item.ruleset)}">${esc(item.ruleset)}</span></value>
             </div>
             <div class="detail-item">
                 <label>Category</label>
@@ -718,10 +715,6 @@ export function showEquipmentDetail(item) {
             <div class="detail-item">
                 <label>Weight</label>
                 <value>${esc(item.weight_lbs || '—')}</value>
-            </div>
-            <div class="detail-item">
-                <label>Display Order</label>
-                <value>${esc(formatDisplayOrder(item.display_order))}</value>
             </div>
         </div>
 

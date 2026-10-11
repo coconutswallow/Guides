@@ -112,6 +112,7 @@ let availableSourceKeys = [];
 let currentViewMode = 'accordion';
 let currentSearchTerm = '';
 let selectedSourceFilter = 'ALL';
+let selectedRulesetFilter = 'ALL';
 let expandedRaceIds = new Set();
 let allExpanded = false;
 
@@ -197,6 +198,7 @@ export function resolveInheritedLineage(sub, race) {
         cha,
         extra,
         notes_advice,
+        ruleset: race.ruleset || sub.ruleset || '2014',
         parentRace: race,
         raceName: race.name
     };
@@ -268,6 +270,7 @@ export async function initRaces(forceRefresh = false) {
 
     if (forceRefresh || allRaces.length === 0) {
         selectedSourceFilter = 'ALL';
+        selectedRulesetFilter = 'ALL';
         currentSearchTerm = '';
     }
 
@@ -344,6 +347,11 @@ function applyFilters() {
     const term = currentSearchTerm.toLowerCase().trim();
 
     filteredSubraces = allSubracesFlat.filter(item => {
+        // Ruleset filter
+        if (selectedRulesetFilter !== 'ALL' && item.ruleset !== selectedRulesetFilter) {
+            return false;
+        }
+
         // Source filter
         if (selectedSourceFilter !== 'ALL') {
             if (!(item.sources || []).includes(selectedSourceFilter)) return false;
@@ -359,17 +367,18 @@ function applyFilters() {
         const extraMatch = item.extra?.toLowerCase().includes(term);
         const adviceMatch = item.notes_advice?.toLowerCase().includes(term);
         const asiMatch = formatASI(item).toLowerCase().includes(term);
+        const rulesetMatch = item.ruleset?.toLowerCase().includes(term);
         const sourceMatch = (item.sources || []).some(sk => {
             if (sk.toLowerCase().includes(term)) return true;
             const src = getSourceByKey(sk);
             return src?.name?.toLowerCase().includes(term) || src?.abbreviation?.toLowerCase().includes(term);
         });
 
-        return raceMatch || subraceMatch || checkIdMatch || languageMatch || extraMatch || adviceMatch || asiMatch || sourceMatch;
+        return raceMatch || subraceMatch || checkIdMatch || languageMatch || extraMatch || adviceMatch || asiMatch || rulesetMatch || sourceMatch;
     });
 
-    const matchingRaceNames = new Set(filteredSubraces.map(s => s.raceName));
-    filteredRaces = allRaces.filter(r => matchingRaceNames.has(r.name));
+    const matchingRaceIds = new Set(filteredSubraces.map(s => s.race_id || s.parentRace?.race_id || s.parentRace?.id));
+    filteredRaces = allRaces.filter(r => matchingRaceIds.has(r.race_id) || matchingRaceIds.has(r.id));
 }
 
 /**
@@ -394,6 +403,13 @@ function renderView() {
             </div>
 
             <div class="ac-races-controls">
+                <!-- Ruleset Filter Dropdown -->
+                <select class="ac-filter-select" id="ac-races-ruleset-filter" aria-label="Filter by Ruleset" title="Filter by Ruleset">
+                    <option value="ALL" ${selectedRulesetFilter === 'ALL' ? 'selected' : ''}>All Rulesets</option>
+                    <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024</option>
+                    <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014</option>
+                </select>
+
                 <!-- Source Filter Dropdown -->
                 <select class="ac-filter-select ac-source-filter-select" id="ac-races-source-filter" aria-label="Filter by Source">
                     <option value="ALL" ${selectedSourceFilter === 'ALL' ? 'selected' : ''}>All Sources (${availableSourceKeys.length})</option>
@@ -457,7 +473,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
         return `
             <table class="ac-table ac-accordion-table" id="${tableId}">
                 <tbody>
-                    <tr><td colspan="9" style="text-align:center; padding: 3rem;">No species found matching your criteria.</td></tr>
+                    <tr><td colspan="10" style="text-align:center; padding: 3rem;">No species found matching your criteria.</td></tr>
                 </tbody>
             </table>
         `;
@@ -469,6 +485,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                 <tr>
                     <th class="col-name">Race / Species</th>
                     <th class="col-subrace">Subrace</th>
+                    <th class="col-ruleset" style="width: 85px; text-align: center;">Ruleset</th>
                     <th class="col-size" style="text-align: center;">Size</th>
                     <th class="col-speed" style="text-align: center;">Speed</th>
                     <th class="col-language">Language</th>
@@ -527,6 +544,9 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                             <td class="col-subrace">
                                 ${lineageSummaryHtml}
                             </td>
+                            <td class="col-ruleset" style="text-align: center;">
+                                <span class="ruleset-pill ruleset-${esc(race.ruleset || '2014')}">${esc(race.ruleset || '2014')}</span>
+                            </td>
                             <td class="col-size" style="text-align: center;">
                                 ${esc(race.size || subs[0]?.size || 'M')}
                             </td>
@@ -549,7 +569,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                     if (hasSubraces) {
                         rowHtml += `
                             <tr class="ac-species-drawer-row ${isExpanded ? '' : 'ac-drawer-collapsed'}" id="drawer-${esc(race.id)}">
-                                <td colspan="9" class="ac-drawer-cell">
+                                <td colspan="10" class="ac-drawer-cell">
                                     <div class="ac-inline-subraces-wrapper">
                                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; padding: 0 0.25rem;">
                                             <div style="font-weight: 600; color: var(--color-primary); font-size: 0.9rem;">
@@ -563,6 +583,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                                             <thead>
                                                 <tr>
                                                     <th>Subrace</th>
+                                                    <th style="text-align: center;">Ruleset</th>
                                                     <th style="text-align: center;">Size</th>
                                                     <th style="text-align: center;">Speed</th>
                                                     <th>Language</th>
@@ -583,6 +604,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                                                     return `
                                                         <tr data-subrace-id="${esc(sub.id)}" data-race-id="${esc(race.id)}" data-sub-idx="${sIdx}">
                                                             <td><strong>${esc(subLabel)}</strong></td>
+                                                            <td style="text-align: center;"><span class="ruleset-pill ruleset-${esc(sub.ruleset || race.ruleset || '2014')}">${esc(sub.ruleset || race.ruleset || '2014')}</span></td>
                                                             <td style="text-align: center;">${esc(sub.size || 'M')}</td>
                                                             <td style="text-align: center;">${esc(subSpeed)}</td>
                                                             <td>${esc(sub.language || 'Common')}</td>
@@ -612,6 +634,15 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
  * Attaches event handlers for toolbar controls (source filter, view switcher, accordion toggle).
  */
 function setupControls() {
+    const rulesetSelect = document.getElementById('ac-races-ruleset-filter');
+    if (rulesetSelect) {
+        rulesetSelect.onchange = (e) => {
+            selectedRulesetFilter = e.target.value;
+            applyFilters();
+            renderView();
+        };
+    }
+
     const sourceSelect = document.getElementById('ac-races-source-filter');
     if (sourceSelect) {
         sourceSelect.onchange = (e) => {
@@ -703,7 +734,10 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
     const html = `
         <div class="detail-header">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-                <div class="detail-category">${renderSourceBadges(currentSub.sources?.length ? currentSub.sources : race.sources)}</div>
+                <div class="detail-category" style="display: flex; gap: 0.5rem; align-items: center;">
+                    <span class="ruleset-pill ruleset-${esc(currentSub.ruleset || race.ruleset || '2014')}">${esc(currentSub.ruleset || race.ruleset || '2014')}</span>
+                    ${renderSourceBadges(currentSub.sources?.length ? currentSub.sources : race.sources)}
+                </div>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
                 <h2 class="detail-title" style="margin: 0;">
@@ -741,6 +775,10 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
         ` : ''}
 
         <div class="detail-grid">
+            <div class="detail-item">
+                <label>Ruleset</label>
+                <value><span class="ruleset-pill ruleset-${esc(currentSub.ruleset || race.ruleset || '2014')}">${esc(currentSub.ruleset || race.ruleset || '2014')}</span></value>
+            </div>
             <div class="detail-item">
                 <label>Size</label>
                 <value>${esc(currentSub.size || 'Medium')}</value>
@@ -1037,6 +1075,15 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
                     <small class="ac-form-help">Base species order will default to bottom (${getNextDisplayOrder(allRaces)})</small>
                 </div>
 
+                <!-- Ruleset Field -->
+                <div class="ac-form-group" id="race-ruleset-group">
+                    <label for="race-input-ruleset">Ruleset Edition *</label>
+                    <select id="race-input-ruleset" class="ac-form-select" required>
+                        <option value="2024" ${(selectedParentRace?.ruleset === '2024' || subraceItem?.ruleset === '2024') ? 'selected' : ''}>2024 Edition</option>
+                        <option value="2014" ${(selectedParentRace?.ruleset !== '2024' && subraceItem?.ruleset !== '2024') ? 'selected' : ''}>2014 Edition</option>
+                    </select>
+                </div>
+
                 <!-- Step 2: Subrace -->
                 <div class="ac-form-group" id="race-subrace-group">
                     <label for="race-input-subrace" id="race-subrace-label">${initialMode === 'race' && isNew ? 'Subrace Name (Optional)' : 'Subrace Name'}</label>
@@ -1302,6 +1349,7 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
             const isNewSpecies = (radioRace?.checked) || (parentSelect?.value === 'NEW');
             let targetRaceId = parentSelect?.value;
             let parentRaceRecord = null;
+            const rulesetVal = document.getElementById('race-input-ruleset')?.value || '2014';
 
             if (isNewSpecies) {
                 const newName = (newNameInput?.value || '').trim();
@@ -1312,9 +1360,9 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
                     }
                     return;
                 }
-                if (allRaces.some(r => r.name.toLowerCase() === newName.toLowerCase())) {
+                if (allRaces.some(r => r.name.toLowerCase() === newName.toLowerCase() && (r.ruleset || '2014') === rulesetVal)) {
                     if (errEl) {
-                        errEl.textContent = `A species with the name "${newName}" already exists.`;
+                        errEl.textContent = `A species with the name "${newName}" and ruleset "${rulesetVal}" already exists.`;
                         errEl.style.display = 'block';
                     }
                     return;
@@ -1326,6 +1374,7 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
                 const { data: createdRace, error: raceErr } = await createRace({
                     race_id: nextRaceId,
                     name: newName,
+                    ruleset: rulesetVal,
                     sources: selectedSources,
                     display_order: nextRaceOrder
                 });
@@ -1444,6 +1493,14 @@ export async function openEditRaceModal(race) {
             </div>
 
             <div class="ac-form-group">
+                <label for="race-edit-ruleset">Ruleset Edition *</label>
+                <select id="race-edit-ruleset" class="ac-form-select" required>
+                    <option value="2024" ${race.ruleset === '2024' ? 'selected' : ''}>2024 Edition</option>
+                    <option value="2014" ${race.ruleset !== '2024' ? 'selected' : ''}>2014 Edition</option>
+                </select>
+            </div>
+
+            <div class="ac-form-group">
                 <label for="race-edit-order">Species Display Order *</label>
                 <input type="number" step="any" id="race-edit-order" required class="ac-form-input" value="${esc(race.display_order ?? 0)}">
                 <small class="ac-form-help">Fractional indexing enabled for ordering species</small>
@@ -1466,6 +1523,7 @@ export async function openEditRaceModal(race) {
         e.preventDefault();
         const errEl = document.getElementById('edit-race-error');
         const newName = document.getElementById('race-edit-name')?.value?.trim();
+        const newRuleset = document.getElementById('race-edit-ruleset')?.value || '2014';
         const newOrder = cleanFloat(parseFloat(document.getElementById('race-edit-order')?.value) || 0);
 
         if (!newName) {
@@ -1478,6 +1536,7 @@ export async function openEditRaceModal(race) {
 
         const { data, error } = await updateRace(race.id, {
             name: newName,
+            ruleset: newRuleset,
             display_order: newOrder
         });
 

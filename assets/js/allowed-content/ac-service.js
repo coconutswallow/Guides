@@ -59,26 +59,51 @@ async function fetchAll(table, select = '*', orders = []) {
 }
 
 /**
- * Fetches all Bastion Categories from Supabase.
+ * Fetches all Bastion Types / Categories from Supabase.
  * Results are cached for the duration of the session.
  * 
  * @returns {Promise<Array>} Array of category objects
  */
-export async function getBastionCategories() {
+export async function getBastionTypes() {
     if (CACHE.categories) return CACHE.categories;
 
-    const { data, error } = await supabase
-        .from('ac_bastion_categories')
-        .select('*')
-        .order('name');
+    try {
+        const { data, error } = await supabase
+            .from('ac_bastion_type')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching bastion categories:', error);
+        if (error || !data || data.length === 0) {
+            // Fallback to legacy ac_bastion_categories if needed
+            const fallback = await supabase
+                .from('ac_bastion_categories')
+                .select('*')
+                .order('name');
+
+            if (!fallback.error && fallback.data) {
+                CACHE.categories = fallback.data;
+                return fallback.data;
+            }
+            if (error) console.error('Error fetching bastion types:', error);
+            return [];
+        }
+
+        CACHE.categories = data;
+        return data;
+    } catch (err) {
+        console.error('Exception fetching bastion types:', err);
         return [];
     }
+}
 
-    CACHE.categories = data;
-    return data;
+/**
+ * Backward-compatible alias for getBastionTypes.
+ * 
+ * @returns {Promise<Array>} Array of category objects
+ */
+export async function getBastionCategories() {
+    return getBastionTypes();
 }
 
 /**
@@ -87,28 +112,55 @@ export async function getBastionCategories() {
  * @returns {Promise<Array>} Array of bastion objects
  */
 export async function getBastions() {
-    // Note: We're not caching bastions here yet to ensure fresh data if needed,
-    // but we can add caching if the dataset grows significantly.
-    
-    // Using a join to get category name directly
-    const { data, error } = await supabase
-        .from('ac_bastions')
-        .select(`
-            *,
-            category:category_id (
-                name,
-                notes,
-                display_order
-            )
-        `)
-        .order('name');
+    try {
+        const { data, error } = await supabase
+            .from('ac_bastion')
+            .select(`
+                *,
+                bastion_type:bastion_type_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .order('display_order', { ascending: true })
+            .order('name', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching bastions:', error);
+        if (error || !data || data.length === 0) {
+            // Fallback to legacy ac_bastions if needed (e.g. in test mocks)
+            const fallback = await supabase
+                .from('ac_bastions')
+                .select(`
+                    *,
+                    category:category_id (
+                        name,
+                        notes,
+                        display_order
+                    )
+                `)
+                .order('name');
+
+            if (!fallback.error && fallback.data) {
+                return (fallback.data || []).map(b => ({
+                    ...b,
+                    bastion_type: b.bastion_type || b.category,
+                    category: b.category || b.bastion_type
+                }));
+            }
+            if (error) console.error('Error fetching bastions:', error);
+            return [];
+        }
+
+        return (data || []).map(b => ({
+            ...b,
+            category: b.bastion_type || b.category,
+            bastion_type: b.bastion_type || b.category
+        }));
+    } catch (err) {
+        console.error('Exception fetching bastions:', err);
         return [];
     }
-
-    return data;
 }
 
 /**
@@ -2072,6 +2124,112 @@ export async function deleteDowntime(id) {
         return { success: false, error: err };
     }
 }
+
+/**
+ * Creates a new Bastion facility in Supabase (ac_bastion).
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} bastionData - Payload containing check_id, bastion_type_id, name, source, size, etc.
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createBastion(bastionData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_bastion')
+            .insert(bastionData)
+            .select(`
+                *,
+                bastion_type:bastion_type_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error creating bastion:', error);
+            return { data: null, error };
+        }
+        const normalized = data ? {
+            ...data,
+            category: data.bastion_type || data.category,
+            bastion_type: data.bastion_type || data.category
+        } : null;
+        return { data: normalized, error: null };
+    } catch (err) {
+        console.error('Exception creating bastion:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Bastion facility in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the bastion facility to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateBastion(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_bastion')
+            .update(updates)
+            .eq('id', id)
+            .select(`
+                *,
+                bastion_type:bastion_type_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error updating bastion:', error);
+            return { data: null, error };
+        }
+        const normalized = data ? {
+            ...data,
+            category: data.bastion_type || data.category,
+            bastion_type: data.bastion_type || data.category
+        } : null;
+        return { data: normalized, error: null };
+    } catch (err) {
+        console.error('Exception updating bastion:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Bastion facility from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the bastion facility to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteBastion(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_bastion')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting bastion:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting bastion:', err);
+        return { success: false, error: err };
+    }
+}
+
 
 
 

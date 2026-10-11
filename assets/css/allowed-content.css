@@ -1405,6 +1405,52 @@ select.ac-form-input {
     color: var(--color-secondary, #2563eb);
 }
 
+/* ================================================================
+ * STANDARDIZED RULESET PILLS (2014 vs 2024)
+ * ================================================================ */
+.ruleset-pill {
+    display: inline-block;
+    padding: 0.18rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    font-family: var(--font-mono, monospace);
+    line-height: 1.25;
+    text-align: center;
+    letter-spacing: 0.03em;
+    vertical-align: middle;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+/* 2014 Edition: Burgundy / Muted Gold Accent */
+.ruleset-pill.ruleset-2014,
+.ruleset-pill:not(.ruleset-2024) {
+    background: rgba(var(--palette-brand-main, 139, 38, 20), 0.1);
+    color: var(--color-primary, #8b2614);
+    border: 1px solid rgba(var(--palette-brand-main, 139, 38, 20), 0.28);
+}
+
+[data-theme="dark"] .ruleset-pill.ruleset-2014,
+[data-theme="dark"] .ruleset-pill:not(.ruleset-2024) {
+    background: rgba(212, 165, 116, 0.12);
+    color: var(--color-primary, #d4a574);
+    border: 1px solid rgba(212, 165, 116, 0.3);
+}
+
+/* 2024 Edition: Emerald / Forest Green Accent */
+.ruleset-pill.ruleset-2024 {
+    background: rgba(46, 125, 50, 0.12);
+    color: #1b5e20;
+    border: 1px solid rgba(46, 125, 50, 0.35);
+}
+
+[data-theme="dark"] .ruleset-pill.ruleset-2024 {
+    background: rgba(76, 175, 80, 0.18);
+    color: #81c784;
+    border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
 /* Subrace Chips */
 .ac-subrace-chips {
     display: flex;
@@ -2129,9 +2175,53 @@ select.ac-form-input {
     text-align: center;
 }
 
-/* Table Category Group Subheading (Shared across Equipment and Downtime) */
+/* Bastions Table Specific Columns */
+#bastions-table .col-name {
+    min-width: 200px;
+}
+
+#bastions-table .col-size {
+    width: 140px;
+}
+
+#bastions-table .col-prereq {
+    min-width: 150px;
+}
+
+#bastions-table .col-gold {
+    width: 120px;
+}
+
+#bastions-table .col-dtp {
+    width: 100px;
+}
+
+#bastions-table .col-order {
+    width: 110px;
+}
+
+#bastions-table .col-source {
+    width: 100px;
+    text-align: center;
+}
+
+#bastions-table .col-description {
+    min-width: 220px;
+}
+
+#bastions-table .col-notes {
+    min-width: 240px;
+}
+
+#bastions-table .col-actions {
+    width: 85px;
+    text-align: center;
+}
+
+/* Table Category Group Subheading (Shared across Equipment, Downtime, and Bastions) */
 #equipment-table tr.ac-table-group-header,
-#downtime-table tr.ac-table-group-header {
+#downtime-table tr.ac-table-group-header,
+#bastions-table tr.ac-table-group-header {
     background: #ede3d2;
     background: linear-gradient(90deg, #ede2cf 0%, #f7f2e8 100%);
     cursor: pointer;
@@ -2140,25 +2230,29 @@ select.ac-form-input {
 }
 
 #equipment-table tbody tr.ac-table-group-header:hover,
-#downtime-table tbody tr.ac-table-group-header:hover {
+#downtime-table tbody tr.ac-table-group-header:hover,
+#bastions-table tbody tr.ac-table-group-header:hover {
     background: #e4d7bf;
     background: linear-gradient(90deg, #e4d7bf 0%, #f2ebd9 100%);
 }
 
 [data-theme="dark"] #equipment-table tr.ac-table-group-header,
-[data-theme="dark"] #downtime-table tr.ac-table-group-header {
+[data-theme="dark"] #downtime-table tr.ac-table-group-header,
+[data-theme="dark"] #bastions-table tr.ac-table-group-header {
     background: #2a221d;
     background: linear-gradient(90deg, #2d241f 0%, #201a16 100%);
 }
 
 [data-theme="dark"] #equipment-table tbody tr.ac-table-group-header:hover,
-[data-theme="dark"] #downtime-table tbody tr.ac-table-group-header:hover {
+[data-theme="dark"] #downtime-table tbody tr.ac-table-group-header:hover,
+[data-theme="dark"] #bastions-table tbody tr.ac-table-group-header:hover {
     background: #362c26;
     background: linear-gradient(90deg, #382c23 0%, #26201b 100%);
 }
 
 #equipment-table tr.ac-table-group-header td,
-#downtime-table tr.ac-table-group-header td {
+#downtime-table tr.ac-table-group-header td,
+#bastions-table tr.ac-table-group-header td {
     padding: 0.75rem 1rem;
     border-top: 2px solid var(--color-primary);
     border-bottom: 1px solid #d5c8b5;
@@ -2166,7 +2260,8 @@ select.ac-form-input {
 }
 
 [data-theme="dark"] #equipment-table tr.ac-table-group-header td,
-[data-theme="dark"] #downtime-table tr.ac-table-group-header td {
+[data-theme="dark"] #downtime-table tr.ac-table-group-header td,
+[data-theme="dark"] #bastions-table tr.ac-table-group-header td {
     border-top: 2px solid var(--color-primary, #d4af37);
     border-bottom: 1px solid #44372e;
     border-left: 4px solid var(--color-primary, #d4af37);
@@ -2265,7 +2360,8 @@ select.ac-form-input {
 }
 
 #equipment-table tr.ac-table-group-header:hover .ac-group-hover-hint,
-#downtime-table tr.ac-table-group-header:hover .ac-group-hover-hint {
+#downtime-table tr.ac-table-group-header:hover .ac-group-hover-hint,
+#bastions-table tr.ac-table-group-header:hover .ac-group-hover-hint {
     opacity: 1;
 }
 
@@ -2286,3 +2382,20 @@ select.ac-form-input {
     border-color: #3d3d3d;
     border-left-color: #d4af37;
 }
+
+.ac-bastion-rules-content {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.93rem;
+    line-height: 1.65;
+    color: var(--color-text-main);
+    background: rgba(var(--palette-parchment-rgb, 253, 250, 243), 0.85);
+    border: 1px solid #ded4c3;
+    border-radius: 6px;
+}
+
+[data-theme="dark"] .ac-bastion-rules-content {
+    background: #231c17;
+    border-color: #40342b;
+    color: #ded7c2;
+}
+

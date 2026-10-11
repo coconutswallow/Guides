@@ -353,8 +353,8 @@ function renderRow(feat, isAdmin) {
     const badgesHtml = renderSourceBadges(sources);
 
     const rulesetBadge = feat.ruleset 
-        ? `<span class="ac-badge ac-badge-ruleset ac-ruleset-${feat.ruleset.toLowerCase()}">${esc(feat.ruleset)}</span>`
-        : '<span style="opacity: 0.4;">—</span>';
+        ? `<span class="ruleset-pill ruleset-${esc(feat.ruleset)}">${esc(feat.ruleset)}</span>`
+        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
 
     return `
         <tr class="ac-feat-row" data-feat-id="${esc(feat.id)}" style="cursor: pointer;">
@@ -462,8 +462,8 @@ export function showFeatDetailModal(feat) {
     const badgesHtml = renderSourceBadges(sources);
 
     const rulesetBadge = feat.ruleset 
-        ? `<span class="ac-badge ac-badge-ruleset ac-ruleset-${feat.ruleset.toLowerCase()}">${esc(feat.ruleset)}</span>` 
-        : '<span style="opacity: 0.4;">—</span>';
+        ? `<span class="ruleset-pill ruleset-${esc(feat.ruleset)}">${esc(feat.ruleset)}</span>` 
+        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
 
     const html = `
         <div class="detail-header">
@@ -497,12 +497,6 @@ export function showFeatDetailModal(feat) {
                 <label>Source</label>
                 <value>${badgesHtml}</value>
             </div>
-            ${isAdmin ? `
-                <div class="detail-item">
-                    <label>Display Order</label>
-                    <value><code style="font-size: 0.85rem;">${formatDisplayOrder(feat.display_order)}</code></value>
-                </div>
-            ` : ''}
         </div>
 
         <div class="detail-section">

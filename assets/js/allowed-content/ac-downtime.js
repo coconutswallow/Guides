@@ -573,7 +573,6 @@ export function showDowntimeDetail(item) {
                 <div class="detail-title-row">
                     <h2>${esc(item.name)}</h2>
                     <div class="detail-badges">
-                        ${item.check_id ? `<span class="source-badge badge-official" title="Audit Check ID">${esc(item.check_id)}</span>` : ''}
                         <span class="source-badge badge-homebrew" title="Category">${esc(catName)}</span>
                     </div>
                 </div>
@@ -588,10 +587,6 @@ export function showDowntimeDetail(item) {
                 <div class="detail-item">
                     <span class="label">DTP Cost:</span>
                     <span class="value"><strong>${esc(dtpVal)}</strong></span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Display Order:</span>
-                    <span class="value">${esc(displayOrderVal)}</span>
                 </div>
                 <div class="detail-item">
                     <span class="label">Category:</span>

@@ -327,8 +327,8 @@ function renderRow(bg, isAdmin) {
     const badgesHtml = renderSourceBadges(sources);
 
     const rulesetBadge = bg.ruleset 
-        ? `<span class="ac-badge ac-badge-ruleset ac-ruleset-${bg.ruleset.toLowerCase()}">${esc(bg.ruleset)}</span>`
-        : '<span style="opacity: 0.4;">—</span>';
+        ? `<span class="ruleset-pill ruleset-${esc(bg.ruleset)}">${esc(bg.ruleset)}</span>`
+        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
 
     const categoryText = bg.category === 'Homebrew' ? 'Hawthorne Homebrew' : (bg.category || 'Official');
 
@@ -437,8 +437,8 @@ export function showBackgroundDetail(bg) {
     const badgesHtml = renderSourceBadges(sources);
 
     const rulesetBadge = bg.ruleset 
-        ? `<span class="ac-badge ac-badge-ruleset ac-ruleset-${bg.ruleset.toLowerCase()}">${esc(bg.ruleset)}</span>` 
-        : '<span style="opacity: 0.4;">—</span>';
+        ? `<span class="ruleset-pill ruleset-${esc(bg.ruleset)}">${esc(bg.ruleset)}</span>` 
+        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
     const categoryBadge = bg.category 
         ? `<span class="ac-badge ac-badge-category">${esc(bg.category === 'Homebrew' ? 'Hawthorne Homebrew' : bg.category)}</span>` 
         : '<span style="opacity: 0.4;">—</span>';

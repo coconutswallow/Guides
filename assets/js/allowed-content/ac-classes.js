@@ -455,7 +455,7 @@ function renderAccordionTable(isAdmin = false) {
                                 </div>
                             </td>
                             <td class="col-ruleset" style="text-align: center;">
-                                <span>${esc(cls.ruleset || '2014')}</span>
+                                <span class="ruleset-pill ruleset-${esc(cls.ruleset || '2014')}">${esc(cls.ruleset || '2014')}</span>
                             </td>
                             <td class="col-subclass">
                                 <div>
@@ -522,7 +522,7 @@ function renderAccordionTable(isAdmin = false) {
                                             ` : subs.map((sub, sIdx) => `
                                                 <tr data-subclass-id="${esc(sub.id)}" data-class-id="${esc(cls.id)}" data-sub-idx="${sIdx}">
                                                     <td><strong>${esc(sub.name)}</strong></td>
-                                                    <td style="text-align: center;">${esc(sub.ruleset || cls.ruleset)}</td>
+                                                    <td style="text-align: center;"><span class="ruleset-pill ruleset-${esc(sub.ruleset || cls.ruleset || '2014')}">${esc(sub.ruleset || cls.ruleset || '2014')}</span></td>
                                                     <td>${esc(sub.category || 'Official')}</td>
                                                     <td style="text-align: center;">${renderSourceBadges(sub.source || sub.sources || cls.source || cls.sources)}</td>
                                                     <td style="text-align: center;">${renderLinkBadge(sub.link)}</td>
@@ -721,7 +721,7 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
             </div>
             <div class="detail-item">
                 <label>Ruleset</label>
-                <value>${esc(currentSub.ruleset || cls.ruleset || '2014')}</value>
+                <value><span class="ruleset-pill ruleset-${esc(currentSub.ruleset || cls.ruleset || '2014')}">${esc(currentSub.ruleset || cls.ruleset || '2014')}</span></value>
             </div>
             <div class="detail-item">
                 <label>Category</label>

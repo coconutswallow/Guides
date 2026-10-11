@@ -50,6 +50,8 @@ node supabase/migrations/run_<migration>.js --execute --prod
 | **09** | 2026-10-06 | **Spells** | `20261006_ac_spells_normalization.sql` | `run_20261006_ac_spells_normalization.js` | ✅ Applied | ✅ Applied |
 | **10** | 2026-10-06 | **Equipment** | `20261006_ac_equipment_normalization.sql` | `run_20261006_ac_equipment_normalization.js` | ✅ Applied | ✅ Applied |
 | **11** | 2026-10-06 | **Downtime** | `20261006_ac_downtime_normalization.sql` | `run_20261006_ac_downtime_normalization.js` | ✅ Applied | ✅ Applied |
+| **12** | 2026-10-09 | **Bastions** | `20261009_ac_bastion_normalization.sql` | `run_20261009_ac_bastion_normalization.js` | ✅ Applied | ✅ Applied |
+| **13** | 2026-10-10 | **Races Ruleset Normalization** | `20261010_ac_races_ruleset.sql` | `run_20261010_ac_races_ruleset.js` | ✅ Applied | ✅ Applied |
 
 ---
 
@@ -420,3 +422,100 @@ When implementing the next Allowed Content tab (e.g. Feats, Equipment, Spells, D
   - [Check ID audit range, e.g. DOM_0001 .. DOM_XXXX]
   - [Referential integrity and constraints]
 ```
+
+---
+
+### Step 12: Bastions (`ac_bastion_type`, `ac_bastion`)
+- **Date**: 2026-10-09
+- **Source Spreadsheets**:
+  - `AC_Bastion_Type.xlsx` → `public.ac_bastion_type` (4 category type records)
+  - `AC_Bastion.xlsx` → `public.ac_bastion` (66 facility records with check_id)
+  - `Allowed_Content_20261004.xlsx` > `Bastions` sheet (authoritative source for facility data)
+- **SQL File**: `20261009_ac_bastion_normalization.sql`
+- **Runner Script**: `run_20261009_ac_bastion_normalization.js`
+- **Dependencies**: Step 01 (Sources), Step 10 (Equipment — ensures EFA, FRHOF, RHW source keys)
+
+#### Normalization Issues Identified & Corrected
+1. **UUID Primary Key**: Original `AC_Bastion.xlsx` used string keys (`BAS_ID`, `BasCat_ID`) as PKs. Corrected to `id UUID PRIMARY KEY DEFAULT gen_random_uuid()` with stable pre-generated UUIDs for idempotent upserts.
+2. **Source as TEXT[]**: Original normalized as plain `Text`. Corrected to `TEXT[] NOT NULL DEFAULT ARRAY['DMG2024']::text[]` to support multiple sources (matching Equipment pattern). Source values normalized: `'Homebrew'` → `'HHB'` (Hawthorne Homebrew key).
+3. **ac_bastion_type check_id**: Added `check_id VARCHAR(32) UNIQUE NOT NULL` field (`BASC_0001`..`BASC_0004`) to `ac_bastion_type` table for consistency with the AC architecture standard.
+4. **display_order**: Stored as `DOUBLE PRECISION` for fractional indexing support (1.0 to 66.0).
+5. **RLS Policies**: Public `SELECT`, service_role `ALL`, and Admin/Engineer `ALL` via `user_roles` join.
+
+#### Schema Created
+- `public.ac_bastion_type` (4 rows: General Rules, Basic Facilities, Special Facilities, Other)
+- `public.ac_bastion` (66 rows: BAS_0001..BAS_0066)
+
+#### Commands to Run
+```bash
+# 1. Dry run on DEV
+node supabase/migrations/run_20261009_ac_bastion_normalization.js --dry-run
+
+# 2. Execute on DEV
+node supabase/migrations/run_20261009_ac_bastion_normalization.js --execute
+
+# 3. Dry run on PRODUCTION
+node supabase/migrations/run_20261009_ac_bastion_normalization.js --dry-run --prod
+
+# 4. Execute on PRODUCTION
+node supabase/migrations/run_20261009_ac_bastion_normalization.js --execute --prod
+```
+
+#### Verification Criteria
+- `ac_bastion_type`: 4 rows, check_ids BASC_0001..BASC_0004, all distinct
+- `ac_bastion`: 66 rows, check_ids BAS_0001..BAS_0066, all distinct, 0 nulls
+- FK integrity: 0 orphan `bastion_type_id` references
+- Source array integrity: all `source[]` elements found in `ac_sources.source_key`
+- Display orders: 1.0..66.0, all 66 distinct
+- RLS: ≥ 6 policies across both tables
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-09 | All 11 checks passed. 4 types, 66 facilities committed. |
+| PRODUCTION | ✅ | ✅ | 2026-10-10 | All 11 checks passed. 4 types, 66 facilities committed. |
+
+---
+
+### Step 13: Races Ruleset & Species Name Normalization (`ac_races`, `v_ac_races`)
+- **Date**: 2026-10-10
+- **SQL Migration**: `supabase/migrations/20261010_ac_races_ruleset.sql`
+- **Runner Script**: `supabase/migrations/run_20261010_ac_races_ruleset.js`
+- **Tables Affected**: `public.ac_races`, `public.v_ac_races`
+
+#### Overview & Changes
+1. **Added `ruleset` Column**: Added `ruleset VARCHAR(10) NOT NULL DEFAULT '2014'` to `public.ac_races`.
+2. **Species Name Normalization**:
+   - For all species containing `(2024)` in `name` (30 species total): set `ruleset = '2024'` and cleanly stripped ` (2024)` from `name`.
+   - All other species (84 species) set to `ruleset = '2014'`.
+3. **Composite Unique Constraint**: Replaced `ac_races_name_key` (single name unique) with `ac_races_name_ruleset_key` (`UNIQUE (name, ruleset)`), allowing 2014 and 2024 printings of identical species names (e.g. `Elf`, `Dwarf`, `Human`) to coexist cleanly.
+4. **Recreated `v_ac_races` View**: Recreated `v_ac_races WITH (security_invoker = true)` exposing `ruleset` from joined `ac_races`, with permissions granted to `anon, authenticated, service_role`.
+
+#### Commands to Run
+```bash
+# 1. Dry run on DEV
+node supabase/migrations/run_20261010_ac_races_ruleset.js --dry-run
+
+# 2. Execute on DEV
+node supabase/migrations/run_20261010_ac_races_ruleset.js --execute
+
+# 3. Dry run on PRODUCTION
+node supabase/migrations/run_20261010_ac_races_ruleset.js --dry-run --prod
+
+# 4. Execute on PRODUCTION
+node supabase/migrations/run_20261010_ac_races_ruleset.js --execute --prod
+```
+
+#### Verification Criteria
+- `ac_races`: 30 species with `ruleset = '2024'`, 84 species with `ruleset = '2014'` (114 total).
+- 0 species in `ac_races` retain `(2024)` in their name string.
+- `v_ac_races`: 52 subraces with `ruleset = '2024'`, 169 with `ruleset = '2014'` (221 total).
+- 0 collisions or foreign key breaks on `ac_subraces.race_id`.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-10 | Verified. 30 '2024' races, 84 '2014' races. 0 remaining with '(2024)' in name. |
+| PRODUCTION | ✅ | ✅ | 2026-10-10 | Verified. 30 '2024' races, 84 '2014' races. 0 remaining with '(2024)' in name. |
+
+

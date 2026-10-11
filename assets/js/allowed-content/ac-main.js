@@ -28,6 +28,7 @@ import { initLanguages, filterLanguages, openLanguageForm } from './ac-languages
 import { initMiscFeatures, filterMiscFeatures, openMiscFeaturePicker } from './ac-misc-features.js';
 import { initEquipment, filterEquipment, openEquipmentForm } from './ac-equipment.js';
 import { initDowntime, filterDowntime, openDowntimeForm } from './ac-downtime.js';
+import { initBastions, filterBastions, openBastionForm } from './ac-bastions.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
 import { initTooltips, debounce, closeModal } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
@@ -166,6 +167,16 @@ export const TAB_REGISTRY = {
         filter: (term) => filterDowntime(term),
         adminActions: [
             { id: 'btn-add-downtime', label: '+ Add Downtime Activity', primary: true, event: 'ac:open-downtime-form' }
+        ]
+    },
+    bastions: {
+        id: 'bastions',
+        viewId: 'ac-view-bastions',
+        searchPlaceholder: 'Search bastions, facilities, orders, prerequisites, costs, sources...',
+        init: (forceRefresh) => initBastions(forceRefresh),
+        filter: (term) => filterBastions(term),
+        adminActions: [
+            { id: 'btn-add-bastion', label: '+ Add Bastion Facility', primary: true, event: 'ac:open-bastion-form' }
         ]
     }
 };
@@ -311,6 +322,19 @@ export async function init() {
         const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
         if (activeTab === 'downtime') {
             await TAB_REGISTRY['downtime'].init(true);
+        }
+    });
+
+    // Listen for admin toolbar action to open bastion form
+    window.addEventListener('ac:open-bastion-form', () => {
+        openBastionForm();
+    });
+
+    // Listen for bastion mutations across tabs to ensure view remains synced
+    window.addEventListener('ac:bastions-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'bastions') {
+            await TAB_REGISTRY['bastions'].init(true);
         }
     });
 

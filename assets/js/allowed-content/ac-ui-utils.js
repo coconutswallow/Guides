@@ -413,6 +413,21 @@ export function renderSourceBadges(sourcesInput, isVariant = false) {
 }
 
 /**
+ * Standardized renderer for Ruleset pills (2014 vs 2024).
+ * Ensures uniform visual presentation across all Allowed Content tables and modals.
+ * 
+ * @param {string} [ruleset='2014'] - Ruleset edition ('2014', '2024', etc.)
+ * @returns {string} HTML string for the ruleset pill
+ */
+export function renderRulesetPill(ruleset) {
+    if (!ruleset || ruleset === '—') {
+        return '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
+    }
+    const clean = String(ruleset).trim();
+    return `<span class="ruleset-pill ruleset-${esc(clean)}">${esc(clean)}</span>`;
+}
+
+/**
  * Renders a standardized, interactive multi-select source tag picker component.
  * Can be reused across any Allowed Content tab (Races, Feats, Classes, Spells, etc.).
  * 
