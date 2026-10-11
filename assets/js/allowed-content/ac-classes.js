@@ -28,8 +28,12 @@ import {
     deleteClass,
     createSubclass,
     updateSubclass,
-    deleteSubclass
+    deleteSubclass,
+    getClassLookups,
+    updateLookup
 } from './ac-service.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
+
 import { 
     getNextDisplayOrder, 
     cleanFloat, 
@@ -64,14 +68,22 @@ let allSubclassesFlat = [];
 let filteredClasses = [];
 let filteredSubclasses = [];
 let availableSourceKeys = [];
+let classCategories = [
+    { name: 'Official', display_order: 1, notes: 'Official D&D 5e / 2024 Classes and Subclasses' },
+    { name: 'Hawthorne Homebrew', display_order: 2, notes: 'Hawthorne Guild Custom Homebrew Content' }
+];
+let classRulesets = [
+    { label: '2014', value: '2014' },
+    { label: '2024', value: '2024' }
+];
 
 let currentViewMode = 'accordion';
 let expandedClassIds = new Set();
 let allExpanded = false;
 
 // Active toolbar filters
-let selectedRulesetFilter = 'ALL';   // 'ALL' | '2014' | '2024'
-let selectedCategoryFilter = 'ALL';  // 'ALL' | 'Official' | 'Hawthorne Homebrew'
+let selectedRulesetFilter = 'ALL';   // 'ALL' | specific ruleset
+let selectedCategoryFilter = 'ALL';  // 'ALL' | specific category
 let selectedSourceFilter = 'ALL';    // 'ALL' | specific source_key
 let currentSearchTerm = '';
 
@@ -155,10 +167,16 @@ export async function initClasses(forceRefresh = false) {
     `;
 
     try {
-        const [classesData, _sourcesMap] = await Promise.all([
+        const [classesData, _sourcesMap, classLookups] = await Promise.all([
             getClasses(),
-            getSourcesMap(forceRefresh)
+            getSourcesMap(forceRefresh),
+            getClassLookups()
         ]);
+
+        if (classLookups) {
+            if (Array.isArray(classLookups.categories)) classCategories = classLookups.categories;
+            if (Array.isArray(classLookups.rulesets)) classRulesets = classLookups.rulesets;
+        }
 
         allClasses = classesData || [];
 
@@ -310,18 +328,20 @@ function renderView() {
                 </div>
 
                 <div class="ac-classes-controls">
-                    <!-- Ruleset Filter (2014 vs 2024) -->
+                    <!-- Ruleset Filter -->
                     <select id="ac-classes-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset" aria-label="Filter by Ruleset">
                         <option value="ALL" ${selectedRulesetFilter === 'ALL' ? 'selected' : ''}>All Rulesets</option>
-                        <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014 Ruleset</option>
-                        <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024 Ruleset</option>
+                        ${classRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${selectedRulesetFilter === String(r.value) ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
 
-                    <!-- Category Filter (Official vs Hawthorne Homebrew) -->
+                    <!-- Category Filter -->
                     <select id="ac-classes-category-filter" class="ac-filter-select" title="Filter by Category" aria-label="Filter by Category">
                         <option value="ALL" ${selectedCategoryFilter === 'ALL' ? 'selected' : ''}>All Categories</option>
-                        <option value="Official" ${selectedCategoryFilter === 'Official' ? 'selected' : ''}>Official WotC</option>
-                        <option value="Hawthorne Homebrew" ${selectedCategoryFilter === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                        ${classCategories.map(c => `
+                            <option value="${esc(c.name)}" ${selectedCategoryFilter === c.name ? 'selected' : ''}>${esc(c.name)}</option>
+                        `).join('')}
                     </select>
 
                     <!-- Source Filter -->
@@ -891,15 +911,17 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                     <div class="ac-form-group">
                         <label for="subclass-input-ruleset">Ruleset *</label>
                         <select id="subclass-input-ruleset" class="ac-form-input" required>
-                            <option value="2014" ${subclassItem.ruleset === '2014' ? 'selected' : ''}>2014</option>
-                            <option value="2024" ${subclassItem.ruleset === '2024' ? 'selected' : ''}>2024</option>
+                            ${classRulesets.map(r => `
+                                <option value="${esc(r.value)}" ${String(subclassItem.ruleset) === String(r.value) ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                            `).join('')}
                         </select>
                     </div>
                     <div class="ac-form-group">
                         <label for="subclass-input-category">Category *</label>
                         <select id="subclass-input-category" class="ac-form-input" required>
-                            <option value="Official" ${subclassItem.category === 'Official' ? 'selected' : ''}>Official</option>
-                            <option value="Hawthorne Homebrew" ${subclassItem.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                            ${classCategories.map(c => `
+                                <option value="${esc(c.name)}" ${subclassItem.category === c.name ? 'selected' : ''}>${esc(c.name)}</option>
+                            `).join('')}
                         </select>
                     </div>
                     <div class="ac-form-group">
@@ -941,15 +963,17 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                         <div class="ac-form-group">
                             <label for="class-input-ruleset">Ruleset *</label>
                             <select id="class-input-ruleset" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
-                                <option value="2014" selected>2014</option>
-                                <option value="2024">2024</option>
+                                ${classRulesets.map((r, i) => `
+                                    <option value="${esc(r.value)}" ${i === 0 ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                                `).join('')}
                             </select>
                         </div>
                         <div class="ac-form-group">
                             <label for="class-input-category">Category *</label>
                             <select id="class-input-category" class="ac-form-input" required ${initialMode === 'class' ? '' : 'disabled'}>
-                                <option value="Official" selected>Official</option>
-                                <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
+                                ${classCategories.map((c, i) => `
+                                    <option value="${esc(c.name)}" ${i === 0 ? 'selected' : ''}>${esc(c.name)}</option>
+                                `).join('')}
                             </select>
                         </div>
                         <div class="ac-form-group">
@@ -1001,15 +1025,17 @@ export async function openClassForm(subclassItem = null, defaultParentClass = nu
                         <div class="ac-form-group">
                             <label for="subclass-input-ruleset">Ruleset *</label>
                             <select id="subclass-input-ruleset" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
-                                <option value="2014" selected>2014</option>
-                                <option value="2024">2024</option>
+                                ${classRulesets.map((r, i) => `
+                                    <option value="${esc(r.value)}" ${i === 0 ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                                `).join('')}
                             </select>
                         </div>
                         <div class="ac-form-group">
                             <label for="subclass-input-category">Category *</label>
                             <select id="subclass-input-category" class="ac-form-input" required ${initialMode === 'subclass' ? '' : 'disabled'}>
-                                <option value="Official" selected>Official</option>
-                                <option value="Hawthorne Homebrew">Hawthorne Homebrew</option>
+                                ${classCategories.map((c, i) => `
+                                    <option value="${esc(c.name)}" ${i === 0 ? 'selected' : ''}>${esc(c.name)}</option>
+                                `).join('')}
                             </select>
                         </div>
                         <div class="ac-form-group">
@@ -1230,4 +1256,63 @@ if (typeof window !== 'undefined') {
         allClasses = [];
         allSubclassesFlat = [];
     });
+    window.addEventListener('ac:open-classes-options', () => openClassesOptionsManagerModal());
 }
+
+/**
+ * Opens the Lookups Options Manager modal for Classes.
+ * Allows Admins/Engineers to configure Class categories and rulesets.
+ */
+export function openClassesOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Classes Options (Lookups)',
+        subtitle: 'Manage categories, rulesets, and notes saved in the lookups table.',
+        tabs: [
+            {
+                id: 'categories',
+                label: 'Categories',
+                addLabel: '+ Add Category',
+                items: classCategories,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Category Name' },
+                    { key: 'notes', label: 'Description', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Category Name', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Description / Notes', type: 'textarea' }
+                ]
+            },
+            {
+                id: 'rulesets',
+                label: 'Rulesets',
+                addLabel: '+ Add Ruleset',
+                items: classRulesets,
+                columns: [
+                    { key: 'label', label: 'Ruleset Label' },
+                    { key: 'value', label: 'Value', code: true }
+                ],
+                fields: [
+                    { key: 'label', label: 'Ruleset Label', required: true },
+                    { key: 'value', label: 'Value (e.g. 2014, 2024)', required: true }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const payload = {
+                categories: drafts.categories,
+                rulesets: drafts.rulesets
+            };
+            const { error } = await updateLookup('classes', payload);
+            if (error) {
+                throw error;
+            }
+            classCategories = drafts.categories;
+            classRulesets = drafts.rulesets;
+            applyFilters();
+            renderView();
+        }
+    });
+}
+

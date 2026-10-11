@@ -47,7 +47,8 @@ import {
     resolveSourceLink, 
     getStaffPortalUrl,
     renderMarkdownLinks, 
-    showToast 
+    showToast,
+    renderFilterSelect
 } from './ac-ui-utils.js';
 import { 
     setAdminMode, 
@@ -207,18 +208,19 @@ function renderSources() {
                 </div>
                 <div class="ac-admin-actions">
                     <button id="btn-add-source" class="ac-btn-admin ac-btn-primary">+ Add New Source</button>
-                    <button id="btn-manage-options" class="ac-btn-admin ac-btn-secondary">⚙️ Configure Options</button>
+                    <button id="btn-manage-options" class="ac-btn-admin ac-btn-secondary">⚙️ Configure Categories</button>
                     <a href="${getStaffPortalUrl()}" class="ac-btn-admin ac-btn-secondary">Staff Portal</a>
                 </div>
             </div>
         ` : ''}
 
-        <div class="ac-table-header">
-            <div id="sources-nav" class="ac-monster-nav">
-                <!-- Filter Chips -->
+        <div class="ac-classes-toolbar ac-sources-toolbar">
+            <div class="ac-classes-stats ac-sources-stats" id="sources-stats">
+                Showing <strong>${filteredSources.length}</strong> ${filteredSources.length === 1 ? 'Source' : 'Sources'}
             </div>
-            <div class="ac-stats" id="sources-stats">
-                ${filteredSources.length} ${filteredSources.length === 1 ? 'Source' : 'Sources'} found
+
+            <div class="ac-classes-controls ac-sources-controls" id="sources-nav">
+                <!-- Dropdown Filters rendered by renderNavigation() -->
             </div>
         </div>
         ${activeCategoryMeta?.notes ? `
@@ -325,61 +327,61 @@ function renderSources() {
 }
 
 /**
- * Renders filter chips for Category and Ruleset.
+ * Renders filter dropdowns for Category and Ruleset.
  */
 function renderNavigation() {
     const navContainer = document.getElementById('sources-nav');
     if (!navContainer) return;
 
     // Available categories from lookups
-    const categoryOptions = sourceTypes.map(c => c.name);
+    const categoryOptions = sourceTypes.map(c => ({
+        value: c.name,
+        label: c.name
+    }));
+
+    // Available rulesets from lookups
+    const rulesetOptions = sourceRulesets.map(r => ({
+        value: String(r.value),
+        label: r.label || String(r.value)
+    }));
 
     navContainer.innerHTML = `
-        <div class="ac-shortcuts-row">
-            <span class="nav-label">Category:</span>
-            <div class="ac-shortcuts">
-                <button class="ac-shortcut-chip ${!selectedType ? 'active' : ''}" data-type="category" data-value="">
-                    All
-                </button>
-                ${categoryOptions.map(catName => `
-                    <button class="ac-shortcut-chip ${selectedType === catName ? 'active' : ''}" data-type="category" data-value="${esc(catName)}">
-                        ${esc(catName)}
-                    </button>
-                `).join('')}
-            </div>
-        </div>
-
-        <div class="ac-shortcuts-row">
-            <span class="nav-label">Ruleset:</span>
-            <div class="ac-shortcuts">
-                <button class="ac-shortcut-chip ${!selectedRuleset ? 'active' : ''}" data-type="ruleset" data-value="">
-                    All
-                </button>
-                ${sourceRulesets.map(r => `
-                    <button class="ac-shortcut-chip ${selectedRuleset === String(r.value) ? 'active' : ''}" data-type="ruleset" data-value="${esc(String(r.value))}">
-                        ${esc(r.label)}
-                    </button>
-                `).join('')}
-            </div>
-        </div>
+        ${renderFilterSelect({
+            id: 'ac-sources-ruleset-filter',
+            title: 'Filter by Ruleset',
+            allLabel: 'All Rulesets',
+            allValue: '',
+            selectedValue: selectedRuleset || '',
+            items: rulesetOptions
+        })}
+        ${renderFilterSelect({
+            id: 'ac-sources-category-filter',
+            title: 'Filter by Category',
+            allLabel: `All Categories (${sourceTypes.length})`,
+            allValue: '',
+            selectedValue: selectedType || '',
+            items: categoryOptions
+        })}
     `;
 
-    // Chip click interactions
-    navContainer.querySelectorAll('.ac-shortcut-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-            const { type, value } = chip.dataset;
-
-            if (type === 'category') {
-                selectedType = value || null;
-                applyFilters();
-                renderSources();
-            } else if (type === 'ruleset') {
-                selectedRuleset = value || null;
-                applyFilters();
-                renderSources();
-            }
+    // Dropdown change listeners
+    const rulesetSelect = document.getElementById('ac-sources-ruleset-filter');
+    if (rulesetSelect) {
+        rulesetSelect.addEventListener('change', (e) => {
+            selectedRuleset = e.target.value || null;
+            applyFilters();
+            renderSources();
         });
-    });
+    }
+
+    const catSelect = document.getElementById('ac-sources-category-filter');
+    if (catSelect) {
+        catSelect.addEventListener('change', (e) => {
+            selectedType = e.target.value || null;
+            applyFilters();
+            renderSources();
+        });
+    }
 }
 
 /**
@@ -558,7 +560,6 @@ export async function openSourceForm(item = null) {
         <form id="ac-source-form" class="ac-edit-form">
             <!-- Hidden / derived fields -->
             <input type="hidden" id="src-input-key" value="${esc(sourceKeyVal)}">
-            <input type="hidden" id="src-input-check" value="${esc(checkIdVal)}">
 
             <div class="ac-form-grid">
                 <div class="ac-form-group">
@@ -711,7 +712,7 @@ export async function openSourceForm(item = null) {
             if (!source_key) {
                 source_key = deriveSourceKey(abbreviation, name);
             }
-            const check_id = document.getElementById('src-input-check')?.value?.trim()?.toUpperCase() || null;
+            const check_id = isNew ? getNextCheckId(allSources) : (item?.check_id || null);
             const type = document.getElementById('src-input-type').value;
             const ruleset = document.getElementById('src-input-ruleset').value;
             const display_order = parseFloat(document.getElementById('src-input-order').value) || 0;
@@ -745,18 +746,6 @@ export async function openSourceForm(item = null) {
                     submitBtn.textContent = 'Create Source';
                 }
                 return;
-            }
-
-            if (check_id) {
-                const checkDup = allSources.find(s => (isNew || s.id !== item.id) && s.check_id?.toUpperCase() === check_id);
-                if (checkDup) {
-                    showToast(`Audit Check ID "${check_id}" is already used by "${checkDup.name}".`, true);
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = isNew ? 'Create Source' : 'Save Changes';
-                    }
-                    return;
-                }
             }
 
             const payload = {

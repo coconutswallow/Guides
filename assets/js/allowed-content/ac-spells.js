@@ -20,6 +20,9 @@ import {
     createSpell, 
     updateSpell, 
     deleteSpell,
+    getSourceLookups,
+    getSharedRulesets,
+    updateLookup,
     getSourcesMap, 
     getSourceByKey 
 } from './ac-service.js';
@@ -47,6 +50,7 @@ import {
     renderSourceTagPicker,
     showToast 
 } from './ac-ui-utils.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 
 export {
     setAdminMode,
@@ -57,6 +61,7 @@ export {
 let allSpells = [];
 let filteredSpells = [];
 let availableSourceKeys = [];
+let spellRulesets = ['2024', '2014'];
 
 // Active toolbar filters
 let selectedRulesetFilter = 'ALL';   // 'ALL' | '2014' | '2024'
@@ -90,10 +95,15 @@ export async function initSpells(forceRefresh = false) {
     `;
 
     try {
-        const [spellsData, _sourcesMap] = await Promise.all([
+        const [spellsData, _sourcesMap, rulesetsData] = await Promise.all([
             getSpells(),
-            getSourcesMap(forceRefresh)
+            getSourcesMap(forceRefresh),
+            getSharedRulesets()
         ]);
+
+        if (rulesetsData && Array.isArray(rulesetsData) && rulesetsData.length > 0) {
+            spellRulesets = rulesetsData.map(r => String(r.value || r.label || r));
+        }
 
         allSpells = sortByDisplayOrder(spellsData || []);
 
@@ -188,8 +198,9 @@ function renderView() {
                     <!-- Ruleset Filter -->
                     <select id="ac-spells-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset" aria-label="Filter by Ruleset">
                         <option value="ALL">All Rulesets</option>
-                        <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024</option>
-                        <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014</option>
+                        ${spellRulesets.map(r => `
+                            <option value="${esc(r)}" ${selectedRulesetFilter === r ? 'selected' : ''}>${esc(r)}</option>
+                        `).join('')}
                     </select>
 
                     <!-- Sourcebook Filter -->
@@ -465,21 +476,13 @@ export function openSpellForm(spell = null) {
                            placeholder="e.g. Spells from PHB (2024)">
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
-                        <label for="spell-check-id" style="font-weight: 600; font-size: 0.85rem;">Check ID *</label>
-                        <input type="text" id="spell-check-id" class="ac-input" required 
-                               value="${isEdit ? esc(spell.check_id) : `SPL_${String(allSpells.length + 1).padStart(4, '0')}`}" 
-                               placeholder="e.g. SPL_0021">
-                    </div>
-
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
-                        <label for="spell-ruleset" style="font-weight: 600; font-size: 0.85rem;">Ruleset Edition *</label>
-                        <select id="spell-ruleset" class="ac-filter-select" style="width: 100%;">
-                            <option value="2024" ${currentRuleset === '2024' ? 'selected' : ''}>2024</option>
-                            <option value="2014" ${currentRuleset === '2014' ? 'selected' : ''}>2014</option>
-                        </select>
-                    </div>
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="spell-ruleset" style="font-weight: 600; font-size: 0.85rem;">Ruleset Edition *</label>
+                    <select id="spell-ruleset" class="ac-filter-select" style="width: 100%;">
+                        ${spellRulesets.map(r => `
+                            <option value="${esc(r)}" ${currentRuleset === r ? 'selected' : ''}>${esc(r)}</option>
+                        `).join('')}
+                    </select>
                 </div>
 
                 <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
@@ -549,7 +552,17 @@ export function openSpellForm(spell = null) {
             }
 
             const name = document.getElementById('spell-name').value.trim();
-            const checkId = document.getElementById('spell-check-id').value.trim();
+            let checkId = isEdit ? (spell?.check_id || null) : null;
+            if (!checkId) {
+                let maxNum = 0;
+                allSpells.forEach(s => {
+                    if (s.check_id && s.check_id.startsWith('SPL_')) {
+                        const num = parseInt(s.check_id.replace('SPL_', ''), 10);
+                        if (!isNaN(num) && num > maxNum) maxNum = num;
+                    }
+                });
+                checkId = `SPL_${String(maxNum + 1).padStart(4, '0')}`;
+            }
             const ruleset = document.getElementById('spell-ruleset').value;
             const displayOrder = parseFloat(document.getElementById('spell-order').value) || 0.0;
             const notes = document.getElementById('spell-notes').value.trim() || null;
@@ -640,4 +653,45 @@ if (typeof window !== 'undefined') {
     window.addEventListener('ac:spells-updated', () => {
         allSpells = [];
     });
+    window.addEventListener('ac:open-spells-options', () => {
+        openSpellsOptionsManagerModal();
+    });
 }
+
+/**
+ * Opens the Options Manager modal for Spells.
+ * Allows Admins/Engineers to configure shared rulesets in the lookups table.
+ */
+export async function openSpellsOptionsManagerModal() {
+    const srcLookups = await getSourceLookups();
+    openGenericOptionsModal({
+        title: '⚙️ Configure Spells Options',
+        subtitle: 'Manage ruleset editions (2014, 2024) saved in the lookups table.',
+        tabs: [
+            {
+                id: 'rulesets',
+                label: 'Rulesets',
+                addLabel: '+ Add Ruleset',
+                items: srcLookups.rulesets || [{ label: '2014', value: 2014 }, { label: '2024', value: 2024 }],
+                columns: [
+                    { key: 'label', label: 'Ruleset Label' },
+                    { key: 'value', label: 'Value', code: true }
+                ],
+                fields: [
+                    { key: 'label', label: 'Ruleset Label', required: true },
+                    { key: 'value', label: 'Value (e.g. 2014, 2024)', required: true }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const currentLookups = await getSourceLookups();
+            const { error } = await updateLookup('sources', {
+                ...currentLookups,
+                rulesets: drafts.rulesets
+            });
+            if (error) throw error;
+            await initSpells(true);
+        }
+    });
+}
+

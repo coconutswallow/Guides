@@ -27,6 +27,7 @@ import { initSpells, filterSpells, openSpellForm } from './ac-spells.js';
 import { initLanguages, filterLanguages, openLanguageForm } from './ac-languages.js';
 import { initMiscFeatures, filterMiscFeatures, openMiscFeaturePicker } from './ac-misc-features.js';
 import { initEquipment, filterEquipment, openEquipmentForm } from './ac-equipment.js';
+import { initItemProperties, filterItemProperties, openItemPropertyForm } from './ac-item-properties.js';
 import { initDowntime, filterDowntime, openDowntimeForm } from './ac-downtime.js';
 import { initBastions, filterBastions, openBastionForm } from './ac-bastions.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
@@ -86,7 +87,8 @@ export const TAB_REGISTRY = {
         filter: (term) => filterRaces(term),
         adminActions: [
             { id: 'btn-add-race', label: '+ Add Race', primary: true, event: 'ac:open-new-race-form' },
-            { id: 'btn-add-subrace', label: '+ Add Subrace', primary: false, event: 'ac:open-race-form' }
+            { id: 'btn-add-subrace', label: '+ Add Subrace', primary: false, event: 'ac:open-race-form' },
+            { id: 'btn-manage-races-options', label: '⚙️ Configure Options', primary: false, event: 'ac:open-races-options' }
         ]
     },
     classes: {
@@ -96,7 +98,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initClasses(forceRefresh),
         filter: (term) => filterClasses(term),
         adminActions: [
-            { id: 'btn-add-class-subclass', label: '+ Add Class/Subclass', primary: true, event: 'ac:open-class-form' }
+            { id: 'btn-add-class-subclass', label: '+ Add Class/Subclass', primary: true, event: 'ac:open-class-form' },
+            { id: 'btn-manage-classes-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-classes-options' }
         ]
     },
     backgrounds: {
@@ -106,7 +109,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initBackgrounds(forceRefresh),
         filter: (term) => filterBackgrounds(term),
         adminActions: [
-            { id: 'btn-add-background', label: '+ Add Background', primary: true, event: 'ac:open-background-form' }
+            { id: 'btn-add-background', label: '+ Add Background', primary: true, event: 'ac:open-background-form' },
+            { id: 'btn-manage-backgrounds-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-backgrounds-options' }
         ]
     },
     feats: {
@@ -116,7 +120,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initFeats(forceRefresh),
         filter: (term) => filterFeats(term),
         adminActions: [
-            { id: 'btn-add-feat', label: '+ Add Feat', primary: true, event: 'ac:open-feat-form' }
+            { id: 'btn-add-feat', label: '+ Add Feat', primary: true, event: 'ac:open-feat-form' },
+            { id: 'btn-manage-feats-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-feats-options' }
         ]
     },
     spells: {
@@ -126,7 +131,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initSpells(forceRefresh),
         filter: (term) => filterSpells(term),
         adminActions: [
-            { id: 'btn-add-spell', label: '+ Add Spell', primary: true, event: 'ac:open-spell-form' }
+            { id: 'btn-add-spell', label: '+ Add Spell', primary: true, event: 'ac:open-spell-form' },
+            { id: 'btn-manage-spells-options', label: '⚙️ Configure Options', primary: false, event: 'ac:open-spells-options' }
         ]
     },
     languages: {
@@ -136,7 +142,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initLanguages(forceRefresh),
         filter: (term) => filterLanguages(term),
         adminActions: [
-            { id: 'btn-add-language', label: '+ Add Language', primary: true, event: 'ac:open-language-form' }
+            { id: 'btn-add-language', label: '+ Add Language', primary: true, event: 'ac:open-language-form' },
+            { id: 'btn-manage-languages-options', label: '⚙️ Configure Classifications', primary: false, event: 'ac:open-languages-options' }
         ]
     },
     'misc-features': {
@@ -146,7 +153,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initMiscFeatures(forceRefresh),
         filter: (term) => filterMiscFeatures(term),
         adminActions: [
-            { id: 'btn-add-misc-feature', label: '+ Add Feature', primary: true, event: 'ac:open-misc-feature-picker' }
+            { id: 'btn-add-misc-feature', label: '+ Add Feature', primary: true, event: 'ac:open-misc-feature-picker' },
+            { id: 'btn-manage-misc-options', label: '⚙️ Configure Sections', primary: false, event: 'ac:open-misc-options' }
         ]
     },
     equipment: {
@@ -156,7 +164,19 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initEquipment(forceRefresh),
         filter: (term) => filterEquipment(term),
         adminActions: [
-            { id: 'btn-add-equipment', label: '+ Add Equipment', primary: true, event: 'ac:open-equipment-form' }
+            { id: 'btn-add-equipment', label: '+ Add Equipment', primary: true, event: 'ac:open-equipment-form' },
+            { id: 'btn-manage-equipment-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-equipment-options' }
+        ]
+    },
+    'item-properties': {
+        id: 'item-properties',
+        viewId: 'ac-view-item-properties',
+        searchPlaceholder: 'Search item properties, creators, histories, quirks, sentient features...',
+        init: (forceRefresh) => initItemProperties(forceRefresh),
+        filter: (term) => filterItemProperties(term),
+        adminActions: [
+            { id: 'btn-add-item-property', label: '+ Add Item Property', primary: true, event: 'ac:open-item-property-form' },
+            { id: 'btn-manage-item-properties-options', label: '⚙️ Configure Options', primary: false, event: 'ac:open-item-properties-options' }
         ]
     },
     downtime: {
@@ -166,7 +186,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initDowntime(forceRefresh),
         filter: (term) => filterDowntime(term),
         adminActions: [
-            { id: 'btn-add-downtime', label: '+ Add Downtime Activity', primary: true, event: 'ac:open-downtime-form' }
+            { id: 'btn-add-downtime', label: '+ Add Downtime Activity', primary: true, event: 'ac:open-downtime-form' },
+            { id: 'btn-manage-downtime-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-downtime-options' }
         ]
     },
     bastions: {
@@ -176,7 +197,8 @@ export const TAB_REGISTRY = {
         init: (forceRefresh) => initBastions(forceRefresh),
         filter: (term) => filterBastions(term),
         adminActions: [
-            { id: 'btn-add-bastion', label: '+ Add Bastion Facility', primary: true, event: 'ac:open-bastion-form' }
+            { id: 'btn-add-bastion', label: '+ Add Bastion Facility', primary: true, event: 'ac:open-bastion-form' },
+            { id: 'btn-manage-bastions-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-bastions-options' }
         ]
     }
 };
@@ -309,6 +331,19 @@ export async function init() {
         const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
         if (activeTab === 'equipment') {
             await TAB_REGISTRY['equipment'].init(true);
+        }
+    });
+
+    // Listen for admin toolbar action to open item property form
+    window.addEventListener('ac:open-item-property-form', () => {
+        openItemPropertyForm();
+    });
+
+    // Listen for item properties mutations across tabs to ensure view remains synced
+    window.addEventListener('ac:item-properties-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'item-properties') {
+            await TAB_REGISTRY['item-properties'].init(true);
         }
     });
 

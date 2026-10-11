@@ -23,8 +23,12 @@ import {
     getLanguageTypes,
     createLanguage, 
     updateLanguage, 
-    deleteLanguage 
+    deleteLanguage,
+    insertLanguageType,
+    updateLanguageType,
+    deleteLanguageType
 } from './ac-service.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 import { 
     getNextDisplayOrder, 
     cleanFloat, 
@@ -656,4 +660,70 @@ if (typeof window !== 'undefined') {
         allLanguages = [];
         allLanguageTypes = [];
     });
+    window.addEventListener('ac:open-languages-options', () => openLanguagesOptionsManagerModal());
 }
+
+/**
+ * Opens the Options Manager modal for Languages.
+ * Allows Admins/Engineers to configure Language classifications stored in the database.
+ */
+export function openLanguagesOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Language Classifications',
+        subtitle: 'Manage language classification types, display orders, and descriptions stored in the database.',
+        tabs: [
+            {
+                id: 'types',
+                label: 'Classifications',
+                addLabel: '+ Add Classification',
+                items: allLanguageTypes,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Classification Name' },
+                    { key: 'description', label: 'Description / Guidelines', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Classification Name', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'description', label: 'Description / Guidelines', type: 'textarea', placeholder: 'Official rulings / guidelines...' }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const draftList = drafts.types || [];
+            const origMap = new Map(allLanguageTypes.map(t => [t.id, t]));
+            const draftIds = new Set(draftList.filter(d => d.id).map(d => d.id));
+
+            // Deletions
+            for (const [id, orig] of origMap.entries()) {
+                if (!draftIds.has(id)) {
+                    const { error } = await deleteLanguageType(id);
+                    if (error) throw error;
+                }
+            }
+
+            // Inserts & Updates
+            for (const item of draftList) {
+                if (item.id && origMap.has(item.id)) {
+                    const { error } = await updateLanguageType(item.id, {
+                        name: item.name,
+                        display_order: item.display_order,
+                        description: item.description
+                    });
+                    if (error) throw error;
+                } else {
+                    const { data, error } = await insertLanguageType({
+                        name: item.name,
+                        display_order: item.display_order,
+                        description: item.description
+                    });
+                    if (error) throw error;
+                    if (data?.id) item.id = data.id;
+                }
+            }
+
+            await initLanguages(true);
+        }
+    });
+}
+

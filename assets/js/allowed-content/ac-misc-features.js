@@ -34,8 +34,11 @@ import {
     updateEldritchInvocation,
     deleteEldritchInvocation,
     getSourcesMap,
-    getSourceByKey
+    getSourceByKey,
+    getMiscFeatureLookups,
+    updateLookup
 } from './ac-service.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 import {
     getNextDisplayOrder,
     cleanFloat,
@@ -74,10 +77,19 @@ let filteredAI = [];
 let filteredEI = [];
 
 let availableSourceKeys = [];
+let miscSections = [
+    { id: 'FS', name: 'Fighting Styles', display_order: 1, notes: 'Fighting Style feats and options' },
+    { id: 'AI', name: 'Artificer Infusions', display_order: 2, notes: 'Artificer Infusions' },
+    { id: 'EI', name: 'Eldritch Invocations', display_order: 3, notes: 'Warlock Eldritch Invocations' }
+];
+let miscRulesets = [
+    { label: '2014', value: '2014' },
+    { label: '2024', value: '2024' }
+];
 
 // Filter state
-let selectedSectionFilter = 'ALL';   // 'ALL' | 'FS' | 'AI' | 'EI'
-let selectedRulesetFilter = 'ALL';   // 'ALL' | '2014' | '2024'
+let selectedSectionFilter = 'ALL';   // 'ALL' | specific section ID
+let selectedRulesetFilter = 'ALL';   // 'ALL' | specific ruleset
 let selectedSourceFilter = 'ALL';    // 'ALL' | specific source_key
 let currentSearchTerm = '';
 
@@ -122,12 +134,18 @@ export async function initMiscFeatures(forceRefresh = false) {
     `;
 
     try {
-        const [fsData, aiData, eiData, _sourcesMap] = await Promise.all([
+        const [fsData, aiData, eiData, _sourcesMap, miscLookups] = await Promise.all([
             getFightingStyles(),
             getArtificerInfusions(),
             getEldritchInvocations(),
-            getSourcesMap(forceRefresh)
+            getSourcesMap(forceRefresh),
+            getMiscFeatureLookups()
         ]);
+
+        if (miscLookups) {
+            if (Array.isArray(miscLookups.sections)) miscSections = miscLookups.sections;
+            if (Array.isArray(miscLookups.rulesets)) miscRulesets = miscLookups.rulesets;
+        }
 
         allFightingStyles = sortByDisplayOrder(fsData || []);
         allArtificerInfusions = sortByDisplayOrder(aiData || []);
@@ -248,17 +266,22 @@ function renderView() {
                 <div class="ac-misc-controls ac-classes-controls">
                     <!-- Section Filter -->
                     <select id="misc-section-filter" class="ac-filter-select" title="Filter by Section" aria-label="Filter by Section">
-                        <option value="ALL" ${selectedSectionFilter === 'ALL' ? 'selected' : ''}>All Sections (3)</option>
-                        <option value="FS" ${selectedSectionFilter === 'FS' ? 'selected' : ''}>Fighting Styles (${filteredFS.length})</option>
-                        <option value="AI" ${selectedSectionFilter === 'AI' ? 'selected' : ''}>Artificer Infusions (${filteredAI.length})</option>
-                        <option value="EI" ${selectedSectionFilter === 'EI' ? 'selected' : ''}>Eldritch Invocations (${filteredEI.length})</option>
+                        <option value="ALL" ${selectedSectionFilter === 'ALL' ? 'selected' : ''}>All Sections (${miscSections.length})</option>
+                        ${miscSections.map(sec => {
+                            let count = 0;
+                            if (sec.id === 'FS') count = filteredFS.length;
+                            else if (sec.id === 'AI') count = filteredAI.length;
+                            else if (sec.id === 'EI') count = filteredEI.length;
+                            return `<option value="${esc(sec.id)}" ${selectedSectionFilter === sec.id ? 'selected' : ''}>${esc(sec.name)} (${count})</option>`;
+                        }).join('')}
                     </select>
 
                     <!-- Ruleset Filter -->
                     <select id="misc-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset" aria-label="Filter by Ruleset">
                         <option value="ALL" ${selectedRulesetFilter === 'ALL' ? 'selected' : ''}>All Rulesets</option>
-                        <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024 Edition</option>
-                        <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014 Edition</option>
+                        ${miscRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${selectedRulesetFilter === String(r.value) ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
 
                     <!-- Source Filter -->
@@ -827,8 +850,9 @@ export async function openFightingStyleForm(item = null) {
                 <div class="ac-form-group">
                     <label for="fs-input-ruleset" style="font-weight: 600;">Ruleset *</label>
                     <select id="fs-input-ruleset" required class="ac-form-select">
-                        <option value="2024" ${item?.ruleset === '2024' ? 'selected' : ''}>2024 Edition</option>
-                        <option value="2014" ${item?.ruleset === '2014' || !isEdit ? 'selected' : ''}>2014 Edition</option>
+                        ${miscRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${String(item?.ruleset) === String(r.value) || (!isEdit && String(r.value) === '2024') ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
                 </div>
                 <div class="ac-form-group">
@@ -936,7 +960,9 @@ export async function openArtificerInfusionForm(item = null) {
                 <div class="ac-form-group">
                     <label for="ai-input-ruleset" style="font-weight: 600;">Ruleset *</label>
                     <select id="ai-input-ruleset" required class="ac-form-select">
-                        <option value="2014" selected>2014 Edition</option>
+                        ${miscRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${String(item?.ruleset) === String(r.value) || (!isEdit && String(r.value) === '2014') ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
                 </div>
                 <div class="ac-form-group">
@@ -1057,8 +1083,9 @@ export async function openEldritchInvocationForm(item = null) {
                 <div class="ac-form-group">
                     <label for="ei-input-ruleset" style="font-weight: 600;">Ruleset *</label>
                     <select id="ei-input-ruleset" required class="ac-form-select">
-                        <option value="2024" ${item?.ruleset === '2024' ? 'selected' : ''}>2024 Edition</option>
-                        <option value="2014" ${item?.ruleset === '2014' || !isEdit ? 'selected' : ''}>2014 Edition</option>
+                        ${miscRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${String(item?.ruleset) === String(r.value) || (!isEdit && String(r.value) === '2024') ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
                 </div>
                 <div class="ac-form-group">
@@ -1228,4 +1255,64 @@ if (typeof window !== 'undefined') {
         allArtificerInfusions = [];
         allEldritchInvocations = [];
     });
+    window.addEventListener('ac:open-misc-options', () => openMiscOptionsManagerModal());
 }
+
+/**
+ * Opens the Lookups Options Manager modal for Misc Class Features.
+ * Allows Admins/Engineers to configure feature sections and rulesets.
+ */
+export function openMiscOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Misc Features Options (Lookups)',
+        subtitle: 'Manage feature sections and rulesets stored in the lookups table.',
+        tabs: [
+            {
+                id: 'sections',
+                label: 'Sections',
+                addLabel: '+ Add Section',
+                items: miscSections,
+                columns: [
+                    { key: 'id', label: 'Section ID', width: '90px', code: true },
+                    { key: 'name', label: 'Section Title' },
+                    { key: 'notes', label: 'Description', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'id', label: 'Section ID (e.g. FS, AI, EI)', required: true },
+                    { key: 'name', label: 'Section Title', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Description / Notes', type: 'textarea' }
+                ]
+            },
+            {
+                id: 'rulesets',
+                label: 'Rulesets',
+                addLabel: '+ Add Ruleset',
+                items: miscRulesets,
+                columns: [
+                    { key: 'label', label: 'Ruleset Label' },
+                    { key: 'value', label: 'Value', code: true }
+                ],
+                fields: [
+                    { key: 'label', label: 'Ruleset Label', required: true },
+                    { key: 'value', label: 'Value (e.g. 2014, 2024)', required: true }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const payload = {
+                sections: drafts.sections,
+                rulesets: drafts.rulesets
+            };
+            const { error } = await updateLookup('misc-features', payload);
+            if (error) {
+                throw error;
+            }
+            miscSections = drafts.sections;
+            miscRulesets = drafts.rulesets;
+            applyFilters();
+            renderView();
+        }
+    });
+}
+

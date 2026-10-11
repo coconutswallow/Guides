@@ -843,6 +843,126 @@ export async function getSourceCategories() {
     return lookups.types || [];
 }
 
+/**
+ * Fetch Class metadata (categories and rulesets) from lookups table.
+ * 
+ * @returns {Promise<{categories: Array, rulesets: Array}>}
+ */
+export async function getClassLookups() {
+    const data = await getLookup('classes');
+    return data || {
+        categories: [
+            { name: 'Official', display_order: 1, notes: 'Official D&D 5e / 2024 Classes and Subclasses' },
+            { name: 'Hawthorne Homebrew', display_order: 2, notes: 'Hawthorne Guild Custom Homebrew Content' }
+        ],
+        rulesets: [
+            { label: '2014', value: '2014' },
+            { label: '2024', value: '2024' }
+        ]
+    };
+}
+
+/**
+ * Fetch Background metadata (categories and rulesets) from lookups table.
+ * 
+ * @returns {Promise<{categories: Array, rulesets: Array}>}
+ */
+export async function getBackgroundLookups() {
+    const data = await getLookup('backgrounds');
+    return data || {
+        categories: [
+            { name: 'Official', display_order: 1, notes: 'Official Backgrounds' },
+            { name: 'Homebrew', display_order: 2, notes: 'Hawthorne Homebrew Backgrounds' }
+        ],
+        rulesets: [
+            { label: '2014', value: '2014' },
+            { label: '2024', value: '2024' }
+        ]
+    };
+}
+
+/**
+ * Fetch Feat metadata (categories and rulesets) from lookups table.
+ * 
+ * @returns {Promise<{categories: Array, rulesets: Array}>}
+ */
+export async function getFeatLookups() {
+    const data = await getLookup('feats');
+    return data || {
+        categories: [
+            { name: 'General', display_order: 1, notes: null },
+            { name: 'Origin', display_order: 2, notes: null },
+            { name: 'Epic Boon', display_order: 3, notes: null },
+            { name: 'Fighting Style', display_order: 4, notes: null },
+            { name: 'Dragonmark', display_order: 5, notes: null },
+            { name: 'Dark Gift', display_order: 6, notes: null }
+        ],
+        rulesets: [
+            { label: '2014', value: '2014' },
+            { label: '2024', value: '2024' }
+        ]
+    };
+}
+
+/**
+ * Fetch Item Property metadata (types and permissions) from lookups table.
+ * 
+ * @returns {Promise<{types: Array, permissions: Array}>}
+ */
+export async function getItemPropertyLookups() {
+    const data = await getLookup('item-properties');
+    return data || {
+        types: [
+            { name: 'Creator', display_order: 1, notes: 'Creator special features for magic items' },
+            { name: 'History', display_order: 2, notes: 'History special features for magic items' },
+            { name: 'Minor Property', display_order: 3, notes: 'Minor properties for magic items' },
+            { name: 'Quirk', display_order: 4, notes: 'Quirks for magic items' },
+            { name: 'Sentient Magic Item Property', display_order: 5, notes: 'Sentient magic item properties' }
+        ],
+        permissions: [
+            { name: 'Fair Game', label: 'Fair Game (Any DM)', display_order: 1, notes: null },
+            { name: 'Full DM Only', label: 'Full DM Only', display_order: 2, notes: null }
+        ]
+    };
+}
+
+/**
+ * Fetch Misc Features metadata (sections and rulesets) from lookups table.
+ * 
+ * @returns {Promise<{sections: Array, rulesets: Array}>}
+ */
+export async function getMiscFeatureLookups() {
+    const data = await getLookup('misc-features');
+    return data || {
+        sections: [
+            { id: 'FS', name: 'Fighting Styles', display_order: 1, notes: 'Fighting Style feats and options' },
+            { id: 'AI', name: 'Artificer Infusions', display_order: 2, notes: 'Artificer Infusions' },
+            { id: 'EI', name: 'Eldritch Invocations', display_order: 3, notes: 'Warlock Eldritch Invocations' }
+        ],
+        rulesets: [
+            { label: '2014', value: '2014' },
+            { label: '2024', value: '2024' }
+        ]
+    };
+}
+
+/**
+ * Fetch shared rulesets metadata.
+ * 
+ * @returns {Promise<Array<{label: string, value: string|number}>>}
+ */
+export async function getSharedRulesets() {
+    const srcLookups = await getSourceLookups();
+    if (srcLookups && Array.isArray(srcLookups.rulesets) && srcLookups.rulesets.length > 0) {
+        return srcLookups.rulesets;
+    }
+    return [
+        { label: '2014', value: '2014' },
+        { label: '2024', value: '2024' }
+    ];
+}
+
+
 // ================================================================
 // In-Memory Sources Cache
 // ================================================================
@@ -2230,7 +2350,257 @@ export async function deleteBastion(id) {
     }
 }
 
+/**
+ * Creates a new Item Property in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} itemPropertyData - Item property details to insert
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createItemProperty(itemPropertyData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_item_properties')
+            .insert([itemPropertyData])
+            .select(`
+                *,
+                category:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
 
+        if (error) {
+            console.error('Error creating item property:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating item property:', err);
+        return { data: null, error: err };
+    }
+}
 
+/**
+ * Updates an existing Item Property in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the item property to update
+ * @param {Object} updates - Modified fields
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateItemProperty(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_item_properties')
+            .update(updates)
+            .eq('id', id)
+            .select(`
+                *,
+                category:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
 
+        if (error) {
+            console.error('Error updating item property:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating item property:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes an Item Property from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of the item property to delete
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteItemProperty(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_item_properties')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting item property:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting item property:', err);
+        return { success: false, error: err };
+    }
+}
+
+// ================================================================
+// Category & Type Table CRUD Operations (Admin / Engineer)
+// ================================================================
+
+// Equipment Types (ac_equip_type)
+export async function insertEquipType(typeData) {
+    try {
+        const { data, error } = await supabase.from('ac_equip_type').insert(typeData).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function updateEquipType(id, updates) {
+    try {
+        const { data, error } = await supabase.from('ac_equip_type').update(updates).eq('id', id).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function deleteEquipType(id) {
+    try {
+        const { error } = await supabase.from('ac_equip_type').delete().eq('id', id);
+        if (error) return { success: false, error };
+        return { success: true, error: null };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
+// Downtime Types (ac_downtime_type)
+export async function insertDowntimeType(typeData) {
+    try {
+        const { data, error } = await supabase.from('ac_downtime_type').insert(typeData).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function updateDowntimeType(id, updates) {
+    try {
+        const { data, error } = await supabase.from('ac_downtime_type').update(updates).eq('id', id).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function deleteDowntimeType(id) {
+    try {
+        const { error } = await supabase.from('ac_downtime_type').delete().eq('id', id);
+        if (error) return { success: false, error };
+        return { success: true, error: null };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
+// Bastion Types (ac_bastion_type)
+export async function insertBastionType(typeData) {
+    try {
+        const { data, error } = await supabase.from('ac_bastion_type').insert(typeData).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function updateBastionType(id, updates) {
+    try {
+        const { data, error } = await supabase.from('ac_bastion_type').update(updates).eq('id', id).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function deleteBastionType(id) {
+    try {
+        const { error } = await supabase.from('ac_bastion_type').delete().eq('id', id);
+        if (error) return { success: false, error };
+        return { success: true, error: null };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
+// Language Types (ac_language_types)
+export async function insertLanguageType(typeData) {
+    try {
+        const { data, error } = await supabase.from('ac_language_types').insert(typeData).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function updateLanguageType(id, updates) {
+    try {
+        const { data, error } = await supabase.from('ac_language_types').update(updates).eq('id', id).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function deleteLanguageType(id) {
+    try {
+        const { error } = await supabase.from('ac_language_types').delete().eq('id', id);
+        if (error) return { success: false, error };
+        return { success: true, error: null };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
+// Item Properties Categories (ac_item_properties_categories)
+export async function insertItemPropertiesCategory(catData) {
+    try {
+        const { data, error } = await supabase.from('ac_item_properties_categories').insert(catData).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function updateItemPropertiesCategory(id, updates) {
+    try {
+        const { data, error } = await supabase.from('ac_item_properties_categories').update(updates).eq('id', id).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function deleteItemPropertiesCategory(id) {
+    try {
+        const { error } = await supabase.from('ac_item_properties_categories').delete().eq('id', id);
+        if (error) return { success: false, error };
+        return { success: true, error: null };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
 

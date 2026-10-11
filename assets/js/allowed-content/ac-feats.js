@@ -26,8 +26,11 @@ import {
     updateFeat, 
     deleteFeat,
     getSourcesMap, 
-    getSourceByKey 
+    getSourceByKey,
+    getFeatLookups,
+    updateLookup
 } from './ac-service.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 import { 
     getNextDisplayOrder, 
     cleanFloat, 
@@ -60,9 +63,21 @@ let allFeats = [];
 let filteredFeats = [];
 let availableCategories = [];
 let availableSourceKeys = [];
+let featCategories = [
+    { name: 'General', display_order: 1 },
+    { name: 'Origin', display_order: 2 },
+    { name: 'Epic Boon', display_order: 3 },
+    { name: 'Fighting Style', display_order: 4 },
+    { name: 'Dragonmark', display_order: 5 },
+    { name: 'Dark Gift', display_order: 6 }
+];
+let featRulesets = [
+    { label: '2014', value: '2014' },
+    { label: '2024', value: '2024' }
+];
 
 // Active toolbar filters
-let selectedRulesetFilter = 'ALL';   // 'ALL' | '2014' | '2024'
+let selectedRulesetFilter = 'ALL';   // 'ALL' | specific ruleset
 let selectedCategoryFilter = 'ALL';  // 'ALL' | specific category
 let selectedSourceFilter = 'ALL';    // 'ALL' | specific source_key
 let currentSearchTerm = '';
@@ -134,21 +149,27 @@ export async function initFeats(forceRefresh = false) {
     `;
 
     try {
-        const [featsData, _sourcesMap] = await Promise.all([
+        const [featsData, _sourcesMap, featLookups] = await Promise.all([
             getFeats(),
-            getSourcesMap(forceRefresh)
+            getSourcesMap(forceRefresh),
+            getFeatLookups()
         ]);
+
+        if (featLookups) {
+            if (Array.isArray(featLookups.categories)) featCategories = featLookups.categories;
+            if (Array.isArray(featLookups.rulesets)) featRulesets = featLookups.rulesets;
+        }
 
         allFeats = sortByDisplayOrder(featsData || []);
 
-        // Collect distinct categories
-        const catSet = new Set();
+        // Collect categories, prioritizing configured lookup categories
+        const catSet = new Set(featCategories.map(c => c.name));
         allFeats.forEach(f => {
             if (f.category && f.category.trim()) {
                 catSet.add(f.category.trim());
             }
         });
-        availableCategories = Array.from(catSet).sort((a, b) => a.localeCompare(b));
+        availableCategories = Array.from(catSet);
 
         // Collect distinct source keys
         const sourceSet = new Set();
@@ -249,8 +270,9 @@ function renderView() {
                     <!-- Ruleset Filter -->
                     <select id="ac-feats-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset" aria-label="Filter by Ruleset">
                         <option value="ALL" ${selectedRulesetFilter === 'ALL' ? 'selected' : ''}>All Rulesets</option>
-                        <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024 </option>
-                        <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014 </option>
+                        ${featRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${selectedRulesetFilter === String(r.value) ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
 
                     <!-- Category Filter -->
@@ -545,11 +567,7 @@ export async function openFeatForm(featItem = null) {
         ? featItem.display_order 
         : getNextDisplayOrder(allFeats, 1);
 
-    const categoriesList = ['General', 'Origin', 'Epic Boon', 'Fighting Style', 'Dragonmark', 'Dark Gift'];
-    // Merge any existing custom categories
-    availableCategories.forEach(c => {
-        if (!categoriesList.includes(c)) categoriesList.push(c);
-    });
+    const categoriesList = Array.from(new Set([...featCategories.map(c => c.name), ...availableCategories]));
 
     const html = `
         <div class="detail-header">
@@ -567,8 +585,9 @@ export async function openFeatForm(featItem = null) {
                 <div class="ac-form-group">
                     <label for="feat-input-ruleset" style="font-weight: 600;">Ruleset *</label>
                     <select id="feat-input-ruleset" class="ac-form-input ac-form-select" required>
-                        <option value="2024" ${featItem?.ruleset === '2024' || (!isEdit) ? 'selected' : ''}>2024</option>
-                        <option value="2014" ${featItem?.ruleset === '2014' ? 'selected' : ''}>2014</option>
+                        ${featRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${String(featItem?.ruleset) === String(r.value) || (!isEdit && String(r.value) === '2024') ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
                 </div>
 
@@ -710,4 +729,68 @@ if (typeof window !== 'undefined') {
     window.addEventListener('ac:feats-updated', () => {
         allFeats = [];
     });
+    window.addEventListener('ac:open-feats-options', () => openFeatsOptionsManagerModal());
 }
+
+/**
+ * Opens the Lookups Options Manager modal for Feats.
+ * Allows Admins/Engineers to configure Feat categories and rulesets.
+ */
+export function openFeatsOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Feats Options (Lookups)',
+        subtitle: 'Manage categories, rulesets, and notes saved in the lookups table.',
+        tabs: [
+            {
+                id: 'categories',
+                label: 'Categories',
+                addLabel: '+ Add Category',
+                items: featCategories,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Category Name' },
+                    { key: 'notes', label: 'Description', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Category Name', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Description / Notes', type: 'textarea' }
+                ]
+            },
+            {
+                id: 'rulesets',
+                label: 'Rulesets',
+                addLabel: '+ Add Ruleset',
+                items: featRulesets,
+                columns: [
+                    { key: 'label', label: 'Ruleset Label' },
+                    { key: 'value', label: 'Value', code: true }
+                ],
+                fields: [
+                    { key: 'label', label: 'Ruleset Label', required: true },
+                    { key: 'value', label: 'Value (e.g. 2014, 2024)', required: true }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const payload = {
+                categories: drafts.categories,
+                rulesets: drafts.rulesets
+            };
+            const { error } = await updateLookup('feats', payload);
+            if (error) {
+                throw error;
+            }
+            featCategories = drafts.categories;
+            featRulesets = drafts.rulesets;
+            const catSet = new Set(featCategories.map(c => c.name));
+            allFeats.forEach(f => {
+                if (f.category && f.category.trim()) catSet.add(f.category.trim());
+            });
+            availableCategories = Array.from(catSet);
+            applyFilters();
+            renderView();
+        }
+    });
+}
+

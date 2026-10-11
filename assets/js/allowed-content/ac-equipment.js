@@ -19,10 +19,14 @@
 
 import { 
     getEquipment, 
-    getEquipTypes,
+    getEquipTypes, 
     createEquipment, 
     updateEquipment, 
     deleteEquipment,
+    insertEquipType,
+    updateEquipType,
+    deleteEquipType,
+    getSharedRulesets,
     getSourcesMap, 
     getSourceByKey 
 } from './ac-service.js';
@@ -50,6 +54,7 @@ import {
     renderSourceTagPicker,
     showToast 
 } from './ac-ui-utils.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 
 export {
     setAdminMode,
@@ -60,6 +65,7 @@ export {
 let allEquipment = [];
 let filteredEquipment = [];
 let allEquipTypes = [];
+let equipRulesets = ['2024', '2014'];
 let availableSourceKeys = [];
 let collapsedCategories = new Set();
 
@@ -98,14 +104,18 @@ export async function initEquipment(forceRefresh = false) {
     `;
 
     try {
-        const [equipmentData, typesData, _sourcesMap] = await Promise.all([
+        const [equipmentData, typesData, _sourcesMap, rulesetsData] = await Promise.all([
             getEquipment(),
             getEquipTypes(),
-            getSourcesMap(forceRefresh)
+            getSourcesMap(forceRefresh),
+            getSharedRulesets()
         ]);
 
         allEquipment = sortByDisplayOrder(equipmentData || []);
         allEquipTypes = sortByDisplayOrder(typesData || []);
+        if (rulesetsData && Array.isArray(rulesetsData) && rulesetsData.length > 0) {
+            equipRulesets = rulesetsData.map(r => String(r.value || r.label || r));
+        }
 
         // Extract available source keys for dropdown filter
         const srcSet = new Set();
@@ -227,8 +237,9 @@ function renderView() {
                     <!-- Ruleset Filter -->
                     <select id="ac-equipment-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset" aria-label="Filter by Ruleset">
                         <option value="ALL">All Rulesets</option>
-                        <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024</option>
-                        <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014</option>
+                        ${equipRulesets.map(r => `
+                            <option value="${esc(r)}" ${selectedRulesetFilter === r ? 'selected' : ''}>${esc(r)}</option>
+                        `).join('')}
                     </select>
 
                     <!-- Sourcebook Filter -->
@@ -819,15 +830,9 @@ export async function openEquipmentForm(item = null) {
             <h2>${isEdit ? `Edit Equipment: ${esc(item.name)}` : 'Add New Equipment Item'}</h2>
         </div>
         <form id="ac-equipment-form" class="ac-edit-form">
-            <div class="ac-form-grid">
-                <div class="ac-form-group">
-                    <label for="form-equip-name">Item Name *</label>
-                    <input type="text" id="form-equip-name" required value="${esc(item?.name || '')}" class="ac-form-input">
-                </div>
-                <div class="ac-form-group">
-                    <label for="form-equip-check-id">Check ID *</label>
-                    <input type="text" id="form-equip-check-id" required value="${esc(defaultCheckId)}" class="ac-form-input">
-                </div>
+            <div class="ac-form-group">
+                <label for="form-equip-name">Item Name *</label>
+                <input type="text" id="form-equip-name" required value="${esc(item?.name || '')}" class="ac-form-input">
             </div>
 
             <div class="ac-form-grid">
@@ -842,8 +847,10 @@ export async function openEquipmentForm(item = null) {
                 <div class="ac-form-group">
                     <label for="form-equip-ruleset">Ruleset Edition *</label>
                     <select id="form-equip-ruleset" class="ac-form-select" required>
-                        <option value="2024" ${item?.ruleset === '2024' || !isEdit ? 'selected' : ''}>2024</option>
-                        <option value="2014" ${item?.ruleset === '2014' ? 'selected' : ''}>2014</option>
+                        ${equipRulesets.map(r => {
+                            const isSel = isEdit ? item?.ruleset === r : (r === '2024' || (!equipRulesets.includes('2024') && r === equipRulesets[0]));
+                            return `<option value="${esc(r)}" ${isSel ? 'selected' : ''}>${esc(r)}</option>`;
+                        }).join('')}
                     </select>
                 </div>
             </div>
@@ -933,7 +940,7 @@ export async function openEquipmentForm(item = null) {
 
         const payload = {
             name: document.getElementById('form-equip-name').value.trim(),
-            check_id: document.getElementById('form-equip-check-id').value.trim(),
+            check_id: isEdit ? (item?.check_id || getNextEquipmentCheckId()) : getNextEquipmentCheckId(),
             equip_type_id: typeId,
             category_id: typeId,
             ruleset: document.getElementById('form-equip-ruleset').value,
@@ -977,7 +984,7 @@ export async function openEquipmentForm(item = null) {
  */
 export async function confirmAndDeleteEquipment(item) {
     if (!item) return;
-    const confirmed = window.confirm(`Are you sure you want to delete "${item.name}" (${item.check_id})?`);
+    const confirmed = window.confirm(`Are you sure you want to delete "${item.name}"?`);
     if (!confirmed) return;
 
     try {
@@ -999,4 +1006,72 @@ if (typeof window !== 'undefined') {
     window.addEventListener('ac:equipment-updated', () => {
         allEquipment = [];
     });
+    window.addEventListener('ac:open-equipment-options', () => {
+        openEquipmentOptionsManagerModal();
+    });
 }
+
+/**
+ * Opens the Options Manager modal for Equipment.
+ * Allows Admins/Engineers to configure Equipment categories (ac_equip_type table) in the database.
+ */
+export function openEquipmentOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Equipment Categories',
+        subtitle: 'Manage equipment categories, guidelines, and display orders stored in the database.',
+        tabs: [
+            {
+                id: 'categories',
+                label: 'Categories',
+                addLabel: '+ Add Category',
+                items: allEquipTypes,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Category Name' },
+                    { key: 'notes', label: 'Guidelines / Notes', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Category Name', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Guidelines / Notes', type: 'textarea', placeholder: 'Category rules / purchasing guidelines...' }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const draftList = drafts.categories || [];
+            const origMap = new Map(allEquipTypes.map(t => [t.id, t]));
+            const draftIds = new Set(draftList.filter(d => d.id).map(d => d.id));
+
+            // Deletions
+            for (const [id] of origMap.entries()) {
+                if (!draftIds.has(id)) {
+                    const { error } = await deleteEquipType(id);
+                    if (error) throw error;
+                }
+            }
+
+            // Inserts & Updates
+            for (const item of draftList) {
+                if (item.id && origMap.has(item.id)) {
+                    const { error } = await updateEquipType(item.id, {
+                        name: item.name,
+                        display_order: item.display_order,
+                        notes: item.notes || null
+                    });
+                    if (error) throw error;
+                } else {
+                    const { data, error } = await insertEquipType({
+                        name: item.name,
+                        display_order: item.display_order,
+                        notes: item.notes || null
+                    });
+                    if (error) throw error;
+                    if (data?.id) item.id = data.id;
+                }
+            }
+
+            await initEquipment(true);
+        }
+    });
+}
+

@@ -68,6 +68,9 @@ import {
     getRaces, 
     getSourcesMap, 
     getSourceByKey,
+    getSourceLookups,
+    getSharedRulesets,
+    updateLookup,
     createRace,
     updateRace,
     deleteRace,
@@ -96,6 +99,7 @@ import {
     renderSourceTagPicker,
     renderMarkdownLinks 
 } from './ac-ui-utils.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 
 export {
     setAdminMode,
@@ -108,6 +112,7 @@ let allSubracesFlat = [];
 let filteredRaces = [];
 let filteredSubraces = [];
 let availableSourceKeys = [];
+let raceRulesets = ['2024', '2014'];
 
 let currentViewMode = 'accordion';
 let currentSearchTerm = '';
@@ -252,9 +257,49 @@ if (typeof window !== 'undefined') {
     window.addEventListener('ac:open-new-race-form', () => {
         openRaceForm(null, null, 'race');
     });
+    window.addEventListener('ac:open-races-options', () => {
+        openRacesOptionsManagerModal();
+    });
     window.addEventListener('ac:races-updated', () => {
         allRaces = [];
         allSubracesFlat = [];
+    });
+}
+
+/**
+ * Opens the Options Manager modal for Races.
+ * Allows Admins/Engineers to configure shared rulesets in the lookups table.
+ */
+export async function openRacesOptionsManagerModal() {
+    const srcLookups = await getSourceLookups();
+    openGenericOptionsModal({
+        title: '⚙️ Configure Species & Lineages Options',
+        subtitle: 'Manage ruleset editions (2014, 2024) saved in the lookups table.',
+        tabs: [
+            {
+                id: 'rulesets',
+                label: 'Rulesets',
+                addLabel: '+ Add Ruleset',
+                items: srcLookups.rulesets || [{ label: '2014', value: 2014 }, { label: '2024', value: 2024 }],
+                columns: [
+                    { key: 'label', label: 'Ruleset Label' },
+                    { key: 'value', label: 'Value', code: true }
+                ],
+                fields: [
+                    { key: 'label', label: 'Ruleset Label', required: true },
+                    { key: 'value', label: 'Value (e.g. 2014, 2024)', required: true }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const currentLookups = await getSourceLookups();
+            const { error } = await updateLookup('sources', {
+                ...currentLookups,
+                rulesets: drafts.rulesets
+            });
+            if (error) throw error;
+            await initRaces(true);
+        }
     });
 }
 
@@ -292,11 +337,16 @@ export async function initRaces(forceRefresh = false) {
     }
 
     // Fetch races (with joined subraces) and ensure sources cache is ready
-    const [races, sourcesMap] = await Promise.all([
+    const [races, sourcesMap, _admin, rulesetsData] = await Promise.all([
         getRaces(),
         getSourcesMap(),
-        detectAdminSession().catch(() => false)
+        detectAdminSession().catch(() => false),
+        getSharedRulesets()
     ]);
+
+    if (rulesetsData && Array.isArray(rulesetsData) && rulesetsData.length > 0) {
+        raceRulesets = rulesetsData.map(r => String(r.value || r.label || r));
+    }
 
     // Sort races and nested subraces by display_order
     allRaces = sortByDisplayOrder(races || []);
@@ -406,8 +456,9 @@ function renderView() {
                 <!-- Ruleset Filter Dropdown -->
                 <select class="ac-filter-select" id="ac-races-ruleset-filter" aria-label="Filter by Ruleset" title="Filter by Ruleset">
                     <option value="ALL" ${selectedRulesetFilter === 'ALL' ? 'selected' : ''}>All Rulesets</option>
-                    <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024</option>
-                    <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014</option>
+                    ${raceRulesets.map(r => `
+                        <option value="${esc(r)}" ${selectedRulesetFilter === r ? 'selected' : ''}>${esc(r)}</option>
+                    `).join('')}
                 </select>
 
                 <!-- Source Filter Dropdown -->
@@ -1079,8 +1130,10 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
                 <div class="ac-form-group" id="race-ruleset-group">
                     <label for="race-input-ruleset">Ruleset Edition *</label>
                     <select id="race-input-ruleset" class="ac-form-select" required>
-                        <option value="2024" ${(selectedParentRace?.ruleset === '2024' || subraceItem?.ruleset === '2024') ? 'selected' : ''}>2024 Edition</option>
-                        <option value="2014" ${(selectedParentRace?.ruleset !== '2024' && subraceItem?.ruleset !== '2024') ? 'selected' : ''}>2014 Edition</option>
+                        ${raceRulesets.map(r => {
+                            const isSel = (selectedParentRace?.ruleset === r || subraceItem?.ruleset === r || (!selectedParentRace?.ruleset && !subraceItem?.ruleset && r === raceRulesets[0]));
+                            return `<option value="${esc(r)}" ${isSel ? 'selected' : ''}>${esc(r)} Edition</option>`;
+                        }).join('')}
                     </select>
                 </div>
 
@@ -1090,8 +1143,6 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
                     <input type="text" id="race-input-subrace" class="ac-form-input" value="${esc(isNew ? '' : (subraceItem.subrace === 'None' ? '' : subraceItem.subrace))}" placeholder="${initialMode === 'race' && isNew ? 'e.g. Standard, or leave blank if none' : 'e.g. High, Wood, or leave blank for \'None\''}">
                     <small class="ac-form-help" id="race-subrace-help">Leave blank or 'None' if this species has no subraces</small>
                 </div>
-
-                <input type="hidden" id="race-input-check-id" value="${esc(nextCheckId)}">
 
                 <!-- Step 3: Stats -->
                 <div class="ac-form-group">
@@ -1395,7 +1446,7 @@ export async function openRaceForm(subraceItem = null, defaultParentRace = null,
 
             const rawSubrace = document.getElementById('race-input-subrace')?.value?.trim();
             const subraceVal = rawSubrace && rawSubrace.toLowerCase() !== 'none' ? rawSubrace : 'None';
-            const checkIdVal = document.getElementById('race-input-check-id')?.value?.trim();
+            const checkIdVal = isNew ? nextCheckId : (subraceItem?.check_id || null);
             const sizeVal = document.getElementById('race-input-size')?.value?.trim() || 'Medium';
             const speedVal = document.getElementById('race-input-speed')?.value?.trim() || '30';
             const langVal = document.getElementById('race-input-language')?.value?.trim() || null;
@@ -1495,8 +1546,9 @@ export async function openEditRaceModal(race) {
             <div class="ac-form-group">
                 <label for="race-edit-ruleset">Ruleset Edition *</label>
                 <select id="race-edit-ruleset" class="ac-form-select" required>
-                    <option value="2024" ${race.ruleset === '2024' ? 'selected' : ''}>2024 Edition</option>
-                    <option value="2014" ${race.ruleset !== '2024' ? 'selected' : ''}>2014 Edition</option>
+                    ${raceRulesets.map(r => `
+                        <option value="${esc(r)}" ${(race.ruleset === r || (!race.ruleset && r === raceRulesets[0])) ? 'selected' : ''}>${esc(r)} Edition</option>
+                    `).join('')}
                 </select>
             </div>
 

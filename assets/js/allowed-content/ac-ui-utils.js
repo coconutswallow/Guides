@@ -220,6 +220,8 @@ export function esc(str) {
         .replace(/"/g, '&quot;');
 }
 
+export { esc as escapeHtml };
+
 /**
  * Resolves a raw source link to a safe absolute or site-relative URL.
  * 
@@ -571,4 +573,40 @@ export function attachExpandableTextListeners(container) {
         });
     });
 }
+
+/**
+ * Generates HTML for a standardized AC filter select dropdown.
+ *
+ * @param {Object} options
+ * @param {string} options.id - Element ID
+ * @param {string} options.title - Dropdown title / accessible label
+ * @param {string} [options.allLabel='All'] - Label for the default/all option
+ * @param {string} [options.allValue='ALL'] - Value for the default/all option
+ * @param {string} [options.selectedValue='ALL'] - Currently active value
+ * @param {Array<{value: string|number, label: string}>} [options.items=[]] - Array of options
+ * @param {string} [options.cssClass='ac-filter-select'] - CSS class name(s)
+ * @returns {string} Standardized select HTML
+ */
+export function renderFilterSelect({
+    id,
+    title,
+    allLabel = 'All',
+    allValue = 'ALL',
+    selectedValue = 'ALL',
+    items = [],
+    cssClass = 'ac-filter-select'
+}) {
+    const isSelected = (val) => String(val) === String(selectedValue);
+    return `
+        <select id="${esc(id)}" class="${esc(cssClass)}" title="${esc(title)}" aria-label="${esc(title)}">
+            <option value="${esc(allValue)}" ${isSelected(allValue) ? 'selected' : ''}>${esc(allLabel)}</option>
+            ${items.map(item => {
+                const val = typeof item === 'object' && item !== null ? (item.value !== undefined ? item.value : item.name) : item;
+                const lbl = typeof item === 'object' && item !== null ? (item.label || item.name || item.value) : item;
+                return `<option value="${esc(String(val))}" ${isSelected(val) ? 'selected' : ''}>${esc(String(lbl))}</option>`;
+            }).join('')}
+        </select>
+    `.trim();
+}
+
 

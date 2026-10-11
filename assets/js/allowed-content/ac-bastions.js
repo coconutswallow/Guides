@@ -18,12 +18,16 @@
 
 import { 
     getBastions, 
-    getBastionTypes,
+    getBastionTypes, 
     createBastion, 
     updateBastion, 
     deleteBastion,
+    insertBastionType,
+    updateBastionType,
+    deleteBastionType,
     getSourcesCached
 } from './ac-service.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 import { 
     getNextDisplayOrder, 
     getStartDisplayOrder,
@@ -231,11 +235,6 @@ function renderShell() {
                     <span class="ac-items-count" id="bastions-stats">
                         Showing <strong>${filteredBastions.length}</strong> ${filteredBastions.length === 1 ? 'Facility' : 'Facilities'}
                     </span>
-                    ${isAdmin ? `
-                        <button type="button" class="ac-btn ac-btn-primary ac-btn-sm" id="btn-add-bastion-top">
-                            + Add Bastion Facility
-                        </button>
-                    ` : ''}
                 </div>
             </div>
 
@@ -453,9 +452,9 @@ function renderTable(isAdmin) {
                                     </td>
                                     ${isAdmin ? `
                                         <td class="col-actions" style="text-align: center;">
-                                            <div class="action-buttons-inline">
-                                                <button type="button" class="btn-action-icon btn-edit-bastion" data-id="${item.id}" title="Edit Facility">✏️</button>
-                                                <button type="button" class="btn-action-icon btn-delete-bastion" data-id="${item.id}" title="Delete Facility">🗑️</button>
+                                            <div class="ac-cell-actions" style="justify-content: center;">
+                                                <button type="button" class="ac-btn-icon btn-edit-bastion" data-id="${item.id}" title="Edit Facility">✏️</button>
+                                                <button type="button" class="ac-btn-icon delete btn-delete-bastion" data-id="${item.id}" title="Delete Facility">🗑️</button>
                                             </div>
                                         </td>
                                     ` : ''}
@@ -536,14 +535,6 @@ function setupControls() {
             }
 
             updateTableOnly();
-        });
-    }
-
-    // 4. Top Add Bastion Button (Admin)
-    const topAddBtn = container.querySelector('#btn-add-bastion-top');
-    if (topAddBtn) {
-        topAddBtn.addEventListener('click', () => {
-            openBastionForm(null);
         });
     }
 
@@ -659,75 +650,73 @@ export function showBastionDetail(item) {
     const displayOrderVal = formatDisplayOrder(item.display_order);
 
     const html = `
-        <div class="ac-modal-detail">
+        <div class="ac-detail-modal-wrapper">
             <!-- Header -->
-            <div class="detail-header">
-                <div class="detail-title-row">
-                    <h2>${esc(item.name)}</h2>
-                    <div class="detail-badges">
-                        <span class="source-badge badge-homebrew" title="Category">${esc(catName)}</span>
+            <div class="detail-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                        <span class="detail-category">${esc(catName)}</span>
                         ${renderSourceBadges(item.source)}
                     </div>
+                    <h2 class="detail-title">${esc(item.name)}</h2>
                 </div>
+                ${isAdmin ? `
+                    <div class="detail-actions">
+                        <button type="button" class="ac-btn-admin ac-btn-primary" id="modal-btn-edit-bastion" title="Edit facility">
+                            ✏️ Edit Facility
+                        </button>
+                        <button type="button" class="ac-btn-admin ac-btn-delete" id="modal-btn-delete-bastion" title="Delete facility">
+                            🗑️ Delete Facility
+                        </button>
+                    </div>
+                ` : ''}
             </div>
 
             <!-- Quick Metadata Grid -->
             <div class="detail-grid">
                 <div class="detail-item">
-                    <span class="label">Size:</span>
-                    <span class="value"><strong>${esc(sizeVal)}</strong></span>
+                    <label>Size</label>
+                    <value><strong>${esc(sizeVal)}</strong></value>
                 </div>
                 <div class="detail-item">
-                    <span class="label">Prerequisites:</span>
-                    <span class="value">${esc(prereqVal)}</span>
+                    <label>Prerequisites</label>
+                    <value>${esc(prereqVal)}</value>
                 </div>
                 <div class="detail-item">
-                    <span class="label">Gold Cost:</span>
-                    <span class="value"><strong>${esc(goldVal)}</strong></span>
+                    <label>Gold Cost</label>
+                    <value><strong>${esc(goldVal)}</strong></value>
                 </div>
                 <div class="detail-item">
-                    <span class="label">DTP Cost:</span>
-                    <span class="value"><strong>${esc(dtpVal)}</strong></span>
+                    <label>DTP Cost</label>
+                    <value><strong>${esc(dtpVal)}</strong></value>
                 </div>
                 <div class="detail-item">
-                    <span class="label">Bastion Order:</span>
-                    <span class="value"><strong>${esc(orderVal)}</strong></span>
+                    <label>Bastion Order</label>
+                    <value><strong>${esc(orderVal)}</strong></value>
                 </div>
             </div>
 
             <!-- Description -->
             ${item.description ? `
                 <div class="detail-section">
-                    <h3>Description</h3>
-                    <div class="detail-text">${renderMarkdownLinks(item.description)}</div>
+                    <h4>Description</h4>
+                    <div class="advice-content">${renderMarkdownLinks(item.description)}</div>
                 </div>
             ` : ''}
 
             <!-- Notes & Advice -->
             ${item.notes_advice ? `
                 <div class="detail-section">
-                    <h3>Notes & Advice</h3>
-                    <div class="detail-text detail-notes">${renderMarkdownLinks(item.notes_advice)}</div>
+                    <h4>Notes & Advice</h4>
+                    <div class="advice-content" style="color: var(--color-secondary);">${renderMarkdownLinks(item.notes_advice)}</div>
                 </div>
             ` : ''}
 
             <!-- Category Guidelines -->
             ${catNotes ? `
-                <div class="detail-section">
-                    <h3>Category Rules: ${esc(catName)}</h3>
-                    <div class="detail-text detail-rules">${renderMarkdownLinks(catNotes)}</div>
-                </div>
-            ` : ''}
-
-            <!-- Staff Admin Actions in Modal -->
-            ${isAdmin ? `
-                <div class="detail-admin-actions">
-                    <button type="button" class="ac-btn ac-btn-secondary" id="modal-btn-edit-bastion">
-                        ✏️ Edit Facility
-                    </button>
-                    <button type="button" class="ac-btn ac-btn-danger" id="modal-btn-delete-bastion">
-                        🗑️ Delete Facility
-                    </button>
+                <div class="category-notes-box">
+                    <strong>Category Rules (${esc(catName)}):</strong>
+                    <div style="margin-top: 0.5rem; line-height: 1.6;">${renderMarkdownLinks(catNotes)}</div>
                 </div>
             ` : ''}
         </div>
@@ -783,7 +772,6 @@ function getNextBastionCheckId() {
  */
 export async function openBastionForm(item = null) {
     const isEdit = !!item;
-    const checkId = isEdit ? (item.check_id || '') : getNextBastionCheckId();
     
     // Default category: pick Basic Facilities if available, else first type
     const basicType = allBastionTypes.find(t => t.name === 'Basic Facilities');
@@ -815,99 +803,99 @@ export async function openBastionForm(item = null) {
 
     const sortedFacilities = sortByDisplayOrder(allBastions);
 
+    const headerCategory = isEdit ? 'Edit Bastion Facility' : 'New Bastion Facility';
+    const headerTitle = isEdit ? (item?.name ? `Edit Bastion Facility: ${esc(item.name)}` : 'Edit Bastion Facility') : 'Add New Bastion Facility';
+
     const html = `
-        <div class="ac-modal-form">
-            <h2>${isEdit ? 'Edit Bastion Facility' : 'Add New Bastion Facility'}</h2>
-            <form id="bastion-editor-form">
-                <div class="form-row">
-                    <div class="form-group form-group-half">
-                        <label for="form-bas-check-id">Check ID</label>
-                        <input type="text" id="form-bas-check-id" value="${esc(checkId)}" placeholder="BAS_0067" required>
-                    </div>
-                    <div class="form-group form-group-half">
-                        <label for="form-bas-category">Category *</label>
-                        <select id="form-bas-category" required>
-                            ${allBastionTypes.filter(t => t.name !== 'General Rules').map(t => `
-                                <option value="${t.id}" ${t.id === defaultTypeId ? 'selected' : ''}>
-                                    ${esc(t.name)}
-                                </option>
-                            `).join('')}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group form-group-full">
-                        <label for="form-bas-name">Facility Name *</label>
-                        <input type="text" id="form-bas-name" value="${esc(item?.name || '')}" placeholder="e.g. Arcane Study" required>
-                    </div>
-                </div>
-
-                <!-- Multi-Source Tag Picker -->
-                <div class="form-group">
-                    <label>Sourcebook(s) *</label>
-                    <div id="form-bas-source-picker" class="ac-source-picker-container"></div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group form-group-half">
-                        <label for="form-bas-size">Size</label>
-                        <input type="text" id="form-bas-size" value="${esc(item?.size || '')}" placeholder="e.g. Roomy (16 sq), Cramped / Roomy / Vast (4/16/36 sq)">
-                    </div>
-                    <div class="form-group form-group-half">
-                        <label for="form-bas-prereq">Prerequisites</label>
-                        <input type="text" id="form-bas-prereq" value="${esc(item?.prerequisite || '')}" placeholder="e.g. Level 5+, Level 9+ Cleric or Paladin">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group form-group-third">
-                        <label for="form-bas-gold">Gold Cost (GP)</label>
-                        <input type="text" id="form-bas-gold" value="${esc(item?.gp_cost || '')}" placeholder="e.g. 1000, 500 / 1000/ 3000">
-                    </div>
-                    <div class="form-group form-group-third">
-                        <label for="form-bas-dtp">DTP Cost</label>
-                        <input type="text" id="form-bas-dtp" value="${esc(item?.dtp_cost || '')}" placeholder="e.g. 45, 20 / 45 / 125">
-                    </div>
-                    <div class="form-group form-group-third">
-                        <label for="form-bas-order-type">Bastion Order</label>
-                        <input type="text" id="form-bas-order-type" value="${esc(item?.bastion_order || '')}" placeholder="e.g. Craft, Empower, Harvest, Trade">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group form-group-half">
-                        <label for="form-bas-order">Display Order (Fractional Index)</label>
-                        <input type="number" step="any" id="form-bas-order" value="${defaultOrder}" required>
-                    </div>
-                    <div class="form-group form-group-half">
-                        <label for="form-bas-placement-helper">Placement Helper</label>
-                        <select id="form-bas-placement-helper" class="ac-form-select">
-                            <option value="end">At End (Order ${getNextDisplayOrder(allBastions, 1.0)})</option>
-                            <option value="start">At Beginning (Order ${getStartDisplayOrder(allBastions)})</option>
-                            ${sortedFacilities.map(f => `
-                                <option value="after_${f.id}">After ${esc(f.name)} (${f.display_order})</option>
-                            `).join('')}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="form-bas-description">Description</label>
-                    <textarea id="form-bas-description" rows="3" placeholder="Comes with 1 hireling. See book for details...">${esc(item?.description || '')}</textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="form-bas-notes">Notes & Advice (Supports Markdown Links)</label>
-                    <textarea id="form-bas-notes" rows="5" placeholder="- Crafting rules and allowed item tiers\n- See [Equipment Guide](/Guides/allowed-content/#equipment)...">${esc(item?.notes_advice || '')}</textarea>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="ac-btn ac-btn-secondary" id="form-bas-cancel">Cancel</button>
-                    <button type="submit" class="ac-btn ac-btn-primary" id="form-bas-submit">${isEdit ? 'Save Changes' : 'Create Facility'}</button>
-                </div>
-            </form>
+        <div class="detail-header">
+            <div>
+                <span class="detail-category">${headerCategory}</span>
+                <h2 class="detail-title">${headerTitle}</h2>
+            </div>
         </div>
+
+        <form id="bastion-editor-form" class="ac-edit-form">
+            <div class="ac-form-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="ac-form-group">
+                    <label for="form-bas-category">Category *</label>
+                    <select id="form-bas-category" class="ac-form-select" required>
+                        ${allBastionTypes.filter(t => t.name !== 'General Rules').map(t => `
+                            <option value="${t.id}" ${t.id === defaultTypeId ? 'selected' : ''}>
+                                ${esc(t.name)}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-bas-name">Facility Name *</label>
+                    <input type="text" id="form-bas-name" class="ac-form-input" value="${esc(item?.name || '')}" placeholder="e.g. Arcane Study" required>
+                </div>
+            </div>
+
+            <!-- Multi-Source Tag Picker -->
+            <div class="ac-form-group">
+                <label>Sourcebook(s) *</label>
+                <div id="form-bas-source-picker" class="ac-source-picker-container"></div>
+            </div>
+
+            <div class="ac-form-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="ac-form-group">
+                    <label for="form-bas-size">Size</label>
+                    <input type="text" id="form-bas-size" class="ac-form-input" value="${esc(item?.size || '')}" placeholder="e.g. Roomy (16 sq), Cramped / Roomy / Vast (4/16/36 sq)">
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-bas-prereq">Prerequisites</label>
+                    <input type="text" id="form-bas-prereq" class="ac-form-input" value="${esc(item?.prerequisite || '')}" placeholder="e.g. Level 5+, Level 9+ Cleric or Paladin">
+                </div>
+            </div>
+
+            <div class="ac-form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="ac-form-group">
+                    <label for="form-bas-gold">Gold Cost (GP)</label>
+                    <input type="text" id="form-bas-gold" class="ac-form-input" value="${esc(item?.gp_cost || '')}" placeholder="e.g. 1000, 500 / 1000/ 3000">
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-bas-dtp">DTP Cost</label>
+                    <input type="text" id="form-bas-dtp" class="ac-form-input" value="${esc(item?.dtp_cost || '')}" placeholder="e.g. 45, 20 / 45 / 125">
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-bas-order-type">Bastion Order</label>
+                    <input type="text" id="form-bas-order-type" class="ac-form-input" value="${esc(item?.bastion_order || '')}" placeholder="e.g. Craft, Empower, Harvest, Trade">
+                </div>
+            </div>
+
+            <div class="ac-form-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="ac-form-group">
+                    <label for="form-bas-order">Display Order (Fractional Index) *</label>
+                    <input type="number" step="any" id="form-bas-order" class="ac-form-input" value="${defaultOrder}" required>
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-bas-placement-helper">Placement Helper</label>
+                    <select id="form-bas-placement-helper" class="ac-form-select">
+                        <option value="end">At End (Order ${getNextDisplayOrder(allBastions, 1.0)})</option>
+                        <option value="start">At Beginning (Order ${getStartDisplayOrder(allBastions)})</option>
+                        ${sortedFacilities.map(f => `
+                            <option value="after_${f.id}">After ${esc(f.name)} (${f.display_order})</option>
+                        `).join('')}
+                    </select>
+                </div>
+            </div>
+
+            <div class="ac-form-group">
+                <label for="form-bas-description">Description</label>
+                <textarea id="form-bas-description" class="ac-form-textarea" rows="3" placeholder="Comes with 1 hireling. See book for details...">${esc(item?.description || '')}</textarea>
+            </div>
+
+            <div class="ac-form-group">
+                <label for="form-bas-notes">Notes & Advice (Supports Markdown Links)</label>
+                <textarea id="form-bas-notes" class="ac-form-textarea" rows="5" placeholder="- Crafting rules and allowed item tiers\n- See [Equipment Guide](/Guides/allowed-content/#equipment)...">${esc(item?.notes_advice || '')}</textarea>
+            </div>
+
+            <div class="ac-form-actions">
+                <button type="button" class="ac-btn-admin ac-btn-secondary" id="form-bas-cancel">Cancel</button>
+                <button type="submit" class="ac-btn-admin ac-btn-primary" id="form-bas-submit">${isEdit ? 'Save Changes' : 'Create Facility'}</button>
+            </div>
+        </form>
     `;
 
     openModal(html);
@@ -959,7 +947,7 @@ export async function openBastionForm(item = null) {
             submitBtn.disabled = true;
 
             const name = document.getElementById('form-bas-name').value.trim();
-            const formCheckId = document.getElementById('form-bas-check-id').value.trim();
+            const formCheckId = isEdit ? (item?.check_id || getNextBastionCheckId()) : getNextBastionCheckId();
             const typeId = document.getElementById('form-bas-category').value;
             const size = document.getElementById('form-bas-size').value.trim();
             const prereq = document.getElementById('form-bas-prereq').value.trim();
@@ -1055,4 +1043,72 @@ if (typeof window !== 'undefined') {
     window.addEventListener('ac:bastions-updated', () => {
         allBastions = [];
     });
+    window.addEventListener('ac:open-bastions-options', () => {
+        openBastionsOptionsManagerModal();
+    });
 }
+
+/**
+ * Opens the Options Manager modal for Bastions.
+ * Allows Admins/Engineers to configure Bastion categories (ac_bastion_type table) in the database.
+ */
+export function openBastionsOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Bastion Categories',
+        subtitle: 'Manage bastion facility categories, guidelines, and display orders stored in the database.',
+        tabs: [
+            {
+                id: 'categories',
+                label: 'Categories',
+                addLabel: '+ Add Category',
+                items: allBastionTypes,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Category Name' },
+                    { key: 'notes', label: 'Guidelines / Rules', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Category Name', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Guidelines / Rules', type: 'textarea', placeholder: 'Official bastion facility rules / guidelines...' }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const draftList = drafts.categories || [];
+            const origMap = new Map(allBastionTypes.map(t => [t.id, t]));
+            const draftIds = new Set(draftList.filter(d => d.id).map(d => d.id));
+
+            // Deletions
+            for (const [id] of origMap.entries()) {
+                if (!draftIds.has(id)) {
+                    const { error } = await deleteBastionType(id);
+                    if (error) throw error;
+                }
+            }
+
+            // Inserts & Updates
+            for (const item of draftList) {
+                if (item.id && origMap.has(item.id)) {
+                    const { error } = await updateBastionType(item.id, {
+                        name: item.name,
+                        display_order: item.display_order,
+                        notes: item.notes || null
+                    });
+                    if (error) throw error;
+                } else {
+                    const { data, error } = await insertBastionType({
+                        name: item.name,
+                        display_order: item.display_order,
+                        notes: item.notes || null
+                    });
+                    if (error) throw error;
+                    if (data?.id) item.id = data.id;
+                }
+            }
+
+            await initBastions(true);
+        }
+    });
+}
+

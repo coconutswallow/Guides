@@ -52,6 +52,7 @@ node supabase/migrations/run_<migration>.js --execute --prod
 | **11** | 2026-10-06 | **Downtime** | `20261006_ac_downtime_normalization.sql` | `run_20261006_ac_downtime_normalization.js` | ✅ Applied | ✅ Applied |
 | **12** | 2026-10-09 | **Bastions** | `20261009_ac_bastion_normalization.sql` | `run_20261009_ac_bastion_normalization.js` | ✅ Applied | ✅ Applied |
 | **13** | 2026-10-10 | **Races Ruleset Normalization** | `20261010_ac_races_ruleset.sql` | `run_20261010_ac_races_ruleset.js` | ✅ Applied | ✅ Applied |
+| **14** | 2026-10-11 | **Item Properties Normalization** | `20261011_ac_item_properties_normalization.sql` | `run_20261011_ac_item_properties_normalization.js` | ✅ Applied | ✅ Applied |
 
 ---
 
@@ -517,5 +518,93 @@ node supabase/migrations/run_20261010_ac_races_ruleset.js --execute --prod
 | :--- | :---: | :---: | :--- | :--- |
 | DEV | ✅ | ✅ | 2026-10-10 | Verified. 30 '2024' races, 84 '2014' races. 0 remaining with '(2024)' in name. |
 | PRODUCTION | ✅ | ✅ | 2026-10-10 | Verified. 30 '2024' races, 84 '2014' races. 0 remaining with '(2024)' in name. |
+
+---
+
+### Step 14: Item Properties Normalization (`ac_item_properties`, `ac_item_properties_categories`)
+- **Date**: 2026-10-11
+- **SQL Migration**: `supabase/migrations/20261011_ac_item_properties_normalization.sql`
+- **Runner Script**: `supabase/migrations/run_20261011_ac_item_properties_normalization.js`
+- **Source Spreadsheets**:
+  - `Allowed_Content_20261004.xlsx` (Item Properties tab — 92 rows)
+  - `AC_Item_Properties.xlsx` (Schema draft analysis & correction)
+- **Tables Affected**: `public.ac_item_properties_categories`, `public.ac_item_properties`
+
+#### Overview & Corrections Addressed
+1. **Spreadsheet & Tab Clarification**:
+   - The user request referenced the Equipment tab, but all 92 Check IDs (`ITP_0001` - `ITP_0092`) are on the **Item Properties** tab. (The Equipment tab contains items with `EQP_0001` - `EQP_0494` already normalized in Step 10).
+2. **Schema & Normalization Fixes**:
+   - **UUID Primary Keys**: Table uses standard UUID (`gen_random_uuid()`) primary keys rather than integer/string IDs. Foreign key to category uses `category_id UUID REFERENCES ac_item_properties_categories(id)`.
+   - **Multi-Source Support (`TEXT[]`)**: Migrated `source` from single `TEXT` to `TEXT[]` referencing canonical `ac_sources` keys (`DMG2014`, `DMG2024`, and `HHB`). GIN index created (`idx_ac_item_properties_source`).
+   - **Fractional Indexing**: `display_order` converted to `DOUBLE PRECISION`.
+   - **Header Artifact Cleanup**: Removed erroneous legacy placeholder row (`Creator` with source `Minor Property` at `display_order = 1`).
+   - **Unique Constraints**:
+     - `check_id VARCHAR(32) UNIQUE` (`ITP_0001` .. `ITP_0092`).
+     - Composite `UNIQUE (category_id, name)` on `ac_item_properties`.
+3. **Staff Admin & Engineer RLS Policies**:
+   - `Allow public read access` (`SELECT` for `anon, authenticated`).
+   - `Allow service_role to manage` (`ALL` for `service_role`).
+   - `Admins and Engineers can manage` (`ALL` for `authenticated` users with `Admin` or `Engineer` roles in `discord_users.roles`).
+
+#### Commands to Run
+```bash
+# 1. Dry run on DEV
+node supabase/migrations/run_20261011_ac_item_properties_normalization.js --dry-run
+
+# 2. Execute on DEV
+node supabase/migrations/run_20261011_ac_item_properties_normalization.js --execute
+
+# 3. Dry run on PRODUCTION
+node supabase/migrations/run_20261011_ac_item_properties_normalization.js --dry-run --prod
+
+# 4. Execute on PRODUCTION
+node supabase/migrations/run_20261011_ac_item_properties_normalization.js --execute --prod
+```
+
+#### Verification Criteria
+- Categories count: 7.
+- Total item properties: 92 (1:1 with `Allowed_Content_20261004.xlsx`).
+- Distinct `ITP_` check_ids: 92 (`ITP_0001` through `ITP_0092`).
+- 92 records with `source` as `TEXT[]`.
+- 92 records with `display_order` as `DOUBLE PRECISION`.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-11 | Verified. 92 rows, 92 distinct ITP_ check_ids, source as text[], double precision order. |
+| PRODUCTION | ✅ | ✅ | 2026-10-11 | Verified. 92 rows, 92 distinct ITP_ check_ids, source as text[], double precision order. |
+
+---
+
+### 20261011_ac_lookups_categories_expansion.sql
+- **Target Table:** `public.lookups`
+- **Runner:** `supabase/migrations/run_20261011_ac_lookups_categories_expansion.js`
+- **Purpose:** Expand `public.lookups` to store categories, types, sections, and rulesets for Allowed Content tabs (`classes`, `backgrounds`, `feats`, `item-properties`, `misc-features`). Grant Staff Admins and Engineers `ALL` (insert, update, delete) permissions on `lookups` under RLS.
+
+#### Execution Commands
+```bash
+# 1. Dry run on DEV
+node supabase/migrations/run_20261011_ac_lookups_categories_expansion.js --dry-run
+
+# 2. Execute on DEV
+node supabase/migrations/run_20261011_ac_lookups_categories_expansion.js --execute
+
+# 3. Dry run on PRODUCTION
+node supabase/migrations/run_20261011_ac_lookups_categories_expansion.js --dry-run --prod
+
+# 4. Execute on PRODUCTION
+node supabase/migrations/run_20261011_ac_lookups_categories_expansion.js --execute --prod
+```
+
+#### Verification Criteria
+- `lookups` contains expanded keys: `classes`, `backgrounds`, `feats`, `item-properties`, `misc-features`, alongside existing `CR`, `monster`, `dm-tool`, `character`, `sources`.
+- Staff Admin and Engineer policy `Admins and Engineers can manage lookups` grants `ALL` access to authenticated staff.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-11 | Verified. 10 types in lookups, Staff Admin/Engineer ALL policy active. |
+| PRODUCTION | ✅ | ✅ | 2026-10-11 | Verified. 10 types in lookups, Staff Admin/Engineer ALL policy active. |
+
 
 

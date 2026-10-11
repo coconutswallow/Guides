@@ -25,8 +25,11 @@ import {
     updateBackground, 
     deleteBackground,
     getSourcesMap, 
-    getSourceByKey 
+    getSourceByKey,
+    getBackgroundLookups,
+    updateLookup
 } from './ac-service.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 import { 
     getNextDisplayOrder, 
     cleanFloat, 
@@ -58,10 +61,18 @@ export {
 let allBackgrounds = [];
 let filteredBackgrounds = [];
 let availableSourceKeys = [];
+let bgCategories = [
+    { name: 'Official', display_order: 1, notes: 'Official Backgrounds' },
+    { name: 'Homebrew', display_order: 2, notes: 'Hawthorne Homebrew Backgrounds' }
+];
+let bgRulesets = [
+    { label: '2014', value: '2014' },
+    { label: '2024', value: '2024' }
+];
 
 // Active toolbar filters
-let selectedRulesetFilter = 'ALL';   // 'ALL' | '2014' | '2024'
-let selectedCategoryFilter = 'ALL';  // 'ALL' | 'Official' | 'Homebrew'
+let selectedRulesetFilter = 'ALL';   // 'ALL' | specific ruleset
+let selectedCategoryFilter = 'ALL';  // 'ALL' | specific category
 let selectedSourceFilter = 'ALL';    // 'ALL' | specific source_key
 let currentSearchTerm = '';
 
@@ -111,10 +122,16 @@ export async function initBackgrounds(forceRefresh = false) {
     `;
 
     try {
-        const [bgData, _sourcesMap] = await Promise.all([
+        const [bgData, _sourcesMap, bgLookups] = await Promise.all([
             getBackgrounds(),
-            getSourcesMap(forceRefresh)
+            getSourcesMap(forceRefresh),
+            getBackgroundLookups()
         ]);
+
+        if (bgLookups) {
+            if (Array.isArray(bgLookups.categories)) bgCategories = bgLookups.categories;
+            if (Array.isArray(bgLookups.rulesets)) bgRulesets = bgLookups.rulesets;
+        }
 
         allBackgrounds = bgData || [];
 
@@ -221,18 +238,20 @@ function renderView() {
                 </div>
 
                 <div class="ac-backgrounds-controls ac-classes-controls">
-                    <!-- Ruleset Filter (2014 vs 2024) -->
+                    <!-- Ruleset Filter -->
                     <select id="ac-backgrounds-ruleset-filter" class="ac-filter-select" title="Filter by Ruleset" aria-label="Filter by Ruleset">
                         <option value="ALL" ${selectedRulesetFilter === 'ALL' ? 'selected' : ''}>All Rulesets</option>
-                        <option value="2014" ${selectedRulesetFilter === '2014' ? 'selected' : ''}>2014 Ruleset</option>
-                        <option value="2024" ${selectedRulesetFilter === '2024' ? 'selected' : ''}>2024 Ruleset</option>
+                        ${bgRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${selectedRulesetFilter === String(r.value) ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
 
-                    <!-- Category Filter (Official vs Homebrew) -->
+                    <!-- Category Filter -->
                     <select id="ac-backgrounds-category-filter" class="ac-filter-select" title="Filter by Category" aria-label="Filter by Category">
                         <option value="ALL" ${selectedCategoryFilter === 'ALL' ? 'selected' : ''}>All Categories</option>
-                        <option value="Official" ${selectedCategoryFilter === 'Official' ? 'selected' : ''}>Official WotC</option>
-                        <option value="Homebrew" ${selectedCategoryFilter === 'Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                        ${bgCategories.map(c => `
+                            <option value="${esc(c.name)}" ${selectedCategoryFilter === c.name ? 'selected' : ''}>${esc(c.name)}</option>
+                        `).join('')}
                     </select>
 
                     <!-- Source Filter -->
@@ -538,16 +557,18 @@ export async function openBackgroundForm(bgItem = null) {
                 <div class="ac-form-group">
                     <label for="bg-input-ruleset">Ruleset *</label>
                     <select id="bg-input-ruleset" class="ac-form-input ac-form-select" required>
-                        <option value="2014" ${bgItem?.ruleset === '2014' ? 'selected' : ''}>2014</option>
-                        <option value="2024" ${bgItem?.ruleset === '2024' || (!isEdit) ? 'selected' : ''}>2024</option>
+                        ${bgRulesets.map(r => `
+                            <option value="${esc(r.value)}" ${String(bgItem?.ruleset) === String(r.value) || (!isEdit && String(r.value) === '2024') ? 'selected' : ''}>${esc(r.label || r.value)}</option>
+                        `).join('')}
                     </select>
                 </div>
 
                 <div class="ac-form-group">
                     <label for="bg-input-category">Category *</label>
                     <select id="bg-input-category" class="ac-form-input ac-form-select" required>
-                        <option value="Official" ${(!bgItem || bgItem.category === 'Official') ? 'selected' : ''}>Official</option>
-                        <option value="Homebrew" ${bgItem?.category === 'Homebrew' || bgItem?.category === 'Hawthorne Homebrew' ? 'selected' : ''}>Hawthorne Homebrew</option>
+                        ${bgCategories.map(c => `
+                            <option value="${esc(c.name)}" ${(bgItem?.category === c.name) || (!isEdit && c.name === 'Official') ? 'selected' : ''}>${esc(c.name)}</option>
+                        `).join('')}
                     </select>
                 </div>
             </div>
@@ -670,4 +691,63 @@ if (typeof window !== 'undefined') {
     window.addEventListener('ac:backgrounds-updated', () => {
         allBackgrounds = [];
     });
+    window.addEventListener('ac:open-backgrounds-options', () => openBackgroundsOptionsManagerModal());
 }
+
+/**
+ * Opens the Lookups Options Manager modal for Backgrounds.
+ * Allows Admins/Engineers to configure Background categories and rulesets.
+ */
+export function openBackgroundsOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Backgrounds Options (Lookups)',
+        subtitle: 'Manage categories, rulesets, and notes saved in the lookups table.',
+        tabs: [
+            {
+                id: 'categories',
+                label: 'Categories',
+                addLabel: '+ Add Category',
+                items: bgCategories,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Category Name' },
+                    { key: 'notes', label: 'Description', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Category Name', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Description / Notes', type: 'textarea' }
+                ]
+            },
+            {
+                id: 'rulesets',
+                label: 'Rulesets',
+                addLabel: '+ Add Ruleset',
+                items: bgRulesets,
+                columns: [
+                    { key: 'label', label: 'Ruleset Label' },
+                    { key: 'value', label: 'Value', code: true }
+                ],
+                fields: [
+                    { key: 'label', label: 'Ruleset Label', required: true },
+                    { key: 'value', label: 'Value (e.g. 2014, 2024)', required: true }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const payload = {
+                categories: drafts.categories,
+                rulesets: drafts.rulesets
+            };
+            const { error } = await updateLookup('backgrounds', payload);
+            if (error) {
+                throw error;
+            }
+            bgCategories = drafts.categories;
+            bgRulesets = drafts.rulesets;
+            applyFilters();
+            renderView();
+        }
+    });
+}
+

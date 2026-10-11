@@ -18,11 +18,15 @@
 
 import { 
     getDowntime, 
-    getDowntimeTypes,
+    getDowntimeTypes, 
     createDowntime, 
     updateDowntime, 
-    deleteDowntime 
+    deleteDowntime,
+    insertDowntimeType,
+    updateDowntimeType,
+    deleteDowntimeType
 } from './ac-service.js';
+import { openGenericOptionsModal } from './ac-options-manager.js';
 import { 
     getNextDisplayOrder, 
     cleanFloat, 
@@ -102,7 +106,7 @@ export async function initDowntime(forceRefresh = false) {
         container.innerHTML = `
             <div class="ac-error-state">
                 <p>Failed to load downtime activities. Please refresh or try again later.</p>
-                <button class="ac-btn ac-btn-primary" onclick="window.location.reload()">Reload</button>
+                <button class="ac-btn-admin ac-btn-primary" onclick="window.location.reload()">Reload</button>
             </div>
         `;
     }
@@ -163,7 +167,7 @@ function renderShell() {
     container.innerHTML = `
         <div class="ac-toolbar-layout">
             <!-- Filter Controls Bar -->
-            <div class="ac-equipment-toolbar ac-classes-toolbar">
+            <div class="ac-downtime-toolbar ac-classes-toolbar">
                 <div class="ac-toolbar-left">
                     <!-- Category / Type Dropdown -->
                     <div class="ac-filter-group">
@@ -191,11 +195,6 @@ function renderShell() {
                     <span class="ac-items-count" id="downtime-stats">
                         Showing <strong>${filteredDowntime.length}</strong> ${filteredDowntime.length === 1 ? 'Activity' : 'Activities'}
                     </span>
-                    ${isAdmin ? `
-                        <button class="ac-btn ac-btn-primary ac-btn-sm" id="btn-add-downtime-top">
-                            + Add Downtime Activity
-                        </button>
-                    ` : ''}
                 </div>
             </div>
 
@@ -374,9 +373,9 @@ function renderTable(isAdmin) {
                                     </td>
                                     ${isAdmin ? `
                                         <td class="col-actions" style="text-align: center;">
-                                            <div class="action-buttons-inline">
-                                                <button class="btn-action-icon btn-edit-downtime" data-id="${item.id}" title="Edit Activity">✏️</button>
-                                                <button class="btn-action-icon btn-delete-downtime" data-id="${item.id}" title="Delete Activity">🗑️</button>
+                                            <div class="ac-cell-actions" style="justify-content: center;">
+                                                <button type="button" class="ac-btn-icon btn-edit-downtime" data-id="${item.id}" title="Edit Activity">✏️</button>
+                                                <button type="button" class="ac-btn-icon delete btn-delete-downtime" data-id="${item.id}" title="Delete Activity">🗑️</button>
                                             </div>
                                         </td>
                                     ` : ''}
@@ -450,12 +449,6 @@ function setupControls() {
 
             updateTableOnly();
         });
-    }
-
-    // Top Add Activity Button (Admin)
-    const addTopBtn = container.querySelector('#btn-add-downtime-top');
-    if (addTopBtn) {
-        addTopBtn.addEventListener('click', () => openDowntimeForm());
     }
 
     // Initial expandable text listeners
@@ -567,66 +560,62 @@ export function showDowntimeDetail(item) {
     const displayOrderVal = formatDisplayOrder(item.display_order);
 
     const html = `
-        <div class="ac-modal-detail">
+        <div class="ac-detail-modal-wrapper">
             <!-- Header -->
-            <div class="detail-header">
-                <div class="detail-title-row">
-                    <h2>${esc(item.name)}</h2>
-                    <div class="detail-badges">
-                        <span class="source-badge badge-homebrew" title="Category">${esc(catName)}</span>
-                    </div>
+            <div class="detail-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+                <div>
+                    <span class="detail-category">${esc(catName)}</span>
+                    <h2 class="detail-title">${esc(item.name)}</h2>
                 </div>
+                ${isAdmin ? `
+                    <div class="detail-actions">
+                        <button type="button" class="ac-btn-admin ac-btn-primary" id="modal-btn-edit-downtime" title="Edit activity">
+                            ✏️ Edit Activity
+                        </button>
+                        <button type="button" class="ac-btn-admin ac-btn-delete" id="modal-btn-delete-downtime" title="Delete activity">
+                            🗑️ Delete Activity
+                        </button>
+                    </div>
+                ` : ''}
             </div>
 
             <!-- Quick Metadata Grid -->
             <div class="detail-grid">
                 <div class="detail-item">
-                    <span class="label">Gold Cost:</span>
-                    <span class="value"><strong>${esc(goldVal)}</strong></span>
+                    <label>Gold Cost</label>
+                    <value><strong>${esc(goldVal)}</strong></value>
                 </div>
                 <div class="detail-item">
-                    <span class="label">DTP Cost:</span>
-                    <span class="value"><strong>${esc(dtpVal)}</strong></span>
+                    <label>DTP Cost</label>
+                    <value><strong>${esc(dtpVal)}</strong></value>
                 </div>
                 <div class="detail-item">
-                    <span class="label">Category:</span>
-                    <span class="value">${esc(catName)}</span>
+                    <label>Category</label>
+                    <value>${esc(catName)}</value>
                 </div>
             </div>
 
             <!-- Description -->
             ${item.description ? `
                 <div class="detail-section">
-                    <h3>Description</h3>
-                    <div class="detail-text">${renderMarkdownLinks(item.description)}</div>
+                    <h4>Description</h4>
+                    <div class="advice-content">${renderMarkdownLinks(item.description)}</div>
                 </div>
             ` : ''}
 
             <!-- Notes & Advice -->
             ${item.notes_advice ? `
                 <div class="detail-section">
-                    <h3>Notes & Advice</h3>
-                    <div class="detail-text detail-notes">${renderMarkdownLinks(item.notes_advice)}</div>
+                    <h4>Notes & Advice</h4>
+                    <div class="advice-content" style="color: var(--color-secondary);">${renderMarkdownLinks(item.notes_advice)}</div>
                 </div>
             ` : ''}
 
             <!-- Category Guidelines -->
             ${catNotes ? `
-                <div class="detail-section">
-                    <h3>Category Rules: ${esc(catName)}</h3>
-                    <div class="detail-text detail-rules">${renderMarkdownLinks(catNotes)}</div>
-                </div>
-            ` : ''}
-
-            <!-- Staff Admin Actions in Modal -->
-            ${isAdmin ? `
-                <div class="detail-admin-actions">
-                    <button class="ac-btn ac-btn-secondary" id="modal-btn-edit-downtime">
-                        ✏️ Edit Activity
-                    </button>
-                    <button class="ac-btn ac-btn-danger" id="modal-btn-delete-downtime">
-                        🗑️ Delete Activity
-                    </button>
+                <div class="category-notes-box">
+                    <strong>Category Rules (${esc(catName)}):</strong>
+                    <div style="margin-top: 0.5rem; line-height: 1.6;">${renderMarkdownLinks(catNotes)}</div>
                 </div>
             ` : ''}
         </div>
@@ -635,23 +624,21 @@ export function showDowntimeDetail(item) {
     openModal(html);
 
     if (isAdmin) {
-        const modalContainer = document.getElementById('ac-detail-modal');
-        if (modalContainer) {
-            const editBtn = modalContainer.querySelector('#modal-btn-edit-downtime');
-            if (editBtn) {
-                editBtn.addEventListener('click', () => {
-                    closeModal();
-                    openDowntimeForm(item);
-                });
-            }
+        const modalContainer = document.getElementById('ac-detail-modal') || document;
+        const editBtn = modalContainer.querySelector('#modal-btn-edit-downtime');
+        if (editBtn) {
+            editBtn.addEventListener('click', () => {
+                closeModal();
+                openDowntimeForm(item);
+            });
+        }
 
-            const deleteBtn = modalContainer.querySelector('#modal-btn-delete-downtime');
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', () => {
-                    closeModal();
-                    confirmAndDeleteDowntime(item.id);
-                });
-            }
+        const deleteBtn = modalContainer.querySelector('#modal-btn-delete-downtime');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                closeModal();
+                confirmAndDeleteDowntime(item.id);
+            });
         }
     }
 }
@@ -682,75 +669,73 @@ function getNextDowntimeCheckId() {
  */
 export function openDowntimeForm(item = null) {
     const isEdit = !!item;
-    const checkId = isEdit ? (item.check_id || '') : getNextDowntimeCheckId();
     const defaultTypeId = isEdit 
         ? (item.downtime_type_id || item.category_id || '') 
         : (allDowntimeTypes[0]?.id || '');
     const defaultOrder = isEdit 
         ? item.display_order 
         : getNextDisplayOrder(allDowntime, 1.0);
+    const headerCategory = isEdit ? 'Edit Downtime Activity' : 'New Downtime Activity';
+    const headerTitle = isEdit ? `Edit: ${esc(item.name)}` : 'Add New Downtime Activity';
 
     const html = `
-        <div class="ac-modal-form">
-            <h2>${isEdit ? 'Edit Downtime Activity' : 'Add New Downtime Activity'}</h2>
-            <form id="downtime-editor-form">
-                <div class="form-row">
-                    <div class="form-group form-group-half">
-                        <label for="form-dt-check-id">Check ID</label>
-                        <input type="text" id="form-dt-check-id" value="${esc(checkId)}" placeholder="DT_0131" required>
-                    </div>
-                    <div class="form-group form-group-half">
-                        <label for="form-dt-category">Category *</label>
-                        <select id="form-dt-category" required>
-                            ${allDowntimeTypes.map(t => `
-                                <option value="${t.id}" ${t.id === defaultTypeId ? 'selected' : ''}>
-                                    ${esc(t.name)}
-                                </option>
-                            `).join('')}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group form-group-full">
-                        <label for="form-dt-name">Activity Name *</label>
-                        <input type="text" id="form-dt-name" value="${esc(item?.name || '')}" placeholder="e.g. Construct or Expand a Bastion" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group form-group-third">
-                        <label for="form-dt-gold">Gold Cost</label>
-                        <input type="text" id="form-dt-gold" value="${esc(item?.gold_cost || '')}" placeholder="e.g. 0, -50, Varies">
-                    </div>
-                    <div class="form-group form-group-third">
-                        <label for="form-dt-dtp">DTP Cost</label>
-                        <input type="text" id="form-dt-dtp" value="${esc(item?.dtp_cost !== null && item?.dtp_cost !== undefined ? String(item.dtp_cost) : '')}" placeholder="e.g. 0, 7, Varies">
-                    </div>
-                    <div class="form-group form-group-third">
-                        <label for="form-dt-order">Display Order</label>
-                        <input type="number" step="0.0001" id="form-dt-order" value="${defaultOrder}" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="form-dt-description">Description</label>
-                    <textarea id="form-dt-description" rows="3" placeholder="Brief summary of the downtime activity...">${esc(item?.description || '')}</textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="form-dt-notes">Notes & Advice (Supports Markdown Links)</label>
-                    <textarea id="form-dt-notes" rows="6" placeholder="- Specific execution rules\n- Log requirement (#downtime-logs)\n- See [Player Guidelines](https://...)">${esc(item?.notes_advice || '')}</textarea>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="ac-btn ac-btn-secondary" id="form-cancel-btn">Cancel</button>
-                    <button type="submit" class="ac-btn ac-btn-primary" id="form-submit-btn">
-                        ${isEdit ? 'Save Changes' : 'Create Activity'}
-                    </button>
-                </div>
-            </form>
+        <div class="detail-header">
+            <div>
+                <span class="detail-category">${headerCategory}</span>
+                <h2 class="detail-title">${headerTitle}</h2>
+            </div>
         </div>
+
+        <form id="downtime-editor-form" class="ac-edit-form">
+            <div class="ac-form-grid" style="grid-template-columns: 1fr 2fr;">
+                <div class="ac-form-group">
+                    <label for="form-dt-category">Category *</label>
+                    <select id="form-dt-category" class="ac-form-select" required>
+                        ${allDowntimeTypes.map(t => `
+                            <option value="${t.id}" ${t.id === defaultTypeId ? 'selected' : ''}>
+                                ${esc(t.name)}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-dt-name">Activity Name *</label>
+                    <input type="text" id="form-dt-name" class="ac-form-input" value="${esc(item?.name || '')}" placeholder="e.g. Construct or Expand a Bastion" required>
+                </div>
+            </div>
+
+            <div class="ac-form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="ac-form-group">
+                    <label for="form-dt-gold">Gold Cost</label>
+                    <input type="text" id="form-dt-gold" class="ac-form-input" value="${esc(item?.gold_cost || '')}" placeholder="e.g. 0, -50, Varies">
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-dt-dtp">DTP Cost</label>
+                    <input type="text" id="form-dt-dtp" class="ac-form-input" value="${esc(item?.dtp_cost !== null && item?.dtp_cost !== undefined ? String(item.dtp_cost) : '')}" placeholder="e.g. 0, 7, Varies">
+                </div>
+                <div class="ac-form-group">
+                    <label for="form-dt-order">Display Order *</label>
+                    <input type="number" step="0.0001" id="form-dt-order" class="ac-form-input" value="${defaultOrder}" required>
+                </div>
+            </div>
+
+            <div class="ac-form-group">
+                <label for="form-dt-description">Description</label>
+                <textarea id="form-dt-description" class="ac-form-textarea" rows="3" placeholder="Brief summary of the downtime activity...">${esc(item?.description || '')}</textarea>
+            </div>
+
+            <div class="ac-form-group">
+                <label for="form-dt-notes">Notes & Advice (Supports Markdown Links)</label>
+                <textarea id="form-dt-notes" class="ac-form-textarea" rows="6" placeholder="- Specific execution rules\n- Log requirement (#downtime-logs)\n- See [Player Guidelines](https://...)">${esc(item?.notes_advice || '')}</textarea>
+            </div>
+
+            <div class="ac-form-actions">
+                <button type="button" class="ac-btn-admin ac-btn-secondary" id="form-cancel-btn">Cancel</button>
+                <button type="submit" class="ac-btn-admin ac-btn-primary" id="form-submit-btn">
+                    ${isEdit ? 'Save Changes' : 'Create Activity'}
+                </button>
+            </div>
+        </form>
     `;
 
     openModal(html);
@@ -767,7 +752,7 @@ export function openDowntimeForm(item = null) {
         submitBtn.textContent = 'Saving...';
 
         const nameVal = form.querySelector('#form-dt-name').value.trim();
-        const checkIdVal = form.querySelector('#form-dt-check-id').value.trim();
+        const checkIdVal = isEdit ? (item?.check_id || getNextDowntimeCheckId()) : getNextDowntimeCheckId();
         const typeIdVal = form.querySelector('#form-dt-category').value;
         const goldVal = form.querySelector('#form-dt-gold').value.trim() || null;
         const dtpVal = form.querySelector('#form-dt-dtp').value.trim() || null;
@@ -843,3 +828,75 @@ async function confirmAndDeleteDowntime(id) {
         showToast(`Failed to delete activity: ${err.message}`, true);
     }
 }
+
+// Invalidate in-memory cache and listen for options modal
+if (typeof window !== 'undefined') {
+    window.addEventListener('ac:open-downtime-options', () => {
+        openDowntimeOptionsManagerModal();
+    });
+}
+
+/**
+ * Opens the Options Manager modal for Downtime Activities.
+ * Allows Admins/Engineers to configure categories (ac_downtime_type table) in the database.
+ */
+export function openDowntimeOptionsManagerModal() {
+    openGenericOptionsModal({
+        title: '⚙️ Configure Downtime Categories',
+        subtitle: 'Manage downtime categories, guidelines, and display orders stored in the database.',
+        tabs: [
+            {
+                id: 'categories',
+                label: 'Categories',
+                addLabel: '+ Add Category',
+                items: allDowntimeTypes,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Category Name' },
+                    { key: 'notes', label: 'Guidelines / Rules', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Category Name', required: true },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Guidelines / Rules', type: 'textarea', placeholder: 'Official downtime rules / guidelines...' }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const draftList = drafts.categories || [];
+            const origMap = new Map(allDowntimeTypes.map(t => [t.id, t]));
+            const draftIds = new Set(draftList.filter(d => d.id).map(d => d.id));
+
+            // Deletions
+            for (const [id] of origMap.entries()) {
+                if (!draftIds.has(id)) {
+                    const { error } = await deleteDowntimeType(id);
+                    if (error) throw error;
+                }
+            }
+
+            // Inserts & Updates
+            for (const item of draftList) {
+                if (item.id && origMap.has(item.id)) {
+                    const { error } = await updateDowntimeType(item.id, {
+                        name: item.name,
+                        display_order: item.display_order,
+                        notes: item.notes || null
+                    });
+                    if (error) throw error;
+                } else {
+                    const { data, error } = await insertDowntimeType({
+                        name: item.name,
+                        display_order: item.display_order,
+                        notes: item.notes || null
+                    });
+                    if (error) throw error;
+                    if (data?.id) item.id = data.id;
+                }
+            }
+
+            await initDowntime(true);
+        }
+    });
+}
+

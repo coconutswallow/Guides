@@ -359,12 +359,12 @@ td.col-hitdie { color: var(--color-secondary); }
 
 @media (max-width: 768px) {
     .hide-mobile { display: none; }
-    .ac-controls, .ac-classes-controls, .ac-races-controls, .ac-backgrounds-controls, .ac-languages-controls, .ac-feats-controls, .ac-spells-controls, .ac-misc-controls { 
+    .ac-controls, .ac-classes-controls, .ac-races-controls, .ac-backgrounds-controls, .ac-languages-controls, .ac-feats-controls, .ac-spells-controls, .ac-misc-controls, .ac-sources-controls { 
         width: 100%;
         flex-direction: column; 
         align-items: stretch; 
     }
-    .ac-classes-toolbar, .ac-races-toolbar, .ac-backgrounds-toolbar, .ac-languages-toolbar, .ac-feats-toolbar, .ac-spells-toolbar, .ac-misc-toolbar {
+    .ac-classes-toolbar, .ac-races-toolbar, .ac-backgrounds-toolbar, .ac-languages-toolbar, .ac-feats-toolbar, .ac-spells-toolbar, .ac-misc-toolbar, .ac-downtime-toolbar, .ac-item-properties-toolbar, .ac-sources-toolbar {
         flex-direction: column;
         align-items: stretch;
     }
@@ -1235,7 +1235,10 @@ select.ac-form-input {
 .ac-languages-toolbar,
 .ac-feats-toolbar,
 .ac-spells-toolbar,
-.ac-misc-toolbar {
+.ac-misc-toolbar,
+.ac-downtime-toolbar,
+.ac-item-properties-toolbar,
+.ac-sources-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1255,7 +1258,8 @@ select.ac-form-input {
 .ac-languages-stats,
 .ac-feats-stats,
 .ac-spells-stats,
-.ac-misc-stats {
+.ac-misc-stats,
+.ac-sources-stats {
     font-size: 0.9rem;
     color: var(--color-text-secondary);
     font-weight: 600;
@@ -1281,7 +1285,8 @@ select.ac-form-input {
 .ac-languages-controls,
 .ac-feats-controls,
 .ac-spells-controls,
-.ac-misc-controls {
+.ac-misc-controls,
+.ac-sources-controls {
     display: flex;
     align-items: center;
     gap: 0.65rem;
@@ -1569,7 +1574,10 @@ select.ac-form-input {
 [data-theme="dark"] .ac-languages-toolbar,
 [data-theme="dark"] .ac-feats-toolbar,
 [data-theme="dark"] .ac-spells-toolbar,
-[data-theme="dark"] .ac-misc-toolbar {
+[data-theme="dark"] .ac-misc-toolbar,
+[data-theme="dark"] .ac-downtime-toolbar,
+[data-theme="dark"] .ac-item-properties-toolbar,
+[data-theme="dark"] .ac-sources-toolbar {
     background: var(--color-card-bg, #242424);
     border-color: #383838;
 }
@@ -1580,7 +1588,8 @@ select.ac-form-input {
 [data-theme="dark"] .ac-languages-stats strong,
 [data-theme="dark"] .ac-feats-stats strong,
 [data-theme="dark"] .ac-spells-stats strong,
-[data-theme="dark"] .ac-misc-stats strong {
+[data-theme="dark"] .ac-misc-stats strong,
+[data-theme="dark"] .ac-sources-stats strong {
     color: var(--color-primary, #D4A574);
 }
 
