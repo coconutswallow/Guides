@@ -739,7 +739,7 @@ export async function getMonsters() {
         return await fetchAll('ac_monsters', `
             *,
             category_id,
-            category:category_id (
+            category_rel:category_id (
                 id,
                 name,
                 notes,
@@ -753,6 +753,112 @@ export async function getMonsters() {
         console.error('Error fetching monsters (check if table exists):', error);
         return [];
     }
+}
+
+/**
+ * Creates a new Monster in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {Object} monsterData
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function createMonster(monsterData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_monsters')
+            .insert([monsterData])
+            .select(`
+                *,
+                category_id,
+                category_rel:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error creating monster:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception creating monster:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an existing Monster in Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of monster
+ * @param {Object} updates
+ * @returns {Promise<{data: Object|null, error: Object|null}>}
+ */
+export async function updateMonster(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_monsters')
+            .update(updates)
+            .eq('id', id)
+            .select(`
+                *,
+                category_id,
+                category_rel:category_id (
+                    id,
+                    name,
+                    notes,
+                    display_order
+                )
+            `)
+            .single();
+
+        if (error) {
+            console.error('Error updating monster:', error);
+            return { data: null, error };
+        }
+        return { data, error: null };
+    } catch (err) {
+        console.error('Exception updating monster:', err);
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Monster from Supabase.
+ * Requires Admin or Engineer role.
+ * 
+ * @param {string} id - UUID of monster
+ * @returns {Promise<{success: boolean, error: Object|null}>}
+ */
+export async function deleteMonster(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_monsters')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting monster:', error);
+            return { success: false, error };
+        }
+        return { success: true, error: null };
+    } catch (err) {
+        console.error('Exception deleting monster:', err);
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Fetch Monster lookups metadata.
+ * 
+ * @returns {Promise<Object>}
+ */
+export async function getMonsterLookups() {
+    return await getLookup('monsters');
 }
 
 /**
@@ -2603,4 +2709,139 @@ export async function deleteItemPropertiesCategory(id) {
         return { success: false, error: err };
     }
 }
+
+// Monster Categories (ac_monsters_categories)
+export async function insertMonsterCategory(catData) {
+    try {
+        const { data, error } = await supabase.from('ac_monsters_categories').insert(catData).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function updateMonsterCategory(id, updates) {
+    try {
+        const { data, error } = await supabase.from('ac_monsters_categories').update(updates).eq('id', id).select().single();
+        if (error) return { data: null, error };
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+export async function deleteMonsterCategory(id) {
+    try {
+        const { error } = await supabase.from('ac_monsters_categories').delete().eq('id', id);
+        if (error) return { success: false, error };
+        return { success: true, error: null };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Fetch shared Usage levels/options from lookups table (type = 'usage').
+ * Falls back to monster lookups, item-properties lookups, or defaults.
+ * 
+ * @returns {Promise<Array<{name: string, label?: string, display_order: number, notes?: string}>>}
+ */
+export async function getSharedUsage() {
+    const data = await getLookup('usage');
+    if (Array.isArray(data) && data.length > 0) {
+        return data;
+    }
+    // Fallback: check monsters lookups
+    const monsterData = await getLookup('monsters');
+    if (monsterData?.categories && Array.isArray(monsterData.categories) && monsterData.categories.length > 0) {
+        return monsterData.categories.map(c => ({
+            name: c.name,
+            label: c.label || (c.name === 'Fair Game' ? 'Fair Game (Any DM)' : c.name),
+            display_order: c.display_order ?? 1,
+            notes: c.notes || null
+        }));
+    }
+    // Fallback: check item-properties lookups
+    const itemPropData = await getLookup('item-properties');
+    if (itemPropData?.permissions && Array.isArray(itemPropData.permissions) && itemPropData.permissions.length > 0) {
+        return itemPropData.permissions;
+    }
+    return [
+        { name: 'Fair Game', label: 'Fair Game (Any DM)', display_order: 1, notes: 'Fair Game content can be used by any DM in adventures they run.' },
+        { name: 'Full DM Only', label: 'Full DM Only', display_order: 2, notes: 'DMs should take care to review statblock and notes before including.' }
+    ];
+}
+
+/**
+ * Save/Update shared Usage levels/options across lookups and dependent category tables.
+ * Synchronizes:
+ *  1. public.lookups (type = 'usage')
+ *  2. public.lookups (type = 'monsters' -> categories)
+ *  3. public.lookups (type = 'item-properties' -> permissions)
+ *  4. public.ac_monsters_categories (for FK integrity in monsters table)
+ * 
+ * @param {Array<{id?: string, name: string, label?: string, display_order: number, notes?: string}>} usageList
+ * @returns {Promise<{success: boolean, data?: Array, error?: any}>}
+ */
+export async function updateSharedUsage(usageList) {
+    if (!Array.isArray(usageList)) return { success: false, error: 'Invalid usageList' };
+
+    const formatted = usageList.map(u => ({
+        name: u.name,
+        label: u.label || (u.name === 'Fair Game' ? 'Fair Game (Any DM)' : u.name),
+        display_order: typeof u.display_order === 'number' ? u.display_order : (parseFloat(u.display_order) || 10.0),
+        notes: u.notes || null
+    }));
+
+    // 1. Update type = 'usage' in lookups
+    await updateLookup('usage', formatted);
+
+    // 2. Keep lookups 'monsters' in sync
+    const monsterLookups = await getLookup('monsters') || {};
+    await updateLookup('monsters', {
+        ...monsterLookups,
+        categories: formatted.map(u => ({
+            name: u.name,
+            display_order: u.display_order,
+            notes: u.notes
+        }))
+    });
+
+    // 3. Keep lookups 'item-properties' in sync
+    const itemPropLookups = await getLookup('item-properties') || {};
+    await updateLookup('item-properties', {
+        ...itemPropLookups,
+        permissions: formatted.map(u => ({
+            name: u.name,
+            label: u.label,
+            display_order: u.display_order,
+            notes: u.notes
+        }))
+    });
+
+    // 4. Keep public.ac_monsters_categories in sync for relational FK
+    const existingCats = await getMonsterCategories().catch(() => []);
+    for (const item of usageList) {
+        const order = typeof item.display_order === 'number' ? item.display_order : (parseFloat(item.display_order) || 10.0);
+        const matched = existingCats.find(c => (item.id && c.id === item.id) || c.name === item.name);
+        if (matched) {
+            await updateMonsterCategory(matched.id, {
+                name: item.name,
+                display_order: order,
+                notes: item.notes || null
+            });
+        } else {
+            await insertMonsterCategory({
+                name: item.name,
+                display_order: order,
+                notes: item.notes || null
+            });
+        }
+    }
+
+    return { success: true, data: formatted };
+}
+
+
 

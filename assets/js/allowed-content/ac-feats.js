@@ -51,7 +51,8 @@ import {
     renderMarkdownLinks, 
     resolveSourceLink,
     formatExpandableText,
-    attachExpandableTextListeners
+    attachExpandableTextListeners,
+    renderRulesetPill
 } from './ac-ui-utils.js';
 
 export {
@@ -373,10 +374,7 @@ function renderTable(isAdmin) {
 function renderRow(feat, isAdmin) {
     const sources = extractSourceKeys(feat.source);
     const badgesHtml = renderSourceBadges(sources);
-
-    const rulesetBadge = feat.ruleset 
-        ? `<span class="ruleset-pill ruleset-${esc(feat.ruleset)}">${esc(feat.ruleset)}</span>`
-        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
+    const rulesetBadge = renderRulesetPill(feat.ruleset);
 
     return `
         <tr class="ac-feat-row" data-feat-id="${esc(feat.id)}" style="cursor: pointer;">
@@ -482,10 +480,7 @@ export function showFeatDetailModal(feat) {
     const isAdmin = getAdminMode();
     const sources = extractSourceKeys(feat.source);
     const badgesHtml = renderSourceBadges(sources);
-
-    const rulesetBadge = feat.ruleset 
-        ? `<span class="ruleset-pill ruleset-${esc(feat.ruleset)}">${esc(feat.ruleset)}</span>` 
-        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
+    const rulesetBadge = renderRulesetPill(feat.ruleset);
 
     const html = `
         <div class="detail-header">

@@ -29,7 +29,9 @@ import {
     insertItemPropertiesCategory,
     updateItemPropertiesCategory,
     deleteItemPropertiesCategory,
-    getSourcesCached
+    getSourcesCached,
+    getSharedUsage,
+    updateSharedUsage
 } from './ac-service.js';
 import { 
     getNextDisplayOrder, 
@@ -54,12 +56,14 @@ import {
     attachExpandableTextListeners,
     showToast 
 } from './ac-ui-utils.js';
-import { openGenericOptionsModal } from './ac-options-manager.js';
+import { openGenericOptionsModal, openUsageOptionsModal } from './ac-options-manager.js';
 
 export {
     setAdminMode,
-    getAdminMode
+    getAdminMode,
+    openUsageOptionsModal
 };
+
 
 // Module State
 let allItemProperties = [];
@@ -106,15 +110,19 @@ export async function initItemProperties(forceRefresh = false) {
     `;
 
     try {
-        const [propsData, catsData, sourcesData, lookupsData] = await Promise.all([
+        const [propsData, catsData, sourcesData, lookupsData, sharedUsageData] = await Promise.all([
             getItemProperties(),
             getItemPropertiesCategories(),
             getSourcesCached().catch(() => []),
-            getItemPropertyLookups()
+            getItemPropertyLookups(),
+            (typeof getSharedUsage === 'function' ? getSharedUsage() : Promise.resolve([])).catch(() => [])
         ]);
 
         allCategories = catsData || [];
         propertyLookups = lookupsData || { types: [], permissions: [] };
+        if (Array.isArray(sharedUsageData) && sharedUsageData.length > 0) {
+            propertyLookups.permissions = sharedUsageData;
+        }
         allItemProperties = (propsData || []).map(p => ({
             ...p,
             display_order: typeof p.display_order === 'number' ? p.display_order : 10.0,
@@ -235,9 +243,9 @@ function renderShell() {
                         }).join('')}
                     </select>
 
-                    <!-- Category / Permission Filter Dropdown -->
-                    <select id="ac-item-properties-category-filter" class="ac-filter-select" title="Filter by Permission" aria-label="Filter by Permission">
-                        <option value="ALL">All Permissions</option>
+                    <!-- Usage Filter Dropdown -->
+                    <select id="ac-item-properties-category-filter" class="ac-filter-select" title="Filter by Usage" aria-label="Filter by Usage">
+                        <option value="ALL">All Usages</option>
                         ${(propertyLookups.permissions || [
                             { name: 'Fair Game', label: 'Fair Game (Any DM)' },
                             { name: 'Full DM Only', label: 'Full DM Only' }
@@ -376,7 +384,7 @@ function renderTable(isAdmin) {
                     <thead>
                         <tr>
                             <th class="col-name" style="min-width: 180px;">Name</th>
-                            <th class="col-permission" style="width: 140px; text-align: center;">Permission</th>
+                            <th class="col-permission" style="width: 140px; text-align: center;">Usage</th>
                             <th class="col-source" style="width: 120px; text-align: center;">Source</th>
                             <th class="col-desc" style="min-width: 240px;">Description</th>
                             <th class="col-notes hide-tablet" style="min-width: 240px;">Notes / Advice</th>
@@ -401,7 +409,7 @@ function renderTable(isAdmin) {
                 <thead>
                     <tr>
                         <th class="col-name" style="min-width: 180px;">Name</th>
-                        <th class="col-permission" style="width: 140px; text-align: center;">Permission</th>
+                        <th class="col-permission" style="width: 140px; text-align: center;">Usage</th>
                         <th class="col-source" style="width: 120px; text-align: center;">Source</th>
                         <th class="col-desc" style="min-width: 240px;">Description</th>
                         <th class="col-notes hide-tablet" style="min-width: 240px;">Notes / Advice</th>
@@ -710,7 +718,7 @@ export function showItemPropertyDetail(item) {
                 <span class="ac-meta-value"><strong>${esc(item.type || '—')}</strong></span>
             </div>
             <div class="ac-meta-item">
-                <span class="ac-meta-label">Permission</span>
+                <span class="ac-meta-label">Usage</span>
                 <span class="ac-meta-value">${permBadge}</span>
             </div>
             <div class="ac-meta-item">
@@ -794,7 +802,7 @@ export async function openItemPropertyForm(item = null) {
 
             <div class="ac-form-grid" style="grid-template-columns: 1fr 1fr;">
                 <div class="ac-form-group">
-                    <label for="form-prop-category">Permission Category *</label>
+                    <label for="form-prop-category">Usage Category *</label>
                     <select id="form-prop-category" class="ac-form-select" required>
                         ${permissionsList.map(p => `
                             <option value="${esc(p.name)}" ${(item?.category_sub === p.name || (!isEdit && p.name === permissionsList[0].name)) ? 'selected' : ''}>${esc(p.label || p.name)}</option>
@@ -988,8 +996,8 @@ export function openItemPropertiesOptionsManagerModal() {
             },
             {
                 id: 'permissions',
-                label: 'Permissions',
-                addLabel: '+ Add Permission',
+                label: 'Usage Levels',
+                addLabel: '+ Add Usage Level',
                 items: propertyLookups.permissions || [],
                 columns: [
                     { key: 'display_order', label: 'Order', width: '70px', code: true },
@@ -1055,8 +1063,20 @@ export function openItemPropertiesOptionsManagerModal() {
             });
             if (lookupErr) throw lookupErr;
 
+            // Synchronize with shared usage across all tabs (e.g. Monsters)
+            await updateSharedUsage(cleanPermissions);
+            window.dispatchEvent(new CustomEvent('ac:usage-updated', { detail: { usage: cleanPermissions } }));
+
             await initItemProperties(true);
         }
     });
 }
+
+// Invalidate in-memory cache and re-sync when usage updates
+if (typeof window !== 'undefined') {
+    window.addEventListener('ac:usage-updated', () => {
+        allItemProperties = [];
+    });
+}
+
 

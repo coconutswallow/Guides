@@ -55,7 +55,8 @@ import {
     renderMarkdownLinks,
     resolveSourceLink,
     formatExpandableText,
-    attachExpandableTextListeners
+    attachExpandableTextListeners,
+    renderRulesetPill
 } from './ac-ui-utils.js';
 
 export {
@@ -475,7 +476,7 @@ function renderAccordionTable(isAdmin = false) {
                                 </div>
                             </td>
                             <td class="col-ruleset" style="text-align: center;">
-                                <span class="ruleset-pill ruleset-${esc(cls.ruleset || '2014')}">${esc(cls.ruleset || '2014')}</span>
+                                ${renderRulesetPill(cls.ruleset || '2014')}
                             </td>
                             <td class="col-subclass">
                                 <div>
@@ -542,7 +543,7 @@ function renderAccordionTable(isAdmin = false) {
                                             ` : subs.map((sub, sIdx) => `
                                                 <tr data-subclass-id="${esc(sub.id)}" data-class-id="${esc(cls.id)}" data-sub-idx="${sIdx}">
                                                     <td><strong>${esc(sub.name)}</strong></td>
-                                                    <td style="text-align: center;"><span class="ruleset-pill ruleset-${esc(sub.ruleset || cls.ruleset || '2014')}">${esc(sub.ruleset || cls.ruleset || '2014')}</span></td>
+                                                    <td style="text-align: center;">${renderRulesetPill(sub.ruleset || cls.ruleset || '2014')}</td>
                                                     <td>${esc(sub.category || 'Official')}</td>
                                                     <td style="text-align: center;">${renderSourceBadges(sub.source || sub.sources || cls.source || cls.sources)}</td>
                                                     <td style="text-align: center;">${renderLinkBadge(sub.link)}</td>
@@ -606,7 +607,23 @@ function setupControls() {
             } else {
                 expandedClassIds.clear();
             }
-            renderView();
+            toggleAllBtn.textContent = allExpanded ? 'Collapse All ▲' : 'Expand All ▼';
+
+            container.querySelectorAll('.ac-accordion-parent-row').forEach(row => {
+                const classId = row.dataset.classId;
+                const isExp = expandedClassIds.has(classId);
+                row.classList.toggle('expanded', isExp);
+                const chevron = row.querySelector('.accordion-chevron');
+                if (chevron) chevron.textContent = isExp ? '▼' : '▶';
+                const hoverIcon = row.querySelector('.row-hover-icon');
+                if (hoverIcon) hoverIcon.textContent = isExp ? 'Collapse ▲' : 'Expand ▼';
+            });
+
+            container.querySelectorAll('.ac-species-drawer-row').forEach(drawer => {
+                const classId = drawer.id.replace('drawer-', '');
+                const isExp = expandedClassIds.has(classId);
+                drawer.classList.toggle('ac-drawer-collapsed', !isExp);
+            });
         };
     }
 }
@@ -626,12 +643,32 @@ function attachRowListeners() {
             const cls = allClasses.find(c => c.id === classId);
             if (!cls) return;
 
-            if (expandedClassIds.has(classId)) {
-                expandedClassIds.delete(classId);
-            } else {
+            const isNowExpanded = !expandedClassIds.has(classId);
+            if (isNowExpanded) {
                 expandedClassIds.add(classId);
+            } else {
+                expandedClassIds.delete(classId);
             }
-            renderView();
+
+            row.classList.toggle('expanded', isNowExpanded);
+            const chevron = row.querySelector('.accordion-chevron');
+            if (chevron) chevron.textContent = isNowExpanded ? '▼' : '▶';
+            const hoverIcon = row.querySelector('.row-hover-icon');
+            if (hoverIcon) hoverIcon.textContent = isNowExpanded ? 'Collapse ▲' : 'Expand ▼';
+
+            const drawer = container.querySelector(`#drawer-${classId}`);
+            if (drawer) {
+                drawer.classList.toggle('ac-drawer-collapsed', !isNowExpanded);
+            }
+
+            // Update Toggle All button label
+            const toggleAllBtn = document.getElementById('accordion-toggle-all-classes-btn');
+            if (toggleAllBtn) {
+                const totalFiltered = filteredClasses.length;
+                const totalExpanded = filteredClasses.filter(c => expandedClassIds.has(c.id)).length;
+                allExpanded = totalFiltered > 0 && totalExpanded === totalFiltered;
+                toggleAllBtn.textContent = allExpanded ? 'Collapse All ▲' : 'Expand All ▼';
+            }
         };
     });
 
@@ -741,7 +778,7 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
             </div>
             <div class="detail-item">
                 <label>Ruleset</label>
-                <value><span class="ruleset-pill ruleset-${esc(currentSub.ruleset || cls.ruleset || '2014')}">${esc(currentSub.ruleset || cls.ruleset || '2014')}</span></value>
+                <value>${renderRulesetPill(currentSub.ruleset || cls.ruleset || '2014')}</value>
             </div>
             <div class="detail-item">
                 <label>Category</label>

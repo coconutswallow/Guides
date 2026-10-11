@@ -50,7 +50,8 @@ import {
     renderMarkdownLinks, 
     resolveSourceLink,
     formatExpandableText,
-    attachExpandableTextListeners
+    attachExpandableTextListeners,
+    renderRulesetPill
 } from './ac-ui-utils.js';
 
 export {
@@ -344,10 +345,7 @@ function renderTable(isAdmin) {
 function renderRow(bg, isAdmin) {
     const sources = extractSourceKeys(bg.source);
     const badgesHtml = renderSourceBadges(sources);
-
-    const rulesetBadge = bg.ruleset 
-        ? `<span class="ruleset-pill ruleset-${esc(bg.ruleset)}">${esc(bg.ruleset)}</span>`
-        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
+    const rulesetBadge = renderRulesetPill(bg.ruleset);
 
     const categoryText = bg.category === 'Homebrew' ? 'Hawthorne Homebrew' : (bg.category || 'Official');
 
@@ -454,10 +452,7 @@ export function showBackgroundDetail(bg) {
     const isAdmin = getAdminMode();
     const sources = extractSourceKeys(bg.source);
     const badgesHtml = renderSourceBadges(sources);
-
-    const rulesetBadge = bg.ruleset 
-        ? `<span class="ruleset-pill ruleset-${esc(bg.ruleset)}">${esc(bg.ruleset)}</span>` 
-        : '<span class="ruleset-pill ruleset-none" style="opacity: 0.4;">—</span>';
+    const rulesetBadge = renderRulesetPill(bg.ruleset);
     const categoryBadge = bg.category 
         ? `<span class="ac-badge ac-badge-category">${esc(bg.category === 'Homebrew' ? 'Hawthorne Homebrew' : bg.category)}</span>` 
         : '<span style="opacity: 0.4;">—</span>';

@@ -48,7 +48,8 @@ import {
     getStaffPortalUrl,
     renderMarkdownLinks, 
     showToast,
-    renderFilterSelect
+    renderFilterSelect,
+    renderRulesetPill
 } from './ac-ui-utils.js';
 import { 
     setAdminMode, 
@@ -305,7 +306,7 @@ function renderSources() {
                                 </div>
                             </td>
                             <td class="col-abbr"><code>${esc(item.abbreviation || '—')}</code></td>
-                            <td class="col-ruleset"><span class="ruleset-pill ruleset-${esc(item.ruleset || '2014')}">${esc(item.ruleset || '—')}</span></td>
+                            <td class="col-ruleset">${renderRulesetPill(item.ruleset)}</td>
                             <td class="col-allowed-content hide-mobile">${formatSnippet(item.allowed_content, 120)}</td>
                             <td class="col-notes">${renderMarkdownLinks(item.notes_advice, true)}</td>
                         </tr>
@@ -450,7 +451,7 @@ function showSourceDetail(item) {
             </div>
             <div class="detail-item">
                 <label>Ruleset</label>
-                <value><span class="ruleset-pill ruleset-${esc(item.ruleset || '2014')}">${esc(item.ruleset || '—')}</span></value>
+                <value>${renderRulesetPill(item.ruleset)}</value>
             </div>
         </div>
 

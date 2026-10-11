@@ -52,6 +52,7 @@ import {
     formatExpandableText,
     attachExpandableTextListeners,
     renderSourceTagPicker,
+    renderRulesetPill,
     showToast 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal } from './ac-options-manager.js';
@@ -464,7 +465,7 @@ function renderTable(isAdmin) {
                                         </div>
                                     </td>
                                     <td class="col-ruleset" style="text-align: center;">
-                                        <span class="ruleset-pill ruleset-${esc(item.ruleset)}">${esc(item.ruleset)}</span>
+                                        ${renderRulesetPill(item.ruleset)}
                                     </td>
                                     <td class="col-cost">${esc(formattedCost)}</td>
                                     <td class="col-weight">${esc(formattedWeight)}</td>
@@ -709,7 +710,7 @@ export function showEquipmentDetail(item) {
         <div class="detail-grid">
             <div class="detail-item">
                 <label>Ruleset Edition</label>
-                <value><span class="ruleset-pill ruleset-${esc(item.ruleset)}">${esc(item.ruleset)}</span></value>
+                <value>${renderRulesetPill(item.ruleset)}</value>
             </div>
             <div class="detail-item">
                 <label>Category</label>

@@ -48,6 +48,7 @@ import {
     formatExpandableText,
     attachExpandableTextListeners,
     renderSourceTagPicker,
+    renderRulesetPill,
     showToast 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal } from './ac-options-manager.js';
@@ -298,7 +299,7 @@ function renderTable(isAdmin) {
                                 </div>
                             </td>
                             <td class="col-ruleset" style="text-align: center;">
-                                <span class="ruleset-pill ruleset-${esc(spell.ruleset || '2024')}">${esc(spell.ruleset || '2024')}</span>
+                                ${renderRulesetPill(spell.ruleset)}
                             </td>
                             <td class="col-source" style="text-align: center;">
                                 ${renderSourceBadges(spell.source)}
@@ -405,7 +406,7 @@ export function showSpellDetail(spell) {
         <div class="ac-detail-modal">
             <div class="detail-header" style="margin-bottom: 1.5rem;">
                 <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
-                    <span class="ruleset-pill ruleset-${esc(spell.ruleset || '2024')}">${esc(spell.ruleset || '2024')}</span>
+                    ${renderRulesetPill(spell.ruleset)}
                 </div>
                 <h2 class="detail-title" style="margin: 0 0 0.5rem 0; font-family: var(--font-header);">${esc(spell.name)}</h2>
             </div>
@@ -420,7 +421,7 @@ export function showSpellDetail(spell) {
                 </div>
                 <div class="detail-item">
                     <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-secondary); display: block; font-weight: 600;">Ruleset Edition</span>
-                    <span style="font-weight: 600;">${esc(spell.ruleset || '2024')}</span>
+                    <span>${renderRulesetPill(spell.ruleset)}</span>
                 </div>
             </div>
 

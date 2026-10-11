@@ -11,6 +11,7 @@
  */
 
 import { openModal, closeModal, showToast, esc } from './ac-ui-utils.js';
+import { getSharedUsage, updateSharedUsage } from './ac-service.js';
 
 function formatSnippet(text, maxLen = 60) {
     if (!text) return '—';
@@ -323,4 +324,54 @@ export function openGenericOptionsModal(config) {
     }
 
     render();
+}
+
+/**
+ * Opens standard shared modal to configure Usage levels.
+ * Shared across tabs that categorize content by usage permission (Monsters, Item Properties, etc.).
+ * 
+ * @param {Object} [options]
+ * @param {Function} [options.onSaved] - Optional callback after successful save
+ */
+export async function openUsageOptionsModal(options = {}) {
+    const usageItems = await getSharedUsage().catch(() => []);
+
+    openGenericOptionsModal({
+        title: '⚙️ Configure Usage',
+        subtitle: 'Manage usage levels, permissions, and rulings shared across Allowed Content tabs (Monsters, Item Properties, etc.).',
+        tabs: [
+            {
+                id: 'usage',
+                label: 'Usage Levels',
+                addLabel: '+ Add Usage Level',
+                items: usageItems,
+                columns: [
+                    { key: 'display_order', label: 'Order', width: '70px', code: true },
+                    { key: 'name', label: 'Usage Name' },
+                    { key: 'label', label: 'Display Label' },
+                    { key: 'notes', label: 'Description & Notes', snippet: 60 }
+                ],
+                fields: [
+                    { key: 'name', label: 'Usage Name', required: true },
+                    { key: 'label', label: 'Display Label', placeholder: 'e.g. Fair Game (Any DM)' },
+                    { key: 'display_order', label: 'Display Order', type: 'number' },
+                    { key: 'notes', label: 'Description & Notes', type: 'textarea', placeholder: 'Usage rules / advice...' }
+                ]
+            }
+        ],
+        onSave: async (drafts) => {
+            const draftUsage = drafts.usage || [];
+            await updateSharedUsage(draftUsage);
+            showToast('Usage levels updated successfully!');
+            
+            // Dispatch notification events for any active tab to sync
+            window.dispatchEvent(new CustomEvent('ac:usage-updated', { detail: { usage: draftUsage } }));
+            window.dispatchEvent(new CustomEvent('ac:monsters-updated'));
+            window.dispatchEvent(new CustomEvent('ac:item-properties-updated'));
+
+            if (typeof options.onSaved === 'function') {
+                await options.onSaved(draftUsage);
+            }
+        }
+    });
 }

@@ -53,6 +53,7 @@ node supabase/migrations/run_<migration>.js --execute --prod
 | **12** | 2026-10-09 | **Bastions** | `20261009_ac_bastion_normalization.sql` | `run_20261009_ac_bastion_normalization.js` | ✅ Applied | ✅ Applied |
 | **13** | 2026-10-10 | **Races Ruleset Normalization** | `20261010_ac_races_ruleset.sql` | `run_20261010_ac_races_ruleset.js` | ✅ Applied | ✅ Applied |
 | **14** | 2026-10-11 | **Item Properties Normalization** | `20261011_ac_item_properties_normalization.sql` | `run_20261011_ac_item_properties_normalization.js` | ✅ Applied | ✅ Applied |
+| **15** | 2026-10-11 | **Monsters Normalization** | `20261011_ac_monsters_normalization.sql` | `run_20261011_ac_monsters_normalization.js` | ✅ Applied | ✅ Applied |
 
 ---
 
@@ -606,5 +607,95 @@ node supabase/migrations/run_20261011_ac_lookups_categories_expansion.js --execu
 | DEV | ✅ | ✅ | 2026-10-11 | Verified. 10 types in lookups, Staff Admin/Engineer ALL policy active. |
 | PRODUCTION | ✅ | ✅ | 2026-10-11 | Verified. 10 types in lookups, Staff Admin/Engineer ALL policy active. |
 
+---
+
+### Step 15: Monsters Normalization (`ac_monsters`, `ac_monsters_categories`, `lookups`)
+- **Date**: 2026-10-11
+- **Source Spreadsheet**: `Allowed_Content_20261004.xlsx` (Monsters tab)
+- **Target Tables**: `public.ac_monsters`, `public.ac_monsters_categories`, `public.lookups`
+- **Runner**: `supabase/migrations/run_20261011_ac_monsters_normalization.js`
+- **SQL Migration**: `supabase/migrations/20261011_ac_monsters_normalization.sql`
+- **Normalized Data File**: `.context/current-tasks/Loaded/AC_Monsters.xlsx` & `.context/current-tasks/AC_Monsters.xlsx`
+- **Dependencies**: Step 1 (`ac_sources` canonical source keys).
+
+#### Key Changes & Architectural Alignment
+1. **Spreadsheet Audit & Filtering**:
+   - Total records in spreadsheet with `MON_` check_id: 3,262 (`MON_0001` through `MON_3262`).
+   - Skipped 67 Hawthorne Field Guide (`HTFG`) homebrew monsters (plus unindexed `Sultan Rezzo`) to avoid redundancy with the interactive Monster Compendium.
+   - Preserved 3,195 official monsters with 1:1 audit integrity.
+2. **Schema Evolution**:
+   - **Legacy Backups**: Created `public.ac_monsters_legacy_backup` and `public.ac_monsters_categories_legacy_backup`.
+   - **Primary Key**: Deterministic UUIDv5 primary keys (`id UUID PRIMARY KEY DEFAULT gen_random_uuid()`).
+   - **Audit Check ID**: Added `check_id VARCHAR(32) UNIQUE NOT NULL`.
+   - **Ruleset**: Added `ruleset VARCHAR(10) NOT NULL DEFAULT '2024'` ('2024' for MM2024 and PHB2024; '2014' for legacy printings).
+   - **Categories**: Reset bloated legacy breadcrumbs down to 2 canonical categories (`Fair Game` and `Full DM Only`) with UUID foreign keys.
+   - **Section Classifications**: Structured into 4 standard sections (`Core`, `Supplemental`, `Adventures`, `Non-FR`).
+   - **Challenge Ratings**: Corrected Excel date-formatting artifacts (`2024-01-04` -> `'1/4'`, `2024-01-02` -> `'1/2'`, `2024-01-08` -> `'1/8'`).
+   - **Canonical Sources**: Mapped to `TEXT[]` referencing canonical `ac_sources.source_key`s with GIN index.
+   - **Fractional Indexing**: `display_order` converted to `DOUBLE PRECISION` (10.0 step sequence).
+3. **Monster Compendium Hub Linking**:
+   - Added `lookups` record (`type = 'monsters'`) with header banner text linking to the Field Guide:
+     `Official Monsters listed here. For Hawthorne Homebrew Monsters, please [Go to the Monster Compendium in the Field Guide](/Guides/monsters/).`
+4. **Staff Admin & Engineer RLS Policies**:
+   - Public read access (`SELECT`) for `anon, authenticated`.
+   - Full management (`ALL`) for `service_role`.
+   - Full management (`ALL`) for authenticated users with `Admin` or `Engineer` roles in `discord_users.roles`.
+
+#### Commands to Run
+```bash
+# 1. Dry run on DEV
+node supabase/migrations/run_20261011_ac_monsters_normalization.js --dry-run
+
+# 2. Execute on DEV
+node supabase/migrations/run_20261011_ac_monsters_normalization.js --execute
+
+# 3. Dry run on PRODUCTION
+node supabase/migrations/run_20261011_ac_monsters_normalization.js --dry-run --prod
+
+# 4. Execute on PRODUCTION
+node supabase/migrations/run_20261011_ac_monsters_normalization.js --execute --prod
+```
+
+#### Verification Criteria
+- Categories count: 2 (`Fair Game`, `Full DM Only`).
+- Total monsters: 3,195 (1:1 with `Allowed_Content_20261004.xlsx`, excluding 67 HTFG monsters).
+- Distinct `MON_` check_ids: 3,195.
+- HTFG monsters in table: 0 (properly routed to Compendium).
+- 2024 ruleset count: 554.
+- 2014 ruleset count: 2,641.
+- All records with `source` as `TEXT[]`.
+- All records with `display_order` as `DOUBLE PRECISION`.
+- Active RLS policies for public read, service role, and staff admin/engineer.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-11 | Verified. 3,195 rows, 2 categories, 3,195 distinct MON_ check_ids, RLS active. |
+| PRODUCTION | ✅ | ✅ | 2026-10-11 | Verified. 3,195 rows, 2 categories, 3,195 distinct MON_ check_ids, RLS active. |
 
 
+---
+
+### Step 16: Shared Usage Lookup (`lookups`)
+- **Date**: 2026-10-11
+- **Target Table**: `public.lookups` (`type = 'usage'`)
+- **Runner**: `supabase/migrations/run_20261011_ac_shared_usage_lookup.js`
+- **SQL Migration**: `supabase/migrations/20261011_ac_shared_usage_lookup.sql`
+- **Dependencies**: Step 14 (`lookups` schema & RLS policies).
+
+#### Key Changes & Architectural Alignment
+1. **Shared Usage Standardization**:
+   - Seeded canonical usage levels in `public.lookups` (`type = 'usage'`).
+   - Shared across Allowed Content tabs that categorize content by usage permission (Monsters, Item Properties, etc.).
+   - Standard levels: `Fair Game` (display label "Fair Game (Any DM)") and `Full DM Only`.
+   - Unified configuration management across all Allowed Content tabs.
+
+#### Verification Criteria
+- `lookups` contains `type = 'usage'` with `Fair Game` and `Full DM Only`.
+- Staff Admin and Engineer policy grants manage access.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-11 | Verified. 'usage' lookup record seeded. |
+| PRODUCTION | ✅ | ✅ | 2026-10-11 | Verified. 'usage' lookup record seeded. |

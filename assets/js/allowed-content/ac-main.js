@@ -30,6 +30,7 @@ import { initEquipment, filterEquipment, openEquipmentForm } from './ac-equipmen
 import { initItemProperties, filterItemProperties, openItemPropertyForm } from './ac-item-properties.js';
 import { initDowntime, filterDowntime, openDowntimeForm } from './ac-downtime.js';
 import { initBastions, filterBastions, openBastionForm } from './ac-bastions.js';
+import { initMonsters, filterMonsters, openMonsterForm, openMonstersOptionsModal, openUsageOptionsModal } from './ac-monsters.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
 import { initTooltips, debounce, closeModal } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
@@ -176,6 +177,7 @@ export const TAB_REGISTRY = {
         filter: (term) => filterItemProperties(term),
         adminActions: [
             { id: 'btn-add-item-property', label: '+ Add Item Property', primary: true, event: 'ac:open-item-property-form' },
+            { id: 'btn-manage-item-properties-usage', label: '⚙️ Configure Usage', primary: false, event: 'ac:open-usage-options' },
             { id: 'btn-manage-item-properties-options', label: '⚙️ Configure Options', primary: false, event: 'ac:open-item-properties-options' }
         ]
     },
@@ -199,6 +201,17 @@ export const TAB_REGISTRY = {
         adminActions: [
             { id: 'btn-add-bastion', label: '+ Add Bastion Facility', primary: true, event: 'ac:open-bastion-form' },
             { id: 'btn-manage-bastions-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-bastions-options' }
+        ]
+    },
+    monsters: {
+        id: 'monsters',
+        viewId: 'ac-view-monsters',
+        searchPlaceholder: 'Search monsters, types, CR, sections, sources...',
+        init: (forceRefresh) => initMonsters(forceRefresh),
+        filter: (term) => filterMonsters(term),
+        adminActions: [
+            { id: 'btn-add-monster', label: '+ Add Monster', primary: true, event: 'ac:open-monster-form' },
+            { id: 'btn-manage-monsters-options', label: '⚙️ Configure Usage', primary: false, event: 'ac:open-usage-options' }
         ]
     }
 };
@@ -370,6 +383,39 @@ export async function init() {
         const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
         if (activeTab === 'bastions') {
             await TAB_REGISTRY['bastions'].init(true);
+        }
+    });
+
+    // Listen for admin toolbar action to open monster form
+    window.addEventListener('ac:open-monster-form', () => {
+        openMonsterForm();
+    });
+
+    // Listen for admin toolbar action to open shared usage options
+    window.addEventListener('ac:open-usage-options', () => {
+        openUsageOptionsModal();
+    });
+
+    // Listen for admin toolbar action to open monster options (backward compatibility)
+    window.addEventListener('ac:open-monsters-options', () => {
+        openUsageOptionsModal();
+    });
+
+    // Listen for monster mutations across tabs to ensure view remains synced
+    window.addEventListener('ac:monsters-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'monsters') {
+            await TAB_REGISTRY['monsters'].init(true);
+        }
+    });
+
+    // Listen for shared usage updates across tabs to ensure view remains synced
+    window.addEventListener('ac:usage-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'monsters') {
+            await TAB_REGISTRY['monsters'].init(true);
+        } else if (activeTab === 'item-properties') {
+            await TAB_REGISTRY['item-properties'].init(true);
         }
     });
 

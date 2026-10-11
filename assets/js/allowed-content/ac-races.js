@@ -97,6 +97,7 @@ import {
     formatSnippet, 
     renderSourceBadges, 
     renderSourceTagPicker,
+    renderRulesetPill,
     renderMarkdownLinks 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal } from './ac-options-manager.js';
@@ -596,7 +597,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                                 ${lineageSummaryHtml}
                             </td>
                             <td class="col-ruleset" style="text-align: center;">
-                                <span class="ruleset-pill ruleset-${esc(race.ruleset || '2014')}">${esc(race.ruleset || '2014')}</span>
+                                ${renderRulesetPill(race.ruleset || '2014')}
                             </td>
                             <td class="col-size" style="text-align: center;">
                                 ${esc(race.size || subs[0]?.size || 'M')}
@@ -655,7 +656,7 @@ function renderAccordionTable(isAdmin = false, tableId = 'races-accordion-table'
                                                     return `
                                                         <tr data-subrace-id="${esc(sub.id)}" data-race-id="${esc(race.id)}" data-sub-idx="${sIdx}">
                                                             <td><strong>${esc(subLabel)}</strong></td>
-                                                            <td style="text-align: center;"><span class="ruleset-pill ruleset-${esc(sub.ruleset || race.ruleset || '2014')}">${esc(sub.ruleset || race.ruleset || '2014')}</span></td>
+                                                            <td style="text-align: center;">${renderRulesetPill(sub.ruleset || race.ruleset || '2014')}</td>
                                                             <td style="text-align: center;">${esc(sub.size || 'M')}</td>
                                                             <td style="text-align: center;">${esc(subSpeed)}</td>
                                                             <td>${esc(sub.language || 'Common')}</td>
@@ -716,7 +717,23 @@ function setupControls() {
             } else {
                 expandedRaceIds.clear();
             }
-            renderView();
+            toggleAllBtn.textContent = allExpanded ? 'Collapse All ▲' : 'Expand All ▼';
+
+            container.querySelectorAll('.ac-accordion-parent-row').forEach(row => {
+                const raceId = row.dataset.raceId;
+                const isExp = expandedRaceIds.has(raceId);
+                row.classList.toggle('expanded', isExp);
+                const chevron = row.querySelector('.accordion-chevron');
+                if (chevron) chevron.textContent = isExp ? '▼' : '▶';
+                const hoverIcon = row.querySelector('.row-hover-icon');
+                if (hoverIcon) hoverIcon.textContent = isExp ? 'Collapse ▲' : 'Expand ▼';
+            });
+
+            container.querySelectorAll('.ac-species-drawer-row').forEach(drawer => {
+                const raceId = drawer.id.replace('drawer-', '');
+                const isExp = expandedRaceIds.has(raceId);
+                drawer.classList.toggle('ac-drawer-collapsed', !isExp);
+            });
         };
     }
 }
@@ -740,12 +757,35 @@ function attachRowListeners() {
             const hasSubraces = subs.length > 1 || (subs[0] && subs[0].subrace && subs[0].subrace.toLowerCase() !== 'none' && subs[0].subrace !== '(none)');
 
             if (hasSubraces) {
-                if (expandedRaceIds.has(raceId)) {
-                    expandedRaceIds.delete(raceId);
-                } else {
+                const isNowExpanded = !expandedRaceIds.has(raceId);
+                if (isNowExpanded) {
                     expandedRaceIds.add(raceId);
+                } else {
+                    expandedRaceIds.delete(raceId);
                 }
-                renderView();
+
+                row.classList.toggle('expanded', isNowExpanded);
+                const chevron = row.querySelector('.accordion-chevron');
+                if (chevron) chevron.textContent = isNowExpanded ? '▼' : '▶';
+                const hoverIcon = row.querySelector('.row-hover-icon');
+                if (hoverIcon) hoverIcon.textContent = isNowExpanded ? 'Collapse ▲' : 'Expand ▼';
+
+                const drawer = container.querySelector(`#drawer-${raceId}`);
+                if (drawer) {
+                    drawer.classList.toggle('ac-drawer-collapsed', !isNowExpanded);
+                }
+
+                // Update Toggle All button state
+                const toggleAllBtn = document.getElementById('accordion-toggle-all-btn');
+                if (toggleAllBtn) {
+                    const speciesWithSubraces = filteredRaces.filter(r => {
+                        const s = r.resolvedSubraces || r.subraces || [];
+                        return s.length > 1 || (s[0] && s[0].subrace && s[0].subrace.toLowerCase() !== 'none' && s[0].subrace !== '(none)');
+                    });
+                    const totalExpanded = speciesWithSubraces.filter(r => expandedRaceIds.has(r.id)).length;
+                    allExpanded = speciesWithSubraces.length > 0 && totalExpanded === speciesWithSubraces.length;
+                    toggleAllBtn.textContent = allExpanded ? 'Collapse All ▲' : 'Expand All ▼';
+                }
             } else {
                 showRaceDetail(race, 0);
             }
@@ -828,7 +868,7 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
         <div class="detail-grid">
             <div class="detail-item">
                 <label>Ruleset</label>
-                <value><span class="ruleset-pill ruleset-${esc(currentSub.ruleset || race.ruleset || '2014')}">${esc(currentSub.ruleset || race.ruleset || '2014')}</span></value>
+                <value>${renderRulesetPill(currentSub.ruleset || race.ruleset || '2014')}</value>
             </div>
             <div class="detail-item">
                 <label>Size</label>

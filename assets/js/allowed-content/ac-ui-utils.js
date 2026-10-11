@@ -156,7 +156,7 @@ export function initTooltips() {
                 targetContainer.appendChild(tooltip);
             }
 
-            tooltip.innerHTML = tipText;
+            tooltip.textContent = tipText;
             tooltip.classList.add('active');
             active = true;
 

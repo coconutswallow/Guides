@@ -59,6 +59,7 @@ import {
     renderMarkdownLinks,
     formatExpandableText,
     attachExpandableTextListeners,
+    renderRulesetPill,
     showToast
 } from './ac-ui-utils.js';
 
@@ -416,7 +417,7 @@ function renderFSTbody(isAdmin) {
     return filteredFS.map(s => `
         <tr data-id="${esc(s.id)}" data-type="fs" style="cursor: pointer;">
             <td><strong>${esc(s.name)}</strong></td>
-            <td style="text-align: center;"><span class="ruleset-pill ruleset-${esc(s.ruleset)}">${esc(s.ruleset)}</span></td>
+            <td style="text-align: center;">${renderRulesetPill(s.ruleset)}</td>
             <td>${esc(s.classes || 'Any')}</td>
             <td style="text-align: center;">${renderSourceBadges(s.source)}</td>
             <td>${formatAdvice(s.notes_advice)}</td>
@@ -447,7 +448,7 @@ function renderAITbody(isAdmin) {
     return filteredAI.map(i => `
         <tr data-id="${esc(i.id)}" data-type="ai" style="cursor: pointer;">
             <td><strong>${esc(i.name)}</strong></td>
-            <td style="text-align: center;"><span class="ruleset-pill ruleset-${esc(i.ruleset)}">${esc(i.ruleset)}</span></td>
+            <td style="text-align: center;">${renderRulesetPill(i.ruleset)}</td>
             <td>${esc(i.item_prereq || '—')}</td>
             <td style="text-align: center;"><span class="ruleset-pill" style="opacity: 0.85;">${esc(i.requires_attunement || 'No')}</span></td>
             <td style="text-align: center;"><code>${esc(String(i.level_prereq || 'Any'))}</code></td>
@@ -480,7 +481,7 @@ function renderEITbody(isAdmin) {
     return filteredEI.map(v => `
         <tr data-id="${esc(v.id)}" data-type="ei" style="cursor: pointer;">
             <td><strong>${esc(v.name)}</strong></td>
-            <td style="text-align: center;"><span class="ruleset-pill ruleset-${esc(v.ruleset)}">${esc(v.ruleset)}</span></td>
+            <td style="text-align: center;">${renderRulesetPill(v.ruleset)}</td>
             <td style="text-align: center;"><code>${esc(v.pact_prereq || 'Any')}</code></td>
             <td>${esc(v.other_prereq || 'None')}</td>
             <td style="text-align: center;"><code>${esc(String(v.level_prereq || 'Any'))}</code></td>
@@ -742,7 +743,7 @@ function showDetailModal(item, categoryLabel) {
         <div class="detail-grid">
             <div class="detail-item">
                 <label>Ruleset</label>
-                <value><span class="ruleset-pill ruleset-${esc(item.ruleset)}">${esc(item.ruleset)}</span></value>
+                <value>${renderRulesetPill(item.ruleset)}</value>
             </div>
             <div class="detail-item">
                 <label>Source</label>
