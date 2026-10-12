@@ -606,6 +606,23 @@ export async function getLoot() {
                 name,
                 notes,
                 display_order
+            ),
+            tier_id,
+            tier:tier_id (
+                id,
+                code,
+                name,
+                tier_group,
+                award_type,
+                min_apl,
+                multisession_sessions,
+                dm_requirement,
+                description,
+                loot_tier_rules,
+                reward_tier_rules,
+                consumable_rules,
+                permanent_rules,
+                display_order
             )
         `, [
             { column: 'display_order', ascending: true },
@@ -616,6 +633,123 @@ export async function getLoot() {
         return [];
     }
 }
+
+/**
+ * Creates a new Loot record.
+ * 
+ * @param {Object} lootData 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function createLoot(lootData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_loot')
+            .insert(lootData)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates a Loot record by ID.
+ * 
+ * @param {string} id - UUID
+ * @param {Object} updates 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function updateLoot(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_loot')
+            .update({ ...updates, updated_at: new Date().toISOString() })
+            .eq('id', id)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Loot record by ID.
+ * 
+ * @param {string} id - UUID
+ * @returns {Promise<{success: boolean, error: Error|null}>}
+ */
+export async function deleteLoot(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_loot')
+            .delete()
+            .eq('id', id);
+        return { success: !error, error };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Inserts a new Loot Category.
+ * 
+ * @param {Object} catData 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function insertLootCategory(catData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_loot_categories')
+            .insert(catData)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates a Loot Category by ID.
+ * 
+ * @param {string} id - UUID
+ * @param {Object} updates 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function updateLootCategory(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_loot_categories')
+            .update({ ...updates, updated_at: new Date().toISOString() })
+            .eq('id', id)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Loot Category by ID.
+ * 
+ * @param {string} id - UUID
+ * @returns {Promise<{success: boolean, error: Error|null}>}
+ */
+export async function deleteLootCategory(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_loot_categories')
+            .delete()
+            .eq('id', id);
+        return { success: !error, error };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
 
 /**
  * Fetch all Other Rewards Categories from Supabase.
@@ -638,7 +772,7 @@ export async function getOtherRewardsCategories() {
 }
 
 /**
- * Fetch all Other Rewards from Supabase, including joined category info.
+ * Fetch all Other Rewards from Supabase, including joined category and tier info.
  * 
  * @returns {Promise<Array>} Array of reward objects
  */
@@ -652,6 +786,20 @@ export async function getOtherRewards() {
                 name,
                 notes,
                 display_order
+            ),
+            tier:tier_id (
+                id,
+                code,
+                name,
+                tier_group,
+                award_type,
+                min_apl,
+                multisession_sessions,
+                dm_requirement,
+                description,
+                reward_tier_rules,
+                consumable_rules,
+                permanent_rules
             )
         `, [
             { column: 'display_order', ascending: true },
@@ -660,6 +808,122 @@ export async function getOtherRewards() {
     } catch (error) {
         console.error('Error fetching other rewards (check if table exists):', error);
         return [];
+    }
+}
+
+/**
+ * Creates a new Other Reward record.
+ * 
+ * @param {Object} rewardData 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function createOtherReward(rewardData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_other_rewards')
+            .insert(rewardData)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an Other Reward record by ID.
+ * 
+ * @param {string} id - UUID
+ * @param {Object} updates 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function updateOtherReward(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_other_rewards')
+            .update({ ...updates, updated_at: new Date().toISOString() })
+            .eq('id', id)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes an Other Reward record by ID.
+ * 
+ * @param {string} id - UUID
+ * @returns {Promise<{success: boolean, error: Error|null}>}
+ */
+export async function deleteOtherReward(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_other_rewards')
+            .delete()
+            .eq('id', id);
+        return { success: !error, error };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}
+
+/**
+ * Inserts a new Other Rewards Category.
+ * 
+ * @param {Object} catData 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function insertOtherRewardsCategory(catData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_other_rewards_categories')
+            .insert(catData)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Updates an Other Rewards Category by ID.
+ * 
+ * @param {string} id - UUID
+ * @param {Object} updates 
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function updateOtherRewardsCategory(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_other_rewards_categories')
+            .update({ ...updates, updated_at: new Date().toISOString() })
+            .eq('id', id)
+            .select()
+            .single();
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes an Other Rewards Category by ID.
+ * 
+ * @param {string} id - UUID
+ * @returns {Promise<{success: boolean, error: Error|null}>}
+ */
+export async function deleteOtherRewardsCategory(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_other_rewards_categories')
+            .delete()
+            .eq('id', id);
+        return { success: !error, error };
+    } catch (err) {
+        return { success: false, error: err };
     }
 }
 
@@ -2843,5 +3107,148 @@ export async function updateSharedUsage(usageList) {
     return { success: true, data: formatted };
 }
 
+// ============================================================================
+// TIERS SERVICE METHODS (ac_tiers)
+// ============================================================================
 
+let tiersCache = null;
+let tiersMap = null;
 
+/**
+ * Fetches all canonical Tiers from public.ac_tiers ordered by display_order.
+ * 
+ * @returns {Promise<Array<Object>>} Array of tier records
+ */
+export async function getTiers() {
+    try {
+        const { data, error } = await supabase
+            .from('ac_tiers')
+            .select('*')
+            .order('display_order', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching tiers:', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('Exception fetching tiers:', err);
+        return [];
+    }
+}
+
+/**
+ * In-memory cached getter for all canonical Tiers.
+ * 
+ * @param {boolean} [forceRefresh=false]
+ * @returns {Promise<Array<Object>>}
+ */
+export async function getTiersCached(forceRefresh = false) {
+    if (forceRefresh || !tiersCache) {
+        tiersCache = await getTiers();
+        tiersMap = new Map();
+        for (const t of tiersCache) {
+            if (t.code) tiersMap.set(t.code, t);
+            if (t.name) tiersMap.set(t.name, t);
+            if (t.id) tiersMap.set(t.id, t);
+        }
+    }
+    return tiersCache;
+}
+
+/**
+ * Returns a Map of all canonical Tiers keyed by code, name, and id.
+ * 
+ * @param {boolean} [forceRefresh=false]
+ * @returns {Promise<Map<string, Object>>}
+ */
+export async function getTiersMap(forceRefresh = false) {
+    if (forceRefresh || !tiersMap) {
+        await getTiersCached(forceRefresh);
+    }
+    return tiersMap;
+}
+
+/**
+ * Synchronously retrieves a Tier record by its code, name, or id from the cache.
+ * 
+ * @param {string} key - e.g. 'T0', 'T1_SELECT', 'T1 Select', or UUID
+ * @returns {Object|null}
+ */
+export function getTierByKey(key) {
+    if (!key || !tiersMap) return null;
+    return tiersMap.get(key) || null;
+}
+
+/**
+ * Updates a Tier record by ID.
+ * 
+ * @param {string} id - UUID of tier
+ * @param {Object} updates - Fields to update
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function updateTier(id, updates) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_tiers')
+            .update({ ...updates, updated_at: new Date().toISOString() })
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (!error) {
+            tiersCache = null;
+            tiersMap = null;
+        }
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Inserts a new Tier record.
+ * 
+ * @param {Object} tierData - Tier properties
+ * @returns {Promise<{data: Object|null, error: Error|null}>}
+ */
+export async function insertTier(tierData) {
+    try {
+        const { data, error } = await supabase
+            .from('ac_tiers')
+            .insert(tierData)
+            .select()
+            .single();
+
+        if (!error) {
+            tiersCache = null;
+            tiersMap = null;
+        }
+        return { data, error };
+    } catch (err) {
+        return { data: null, error: err };
+    }
+}
+
+/**
+ * Deletes a Tier record by ID.
+ * 
+ * @param {string} id - UUID of tier
+ * @returns {Promise<{success: boolean, error: Error|null}>}
+ */
+export async function deleteTier(id) {
+    try {
+        const { error } = await supabase
+            .from('ac_tiers')
+            .delete()
+            .eq('id', id);
+
+        if (!error) {
+            tiersCache = null;
+            tiersMap = null;
+        }
+        return { success: !error, error };
+    } catch (err) {
+        return { success: false, error: err };
+    }
+}

@@ -54,6 +54,9 @@ node supabase/migrations/run_<migration>.js --execute --prod
 | **13** | 2026-10-10 | **Races Ruleset Normalization** | `20261010_ac_races_ruleset.sql` | `run_20261010_ac_races_ruleset.js` | ✅ Applied | ✅ Applied |
 | **14** | 2026-10-11 | **Item Properties Normalization** | `20261011_ac_item_properties_normalization.sql` | `run_20261011_ac_item_properties_normalization.js` | ✅ Applied | ✅ Applied |
 | **15** | 2026-10-11 | **Monsters Normalization** | `20261011_ac_monsters_normalization.sql` | `run_20261011_ac_monsters_normalization.js` | ✅ Applied | ✅ Applied |
+| **16** | 2026-10-11 | **Shared Usage Lookup** | `20261011_ac_shared_usage_lookup.sql` | `run_20261011_ac_shared_usage_lookup.js` | ✅ Applied | ✅ Applied |
+| **17** | 2026-10-12 | **Tiers Normalization** | `20261012_ac_tiers_normalization.sql` | `run_20261012_ac_tiers_normalization.js` | ✅ Applied | ✅ Applied |
+| **18** | 2026-10-12 | **Other Rewards Normalization** | `20261012_ac_other_rewards_normalization.sql` | `run_20261012_ac_other_rewards_normalization.js` | ✅ Applied | ⏳ Pending (DEV Only) |
 
 ---
 
@@ -699,3 +702,216 @@ node supabase/migrations/run_20261011_ac_monsters_normalization.js --execute --p
 | :--- | :---: | :---: | :--- | :--- |
 | DEV | ✅ | ✅ | 2026-10-11 | Verified. 'usage' lookup record seeded. |
 | PRODUCTION | ✅ | ✅ | 2026-10-11 | Verified. 'usage' lookup record seeded. |
+
+---
+
+### Step 17: AC Tiers Normalization (`ac_tiers`)
+- **Date**: 2026-10-12
+- **Target Table**: `public.ac_tiers`
+- **Runner**: `supabase/migrations/run_20261012_ac_tiers_normalization.js`
+- **SQL Migration**: `supabase/migrations/20261012_ac_tiers_normalization.sql`
+- **Source Spreadsheets**: `Allowed_Content_20261004.xlsx` (Loot & Other Rewards tabs), `AC_Tiers.xlsx`
+- **Dependencies**: None (Foundational lookup for Loot and Other Rewards).
+
+#### Key Changes & Architectural Alignment
+1. **Canonical Tiers Reference Table**:
+   - Reconciled the 3-tier nested hierarchy of rules (Category -> Tier -> Consumable/Permanent) across the upcoming Loot and Other Rewards tabs.
+   - Created `public.ac_tiers` with:
+     - `code VARCHAR(32) UNIQUE NOT NULL`
+     - `name VARCHAR(64) NOT NULL`
+     - `tier_group VARCHAR(16) NOT NULL` ('T0', 'T1', 'T2', 'T3', 'T4', 'Tier S', 'Special')
+     - `award_type VARCHAR(32) NOT NULL` ('Rolled', 'Select', 'Multisession', 'Special')
+     - `min_apl INTEGER` (APL thresholds: 1, 3, 5, 11, 17, 20)
+     - `multisession_sessions INTEGER` (3, 5, 8 session requirements)
+     - `dm_requirement VARCHAR(32)` ('Any DM', 'Trial DM', 'Full DM Only')
+     - `description TEXT NOT NULL` (Universal baseline tier rules)
+     - `loot_tier_rules TEXT` (Specific magic item distribution rules)
+     - `reward_tier_rules TEXT` (Specific supernatural reward, charm, and mount rules)
+     - `consumable_rules TEXT` (Duplicate allowances: 4 for T0, 3 for T1–T3, ammo limits 15/20)
+     - `permanent_rules TEXT` (Permanent item limits: max 1 for T0, 50% session caps, Full DM locks)
+     - `display_order DOUBLE PRECISION NOT NULL` (Fractional indexing)
+2. **Canonical 17 Seed Tiers**:
+   - Populated: `T0`, `T1`, `T1 Select`, `T1+`, `T2`, `T2 Select`, `T2+`, `T3`, `T3 Select`, `T3+`, `T4`, `T4 Select`, `T4+`, `Tier S`, `T2+/T3+/T4+`, `Varies`, `—`.
+3. **Staff Admin & Engineer RLS Policies**:
+   - Public read access (`SELECT`) for `anon, authenticated`.
+   - Full management (`ALL`) for `service_role`.
+   - Full management (`ALL`) for authenticated users with `Admin` or `Engineer` roles in `discord_users.roles`.
+
+#### Commands to Run
+```bash
+# 1. Dry run on DEV
+node supabase/migrations/run_20261012_ac_tiers_normalization.js --dry-run
+
+# 2. Execute on DEV
+node supabase/migrations/run_20261012_ac_tiers_normalization.js --execute
+
+# 3. Dry run on PRODUCTION
+node supabase/migrations/run_20261012_ac_tiers_normalization.js --dry-run --prod
+
+# 4. Execute on PRODUCTION
+node supabase/migrations/run_20261012_ac_tiers_normalization.js --execute --prod
+```
+
+#### Verification Criteria
+- Table `public.ac_tiers` exists.
+- Exactly 17 rows present.
+- All 17 codes match canonical definitions.
+- RLS policies active for public read, service role, and staff admin/engineer.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Verified. 17 rows, complete rule descriptions, RLS active. |
+| PRODUCTION | ✅ | ✅ | 2026-10-12 | Verified. 17 rows, complete rule descriptions, RLS active. |
+
+---
+
+### Step 18: Other Rewards Normalization (`ac_other_rewards`, `ac_other_rewards_categories`)
+- **Date**: 2026-10-12
+- **Target Tables**: `public.ac_other_rewards`, `public.ac_other_rewards_categories`
+- **Runner**: `supabase/migrations/run_20261012_ac_other_rewards_normalization.js`
+- **SQL Migration**: `supabase/migrations/20261012_ac_other_rewards_normalization.sql`
+- **Source Spreadsheets**: `Allowed_Content_20261004.xlsx` (Other Rewards tab), `AC_Other_Rewards.xlsx`, `AC_Other_Reward_Cat.xlsx`, `AC_Other_Reward_Type.xlsx`
+- **Dependencies**: Step 01 (`ac_sources`), Step 17 (`ac_tiers`).
+
+#### Key Changes & Architectural Alignment
+1. **Backups Created**:
+   - `public.ac_other_rewards_legacy_backup` and `public.ac_other_rewards_categories_legacy_backup`.
+2. **Category Normalization (Level 1 Scope)**:
+   - Reset bloated legacy categories (82 breadcrumbs) down to **5 canonical categories**:
+     - `Dark Gifts` (10 items)
+     - `Supernatural Gifts` (64 items)
+     - `Mythic Gifts (Tier S)` (2 items)
+     - `Charms` (81 items)
+     - `Miscellaneous` (230 items)
+   - Populated complete Level 1 rules into `notes` for each category (trade bans, PB limits, Long Rest swaps).
+3. **Reward Items Normalization**:
+   - Populated exactly **387 canonical rewards** (`REW_0001` through `REW_0387`).
+   - Links `category_id` via foreign key to `public.ac_other_rewards_categories(id)`.
+   - Links `tier_id` via foreign key to `public.ac_tiers(id)`.
+   - Populated `tier_display` for 100% spreadsheet label parity (`T0`, `T1 Select`, `T1 Select (DM Select)`, etc.).
+   - Populated `is_dm_select` boolean and `event_category` flags.
+   - Normalized source keys to `TEXT[]` referencing canonical `ac_sources.source_key`s with GIN index.
+   - Converted `display_order` to `DOUBLE PRECISION` (fractional indexing sequence).
+4. **Staff Admin & Engineer RLS Policies**:
+   - Public read access (`SELECT`) for `anon, authenticated`.
+   - Full management (`ALL`) for `service_role`.
+   - Full management (`ALL`) for authenticated users with `Admin` or `Engineer` roles in `discord_users.roles`.
+
+#### Commands to Run
+```bash
+# 1. Dry run on DEV
+node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --dry-run
+
+# 2. Execute on DEV
+node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --execute
+
+# 3. Dry run on PRODUCTION (Pending)
+node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --dry-run --prod
+
+# 4. Execute on PRODUCTION (Pending)
+node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --execute --prod
+```
+
+#### Verification Criteria
+- Categories count: exactly 5.
+- Total rewards: exactly 387.
+- Distinct `check_id` sequence: `REW_0001` through `REW_0387` (387 distinct).
+- Zero orphan category or tier foreign keys.
+- All records have `source` as `TEXT[]` and `display_order` as `DOUBLE PRECISION`.
+- RLS policies active on both tables.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Verified. 387 rows, 5 categories, 0 orphan FKs, RLS active. |
+| PRODUCTION | ⏳ | ⏳ | — | Pending (Executed in DEV only per user instruction). |
+
+---
+
+### Step 19: AC Loot Normalization (`ac_loot`, `ac_loot_categories`, `ac_loot_tags`)
+- **Date**: 2026-10-12
+- **Source Spreadsheet**: `Allowed_Content_20261004.xlsx` (Loot tab)
+- **Draft Reference**: `Allowed_Content_20261004.xlsx` (Loot)
+- **Dependencies**: Step 17 (`public.ac_tiers`), Step 1 (`public.ac_sources`)
+- **Files**:
+  - `supabase/migrations/20261012_ac_loot_normalization.sql`
+  - `supabase/migrations/run_20261012_ac_loot_normalization.js`
+  - `.context/current-tasks/generate_loot_sql.py`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_loot_normalization.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_loot_normalization.js --execute`
+
+#### Key Changes
+1. **Legacy Table Archiving**:
+   - Backed up legacy data safely into `public.ac_loot_legacy_backup` (1,351 rows) and `public.ac_loot_categories_legacy_backup` (77 rows).
+2. **Category Normalization (Level 1 Scope)**:
+   - Reset bloated legacy categories (77 navigation breadcrumbs) down to **4 canonical sections**:
+     - `Rolled Loot` (1,006 items)
+     - `Select Loot` (69 items)
+     - `Multisession Loot` (64 items)
+     - `Other Loot` (219 items)
+   - Stored full Level 1 category rules directly in `notes` (`/hgenloot` usage, 50% permanent cap, predetermination eligibility, Full DM locks).
+3. **Loot Items Normalization (Level 2 & Level 3 Scope)**:
+   - Populated exactly **1,358 canonical items** (`LOT_0001` through `LOT_1358`).
+   - Filtered out 3 navigation anchor rows (`2021 Hawthorne Coliseum`, `2025 Sky District`, `Feast of the Moon`).
+   - Decomposed composite tier strings (e.g. `T2 Select Permanent (DM Select)`) into:
+     - `tier_id` $\rightarrow$ foreign key to `public.ac_tiers(id)`
+     - `nature` $\rightarrow$ `'Permanent'` (1,080), `'Consumable'` (267), or `'Varies'` (11)
+     - `is_dm_select` $\rightarrow$ `boolean`
+     - `event_category` $\rightarrow$ `'Exclusive Event'`, `'Seasonal Event'`, or `NULL`
+     - `tier_display` $\rightarrow$ original composite string for 100% UI fidelity
+   - Mapped source tokens to `TEXT[]` referencing canonical `ac_sources.source_key`s.
+   - Converted `display_order` to `DOUBLE PRECISION` for fractional sequence indexing.
+4. **Staff Admin, Auditor, and Engineer RLS Policies**:
+   - Public read access (`SELECT`) for all users.
+   - Full management (`INSERT`, `UPDATE`, `DELETE`) for `Admin`, `Auditor`, and `Engineer` roles via `discord_users.roles`.
+
+#### Verification Criteria
+- Categories count: exactly 4.
+- Total loot items: exactly 1,358.
+- Distinct `check_id` sequence: `LOT_0001` through `LOT_1358` (1,358 distinct).
+- Zero orphan category or tier foreign keys.
+- RLS policies active across `ac_loot`, `ac_loot_categories`, and `ac_loot_tags`.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Verified. 1,358 items, 4 categories, 0 orphan FKs, RLS active. |
+| PRODUCTION | ⏳ | ⏳ | — | Pending (Executed in DEV only per user instruction). |
+
+---
+
+### Step 20: AC Other Rewards Deduplication (`ac_other_rewards`)
+- **Date**: 2026-10-12
+- **Scope**: Deduplication of accidental source spreadsheet repeat rows REW_0376 and REW_0377
+- **Files**:
+  - `supabase/migrations/20261011_ac_other_rewards_deduplication.sql`
+  - `supabase/migrations/run_20261011_ac_other_rewards_deduplication.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261011_ac_other_rewards_deduplication.js --dry-run`
+  - `node supabase/migrations/run_20261011_ac_other_rewards_deduplication.js --execute`
+
+#### Key Changes
+1. **Accidental Duplicate Removal**:
+   - Removed `REW_0376` (duplicate "Quirk" entry mistakenly inserted before Story Outcomes).
+   - Removed `REW_0377` (duplicate "Piety" entry mistakenly inserted before Story Outcomes).
+2. **Canonical Entry Enrichment**:
+   - Preserved and synchronized the full `notes_advice` instructions onto the canonical `REW_0159` ("Quirk") and `REW_0161` ("Piety") records.
+3. **Table Item Count**:
+   - Total items normalized from 387 to **385 items**.
+
+#### Verification Criteria
+- `public.ac_other_rewards` total count: 385 items.
+- Duplicate entries `REW_0376` and `REW_0377` verified removed.
+- Exactly 1 canonical `Quirk` entry and 1 canonical `Piety` entry.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Verified. 385 items, REW_0376/REW_0377 removed, canonical notes enriched. |
+| PRODUCTION | ⏳ | ⏳ | — | Pending (Executed in DEV only per user instruction). |
+
+
+
+

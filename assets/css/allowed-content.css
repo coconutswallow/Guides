@@ -1238,7 +1238,9 @@ select.ac-form-input {
 .ac-misc-toolbar,
 .ac-downtime-toolbar,
 .ac-item-properties-toolbar,
-.ac-sources-toolbar {
+.ac-sources-toolbar,
+.ac-other-rewards-toolbar,
+.ac-loot-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1259,7 +1261,9 @@ select.ac-form-input {
 .ac-feats-stats,
 .ac-spells-stats,
 .ac-misc-stats,
-.ac-sources-stats {
+.ac-sources-stats,
+.ac-other-rewards-stats,
+.ac-loot-stats {
     font-size: 0.9rem;
     color: var(--color-text-secondary);
     font-weight: 600;
@@ -1274,7 +1278,9 @@ select.ac-form-input {
 .ac-languages-stats strong,
 .ac-feats-stats strong,
 .ac-spells-stats strong,
-.ac-misc-stats strong {
+.ac-misc-stats strong,
+.ac-other-rewards-stats strong,
+.ac-loot-stats strong {
     color: var(--color-primary);
     font-weight: 700;
 }
@@ -1286,7 +1292,9 @@ select.ac-form-input {
 .ac-feats-controls,
 .ac-spells-controls,
 .ac-misc-controls,
-.ac-sources-controls {
+.ac-sources-controls,
+.ac-other-rewards-controls,
+.ac-loot-controls {
     display: flex;
     align-items: center;
     gap: 0.65rem;
@@ -1577,7 +1585,9 @@ select.ac-form-input {
 [data-theme="dark"] .ac-misc-toolbar,
 [data-theme="dark"] .ac-downtime-toolbar,
 [data-theme="dark"] .ac-item-properties-toolbar,
-[data-theme="dark"] .ac-sources-toolbar {
+[data-theme="dark"] .ac-sources-toolbar,
+[data-theme="dark"] .ac-other-rewards-toolbar,
+[data-theme="dark"] .ac-loot-toolbar {
     background: var(--color-card-bg, #242424);
     border-color: #383838;
 }
@@ -1589,7 +1599,9 @@ select.ac-form-input {
 [data-theme="dark"] .ac-feats-stats strong,
 [data-theme="dark"] .ac-spells-stats strong,
 [data-theme="dark"] .ac-misc-stats strong,
-[data-theme="dark"] .ac-sources-stats strong {
+[data-theme="dark"] .ac-sources-stats strong,
+[data-theme="dark"] .ac-other-rewards-stats strong,
+[data-theme="dark"] .ac-loot-stats strong {
     color: var(--color-primary, #D4A574);
 }
 
@@ -2227,10 +2239,72 @@ select.ac-form-input {
     text-align: center;
 }
 
-/* Table Category Group Subheading (Shared across Equipment, Downtime, and Bastions) */
+/* Other Rewards Table Specific Columns */
+#other-rewards-table .col-name {
+    min-width: 180px;
+}
+
+#other-rewards-table .col-type {
+    width: 140px;
+}
+
+#other-rewards-table .col-tier {
+    width: 110px;
+    text-align: center;
+}
+
+#other-rewards-table .col-source {
+    width: 110px;
+    text-align: center;
+}
+
+#other-rewards-table .col-desc {
+    min-width: 240px;
+}
+
+#other-rewards-table .col-notes {
+    min-width: 240px;
+}
+
+#other-rewards-table .col-actions {
+    width: 85px;
+    text-align: center;
+}
+
+/* Loot Table Specific Columns */
+#loot-table .col-name {
+    min-width: 180px;
+}
+
+#loot-table .col-type {
+    width: 140px;
+}
+
+#loot-table .col-tier {
+    width: 120px;
+    text-align: center;
+}
+
+#loot-table .col-source {
+    width: 110px;
+    text-align: center;
+}
+
+#loot-table .col-desc {
+    min-width: 220px;
+}
+
+#loot-table .col-actions {
+    width: 85px;
+    text-align: center;
+}
+
+/* Table Category Group Subheading (Shared across Equipment, Downtime, Bastions, Other Rewards, and Loot) */
 #equipment-table tr.ac-table-group-header,
 #downtime-table tr.ac-table-group-header,
-#bastions-table tr.ac-table-group-header {
+#bastions-table tr.ac-table-group-header,
+#other-rewards-table tr.ac-table-group-header,
+#loot-table tr.ac-table-group-header {
     background: #ede3d2;
     background: linear-gradient(90deg, #ede2cf 0%, #f7f2e8 100%);
     cursor: pointer;
@@ -2240,28 +2314,36 @@ select.ac-form-input {
 
 #equipment-table tbody tr.ac-table-group-header:hover,
 #downtime-table tbody tr.ac-table-group-header:hover,
-#bastions-table tbody tr.ac-table-group-header:hover {
+#bastions-table tbody tr.ac-table-group-header:hover,
+#other-rewards-table tbody tr.ac-table-group-header:hover,
+#loot-table tbody tr.ac-table-group-header:hover {
     background: #e4d7bf;
     background: linear-gradient(90deg, #e4d7bf 0%, #f2ebd9 100%);
 }
 
 [data-theme="dark"] #equipment-table tr.ac-table-group-header,
 [data-theme="dark"] #downtime-table tr.ac-table-group-header,
-[data-theme="dark"] #bastions-table tr.ac-table-group-header {
+[data-theme="dark"] #bastions-table tr.ac-table-group-header,
+[data-theme="dark"] #other-rewards-table tr.ac-table-group-header,
+[data-theme="dark"] #loot-table tr.ac-table-group-header {
     background: #2a221d;
     background: linear-gradient(90deg, #2d241f 0%, #201a16 100%);
 }
 
 [data-theme="dark"] #equipment-table tbody tr.ac-table-group-header:hover,
 [data-theme="dark"] #downtime-table tbody tr.ac-table-group-header:hover,
-[data-theme="dark"] #bastions-table tbody tr.ac-table-group-header:hover {
+[data-theme="dark"] #bastions-table tbody tr.ac-table-group-header:hover,
+[data-theme="dark"] #other-rewards-table tbody tr.ac-table-group-header:hover,
+[data-theme="dark"] #loot-table tbody tr.ac-table-group-header:hover {
     background: #362c26;
     background: linear-gradient(90deg, #382c23 0%, #26201b 100%);
 }
 
 #equipment-table tr.ac-table-group-header td,
 #downtime-table tr.ac-table-group-header td,
-#bastions-table tr.ac-table-group-header td {
+#bastions-table tr.ac-table-group-header td,
+#other-rewards-table tr.ac-table-group-header td,
+#loot-table tr.ac-table-group-header td {
     padding: 0.75rem 1rem;
     border-top: 2px solid var(--color-primary);
     border-bottom: 1px solid #d5c8b5;
@@ -2270,7 +2352,9 @@ select.ac-form-input {
 
 [data-theme="dark"] #equipment-table tr.ac-table-group-header td,
 [data-theme="dark"] #downtime-table tr.ac-table-group-header td,
-[data-theme="dark"] #bastions-table tr.ac-table-group-header td {
+[data-theme="dark"] #bastions-table tr.ac-table-group-header td,
+[data-theme="dark"] #other-rewards-table tr.ac-table-group-header td,
+[data-theme="dark"] #loot-table tr.ac-table-group-header td {
     border-top: 2px solid var(--color-primary, #d4af37);
     border-bottom: 1px solid #44372e;
     border-left: 4px solid var(--color-primary, #d4af37);
@@ -2406,5 +2490,249 @@ select.ac-form-input {
     background: #231c17;
     border-color: #40342b;
     color: #ded7c2;
+}
+
+/* ================================================================
+ * OTHER REWARDS & LOOT UI SPECIFIC STYLES
+ * ================================================================ */
+.ac-badge-tier {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: help;
+    background: rgba(var(--palette-brand-main, 139, 38, 20), 0.08);
+    border: 1px solid rgba(var(--palette-brand-main, 139, 38, 20), 0.25);
+    color: var(--color-primary);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.ac-badge-tier:hover {
+    background: rgba(var(--palette-brand-main, 139, 38, 20), 0.16);
+    border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .ac-badge-tier {
+    background: rgba(235, 185, 110, 0.12);
+    border-color: rgba(235, 185, 110, 0.3);
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .ac-badge-tier:hover {
+    background: rgba(235, 185, 110, 0.22);
+    border-color: #ebc88a;
+}
+
+.ac-badge-nature-permanent {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(46, 125, 50, 0.1);
+    border: 1px solid rgba(46, 125, 50, 0.3);
+    color: #2e7d32;
+    white-space: nowrap;
+}
+
+[data-theme="dark"] .ac-badge-nature-permanent {
+    background: rgba(129, 199, 132, 0.15);
+    border-color: rgba(129, 199, 132, 0.4);
+    color: #81c784;
+}
+
+.ac-badge-nature-consumable {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(239, 108, 0, 0.1);
+    border: 1px solid rgba(239, 108, 0, 0.3);
+    color: #ef6c00;
+    white-space: nowrap;
+}
+
+[data-theme="dark"] .ac-badge-nature-consumable {
+    background: rgba(255, 183, 77, 0.15);
+    border-color: rgba(255, 183, 77, 0.4);
+    color: #ffb74d;
+}
+
+.ac-badge-dm-select {
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(156, 39, 176, 0.1);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    color: #8e24aa;
+    white-space: nowrap;
+}
+
+[data-theme="dark"] .ac-badge-dm-select {
+    background: rgba(206, 147, 216, 0.15);
+    border-color: rgba(206, 147, 216, 0.4);
+    color: #ce93d8;
+}
+
+#other-rewards-table tr.ac-table-group-header:hover .ac-group-hover-hint,
+#loot-table tr.ac-table-group-header:hover .ac-group-hover-hint {
+    opacity: 1;
+}
+
+/* Tier Accordion Subheadings (Level 2 under Category in Other Rewards & Loot) */
+#other-rewards-table tr.ac-table-tier-header,
+#loot-table tr.ac-table-tier-header {
+    background: #f5eedf;
+    background: linear-gradient(90deg, #f5eee0 0%, #faf6ee 100%);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    user-select: none;
+}
+
+#other-rewards-table tbody tr.ac-table-tier-header:hover,
+#loot-table tbody tr.ac-table-tier-header:hover {
+    background: #ebe0cc;
+    background: linear-gradient(90deg, #ebe0cc 0%, #f6efe0 100%);
+}
+
+[data-theme="dark"] #other-rewards-table tr.ac-table-tier-header,
+[data-theme="dark"] #loot-table tr.ac-table-tier-header {
+    background: #231b15;
+    background: linear-gradient(90deg, #241c16 0%, #1c1612 100%);
+}
+
+[data-theme="dark"] #other-rewards-table tbody tr.ac-table-tier-header:hover,
+[data-theme="dark"] #loot-table tbody tr.ac-table-tier-header:hover {
+    background: #2e241c;
+    background: linear-gradient(90deg, #30251d 0%, #221b16 100%);
+}
+
+#other-rewards-table tr.ac-table-tier-header td,
+#loot-table tr.ac-table-tier-header td {
+    padding: 0.65rem 1rem 0.65rem 1rem;
+    border-top: 1px dashed #d5c8b5;
+    border-bottom: 1px solid #e5dccb;
+    border-left: 4px solid rgba(var(--palette-brand-main, 139, 38, 20), 0.55);
+}
+
+[data-theme="dark"] #other-rewards-table tr.ac-table-tier-header td,
+[data-theme="dark"] #loot-table tr.ac-table-tier-header td {
+    border-top: 1px dashed #3a3028;
+    border-bottom: 1px solid #332a22;
+    border-left: 4px solid rgba(212, 165, 116, 0.55);
+}
+
+.ac-table-tier-main {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    width: 100%;
+    position: relative;
+}
+
+.ac-table-tier-header .accordion-chevron {
+    display: inline-block;
+    transition: transform 0.2s ease, color 0.15s ease;
+    font-size: 0.75rem;
+    margin-right: 0.2rem;
+    color: var(--color-primary);
+    user-select: none;
+    font-weight: 700;
+}
+
+.ac-table-tier-header.collapsed .accordion-chevron {
+    color: var(--color-text-muted, #8c827a);
+}
+
+.ac-table-tier-title {
+    font-family: var(--font-header, 'Marcellus SC', Georgia, serif);
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: 0.02em;
+    margin: 0;
+}
+
+[data-theme="dark"] .ac-table-tier-title {
+    color: #e8dfc9;
+}
+
+.ac-tier-pill {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.12rem 0.48rem;
+    border-radius: 10px;
+    background: rgba(var(--palette-brand-main, 163, 102, 110), 0.1);
+    color: var(--color-primary);
+    border: 1px solid rgba(var(--palette-brand-main, 163, 102, 110), 0.22);
+}
+
+[data-theme="dark"] .ac-tier-pill {
+    background: rgba(235, 185, 110, 0.12);
+    border-color: rgba(235, 185, 110, 0.25);
+    color: #ebc88a;
+}
+
+.ac-table-tier-notes {
+    font-size: 0.86rem;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    margin: 0;
+    padding: 0;
+    white-space: pre-line;
+    flex: 1 1 auto;
+}
+
+[data-theme="dark"] .ac-table-tier-notes {
+    color: #c9c2ad;
+}
+
+.ac-table-tier-header:hover .ac-group-hover-hint {
+    opacity: 1;
+}
+
+/* Indented subcategory item rows under Miscellaneous */
+#other-rewards-table tr.ac-subrow-indented td.col-name {
+    padding-left: 2rem;
+    position: relative;
+}
+
+#other-rewards-table tr.ac-subrow-indented td.col-name strong::before {
+    content: "↳";
+    display: inline-block;
+    margin-right: 0.4rem;
+    color: var(--color-text-muted, #8c827a);
+    font-weight: normal;
+}
+
+/* Detail Click Hint in tabular view */
+.ac-detail-click-hint {
+    color: var(--color-text-muted, #7c7263);
+    font-style: italic;
+    font-size: 0.88rem;
+    opacity: 0.85;
+    cursor: pointer;
+    transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+tr.ac-row-clickable:hover .ac-detail-click-hint {
+    color: var(--color-primary, #8b1d1d);
+    opacity: 1;
+    text-decoration: underline;
+}
+
+[data-theme="dark"] .ac-detail-click-hint {
+    color: #a89c89;
+}
+
+[data-theme="dark"] tr.ac-row-clickable:hover .ac-detail-click-hint {
+    color: #e5a93c;
 }
 

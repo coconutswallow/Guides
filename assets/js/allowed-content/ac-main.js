@@ -31,6 +31,8 @@ import { initItemProperties, filterItemProperties, openItemPropertyForm } from '
 import { initDowntime, filterDowntime, openDowntimeForm } from './ac-downtime.js';
 import { initBastions, filterBastions, openBastionForm } from './ac-bastions.js';
 import { initMonsters, filterMonsters, openMonsterForm, openMonstersOptionsModal, openUsageOptionsModal } from './ac-monsters.js';
+import { initOtherRewards, filterOtherRewards, openOtherRewardForm, openOtherRewardsOptionsModal } from './ac-other-rewards.js';
+import { initLoot, filterLoot, openLootForm, openLootOptionsModal } from './ac-loot.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
 import { initTooltips, debounce, closeModal } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
@@ -169,18 +171,6 @@ export const TAB_REGISTRY = {
             { id: 'btn-manage-equipment-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-equipment-options' }
         ]
     },
-    'item-properties': {
-        id: 'item-properties',
-        viewId: 'ac-view-item-properties',
-        searchPlaceholder: 'Search item properties, creators, histories, quirks, sentient features...',
-        init: (forceRefresh) => initItemProperties(forceRefresh),
-        filter: (term) => filterItemProperties(term),
-        adminActions: [
-            { id: 'btn-add-item-property', label: '+ Add Item Property', primary: true, event: 'ac:open-item-property-form' },
-            { id: 'btn-manage-item-properties-usage', label: '⚙️ Configure Usage', primary: false, event: 'ac:open-usage-options' },
-            { id: 'btn-manage-item-properties-options', label: '⚙️ Configure Options', primary: false, event: 'ac:open-item-properties-options' }
-        ]
-    },
     downtime: {
         id: 'downtime',
         viewId: 'ac-view-downtime',
@@ -201,6 +191,40 @@ export const TAB_REGISTRY = {
         adminActions: [
             { id: 'btn-add-bastion', label: '+ Add Bastion Facility', primary: true, event: 'ac:open-bastion-form' },
             { id: 'btn-manage-bastions-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-bastions-options' }
+        ]
+    },
+    loot: {
+        id: 'loot',
+        viewId: 'ac-view-loot',
+        searchPlaceholder: 'Search loot, rolled items, select items, magic items, weapons, armor...',
+        init: (forceRefresh) => initLoot(forceRefresh),
+        filter: (term) => filterLoot(term),
+        adminActions: [
+            { id: 'btn-add-loot', label: '+ Add Loot', primary: true, event: 'ac:open-loot-form' },
+            { id: 'btn-manage-loot-categories', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-loot-categories' }
+        ]
+    },
+    'other-rewards': {
+        id: 'other-rewards',
+        viewId: 'ac-view-other-rewards',
+        searchPlaceholder: 'Search other rewards, dark gifts, supernatural gifts, charms, mounts, pets...',
+        init: (forceRefresh) => initOtherRewards(forceRefresh),
+        filter: (term) => filterOtherRewards(term),
+        adminActions: [
+            { id: 'btn-add-other-reward', label: '+ Add Reward', primary: true, event: 'ac:open-other-reward-form' },
+            { id: 'btn-manage-other-rewards-categories', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-other-rewards-categories' }
+        ]
+    },
+    'item-properties': {
+        id: 'item-properties',
+        viewId: 'ac-view-item-properties',
+        searchPlaceholder: 'Search item properties, creators, histories, quirks, sentient features...',
+        init: (forceRefresh) => initItemProperties(forceRefresh),
+        filter: (term) => filterItemProperties(term),
+        adminActions: [
+            { id: 'btn-add-item-property', label: '+ Add Item Property', primary: true, event: 'ac:open-item-property-form' },
+            { id: 'btn-manage-item-properties-usage', label: '⚙️ Configure Usage', primary: false, event: 'ac:open-usage-options' },
+            { id: 'btn-manage-item-properties-options', label: '⚙️ Configure Options', primary: false, event: 'ac:open-item-properties-options' }
         ]
     },
     monsters: {
@@ -416,6 +440,34 @@ export async function init() {
             await TAB_REGISTRY['monsters'].init(true);
         } else if (activeTab === 'item-properties') {
             await TAB_REGISTRY['item-properties'].init(true);
+        }
+    });
+
+    // Listen for admin toolbar actions for Other Rewards
+    window.addEventListener('ac:open-other-reward-form', () => {
+        openOtherRewardForm();
+    });
+    window.addEventListener('ac:open-other-rewards-categories', () => {
+        openOtherRewardsOptionsModal();
+    });
+    window.addEventListener('ac:other-rewards-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'other-rewards') {
+            await TAB_REGISTRY['other-rewards'].init(true);
+        }
+    });
+
+    // Listen for admin toolbar actions for Loot
+    window.addEventListener('ac:open-loot-form', () => {
+        openLootForm();
+    });
+    window.addEventListener('ac:open-loot-categories', () => {
+        openLootOptionsModal();
+    });
+    window.addEventListener('ac:loot-updated', async () => {
+        const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+        if (activeTab === 'loot') {
+            await TAB_REGISTRY['loot'].init(true);
         }
     });
 
