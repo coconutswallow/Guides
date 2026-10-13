@@ -353,7 +353,7 @@ function renderTableBody() {
                         <td style="text-align: center;">${renderSourceBadges(item.source)}</td>
                         <td>${formatExpandableText(item.notes_advice, 160)}</td>
                         ${isAdmin ? `
-                            <td style="text-align: center;" onclick="event.stopPropagation()">
+                            <td class="col-actions" style="text-align: center;">
                                 <button class="ac-btn-admin ac-btn-sm btn-edit" data-id="${item.id}" title="Edit Monster">✏️</button>
                                 <button class="ac-btn-admin ac-btn-sm ac-btn-delete btn-del" data-id="${item.id}" title="Delete Monster">🗑️</button>
                             </td>
@@ -372,6 +372,23 @@ function renderTableBody() {
     `;
 
     attachExpandableTextListeners(container);
+
+    // Direct event bindings for staff action buttons
+    container.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const item = allMonsters.find(i => String(i.id) === String(btn.dataset.id));
+            if (item) openMonsterForm(item);
+        });
+    });
+
+    container.querySelectorAll('.btn-del').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const item = allMonsters.find(i => String(i.id) === String(btn.dataset.id));
+            if (item) confirmAndDeleteMonster(item);
+        });
+    });
 }
 
 /**
@@ -448,7 +465,7 @@ function setupDelegatedInteractions() {
         const editBtn = e.target.closest('.btn-edit');
         if (editBtn) {
             e.stopPropagation();
-            const item = allMonsters.find(i => i.id === editBtn.dataset.id);
+            const item = allMonsters.find(i => String(i.id) === String(editBtn.dataset.id));
             if (item) openMonsterForm(item);
             return;
         }
@@ -457,15 +474,15 @@ function setupDelegatedInteractions() {
         const delBtn = e.target.closest('.btn-del');
         if (delBtn) {
             e.stopPropagation();
-            const item = allMonsters.find(i => i.id === delBtn.dataset.id);
+            const item = allMonsters.find(i => String(i.id) === String(delBtn.dataset.id));
             if (item) confirmAndDeleteMonster(item);
             return;
         }
 
-        // Table row clicked -> Detail Modal
+        // Table row clicked -> Detail Modal (skip if clicking links, buttons, or action cells)
         const row = e.target.closest('tr[data-id]');
-        if (row && !e.target.closest('a') && !e.target.closest('button')) {
-            const item = allMonsters.find(i => i.id === row.dataset.id);
+        if (row && !e.target.closest('a') && !e.target.closest('button') && !e.target.closest('.col-actions')) {
+            const item = allMonsters.find(i => String(i.id) === String(row.dataset.id));
             if (item) showDetailModal(item);
         }
     };
@@ -522,7 +539,6 @@ export function showDetailModal(item) {
 
     if (isAdmin) {
         document.getElementById('modal-btn-edit')?.addEventListener('click', () => {
-            closeModal();
             openMonsterForm(item);
         });
         document.getElementById('modal-btn-delete')?.addEventListener('click', () => {

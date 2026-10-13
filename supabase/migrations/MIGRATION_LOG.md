@@ -1469,3 +1469,82 @@ node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --execut
 | DEV | ✅ | ✅ | 2026-10-12 | All 6 automated verification checks passed. Committed to DEV. |
 | PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified (all 6 checks passed). Pending execution when ready. |
 
+---
+
+### Step 35: Drop Deprecated AC Legacy Backup Tables
+- **Date**: 2026-10-12
+- **Scope**: Clean up 12 deprecated `ac_*_legacy_backup` and `ac_*_legacy_20261004` snapshot tables in PostgreSQL that were created during earlier normalization steps.
+- **Files**:
+  - `supabase/migrations/20261012_drop_ac_legacy_tables.sql`
+  - `supabase/migrations/run_20261012_drop_ac_legacy_tables.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_drop_ac_legacy_tables.js --dry-run`
+  - `node supabase/migrations/run_20261012_drop_ac_legacy_tables.js --execute`
+  - `node supabase/migrations/run_20261012_drop_ac_legacy_tables.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Dropped Snapshot Tables**:
+   - `public.ac_artificer_infusions_legacy_backup`
+   - `public.ac_classes_legacy_backup`
+   - `public.ac_eldritch_invocations_legacy_backup`
+   - `public.ac_feats_legacy_backup`
+   - `public.ac_fighting_styles_legacy_backup`
+   - `public.ac_loot_categories_legacy_backup`
+   - `public.ac_loot_legacy_backup`
+   - `public.ac_monsters_categories_legacy_backup`
+   - `public.ac_monsters_legacy_backup`
+   - `public.ac_other_rewards_categories_legacy_backup`
+   - `public.ac_other_rewards_legacy_backup`
+   - `public.ac_races_legacy_20261004`
+2. **Schema Integrity Verified**:
+   - Confirmed 0 foreign key dependencies and 0 dependent views on any of the dropped tables.
+   - All primary Allowed Content tables (`ac_sources`, `ac_classes`, `ac_subclasses`, `ac_races`, `ac_subraces`, `ac_backgrounds`, `ac_feats`, `ac_spells`, `ac_equipment`, `ac_bastion`, `ac_bastion_type`, `ac_downtime`, `ac_loot`, `ac_monsters`, `ac_other_rewards`, `ac_item_properties`, `ac_languages`) verified 100% preserved with full row counts.
+   - Database views `public.v_ac_classes` and `public.v_ac_races` verified fully intact and queryable.
+
+#### Verification Criteria
+- All 12 legacy backup tables confirmed dropped from `information_schema.tables`.
+- All 17 primary AC tables confirmed intact with complete record counts.
+- Active views `v_ac_classes` (244 rows) and `v_ac_races` (221 rows) verified intact.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 12 legacy tables dropped. Committed to DEV. |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified (all checks passed). Pending execution when ready. |
+
+---
+
+### Step 36: Drop Deprecated AC Compatibility Views (`ac_downtime_categories`, `ac_equipment_categories`)
+- **Date**: 2026-10-12
+- **Scope**: Clean up 2 deprecated compatibility views in PostgreSQL (`public.ac_downtime_categories` and `public.ac_equipment_categories`) that were superseded by base tables `ac_downtime_type` and `ac_equip_type`.
+- **Files**:
+  - `supabase/migrations/20261012_drop_ac_legacy_views.sql`
+  - `supabase/migrations/run_20261012_drop_ac_legacy_views.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_drop_ac_legacy_views.js --dry-run`
+  - `node supabase/migrations/run_20261012_drop_ac_legacy_views.js --execute`
+  - `node supabase/migrations/run_20261012_drop_ac_legacy_views.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Dropped Compatibility Views**:
+   - `public.ac_downtime_categories` (previously mapped to `ac_downtime_type`)
+   - `public.ac_equipment_categories` (previously mapped to `ac_equip_type`)
+2. **Security & RLS Resolution**:
+   - Neither view had `security_invoker = true`, running under default security-definer privileges.
+   - Verified that neither view is queried anywhere in the active codebase (`ac-service.js` directly queries canonical base tables `ac_downtime_type` and `ac_equip_type`).
+   - Dropping these unused views eliminates unneeded schema overhead and security lint warnings.
+3. **Canonical Base Tables & Active Views Preserved**:
+   - `public.ac_downtime_type` (13 rows) and `public.ac_equip_type` (13 rows) confirmed 100% intact.
+   - Active views `public.v_ac_classes` and `public.v_ac_races` (with `security_invoker = true`) confirmed intact.
+
+#### Verification Criteria
+- Both deprecated views confirmed dropped from `information_schema.views`.
+- Base tables `ac_downtime_type` and `ac_equip_type` verified intact with 13 rows each.
+- Active views `v_ac_classes` and `v_ac_races` verified intact and queryable.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Both deprecated views dropped. Committed to DEV. |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified (all checks passed). Pending execution when ready. |
+
