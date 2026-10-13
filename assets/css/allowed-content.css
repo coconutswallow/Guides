@@ -1301,6 +1301,13 @@ select.ac-form-input {
     flex-wrap: wrap;
 }
 
+.ac-loot-controls .ac-btn-admin,
+.ac-other-rewards-controls .ac-btn-admin {
+    height: 38px;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
 /* Unified Themed Select Dropdowns */
 .ac-filter-select,
 .ac-source-filter-select {
@@ -2273,7 +2280,7 @@ select.ac-form-input {
 
 /* Loot Table Specific Columns */
 #loot-table .col-name {
-    min-width: 180px;
+    min-width: calc(46ch + 1.5rem);
 }
 
 #loot-table .col-type {
@@ -2291,7 +2298,11 @@ select.ac-form-input {
 }
 
 #loot-table .col-desc {
-    min-width: 220px;
+    min-width: 260px;
+}
+
+#loot-table .col-notes {
+    min-width: 240px;
 }
 
 #loot-table .col-actions {

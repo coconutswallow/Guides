@@ -55,8 +55,13 @@ node supabase/migrations/run_<migration>.js --execute --prod
 | **14** | 2026-10-11 | **Item Properties Normalization** | `20261011_ac_item_properties_normalization.sql` | `run_20261011_ac_item_properties_normalization.js` | ✅ Applied | ✅ Applied |
 | **15** | 2026-10-11 | **Monsters Normalization** | `20261011_ac_monsters_normalization.sql` | `run_20261011_ac_monsters_normalization.js` | ✅ Applied | ✅ Applied |
 | **16** | 2026-10-11 | **Shared Usage Lookup** | `20261011_ac_shared_usage_lookup.sql` | `run_20261011_ac_shared_usage_lookup.js` | ✅ Applied | ✅ Applied |
-| **17** | 2026-10-12 | **Tiers Normalization** | `20261012_ac_tiers_normalization.sql` | `run_20261012_ac_tiers_normalization.js` | ✅ Applied | ✅ Applied |
 | **18** | 2026-10-12 | **Other Rewards Normalization** | `20261012_ac_other_rewards_normalization.sql` | `run_20261012_ac_other_rewards_normalization.js` | ✅ Applied | ⏳ Pending (DEV Only) |
+| **19** | 2026-10-12 | **AC Loot Normalization** | `20261012_ac_loot_normalization.sql` | `run_20261012_ac_loot_normalization.js` | ✅ Applied | ✅ Applied |
+| **20** | 2026-10-12 | **Tiers Display & Rules** | `20261012_ac_tiers_display.sql` | `run_20261012_ac_tiers_display.js` | ✅ Applied | ✅ Applied |
+| **21** | 2026-10-12 | **AC Loot Description Links** | `20261012_ac_loot_description_links.sql` | `run_20261012_ac_loot_description_links.js` | ✅ Applied | ✅ Applied |
+| **22** | 2026-10-12 | **Other Rewards Description Links** | `20261012_ac_other_rewards_description_links.sql` | `run_20261012_ac_other_rewards_description_links.js` | ✅ Applied | ✅ Applied |
+| **23** | 2026-10-12 | **AC Loot Notes & Links Population** | `20261012_ac_loot_notes_links.sql` | `run_20261012_ac_loot_notes_links.js` | ✅ Applied | ✅ Applied |
+| **24** | 2026-10-12 | **AC Bastion Links Normalization** | `20261012_ac_bastion_links.sql` | `run_20261012_ac_bastion_links.js` | ✅ Applied | ✅ Applied |
 
 ---
 
@@ -912,6 +917,555 @@ node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --execut
 | DEV | ✅ | ✅ | 2026-10-12 | Verified. 385 items, REW_0376/REW_0377 removed, canonical notes enriched. |
 | PRODUCTION | ⏳ | ⏳ | — | Pending (Executed in DEV only per user instruction). |
 
+---
 
+### Step 21: AC Loot Description Links (`ac_loot`)
+- **Date**: 2026-10-12
+- **Scope**: Convert cross-reference links in `public.ac_loot` descriptions to markdown format
+- **Files**:
+  - `supabase/migrations/20261012_ac_loot_description_links.sql`
+  - `supabase/migrations/run_20261012_ac_loot_description_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_loot_description_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_loot_description_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_loot_description_links.js --dry-run --prod`
+  - `node supabase/migrations/run_20261012_ac_loot_description_links.js --execute --prod`
 
+#### Key Changes
+1. **Fluff Puffle Pet Link**:
+   - Converted "Fluff Puffle" companion reference in `LOT_1232` (*The Spirit of Joy*) to relative compendium link: `[Fluff Puffle](/monsters/#fluff-puffle)`.
+2. **Tab Cross-References (Equipment)**:
+   - Converted 118 items referencing `See Equipment` in `description` (e.g. `Base Cost: See Equipment.`, `Crafting Cost: See Equipment.`, `Tool: See Equipment (...)`) to `See [Equipment](/allowed-content/#equipment)`.
+3. **Tab Cross-References (Downtime)**:
+   - Converted 4 items referencing `See Downtime` in `description` (e.g. `Crafting Cost: See Downtime (Scribing Spell Scroll)`) to `See [Downtime](/allowed-content/#downtime)`.
+4. **Non-Reference Safeguard**:
+   - Items using "equipment" in ordinary sentences (`LOT_0067`, `LOT_0433` - "clean yourself and any equipment...") preserved intact without modification.
+
+#### Verification Criteria
+- `public.ac_loot` total count preserved at 1,358 items.
+- `LOT_1232` verified containing `[Fluff Puffle](/monsters/#fluff-puffle)`.
+- `public.ac_loot` verified with 118 items linked to `[Equipment](/allowed-content/#equipment)` and 0 unlinked.
+- `public.ac_loot` verified with 4 items linked to `[Downtime](/allowed-content/#downtime)` and 0 unlinked.
+- Non-reference items `LOT_0067` and `LOT_0433` verified uncorrupted.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Verified. 1,358 items, 118 Equipment links, 4 Downtime links, 1 Fluff Puffle link. |
+| PRODUCTION | ✅ | ✅ | 2026-10-12 | Verified. 1,358 items, 118 Equipment links, 4 Downtime links, 1 Fluff Puffle link. |
+
+---
+
+### Step 22: AC Other Rewards Description Links (`ac_other_rewards`, `ac_loot`)
+- **Date**: 2026-10-12
+- **Scope**: Convert description links to markdown in `public.ac_other_rewards` and restore `notes_advice` for `LOT_1073` (*Talisman of the Gauntlet (HB)*) in `public.ac_loot`
+- **Files**:
+  - `supabase/migrations/20261012_ac_other_rewards_description_links.sql`
+  - `supabase/migrations/run_20261012_ac_other_rewards_description_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_other_rewards_description_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_other_rewards_description_links.js --execute`
+
+#### Key Changes
+1. **Deity Factions External Links**:
+   - Converted 14 deity factions (`REW_0299` through `REW_0312`) referencing Forgotten Realms: Heroes of Faerûn to markdown: `See [Forgotten Realms: Heroes of Faerûn](https://www.dndbeyond.com/sources/dnd/frhof) for a description and list of Renown rewards.`
+2. **Monster Compendium Link**:
+   - In `REW_0353` (*Flourishing Favor*), linked Fair Game to monster compendium: `in the [Fair Game](/allowed-content/#monsters) category of Allowed Content.`
+3. **Allowed Content Tabs Cross-References**:
+   - In `REW_0357` (*Renown Rewards (UUC)*), linked to Loot: `Allowed Content ([Loot](/allowed-content/#loot))`.
+   - In `REW_0229` and `REW_0345`, linked to Equipment: `[Equipment](/allowed-content/#equipment)`.
+   - In `REW_0348` (*Legate's Legions*), linked to Bastions: `from the [War Room](/allowed-content/#bastions) Bastion Facility`.
+4. **Talisman of the Gauntlet (HB) Restoration**:
+   - Restored `notes_advice` for `LOT_1073` in `public.ac_loot` with relative link: `[Order of the Gauntlet](/allowed-content/#other-rewards)`.
+
+#### Verification Criteria
+- `public.ac_other_rewards` count preserved at 385.
+- 14 deity factions verified with D&D Beyond markdown link.
+- `REW_0353` verified containing `[Fair Game](/allowed-content/#monsters)`.
+- `REW_0357` verified containing `[Loot](/allowed-content/#loot)`.
+- `REW_0229` & `REW_0345` verified containing `[Equipment](/allowed-content/#equipment)`.
+- `REW_0348` verified containing `[War Room](/allowed-content/#bastions)`.
+- `LOT_1073` verified with restored notes and `[Order of the Gauntlet](/allowed-content/#other-rewards)`.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Verified. 385 items, 14 external deity links, 5 cross-tab links, LOT_1073 restored. |
+| PRODUCTION | ⏳ | ⏳ | — | Pending (Executed in DEV only per user instruction). |
+
+---
+
+### Step 23: AC Loot Notes & Links Population (`ac_loot`)
+- **Date**: 2026-10-12
+- **Scope**: Populate `notes_advice` for all 680 items in `public.ac_loot` from spreadsheet Column J, converting all embedded cell hyperlinks (193 links) and cross-references to markdown.
+- **Files**:
+  - `supabase/migrations/20261012_ac_loot_notes_links.sql`
+  - `supabase/migrations/run_20261012_ac_loot_notes_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_loot_notes_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_loot_notes_links.js --execute`
+
+#### Key Changes
+1. **Spreadsheet Column J Restoration**:
+   - Resolved the column index mapping bug from the initial normalization, populating `notes_advice` for all **680 loot items** that have rulings, crafting guidelines, and creator attributions in the source spreadsheet.
+2. **Faction Renown Cross-References (40 items)**:
+   - Converted internal named range hyperlinks (`OtherRewardsRenown...`) to relative Allowed Content links: `[<Faction Name>](/allowed-content/#other-rewards)` (*Order of the Gauntlet, Harpers, Emerald Enclave, Lords' Alliance, Zhentarim, Yamato Clan, Court of the Dunes, Crime Family, GEAR, Gilded Accord, HALO, Legion of Dread, Prismatic Lotus*).
+3. **Allowed Content Tabs Cross-References (7 items)**:
+   - Converted spreadsheet tab references to relative URLs:
+     - `[Equipment](/allowed-content/#equipment)` (4 items)
+     - `[Downtime](/allowed-content/#downtime)` (2 items)
+     - `[Bastions](/allowed-content/#bastions)` (1 item)
+4. **External Event & Source Links (147 items)**:
+   - Converted 145 Discord event announcement links to markdown `[<Event Name>](https://discord.com/channels/...)` (*Coliseum, Feast of the Moon, Greengrass, Midwinter, Rage of Dragons, Wilds District, Founding Week, Lionheart Legion Playtest, etc.*).
+   - Converted 2 D&D Beyond links to markdown `[Wayfinder's Guide to Eberron](https://marketplace.dndbeyond.com/category/SRC-00037)`.
+
+#### Verification Criteria
+- `public.ac_loot` row count preserved at 1,358 items.
+- `public.ac_loot` verified with exactly 680 items having `notes_advice IS NOT NULL`.
+- Verified 40 Other Rewards Renown faction links.
+- Verified 145 Discord event announcement links.
+- Verified 4 Equipment tab links, 2 Downtime tab links, and 1 Bastions tab link.
+- Verified benchmark items: `LOT_1073` (*Talisman of the Gauntlet*), `LOT_0047` (*Adventurer's Ring*), `LOT_1202` (*Hawthorne Cast-Off Shirt of Mending*).
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | Verified. 1,358 items, 680 notes populated, 193 links converted. |
+| PRODUCTION | ⏳ | ⏳ | — | Pending (Executed in DEV only per user instruction). |
+
+---
+
+### Step 24: AC Bastion Links Normalization (`ac_bastion`, `ac_bastion_type`)
+- **Date**: 2026-10-12
+- **Scope**: Convert cross-reference links in `public.ac_bastion` (18 facility notes) and `public.ac_bastion_type` (2 category notes) to relative markdown links within the website, and audit all check_IDs against `Allowed_Content_20261004.xlsx - Bastion tab`.
+- **Files**:
+  - `supabase/migrations/20261012_ac_bastion_links.sql`
+  - `supabase/migrations/run_20261012_ac_bastion_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_bastion_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_bastion_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_bastion_links.js --dry-run --prod`
+  - `node supabase/migrations/run_20261012_ac_bastion_links.js --execute --prod`
+
+#### Key Changes
+1. **Check_ID Verification**:
+   - Confirmed 100% 1:1 parity for all **66 facility check_IDs** (`BAS_0001` through `BAS_0066`) between the spreadsheet Bastions tab, `.context/current-tasks/Loaded/AC_Bastion.xlsx`, and `public.ac_bastion` across DEV and PRODUCTION.
+2. **Category Rule Relative Links (`ac_bastion_type`)**:
+   - `BASC_0001` (General Rules): Converted Appendix B reference to relative URL: `[Appendix B of the Player Guidelines](/playersguide/appendices/bastions/)`.
+   - `BASC_0003` (Special Facilities): Converted Appendix B and downtime activity references to relative URLs: `[Appendix B of the Player Guidelines](/playersguide/appendices/bastions/)` and `[Crafting Magic Item](/allowed-content/#downtime)`.
+3. **Facility Note Cross-References (`ac_bastion`)**:
+   - Equipment tab links (8 facilities): `BAS_0020`, `BAS_0021`, `BAS_0023`, `BAS_0029`, `BAS_0030`, `BAS_0036`, `BAS_0057`, `BAS_0058` $\rightarrow$ `[Equipment](/allowed-content/#equipment)`.
+   - Downtime tab links (8 facilities): `BAS_0021`, `BAS_0029`, `BAS_0032`, `BAS_0033`, `BAS_0036`, `BAS_0044`, `BAS_0047`, `BAS_0066` $\rightarrow$ `[Buying and Selling](/allowed-content/#downtime)`, `[Traveling](/allowed-content/#downtime)`, `[Building a Stronghold](/allowed-content/#downtime)`, `[Allowed Content (Downtime)](/allowed-content/#downtime)`.
+   - Loot tab links (5 facilities): `BAS_0009`, `BAS_0020`, `BAS_0023`, `BAS_0034`, `BAS_0044` $\rightarrow$ `[Rolled](/allowed-content/#loot) or [Select](/allowed-content/#loot) Loot categories`.
+   - Monsters tab link (1 facility): `BAS_0050` (Menagerie) $\rightarrow$ `[Monsters](/allowed-content/#monsters)`.
+   - Other Rewards link (1 facility): `BAS_0059` (Liminal Space) $\rightarrow$ `[Allowed Content: Other Rewards (Dark Gifts)](/allowed-content/#other-rewards)`.
+   - Player Guidelines link (1 facility): `BAS_0061` (War Room) $\rightarrow$ `[Appendix B of the Player Guidelines](/playersguide/appendices/bastions/)`.
+4. **Draft Workbook Synchronization**:
+   - Updated `.context/current-tasks/Loaded/AC_Bastion.xlsx` (18 facilities) and `.context/current-tasks/Loaded/AC_Bastion_Type.xlsx` (2 category types) to keep local offline references 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_bastion_type`: 4 rows preserved in both DEV and PROD.
+- `public.ac_bastion`: 66 rows preserved (`BAS_0001` through `BAS_0066`) in both DEV and PROD.
+- 8 facilities verified with `[Equipment](/allowed-content/#equipment)` links.
+- 8 facilities verified with Downtime links.
+- 5 facilities verified with Loot links.
+- Verified Menagerie (`BAS_0050`), Liminal Space (`BAS_0059`), and War Room (`BAS_0061`).
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 8 automated verification checks passed. |
+| PRODUCTION | ✅ | ✅ | 2026-10-12 | All 8 automated verification checks passed. |
+
+---
+
+### Step 25: AC Downtime Links Normalization (`ac_downtime`, `ac_downtime_type`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Downtime tab`, confirm `check_id` against `public.ac_downtime`, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs.
+- **Files**:
+  - `supabase/migrations/20261012_ac_downtime_links.sql`
+  - `supabase/migrations/run_20261012_ac_downtime_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_downtime_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_downtime_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_downtime_links.js --dry-run --prod`
+  - `node supabase/migrations/run_20261012_ac_downtime_links.js --execute --prod`
+
+#### Key Changes
+1. **Check_ID Verification**:
+   - Confirmed all **72 check_IDs** in the spreadsheet (`DTP_0001` through `DTP_0072`) map 1:1 to `DT_0001` through `DT_0072` in `public.ac_downtime` and `AC_Downtime.xlsx`.
+   - Verified that all remaining rows without Col 16 in the master spreadsheet correspond to `DT_0073` through `DT_0130` in `public.ac_downtime`, preserving exact 130 row count parity.
+2. **Category Rule Relative & External Links (`ac_downtime_type`)**:
+   - `Bastions`: Replaced absolute site URL with relative link: `(see Appendix B of the [Player Guidelines](/playersguide/appendices/bastions/) for details)`.
+   - `Building a Stronghold`: Replaced absolute site URL with relative link: `in [Appendix B](/playersguide/appendices/bastions/) of the Player Guidelines`.
+   - `Traveling`: Replaced absolute site URL with relative link `[Player Guidelines](/playersguide/downtime/#traveling)` and normalized external map link to `[Forgotten Realms: Heroes of Faerûn map](https://www.aidedd.org/atlas/faerun)`.
+3. **Downtime Activity Link Updates (`ac_downtime`)**:
+   - `DT_0001` (*Construct or Expand a Bastion*): Converted Bastions tab link `[Bastions](/allowed-content/#bastions)`, Appendix B link `[Appendix B of the Player Guidelines](/playersguide/appendices/bastions/)`, and downtime cross-reference `[Traveling](/allowed-content/#downtime) downtime activity`.
+   - `DT_0002` (*Construct or Expand a Shared Bastion*): Converted Bastions tab link `[Bastions](/allowed-content/#bastions)` and Appendix B link `[Appendix B of the Player Guidelines](/playersguide/appendices/bastions/)`.
+   - `DT_0003` (*Haunted Bastions*): Added external markdown link to `[Ravenloft: The Horrors Within](https://www.dndbeyond.com/sources/dnd/rthw)`.
+   - `DT_0005` (*Bastion (Stronghold)*): Converted Appendix B link to relative URL `[Appendix B](/playersguide/appendices/bastions/) of the Player Guidelines`.
+   - Equipment tab links (13 activities: `DT_0015` through `DT_0022` buying/selling, and `DT_0024` through `DT_0028` crafting): Replaced `Equipment sheet` text with `[Equipment](/allowed-content/#equipment) tab`.
+   - `DT_0039` (*Crafting T0 Consumable*): Converted `Loot sheet` text to `[Loot](/allowed-content/#loot)` and `Bastions sheet` text to `[Bastions](/allowed-content/#bastions)`.
+   - `DT_0056` (*Ala Carte Rework (Level 6)*): Converted absolute site URL to relative URL `[Player Guidelines](/playersguide/appendices/2024-games/)`.
+   - Languages tab links (4 activities: `DT_0104` through `DT_0107` learning languages): Replaced `Languages sheet` text with `[Languages](/allowed-content/#languages) tab`.
+4. **Draft Workbook Synchronization**:
+   - Updated `.context/current-tasks/Loaded/AC_Downtime.xlsx` (23 activities) and `.context/current-tasks/Loaded/AC_Downtime_Type.xlsx` (3 category types) to keep offline master workbooks 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_downtime_type`: 13 rows preserved in both DEV and PROD.
+- `public.ac_downtime`: 130 rows preserved (`DT_0001` through `DT_0130`) in both DEV and PROD.
+- Exactly 13 activities verified with `[Equipment](/allowed-content/#equipment)` links.
+- Exactly 4 activities verified with `[Languages](/allowed-content/#languages)` links.
+- Verified Bastion activities (`DT_0001`, `DT_0002`, `DT_0003`, `DT_0005`).
+- Verified magic item crafting (`DT_0039`) and level 6 rework (`DT_0056`).
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 7 automated verification checks passed. |
+| PRODUCTION | ✅ | ✅ | 2026-10-12 | All 7 automated verification checks passed. |
+
+---
+
+### Step 26: AC Equipment Links Normalization (`ac_equipment`, `ac_equip_type`, `ac_equipment_categories`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Equipment tab`, confirm `check_id` against `public.ac_equipment`, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs.
+- **Files**:
+  - `supabase/migrations/20261012_ac_equipment_links.sql`
+  - `supabase/migrations/run_20261012_ac_equipment_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_equipment_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_equipment_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_equipment_links.js --dry-run --prod`
+  - `node supabase/migrations/run_20261012_ac_equipment_links.js --execute --prod`
+
+#### Key Changes
+1. **Check_ID Verification**:
+   - Confirmed all **490 equipment items** map 1:1 between `Allowed_Content_20261004.xlsx`, `AC_Equipment.xlsx`, and `public.ac_equipment`.
+   - Identified that rows 480–484 in the master spreadsheet (`EQP_0425` through `EQP_0429`) were section banner headers ("Vehicle Upgrades"), while `Wheat` was numbered `EQP_0495` in the database, preserving exact 490 items count across DEV and PRODUCTION.
+2. **Category Rule Relative Links (`ac_equip_type`, `ac_equipment_categories`)**:
+   - `Siege Ammunition and Weapons`: Converted structure reference `atop a structure such as a Bastion` to `atop a structure such as a [Bastion](/allowed-content/#bastions)`.
+3. **Equipment Item Links (`ac_equipment`)**:
+   - `EQP_0039` (*Lance*): Converted Loot reference to relative URL `[Loot](/allowed-content/#loot)`.
+   - `EQP_0248` (*Cheese Bag*): Converted Downtime reference to relative URL `[downtime](/allowed-content/#downtime)`.
+   - `EQP_0252` (*Adventurer's Ring*), `EQP_0273` (*Mechanical Wonder (Domestic)*), `EQP_0282` (*Prosthetic Limb*): Converted Loot reference to relative URL `[Allowed Content (Loot)](/allowed-content/#loot)`.
+   - `EQP_0389` (*Demon Grinder*), `EQP_0390` (*Tormentor*), `EQP_0391` (*Scavenger*): Converted Downtime reference to relative URL `[Downtime](/allowed-content/#downtime)`.
+   - `EQP_0394` (*Mechanical Beholder*), `EQP_0403` (*Rowboat*), `EQP_0409` (*Whaleboat*): Converted Bastion reference to relative URL `[Bastion](/allowed-content/#bastions)`.
+   - `EQP_0396` (*Lyrandar Air Cruiser*), `EQP_0397` (*Lyrandar Skyskiff*), `EQP_0398` (*Strider Airship*): Converted Bastions reference to relative URL `[Bastions](/allowed-content/#bastions)` and converted external reference to markdown `[Eberron: Forge of the Artificer](https://www.dndbeyond.com/sources/dnd/efota)`.
+   - `EQP_0399` (*Hot Air Balloon (HB)*): Converted Bastion reference to relative URL `[Bastion](/allowed-content/#bastions)` and downtime travel reference to `[downtime](/allowed-content/#downtime)`.
+   - `EQP_0416` (*Nautiloid*): Converted planar travel reference to relative URL `[downtime](/allowed-content/#downtime)`.
+   - `EQP_0453` (*Playful Pulp*): Converted description reference to relative URL `[Hawthorne Field Guide](/monsters/)`.
+   - `EQP_0459` (*Songbird*): Converted description reference to markdown external URL `[Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view)`.
+   - `EQP_0487` (*Tuning Fork (Other Planes)*): Converted reference to markdown external URL `["Plane Speaking" in Dragon 120](https://archive.org/details/DragonMagazine260_201801/DragonMagazine120/page/n43/mode/2up)`.
+   - `EQP_0494` (*Planar Puzzle Cube*): Converted Bastion reference to relative URL `[Bastion](/allowed-content/#bastions)`.
+4. **Draft Workbook Synchronization**:
+   - Updated `.context/current-tasks/Loaded/AC_Equipment.xlsx` (20 items) to keep offline master workbooks 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_equipment`: 490 rows preserved in both DEV and PROD.
+- `public.ac_equip_type` & `public.ac_equipment_categories`: 13 rows preserved.
+- Exactly 4 items verified with `[Loot](/allowed-content/#loot)` links.
+- Exactly 6 items verified with `[Downtime](/allowed-content/#downtime)` links.
+- Exactly 8 items verified with `[Bastions](/allowed-content/#bastions)` links.
+- Playful Pulp (`EQP_0453`) and Songbird (`EQP_0459`) verified with monster relative link & Google Drive external link.
+- Tuning Fork (`EQP_0487`) and Eberron Airships (`EQP_0396`..`EQP_0398`) verified with external links.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 7 automated verification checks passed. |
+| PRODUCTION | ✅ | ✅ | 2026-10-12 | All 7 automated verification checks passed. |
+
+---
+
+### Step 27: AC Misc Class Features Links Normalization (`ac_fighting_styles`, `ac_artificer_infusions`, `ac_eldritch_invocations`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Misc. Class Features tab`, confirm `check_id` against respective database tables, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs.
+- **Files**:
+  - `supabase/migrations/20261012_ac_misc_features_links.sql`
+  - `supabase/migrations/run_20261012_ac_misc_features_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_misc_features_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_misc_features_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_misc_features_links.js --dry-run --prod`
+  - `node supabase/migrations/run_20261012_ac_misc_features_links.js --execute --prod`
+
+#### Key Changes
+1. **Check_ID Verification**:
+   - Confirmed all **119 check_IDs** (`MSC_0001` through `MSC_0119`) map 1:1 to their respective tables:
+     - `public.ac_fighting_styles`: 17 records (`MSC_0001` .. `MSC_0017`).
+     - `public.ac_artificer_infusions`: 16 records (`MSC_0018` .. `MSC_0033`).
+     - `public.ac_eldritch_invocations`: 86 records (`MSC_0034` .. `MSC_0119`).
+2. **Relative Link Updates**:
+   - `MSC_0017` (*2024 Fighting Styles*): Normalized link to in-page relative URL: `Refer to Fighting Style Feats [here](/allowed-content/#feats).`
+   - `MSC_0029` (*Replicate Magic Item*): Converted spreadsheet reference `in the Items List` to relative URL `in [Loot](/allowed-content/#loot)`.
+3. **Draft Workbook Synchronization**:
+   - Updated `.context/current-tasks/Loaded/AC_Fightingstyles.xlsx` (`MSC_0017`) and `.context/current-tasks/Loaded/AC_Artificer_Infusion.xlsx` (`MSC_0029`).
+
+#### Verification Criteria
+- `public.ac_fighting_styles`: 17 rows preserved in both DEV and PROD.
+- `public.ac_artificer_infusions`: 16 rows preserved in both DEV and PROD.
+- `public.ac_eldritch_invocations`: 86 rows preserved in both DEV and PROD.
+- Check_ID ranges: `MSC_0001`..`MSC_0017`, `MSC_0018`..`MSC_0033`, `MSC_0034`..`MSC_0119`.
+- Verified Feats relative link in `MSC_0017` and Loot relative link in `MSC_0029`.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 4 automated verification checks passed. |
+| PRODUCTION | ✅ | ✅ | 2026-10-12 | All 4 automated verification checks passed. |
+
+---
+
+### Step 28: AC Spells Links Normalization (`ac_spells`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Spells tab`, confirm `check_id` against `public.ac_spells`, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs.
+- **Files**:
+  - `supabase/migrations/20261012_ac_spells_links.sql`
+  - `supabase/migrations/run_20261012_ac_spells_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_spells_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_spells_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_spells_links.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Check_ID Verification**:
+   - Confirmed all **20 check_IDs** (`SPL_0001` through `SPL_0020`) map 1:1 to `public.ac_spells`.
+2. **External Link Updates**:
+   - `SPL_0007` (*Spells from EGW*): Added external markdown link to Hawthorne Arcana Google Drive: `[Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view)`.
+   - `SPL_0017` (*Spells from PHB (2024)*): Added external markdown link to PHB 2024 Spell Changes spreadsheet: `[PHB 2024 Spell Changes](https://docs.google.com/spreadsheets/d/1tKfU_-0uIi5SvnDXDdLw09WNw8X0akidCoZar1MeOL4/edit?usp=sharing)`.
+3. **Relative Site Link Updates**:
+   - `SPL_0012` (*Spells from AAG*): Converted spreadsheet reference `Equipment!A1` to relative URL `[Equipment](/allowed-content/#equipment)`.
+   - `SPL_0018` (*Spells from FRHOF (2024)*): Converted spreadsheet cross-reference `Spells!A1` to relative URL `[Allowed Content (Spells)](/allowed-content/#spells)`.
+4. **Draft Workbook Synchronization**:
+   - Updated `.context/current-tasks/Loaded/AC_Spells.xlsx` (`SPL_0007`, `SPL_0012`, `SPL_0017`, `SPL_0018`) to keep offline master workbooks 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_spells`: Exactly 20 rows preserved (`SPL_0001` through `SPL_0020`).
+- Check_ID ranges: `SPL_0001`..`SPL_0020`.
+- Verified external links formatted in markdown for `SPL_0007` and `SPL_0017`.
+- Verified relative website links for `SPL_0012` (`/allowed-content/#equipment`) and `SPL_0018` (`/allowed-content/#spells`).
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 6 automated verification checks passed. Committed to DEV. |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified. Pending execution when ready. |
+
+---
+
+### Step 29: AC Feats Links Normalization (`ac_feats`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Feats tab`, confirm `check_id` against `public.ac_feats`, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs.
+- **Files**:
+  - `supabase/migrations/20261012_ac_feats_links.sql`
+  - `supabase/migrations/run_20261012_ac_feats_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_feats_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_feats_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_feats_links.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Check_ID Verification**:
+   - Confirmed all **346 check_IDs** (`FEA_0001` through `FEA_0346`) map 1:1 to `public.ac_feats`.
+2. **External Link Updates**:
+   - **Eberron: Rising from the Last War** (26 feats): Converted references across 13 Origin dragonmark feats (`FEA_0193`..`FEA_0205`), 12 Greater dragonmark feats (`FEA_0239`..`FEA_0250`), and Potent Dragonmark (`FEA_0275`) to `[Eberron: Rising from the Last War](https://www.dndbeyond.com/sources/dnd/erftlw)`.
+   - **Hawthorne Arcana** (15 feats): Converted references in `FEA_0001` (Aberrant Dragonmark), 13 Origin dragonmark feats (`FEA_0193`..`FEA_0205`), and `FEA_0340` (Boon of Siberys) to `[Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view)`.
+3. **Relative Site Link Updates**:
+   - `FEA_0154` (*Cult of the Dragon Initiate*): Converted spreadsheet reference `Allowed Content (Languages)` to relative website URL `[Allowed Content (Languages)](/allowed-content/#languages)`.
+4. **Draft Workbook Synchronization**:
+   - Updated `.context/current-tasks/Loaded/AC_Feats.xlsx` across all 29 corresponding records to keep offline master workbooks 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_feats`: Exactly 346 rows preserved (`FEA_0001` through `FEA_0346`).
+- Check_ID ranges: `FEA_0001`..`FEA_0346`.
+- Exactly 26 feats verified with `[Eberron: Rising from the Last War](https://www.dndbeyond.com/sources/dnd/erftlw)`.
+- Exactly 15 feats verified with `[Hawthorne Arcana](https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view)`.
+- Exactly 1 feat (`FEA_0154`) verified with `[Allowed Content (Languages)](/allowed-content/#languages)`.
+- Spot checks verified for multi-link feats (e.g. `FEA_0193`).
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :--- | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 6 automated verification checks passed. Committed to DEV. |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified. Pending execution when ready. |
+
+---
+
+### Step 30: AC Backgrounds Links & Check_ID Normalization (`ac_backgrounds`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Backgrounds tab`, confirm `check_id` against `public.ac_backgrounds`, add `check_id` column and populate `BAC_0001`..`BAC_0166`, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs.
+- **Files**:
+  - `supabase/migrations/20261012_ac_backgrounds_links.sql`
+  - `supabase/migrations/run_20261012_ac_backgrounds_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_backgrounds_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_backgrounds_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_backgrounds_links.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Check_ID Schema Evolution & Backfill**:
+   - `public.ac_backgrounds` previously lacked the `check_id` audit column.
+   - Added `check_id VARCHAR(32) NOT NULL UNIQUE` to `public.ac_backgrounds`.
+   - Populated `check_id = 'BAC_' || LPAD(display_order::text, 4, '0')` for all 166 backgrounds, establishing strict 1:1 parity with `Allowed_Content_20261004.xlsx` (`BAC_0001` through `BAC_0166`).
+2. **Link & Description Audit**:
+   - Audited all 166 rows of `Allowed_Content_20261004.xlsx - Backgrounds` across Column 1 (`Name`), Column 4 (`Feature`), and Column 6 (`Notes / Rage Advice`).
+   - Confirmed 0 cell hyperlinks in target text fields and 0 external URLs / cross-sheet spreadsheet links requiring link syntax conversions. All 166 descriptions are clean text.
+3. **Draft Workbook Synchronization**:
+   - Synchronized `.context/current-tasks/Loaded/AC_Backgrounds.xlsx` with `check_id` column and values `BAC_0001` through `BAC_0166` across all 166 records to keep offline master workbooks 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_backgrounds`: Exactly 166 rows preserved (`BAC_0001` through `BAC_0166`).
+- Check_ID ranges: `BAC_0001`..`BAC_0166` (166 distinct IDs, 0 nulls/empty).
+- Strict 1:1 alignment between `display_order` and `check_id` across all 166 records.
+- Spot checks verified for boundary records (`BAC_0001` = Cult of the Dragon Infiltrator, `BAC_0038` = Fallen Cloak Survivor, `BAC_0166` = Zhentarim Mercenary).
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified. Pending execution when ready. |
+
+---
+
+### Step 31: AC Feats Aberrant Dragonmark Website Link Update (`ac_feats`)
+- **Date**: 2026-10-12
+- **Scope**: Update Aberrant Dragonmark feats in `public.ac_feats` (`FEA_0001` and `FEA_0193`) so that the reference to Hawthorne Arcana points to the website link (`[Hawthorne Arcana](/arcana/)`) instead of the external Google Drive PDF.
+- **Files**:
+  - `supabase/migrations/20261012_ac_feats_aberrant_dragonmark_link.sql`
+  - `supabase/migrations/run_20261012_ac_feats_aberrant_dragonmark_link.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_feats_aberrant_dragonmark_link.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_feats_aberrant_dragonmark_link.js --execute`
+  - `node supabase/migrations/run_20261012_ac_feats_aberrant_dragonmark_link.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Aberrant Dragonmark Link Normalization**:
+   - Updated `FEA_0001` (2014 Aberrant Dragonmark) and `FEA_0193` (2024 Aberrant Dragonmark) in `public.ac_feats`.
+   - Converted Google Drive URL (`https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view`) to the site link `[Hawthorne Arcana](/arcana/)`.
+2. **Draft Workbook Synchronization**:
+   - Synchronized `.context/current-tasks/Loaded/AC_Feats.xlsx` across both Aberrant Dragonmark records to keep offline master workbooks 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_feats`: Exactly 346 rows preserved.
+- `FEA_0001` verified with `[Hawthorne Arcana](/arcana/)`.
+- `FEA_0193` verified with `[Hawthorne Arcana](/arcana/)`.
+- Zero Google Drive links remaining in Aberrant Dragonmark records.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified. Pending execution when ready. |
+
+---
+
+### Step 32: AC Races & Subraces Links Normalization (`ac_races`, `ac_subraces`, `v_ac_races`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Races tab`, confirm `check_id` against `public.ac_races` and `public.ac_subraces`, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs.
+- **Files**:
+  - `supabase/migrations/20261012_ac_races_links.sql`
+  - `supabase/migrations/run_20261012_ac_races_links.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_races_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_races_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_races_links.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Check_ID Architecture & Parity**:
+   - `Allowed_Content_20261004.xlsx - Races` contains 247 rows (`RAC_0001` through `RAC_0247`).
+   - 26 parent header rows have `(choose one)` subrace placeholders (e.g. `Elf (2014) (choose one)` = `RAC_0037`).
+   - All 221 functional subrace/species rows correspond 1:1 to `public.ac_subraces`, which already carries `check_id VARCHAR(32) NOT NULL UNIQUE`.
+2. **Hawthorne Arcana Website Link Normalization**:
+   - Converted all raw text mentions of `can be found in Hawthorne Arcana` in `public.ac_subraces` (19 records across dragonmarked lineages, warforged, changelings, kalashtar) and `public.ac_races` (5 parent species) to relative website links: `can be found in [Hawthorne Arcana](/arcana/)`.
+   - The inheritance view `public.v_ac_races` automatically reflects the markdown link across all subrace rows.
+3. **Draft Workbook Synchronization**:
+   - Synchronized `.context/current-tasks/Loaded/AC_Subraces.xlsx` across all 19 corresponding records to keep offline master workbooks 100% in sync with database and live site.
+
+#### Verification Criteria
+- `public.ac_races`: Exactly 114 base species preserved.
+- `public.ac_subraces`: Exactly 221 subraces preserved (`RAC_0001` through `RAC_0247`).
+- Exactly 19 subraces in `public.ac_subraces` verified with `[Hawthorne Arcana](/arcana/)`.
+- Exactly 5 base races in `public.ac_races` verified with `[Hawthorne Arcana](/arcana/)`.
+- Zero unlinked occurrences of `can be found in Hawthorne Arcana` remaining.
+- Spot checks verified in `public.v_ac_races` for `RAC_0075` (Mark of Scribing) and `RAC_0179` (Warforged).
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 6 automated verification checks passed. Committed to DEV. |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified. Pending execution when ready. |
+
+---
+
+### Step 33: Global Hawthorne Arcana Links Replacement (`ac_feats`, `ac_spells`, `ac_equipment`, Static Docs)
+- **Date**: 2026-10-12
+- **Scope**: Search the entire site and database for links to the external Google Drive PDF (`https://drive.google.com/file/d/1yoinFa31Rhq__unHxMxCSfMq7QY5ARYC/view`) and replace with the website link to Arcana (`/arcana/` in database Allowed Content tables, and `{{ '/arcana/' | relative_url }}` in Jekyll documentation).
+- **Files**:
+  - `_resources/PDF-guides.md`
+  - `supabase/migrations/20261012_ac_arcana_links_global.sql`
+  - `supabase/migrations/run_20261012_ac_arcana_links_global.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_arcana_links_global.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_arcana_links_global.js --execute`
+  - `node supabase/migrations/run_20261012_ac_arcana_links_global.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Static Documentation**:
+   - `_resources/PDF-guides.md`: Replaced Google Drive PDF URL with Jekyll relative site link `[Hawthorne Arcana]({{ '/arcana/' | relative_url }})`.
+2. **Database Allowed Content Tables**:
+   - `public.ac_feats`: Converted remaining 13 dragonmark origin feats (`FEA_0194`–`FEA_0205`) and Boon of Siberys (`FEA_0340`) from the Google Drive URL to `[Hawthorne Arcana](/arcana/)`. All 15 dragonmark / Siberys / Aberrant feats now point to `/arcana/`.
+   - `public.ac_spells`: Converted Dunamancy notes reference in `SPL_0007` (*Spells from EGW*) from Google Drive URL to `[Hawthorne Arcana](/arcana/)`.
+   - `public.ac_equipment`: Converted *Songbird* (`EQP_0459`) description reference from Google Drive URL to `[Hawthorne Arcana](/arcana/)`.
+   - `public.ac_monsters_legacy_backup`: Converted backup notes reference if table is present.
+
+#### Verification Criteria
+- `public.ac_feats`: Exactly 346 rows preserved; 0 Google Drive Arcana links remaining; 15 feats verified with `[Hawthorne Arcana](/arcana/)`.
+- `public.ac_spells`: Exactly 20 rows preserved; 0 Google Drive Arcana links remaining; `SPL_0007` verified with `[Hawthorne Arcana](/arcana/)`.
+- `public.ac_equipment`: Exactly 490 rows preserved; 0 Google Drive Arcana links remaining; `EQP_0459` verified with `[Hawthorne Arcana](/arcana/)`.
+- Global audit across all other Allowed Content tables (`ac_classes`, `ac_subclasses`, `ac_races`, `ac_subraces`, `ac_backgrounds`, `ac_sources`, `ac_downtime`, `ac_bastions`, `ac_loot`, `ac_item_properties`, `ac_other_rewards`, `ac_monsters`) confirmed 0 Drive Arcana links remaining.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 8 automated verification checks passed. Committed to DEV. |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified (all 8 checks passed). Pending execution when ready. |
+
+---
+
+### Step 34: AC Sources Links Normalization (`ac_sources`)
+- **Date**: 2026-10-12
+- **Scope**: Review each row of `Allowed_Content_20261004.xlsx - Sources tab`, confirm `check_id` against `public.ac_sources`, format external links in markdown (`[label](url)`), and convert spreadsheet cross-references to relative site URLs (`/allowed-content/#...`).
+- **Files**:
+  - `supabase/migrations/20261012_ac_sources_links.sql`
+  - `supabase/migrations/run_20261012_ac_sources_links.js`
+  - `.context/current-tasks/AC_Sources v2.xlsx`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261012_ac_sources_links.js --dry-run`
+  - `node supabase/migrations/run_20261012_ac_sources_links.js --execute`
+  - `node supabase/migrations/run_20261012_ac_sources_links.js --dry-run --prod` (Dry-run verified; ready for PROD execution)
+
+#### Key Changes
+1. **Check_ID Architecture & Parity**:
+   - `Allowed_Content_20261004.xlsx - Sources` contains 119 source records (`SRC_0001` through `SRC_0119`).
+   - Every single check_id corresponds 1:1 to `public.ac_sources`.
+   - `public.ac_sources` additionally contains 2 site-internal synthetic navigation records (`SRC_0120` Hawthorne Homebrew and `SRC_0121` Allowed Content) for 121 total records.
+2. **Notes & Cross-Reference Link Normalization**:
+   - `SRC_0009` (*The Book of Many Things*): Converted raw Google Spreadsheet cross-reference to `[Feats](/allowed-content/#feats)` and updated Loot mention to relative link `[Loot](/allowed-content/#loot)`.
+   - `SRC_0023` (*Explorer's Guide to Wildemount*): Converted raw Google Spreadsheet cross-reference to `[Spells](/allowed-content/#spells)`.
+   - `SRC_0001`–`SRC_0006`: Confirmed Core rulebook external links to Basic Rules, SRD, and Sage Advice are properly formatted as markdown `[label](url)`.
+3. **Draft Workbook Synchronization**:
+   - Synchronized `.context/current-tasks/AC_Sources v2.xlsx` across `SRC_0009`, `SRC_0023`, and `SRC_0118` to maintain exact 1:1 parity with database and live site.
+
+#### Verification Criteria
+- `public.ac_sources`: Exactly 121 rows preserved.
+- All 119 distinct `SRC_*` records confirmed present.
+- `SRC_0009` verified with `[Feats](/allowed-content/#feats)` and `[Loot](/allowed-content/#loot)`.
+- `SRC_0023` verified with `[Spells](/allowed-content/#spells)`.
+- Zero Google Spreadsheet URLs (`docs.google.com/spreadsheets`) remaining in `ac_sources`.
+- All 6 Core rulebooks verified with external markdown links.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-12 | All 6 automated verification checks passed. Committed to DEV. |
+| PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified (all 6 checks passed). Pending execution when ready. |
 

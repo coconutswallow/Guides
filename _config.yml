@@ -4,9 +4,16 @@ description: "Comprehensive guide for the Hawthorne D&D Guild"
 baseurl: "/Guides"
 url: "https://coconutswallow.github.io"
 
-include:
-  - ".context"
-  - ".agent"
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - package.json
+  - package-lock.json
+  - supabase
+  - test
+  - .context
+  - .agent
 
 # Collections for different guide sections
 collections:
@@ -48,6 +55,7 @@ collections:
     permalink: /field-guide/adventure-locations/:path/
 
 # Build settings
+incremental: true
 markdown: kramdown
 kramdown:
   input: GFM

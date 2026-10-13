@@ -106,7 +106,7 @@ export function formatLootTierTooltip(item) {
         if (tier.consumable_rules) lines.push(`Consumable: ${tier.consumable_rules}`);
     }
 
-    if (item.is_dm_select) lines.push(`• DM Select: Requires DM collaboration or predetermination.`);
+    if (item.is_dm_select) lines.push(`• DM Select: Requires permission or collaboration by creator DM.`);
     if (item.event_category) lines.push(`• Event: Acquirable only during ${item.event_category}.`);
 
     return lines.join('\n');
@@ -173,7 +173,7 @@ export async function initLoot(forceRefresh = false) {
         container.innerHTML = `
             <div class="ac-error">
                 <p>Failed to load Loot: ${esc(err.message)}</p>
-                <button class="btn-primary" onclick="window.location.reload()">Retry</button>
+                <button class="ac-btn-admin ac-btn-primary" onclick="window.location.reload()">Retry</button>
             </div>
         `;
     }
@@ -230,10 +230,10 @@ function renderShell(container) {
                     </button>
 
                     ${isAdmin ? `
-                        <button type="button" class="btn-primary ac-btn-sm" id="btn-add-loot-inline">
+                        <button type="button" class="ac-btn-admin ac-btn-primary" id="btn-add-loot-inline">
                             + Add Loot
                         </button>
-                        <button type="button" class="btn-secondary ac-btn-sm" id="btn-manage-loot-categories-inline">
+                        <button type="button" class="ac-btn-admin ac-btn-secondary" id="btn-manage-loot-categories-inline">
                             ⚙️ Configure Categories
                         </button>
                     ` : ''}
@@ -249,6 +249,7 @@ function renderShell(container) {
                             <th class="col-tier">Tier</th>
                             <th class="col-source">Source</th>
                             <th class="col-desc">Description</th>
+                            <th class="col-notes">Notes / Rage Advice</th>
                             ${isAdmin ? '<th class="col-actions">Actions</th>' : ''}
                         </tr>
                     </thead>
@@ -457,10 +458,41 @@ function groupLootByCategory(items) {
 }
 
 /**
+ * Formats a loot item description for tabular display:
+ * - If the text contains "See book for description.", displays that text.
+ * - If the text has any other description, shows the text before "Base Cost".
+ * 
+ * @param {string|null} text - Raw description text
+ * @returns {string} Formatted HTML snippet
+ */
+export function formatLootTableDescription(text) {
+    if (!text || !text.trim() || text === '—') {
+        return '<span style="opacity: 0.5;">—</span>';
+    }
+
+    let displayText;
+    if (text.includes('See book for description.')) {
+        displayText = 'See book for description.';
+    } else {
+        const baseCostIdx = text.search(/Base Cost/i);
+        if (baseCostIdx !== -1) {
+            const before = text.slice(0, baseCostIdx).trim();
+            displayText = before || text.trim();
+        } else {
+            displayText = text.trim();
+        }
+    }
+
+    return formatExpandableText(displayText, 160);
+}
+
+/**
  * Helper to render a Loot row with Tier column restored.
  */
 function renderLootRowHtml(item, isAdmin) {
     const tierTooltip = formatLootTierTooltip(item);
+    const descFormatted = formatLootTableDescription(item.description);
+    const notesFormatted = formatExpandableText(item.notes_advice || item.notes, 120);
 
     return `
         <tr class="ac-row-clickable" data-loot-id="${esc(item.id)}">
@@ -480,7 +512,10 @@ function renderLootRowHtml(item, isAdmin) {
                 ${renderSourceBadges(item.source)}
             </td>
             <td class="col-desc">
-                <span class="ac-detail-click-hint">Click for detailed description</span>
+                ${descFormatted}
+            </td>
+            <td class="col-notes">
+                ${notesFormatted}
             </td>
             ${isAdmin ? `
                 <td class="col-actions" style="text-align: center;" onclick="event.stopPropagation()">
@@ -505,7 +540,7 @@ function updateTableOnly() {
     }
 
     const isAdmin = getAdminMode();
-    const colSpan = isAdmin ? 6 : 5;
+    const colSpan = isAdmin ? 7 : 6;
 
     if (filteredLoot.length === 0) {
         tbody.innerHTML = `
@@ -708,20 +743,18 @@ export function showLootDetail(item) {
             <div class="detail-section">
                 <h4>Description & Effects</h4>
                 <div class="advice-content">
-                    ${renderMarkdownLinks(esc(item.description)).replace(/\n/g, '<br>')}
+                    ${renderMarkdownLinks(item.description)}
                 </div>
             </div>
         ` : ''}
 
-        <!-- Section 4: Notes & Advice -->
-        ${item.notes_advice ? `
-            <div class="detail-section">
-                <h4>Notes & Advice</h4>
-                <div class="advice-content" style="color: var(--color-secondary);">
-                    ${renderMarkdownLinks(esc(item.notes_advice)).replace(/\n/g, '<br>')}
-                </div>
+        <!-- Section 4: Notes / Rage Advice -->
+        <div class="detail-section">
+            <h4>Notes / Rage Advice</h4>
+            <div class="advice-content" style="color: var(--color-secondary);">
+                ${(item.notes_advice || item.notes) ? renderMarkdownLinks(item.notes_advice || item.notes) : '<em>—</em>'}
             </div>
-        ` : ''}
+        </div>
 
         <!-- Metadata Footer (Admin only) -->
         ${isAdmin ? `
@@ -822,7 +855,7 @@ export function openLootForm(existingItem = null) {
                 <div class="ac-form-group" style="justify-content: center;">
                     <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; text-transform: none; font-size: 0.9rem;">
                         <input type="checkbox" id="loot-form-dm-select" ${existingItem && existingItem.is_dm_select ? 'checked' : ''} />
-                        Is DM Select Item (predetermined only)
+                        Is DM Select Item (Requires creator DM permission)
                     </label>
                 </div>
                 <div class="ac-form-group">

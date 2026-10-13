@@ -194,7 +194,7 @@ export async function initOtherRewards(forceRefresh = false) {
         container.innerHTML = `
             <div class="ac-error">
                 <p>Failed to load Other Rewards: ${esc(err.message)}</p>
-                <button class="btn-primary" onclick="window.location.reload()">Retry</button>
+                <button class="ac-btn-admin ac-btn-primary" onclick="window.location.reload()">Retry</button>
             </div>
         `;
     }
@@ -257,10 +257,10 @@ function renderShell(container) {
                     </button>
 
                     ${isAdmin ? `
-                        <button type="button" class="btn-primary ac-btn-sm" id="btn-add-other-reward-inline">
+                        <button type="button" class="ac-btn-admin ac-btn-primary" id="btn-add-other-reward-inline">
                             + Add Reward
                         </button>
-                        <button type="button" class="btn-secondary ac-btn-sm" id="btn-manage-other-rewards-categories-inline">
+                        <button type="button" class="ac-btn-admin ac-btn-secondary" id="btn-manage-other-rewards-categories-inline">
                             ⚙️ Configure Categories
                         </button>
                     ` : ''}
@@ -797,7 +797,7 @@ export function showOtherRewardDetail(item) {
             <div class="detail-section">
                 <h4>Description & Effects</h4>
                 <div class="advice-content">
-                    ${renderMarkdownLinks(esc(item.description)).replace(/\n/g, '<br>')}
+                    ${renderMarkdownLinks(item.description)}
                 </div>
             </div>
         ` : ''}
@@ -807,7 +807,7 @@ export function showOtherRewardDetail(item) {
             <div class="detail-section">
                 <h4>Notes & Advice</h4>
                 <div class="advice-content" style="color: var(--color-secondary);">
-                    ${renderMarkdownLinks(esc(item.notes_advice)).replace(/\n/g, '<br>')}
+                    ${renderMarkdownLinks(item.notes_advice)}
                 </div>
             </div>
         ` : ''}
