@@ -57,6 +57,18 @@ const server = http.createServer((req, res) => {
         filePath = filePath + '.html';
     }
 
+    // Fallback: if requesting /staff/help/* but directory is in /help/* or vice versa
+    if (!fs.existsSync(filePath)) {
+        if (relativePath.startsWith('/staff/help/')) {
+            const fallbackPath = path.join(SITE_DIR, relativePath.replace('/staff/help/', '/help/'));
+            if (fs.existsSync(fallbackPath) && fs.statSync(fallbackPath).isDirectory() && fs.existsSync(path.join(fallbackPath, 'index.html'))) {
+                filePath = path.join(fallbackPath, 'index.html');
+            } else if (fs.existsSync(fallbackPath) && !fs.statSync(fallbackPath).isDirectory()) {
+                filePath = fallbackPath;
+            }
+        }
+    }
+
     if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');

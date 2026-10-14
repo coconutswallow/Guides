@@ -255,8 +255,8 @@ title: Staff Portal
             <div class="tool-header">
               <h3 class="tool-title">Static Content Editor</h3>
             </div>
-            <p class="tool-description">Use the DecapBridge CMS to edit static pages (Guides, Adventure Locations,
-              FAQ).</p>
+            <p class="tool-description">A front-end tool to edit static pages (Player's Guides, DM's Guide, etc.,
+              FAQ.  Allows non-technical users to edit content without needing to code).</p>
             <div class="tool-meta">
               <span class="access-label">Access: <span class="access-roles">User-specific (as assigned by
                   Admin)</span></span>
@@ -269,7 +269,7 @@ title: Staff Portal
             <div class="tool-header">
               <h3 class="tool-title">Content Editor Help</h3>
             </div>
-            <p class="tool-description">Guides and documentation for using the DecapBridge CMS and formatting with
+            <p class="tool-description">Help documentation for using the DecapBridge CMS and formatting with
               Markdown.
             </p>
             <div class="tool-meta">
@@ -284,39 +284,15 @@ title: Staff Portal
             </div>
           </div>
 
-          <!-- Tool: DecapBridge Admin -->
+          <!-- Tool: Content Editor User Admin -->
           <div class="tool-card">
             <div class="tool-header">
               <h3 class="tool-title">DecapBridge Admin</h3>
             </div>
-            <p class="tool-description">Maintain DecapBridge settings and manage user invites to edit static pages.</p>
+            <p class="tool-description">For Admin to add/edit users to have access to the Content Editor UI (DecapBridge).</p>
             <div class="tool-meta">
               <span class="access-label">Access: <span class="access-roles">Admin</span></span>
               <a href="https://decapbridge.com/auth/login" class="tool-button">Manage Settings</a>
-            </div>
-          </div>
-
-          <!-- Tool: Allowed Content Manager -->
-          <div class="tool-card">
-            <div class="tool-header">
-              <h3 class="tool-title">Allowed Content Manager</h3>
-            </div>
-            <p class="tool-description">Accesing the Allowed Content Page while logged in as Admin or Engineer will unhide controls for add/edit/delete of the AC.</p>
-            <div class="tool-meta">
-              <span class="access-label">Access: <span class="access-roles">Admin, Engineer</span></span>
-              <a href="{{ '/allowed-content/?admin=true' | relative_url }}" class="tool-button">Open Editor</a>
-            </div>
-          </div>
-
-          <!-- Tool: Allowed Content Schema & ERD -->
-          <div class="tool-card">
-            <div class="tool-header">
-              <h3 class="tool-title">Allowed Content Schema & ERD</h3>
-            </div>
-            <p class="tool-description">Explore data schema definitions, column types, foreign key relationships, and an interactive ERD diagram for all 34 Allowed Content tables.</p>
-            <div class="tool-meta">
-              <span class="access-label">Access: <span class="access-roles">All Staff</span></span>
-              <a href="{{ '/staff/ac-schema/' | relative_url }}" class="tool-button">View Data Schema</a>
             </div>
           </div>
         </div>
@@ -353,10 +329,22 @@ title: Staff Portal
         </div>
       </section>
 
-      <!-- SECTION: OTHERS -->
+      <!-- SECTION: DATA MANAGEMENT -->
       <section class="dashboard-section">
-        <h2>Others</h2>
+        <h2>Data Management</h2>
         <div class="tool-grid">
+
+          <!-- Tool: Allowed Content Manager -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <h3 class="tool-title">Allowed Content Manager</h3>
+            </div>
+            <p class="tool-description">Accessing the Allowed Content Page while logged in as Admin or Engineer will unhide controls for add/edit/delete of items in the AC.</p>
+            <div class="tool-meta">
+              <span class="access-label">Access: <span class="access-roles">Admin, Engineer</span></span>
+              <a href="{{ '/allowed-content/?admin=true' | relative_url }}" class="tool-button">Open Editor</a>
+            </div>
+          </div>
 
           <!-- Tool: DM Tool -->
           <div class="tool-card">
@@ -385,6 +373,36 @@ title: Staff Portal
               <span class="access-label">Access: <span class="access-roles">Admin, Engineer</span></span>
               <a href="{{ '/player-tools/rework/admin/' | relative_url }}" class="tool-button">Open Rework Class
                 Admin</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: WEBSITE DOCUMENTATION -->
+      <section class="dashboard-section">
+        <h2>Website Documentation</h2>
+        <div class="tool-grid">
+          <!-- Tool: Allowed Content Schema & ERD -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <h3 class="tool-title">Allowed Content Schema & ERD</h3>
+            </div>
+            <p class="tool-description">Explore data schema definitions, column types, foreign key relationships, and an interactive ERD diagram for all Allowed Content tables.</p>
+            <div class="tool-meta">
+              <span class="access-label">Access: <span class="access-roles">All Staff</span></span>
+              <a href="{{ '/staff/ac-schema/' | relative_url }}" class="tool-button">View Data Schema</a>
+            </div>
+          </div>
+
+          <!-- Tool: Website Architecture & Help Docs -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <h3 class="tool-title">Website Architecture & Help Docs</h3>
+            </div>
+            <p class="tool-description">Explore comprehensive technical guides, architecture overviews, author editing instructions, and component references for all website subsystems.</p>
+            <div class="tool-meta">
+              <span class="access-label">Access: <span class="access-roles">All Staff</span></span>
+              <a href="{{ '/help/' | relative_url }}" class="tool-button">View Documentation</a>
             </div>
           </div>
         </div>

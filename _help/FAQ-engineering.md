@@ -1,108 +1,65 @@
 ---
 layout: doc
-title: "FAQ Engineering Notes"
+title: "FAQ Architecture & Maintenance"
 order: 36
 exclude_from_search: true
 ---
 
-**FAQ Feature Engineering Notes**
+# FAQ Architecture & Maintenance
 
-## 1. Overview
+This document covers the technical architecture, data model, and update process for the guild's [Frequently Asked Questions (FAQ)](/Guides/faq.html) page.
 
-The FAQ page is a **static, client-side searchable** interface. It generates content at build time using Jekyll data files but handles search and filtering dynamically in the browser using **Alpine.js**.
+---
 
-This approach ensures the page is SEO-friendly (all content is in the initial HTML) while remaining instant for the user (no page reloads when filtering).
+## 1. Technical Overview
 
-## 2. Architecture & File Structure
+The FAQ page is a **hybrid static-reactive** interface:
+- **Build Time:** Jekyll iterates over `_data/faqs.yml` at build time to render all questions and categories directly into the HTML DOM for instant loading and SEO discoverability.
+- **Run Time:** [Alpine.js](https://alpinejs.dev/) provides client-side instant search and category filtering with zero server round-trips.
 
-### Key Files
+---
 
-|   |   |
-|---|---|
-|**File**|**Description**|
-|`faq.html`|The main page template. Contains the Alpine.js logic and Jekyll Liquid loops.|
-|`_data/faqs.yml`|The source of truth. Contains all questions, answers, and categories.|
-|`assets/css/faq.css`|Specific styles for the FAQ page (loaded via `extra_css` front matter).|
-|`/tools/convert_faq.py`|Utility script to convert Spreadsheet exports (TSV) into the YAML format.|
-|`https://docs.google.com/spreadsheets/d/13x8hrf6-3-dst0Gj9lFsHAtxQHQPS2kIreVQMY7oeiw/edit?usp=sharing`| Google Sheet where CGs can maintain the FAQ easily, and then we use the tool to convert to a yml |
+## 2. File Structure
 
-### Logic Flow
+| File | Purpose |
+| :--- | :--- |
+| `faq.html` | Core template containing Alpine.js state (`searchTerm`), category nav, and Question cards. |
+| `_data/faqs.yml` | The single source of truth containing all FAQ questions, answers, and category tags. |
+| `assets/css/faq.css` | Specialized styling for the two-column sidebar layout, search bar, and question cards. |
 
-1. **Build Time:** Jekyll reads `_data/faqs.yml` and loops through it in `faq.html`. It renders every single FAQ item into the DOM.
-    
-2. **Run Time:** Alpine.js initializes with `{ searchTerm: '', selectedCategory: 'all' }`.
-    
-3. **Interactivity:**
-    
-    - **Search:** The `input` binds to `searchTerm`.
-        
-    - **Filter:** Buttons bind to `selectedCategory`.
-        
-    - **Visibility:** Each FAQ item has an `x-show` directive that evaluates:
-        
-        ```
-        (categoryMatch) && (searchMatch)
-        ```
-        
+---
 
-## 3. Content Maintenance Workflow
+## 3. Data Structure (`_data/faqs.yml`)
 
-### Prerequisites
+The YAML file contains an `entries` array where each item has three properties:
 
-- **Python 3.x** installed.
-    
-- **Dependencies:** The `ruamel.yaml` library is required to preserve block formatting.
-    
-    ```
-    # First time setup
-    python -m pip install ruamel.yaml
-    ```
-    
+```yaml
+entries:
+  - category: "Character Creation"
+    question: "What rulesets are allowed in Hawthorne?"
+    answer: "Both the 2014 and 2024 core rulesets are permitted. Check the <a href='/Guides/allowed-content/'>Allowed Content</a> catalog for specific sourcebook rulings."
 
-### Step-by-Step Update Process
-
-#### 1. Edit the Spreadsheet
-
-[Google Sheet](https://docs.google.com/spreadsheets/d/13x8hrf6-3-dst0Gj9lFsHAtxQHQPS2kIreVQMY7oeiw/edit?usp=sharing)
-
-- `category` (e.g., General, Rules, Downtime)
-   
-- `question` (Plain text)
-    
-- `answer` (HTML allowed)
-    
-
-**Important Formatting Rules:**
-
-- **Newlines:** Do not press Enter inside a cell. Use the character sequence `\n` to indicate a paragraph break.
-    
-- **Links:** Use standard HTML anchors: `<a href="...">Link</a>` or `[name of the link](link url)`.  Note I tried to use relative internal links, but it doesn't work.  Adding code to try to accomodate it became too complex for what it's worth.
-    
-- **No Tabs:** Do not use tab characters within the text.
-   
-
-#### 2. Export to TSV
-
-File > Download > Tab-separated values (.tsv).  it will be named `faqs - Sheet1.tsv` by default
-
-Save the file as `faqs - Sheet1.tsv` in the same folder as the Python script. (`/tools)`)
-    
-
-#### 3. Run the Converter
-
-Execute the script to generate the production YAML file (via your command prompt)
-
-```
-python convert_faq.py
+  - category: "Downtime"
+    question: "How do I log crafting progress?"
+    answer: "Crafting downtime must be logged in the designated discord channel according to the Guild Downtime rules."
 ```
 
-- **Input:** `tools/faqs - Sheet1.tsv` (or root, depending on script config)  
-- **Output:** `_data/faqs.yml`
-    
+### Supported Categories & Sorting
+In `faq.html`, categories are ordered according to the configured priority:
+1. `General`
+2. `Character Creation`
+3. `MAL`
+4. `Games`
+5. `Downtime`
+6. `DM`
+7. `Rules`
+8. `Support`
 
-#### 4. Verify and Commit
+---
 
-Check `_data/faqs.yml` to ensure the formatting looks correct. 
+## 4. Editing & Updating Questions
 
-
-#### 5. Push to Github
+1. Open `_data/faqs.yml`.
+2. Add a new entry to the `entries` list or modify an existing item.
+3. In the `answer` field, HTML anchor tags (`<a href="...">`) and standard HTML markup are fully supported.
+4. Commit changes to git and push; Jekyll will rebuild the page automatically.

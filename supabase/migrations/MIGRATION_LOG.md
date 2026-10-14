@@ -1548,3 +1548,34 @@ node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --execut
 | DEV | ✅ | ✅ | 2026-10-12 | Both deprecated views dropped. Committed to DEV. |
 | PRODUCTION | ✅ | ⏳ | 2026-10-12 | Dry-run verified (all checks passed). Pending execution when ready. |
 
+
+---
+
+### Step 37: Drop AC Legacy Bastion Tables (`ac_bastions`, `ac_bastion_categories`)
+- **Date**: 2026-10-14
+- **Scope**: Clean up 2 deprecated pre-normalization Bastion tables in PostgreSQL (`public.ac_bastions` and `public.ac_bastion_categories`) that were superseded by normalized base tables `public.ac_bastion` and `public.ac_bastion_type`.
+- **Files**:
+  - `supabase/migrations/20261014_drop_ac_bastions_legacy_tables.sql`
+  - `supabase/migrations/run_20261014_drop_ac_bastions_legacy_tables.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261014_drop_ac_bastions_legacy_tables.js --dry-run`
+  - `node supabase/migrations/run_20261014_drop_ac_bastions_legacy_tables.js --execute`
+  - `node supabase/migrations/run_20261014_drop_ac_bastions_legacy_tables.js --dry-run --prod`
+  - `node supabase/migrations/run_20261014_drop_ac_bastions_legacy_tables.js --execute --prod`
+
+#### Key Changes
+1. **Dropped Legacy Bastion Tables**:
+   - `public.ac_bastions` (superseded by normalized `ac_bastion`)
+   - `public.ac_bastion_categories` (superseded by normalized `ac_bastion_type`)
+2. **Service Layer Clean-Up**:
+   - In `assets/js/allowed-content/ac-service.js`, removed deprecated fallback query logic that attempted to read from `ac_bastions` or `ac_bastion_categories`. All reads and CRUD operations exclusively target `ac_bastion` and `ac_bastion_type`.
+3. **Verification Criteria**:
+   - `ac_bastions` and `ac_bastion_categories` confirmed dropped from `information_schema.tables` in both DEV and PRODUCTION environments.
+   - Active normalized tables `public.ac_bastion` (66 rows) and `public.ac_bastion_type` (4 rows) verified 100% intact.
+   - Re-extracted metadata via `generate_ac_schema_metadata.js`, indexing 32 clean tables/views.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-14 | Both legacy bastion tables dropped. Committed to DEV. |
+| PRODUCTION | ✅ | ✅ | 2026-10-14 | Both legacy bastion tables dropped. Committed to PRODUCTION. |

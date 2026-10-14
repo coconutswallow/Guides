@@ -56,8 +56,6 @@ const NODE_POSITIONS = {
     'ac_downtime': { x: 2150, y: 1020 },
     'ac_bastion_type': { x: 2450, y: 780 },
     'ac_bastion': { x: 2450, y: 1020 },
-    'ac_bastion_categories': { x: 2750, y: 780 },
-    'ac_bastions': { x: 2750, y: 1020 },
 
     // Cluster: Monsters
     'ac_monsters_categories': { x: 1450, y: 1250 },
@@ -195,7 +193,7 @@ export class ACSchemaViewer {
             this.container.querySelectorAll('.ac-filter-pill').forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
             this.currentDomain = pill.dataset.domain;
-            this.handleSearchFilter();
+            this.handleSearchFilter(true);
         });
     }
 
@@ -287,6 +285,7 @@ export class ACSchemaViewer {
                     
                     <!-- Header Background -->
                     <rect class="node-header-bg" width="${CARD_WIDTH}" height="${HEADER_HEIGHT}" rx="6" ry="6" />
+                    <line class="node-header-line" x1="0" y1="${HEADER_HEIGHT}" x2="${CARD_WIDTH}" y2="${HEADER_HEIGHT}" />
                     
                     <!-- Header Title & Name -->
                     <text class="node-header-title" x="12" y="22">${this.escapeHtml(table.title)}</text>
@@ -353,6 +352,7 @@ export class ACSchemaViewer {
         svgContainer.addEventListener('mousedown', (e) => {
             if (e.target.closest('.erd-node') || e.target.closest('.ac-ctrl-btn')) return;
             this.isDragging = true;
+            svgContainer.classList.add('is-dragging');
             this.dragStart = { x: e.clientX - this.transform.x, y: e.clientY - this.transform.y };
         });
 
@@ -364,12 +364,16 @@ export class ACSchemaViewer {
         });
 
         window.addEventListener('mouseup', () => {
-            this.isDragging = false;
+            if (this.isDragging) {
+                this.isDragging = false;
+                svgContainer.classList.remove('is-dragging');
+            }
         });
 
         // Mouse Wheel Zoom (Around Cursor)
         svgContainer.addEventListener('wheel', (e) => {
             e.preventDefault();
+            svgContainer.classList.add('is-dragging');
             const rect = svgContainer.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
             const mouseY = e.clientY - rect.top;
@@ -383,6 +387,11 @@ export class ACSchemaViewer {
             this.transform.scale = newScale;
 
             this.updateSvgTransform();
+
+            clearTimeout(this._wheelTimeout);
+            this._wheelTimeout = setTimeout(() => {
+                svgContainer.classList.remove('is-dragging');
+            }, 100);
         }, { passive: false });
 
         // Controls
@@ -568,6 +577,7 @@ export class ACSchemaViewer {
                                 <td>
                                     <strong><code>${this.escapeHtml(col.name)}</code></strong>
                                     ${!col.nullable ? '<span style="color: #c93b27; font-size: 0.75rem;" title="Required">*</span>' : ''}
+                                    ${col.description ? `<div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px;">${this.escapeHtml(col.description)}</div>` : ''}
                                 </td>
                                 <td><span class="ac-type-tag">${this.escapeHtml(col.type)}</span></td>
                                 <td>
@@ -608,13 +618,13 @@ export class ACSchemaViewer {
         this.selectedTableId = null;
     }
 
-    panToTable(tableId) {
+    panToTable(tableId, targetScale = 0.9) {
         const pos = NODE_POSITIONS[tableId];
         const svgContainer = this.container.querySelector('#erd-canvas-container');
         if (!pos || !svgContainer) return;
 
         const rect = svgContainer.getBoundingClientRect();
-        this.transform.scale = Math.max(this.transform.scale, 0.75);
+        this.transform.scale = targetScale;
         this.transform.x = rect.width / 2 - (pos.x + CARD_WIDTH / 2) * this.transform.scale;
         this.transform.y = rect.height / 2 - (pos.y + 100) * this.transform.scale;
 
@@ -624,7 +634,7 @@ export class ACSchemaViewer {
     /* ============================================================================
      * SEARCH & FILTER LOGIC
      * ============================================================================ */
-    handleSearchFilter() {
+    handleSearchFilter(isFilterClick = false) {
         const q = this.searchQuery;
         const dom = this.currentDomain;
 
@@ -651,16 +661,20 @@ export class ACSchemaViewer {
                 const visible = domainMatches && searchMatches;
 
                 nodeEl.classList.toggle('dimmed', !visible);
-                nodeEl.classList.toggle('matched', Boolean(visible && q));
+                nodeEl.classList.toggle('matched', Boolean(visible && (q || dom !== 'all')));
 
-                if (visible && q && !matchedFirst) {
+                if (visible && !matchedFirst) {
                     matchedFirst = tableId;
                 }
             }
 
-            // Auto-pan to first match if searching
-            if (matchedFirst) {
-                this.panToTable(matchedFirst);
+            // Auto-pan and zoom to the first relevant table when a filter or search is applied
+            if (dom === 'all' && !q && isFilterClick) {
+                this.fitAllNodes();
+                this.closeInspector();
+            } else if (matchedFirst && (isFilterClick || q)) {
+                this.panToTable(matchedFirst, 0.9);
+                this.selectTable(matchedFirst);
             }
         } else if (this.currentView === 'dict') {
             this.renderDataDictionaryView(this.container.querySelector('#ac-view-viewport'));
@@ -765,6 +779,7 @@ export class ACSchemaViewer {
                                         <tr>
                                             <td>
                                                 <strong><code>${this.escapeHtml(col.name)}</code></strong>
+                                                ${col.description ? `<div style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 2px;">${this.escapeHtml(col.description)}</div>` : ''}
                                             </td>
                                             <td>
                                                 <span class="ac-type-tag">${this.escapeHtml(col.type)}</span>

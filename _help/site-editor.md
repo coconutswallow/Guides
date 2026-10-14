@@ -1,55 +1,38 @@
 ---
-title: Site Editor
+title: Site Editor (DecapBridge CMS)
 layout: doc
-order: 10
+permalink: /help/site-editor/
+order: 110
 exclude_from_search: true
 ---
 
-**Using the Web Editor to Edit documents**
+## Content Editing with DecapBridge CMS
 
-To make it easier for authors to add / edit documents, I installed a back-end web-editor onto the development site (hawthorneguild.github.io/Guides).
+To enable staff and authors to add or edit static documentation pages without editing raw git files or requiring command-line tools, a web-based Content Management System (DecapBridge) is integrated into the site.
 
+---
 
-## Access to the Web Editor
+### 1. Accessing the Web Editor
 
-To access the web editor, go to [https://hawthorneguild.github.io/Guides/admin](https://hawthorneguild.github.io/Guides/admin)
+1. Navigate to the web editor interface at:  
+   **[`/admin/`](/Guides/admin/)** or directly via [https://hawthorneguild.github.io/Guides/admin](https://hawthorneguild.github.io/Guides/admin)
+2. DecapBridge administrative settings and user invites are managed at [https://decapbridge.com/auth/login](https://decapbridge.com/auth/login).
+3. **Permissions:** Access is restricted to authorized editors. To request an invitation, reach out to an **Admin** or **Engineer** in the Hawthorne Guild Discord.
 
-![Login Screen](/Guides/assets/images/CMS-1.png)
+---
 
-**Note:**  Only those who have been granted access can login. Request an invitation from **Luolang** in Discord to get access.
+### 2. Editor Workflow
 
-## Main Screen
+Once logged in, the editor displays the site's collections on the left (e.g. *Rules & Roles*, *Player's Guide*, *DM's Guide*, *Arcana*, *Lore*):
 
-Once logged in, you should see the main screen that looks something like below.  The Collections on the left are the "books" or section of the website, and the center are the "pages" of the book.
-
-![Main CMS Screen](/Guides/assets/images/CMS-2.png)
-
-## Editing or adding a new page
-
-To edit a new page, click on one of the pages to open it up for editing.  To add a new page, click on the button near the top right (in the example above, it's the [New Player's Guide] button.)
-
-Once in, you'll see the header "Front Matter":
-
-![Header Metadata](/Guides/assets/images/CMS-4.png)
-
-The Front Matter section is very important, it's what the site uses to put the page onto the navigation menu.  Give the page a title.  the layout is always "doc" for your purposes, and the order dictates where it shows up on the navigation (so you might want to check what is the order before and after where you want to insert a page).  
-
-Typically I've numbered pages 10, 20, 30 etc. so there's room to add pages in between without needing to update the page orders for every page in the section.
-
-![Editor Block](/Guides/assets/images/CMS-5.png)
-
-You'll see at the top, the menu bar that supports the formatting, along with a toggle for "rich text" and "markdown".  Editing using rich text allows you to not need to know/use markdown format, but you must use the formatting buttons above.  On the flip side, you can toggle to markdown.  Markdown is basically what Discord uses.  Of course, there is the option to toggle back-and-forth, which is what I am doing writing this because rich-text does have one big advantage:  **images**.
-
-In rich-text format, you can press the + button in the bar, and choose image.  It will give you a couple of options, "Choose \[different] image", "Replace with URL", or "Remove image".
-
-![](/Guides/assets/images/CMS-6.png)
-
-Choose image allows you to select (or upload) images to the server, whereas "replace with url" allows you to add an external link
-
-![](/Guides/assets/images/CMS-8.png)
-
-As you can see in the screenshot above, you can select an image already uploaded, or press the upload image to add an image to the site library, then select it.
-
-## Publishing
-
-Once you are done, hit the "Publish" button and it will load to the website in ~ 1-5 minutes.  
+1. **Selecting a Page:** Click on any page title in the list to open the editor.
+2. **Creating a Page:** Click the **New [Collection Name]** button in the upper right.
+3. **Front Matter:**
+   - **Title:** The display name of the article.
+   - **Order:** Numerical sequence determining menu order (e.g., `10, 20, 30...`). Leave gaps between numbers to allow inserting future pages easily.
+   - **Layout:** Standard pages use `layout: doc`.
+   - **Background Image:** Optional header background image path.
+4. **Rich Text vs. Markdown:**
+   - Toggle between **Rich Text** (visual formatting toolbar) and **Markdown** mode.
+   - In Rich Text mode, use the `+` button to upload images into the media library or insert URLs.
+5. **Publishing:** Click **Publish** to save changes. The changes are committed to GitHub and deployed automatically to the live site within 1–3 minutes.

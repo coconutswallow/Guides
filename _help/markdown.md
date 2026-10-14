@@ -1,7 +1,8 @@
 ---
 title: Markdown Guide
 layout: doc
-order: 12
+permalink: /help/markdown/
+order: 110
 exclude_from_search: true
 ---
 

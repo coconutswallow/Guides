@@ -27,13 +27,6 @@
   border-color: var(--color-primary);
 }
 
-@media (max-width: 768px) {
-  #search-input {
-    /* Reduce the width and max-width on mobile to prevent crowding */
-    width: 70%; 
-    max-width: 180px;
-  }
-}
 
 /* ============================================ */
 /* SEARCH RESULTS CONTAINER */
@@ -110,7 +103,7 @@
 #search-results li h4 {
   margin: 0 0 5px 0;
   color: var(--color-primary);
-  font-family: 'Cinzel', serif;
+  font-family: var(--font-header);
   transition: color 0.3s ease;
 }
 
@@ -129,7 +122,8 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
   #search-input {
-    max-width: 200px;
+    width: 70%;
+    max-width: 180px;
     height: 36px;
     font-size: 0.9em;
   }

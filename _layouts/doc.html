@@ -25,10 +25,103 @@ layout: default
             <span class="breadcrumb-item active">{{ page.title }}</span>
         </nav>
 
-        <h1 class="doc-title">{{ page.title }}</h1>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+            <h1 class="doc-title" style="margin-bottom: 0;">{{ page.title }}</h1>
+            {% if page.collection == 'help' or page.staff_only %}
+            <div style="margin-left: auto;">
+                {% include auth-header.html %}
+            </div>
+            {% endif %}
+        </div>
 
+        {% if page.collection == 'help' or page.staff_only %}
+        <!-- Access Denied State -->
+        <div id="access-denied" class="access-denied" style="display: none; max-width: 600px; margin: 3rem auto; padding: 2.5rem 2rem; background: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-align: center; box-shadow: var(--shadow-md);">
+            <h2 style="color: var(--color-primary); font-family: var(--font-header); font-size: 2rem; margin-bottom: 1rem;">Staff Access Required</h2>
+            <p style="font-size: 1.05rem; color: var(--color-text); line-height: 1.6; margin-bottom: 1.5rem;">
+                This documentation contains internal website specifications, architecture diagrams, and administrative workflows. Please log in with a Discord account holding a Hawthorne Staff role to view this page.
+            </p>
+            <p style="font-size: 0.9em; color: var(--color-text-secondary); margin-bottom: 0;">For more information, please see the <a href="{{ '/resources/discord-login/' | relative_url }}">Discord Login Explanation</a>.</p>
+        </div>
 
+        <!-- Authenticated Staff Content Container -->
+        <div id="staff-interface" style="display: none;">
+            <div class="doc-body">
+                {{ content }}
+            </div>
 
+            {% if page.toc %}
+            <aside class="doc-toc">
+                <h3>On This Page</h3>
+                <div id="toc-container"></div>
+            </aside>
+            {% endif %}
+
+            {% if page.collection %}
+            <nav class="doc-footer-nav">
+                {% assign collection_items = site[page.collection] | where_exp: "item", "item.hide_from_nav != true" | sort: 'order' %}
+                {% assign current_index_0 = -1 %}
+
+                {% for item in collection_items %}
+                    {% if item.url == page.url %}
+                        {% assign current_index_0 = forloop.index0 %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% if current_index_0 > 0 %} 
+                    {% assign prev_item_index = current_index_0 | minus: 1 %}
+                    {% assign prev_item = collection_items[prev_item_index] %}
+                    <a href="{{ prev_item.url | relative_url }}" class="prev-link">
+                        <span class="nav-arrow">‹</span>
+                        <span class="nav-label">{{ prev_item.title }}</span>
+                    </a>
+                {% endif %}
+                
+                {% assign next_item_index = current_index_0 | plus: 1 %}
+                {% if next_item_index < collection_items.size %}
+                    {% assign next_item = collection_items[next_item_index] %}  
+                    <a href="{{ next_item.url | relative_url }}" class="next-link">
+                        <span class="nav-label">{{ next_item.title }}</span>
+                        <span class="nav-arrow">›</span>
+                    </a>
+                {% endif %}
+            </nav>
+            {% endif %}
+        </div>
+
+        <script type="module">
+            import { checkAccess } from "{{ '/assets/js/auth-check.js' | relative_url }}";
+
+            const ui = {
+                accessDenied: document.getElementById('access-denied'),
+                staffInterface: document.getElementById('staff-interface')
+            };
+
+            window.handlePageAuth = async function (user) {
+                if (!user) {
+                    if (ui.accessDenied) ui.accessDenied.style.display = 'block';
+                    if (ui.staffInterface) ui.staffInterface.style.display = 'none';
+                    return;
+                }
+
+                const hasAccess = await checkAccess(user.id, ['Staff', 'Staff Apprentice', 'Admin', 'Engineer', 'Auditor', 'Lore', 'Rules']);
+
+                if (!hasAccess) {
+                    if (ui.accessDenied) ui.accessDenied.style.display = 'block';
+                    if (ui.staffInterface) ui.staffInterface.style.display = 'none';
+                    return;
+                }
+
+                if (ui.accessDenied) ui.accessDenied.style.display = 'none';
+                if (ui.staffInterface) ui.staffInterface.style.display = 'block';
+            };
+
+            if (window.authManager && window.authManager.user !== undefined) {
+                window.handlePageAuth(window.authManager.user);
+            }
+        </script>
+        {% else %}
         <div class="doc-body">
             {{ content }}
         </div>
@@ -70,6 +163,7 @@ layout: default
                 </a>
             {% endif %}
         </nav>
+        {% endif %}
         {% endif %}
     </div>
 </div>

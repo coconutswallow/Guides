@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Marcellus+SC&display=swap');
-
 /* ============================================ */
 /* D&D 2024 MONSTER STAT BLOCK STYLES */
 /* ============================================ */
@@ -52,7 +50,7 @@ blockquote.stat-block,
   padding: 0; /* Padding added to children instead */
   margin: 1em 0;
   box-shadow: 0 0 8px var(--statblock-card-shadow);
-  font-family: 'Alegreya Sans', 'Source Sans 3', Arial, sans-serif;
+  font-family: var(--font-body);
   font-style: normal; /* Override default blockquote italic */
   overflow: hidden;
   page-break-inside: avoid; /* Keep stat block together when printing */
@@ -70,7 +68,7 @@ blockquote.stat-block,
 
 .monster-page blockquote h2,
 blockquote.stat-block h2 {
-  font-family: 'Marcellus SC', 'Cinzel Decorative', 'Cinzel', Georgia, serif;
+  font-family: var(--font-header);
   font-size: 1.6em;
   color: var(--statblock-header-text);
   background: var(--color-primary);

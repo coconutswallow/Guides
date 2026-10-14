@@ -301,7 +301,7 @@
     position: absolute;
     top: 1rem;
     left: 1rem;
-    background: rgba(var(--palette-bg-card-light), 0.85);
+    background: rgba(var(--palette-bg-card-light-rgb), 0.85);
     backdrop-filter: blur(4px);
     border: 1px solid var(--color-border);
     border-radius: 4px;
@@ -371,26 +371,45 @@
     opacity: 0.22;
 }
 
+#erd-viewport {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ac-erd-canvas-container.is-dragging #erd-viewport {
+    transition: none !important;
+}
+
 .node-card-bg {
-    fill: var(--color-bg-light, #ffffff);
-    stroke: var(--color-border, #d4c4b0);
-    stroke-width: 1px;
+    fill: #ffffff !important;
+    stroke: #cbc5b8;
+    stroke-width: 1.5px;
     rx: 6px;
     ry: 6px;
-    transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.09));
+    transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease;
 }
 
 [data-theme="dark"] .node-card-bg {
-    fill: #1e1e1e;
+    fill: #1e1e1e !important;
     stroke: #3a3a3a;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
 .node-header-bg {
-    fill: rgba(88, 24, 13, 0.08);
+    fill: #ffffff;
 }
 
 [data-theme="dark"] .node-header-bg {
-    fill: rgba(212, 165, 116, 0.12);
+    fill: #222222;
+}
+
+.node-header-line {
+    stroke: #e4decb;
+    stroke-width: 1px;
+}
+
+[data-theme="dark"] .node-header-line {
+    stroke: #333333;
 }
 
 .node-header-title {
@@ -441,7 +460,7 @@
 .ac-inspector-drawer {
     width: 380px;
     border-left: 1px solid var(--color-border);
-    background: var(--color-bg-light);
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -449,6 +468,10 @@
     transition: transform 0.3s ease;
     box-shadow: -4px 0 15px rgba(0, 0, 0, 0.08);
     position: relative;
+}
+
+[data-theme="dark"] .ac-inspector-drawer {
+    background: #1a1a1a;
 }
 
 .ac-inspector-drawer.collapsed {
@@ -596,12 +619,16 @@
 }
 
 .ac-dict-table-card {
-    background: var(--color-bg-light);
+    background: #ffffff;
     border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="dark"] .ac-dict-table-card {
+    background: #1a1a1a;
 }
 
 .ac-dict-table-card:hover {

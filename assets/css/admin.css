@@ -88,7 +88,7 @@
 
 .admin-tab:hover {
     color: var(--admin-primary);
-    background: var(--palette-bg-hover-light);
+    background: var(--color-table-hover);
 }
 
 .admin-tab.active {
@@ -157,7 +157,7 @@
     padding: 0.6rem;
     border: 1px solid var(--admin-border);
     border-radius: 6px;
-    background: #fff;
+    background: var(--color-bg-page);
     color: var(--color-text);
     font-family: inherit;
 }
@@ -239,7 +239,7 @@
 }
 
 .btn-add-row:hover {
-    background: var(--palette-bg-hover-light);
+    background: var(--color-table-hover);
     color: var(--admin-primary);
     border-color: var(--admin-primary);
 }
@@ -258,7 +258,7 @@
 
 .admin-table th {
     background: var(--admin-primary);
-    color: #fff;
+    color: var(--palette-neutral-white);
     text-align: left;
     padding: 1rem;
 }
@@ -273,7 +273,7 @@
 }
 
 .admin-table tr:hover {
-    background: var(--palette-bg-hover-light);
+    background: var(--color-table-hover);
 }
 
 /* Badges */
@@ -286,12 +286,12 @@
 }
 
 .badge-active {
-    background: var(--palette-alert-success-bg-light);
+    background: var(--color-alert-success-bg);
     color: var(--palette-alert-success-border);
 }
 
 .badge-inactive {
-    background: var(--palette-alert-danger-bg-light);
+    background: var(--color-alert-danger-bg);
     color: var(--palette-alert-danger-border);
 }
 

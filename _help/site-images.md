@@ -1,52 +1,72 @@
 ---
-title: Site Images
+title: Site Images & Artwork
 layout: doc
-order: 52
+order: 120
 exclude_from_search: true
 ---
 
+# Managing Site Images & Artwork
 
-## Home Page Images
+This guide covers guidelines for adding, sizing, and styling images across the Hawthorne Guild documentation website.
 
-On the main home-page, I created thumbnail images per "card".  You can see in index.html the format to add images, which I save to
-`/assets/thumbnails.`  Note that for consistency, each image is 300x200px.  
+---
 
-## Background Images
+## 1. Homepage & Feature Thumbnails
 
-You'll see for some pages, I have a background image.  The css to have the image in the background is built into the template, so
-to add a background image, all you need to do is add `background_image:` to the front matter, e.g.
+Thumbnails displayed in card grids (such as the homepage or tool landing pages) are stored in `/assets/thumbnails/`:
 
-```
+- **Standard Dimensions:** **300 x 200 px** (3:2 aspect ratio).
+- **Format:** Prefer lightweight PNG or WebP files optimized for web.
+- **Reference Pattern:**
+  ```liquid
+  <img src="{{ '/assets/thumbnails/example-thumb.png' | relative_url }}" alt="Feature Title" class="card-thumbnail">
+  ```
+
+---
+
+## 2. Page Header Background Images
+
+Documentation pages support custom header artwork via front matter:
+
+```yaml
 ---
 layout: doc
-title: "Downtime"
+title: "Downtime Activities"
 order: 15
 background_image: /assets/images/tavern_brawl.jpg
 ---
 ```
 
-## Adding images in pages
+The background styling is integrated into `_layouts/doc.html`, applying subtle darkening and parchment blending to keep title text legible.
 
-Internal Images (saved onto the site):
-```
-![Example of a Trade in #trade-logs](Guides/assets/images/trade-example.png)
-```
+---
 
-External Images:
-```
-![Example of a Trade in #trade-logs](https://image.com/example-image.png)
-```
+## 3. Inserting Images into Markdown Articles
 
-## Crediting Images
+### Internal Repository Images:
+Store new images in `/assets/images/` and reference them using site-relative paths:
 
-To credit an image, we need to use an html tag (span class="image caption"):
-
-```
-<span class="image-caption">Dragon Magazine #300</span>
+```markdown
+![Trade Confirmation Example](/Guides/assets/images/trade-example.png)
 ```
 
-You can also insert links to the caption, but require the HTML tag instead of markdown:
-```
-<span class="image-caption"><a href="https://cdnb.artstation.com/p/assets/images/images/021/394/125/4k/logan-feliciano-bonespire-002s.jpg?1571510286">Bone Spire by logan-feliciano</a></span>
+### External Images:
+```markdown
+![Artwork Title](https://example.com/artwork.jpg)
 ```
 
+---
+
+## 4. Image Credits & Captions
+
+To maintain accreditation for community and sourcebook artists, use the styled `.image-caption` class:
+
+```html
+<span class="image-caption">Dragon Magazine #300 — Illustration by Wayne Reynolds</span>
+```
+
+With an external portfolio link:
+
+```html
+<span class="image-caption"><a href="https://artstation.com/artist" target="_blank" rel="noopener noreferrer">Artwork Title by Artist Name</a></span>
+```

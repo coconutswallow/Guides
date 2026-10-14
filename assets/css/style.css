@@ -63,6 +63,14 @@
   --palette-bg-row-light: #F5E6D3;
   --palette-bg-hover-light: #F0E0C8;
 
+  /* RGB Channels for Alpha Transparency */
+  --palette-brand-main-rgb: 88, 24, 13;
+  --palette-brand-accent-rgb: 130, 32, 0;
+  --palette-brand-highlight-rgb: 192, 173, 106;
+  --palette-bg-card-light-rgb: 253, 241, 220;
+  --palette-bg-page-light-rgb: 255, 254, 249;
+  --palette-border-light-rgb: 212, 196, 176;
+
   --palette-border-light: #D4C4B0;
   --palette-text-main-light: #2c2c2c;
   --palette-text-muted-light: #5a5a5a;
@@ -175,6 +183,7 @@
   --color-primary: var(--palette-brand-main);
   --color-secondary: var(--palette-brand-accent);
   --color-text: var(--palette-text-main-light);
+  --color-text-main: var(--palette-text-main-light);
   --color-text-secondary: var(--palette-text-muted-light);
   --color-border: var(--palette-border-light);
 
@@ -270,6 +279,7 @@
   --shadow-sm: 0 2px 4px var(--shadow-color-light);
   --shadow-md: 0 4px 8px var(--shadow-color-light-alt);
   --shadow-lg: 0 6px 12px var(--shadow-color-light-alt-2);
+  --shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
 
@@ -277,10 +287,18 @@
    3. THEME OVERRIDES (Dark Mode)
    ============================================ */
 [data-theme="dark"] {
+  /* RGB Channels (Dark Mode) */
+  --palette-brand-main-rgb: 212, 165, 116;
+  --palette-brand-accent-rgb: 232, 197, 160;
+  --palette-bg-card-dark-rgb: 26, 26, 26;
+  --palette-bg-page-dark-rgb: 0, 0, 0;
+  --palette-border-dark-rgb: 58, 58, 58;
+
   /* Core Colors */
   --color-primary: var(--palette-brand-main-dark);
   --color-secondary: var(--palette-brand-accent-dark);
   --color-text: var(--palette-text-main-dark);
+  --color-text-main: var(--palette-text-main-dark);
   --color-text-secondary: var(--palette-text-muted-dark);
   --color-border: var(--palette-border-dark);
 

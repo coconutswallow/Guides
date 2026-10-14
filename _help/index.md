@@ -1,48 +1,43 @@
 ---
-title: Help Index
+title: Website Documentation Hub
 layout: doc
 permalink: /help/
 order: 1
 exclude_from_search: true
+staff_only: true
 ---
 
-**Site Documentation**
+## ⚙️ Core Architecture & Design System
 
-### For Authors:
-- <a href="{{ 'help/site-editor/' | relative_url }}">Site Page Editing tool</a>
-- <a href="{{ 'help/markdown/' | relative_url }}">Markdown Author's Guide</a>
-- <a href="{{ 'help/sitemap/' | relative_url }}">Site Map to help you figure out the page orders quickly</a>
+- **[Website Technical Architecture & Infrastructure]({{ '/help/website-architecture/' | relative_url }})**  
+  Documents the high-level of how the website is constructed, including the integration between the test and the production servers.
+  
+- **[Collections & Navigation Setup]({{ '/help/collections/' | relative_url }})**  
+  How Jekyll (the tool in GitHub) collections in `_config.yml` pair with `_data/navigation.yml` to build collapsible sidebar navigation menus.
 
-### For Engineers
+- **[Color System & Parchment Themes]({{ '/help/colors/' | relative_url }})**  
+  The two-layer design token model (raw palette tokens vs. semantic theme variables) powering both Light and Dark modes.
 
-#### Standard Pages
+- **[Discord Authentication & Role-Based Access Control]({{ '/help/discord-login/' | relative_url }})**  
+  Supabase Auth integration with Discord OAuth, `discord_users` role lookups, client caching, and page gating.
+  
+- **[Home Page & Server Announcements]({{ '/help/homepage/' | relative_url }})**  
+- 
+  Homepage grid organization and the dynamic date-filtered server announcements banner powered by Supabase `server_msg`.
 
-The intention of the site design is that maintenance of the content is "low-tech".  Most of it is designed to work automatically, but here are a few things to know to customize the site:
-
-- <a href="{{ 'help/collections/' | relative_url }}">Collections & Configuring the Site Navigation</a>
-- <a href="{{ 'help/colors/' | relative_url }}">Site Color Schemes (Light/Dark)</a>
-- <a href="{{ 'help/site-images/' | relative_url }}">Site Images</a>
-
-#### Custom Pages
-
-- <a href="{{ 'help/homepage' | relative_url }}">Main Site Home Page</a>
-- <a href="{{ 'help/monsters' | relative_url }}">Monster Compendium Customer Pages</a>
-- <a href="{{ 'help/FAQ-engineering' | relative_url }}">FAQ</a>
+- **[FAQ Architecture & Maintenance]({{ '/help/FAQ-engineering/' | relative_url }})**  
+  Alpine.js reactive search and filter engine coupled with build-time `_data/faqs.yml` data.
 
 ---
 
-#### External Components
+## 🛡️ Subsystems & Staff Applications
 
-I tried not to, but there are a few external components used for super complicated stuff
+Deep-dive documentation for database-driven single page applications:
 
-##### lunnr.js 
-(/assets/js/lunr.js)
+- **[Allowed Content Architecture & Data Model]({{ '/help/allowed-content/' | relative_url }})**  
+  Full overview of the 32 normalized PostgreSQL tables (`public.ac_*`), modular frontend architecture, admin CRUD workflows, and sequencing.
 
-This is a library that adds universal search to the the whole site.  It's not the best universal search out there, but it works. and it's free.
-BUT.... `/assets/js/search.js` together with `search.json` is where you can set some parameters for the search.  I have it set to prioritize the Title first, then headers, then body for search. 
-
-##### Deecapbridge CMS
-This is the editor that I have plugged into the back-end so that users can edit the pages directly without going through git-hub.  It's primarily configured by the files in `/admin`
-
-
+- **[Monster Compendium, Creator & Approvals]({{ '/help/monsters/' | relative_url }})**  
+  Dynamic 5e statblock SPA, the interactive monster creator (`editor.html`), and the staff approval review queue.
+---
 

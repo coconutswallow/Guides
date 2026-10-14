@@ -1,51 +1,57 @@
 ---
 layout: doc
-title: "Home Page"
+title: "Home Page & Announcements"
 order: 32
 exclude_from_search: true
 ---
 
-**Site Documentation: Editing the Homepage**
+# Home Page & Announcements Architecture
 
-This guide explains how to make simple edits to the main homepage (`index.html`) of the guild website.
+This guide explains how the main homepage (`index.html`) is structured and how active server announcement banners are managed via Supabase.
 
-## Layout Overview
+---
 
-The homepage uses a responsive grid designed to highlight key entry points for players and DMs.
+## 1. Dynamic Server Messages Banner
 
-- **Structure:** The page is split into 3 major sections: **Getting Started**, **For Players**, and **For Dungeon Masters**.
-- **Grid:** Each section contains a series of cards. Currently, the site is optimized for a **3x4 grid (12 cards total)** to balance the layout.
+The top of the homepage features a dynamic server announcement banner:
 
-## How the Homepage is Structured
+- **Data Source:** Supabase PostgreSQL table `server_msg`.
+- **Query Filter:** Automatically displays messages where `start_date <= today <= end_date` based on the user's local date.
+- **Markdown Rendering:** Messages support full Markdown (links, bolding, lists, italics) parsed in the browser via `marked.js`.
 
-The homepage is built in a semantic pattern:
+### How to Post or Edit an Announcement:
+1. Open the Supabase Table Editor for `server_msg`.
+2. Insert or edit a row:
+   - `message`: Markdown-formatted announcement text.
+   - `start_date`: Date when the banner should start displaying (e.g. `2026-10-14`).
+   - `end_date`: Date when the banner should automatically expire and hide.
+3. Multiple active announcements will automatically render separated by subtle dividers.
 
-1.  **Sections (`<div class="home-section">`)**: Containers for major topics. Each has an `<h3>` title.
-2.  **Card Grids (`<div class="card-grid">`)**: The wrapper for the individual cards.
-3.  **Cards (`<div class="feature-card">`)**: Each card contains a title, a thumbnail image, a brief description, and a button.
+---
 
-## How to Make Common Edits
+## 2. Homepage Grid Structure
 
-To edit a card, find the corresponding block in `index.html`.
+Below the hero banner and active announcements, `index.html` organizes content into three primary sections:
 
-### Example Card Block:
+1. **Getting Started:** Quick orientation cards for new guild members.
+2. **For Players:** Player's Guide, Allowed Content, Arcana, Player Tools, and Downtime.
+3. **For Dungeon Masters:** DM's Guide, Monster Compendium, Field Guide, and DM Tools.
+
+### Card HTML Pattern:
 
 ```html
-<div class="feature-card">
-  <h4>Player's Guide</h4>
-  <a href="{{ 'playersguide/index/' | relative_url }}">
-    <img src="{{ '/assets/thumbnails/players-300.png' | relative_url }}" alt="Player's Guide" class="card-thumbnail">
-  </a>
-  <p>Everything you need to know to create characters and play on the Hawthorne D&D 5e Server</p>
-  <a href="{{ 'playersguide/index/' | relative_url }}" class="card-button">Read Guide</a>
+<div class="card-grid">
+  <div class="feature-card">
+    <div class="card-image-wrapper">
+      <img src="{{ '/assets/thumbnails/ac-thumb.png' | relative_url }}" alt="Allowed Content" class="card-thumbnail">
+    </div>
+    <div class="card-content">
+      <h4>Allowed Content</h4>
+      <p>Browse approved races, classes, backgrounds, feats, spells, and items.</p>
+      <a href="{{ '/allowed-content/' | relative_url }}" class="card-button">Explore Catalog</a>
+    </div>
+  </div>
 </div>
 ```
 
-### Key Elements to Edit:
-- `<h4></h4>`: The title displayed at the top of the card.
-- `src="{{ '/assets/thumbnails/...' | relative_url }}"`: The thumbnail image. For best results, use **300x200px** images.
-- `<p></p>`: The short descriptive blurb.
-- `href="{{ '...' | relative_url }}"`: The link location. Ensure this matches your directory path (e.g., `lore/` or `playersguide/index/`).
-
-> [!IMPORTANT]
-> When adding or removing cards, try to maintain a multiple of 3 or 4 per row to keep the grid looking balanced on desktop screens.
+- **Thumbnails:** Stored in `/assets/thumbnails/` at standard **300x200px** dimensions.

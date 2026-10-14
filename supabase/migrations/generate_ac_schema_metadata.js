@@ -227,20 +227,6 @@ const TABLE_METADATA = {
         domain: 'Lookups & Categories',
         description: 'Categories for Bastion facilities (Basic Facilities, Special Facilities).'
     },
-    'ac_bastions': {
-        title: 'Bastions (Legacy Alias)',
-        tabs: ['bastions'],
-        tabNames: ['Bastions'],
-        domain: 'Bastions & Downtime',
-        description: 'Legacy Bastion facility table retained as compatibility alias with foreign key to ac_bastion_categories.'
-    },
-    'ac_bastion_categories': {
-        title: 'Bastion Categories (Legacy Alias)',
-        tabs: ['bastions'],
-        tabNames: ['Bastions'],
-        domain: 'Lookups & Categories',
-        description: 'Legacy category lookup table for bastions retained for backwards compatibility.'
-    },
     'ac_loot': {
         title: 'Loot & Magic Items',
         tabs: ['loot'],
@@ -365,6 +351,40 @@ async function main() {
     `;
     const fksRes = await pool.query(fksQuery);
 
+    // 5. Fetch table comments from pg_description
+    const tableCommentsQuery = `
+        SELECT 
+            c.relname as table_name,
+            d.description
+        FROM pg_class c
+        JOIN pg_namespace n ON n.oid = c.relnamespace
+        JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = 0
+        WHERE n.nspname = 'public' AND (c.relname LIKE 'ac_%' OR c.relname LIKE 'v_ac_%');
+    `;
+    const tableCommentsRes = await pool.query(tableCommentsQuery);
+    const tableCommentsMap = {};
+    for (const r of tableCommentsRes.rows) {
+        tableCommentsMap[r.table_name] = r.description;
+    }
+
+    // 6. Fetch column comments from pg_description
+    const colCommentsQuery = `
+        SELECT 
+            c.relname as table_name,
+            a.attname as column_name,
+            d.description
+        FROM pg_class c
+        JOIN pg_namespace n ON n.oid = c.relnamespace
+        JOIN pg_attribute a ON a.attrelid = c.oid
+        JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = a.attnum
+        WHERE n.nspname = 'public' AND (c.relname LIKE 'ac_%' OR c.relname LIKE 'v_ac_%');
+    `;
+    const colCommentsRes = await pool.query(colCommentsQuery);
+    const colCommentsMap = {};
+    for (const r of colCommentsRes.rows) {
+        colCommentsMap[`${r.table_name}.${r.column_name}`] = r.description;
+    }
+
     // Index PKs and FKs
     const pksByTable = {};
     for (const row of pksRes.rows) {
@@ -405,6 +425,9 @@ async function main() {
             description: `Table ${tableName} in public schema.`
         };
 
+        const dbTableDesc = tableCommentsMap[tableName];
+        const finalDesc = dbTableDesc && dbTableDesc.length > 15 ? dbTableDesc : meta.description;
+
         tablesMap[tableName] = {
             id: tableName,
             title: meta.title,
@@ -412,7 +435,7 @@ async function main() {
             tabs: meta.tabs,
             tabNames: meta.tabNames,
             domain: meta.domain,
-            description: meta.description,
+            description: finalDesc,
             rowCount: rowCounts[tableName] ?? 0,
             columns: [],
             primaryKeys: Array.from(pksByTable[tableName] || []),
@@ -428,6 +451,7 @@ async function main() {
 
         const isPk = pksByTable[col.table_name]?.has(col.column_name) ?? false;
         const fkInfo = (fksByTable[col.table_name] || []).find(f => f.column_name === col.column_name);
+        const colDesc = colCommentsMap[`${col.table_name}.${col.column_name}`] || '';
 
         const typeDisplay = col.data_type === 'USER-DEFINED' ? col.udt_name : col.data_type;
 
@@ -437,6 +461,7 @@ async function main() {
             nullable: col.is_nullable === 'YES',
             default: col.column_default,
             maxLength: col.character_maximum_length,
+            description: colDesc,
             isPk,
             isFk: !!fkInfo,
             fkTarget: fkInfo ? {

@@ -74,23 +74,13 @@ export async function getBastionTypes() {
             .order('display_order', { ascending: true })
             .order('name', { ascending: true });
 
-        if (error || !data || data.length === 0) {
-            // Fallback to legacy ac_bastion_categories if needed
-            const fallback = await supabase
-                .from('ac_bastion_categories')
-                .select('*')
-                .order('name');
-
-            if (!fallback.error && fallback.data) {
-                CACHE.categories = fallback.data;
-                return fallback.data;
-            }
-            if (error) console.error('Error fetching bastion types:', error);
+        if (error) {
+            console.error('Error fetching bastion types:', error);
             return [];
         }
 
-        CACHE.categories = data;
-        return data;
+        CACHE.categories = data || [];
+        return CACHE.categories;
     } catch (err) {
         console.error('Exception fetching bastion types:', err);
         return [];
@@ -127,28 +117,8 @@ export async function getBastions() {
             .order('display_order', { ascending: true })
             .order('name', { ascending: true });
 
-        if (error || !data || data.length === 0) {
-            // Fallback to legacy ac_bastions if needed (e.g. in test mocks)
-            const fallback = await supabase
-                .from('ac_bastions')
-                .select(`
-                    *,
-                    category:category_id (
-                        name,
-                        notes,
-                        display_order
-                    )
-                `)
-                .order('name');
-
-            if (!fallback.error && fallback.data) {
-                return (fallback.data || []).map(b => ({
-                    ...b,
-                    bastion_type: b.bastion_type || b.category,
-                    category: b.category || b.bastion_type
-                }));
-            }
-            if (error) console.error('Error fetching bastions:', error);
+        if (error) {
+            console.error('Error fetching bastions:', error);
             return [];
         }
 

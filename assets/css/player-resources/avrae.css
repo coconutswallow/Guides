@@ -64,14 +64,14 @@
 }
 
 .tool-btn:hover {
-    background: var(--color-bg-hover-light);
+    background: var(--color-table-hover);
     transform: translateY(-1px);
 }
 
 .tool-btn.active {
-    background: var(--palette-brand-main);
-    color: white;
-    border-color: var(--palette-brand-main);
+    background: var(--color-primary);
+    color: var(--palette-neutral-white);
+    border-color: var(--color-primary);
 }
 
 /* Command List Styling */
@@ -112,7 +112,7 @@
 }
 
 .accordion-header:hover {
-    background: var(--color-bg-hover-light);
+    background: var(--color-table-hover);
 }
 
 .accordion-header::after {
@@ -241,7 +241,7 @@
 }
 
 [data-theme="dark"] .tool-btn:not(.active) {
-    background: var(--color-bg-card-dark);
+    background: var(--color-bg-light);
 }
 [data-theme="dark"] .avrae-header-row,
 [data-theme="dark"] .avrae-header-row span {

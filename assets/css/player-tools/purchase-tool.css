@@ -268,7 +268,7 @@
 }
 
 .item-row-variable {
-    background: rgba(var(--palette-brand-primary-rgb), 0.03);
+    background: rgba(var(--palette-brand-main-rgb), 0.03);
 }
 
 .table-qty-container {
@@ -508,7 +508,7 @@
 }
 
 .instruction-box {
-    background: rgba(var(--palette-brand-primary-rgb), 0.05);
+    background: rgba(var(--palette-brand-main-rgb), 0.05);
     border-left: 5px solid var(--color-primary);
     padding: 1rem;
     margin-top: 0.5rem;
