@@ -1,0 +1,84 @@
+---
+layout: default
+title: Allowed Content Schema & ERD
+full_width: true
+extra_css:
+  - /assets/css/ac-schema.css
+---
+
+<div class="staff-container" style="max-width: 1650px; margin: 0 auto; padding: 1.5rem;">
+  <div class="staff-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--color-border);">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <h1 style="margin: 0; font-size: 2.2rem; color: var(--color-primary); font-family: var(--font-header);">Staff Portal</h1>
+      <span style="font-size: 1.2rem; color: var(--color-text-secondary); opacity: 0.6;">/</span>
+      <span style="font-size: 1.4rem; font-weight: 700; color: var(--palette-brand-highlight);">Allowed Content Schema</span>
+    </div>
+    {% include auth-header.html %}
+  </div>
+
+  <!-- Access Denied State -->
+  <div id="access-denied" class="access-denied" style="display: none; max-width: 600px; margin: 4rem auto; padding: 3rem 2rem; background: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: 4px; text-align: center; box-shadow: var(--shadow-lg);">
+    <h2 style="color: var(--color-primary); font-family: var(--font-header); font-size: 2.2rem; margin-bottom: 1.5rem;">Staff Access Required</h2>
+    <p style="font-size: 1.15rem; color: var(--color-text); line-height: 1.6; margin-bottom: 2rem;">
+      This page displays internal Allowed Content database schema definitions and relationships. Please log in with a Discord account holding a Hawthorne Staff role to continue.
+    </p>
+    <p>For more information, please see the <a href="{{ '/resources/discord-login/' | relative_url }}">Discord Login Explanation</a>.</p>
+  </div>
+
+  <!-- Authenticated Application Container -->
+  <div id="staff-interface" style="display: none;">
+    <div id="ac-schema-app">
+      <div style="padding: 3rem; text-align: center; color: var(--color-text-secondary);">
+        <div class="spinner" style="display: inline-block; width: 40px; height: 40px; border: 3px solid var(--color-border); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 1s infinite linear;"></div>
+        <div style="margin-top: 1rem; font-weight: 600;">Loading Allowed Content Schema & ERD...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+<script type="module">
+  import { checkAccess } from "{{ '/assets/js/auth-check.js' | relative_url }}";
+  import { ACSchemaViewer } from "{{ '/assets/js/allowed-content/ac-schema-viewer.js' | relative_url }}";
+
+  const ui = {
+    accessDenied: document.getElementById('access-denied'),
+    staffInterface: document.getElementById('staff-interface')
+  };
+
+  let viewerInstance = null;
+
+  /**
+   * Authentication callback called by auth-header.html
+   */
+  window.handlePageAuth = async function (user) {
+    if (!user) {
+      ui.accessDenied.style.display = 'block';
+      ui.staffInterface.style.display = 'none';
+      return;
+    }
+
+    // Check staff access (Staff, Staff Apprentice, Admin, Engineer, Auditor, Lore, Rules)
+    const hasAccess = await checkAccess(user.id, ['Staff', 'Staff Apprentice', 'Admin', 'Engineer', 'Auditor', 'Lore', 'Rules']);
+
+    if (!hasAccess) {
+      ui.accessDenied.style.display = 'block';
+      ui.staffInterface.style.display = 'none';
+      return;
+    }
+
+    // Access granted
+    ui.accessDenied.style.display = 'none';
+    ui.staffInterface.style.display = 'block';
+
+    if (!viewerInstance) {
+      viewerInstance = new ACSchemaViewer('ac-schema-app');
+    }
+  };
+</script>
