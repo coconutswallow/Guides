@@ -1,31 +1,51 @@
 ---
 layout: doc
 title: "Home Page & Announcements"
-order: 32
+order: 50
 exclude_from_search: true
 ---
 
 # Home Page & Announcements Architecture
 
-This guide explains how the main homepage (`index.html`) is structured and how active server announcement banners are managed via Supabase.
+This guide explains how the main homepage (`index.html`) is structured and how staff can easily post and manage active server announcement banners.
 
 ---
 
-## 1. Dynamic Server Messages Banner
+## 1. Server Announcements Banner
 
-The top of the homepage features a dynamic server announcement banner:
+Right beneath the welcome message on the homepage, there is a prominent announcement banner. Staff can use this to broadcast important updates to all visitors—such as upcoming community workshops, major ruleset changes, seasonal events, or scheduled server maintenance.
 
-- **Data Source:** Supabase PostgreSQL table `server_msg`.
-- **Query Filter:** Automatically displays messages where `start_date <= today <= end_date` based on the user's local date.
-- **Markdown Rendering:** Messages support full Markdown (links, bolding, lists, italics) parsed in the browser via `marked.js`.
+### How It Works 
+- **Automatic Appearance:** The banner only appears when there is an active announcement scheduled for today. If there are no current notices, the banner stays completely hidden so the homepage remains clean and uncluttered.
+- **Set It and Forget It:** Every announcement has a **Start Date** and an **End Date**. The banner automatically starts showing on the start date and quietly disappears once the end date passes—no manual cleanup or code edits needed.
+- **Rich Text & Links:** Announcements support standard Markdown formatting. You can make text **bold**, add *italics*, create bullet lists, or include clickable links directly to guides, Discord channels, or signup forms.
+- **Multiple Notices:** If more than one announcement is active on the same day, the banner neatly stacks them with subtle divider lines between each notice.
 
-### How to Post or Edit an Announcement:
-1. Open the Supabase Table Editor for `server_msg`.
-2. Insert or edit a row:
-   - `message`: Markdown-formatted announcement text.
-   - `start_date`: Date when the banner should start displaying (e.g. `2026-10-14`).
-   - `end_date`: Date when the banner should automatically expire and hide.
-3. Multiple active announcements will automatically render separated by subtle dividers.
+---
+
+### How to Post, Edit, or Remove an Announcement
+
+You do not need to touch any website code or re-deploy the site to publish an announcement.
+
+1. **Open the Database:** Navigate to the `server_msg` table in the Supabase Table Editor.
+2. **Add or Edit a Notice:** Click **Insert row** (or double-click an existing entry to edit):
+   - **`message`:** Enter your announcement text using regular Markdown (e.g. `🎉 **Bastion Workshop** this Saturday! Join us in voice chat or [read the Bastion Guide](/Guides/bastions/).`).
+   - **`start_date`:** The day the notice should begin appearing (formatted as `YYYY-MM-DD`, e.g. `2026-10-15`).
+   - **`end_date`:** The final day the notice should appear. The day after this date, the banner automatically stops displaying.
+3. **To Remove Early:** If an event is cancelled or an announcement is no longer relevant, simply delete the row or set its `end_date` to yesterday's date.
+
+> [!TIP]
+> **Time Zones:** The website checks announcement dates against each visitor's **local calendar date**. An announcement scheduled for `2026-10-15` will appear on October 15th in the visitor's own time zone.
+
+<details>
+<summary><strong>Technical Details (For Developers & Engineers)</strong></summary>
+
+- **Database Table:** `public.server_msg` (columns: `message` text, `start_date` date, `end_date` date).
+- **Client Script:** Embedded in `index.html` within the `loadActiveMessages()` function.
+- **Query Filter:** `supabase.from('server_msg').select('message').lte('start_date', localToday).gte('end_date', localToday)`.
+- **Markdown Parser:** Parsed client-side using `marked.js` (`cdn.jsdelivr.net/npm/marked/marked.min.js`).
+- **DOM Container:** `#server-msg-container`, hidden by default (`display: none`) and styled with `var(--color-bg-light)` and `border-left: 5px solid var(--color-primary)`.
+</details>
 
 ---
 

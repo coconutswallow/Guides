@@ -85,7 +85,7 @@
     gap: 1.5rem;
     padding: 1rem 1.5rem;
     background: var(--color-primary);
-    color: white;
+    color: var(--color-table-header-text);
     font-family: 'Marcellus SC', serif;
     text-transform: uppercase;
     letter-spacing: 1px;

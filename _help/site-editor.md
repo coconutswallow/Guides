@@ -2,7 +2,7 @@
 title: Site Editor (DecapBridge CMS)
 layout: doc
 permalink: /help/site-editor/
-order: 110
+order: 100
 exclude_from_search: true
 ---
 

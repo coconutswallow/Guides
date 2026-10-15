@@ -1,7 +1,7 @@
 ---
 title: Collections & Navigation Setup
 layout: doc
-order: 20
+order: 20 
 exclude_from_search: true
 ---
 
@@ -55,7 +55,7 @@ collections:
     permalink: /field-guide/adventure-locations/:path/
 ```
 
-Individual markdown files within a collection folder (e.g. `_rules/downtime.md`) automatically inherit the collection layout and routing.
+You'll notice that collection folders always start with "_" such as "_playersguide".  This helps Jekyll know which folders to index and convert the .md into .html.  Individual markdown files within a collection folder (e.g. `_rules/downtime.md`) automatically inherit the collection layout and routing.
 
 ---
 
@@ -109,7 +109,7 @@ Used for groupings of distinct URLs or sub-tools:
 
 ## 3. Front Matter Conventions
 
-Every markdown document in a collection should begin with front matter:
+Every markdown document in a collection should begin with front matter (i.e. this should be at the top of each .md file)
 
 ```yaml
 ---

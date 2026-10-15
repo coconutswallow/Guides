@@ -81,7 +81,7 @@
 /* Leaflet Popup Overrides */
 .leaflet-popup-content-wrapper {
     background: var(--palette-neutral-white) !important; 
-    color: #333333 !important;
+    color: var(--palette-neutral-gray-500) !important;
     border: 1px solid var(--palette-neutral-gray-200);
     border-radius: 4px;
     font-family: inherit;
@@ -93,13 +93,13 @@
     color: var(--color-primary);
     margin: 0 0 10px 0;
     padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--palette-neutral-gray-100);
     font-family: var(--font-header);
 }
 
 .leaflet-popup-content p {
     margin: 8px 0;
-    color: #333;
+    color: var(--palette-neutral-gray-500);
 }
 
 .leaflet-popup-content a {
@@ -119,19 +119,19 @@
     flex-direction: column;
     gap: 10px;
     min-width: 240px;
-    color: #333; /* Ensure readability on white popup background */
+    color: var(--palette-neutral-gray-500); /* Ensure readability on white popup background */
 }
 
 .pin-form strong {
     font-size: 15px;
-    color: #333;
+    color: var(--palette-neutral-gray-500);
     margin-bottom: 4px;
 }
 
 .pin-form label {
     font-weight: 600;
     font-size: 13px;
-    color: #555;
+    color: var(--palette-neutral-gray-400);
     margin-bottom: -4px;
 }
 
@@ -139,10 +139,10 @@
 .pin-form textarea {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--palette-neutral-gray-200);
     border-radius: 4px;
-    background: #fff;
-    color: #000;
+    background: var(--palette-neutral-white);
+    color: var(--palette-neutral-gray-500);
     font-family: inherit;
     font-size: 14px;
     box-sizing: border-box;
@@ -201,7 +201,7 @@
 .location-display p {
     margin: 5px 0;
     padding: 8px;
-    background: #f5f5f5;
+    background: var(--color-bg-page);
     border-radius: 4px;
     font-size: 13px;
 }

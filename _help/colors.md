@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "Color System & Design Tokens"
-order: 51
+order: 30
 exclude_from_search: true
 staff_only: true
 ---

@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: "FAQ Architecture & Maintenance"
-order: 36
+order: 60
 exclude_from_search: true
 ---
 

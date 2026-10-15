@@ -296,6 +296,31 @@ body_class: "my-class" # Adds a custom CSS class to the
         <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
         <script src="{{ '/assets/js/sidebar.js' | relative_url }}"></script>
         <script type="module" src="{{ '/assets/js/auth-manager.js' | relative_url }}"></script>
+        <script type="module">
+            // Progressive enhancement: render Mermaid diagrams if present on page
+            const mermaidBlocks = document.querySelectorAll('pre code.language-mermaid, pre.mermaid');
+            if (mermaidBlocks.length > 0) {
+                import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs').then(({ default: mermaid }) => {
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'neutral' });
+                    mermaidBlocks.forEach(async (el, idx) => {
+                        const pre = el.closest('pre');
+                        const code = el.textContent;
+                        const container = document.createElement('div');
+                        container.className = 'mermaid-diagram';
+                        container.style.textAlign = 'center';
+                        container.style.margin = '1.5rem 0';
+                        try {
+                            const { svg } = await mermaid.render(`mermaid-svg-${idx}`, code);
+                            container.innerHTML = svg;
+                            pre.parentNode.replaceChild(container, pre);
+                        } catch (err) {
+                            console.error('Mermaid render error:', err);
+                        }
+                    });
+                }).catch(err => console.error('Failed to load Mermaid:', err));
+            }
+        </script>
 
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
             <span class="sun-icon">☀️</span>

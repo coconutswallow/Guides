@@ -1,43 +1,46 @@
 ---
 layout: doc
 title: "Allowed Content Architecture"
-order: 30
+order: 70
 exclude_from_search: true
 ---
 
-# Allowed Content Architecture & Data Schema
+The Allowed Content web version is a conversion of the gsheet into normalized database tables; this allows for configuration of new content with drop downs, and the ability to filter and search by different criteria.
 
-The **Allowed Content (AC)** system is Hawthorne Guild's comprehensive database and reference catalog for all character creation options, equipment, rules, and world mechanics. It supports both the **2014** and **2024** rulesets, as well as **Official** and **Homebrew** content.
 
----
+## System Overview
 
-## 1. System Overview
-
-Allowed Content operates as a dynamic, client-side Single Page Application (SPA) backed by **Supabase PostgreSQL** and vanilla ES6 modules:
+Allowed Content operates as a Single Page Application backed by a database (supabase):
 
 - **Database:** 32 normalized tables and views in PostgreSQL (`public.ac_*`).
 - **Data Access Layer:** `assets/js/allowed-content/ac-service.js` manages caching, joined lookups, and CRUD operations.
-- **Role-Based Permissions:** `assets/js/allowed-content/ac-auth.js` enforces role checks (`Admin`, `Engineer`, `Auditor`).
-- **Interactive Schema & ERD:** Located at `/staff/ac-schema/` for real-time visualization of tables, fields, and foreign keys.
+- **Role-Based Permissions:** `assets/js/allowed-content/ac-auth.js` enforces role checks (`Admin`, `Engineer` have edit access only).
 
 ---
 
-## 2. Table Domains & Architecture
+## Implementation Architecture: Tables, Views & Inheritance
 
-Allowed Content tables are divided into logical domains:
+Rather than maintaining a flat spreadsheet, Allowed Content normalizes data into relational tables and PostgreSQL views based on four architectural patterns:
 
-| Domain | Primary Tables & Views | Key Responsibilities |
-| :--- | :--- | :--- |
-| **Sources** | `ac_sources`, `ac_sources_view` | Core rulebooks, supplements, third-party publishers, and homebrew sources. |
-| **Character Options** | `ac_races`, `ac_classes`, `ac_subclasses`, `ac_backgrounds`, `ac_feats` | Species, lineages, class progressions, subclasses, backgrounds, and feats. |
-| **Magic & Spells** | `ac_spells`, `ac_spell_classes`, `ac_spell_subclasses` | Spell definitions, spell list mappings per class/subclass, ritual/concentration flags. |
-| **Equipment & Loot** | `ac_equipment`, `ac_item_properties`, `ac_items`, `ac_loot`, `ac_other_rewards` | Weapons, armor, gear, property tags, magic item drops, and server rewards. |
-| **Bastions & Downtime** | `ac_bastion`, `ac_bastion_type`, `ac_downtime`, `ac_downtime_categories` | 2024 bastion facilities, facility categories, and server downtime activities. |
-| **Monsters & World** | `ac_monsters`, `ac_languages` | Compendium monsters integrated into Allowed Content and server languages. |
+### Parent-Child Relationships & Inheritance Views (`v_ac_*`)
+For options that have parent and variant definitions (such as classes/subclasses and species/subraces), the database normalizes parent attributes separately from child options, then exposes an **Inheritance Resolution View**:
+
+- **Classes (`ac_classes` + `ac_subclasses` → `v_ac_classes`)**:
+  - `ac_classes`: Stores parent class properties that apply to all archetypes (hit die, multiclassing prerequisites, class book source, ruleset, and optional class features).
+  - `ac_subclasses`: Stores specific subclass options (subclass name, category, subclass book source, external links, and subclass advice).
+  - `v_ac_classes`: A view that joins class with subclass
+
+- **Species & Lineages (`ac_races` + `ac_subraces` → `v_ac_races`)**:
+  - `ac_races`: Stores base species traits (base size, base speed, base languages, core ability score baselines).
+  - `ac_subraces`: Stores lineage variants, stat adjustments, and subrace-specific traits.
+  - `v_ac_races`: Merges race with subraces
+
+###  Sources Reference Table (`ac_sources`)
+- Every content table references `ac_sources.source_key` (e.g. `'PHB'`, `'XGE'`, `'TCE'`).
+- This centralizes ruleset classification (`'2014'` vs `'2024'`), publisher metadata, and Nature (`'Official'` vs `'Homebrew'`). Changing a source's properties in `ac_sources` automatically cascades across all referencing content without modifying individual item rows.
 
 ---
-
-## 3. Frontend Architecture
+## Frontend Architecture
 
 The frontend is modularized in `assets/js/allowed-content/`:
 
@@ -45,10 +48,10 @@ The frontend is modularized in `assets/js/allowed-content/`:
 assets/js/allowed-content/
 ├── ac-main.js                  # Main controller, tab registration & routing
 ├── ac-service.js               # Central Supabase data access layer & caching
-├── ac-auth.js                  # Role verification (canManageAC, canAuditAC)
+├── ac-auth.js                  # Staff authentication, role checks (detectAdminSession), and admin mode bar
 ├── ac-order-utils.js           # check_id and placement ordering calculations
 ├── ac-schema-viewer.js         # Interactive SVG ERD, data dictionary & Mermaid generator
-├── ac-schema-data.js           # Pre-compiled database schema metadata
+├── ac-schema-data.js           # Pre-compiled database schema metadata (32 tables and views)
 ├── ac-sources.js               # Sources tab module
 ├── ac-races.js                 # Species & lineages tab module
 ├── ac-classes.js               # Classes & subclasses tab module
@@ -66,7 +69,7 @@ assets/js/allowed-content/
 
 ---
 
-## 4. Staff Admin & Workflow
+## Staff Admin & Workflow
 
 Staff members with `Admin` or `Engineer` roles can manage content directly on `/allowed-content/?admin=true`:
 
@@ -77,15 +80,8 @@ Staff members with `Admin` or `Engineer` roles can manage content directly on `/
 
 ---
 
-## 5. Schema & Interactive ERD Tool
+## Schema & Interactive ERD Tool
 
-To understand the relational structure, refer to the **Allowed Content Schema & ERD** page at:
+There's a lot of tables, so I created an interactive Schema Browser:
 
-**[`/staff/ac-schema/`](/Guides/staff/ac-schema/)**
-
-Features:
-- **Interactive Vector Canvas:** Pan, zoom, and drag table cards.
-- **Auto-Focus Zoom:** Filter pill clicks automatically pan and zoom to the first matching table.
-- **Searchable Data Dictionary:** Search across table names, column names, data types, and PostgreSQL descriptions.
-- **Mermaid Exporter:** One-click generation of Mermaid ERD markup for documentation and GitHub issues.
-- **Metadata Generator:** Built via `supabase/migrations/generate_ac_schema_metadata.js`, pulling table and column comments directly from `pg_description`.
+**[Allowed Content Schema Browser](/Guides/staff/ac-schema/)**

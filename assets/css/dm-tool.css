@@ -196,7 +196,7 @@ body {
     border-left-color: var(--color-primary);
     color: var(--color-primary);
     font-weight: bold;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
+    box-shadow: inset 0 2px 5px var(--shadow-color-light);
 }
 
 .nav-divider {
@@ -412,7 +412,7 @@ body {
     border-radius: 4px;
     font-family: inherit;
     /* FIX: Force white background for editable fields in Light Mode */
-    background: #ffffff;
+    background: var(--palette-neutral-white);
     color: var(--color-text);
 }
 
@@ -446,14 +446,14 @@ body {
     padding: 0.5rem;
     border: 1px solid var(--color-border);
     /* FIX: Force white background */
-    background-color: #ffffff;
+    background-color: var(--palette-neutral-white);
     color: var(--color-text);
     border-radius: 4px;
 }
 
 #template-select {
     /* FIX: Force white background */
-    background-color: #ffffff;
+    background-color: var(--palette-neutral-white);
     color: var(--color-text);
     border: 1px solid var(--color-border);
 }
@@ -475,13 +475,13 @@ body {
     background: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
     transition: all 0.2s ease;
 }
 
 .player-card:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     border-color: var(--color-primary);
 }
 
@@ -490,7 +490,7 @@ body {
     background: var(--color-bg-light);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
     padding: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -526,8 +526,8 @@ body {
 }
 
 .btn-delete-card {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    background: rgba(var(--palette-neutral-white-rgb), 0.2);
+    color: var(--palette-neutral-white);
     border: none;
     padding: 2px 8px;
     border-radius: 4px;
@@ -607,7 +607,7 @@ body {
     /* MATCHED to standard inputs (was 0.95rem) */
     box-sizing: border-box;
     /* FIX: Force white background */
-    background: #ffffff;
+    background: var(--palette-neutral-white);
     color: var(--color-text);
 }
 
@@ -715,12 +715,12 @@ body {
 
 .btn-danger-outline:hover {
     background-color: var(--palette-alert-danger-action) !important;
-    color: #fff !important;
+    color: var(--color-btn-text) !important;
 }
 
 #btn-load-template,
 #btn-open-save-template {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(var(--palette-neutral-white-rgb), 0.1);
     color: var(--color-text);
     border: 1px solid var(--color-border);
     transition: all 0.2s ease;
@@ -748,7 +748,7 @@ dialog {
 }
 
 dialog::backdrop {
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--shadow-color-overlay);
 }
 
 .checkbox-list {
@@ -938,7 +938,7 @@ dialog::backdrop {
 /* Ensure Output Textareas are editable now */
 .out-session-text {
     pointer-events: auto !important;
-    background: #36393f !important;
+    background: var(--palette-bg-page-dark) !important;
 }
 
 /* INSTRUCTION TEXT */
@@ -985,26 +985,26 @@ dialog::backdrop {
 
 /* Error state for gold validation */
 .card-field.error input {
-    border-color: #e74c3c !important;
-    background-color: rgba(231, 76, 60, 0.1) !important;
+    border-color: var(--palette-alert-danger-border) !important;
+    background-color: var(--color-alert-danger-bg) !important;
 }
 
 .card-field.error label::after {
     content: " ⚠️";
-    color: #e74c3c;
+    color: var(--palette-alert-danger-border);
     font-size: 0.9em;
 }
 
 /* Soft Validation Warning for Gold */
 .card-field.warning input {
-    border-color: #ffc107 !important;
+    border-color: var(--color-alert-warning-border) !important;
     /* Amber/Yellow */
-    background-color: rgba(255, 193, 7, 0.1);
+    background-color: var(--color-alert-warning-bg);
     /* Light Yellow tint */
 }
 
 .card-field.warning label {
-    color: #e0a800;
+    color: var(--color-alert-warning-border);
     /* Darker yellow for text readability */
 }
 
@@ -1028,7 +1028,7 @@ dialog::backdrop {
         border-top: 1px solid var(--color-primary);
         padding: 10px 15px;
         z-index: 9999;
-        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: var(--shadow-md);
         height: 70px;
         /* Fixed height for consistency */
     }
@@ -1063,7 +1063,7 @@ dialog::backdrop {
     .nav-btn.prev-link:active,
     .nav-btn.next-link:active {
         background-color: var(--color-primary);
-        color: white;
+        color: var(--color-btn-text);
         transform: translateY(2px);
     }
 
@@ -1114,15 +1114,14 @@ dialog::backdrop {
 }
 
 .wf-step {
-    background-color: #f4eadd;
-    /* Beige from image */
-    border: 1px solid #d4c4b0;
-    color: #333;
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
     padding: 8px 12px;
     border-radius: 2px;
     font-weight: 600;
     font-size: 0.95em;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

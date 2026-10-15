@@ -22,7 +22,6 @@ staff_only: true
   Supabase Auth integration with Discord OAuth, `discord_users` role lookups, client caching, and page gating.
   
 - **[Home Page & Server Announcements]({{ '/help/homepage/' | relative_url }})**  
-- 
   Homepage grid organization and the dynamic date-filtered server announcements banner powered by Supabase `server_msg`.
 
 - **[FAQ Architecture & Maintenance]({{ '/help/FAQ-engineering/' | relative_url }})**  
@@ -35,9 +34,21 @@ staff_only: true
 Deep-dive documentation for database-driven single page applications:
 
 - **[Allowed Content Architecture & Data Model]({{ '/help/allowed-content/' | relative_url }})**  
-  Full overview of the 32 normalized PostgreSQL tables (`public.ac_*`), modular frontend architecture, admin CRUD workflows, and sequencing.
+  Oveview of the Allowed Content - and the database tables that now power it
 
-- **[Monster Compendium, Creator & Approvals]({{ '/help/monsters/' | relative_url }})**  
-  Dynamic 5e statblock SPA, the interactive monster creator (`editor.html`), and the staff approval review queue.
 ---
+
+## 📝 For Content Authors & Editors
+
+- **[Site Editor (DecapBridge CMS)]({{ '/help/site-editor/' | relative_url }})**  
+  Browser-based visual editor for creating and updating static guides without touching git repositories.
+
+- **[Markdown Author's Guide]({{ '/help/markdown/' | relative_url }})**  
+  Typography standards, alert callout syntax, tables, and embedding guidelines for Hawthorne documentation.
+
+- **[Site Images & Artwork]({{ '/help/site-images/' | relative_url }})**  
+  Image placement, compression guidelines, thumbnail standards, and asset paths.
+
+- **[Site Map & Page Ordering]({{ '/help/sitemap/' | relative_url }})**  
+  Complete listing of all collections and pages to verify sorting orders and URLs.
 
