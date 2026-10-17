@@ -468,8 +468,35 @@ function updateSessionCalculations() {
     if (!calculationEngine) return;
 
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
-    const stats = stateManager.getStats(); // Get APL
-    const maxGold = calculationEngine.calculateMaxGold(stats.apl);
+    
+    // Always sync stateManager.state.players from master roster if master roster rows exist
+    const masterPlayers = Rows.getMasterRosterData ? Rows.getMasterRosterData() : [];
+    if (masterPlayers.length > 0) {
+        stateManager.state.players = masterPlayers;
+    }
+    const stats = stateManager.getStats();
+
+    // Calculate APL for max gold using actual levels, not "playing as" levels
+    let actualApl = stats.actualApl || stats.apl;
+    const cards = document.querySelectorAll('#session-roster-list .player-card');
+    if (cards.length > 0) {
+        let totalRealLevel = 0;
+        let count = 0;
+        cards.forEach(card => {
+            const realLevelInput = card.querySelector('.s-real-level');
+            const levelInput = card.querySelector('.s-level');
+            const lvl = parseFloat(realLevelInput?.value) || parseFloat(levelInput?.value) || 0;
+            if (lvl > 0) {
+                totalRealLevel += lvl;
+                count++;
+            }
+        });
+        if (count > 0) {
+            actualApl = Math.round(totalRealLevel / count);
+        }
+    }
+
+    const maxGold = calculationEngine.calculateMaxGold(actualApl);
 
     // --- FIX: Update the visual "Max Gold" Label ---
     const elMaxGold = document.querySelector('.val-max-gold');
@@ -477,8 +504,6 @@ function updateSessionCalculations() {
         elMaxGold.textContent = maxGold;
     }
     // ------------------------------------------------
-
-    const cards = document.querySelectorAll('#session-roster-list .player-card');
 
     cards.forEach(card => {
         // Gather input data from the card
@@ -494,11 +519,11 @@ function updateSessionCalculations() {
         if (!levelInput || !hoursInput || !xpInput || !dtpInput) return;
 
         // --- Max Gold Validation / Warning ---
-        // Visually warn user if they award more gold than the table allows
+        // Visually warn user if they award more gold than the table allows based on actual APL
         const currentGold = parseFloat(goldInput.value) || 0;
         if (currentGold > maxGold) {
             goldInput.style.borderColor = "#ff4444";
-            goldInput.title = `Warning: Exceeds Max Gold for APL ${stats.apl} (${maxGold}gp)`;
+            goldInput.title = `Warning: Exceeds Max Gold for APL ${actualApl} (${maxGold}gp)`;
         } else {
             goldInput.style.borderColor = "";
             goldInput.title = "";

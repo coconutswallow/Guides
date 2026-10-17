@@ -267,24 +267,33 @@ class StateManager {
 
     getStats() {
         let totalLevel = 0;
+        let totalActualLevel = 0;
         let playerCount = 0;
 
         this.state.players.forEach(player => {
             const effectiveLevel = parseFloat(player.level_playing_as || player.level) || 0;
-            if (effectiveLevel > 0) {
-                totalLevel += effectiveLevel;
+            const actualLevel = parseFloat(player.real_level || player.level) || 0;
+            if (effectiveLevel > 0 || actualLevel > 0) {
+                totalLevel += (effectiveLevel > 0 ? effectiveLevel : actualLevel);
+                totalActualLevel += (actualLevel > 0 ? actualLevel : effectiveLevel);
                 playerCount++;
             }
         });
 
         const apl = playerCount > 0 ? Math.round(totalLevel / playerCount) : 0;
+        const actualApl = playerCount > 0 ? Math.round(totalActualLevel / playerCount) : 0;
 
         let tier = 1;
         if (apl >= 17) tier = 4;
         else if (apl >= 11) tier = 3;
         else if (apl >= 5) tier = 2;
 
-        return { partySize: this.state.players.length, apl, tier, playerCount };
+        let actualTier = 1;
+        if (actualApl >= 17) actualTier = 4;
+        else if (actualApl >= 11) actualTier = 3;
+        else if (actualApl >= 5) actualTier = 2;
+
+        return { partySize: this.state.players.length, apl, actualApl, tier, actualTier, playerCount };
     }
 
     getPlayerStats() {

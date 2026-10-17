@@ -649,3 +649,69 @@ async function checkSlugUniqueness(slug, currentMonster, input) {
     input.classList.toggle('is-invalid', !isUnique);
     input.title = isUnique ? '' : 'Warning: Slug already in use.';
 }
+
+/**
+ * Displays a popup modal explaining that an already published monster cannot be directly edited,
+ * and instructs the user how to create a new version.
+ * @param {string} slug - The monster slug to navigate to upon continuing.
+ * @param {string} [monsterName] - Optional monster name.
+ * @returns {HTMLElement} The created modal element.
+ */
+export function showPublishedMonsterModal(slug, monsterName) {
+    let modal = document.getElementById('published-monster-modal');
+    if (modal) modal.remove();
+
+    modal = document.createElement('div');
+    modal.id = 'published-monster-modal';
+    modal.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+    `;
+
+    modal.innerHTML = `
+        <div class="modal-card" style="background: var(--color-bg-page, #fff); color: var(--color-text, #333); max-width: 560px; width: 92%; border-radius: 8px; border: 2px solid var(--color-primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 2rem; position: relative;">
+            <button type="button" class="close-published-modal" aria-label="Close modal" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.8rem; line-height: 1; cursor: pointer; color: var(--color-text-secondary);">&times;</button>
+            <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); font-family: 'Marcellus SC', serif; font-size: 1.5rem; text-transform: uppercase;">Published Monster</h3>
+            <p style="margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">
+                This monster is already published. To make edits, click on the &ldquo;Create as New Version&rdquo; button.  Once edits are complete, submit for approval and ping the <strong>rules architects</strong> for review.  Once approved, the new version will become active, and the previous version archived.
+            </p>
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary close-published-modal" style="padding: 0.6rem 1.2rem;">Cancel</button>
+                <button type="button" id="btn-proceed-published-edit" class="btn btn-primary" style="padding: 0.6rem 1.2rem;">Continue to Monster</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const closeModal = () => {
+        modal.remove();
+    };
+
+    modal.querySelectorAll('.close-published-modal').forEach(btn => {
+        btn.addEventListener('click', closeModal);
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    const proceedBtn = modal.querySelector('#btn-proceed-published-edit');
+    if (proceedBtn) {
+        proceedBtn.addEventListener('click', () => {
+            modal.remove();
+            if (slug) {
+                window.location.hash = `#/edit/${slug}`;
+            }
+        });
+    }
+
+    return modal;
+}
+

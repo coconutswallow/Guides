@@ -59,7 +59,7 @@ export async function renderDashboard(container) {
                                <button type="button" class="btn btn-sm btn-outline-primary btn-copy-approval" data-slug="${m.slug}" data-name="${m.name}" style="margin-left: 0.4rem; padding: 0.2rem 0.6rem; font-size: 0.75rem;" title="Copy direct link for staff approvers">📋 Copy Link</button>`
                             : m.status === 'Queued'
                             ? `<span class="status-badge status-queued" style="font-size: 0.7rem;">Queued for Patch</span>`
-                            : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info">${m.status === 'Archived' ? 'View' : 'Edit'}</a>`
+                            : `<a href="#/edit/${m.slug}" class="btn btn-sm btn-info btn-edit-monster" data-slug="${m.slug}" data-name="${m.name}" data-status="${m.status}" data-live="${m.is_live}">${m.status === 'Archived' ? 'View' : 'Edit'}</a>`
                         }
                         ${m.status === 'Draft' ? `<button class="btn btn-sm btn-outline-danger btn-delete-row" data-row-id="${m.row_id}" data-name="${m.name}" data-slug="${m.slug}" title="Delete Draft">Delete</button>` : ''}
                         ${m.status === 'Approved' ? `<a href="${(window.MONSTER_EDITOR_CONFIG?.baseUrl || '/Guides/') + 'monsters/#/' + m.slug}" target="_blank" class="btn btn-sm btn-outline-secondary">View Live</a>` : ''}
@@ -107,7 +107,7 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
             <button type="button" id="btn-preview" class="btn btn-preview" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Preview Statblock</button>
             <button type="button" id="btn-submit" class="btn btn-submit" style="font-size: 0.85rem; padding: 0.5rem 1rem;" ${isLocked ? `disabled title="Monster is locked (${lockReason})"` : ''}>Submit for Review</button>
             ${!isNew && currentMonster.status === 'Draft' ? '<button type="button" id="btn-delete-draft" class="btn btn-outline-danger" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Delete Draft</button>' : ''}
-            ${currentMonster.status === 'Approved' ? '<button type="button" id="btn-version" class="btn btn-outline-primary" style="margin-left: auto; font-size: 0.85rem; padding: 0.5rem 1rem;">Save as New Version</button>' : ''}
+            ${currentMonster.status === 'Approved' ? '<button type="button" id="btn-version" class="btn btn-outline-primary" style="margin-left: auto; font-size: 0.85rem; padding: 0.5rem 1rem;">Create as New Version</button>' : ''}
         </div>
 
         ${isLocked ? `
@@ -116,7 +116,7 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
                 ${currentMonster.status === 'Pending' ? 'If you need to make changes, please wait for staff review or contact Admin.' :
                 currentMonster.status === 'Queued' ? 'This version is accepted and waiting to be merged into the next patch release.' :
                     currentMonster.status === 'Archived' ? 'This is an archived older version and is read-only.' :
-                        'Approved monsters are locked to maintain consistency in the compendium.'}
+                        'This monster is already published. To make edits, click on the "Create as New Version" button. Once edits are complete, submit for approval and ping the <strong>rules architects</strong> for review. Once approved, the new version will become active, and the previous version archived.'}
             </div>
         ` : ''}
 

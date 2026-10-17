@@ -28,8 +28,13 @@ export function updateLootInstructions(isFullDM) {
     const container = document.getElementById('out-loot-instructions');
     if (!container) return;
 
+    if ((!stateManager.state.players || stateManager.state.players.length === 0) && Rows.getMasterRosterData) {
+        const roster = Rows.getMasterRosterData();
+        if (roster && roster.length > 0) stateManager.state.players = roster;
+    }
     const stats = stateManager.getStats();
-    const tier = stats.tier || 1;
+    // Loot tier uses actual player level APL calculation
+    const tier = stats.actualTier || (stats.actualApl >= 17 ? 4 : stats.actualApl >= 11 ? 3 : stats.actualApl >= 5 ? 2 : (stats.tier || 1));
     const partySize = stats.partySize || 0;
     
     // Half party size is used often for "Consumable" or "Permanent" limits
@@ -88,12 +93,18 @@ export function updateLootInstructions(isFullDM) {
  */
 export function updateLootDeclaration(discordId) {
     const state = stateManager.getFullState();
+    if ((!stateManager.state.players || stateManager.state.players.length === 0) && Rows.getMasterRosterData) {
+        const roster = Rows.getMasterRosterData();
+        if (roster && roster.length > 0) stateManager.state.players = roster;
+    }
     const stats = stateManager.getStats();
+    // Loot declaration uses actual player level APL calculation
+    const apl = stats.actualApl || stats.apl || 1;
     const gameName = state.header.title || "Untitled";
     const lootPlan = state.header.loot_plan || "";
     
     // Format: @DM declares loot for Game, Players: X, APL: Y || Plan ||
-    const declareText = `<@${discordId}> declares loot for ${gameName}, Number of Players: ${stats.partySize}, APL: ${stats.apl}\n||\n${lootPlan}\n||`;
+    const declareText = `<@${discordId}> declares loot for ${gameName}, Number of Players: ${stats.partySize}, APL: ${apl}\n||\n${lootPlan}\n||`;
 
     const out = document.getElementById('out-loot-declaration');
     if (out) out.value = declareText;
@@ -103,17 +114,22 @@ export function updateLootDeclaration(discordId) {
  * Updates the Hybrid Generator (HGen) logic for Party Loot.
  * Generates the specific `/hgenloot` command string based on:
  * 1. Party Size (Number of items to generate).
- * 2. APL (Average Party Level).
+ * 2. APL (Average Party Level, using actual levels).
  * 3. Pre-determined items (Subtracts from the generation pool).
  * * @param {string} discordId - The Discord User ID of the DM.
  */
 export function updateHgenLogic(discordId) {
     const state = stateManager.getFullState();
+    if ((!stateManager.state.players || stateManager.state.players.length === 0) && Rows.getMasterRosterData) {
+        const roster = Rows.getMasterRosterData();
+        if (roster && roster.length > 0) stateManager.state.players = roster;
+    }
     const stats = stateManager.getStats();
     
     const gameName = state.header.title || "Untitled";
     const partySize = stats.partySize || 0;
-    const apl = stats.apl || 1;
+    // Loot roll calculation uses actual player level APL calculation
+    const apl = stats.actualApl || stats.apl || 1;
     
     // Number of items the DM has already hand-picked
     const permsVal = parseInt(state.header.predet_perms) || 0;

@@ -190,10 +190,11 @@ class CalculationEngine {
     /**
      * Determines the maximum Gold a player can earn based on APL (Average Party Level).
      * Used primarily for validation warnings in the UI.
-     * * @param {number|string} apl - The Average Party Level.
+     * Note: APL for max gold uses actual character levels rather than "playing as" levels.
+     * @param {number|string} apl - The Average Party Level (based on actual levels).
      * @returns {number} The max gold cap.
      */
-    // FIX: Calculate max gold for session (Used for Player Validation based on APL)
+    // Calculate max gold for session (Used for Player Validation based on actual APL)
     calculateMaxGold(apl) {
         if (!this.rules || !this.rules.gold_per_session_by_apl) return 0;
         

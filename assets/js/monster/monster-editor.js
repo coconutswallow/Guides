@@ -16,7 +16,7 @@ import {
     renderFeatureList,
     initMarkdownWidget
 } from './monster-editor-ui.js';
-import { attachEditorEvents, handleSave, handlePreview, handleSubmit } from './monster-editor-handlers.js';
+import { attachEditorEvents, handleSave, handlePreview, handleSubmit, showPublishedMonsterModal } from './monster-editor-handlers.js';
 import {
     createEmptyMonster,
     getLocalCache,
@@ -130,6 +130,20 @@ async function handleRoute() {
                 } catch (err) {
                     // Fallback prompt for environments without clipboard permissions
                     prompt('Copy this approval link for staff:', approvalUrl);
+                }
+            });
+        });
+
+        // Handle clicking Edit on an already published (Approved) monster
+        container.querySelectorAll('.btn-edit-monster').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const status = btn.dataset.status;
+                const isLive = btn.dataset.live === 'true';
+                if (status === 'Approved' || isLive) {
+                    e.preventDefault();
+                    const slug = btn.dataset.slug;
+                    const name = btn.dataset.name;
+                    showPublishedMonsterModal(slug, name);
                 }
             });
         });
