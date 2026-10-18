@@ -11,6 +11,28 @@ import {
 } from '../monster-utils.js';
 
 /**
+ * Formats the creator and usage attribution string.
+ * Format: "Created by <Creator> - <Usage>", "Created by <Creator>", or "<Usage>".
+ * @param {Object} monster - Monster data object.
+ * @returns {string} Formatted attribution string.
+ */
+export function formatCreatorAndUsage(monster) {
+    if (!monster) return '';
+    const creator = (monster.creator || monster.creator_display_name || '').trim();
+    const usage = (monster.usage || '').trim();
+    if (creator && usage) {
+        return `Created by ${escapeHTML(creator)} - ${escapeHTML(usage)}`;
+    }
+    if (creator) {
+        return `Created by ${escapeHTML(creator)}`;
+    }
+    if (usage) {
+        return escapeHTML(usage);
+    }
+    return '';
+}
+
+/**
  * Main page view: Fetches monster by slug and renders the statblock.
  * @param {HTMLElement} container - The app container element.
  * @param {Object} params - Router parameters.
@@ -27,9 +49,9 @@ export async function renderMonsterDetail(container, { slug }) {
             return;
         }
 
-        const creator = (monster.creator || monster.creator_display_name || '').trim();
-        const creatorHtml = creator
-            ? `<div class="monster-view-creator" style="margin-top: 0.5rem; font-style: italic; color: var(--color-text-secondary); font-size: 1.1rem;">Created by ${escapeHTML(creator)}</div>`
+        const creatorUsageText = formatCreatorAndUsage(monster);
+        const creatorHtml = creatorUsageText
+            ? `<div class="monster-view-creator" style="margin-top: 0.5rem; font-style: italic; color: var(--color-text-secondary); font-size: 1.1rem;">${creatorUsageText}</div>`
             : '';
 
         container.innerHTML = `
@@ -190,9 +212,9 @@ export function renderMonsterStatblock(container, monster) {
                         ${renderFeatureBucket(features.Regional, 'Regional Effects', monster.regional_header)}
                     </div>
 
-                    ${(monster.creator || monster.creator_display_name) && (monster.creator || monster.creator_display_name).trim() ? `
+                    ${formatCreatorAndUsage(monster) ? `
                         <div class="statblock-creator">
-                            Created by ${escapeHTML((monster.creator || monster.creator_display_name).trim())}
+                            ${formatCreatorAndUsage(monster)}
                         </div>
                     ` : ''}
                 </blockquote>

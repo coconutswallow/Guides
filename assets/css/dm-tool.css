@@ -664,6 +664,7 @@ body {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .stat-label {
@@ -676,6 +677,12 @@ body {
 .stat-value {
     font-weight: bold;
     font-size: 1.2em;
+}
+
+.stat-note {
+    font-size: 0.85em;
+    font-weight: normal;
+    color: var(--color-text-secondary);
 }
 
 /* Square Incentives Button */

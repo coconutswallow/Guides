@@ -460,11 +460,15 @@ document.addEventListener('DOMContentLoaded', initSessionEditor);
    CALCULATION LOGIC
    ========================================================================== */
 
+export function setCalculationEngine(engine) {
+    calculationEngine = engine;
+}
+
 /**
  * Main calculation loop for Player Rewards.
  * Syncs roster stats, checks gold limits, and updates each player card's XP/DTP.
  */
-function updateSessionCalculations() {
+export function updateSessionCalculations() {
     if (!calculationEngine) return;
 
     const sessionHours = parseFloat(document.getElementById('inp-session-total-hours')?.value) || 3;
@@ -498,10 +502,14 @@ function updateSessionCalculations() {
 
     const maxGold = calculationEngine.calculateMaxGold(actualApl);
 
-    // --- FIX: Update the visual "Max Gold" Label ---
+    // --- Update visual "Max Gold" and "Actual (MAL) APL" Labels ---
     const elMaxGold = document.querySelector('.val-max-gold');
     if (elMaxGold) {
         elMaxGold.textContent = maxGold;
+    }
+    const elActualApl = document.querySelector('.val-actual-apl');
+    if (elActualApl) {
+        elActualApl.textContent = actualApl;
     }
     // ------------------------------------------------
 

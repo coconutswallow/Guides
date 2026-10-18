@@ -5,6 +5,8 @@ order: 1
 hide_from_nav: true
 permalink: /field-guide/
 background_image: /assets/images/the_contract_by_exphrasis_dac13bh.jpg
+extra_css:
+  - /assets/css/home.css
 ---
 
 Welcome to the Field Guide. This section contains essential resources for Dungeon Masters, including a compendium of homebrew monsters and detailed adventure locations.

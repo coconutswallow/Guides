@@ -15,7 +15,7 @@ import {
     createNewVersion,
     deleteMonster
 } from './monster-service.js';
-import { renderMonsterStatblock } from './views/monster-detail.js';
+import { renderMonsterStatblock, formatCreatorAndUsage } from './views/monster-detail.js';
 import { calculatePB, calculateXP, calculateMod, formatInitiative, calculatePassivePerception, getMonsterApprovalUrl, escapeHTML } from './monster-utils.js';
 import { renderFeatureList, updateFeatureCardHeader } from './monster-editor-ui.js';
 import {
@@ -445,9 +445,9 @@ export async function handlePreview(currentMonster) {
         syncMonsterFromForm(document.getElementById('monster-form'), currentMonster);
         const { modal, target } = ensurePreviewModalElements();
 
-        const previewCreator = (currentMonster.creator || currentMonster.creator_display_name || '').trim();
-        const previewCreatorHtml = previewCreator
-            ? `<div class="monster-view-creator" style="margin-top: 0.5rem; font-style: italic; color: var(--color-text-secondary); font-size: 1.1rem;">Created by ${escapeHTML(previewCreator)}</div>`
+        const previewCreatorText = formatCreatorAndUsage(currentMonster);
+        const previewCreatorHtml = previewCreatorText
+            ? `<div class="monster-view-creator" style="margin-top: 0.5rem; font-style: italic; color: var(--color-text-secondary); font-size: 1.1rem;">${previewCreatorText}</div>`
             : '';
 
         modal.style.display = 'block';
