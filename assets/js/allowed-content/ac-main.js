@@ -38,10 +38,11 @@ import {
     showToast, 
     copyDirectLink, 
     getModalItem, 
-    slugify 
+    slugify,
+    initTooltips,
+    debounce
 } from './ac-ui-utils.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
-import { initTooltips, debounce, closeModal } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
 
 /**
