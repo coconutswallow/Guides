@@ -47,6 +47,8 @@ import {
     openModal, 
     closeModal, 
     setModalItem,
+    copyDirectLink,
+    slugify,
     esc, 
     renderMarkdownLinks, 
     renderSourceBadges,
@@ -77,6 +79,7 @@ let selectedSubcategoryFilter = 'ALL'; // 'ALL' | specific subcategory name (for
 let selectedTierFilter = 'ALL';       // 'ALL' | specific tier code or group
 let selectedSourceFilter = 'ALL';     // 'ALL' | specific source key
 let currentSearchTerm = '';
+let pendingRewardTarget = null;
 
 /**
  * Returns the subcategory within Miscellaneous for a given item.
@@ -190,6 +193,12 @@ export async function initOtherRewards(forceRefresh = false) {
         renderShell(container);
         applyFilters();
         updateTableOnly();
+
+        if (pendingRewardTarget) {
+            const target = pendingRewardTarget;
+            pendingRewardTarget = null;
+            highlightOtherRewardItem(target);
+        }
     } catch (err) {
         console.error('Failed to initialize Other Rewards view:', err);
         container.innerHTML = `
@@ -505,7 +514,17 @@ function renderRewardRowHtml(item, isAdmin, isSubrow = false) {
     return `
         <tr class="ac-row-clickable ${isSubrow ? 'ac-subrow-indented' : ''}" data-reward-id="${esc(item.id)}">
             <td class="col-name">
-                <strong>${esc(item.name)}</strong>
+                <div class="ac-item-name-cell">
+                    <strong>${esc(item.name)}</strong>
+                    <button type="button" 
+                            class="ac-btn-copy-link" 
+                            data-reward-id="${esc(item.id)}" 
+                            data-item-id="${esc(slugify(item.name) || item.id)}" 
+                            title="Copy direct link to ${esc(item.name)}" 
+                            aria-label="Copy direct link to ${esc(item.name)}">
+                        🔗
+                    </button>
+                </div>
             </td>
             <td class="col-type">
                 <span class="ac-badge-type">${esc(item.type || '—')}</span>
@@ -670,6 +689,16 @@ function attachRowListeners(tbody) {
                 collapsedSubcategories.add(subName);
             }
             updateTableOnly();
+        });
+    });
+
+    // Copy link buttons
+    tbody.querySelectorAll('.ac-btn-copy-link').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const rewardId = btn.dataset.rewardId;
+            const reward = allRewards.find(r => r.id === rewardId);
+            if (reward) copyDirectLink('other-rewards', reward);
         });
     });
 
@@ -841,6 +870,98 @@ export function showOtherRewardDetail(item) {
             });
         }
     }
+}
+
+/**
+ * Highlights a specific other reward from a direct link or query identifier:
+ * - Uncollapses the parent category and subcategory accordion group.
+ * - Resets active filters if the item is currently hidden.
+ * - Smoothly scrolls the item row into view with a visual pulse highlight.
+ * - Automatically opens the item's detail modal.
+ * 
+ * @param {string} identifier - Item name slug, UUID id, or check_id
+ * @returns {Promise<boolean>} True if item was found and opened
+ */
+export async function highlightOtherRewardItem(identifier) {
+    if (!identifier) return false;
+
+    if (!allRewards || allRewards.length === 0) {
+        pendingRewardTarget = identifier;
+        return true;
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const item = allRewards.find(i => 
+        (i.name && slugify(i.name) === cleanId) ||
+        (i.name && i.name.toLowerCase() === cleanId) ||
+        (i.id && i.id.toLowerCase() === cleanId) ||
+        (i.check_id && i.check_id.toLowerCase() === cleanId)
+    );
+
+    if (!item) return false;
+
+    // 1. Uncollapse parent category & subcategory
+    const catId = item.category_id || (item.category ? item.category.id : null);
+    if (catId && collapsedCategories.has(catId)) {
+        collapsedCategories.delete(catId);
+    }
+    const subName = getRewardSubcategory(item);
+    if (subName && collapsedSubcategories.has(subName)) {
+        collapsedSubcategories.delete(subName);
+    }
+
+    // 2. Clear filters if hidden
+    let filtersReset = false;
+    const catName = item.category ? item.category.name : '';
+    if (selectedCategoryFilter !== 'ALL' && catName && selectedCategoryFilter !== catName) {
+        selectedCategoryFilter = 'ALL';
+        const cSelect = document.getElementById('other-rewards-category-filter');
+        if (cSelect) cSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedSubcategoryFilter !== 'ALL' && selectedSubcategoryFilter !== subName) {
+        selectedSubcategoryFilter = 'ALL';
+        const sSelect = document.getElementById('other-rewards-subcat-filter');
+        if (sSelect) sSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedTierFilter !== 'ALL') {
+        selectedTierFilter = 'ALL';
+        const tSelect = document.getElementById('other-rewards-tier-filter');
+        if (tSelect) tSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedSourceFilter !== 'ALL') {
+        selectedSourceFilter = 'ALL';
+        const srcSelect = document.getElementById('other-rewards-source-filter');
+        if (srcSelect) srcSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (currentSearchTerm) {
+        currentSearchTerm = '';
+        const searchInput = document.getElementById('ac-global-search');
+        if (searchInput) searchInput.value = '';
+        filtersReset = true;
+    }
+
+    applyFilters();
+    updateTableOnly();
+
+    // 3. Highlight row & scroll
+    const row = document.querySelector(`tr[data-reward-id="${item.id}"]`);
+    if (row) {
+        if (typeof row.scrollIntoView === 'function') {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        row.classList.remove('ac-row-highlighted');
+        if (row.offsetWidth !== undefined) void row.offsetWidth;
+        row.classList.add('ac-row-highlighted');
+        setTimeout(() => row.classList.remove('ac-row-highlighted'), 4000);
+    }
+
+    // 4. Open modal
+    showOtherRewardDetail(item);
+    return true;
 }
 
 /**

@@ -44,6 +44,8 @@ import {
     openModal, 
     closeModal, 
     setModalItem,
+    copyDirectLink,
+    slugify,
     esc, 
     renderMarkdownLinks, 
     renderSourceBadges,
@@ -69,6 +71,7 @@ let collapsedCategories = new Set();
 let selectedTypeFilter = 'ALL';       // 'ALL' | specific category name
 let selectedSourceFilter = 'ALL';     // 'ALL' | specific source key
 let currentSearchTerm = '';
+let pendingBastionTarget = null;
 
 /**
  * Initializes the Bastions view.
@@ -121,6 +124,12 @@ export async function initBastions(forceRefresh = false) {
 
         applyFilters();
         renderShell();
+
+        if (pendingBastionTarget) {
+            const target = pendingBastionTarget;
+            pendingBastionTarget = null;
+            highlightBastionItem(target);
+        }
     } catch (error) {
         console.error('Failed to initialize Bastions module:', error);
         container.innerHTML = `
@@ -437,8 +446,16 @@ function renderTable(isAdmin) {
                             return `
                                 <tr data-id="${item.id}" data-category="${esc(group.name)}" class="ac-bastion-row ${isCollapsed ? 'ac-group-collapsed' : ''}" style="${isCollapsed ? 'display: none;' : ''}">
                                     <td class="col-name">
-                                        <div class="name-cell">
+                                        <div class="name-cell ac-item-name-cell">
                                             <strong>${esc(item.name)}</strong>
+                                            <button type="button" 
+                                                    class="ac-btn-copy-link" 
+                                                    data-id="${esc(item.id)}" 
+                                                    data-item-id="${esc(slugify(item.name) || item.id)}" 
+                                                    title="Copy direct link to ${esc(item.name)}" 
+                                                    aria-label="Copy direct link to ${esc(item.name)}">
+                                                🔗
+                                            </button>
                                             <span class="row-hover-icon">Details →</span>
                                         </div>
                                     </td>
@@ -587,6 +604,16 @@ function setupTableInteractions() {
             }
 
             updateToggleAllBtn();
+            return;
+        }
+
+        // 1b. Direct Copy Link Button
+        const copyBtn = e.target.closest('.ac-btn-copy-link');
+        if (copyBtn) {
+            e.stopPropagation();
+            const id = copyBtn.dataset.id;
+            const item = allBastions.find(i => i.id === id);
+            if (item) copyDirectLink('bastions', item);
             return;
         }
 
@@ -746,6 +773,83 @@ export function showBastionDetail(item) {
             }
         }
     }
+}
+
+/**
+ * Highlights a specific bastion facility from a direct link or query identifier:
+ * - Uncollapses the parent category group if collapsed.
+ * - Resets active filters if the item is currently hidden.
+ * - Smoothly scrolls the item row into view with a visual pulse highlight.
+ * - Automatically opens the item's detail modal.
+ * 
+ * @param {string} identifier - Item name slug, UUID id, or check_id
+ * @returns {Promise<boolean>} True if item was found and opened
+ */
+export async function highlightBastionItem(identifier) {
+    if (!identifier) return false;
+
+    if (!allBastions || allBastions.length === 0) {
+        pendingBastionTarget = identifier;
+        return true;
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const item = allBastions.find(i => 
+        (i.name && slugify(i.name) === cleanId) ||
+        (i.name && i.name.toLowerCase() === cleanId) ||
+        (i.id && i.id.toLowerCase() === cleanId) ||
+        (i.check_id && i.check_id.toLowerCase() === cleanId)
+    );
+
+    if (!item) return false;
+
+    // 1. Uncollapse parent category
+    const catName = item.bastion_type?.name || item.category?.name || '';
+    if (catName && collapsedCategories.has(catName)) {
+        collapsedCategories.delete(catName);
+    }
+
+    // 2. Clear filters if hidden
+    let filtersReset = false;
+    if (selectedTypeFilter !== 'ALL' && catName && selectedTypeFilter !== catName) {
+        selectedTypeFilter = 'ALL';
+        const typeSelect = document.getElementById('ac-bastions-type-filter');
+        if (typeSelect) typeSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedSourceFilter !== 'ALL') {
+        selectedSourceFilter = 'ALL';
+        const sSelect = document.getElementById('ac-bastions-source-filter');
+        if (sSelect) sSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (currentSearchTerm) {
+        currentSearchTerm = '';
+        const searchInput = document.getElementById('ac-global-search');
+        if (searchInput) searchInput.value = '';
+        filtersReset = true;
+    }
+
+    if (filtersReset) {
+        applyFilters();
+    }
+    updateTableOnly();
+
+    // 3. Highlight row & scroll
+    const row = document.querySelector(`tr[data-id="${item.id}"]`);
+    if (row) {
+        if (typeof row.scrollIntoView === 'function') {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        row.classList.remove('ac-row-highlighted');
+        if (row.offsetWidth !== undefined) void row.offsetWidth;
+        row.classList.add('ac-row-highlighted');
+        setTimeout(() => row.classList.remove('ac-row-highlighted'), 4000);
+    }
+
+    // 4. Open modal
+    showBastionDetail(item);
+    return true;
 }
 
 /**

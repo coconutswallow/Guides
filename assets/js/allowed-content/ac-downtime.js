@@ -42,6 +42,8 @@ import {
     openModal, 
     closeModal, 
     setModalItem,
+    copyDirectLink,
+    slugify,
     esc, 
     renderMarkdownLinks, 
     resolveSourceLink,
@@ -64,6 +66,7 @@ let collapsedCategories = new Set();
 // Active toolbar filters
 let selectedCategoryFilter = 'ALL';   // 'ALL' | specific category name
 let currentSearchTerm = '';
+let pendingDowntimeTarget = null;
 
 /**
  * Initializes the Downtime view.
@@ -102,6 +105,12 @@ export async function initDowntime(forceRefresh = false) {
 
         applyFilters();
         renderShell();
+
+        if (pendingDowntimeTarget) {
+            const target = pendingDowntimeTarget;
+            pendingDowntimeTarget = null;
+            highlightDowntimeItem(target);
+        }
     } catch (error) {
         console.error('Failed to initialize Downtime module:', error);
         container.innerHTML = `
@@ -359,8 +368,16 @@ function renderTable(isAdmin) {
                             return `
                                 <tr data-id="${item.id}" data-category="${esc(group.name)}" class="ac-downtime-row ${isCollapsed ? 'ac-group-collapsed' : ''}" style="${isCollapsed ? 'display: none;' : ''}">
                                     <td class="col-name">
-                                        <div class="name-cell">
+                                        <div class="name-cell ac-item-name-cell">
                                             <strong>${esc(item.name)}</strong>
+                                            <button type="button" 
+                                                    class="ac-btn-copy-link" 
+                                                    data-id="${esc(item.id)}" 
+                                                    data-item-id="${esc(slugify(item.name) || item.id)}" 
+                                                    title="Copy direct link to ${esc(item.name)}" 
+                                                    aria-label="Copy direct link to ${esc(item.name)}">
+                                                🔗
+                                            </button>
                                             <span class="row-hover-icon">Details →</span>
                                         </div>
                                     </td>
@@ -500,6 +517,16 @@ function setupTableInteractions() {
             }
 
             updateToggleAllBtn();
+            return;
+        }
+
+        // 1b. Direct Copy Link Button
+        const copyBtn = e.target.closest('.ac-btn-copy-link');
+        if (copyBtn) {
+            e.stopPropagation();
+            const id = copyBtn.dataset.id;
+            const item = allDowntime.find(i => i.id === id);
+            if (item) copyDirectLink('downtime', item);
             return;
         }
 
@@ -643,6 +670,77 @@ export function showDowntimeDetail(item) {
             });
         }
     }
+}
+
+/**
+ * Highlights a specific downtime activity from a direct link or query identifier:
+ * - Uncollapses the parent category group if collapsed.
+ * - Resets active filters if the item is currently hidden.
+ * - Smoothly scrolls the item row into view with a visual pulse highlight.
+ * - Automatically opens the item's detail modal.
+ * 
+ * @param {string} identifier - Item name slug, UUID id, or check_id
+ * @returns {Promise<boolean>} True if item was found and opened
+ */
+export async function highlightDowntimeItem(identifier) {
+    if (!identifier) return false;
+
+    if (!allDowntime || allDowntime.length === 0) {
+        pendingDowntimeTarget = identifier;
+        return true;
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const item = allDowntime.find(i => 
+        (i.name && slugify(i.name) === cleanId) ||
+        (i.name && i.name.toLowerCase() === cleanId) ||
+        (i.id && i.id.toLowerCase() === cleanId) ||
+        (i.check_id && i.check_id.toLowerCase() === cleanId)
+    );
+
+    if (!item) return false;
+
+    // 1. Uncollapse parent category
+    const catName = item.downtime_type?.name || item.category?.name || '';
+    if (catName && collapsedCategories.has(catName)) {
+        collapsedCategories.delete(catName);
+    }
+
+    // 2. Clear filters if hidden
+    let filtersReset = false;
+    if (selectedCategoryFilter !== 'ALL' && catName && selectedCategoryFilter !== catName) {
+        selectedCategoryFilter = 'ALL';
+        const cSelect = document.getElementById('ac-downtime-category-filter');
+        if (cSelect) cSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (currentSearchTerm) {
+        currentSearchTerm = '';
+        const sInput = document.getElementById('ac-global-search');
+        if (sInput) sInput.value = '';
+        filtersReset = true;
+    }
+
+    if (filtersReset) {
+        applyFilters();
+    }
+    updateTableOnly();
+
+    // 3. Highlight row & scroll
+    const row = document.querySelector(`tr[data-id="${item.id}"]`);
+    if (row) {
+        if (typeof row.scrollIntoView === 'function') {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        row.classList.remove('ac-row-highlighted');
+        if (row.offsetWidth !== undefined) void row.offsetWidth;
+        row.classList.add('ac-row-highlighted');
+        setTimeout(() => row.classList.remove('ac-row-highlighted'), 4000);
+    }
+
+    // 4. Open modal
+    showDowntimeDetail(item);
+    return true;
 }
 
 /**

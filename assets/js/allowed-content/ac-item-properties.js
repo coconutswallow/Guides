@@ -49,6 +49,8 @@ import {
     openModal, 
     closeModal, 
     setModalItem,
+    copyDirectLink,
+    slugify,
     esc, 
     renderMarkdownLinks, 
     renderSourceBadges,
@@ -80,6 +82,7 @@ let selectedTypeFilter = 'ALL';         // 'ALL' | 'Creator' | 'History' | 'Mino
 let selectedCategoryFilter = 'ALL';     // 'ALL' | 'Fair Game' | 'Full DM Only'
 let selectedSourceFilter = 'ALL';       // 'ALL' | specific source key ('DMG2014', 'DMG2024', 'HHB')
 let currentSearchTerm = '';
+let pendingPropertyTarget = null;
 
 /**
  * Initializes the Item Properties view.
@@ -154,6 +157,12 @@ export async function initItemProperties(forceRefresh = false) {
 
         applyFilters();
         renderShell();
+
+        if (pendingPropertyTarget) {
+            const target = pendingPropertyTarget;
+            pendingPropertyTarget = null;
+            highlightItemPropertyItem(target);
+        }
     } catch (err) {
         console.error('Error initializing Item Properties:', err);
         container.innerHTML = `
@@ -469,7 +478,17 @@ function renderTable(isAdmin) {
                     tabindex="0"
                     role="button">
                     <td class="col-name">
-                        <strong>${esc(item.name)}</strong>
+                        <div class="ac-item-name-cell">
+                            <strong>${esc(item.name)}</strong>
+                            <button type="button" 
+                                    class="ac-btn-copy-link" 
+                                    data-id="${esc(item.id)}" 
+                                    data-item-id="${esc(slugify(item.name) || item.id)}" 
+                                    title="Copy direct link to ${esc(item.name)}" 
+                                    aria-label="Copy direct link to ${esc(item.name)}">
+                                🔗
+                            </button>
+                        </div>
                     </td>
                     <td class="col-permission" style="text-align: center;">
                         ${permBadge}
@@ -633,6 +652,16 @@ function setupTableInteractions() {
             return;
         }
 
+        // 1b. Direct Copy Link Button
+        const copyBtn = e.target.closest('.ac-btn-copy-link');
+        if (copyBtn) {
+            e.stopPropagation();
+            const id = copyBtn.dataset.id;
+            const item = allItemProperties.find(i => i.id === id);
+            if (item) copyDirectLink('item-properties', item);
+            return;
+        }
+
         // 2. Edit Action Click
         const editBtn = e.target.closest('.btn-edit-property');
         if (editBtn) {
@@ -759,6 +788,87 @@ export function showItemPropertyDetail(item) {
             confirmAndDeleteItemProperty(item);
         });
     }
+}
+
+/**
+ * Highlights a specific item property from a direct link or query identifier:
+ * - Uncollapses the parent type group if collapsed.
+ * - Resets active filters if the item is currently hidden.
+ * - Smoothly scrolls the item row into view with a visual pulse highlight.
+ * - Automatically opens the item's detail modal.
+ * 
+ * @param {string} identifier - Item name slug, UUID id, or check_id
+ * @returns {Promise<boolean>} True if item was found and opened
+ */
+export async function highlightItemPropertyItem(identifier) {
+    if (!identifier) return false;
+
+    if (!allItemProperties || allItemProperties.length === 0) {
+        pendingPropertyTarget = identifier;
+        return true;
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const item = allItemProperties.find(i => 
+        (i.name && slugify(i.name) === cleanId) ||
+        (i.name && i.name.toLowerCase() === cleanId) ||
+        (i.id && i.id.toLowerCase() === cleanId) ||
+        (i.check_id && i.check_id.toLowerCase() === cleanId)
+    );
+
+    if (!item) return false;
+
+    // 1. Uncollapse parent category
+    const catName = item.type || '';
+    if (catName && collapsedCategories.has(catName)) {
+        collapsedCategories.delete(catName);
+    }
+
+    // 2. Clear filters if hidden
+    let filtersReset = false;
+    if (selectedTypeFilter !== 'ALL' && catName && selectedTypeFilter !== catName) {
+        selectedTypeFilter = 'ALL';
+        const typeSelect = document.getElementById('ac-item-properties-type-filter');
+        if (typeSelect) typeSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedCategoryFilter !== 'ALL' && item.category_sub !== selectedCategoryFilter) {
+        selectedCategoryFilter = 'ALL';
+        const cSelect = document.getElementById('ac-item-properties-category-filter');
+        if (cSelect) cSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedSourceFilter !== 'ALL') {
+        selectedSourceFilter = 'ALL';
+        const sSelect = document.getElementById('ac-item-properties-source-filter');
+        if (sSelect) sSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (currentSearchTerm) {
+        currentSearchTerm = '';
+        const searchInput = document.getElementById('ac-global-search');
+        if (searchInput) searchInput.value = '';
+        filtersReset = true;
+    }
+
+    applyFilters();
+    updateTableOnly();
+
+    // 3. Highlight row & scroll
+    const row = document.querySelector(`tr[data-id="${item.id}"]`);
+    if (row) {
+        if (typeof row.scrollIntoView === 'function') {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        row.classList.remove('ac-row-highlighted');
+        if (row.offsetWidth !== undefined) void row.offsetWidth;
+        row.classList.add('ac-row-highlighted');
+        setTimeout(() => row.classList.remove('ac-row-highlighted'), 4000);
+    }
+
+    // 4. Open modal
+    showItemPropertyDetail(item);
+    return true;
 }
 
 /**

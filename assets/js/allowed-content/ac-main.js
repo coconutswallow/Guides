@@ -26,12 +26,12 @@ import { initFeats, filterFeats, openFeatForm } from './ac-feats.js';
 import { initSpells, filterSpells, openSpellForm } from './ac-spells.js';
 import { initLanguages, filterLanguages, openLanguageForm } from './ac-languages.js';
 import { initMiscFeatures, filterMiscFeatures, openMiscFeaturePicker } from './ac-misc-features.js';
-import { initEquipment, filterEquipment, openEquipmentForm } from './ac-equipment.js';
-import { initItemProperties, filterItemProperties, openItemPropertyForm } from './ac-item-properties.js';
-import { initDowntime, filterDowntime, openDowntimeForm } from './ac-downtime.js';
-import { initBastions, filterBastions, openBastionForm } from './ac-bastions.js';
-import { initMonsters, filterMonsters, openMonsterForm, openMonstersOptionsModal, openUsageOptionsModal } from './ac-monsters.js';
-import { initOtherRewards, filterOtherRewards, openOtherRewardForm, openOtherRewardsOptionsModal } from './ac-other-rewards.js';
+import { initEquipment, filterEquipment, openEquipmentForm, highlightEquipmentItem } from './ac-equipment.js';
+import { initItemProperties, filterItemProperties, openItemPropertyForm, highlightItemPropertyItem } from './ac-item-properties.js';
+import { initDowntime, filterDowntime, openDowntimeForm, highlightDowntimeItem } from './ac-downtime.js';
+import { initBastions, filterBastions, openBastionForm, highlightBastionItem } from './ac-bastions.js';
+import { initMonsters, filterMonsters, openMonsterForm, openMonstersOptionsModal, openUsageOptionsModal, highlightMonsterItem } from './ac-monsters.js';
+import { initOtherRewards, filterOtherRewards, openOtherRewardForm, openOtherRewardsOptionsModal, highlightOtherRewardItem } from './ac-other-rewards.js';
 import { initLoot, filterLoot, openLootForm, openLootOptionsModal, highlightLootItem } from './ac-loot.js';
 import { 
     closeModal, 
@@ -174,6 +174,7 @@ export const TAB_REGISTRY = {
         searchPlaceholder: 'Search equipment, weapons, armor, tools, categories, sources...',
         init: (forceRefresh) => initEquipment(forceRefresh),
         filter: (term) => filterEquipment(term),
+        openItem: (target) => highlightEquipmentItem(target),
         adminActions: [
             { id: 'btn-add-equipment', label: '+ Add Equipment', primary: true, event: 'ac:open-equipment-form' },
             { id: 'btn-manage-equipment-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-equipment-options' }
@@ -185,6 +186,7 @@ export const TAB_REGISTRY = {
         searchPlaceholder: 'Search downtime activities, categories, costs, rules, notes...',
         init: (forceRefresh) => initDowntime(forceRefresh),
         filter: (term) => filterDowntime(term),
+        openItem: (target) => highlightDowntimeItem(target),
         adminActions: [
             { id: 'btn-add-downtime', label: '+ Add Downtime Activity', primary: true, event: 'ac:open-downtime-form' },
             { id: 'btn-manage-downtime-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-downtime-options' }
@@ -196,6 +198,7 @@ export const TAB_REGISTRY = {
         searchPlaceholder: 'Search bastions, facilities, orders, prerequisites, costs, sources...',
         init: (forceRefresh) => initBastions(forceRefresh),
         filter: (term) => filterBastions(term),
+        openItem: (target) => highlightBastionItem(target),
         adminActions: [
             { id: 'btn-add-bastion', label: '+ Add Bastion Facility', primary: true, event: 'ac:open-bastion-form' },
             { id: 'btn-manage-bastions-options', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-bastions-options' }
@@ -219,6 +222,7 @@ export const TAB_REGISTRY = {
         searchPlaceholder: 'Search other rewards, dark gifts, supernatural gifts, charms, mounts, pets...',
         init: (forceRefresh) => initOtherRewards(forceRefresh),
         filter: (term) => filterOtherRewards(term),
+        openItem: (target) => highlightOtherRewardItem(target),
         adminActions: [
             { id: 'btn-add-other-reward', label: '+ Add Reward', primary: true, event: 'ac:open-other-reward-form' },
             { id: 'btn-manage-other-rewards-categories', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-other-rewards-categories' }
@@ -230,6 +234,7 @@ export const TAB_REGISTRY = {
         searchPlaceholder: 'Search item properties, creators, histories, quirks, sentient features...',
         init: (forceRefresh) => initItemProperties(forceRefresh),
         filter: (term) => filterItemProperties(term),
+        openItem: (target) => highlightItemPropertyItem(target),
         adminActions: [
             { id: 'btn-add-item-property', label: '+ Add Item Property', primary: true, event: 'ac:open-item-property-form' },
             { id: 'btn-manage-item-properties-usage', label: '⚙️ Configure Usage', primary: false, event: 'ac:open-usage-options' },
@@ -242,6 +247,7 @@ export const TAB_REGISTRY = {
         searchPlaceholder: 'Search monsters, types, CR, sections, sources...',
         init: (forceRefresh) => initMonsters(forceRefresh),
         filter: (term) => filterMonsters(term),
+        openItem: (target) => highlightMonsterItem(target),
         adminActions: [
             { id: 'btn-add-monster', label: '+ Add Monster', primary: true, event: 'ac:open-monster-form' },
             { id: 'btn-manage-monsters-options', label: '⚙️ Configure Usage', primary: false, event: 'ac:open-usage-options' }

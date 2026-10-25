@@ -45,6 +45,8 @@ import {
     openModal, 
     closeModal, 
     setModalItem,
+    copyDirectLink,
+    slugify,
     esc, 
     renderSourceBadges, 
     extractSourceKeys, 
@@ -76,6 +78,7 @@ let selectedTypeFilter = 'ALL';      // 'ALL' | specific category name
 let selectedRulesetFilter = 'ALL';   // 'ALL' | '2024' | '2014'
 let selectedSourceFilter = 'ALL';    // 'ALL' | specific source_key
 let currentSearchTerm = '';
+let pendingEquipmentTarget = null;
 
 /**
  * Initializes the Equipment view.
@@ -133,6 +136,12 @@ export async function initEquipment(forceRefresh = false) {
 
         applyFilters();
         renderView();
+
+        if (pendingEquipmentTarget) {
+            const target = pendingEquipmentTarget;
+            pendingEquipmentTarget = null;
+            highlightEquipmentItem(target);
+        }
     } catch (err) {
         console.error('Error initializing Equipment module:', err);
         container.innerHTML = `
@@ -460,8 +469,16 @@ function renderTable(isAdmin) {
                             return `
                                 <tr data-id="${item.id}" data-category="${esc(group.name)}" class="ac-equipment-row ${isCollapsed ? 'ac-group-collapsed' : ''}" style="${isCollapsed ? 'display: none;' : ''}">
                                     <td class="col-name">
-                                        <div class="name-cell">
+                                        <div class="name-cell ac-item-name-cell">
                                             <strong>${esc(item.name)}</strong>
+                                            <button type="button" 
+                                                    class="ac-btn-copy-link" 
+                                                    data-id="${esc(item.id)}" 
+                                                    data-item-id="${esc(slugify(item.name) || item.id)}" 
+                                                    title="Copy direct link to ${esc(item.name)}" 
+                                                    aria-label="Copy direct link to ${esc(item.name)}">
+                                                🔗
+                                            </button>
                                             <span class="row-hover-icon">Details →</span>
                                         </div>
                                     </td>
@@ -593,7 +610,17 @@ function setupTableInteractions() {
             return;
         }
 
-        // 1. Edit Button
+        // 1. Direct Copy Link Button
+        const copyBtn = e.target.closest('.ac-btn-copy-link');
+        if (copyBtn) {
+            e.stopPropagation();
+            const id = copyBtn.dataset.id;
+            const item = allEquipment.find(i => i.id === id);
+            if (item) copyDirectLink('equipment', item);
+            return;
+        }
+
+        // 2. Edit Button
         const editBtn = e.target.closest('.btn-edit');
         if (editBtn) {
             e.stopPropagation();
@@ -787,6 +814,89 @@ export function showEquipmentDetail(item) {
             confirmAndDeleteEquipment(item);
         });
     }
+}
+
+/**
+ * Highlights a specific equipment item from a direct link or query identifier:
+ * - Uncollapses the parent category group if collapsed.
+ * - Resets active filters if the item is currently hidden.
+ * - Smoothly scrolls the item row into view with a visual pulse highlight.
+ * - Automatically opens the item's detail modal.
+ * 
+ * @param {string} identifier - Item name slug, UUID id, or check_id
+ * @returns {Promise<boolean>} True if item was found and opened
+ */
+export async function highlightEquipmentItem(identifier) {
+    if (!identifier) return false;
+
+    if (!allEquipment || allEquipment.length === 0) {
+        pendingEquipmentTarget = identifier;
+        return true;
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const item = allEquipment.find(i => 
+        (i.name && slugify(i.name) === cleanId) ||
+        (i.name && i.name.toLowerCase() === cleanId) ||
+        (i.id && i.id.toLowerCase() === cleanId) ||
+        (i.check_id && i.check_id.toLowerCase() === cleanId)
+    );
+
+    if (!item) return false;
+
+    // 1. Uncollapse parent category
+    const catName = item.equip_type?.name || item.category?.name || '';
+    if (catName && collapsedCategories.has(catName)) {
+        collapsedCategories.delete(catName);
+    }
+
+    // 2. Clear filters if hidden
+    let filtersReset = false;
+    if (selectedTypeFilter !== 'ALL' && catName && selectedTypeFilter !== catName) {
+        selectedTypeFilter = 'ALL';
+        const typeSelect = document.getElementById('ac-equipment-type-filter');
+        if (typeSelect) typeSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedRulesetFilter !== 'ALL' && String(item.ruleset) !== String(selectedRulesetFilter)) {
+        selectedRulesetFilter = 'ALL';
+        const rSelect = document.getElementById('ac-equipment-ruleset-filter');
+        if (rSelect) rSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedSourceFilter !== 'ALL') {
+        selectedSourceFilter = 'ALL';
+        const sSelect = document.getElementById('ac-equipment-source-filter');
+        if (sSelect) sSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (currentSearchTerm) {
+        currentSearchTerm = '';
+        const searchInput = document.getElementById('ac-global-search');
+        if (searchInput) searchInput.value = '';
+        filtersReset = true;
+    }
+
+    if (filtersReset) {
+        applyFilters();
+    }
+    updateTableOnly();
+
+    // 3. Highlight row & scroll
+    const row = document.querySelector(`tr[data-id="${item.id}"]`);
+    if (row) {
+        if (typeof row.scrollIntoView === 'function') {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        row.classList.remove('ac-row-highlighted');
+        if (row.offsetWidth !== undefined) void row.offsetWidth;
+        row.classList.add('ac-row-highlighted');
+        setTimeout(() => row.classList.remove('ac-row-highlighted'), 4000);
+    }
+
+    // 4. Open modal
+    showEquipmentDetail(item);
+    return true;
 }
 
 /**

@@ -60,6 +60,8 @@ import {
     renderSourceTagPicker,
     renderRulesetPill,
     setModalItem,
+    copyDirectLink,
+    slugify,
     showToast 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal, openUsageOptionsModal } from './ac-options-manager.js';
@@ -83,6 +85,7 @@ let selectedClassificationFilter = 'ALL';
 let selectedCRFilter = 'ALL';
 let selectedSourceFilter = 'ALL';
 let currentSearchTerm = '';
+let pendingMonsterTarget = null;
 const PAGE_SIZE = 100;
 let currentPage = 1;
 
@@ -196,6 +199,12 @@ export async function initMonsters(forceRefresh = false) {
 
         applyFilters();
         renderView();
+
+        if (pendingMonsterTarget) {
+            const target = pendingMonsterTarget;
+            pendingMonsterTarget = null;
+            highlightMonsterItem(target);
+        }
     } catch (err) {
         console.error('Error initializing Monsters:', err);
         container.innerHTML = `<div class="ac-error-state"><p>Failed to load monster data: ${esc(err.message)}</p></div>`;
@@ -345,7 +354,19 @@ function renderTableBody() {
             <tbody>
                 ${pageItems.map(item => `
                     <tr data-id="${item.id}" style="cursor: pointer;">
-                        <td><strong>${esc(item.name)}</strong></td>
+                        <td>
+                            <div class="ac-item-name-cell">
+                                <strong>${esc(item.name)}</strong>
+                                <button type="button" 
+                                        class="ac-btn-copy-link" 
+                                        data-id="${esc(item.id)}" 
+                                        data-item-id="${esc(slugify(item.name) || item.id)}" 
+                                        title="Copy direct link to ${esc(item.name)}" 
+                                        aria-label="Copy direct link to ${esc(item.name)}">
+                                    🔗
+                                </button>
+                            </div>
+                        </td>
                         <td style="text-align: center;">${renderRulesetPill(item.ruleset)}</td>
                         <td style="text-align: center;"><span class="ac-category-pill">${esc(item.category)}</span></td>
                         <td style="text-align: center;"><span class="ac-cr-pill">${esc(item.cr || '—')}</span></td>
@@ -462,6 +483,16 @@ function setupDelegatedInteractions() {
             return;
         }
 
+        // Direct Copy Link Button
+        const copyBtn = e.target.closest('.ac-btn-copy-link');
+        if (copyBtn) {
+            e.stopPropagation();
+            const id = copyBtn.dataset.id;
+            const item = allMonsters.find(i => String(i.id) === String(id));
+            if (item) copyDirectLink('monsters', item);
+            return;
+        }
+
         // Edit button clicked
         const editBtn = e.target.closest('.btn-edit');
         if (editBtn) {
@@ -547,6 +578,99 @@ export function showDetailModal(item) {
             confirmAndDeleteMonster(item);
         });
     }
+}
+
+/**
+ * Highlights a specific monster from a direct link or query identifier:
+ * - Resets active filters if the item is currently hidden.
+ * - Navigates to the correct pagination page.
+ * - Smoothly scrolls the item row into view with a visual pulse highlight.
+ * - Automatically opens the item's detail modal.
+ * 
+ * @param {string} identifier - Item name slug, UUID id, or check_id
+ * @returns {Promise<boolean>} True if item was found and opened
+ */
+export async function highlightMonsterItem(identifier) {
+    if (!identifier) return false;
+
+    if (!allMonsters || allMonsters.length === 0) {
+        pendingMonsterTarget = identifier;
+        return true;
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const item = allMonsters.find(i => 
+        (i.name && slugify(i.name) === cleanId) ||
+        (i.name && i.name.toLowerCase() === cleanId) ||
+        (i.id && String(i.id).toLowerCase() === cleanId) ||
+        (i.check_id && i.check_id.toLowerCase() === cleanId)
+    );
+
+    if (!item) return false;
+
+    // 1. Clear filters if hidden
+    let filtersReset = false;
+    if (selectedRulesetFilter !== 'ALL' && item.ruleset !== selectedRulesetFilter) {
+        selectedRulesetFilter = 'ALL';
+        const rSelect = document.getElementById('monsters-ruleset-filter');
+        if (rSelect) rSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedCategoryFilter !== 'ALL' && item.category !== selectedCategoryFilter) {
+        selectedCategoryFilter = 'ALL';
+        const cSelect = document.getElementById('monsters-category-filter');
+        if (cSelect) cSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedClassificationFilter !== 'ALL' && item.classification !== selectedClassificationFilter) {
+        selectedClassificationFilter = 'ALL';
+        const clSelect = document.getElementById('monsters-classification-filter');
+        if (clSelect) clSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedCRFilter !== 'ALL' && item.cr !== selectedCRFilter) {
+        selectedCRFilter = 'ALL';
+        const crSelect = document.getElementById('monsters-cr-filter');
+        if (crSelect) crSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedSourceFilter !== 'ALL') {
+        selectedSourceFilter = 'ALL';
+        const sSelect = document.getElementById('monsters-source-filter');
+        if (sSelect) sSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (currentSearchTerm) {
+        currentSearchTerm = '';
+        const searchInput = document.getElementById('ac-global-search');
+        if (searchInput) searchInput.value = '';
+        filtersReset = true;
+    }
+
+    applyFilters();
+
+    // 2. Adjust pagination
+    const itemIndex = filteredMonsters.findIndex(i => String(i.id) === String(item.id));
+    if (itemIndex >= 0) {
+        currentPage = Math.floor(itemIndex / PAGE_SIZE) + 1;
+    }
+    renderTableBody();
+
+    // 3. Highlight row & scroll
+    const row = document.querySelector(`tr[data-id="${item.id}"]`);
+    if (row) {
+        if (typeof row.scrollIntoView === 'function') {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        row.classList.remove('ac-row-highlighted');
+        if (row.offsetWidth !== undefined) void row.offsetWidth;
+        row.classList.add('ac-row-highlighted');
+        setTimeout(() => row.classList.remove('ac-row-highlighted'), 4000);
+    }
+
+    // 4. Open modal
+    showDetailModal(item);
+    return true;
 }
 
 /**
