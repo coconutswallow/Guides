@@ -59,6 +59,7 @@ import {
     attachExpandableTextListeners,
     renderSourceTagPicker,
     renderRulesetPill,
+    setModalItem,
     showToast 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal, openUsageOptionsModal } from './ac-options-manager.js';
@@ -536,6 +537,7 @@ export function showDetailModal(item) {
         ` : ''}
     `;
     openModal(html);
+    setModalItem('monsters', item);
 
     if (isAdmin) {
         document.getElementById('modal-btn-edit')?.addEventListener('click', () => {

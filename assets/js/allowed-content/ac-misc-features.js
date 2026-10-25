@@ -60,6 +60,7 @@ import {
     formatExpandableText,
     attachExpandableTextListeners,
     renderRulesetPill,
+    setModalItem,
     showToast
 } from './ac-ui-utils.js';
 
@@ -761,6 +762,7 @@ function showDetailModal(item, categoryLabel) {
     `;
 
     openModal(html);
+    setModalItem('misc-features', item);
 
     if (isAdmin) {
         document.getElementById('detail-btn-edit')?.addEventListener('click', () => {

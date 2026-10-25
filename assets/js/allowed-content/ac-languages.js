@@ -42,6 +42,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderMarkdownLinks, 
     formatExpandableText,
@@ -481,6 +482,7 @@ export function showLanguageDetail(lang) {
     `;
 
     openModal(contentHtml);
+    setModalItem('languages', lang);
 
     if (isAdmin) {
         const editBtn = document.getElementById('detail-btn-edit-lang');

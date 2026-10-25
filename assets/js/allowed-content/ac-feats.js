@@ -45,6 +45,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderSourceBadges, 
     extractSourceKeys, 
@@ -525,6 +526,7 @@ export function showFeatDetailModal(feat) {
     `;
 
     openModal(html);
+    setModalItem('feats', feat);
 
     if (isAdmin) {
         const editBtn = document.getElementById('detail-btn-edit');

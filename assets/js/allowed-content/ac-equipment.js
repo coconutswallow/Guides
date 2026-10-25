@@ -44,6 +44,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderSourceBadges, 
     extractSourceKeys, 
@@ -775,6 +776,7 @@ export function showEquipmentDetail(item) {
     `;
 
     openModal(html);
+    setModalItem('equipment', item);
 
     if (isAdmin) {
         document.getElementById('modal-btn-edit-equipment')?.addEventListener('click', () => {

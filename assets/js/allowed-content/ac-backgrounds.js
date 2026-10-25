@@ -44,6 +44,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderSourceBadges, 
     extractSourceKeys, 
@@ -499,6 +500,7 @@ export function showBackgroundDetail(bg) {
     `;
 
     openModal(html);
+    setModalItem('backgrounds', bg);
 
     if (isAdmin) {
         const editBtn = document.getElementById('modal-btn-edit-background');

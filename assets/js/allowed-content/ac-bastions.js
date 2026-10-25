@@ -43,6 +43,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderMarkdownLinks, 
     renderSourceBadges,
@@ -723,6 +724,7 @@ export function showBastionDetail(item) {
     `;
 
     openModal(html);
+    setModalItem('bastions', item);
 
     if (isAdmin) {
         const modalContainer = document.getElementById('ac-detail-modal');

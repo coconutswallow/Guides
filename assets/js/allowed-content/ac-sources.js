@@ -49,7 +49,8 @@ import {
     renderMarkdownLinks, 
     showToast,
     renderFilterSelect,
-    renderRulesetPill
+    renderRulesetPill,
+    setModalItem
 } from './ac-ui-utils.js';
 import { 
     setAdminMode, 
@@ -469,6 +470,7 @@ function showSourceDetail(item) {
     `;
 
     openModal(html);
+    setModalItem('sources', item);
 
     if (isAdmin) {
         document.getElementById('modal-btn-edit-source')?.addEventListener('click', () => openSourceForm(item));

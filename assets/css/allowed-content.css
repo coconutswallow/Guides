@@ -398,6 +398,13 @@ td.col-hitdie { color: var(--color-secondary); }
         z-index: 5;
     }
 
+    .ac-modal-share {
+        top: 0.75rem;
+        right: 3.8rem;
+        padding: 0.25rem 0.55rem;
+        font-size: 0.8rem;
+    }
+
     .detail-header {
         padding-right: 2.2rem;
         margin-bottom: 1rem;
@@ -517,6 +524,91 @@ td.col-hitdie { color: var(--color-secondary); }
 
 .ac-modal-close:hover {
     color: var(--color-primary);
+}
+
+.ac-modal-share {
+    position: absolute;
+    top: 1.15rem;
+    right: 4.5rem;
+    background: var(--color-bg-medium);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+    z-index: 5;
+}
+
+.ac-modal-share:hover {
+    background: var(--color-bg-light);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.ac-modal-share:active {
+    transform: translateY(0);
+}
+
+/* Direct Link & Share Styling */
+.ac-item-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.ac-btn-copy-link {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.35rem;
+    border-radius: 4px;
+    opacity: 0.3;
+    transition: opacity 0.2s, background-color 0.2s, transform 0.1s;
+    line-height: 1;
+    color: var(--color-primary);
+}
+
+.ac-row-clickable:hover .ac-btn-copy-link,
+.ac-btn-copy-link:focus,
+.ac-btn-copy-link:hover {
+    opacity: 1;
+}
+
+.ac-btn-copy-link:hover {
+    background: var(--color-bg-medium);
+    transform: scale(1.15);
+}
+
+.ac-btn-copy-link:active {
+    transform: scale(0.95);
+}
+
+@keyframes acRowPulse {
+    0% {
+        background-color: var(--color-bg-medium);
+        outline: 2px solid var(--palette-brand-highlight);
+    }
+    40% {
+        background-color: rgba(184, 134, 11, 0.25);
+        outline: 2px solid var(--palette-brand-main);
+    }
+    100% {
+        background-color: var(--color-table-hover);
+        outline: 2px solid transparent;
+    }
+}
+
+.ac-row-highlighted {
+    animation: acRowPulse 2.5s ease-out forwards;
+    position: relative;
+    z-index: 2;
 }
 
 /* Detail View Components */

@@ -46,6 +46,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderMarkdownLinks, 
     renderSourceBadges,
@@ -821,6 +822,7 @@ export function showOtherRewardDetail(item) {
     `;
 
     openModal(contentHtml);
+    setModalItem('other-rewards', item);
 
     if (isAdmin) {
         const editBtn = document.getElementById('btn-modal-edit-reward');

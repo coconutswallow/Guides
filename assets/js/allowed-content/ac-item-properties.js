@@ -48,6 +48,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderMarkdownLinks, 
     renderSourceBadges,
@@ -747,6 +748,7 @@ export function showItemPropertyDetail(item) {
     `;
 
     openModal(html);
+    setModalItem('item-properties', item);
 
     if (isAdmin) {
         document.getElementById('modal-btn-edit-property')?.addEventListener('click', () => {

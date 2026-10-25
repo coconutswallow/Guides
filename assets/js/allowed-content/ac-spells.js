@@ -40,6 +40,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderSourceBadges, 
     extractSourceKeys, 
@@ -442,6 +443,7 @@ export function showSpellDetail(spell) {
     `;
 
     openModal(html);
+    setModalItem('spells', spell);
 }
 
 /**

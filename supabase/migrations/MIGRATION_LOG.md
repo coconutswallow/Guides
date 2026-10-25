@@ -62,6 +62,7 @@ node supabase/migrations/run_<migration>.js --execute --prod
 | **22** | 2026-10-12 | **Other Rewards Description Links** | `20261012_ac_other_rewards_description_links.sql` | `run_20261012_ac_other_rewards_description_links.js` | ✅ Applied | ✅ Applied |
 | **23** | 2026-10-12 | **AC Loot Notes & Links Population** | `20261012_ac_loot_notes_links.sql` | `run_20261012_ac_loot_notes_links.js` | ✅ Applied | ✅ Applied |
 | **24** | 2026-10-12 | **AC Bastion Links Normalization** | `20261012_ac_bastion_links.sql` | `run_20261012_ac_bastion_links.js` | ✅ Applied | ✅ Applied |
+| **38** | 2026-10-25 | **AC Loot Notes Re-alignment** | `20261025_ac_loot_notes_realignment.sql` | `run_20261025_ac_loot_notes_realignment.js` | ✅ Applied | ✅ Applied |
 
 ---
 
@@ -1579,3 +1580,41 @@ node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --execut
 | :--- | :---: | :---: | :---: | :--- |
 | DEV | ✅ | ✅ | 2026-10-14 | Both legacy bastion tables dropped. Committed to DEV. |
 | PRODUCTION | ✅ | ✅ | 2026-10-14 | Both legacy bastion tables dropped. Committed to PRODUCTION. |
+
+---
+
+### Step 38: AC Loot Notes Re-alignment (`public.ac_loot`)
+- **Date**: 2026-10-25
+- **Scope**: Re-align all `notes_advice` values in `public.ac_loot` with canonical spreadsheet `Allowed_Content_20261004.xlsx - Loot tab`.
+- **Root Cause Resolved**: The initial notes population migration (`20261012_ac_loot_notes_links.sql`) keyed updates on spreadsheet Column P (`check_id`). Two items in the source spreadsheet lacked Column P IDs (`Zhentarim Token (HB)` at row 194 and `Hawthorne Cape (HB)` at row 1433), whereas the initial schema migration generated sequential IDs (`LOT_0001` to `LOT_1358`). This caused an off-by-one upward shift from row 195 onwards (e.g. Blight Ichor's note displaying on Blasting Powder) and an off-by-two shift after row 1433, as well as leaving Zhentarim Token and Hawthorne Cape without notes, and overwriting Rod of Absorption's note due to a duplicate ID in the spreadsheet.
+- **Files**:
+  - `supabase/migrations/20261025_ac_loot_notes_realignment.sql`
+  - `supabase/migrations/run_20261025_ac_loot_notes_realignment.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261025_ac_loot_notes_realignment.js --dry-run`
+  - `node supabase/migrations/run_20261025_ac_loot_notes_realignment.js --execute`
+  - `node supabase/migrations/run_20261025_ac_loot_notes_realignment.js --dry-run --prod`
+  - `node supabase/migrations/run_20261025_ac_loot_notes_realignment.js --execute --prod`
+
+#### Key Changes
+1. **Safety Backup**: Created table `public.ac_loot_notes_backup_20261025` before resetting notes.
+2. **Notes Realignment**:
+   - Cleared shifted and orphaned notes (`notes_advice = NULL`).
+   - Populated exact 1:1 notes for all **681 loot items** having notes in the canonical spreadsheet.
+   - Restored notes and markdown links for `LOT_0175` (`Zhentarim Token (HB)` with `[Zhentarim](/allowed-content/#other-rewards)`) and `LOT_1233` (`Hawthorne Cape (HB)` with February 2025 event announcement Discord link).
+   - Corrected `LOT_0177` (`Blasting Powder`) to `NULL` notes, and aligned `LOT_0178` (`Blight Ichor`) with its Underdark fungi note.
+   - Restored `LOT_1077` (`Rod of Absorption`) multisession limit note and set `LOT_1078` (`+2 All-Purpose Tool`) to `NULL`.
+3. **Verification Criteria**:
+   - `public.ac_loot` total row count preserved at 1,358 items.
+   - Exactly 681 rows with `notes_advice IS NOT NULL` (677 `NULL`).
+   - 40 Other Rewards renown faction links verified.
+   - 146 Discord event links verified.
+   - 4 Equipment links, 2 Downtime links, 1 Bastions link verified.
+   - All benchmark items (`LOT_0175`, `LOT_0177`, `LOT_0178`, `LOT_1077`, `LOT_1078`, `LOT_1079`, `LOT_1232`, `LOT_1233`) verified 100%.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-25 | Re-aligned all 681 notes. All verification checks passed. |
+| PRODUCTION | ✅ | ✅ | 2026-10-25 | Re-aligned all 681 notes. All verification checks passed. |
+

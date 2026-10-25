@@ -36,10 +36,125 @@ export function openModal(contentHtml) {
     }
 }
 
+let currentModalItem = null;
+
+/**
+ * Normalizes text to a clean URL-friendly slug.
+ * 
+ * @param {string} str 
+ * @returns {string}
+ */
+export function slugify(str) {
+    return String(str || '')
+        .toLowerCase()
+        .replace(/['’]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Creates a direct link URL to a specific Allowed Content item within a tab.
+ * 
+ * @param {string} tab - Tab name (e.g. 'loot', 'equipment', 'spells')
+ * @param {Object} item - Item record (has check_id, id, and/or name)
+ * @returns {string} Full direct link URL
+ */
+export function createDirectLink(tab, item) {
+    const identifier = (item && (item.check_id || slugify(item.name) || item.id)) || '';
+    const origin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+    const pathname = (typeof window !== 'undefined' && window.location && window.location.pathname) ? window.location.pathname : '/allowed-content/';
+    return `${origin}${pathname}#${tab}?item=${encodeURIComponent(identifier)}`;
+}
+
+/**
+ * Copies a direct link to the clipboard and triggers a toast notification.
+ * Also synchronizes the browser address bar with the direct link.
+ * 
+ * @param {string} tab - Tab name
+ * @param {Object} item - Item record
+ * @returns {string} Copied link
+ */
+export function copyDirectLink(tab, item) {
+    const linkUrl = createDirectLink(tab, item);
+    const itemName = item ? (item.name || 'item') : 'item';
+
+    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        navigator.clipboard.writeText(linkUrl)
+            .then(() => {
+                showToast(`Link to "${itemName}" copied to clipboard!`);
+            })
+            .catch(() => {
+                fallbackCopy(linkUrl, itemName);
+            });
+    } else {
+        fallbackCopy(linkUrl, itemName);
+    }
+
+    if (typeof window !== 'undefined' && window.history && typeof window.history.replaceState === 'function') {
+        window.history.replaceState(null, '', linkUrl);
+    }
+
+    return linkUrl;
+}
+
+function fallbackCopy(text, itemName) {
+    if (typeof document === 'undefined') return;
+    const input = document.createElement('textarea');
+    input.value = text;
+    input.style.position = 'fixed';
+    input.style.opacity = '0';
+    document.body.appendChild(input);
+    input.focus();
+    input.select();
+    try {
+        document.execCommand('copy');
+        showToast(`Link to "${itemName}" copied to clipboard!`);
+    } catch (_) {
+        showToast(`Direct link: ${text}`);
+    }
+    if (input.parentNode) input.parentNode.removeChild(input);
+}
+
+/**
+ * Sets the active item represented in the detail modal and updates the URL.
+ * 
+ * @param {string} tab 
+ * @param {Object} item 
+ */
+export function setModalItem(tab, item) {
+    currentModalItem = item ? { tab, ...item } : null;
+    if (item && typeof window !== 'undefined' && window.history && typeof window.history.replaceState === 'function') {
+        const linkUrl = createDirectLink(tab, item);
+        window.history.replaceState(null, '', linkUrl);
+    }
+}
+
+/**
+ * Gets the active item represented in the detail modal.
+ * 
+ * @returns {Object|null}
+ */
+export function getModalItem() {
+    return currentModalItem;
+}
+
+/**
+ * Clears the active modal item and restores the clean tab hash in the URL.
+ */
+export function clearModalItem() {
+    if (currentModalItem && typeof window !== 'undefined' && window.history && typeof window.history.replaceState === 'function') {
+        const tab = currentModalItem.tab || 'sources';
+        const cleanUrl = `${window.location.origin}${window.location.pathname}#${tab}`;
+        window.history.replaceState(null, '', cleanUrl);
+    }
+    currentModalItem = null;
+}
+
 /**
  * Closes the detail modal safely in both browser and headless environments.
  */
 export function closeModal() {
+    clearModalItem();
     const modal = document.getElementById('ac-detail-modal');
     const tooltip = document.getElementById('ac-global-tooltip');
     if (tooltip && tooltip.parentElement !== document.body) {

@@ -93,6 +93,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     formatSnippet, 
     renderSourceBadges, 
@@ -906,6 +907,7 @@ export function showRaceDetail(race, activeSubraceIndex = 0) {
     `;
 
     openModal(html);
+    setModalItem('races', currentSub || race);
 
     if (isAdmin) {
         document.getElementById('modal-btn-edit-lineage')?.addEventListener('click', () => {

@@ -41,6 +41,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     renderMarkdownLinks, 
     resolveSourceLink,
@@ -622,6 +623,7 @@ export function showDowntimeDetail(item) {
     `;
 
     openModal(html);
+    setModalItem('downtime', item);
 
     if (isAdmin) {
         const modalContainer = document.getElementById('ac-detail-modal') || document;

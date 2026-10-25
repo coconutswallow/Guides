@@ -32,7 +32,14 @@ import { initDowntime, filterDowntime, openDowntimeForm } from './ac-downtime.js
 import { initBastions, filterBastions, openBastionForm } from './ac-bastions.js';
 import { initMonsters, filterMonsters, openMonsterForm, openMonstersOptionsModal, openUsageOptionsModal } from './ac-monsters.js';
 import { initOtherRewards, filterOtherRewards, openOtherRewardForm, openOtherRewardsOptionsModal } from './ac-other-rewards.js';
-import { initLoot, filterLoot, openLootForm, openLootOptionsModal } from './ac-loot.js';
+import { initLoot, filterLoot, openLootForm, openLootOptionsModal, highlightLootItem } from './ac-loot.js';
+import { 
+    closeModal, 
+    showToast, 
+    copyDirectLink, 
+    getModalItem, 
+    slugify 
+} from './ac-ui-utils.js';
 import { detectAdminSession, renderAdminBar } from './ac-auth.js';
 import { initTooltips, debounce, closeModal } from './ac-ui-utils.js';
 import { getSourcesCached } from './ac-service.js';
@@ -199,6 +206,7 @@ export const TAB_REGISTRY = {
         searchPlaceholder: 'Search loot, rolled items, select items, magic items, weapons, armor...',
         init: (forceRefresh) => initLoot(forceRefresh),
         filter: (term) => filterLoot(term),
+        openItem: (target) => highlightLootItem(target),
         adminActions: [
             { id: 'btn-add-loot', label: '+ Add Loot', primary: true, event: 'ac:open-loot-form' },
             { id: 'btn-manage-loot-categories', label: '⚙️ Configure Categories', primary: false, event: 'ac:open-loot-categories' }
@@ -502,20 +510,209 @@ export async function init() {
         });
     }
 
+    // Modal share / copy link button listener
+    const modalShare = document.getElementById('ac-modal-share');
+    if (modalShare) {
+        modalShare.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const item = getModalItem();
+            if (item) {
+                copyDirectLink(item.tab || currentActiveTab || 'loot', item);
+            } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Direct link copied to clipboard!');
+            }
+        });
+    }
+
     // Handle initial routing (deep links)
-    const hash = window.location.hash.substring(1);
-    const initialTab = VALID_TABS.includes(hash) ? hash : 'sources';
+    const { tab: initialTab, itemId } = parseRoute();
     await switchTab(initialTab, false);
+    if (itemId) {
+        await navigateToItem(initialTab, itemId);
+    }
 
     // Listen for hash changes (back/forward navigation)
-    window.addEventListener('hashchange', () => {
-        const newHash = window.location.hash.substring(1);
-        if (VALID_TABS.includes(newHash) && newHash !== currentActiveTab) {
-            switchTab(newHash, false);
+    window.addEventListener('hashchange', async () => {
+        const { tab: newTab, itemId: newId } = parseRoute();
+        if (VALID_TABS.includes(newTab) && newTab !== currentActiveTab) {
+            await switchTab(newTab, false);
+        }
+        if (newId) {
+            await navigateToItem(newTab, newId);
         }
     });
     
     console.log('AC UI: Ready.');
+}
+
+/**
+ * Parses URL hash and query string into a target tab and item identifier.
+ * Supports:
+ * - #tab?item=LOT_0178 or #tab?id=...
+ * - #tab/LOT_0178 or #tab:LOT_0178
+ * - ?tab=loot&item=LOT_0178
+ * - #LOT_0178 (direct check_id)
+ * - #tab
+ * 
+ * @param {string} [hashString]
+ * @param {string} [searchString]
+ * @returns {{ tab: string, itemId: string|null }}
+ */
+export function parseRoute(
+    hashString = (typeof window !== 'undefined' ? window.location.hash : ''),
+    searchString = (typeof window !== 'undefined' ? window.location.search : '')
+) {
+    let tab = 'sources';
+    let itemId = null;
+
+    // 1. Check URL query search params (?tab=loot&item=LOT_0178)
+    if (searchString) {
+        const params = new URLSearchParams(searchString.startsWith('?') ? searchString.slice(1) : searchString);
+        const queryTab = params.get('tab');
+        if (queryTab && VALID_TABS.includes(queryTab)) {
+            tab = queryTab;
+        }
+        if (params.get('item')) {
+            itemId = params.get('item');
+        } else if (params.get('id')) {
+            itemId = params.get('id');
+        }
+    }
+
+    // 2. Check hash string (#loot?item=LOT_0178, #loot/LOT_0178, etc.)
+    if (hashString && hashString.length > 1) {
+        const raw = hashString.startsWith('#') ? hashString.slice(1) : hashString;
+
+        // Pattern A: #tab?item=xxx or #tab?id=xxx
+        if (raw.includes('?')) {
+            const [tabPart, queryPart] = raw.split('?');
+            if (VALID_TABS.includes(tabPart)) {
+                tab = tabPart;
+            }
+            const qParams = new URLSearchParams(queryPart);
+            itemId = qParams.get('item') || qParams.get('id') || itemId;
+        } 
+        // Pattern B: #tab/xxx or #tab:xxx
+        else if (raw.includes('/') || raw.includes(':')) {
+            const sep = raw.includes('/') ? '/' : ':';
+            const [tabPart, ...rest] = raw.split(sep);
+            if (VALID_TABS.includes(tabPart)) {
+                tab = tabPart;
+                itemId = rest.join(sep);
+            }
+        }
+        // Pattern C: #tab
+        else if (VALID_TABS.includes(raw)) {
+            tab = raw;
+        }
+        // Pattern D: direct check_id like #LOT_0178
+        else if (/^[A-Za-z]+_\d+$/.test(raw)) {
+            const prefix = raw.split('_')[0].toUpperCase();
+            const prefixTabMap = {
+                'LOT': 'loot',
+                'SRC': 'sources',
+                'RAC': 'races',
+                'CLS': 'classes',
+                'BKG': 'backgrounds',
+                'LNG': 'languages',
+                'FEA': 'feats',
+                'SPL': 'spells',
+                'EQP': 'equipment',
+                'DT': 'downtime',
+                'BAS': 'bastions',
+                'REW': 'other-rewards',
+                'PRP': 'item-properties',
+                'MON': 'monsters'
+            };
+            if (prefixTabMap[prefix]) {
+                tab = prefixTabMap[prefix];
+                itemId = raw;
+            }
+        }
+    }
+
+    return { tab, itemId };
+}
+
+/**
+ * Traverses ancestors of a row or element to expand any collapsed category or accordion containers.
+ * 
+ * @param {HTMLElement} element 
+ */
+export function expandParentAccordions(element) {
+    if (!element) return;
+    
+    // 1. Check for preceding category header in table
+    let prev = element.previousElementSibling;
+    while (prev) {
+        if (prev.classList.contains('ac-table-group-header') || prev.classList.contains('accordion-header')) {
+            if (prev.classList.contains('collapsed')) {
+                prev.click();
+            }
+            break;
+        }
+        prev = prev.previousElementSibling;
+    }
+
+    // 2. Check for details or accordion wrapper
+    const details = element.closest('details');
+    if (details && !details.open) {
+        details.open = true;
+    }
+}
+
+/**
+ * Navigates to and highlights a specific item within the active tab.
+ * 
+ * @param {string} tab 
+ * @param {string} itemId 
+ * @returns {Promise<boolean>}
+ */
+export async function navigateToItem(tab, itemId) {
+    if (!itemId) return false;
+
+    // Ensure tab is active in DOM
+    const activeTab = document.querySelector('.ac-tab.active')?.dataset.tab;
+    if (tab && activeTab !== tab) {
+        await switchTab(tab);
+    }
+
+    const tabConfig = TAB_REGISTRY[tab];
+    if (tabConfig && typeof tabConfig.openItem === 'function') {
+        try {
+            const handled = await tabConfig.openItem(itemId);
+            if (handled) return true;
+        } catch (err) {
+            console.warn(`AC UI: openItem failed for tab '${tab}':`, err);
+        }
+    }
+
+    // Universal DOM fallback
+    await new Promise(r => setTimeout(r, 150));
+    const cleanId = String(itemId).trim().toLowerCase();
+
+    const targetEl = document.querySelector(
+        `tr[data-id="${cleanId}"], tr[data-check-id="${cleanId}"], tr[data-loot-id="${cleanId}"], [id*="${cleanId}"]`
+    ) || Array.from(document.querySelectorAll('tr.ac-row-clickable, tr[data-id]')).find(tr => {
+        const nameEl = tr.querySelector('.col-name, strong, .detail-title');
+        return nameEl && (nameEl.textContent.trim().toLowerCase() === cleanId || slugify(nameEl.textContent) === cleanId);
+    });
+
+    if (targetEl) {
+        expandParentAccordions(targetEl);
+        if (typeof targetEl.scrollIntoView === 'function') {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        targetEl.classList.remove('ac-row-highlighted');
+        if (targetEl.offsetWidth !== undefined) void targetEl.offsetWidth;
+        targetEl.classList.add('ac-row-highlighted');
+        setTimeout(() => targetEl.classList.remove('ac-row-highlighted'), 4000);
+        targetEl.click();
+        return true;
+    }
+
+    return false;
 }
 
 let currentActiveTab = null;

@@ -54,7 +54,11 @@ import {
     formatExpandableText,
     attachExpandableTextListeners,
     showToast,
-    initTooltips
+    initTooltips,
+    createDirectLink,
+    copyDirectLink,
+    setModalItem,
+    slugify
 } from './ac-ui-utils.js';
 
 export {
@@ -77,6 +81,7 @@ let selectedNatureFilter = 'ALL';     // 'ALL' | 'Permanent' | 'Consumable'
 let selectedTierFilter = 'ALL';       // 'ALL' | specific tier code or group
 let selectedSourceFilter = 'ALL';     // 'ALL' | specific source key
 let currentSearchTerm = '';
+let pendingLootTarget = null;
 
 /**
  * Builds tooltip text for Loot tier badges (incorporates Level 2 & Level 3 rules).
@@ -168,6 +173,12 @@ export async function initLoot(forceRefresh = false) {
         renderShell(container);
         applyFilters();
         updateTableOnly();
+
+        if (pendingLootTarget) {
+            const target = pendingLootTarget;
+            pendingLootTarget = null;
+            highlightLootItem(target);
+        }
     } catch (err) {
         console.error('Failed to initialize Loot view:', err);
         container.innerHTML = `
@@ -495,9 +506,20 @@ function renderLootRowHtml(item, isAdmin) {
     const notesFormatted = formatExpandableText(item.notes_advice || item.notes, 120);
 
     return `
-        <tr class="ac-row-clickable" data-loot-id="${esc(item.id)}">
+        <tr class="ac-row-clickable" data-loot-id="${esc(item.id)}" data-check-id="${esc(item.check_id || '')}" id="loot-${esc(item.check_id || item.id)}">
             <td class="col-name">
-                <strong>${esc(item.name)}</strong>
+                <div class="ac-item-name-cell">
+                    <strong>${esc(item.name)}</strong>
+                    <button type="button" 
+                            class="ac-btn-copy-link" 
+                            data-loot-id="${esc(item.id)}" 
+                            data-check-id="${esc(item.check_id || '')}"
+                            data-item-id="${esc(item.check_id || item.id)}"
+                            title="Copy direct link to ${esc(item.name)}" 
+                            aria-label="Copy direct link to ${esc(item.name)}">
+                        🔗
+                    </button>
+                </div>
             </td>
             <td class="col-type">
                 <span class="ac-badge-type">${esc(item.type || '—')}</span>
@@ -611,6 +633,18 @@ function attachRowListeners(tbody) {
         });
     });
 
+    tbody.querySelectorAll('.ac-btn-copy-link').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            const lootId = btn.dataset.lootId;
+            const lootItem = allLoot.find(l => l.id === lootId);
+            if (lootItem) {
+                copyDirectLink('loot', lootItem);
+            }
+        });
+    });
+
     tbody.querySelectorAll('.ac-row-clickable').forEach(row => {
         row.addEventListener('click', (e) => {
             if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.ac-expand-toggle')) {
@@ -671,12 +705,15 @@ export function showLootDetail(item) {
                 </div>
                 <h2 class="detail-title" style="margin: 0;">${esc(item.name)}</h2>
             </div>
-            ${isAdmin ? `
-                <div class="detail-actions">
+            <div class="detail-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="ac-btn-admin ac-btn-secondary ac-btn-copy-link-modal" id="btn-modal-copy-loot-link" title="Copy direct link to ${esc(item.name)}">
+                    🔗 Copy Link
+                </button>
+                ${isAdmin ? `
                     <button type="button" class="ac-btn-admin ac-btn-primary" id="btn-modal-edit-loot" title="Edit Loot">✏️ Edit</button>
                     <button type="button" class="ac-btn-admin ac-btn-delete" id="btn-modal-delete-loot" title="Delete Loot">🗑️ Delete</button>
-                </div>
-            ` : ''}
+                ` : ''}
+            </div>
         </div>
 
         <div class="detail-grid">
@@ -765,6 +802,14 @@ export function showLootDetail(item) {
     `;
 
     openModal(contentHtml);
+    setModalItem('loot', item);
+
+    const copyBtn = document.getElementById('btn-modal-copy-loot-link');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            copyDirectLink('loot', item);
+        });
+    }
 
     if (isAdmin) {
         const editBtn = document.getElementById('btn-modal-edit-loot');
@@ -783,6 +828,95 @@ export function showLootDetail(item) {
             });
         }
     }
+}
+
+/**
+ * Highlights a specific loot item from a direct link or query identifier:
+ * - Expands the category group if collapsed.
+ * - Resets filters if the item is currently hidden.
+ * - Smoothly scrolls the item row into view with a visual pulse highlight.
+ * - Automatically opens the item's detail modal.
+ * 
+ * @param {string} identifier - Item check_id (e.g. 'LOT_0178'), UUID id, or item name / slug
+ * @returns {Promise<boolean>} True if item was found and opened
+ */
+export async function highlightLootItem(identifier) {
+    if (!identifier) return false;
+
+    if (!allLoot || allLoot.length === 0) {
+        pendingLootTarget = identifier;
+        return true;
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const item = allLoot.find(l => 
+        (l.check_id && l.check_id.toLowerCase() === cleanId) ||
+        (l.id && l.id.toLowerCase() === cleanId) ||
+        (l.name && l.name.toLowerCase() === cleanId) ||
+        (l.name && slugify(l.name) === cleanId)
+    );
+
+    if (!item) return false;
+
+    // 1. Ensure parent category accordion is uncollapsed
+    const catId = item.category_id || (item.category ? item.category.id : null);
+    if (catId && collapsedCategories.has(catId)) {
+        collapsedCategories.delete(catId);
+    }
+
+    // 2. Clear filters if they would hide this item
+    let filtersReset = false;
+    if (selectedCategoryFilter !== 'ALL' && item.category && selectedCategoryFilter !== item.category.name) {
+        selectedCategoryFilter = 'ALL';
+        const catSelect = document.getElementById('loot-category-filter');
+        if (catSelect) catSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedNatureFilter !== 'ALL' && selectedNatureFilter !== item.nature) {
+        selectedNatureFilter = 'ALL';
+        const natureSelect = document.getElementById('loot-nature-filter');
+        if (natureSelect) natureSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedTierFilter !== 'ALL') {
+        selectedTierFilter = 'ALL';
+        const tierSelect = document.getElementById('loot-tier-filter');
+        if (tierSelect) tierSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (selectedSourceFilter !== 'ALL') {
+        selectedSourceFilter = 'ALL';
+        const sourceSelect = document.getElementById('loot-source-filter');
+        if (sourceSelect) sourceSelect.value = 'ALL';
+        filtersReset = true;
+    }
+    if (currentSearchTerm) {
+        currentSearchTerm = '';
+        const searchInput = document.getElementById('ac-global-search');
+        if (searchInput) searchInput.value = '';
+        filtersReset = true;
+    }
+
+    if (filtersReset) {
+        applyFilters();
+    }
+    updateTableOnly();
+
+    // 3. Locate row in DOM, scroll into view, pulse highlight
+    const row = document.querySelector(`tr[data-loot-id="${item.id}"]`);
+    if (row) {
+        if (typeof row.scrollIntoView === 'function') {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        row.classList.remove('ac-row-highlighted');
+        if (row.offsetWidth !== undefined) void row.offsetWidth; // Force reflow
+        row.classList.add('ac-row-highlighted');
+        setTimeout(() => row.classList.remove('ac-row-highlighted'), 4000);
+    }
+
+    // 4. Open rich detail modal
+    showLootDetail(item);
+    return true;
 }
 
 /**

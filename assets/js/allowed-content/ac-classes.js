@@ -48,6 +48,7 @@ import {
 import { 
     openModal, 
     closeModal, 
+    setModalItem,
     esc, 
     formatSnippet, 
     renderSourceBadges, 
@@ -818,6 +819,7 @@ export function showClassDetail(cls, activeSubclassIndex = 0) {
     `;
 
     openModal(html);
+    setModalItem('classes', cls);
 
     // Attach subclass tab listeners
     const modalEl = document.getElementById('ac-detail-modal');
