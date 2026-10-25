@@ -60,7 +60,7 @@ export function slugify(str) {
  * @returns {string} Full direct link URL
  */
 export function createDirectLink(tab, item) {
-    const identifier = (item && (item.check_id || slugify(item.name) || item.id)) || '';
+    const identifier = (item && (item.id || slugify(item.name) || item.check_id)) || '';
     const origin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
     const pathname = (typeof window !== 'undefined' && window.location && window.location.pathname) ? window.location.pathname : '/allowed-content/';
     return `${origin}${pathname}#${tab}?item=${encodeURIComponent(identifier)}`;

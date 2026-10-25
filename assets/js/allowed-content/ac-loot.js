@@ -514,7 +514,7 @@ function renderLootRowHtml(item, isAdmin) {
                             class="ac-btn-copy-link" 
                             data-loot-id="${esc(item.id)}" 
                             data-check-id="${esc(item.check_id || '')}"
-                            data-item-id="${esc(item.check_id || item.id)}"
+                            data-item-id="${esc(item.id || item.check_id)}"
                             title="Copy direct link to ${esc(item.name)}" 
                             aria-label="Copy direct link to ${esc(item.name)}">
                         🔗
@@ -705,15 +705,12 @@ export function showLootDetail(item) {
                 </div>
                 <h2 class="detail-title" style="margin: 0;">${esc(item.name)}</h2>
             </div>
-            <div class="detail-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                <button type="button" class="ac-btn-admin ac-btn-secondary ac-btn-copy-link-modal" id="btn-modal-copy-loot-link" title="Copy direct link to ${esc(item.name)}">
-                    🔗 Copy Link
-                </button>
-                ${isAdmin ? `
+            ${isAdmin ? `
+                <div class="detail-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                     <button type="button" class="ac-btn-admin ac-btn-primary" id="btn-modal-edit-loot" title="Edit Loot">✏️ Edit</button>
                     <button type="button" class="ac-btn-admin ac-btn-delete" id="btn-modal-delete-loot" title="Delete Loot">🗑️ Delete</button>
-                ` : ''}
-            </div>
+                </div>
+            ` : ''}
         </div>
 
         <div class="detail-grid">
@@ -803,13 +800,6 @@ export function showLootDetail(item) {
 
     openModal(contentHtml);
     setModalItem('loot', item);
-
-    const copyBtn = document.getElementById('btn-modal-copy-loot-link');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', () => {
-            copyDirectLink('loot', item);
-        });
-    }
 
     if (isAdmin) {
         const editBtn = document.getElementById('btn-modal-edit-loot');
