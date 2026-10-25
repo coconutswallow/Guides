@@ -514,7 +514,7 @@ function renderLootRowHtml(item, isAdmin) {
                             class="ac-btn-copy-link" 
                             data-loot-id="${esc(item.id)}" 
                             data-check-id="${esc(item.check_id || '')}"
-                            data-item-id="${esc(item.id || item.check_id)}"
+                            data-item-id="${esc(slugify(item.name) || item.id)}"
                             title="Copy direct link to ${esc(item.name)}" 
                             aria-label="Copy direct link to ${esc(item.name)}">
                         🔗
