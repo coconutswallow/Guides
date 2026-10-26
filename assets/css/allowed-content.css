@@ -2496,7 +2496,8 @@ select.ac-form-input {
     display: inline-block;
     padding: 0.2rem 0.55rem;
     border-radius: 4px;
-    font-size: 0.82rem;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: help;
     background: rgba(var(--palette-brand-main-rgb), 0.08);
