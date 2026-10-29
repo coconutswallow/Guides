@@ -1377,6 +1377,74 @@ select.ac-form-input {
     box-sizing: border-box;
 }
 
+.ac-loot-toolbar-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    width: 100%;
+}
+
+/* Tier Multi-Select Filter Row */
+.ac-loot-tier-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-top: 0.65rem;
+    border-top: 1px dashed var(--color-border);
+}
+
+.ac-tier-filter-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.ac-tier-pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.ac-tier-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    padding: 0 0.75rem;
+    border-radius: 15px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-light);
+    color: var(--color-text);
+    font-family: var(--font-body, 'Alegreya Sans', sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    user-select: none;
+    line-height: 1;
+}
+
+.ac-tier-pill-btn:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-table-hover);
+    transform: translateY(-1px);
+}
+
+.ac-tier-pill-btn.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-btn-text, #ffffff) !important;
+    box-shadow: 0 2px 4px rgba(var(--palette-brand-main-rgb), 0.25);
+}
+
 /* Unified Themed Select Dropdowns */
 .ac-filter-select,
 .ac-source-filter-select {
@@ -1713,6 +1781,24 @@ select.ac-form-input {
     color: var(--color-btn-text) !important;
     border-color: var(--color-primary);
     box-shadow: var(--shadow-md);
+}
+
+[data-theme="dark"] .ac-tier-pill-btn {
+    background-color: var(--color-bg-medium);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .ac-tier-pill-btn:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-table-hover);
+}
+
+[data-theme="dark"] .ac-tier-pill-btn.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-btn-text, #ffffff) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 [data-theme="dark"] .ac-subrace-chip {
