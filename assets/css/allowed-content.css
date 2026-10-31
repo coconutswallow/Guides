@@ -2415,7 +2415,18 @@ select.ac-form-input {
 
 /* Loot Table Specific Columns */
 #loot-table .col-name {
-    min-width: calc(46ch + 1.5rem);
+    width: calc(32ch + 1rem);
+    min-width: calc(32ch + 1rem);
+    max-width: calc(32ch + 1rem);
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+#loot-table .col-name .ac-item-name-cell {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 #loot-table .col-type {
@@ -2437,7 +2448,12 @@ select.ac-form-input {
 }
 
 #loot-table .col-notes {
-    min-width: 240px;
+    min-width: calc(240px + 14ch);
+    max-width: none;
+    width: auto;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 #loot-table .col-actions {
