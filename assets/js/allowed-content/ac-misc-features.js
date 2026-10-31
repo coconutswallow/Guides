@@ -421,7 +421,7 @@ function renderFSTbody(isAdmin) {
             <td style="text-align: center;">${renderRulesetPill(s.ruleset)}</td>
             <td>${esc(s.classes || 'Any')}</td>
             <td style="text-align: center;">${renderSourceBadges(s.source)}</td>
-            <td>${formatAdvice(s.notes_advice)}</td>
+            <td class="col-notes">${formatAdvice(s.notes_advice)}</td>
             ${isAdmin ? `
                 <td style="text-align: center;" onclick="event.stopPropagation()">
                     <button class="ac-btn-admin ac-btn-sm btn-edit-fs" data-id="${esc(s.id)}" title="Edit Style">✏️</button>
@@ -454,7 +454,7 @@ function renderAITbody(isAdmin) {
             <td style="text-align: center;"><span class="ruleset-pill" style="opacity: 0.85;">${esc(i.requires_attunement || 'No')}</span></td>
             <td style="text-align: center;"><code>${esc(String(i.level_prereq || 'Any'))}</code></td>
             <td style="text-align: center;">${renderSourceBadges(i.source)}</td>
-            <td>${formatAdvice(i.notes_advice)}</td>
+            <td class="col-notes">${formatAdvice(i.notes_advice)}</td>
             ${isAdmin ? `
                 <td style="text-align: center;" onclick="event.stopPropagation()">
                     <button class="ac-btn-admin ac-btn-sm btn-edit-ai" data-id="${esc(i.id)}" title="Edit Infusion">✏️</button>
@@ -487,7 +487,7 @@ function renderEITbody(isAdmin) {
             <td>${esc(v.other_prereq || 'None')}</td>
             <td style="text-align: center;"><code>${esc(String(v.level_prereq || 'Any'))}</code></td>
             <td style="text-align: center;">${renderSourceBadges(v.source)}</td>
-            <td>${formatAdvice(v.notes_advice)}</td>
+            <td class="col-notes">${formatAdvice(v.notes_advice)}</td>
             ${isAdmin ? `
                 <td style="text-align: center;" onclick="event.stopPropagation()">
                     <button class="ac-btn-admin ac-btn-sm btn-edit-ei" data-id="${esc(v.id)}" title="Edit Invocation">✏️</button>

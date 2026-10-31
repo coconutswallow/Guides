@@ -373,7 +373,7 @@ function renderTableBody() {
                         <td>${esc(item.creature_type || '—')}</td>
                         <td style="text-align: center;">${esc(item.classification)}</td>
                         <td style="text-align: center;">${renderSourceBadges(item.source)}</td>
-                        <td>${formatExpandableText(item.notes_advice, 160)}</td>
+                        <td class="col-notes">${formatExpandableText(item.notes_advice, 160)}</td>
                         ${isAdmin ? `
                             <td class="col-actions" style="text-align: center;">
                                 <button class="ac-btn-admin ac-btn-sm btn-edit" data-id="${item.id}" title="Edit Monster">✏️</button>

@@ -239,9 +239,10 @@ td.col-hitdie { color: var(--color-secondary); }
 .col-multiclass { font-size: 0.85rem; opacity: 0.7; }
 
 /* Snippet Columns */
-.col-traits, .col-description, .col-expanded, .col-notes, .col-advice, .col-feature {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
+.col-traits, .col-description, .col-expanded, .col-notes, .col-advice, .col-feature, .col-bg-notes {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #000000;
     max-width: 300px;
 }
 
@@ -250,7 +251,8 @@ td.col-hitdie { color: var(--color-secondary); }
 [data-theme="dark"] .col-expanded, 
 [data-theme="dark"] .col-notes, 
 [data-theme="dark"] .col-advice, 
-[data-theme="dark"] .col-feature {
+[data-theme="dark"] .col-feature,
+[data-theme="dark"] .col-bg-notes {
     color: var(--color-text) !important;
 }
 
@@ -279,10 +281,16 @@ td.col-hitdie { color: var(--color-secondary); }
 #sources-table .col-notes {
     width: 32%;
     min-width: 280px;
-    font-size: 0.88rem;
-    line-height: 1.45;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #000000;
     word-break: normal;
     overflow-wrap: break-word;
+}
+
+[data-theme="dark"] #sources-table .col-allowed-content,
+[data-theme="dark"] #sources-table .col-notes {
+    color: var(--color-text) !important;
 }
 
 /* Races Table specific columns */
@@ -345,10 +353,15 @@ td.col-hitdie { color: var(--color-secondary); }
     min-width: 280px;
     max-width: none;
     width: auto;
-    font-size: 0.88rem;
-    line-height: 1.45;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #000000;
     white-space: normal;
     word-break: break-word;
+}
+
+[data-theme="dark"] #races-table .col-notes {
+    color: var(--color-text) !important;
 }
 
 
@@ -665,7 +678,7 @@ td.col-hitdie { color: var(--color-secondary); }
 }
 
 .advice-content {
-    color: var(--color-text);
+    color: #000000;
     font-size: 1rem;
     line-height: 1.6;
 }
@@ -2520,13 +2533,17 @@ select.ac-form-input {
 }
 
 .ac-table-group-notes {
-    font-size: 0.9rem;
-    line-height: 1.45;
-    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #000000;
     margin: 0;
     padding: 0;
     white-space: pre-line;
     flex: 1 1 auto;
+}
+
+[data-theme="dark"] .ac-table-group-notes {
+    color: var(--color-text) !important;
 }
 
 .ac-table-group-notes a {
@@ -2727,13 +2744,17 @@ select.ac-form-input {
 }
 
 .ac-table-tier-notes {
-    font-size: 0.86rem;
-    line-height: 1.4;
-    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #000000;
     margin: 0;
     padding: 0;
     white-space: pre-line;
     flex: 1 1 auto;
+}
+
+[data-theme="dark"] .ac-table-tier-notes {
+    color: var(--color-text) !important;
 }
 
 .ac-table-tier-header:hover .ac-group-hover-hint {

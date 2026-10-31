@@ -362,7 +362,7 @@ function renderRow(bg, isAdmin) {
             <td class="col-bg-category">${esc(categoryText)}</td>
             <td class="col-bg-feature">${formatFeature(bg.feature)}</td>
             <td class="col-bg-source" style="text-align: center;">${badgesHtml}</td>
-            <td class="col-bg-notes">${formatAdvice(bg.notes_advice)}</td>
+            <td class="col-bg-notes col-notes">${formatAdvice(bg.notes_advice)}</td>
             ${isAdmin ? `
                 <td class="col-bg-actions" style="text-align: center;" onclick="event.stopPropagation();">
                     <button class="ac-btn-admin ac-btn-secondary ac-btn-sm btn-edit-bg" data-bg-id="${esc(bg.id)}" title="Edit Background" style="padding: 2px 6px;">✏️</button>
@@ -494,7 +494,7 @@ export function showBackgroundDetail(bg) {
         ${bg.notes_advice && bg.notes_advice.trim() ? `
             <div class="detail-section">
                 <h4>Notes / Rage Advice</h4>
-                <div class="advice-box" style="margin-top: 0.35rem; line-height: 1.6; white-space: pre-wrap; color: var(--color-secondary);">${renderMarkdownLinks(bg.notes_advice.trim())}</div>
+                <div class="advice-content" style="margin-top: 0.35rem; line-height: 1.6; white-space: pre-wrap;">${renderMarkdownLinks(bg.notes_advice.trim())}</div>
             </div>
         ` : ''}
     `;
