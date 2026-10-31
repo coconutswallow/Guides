@@ -17,7 +17,7 @@ import {
 } from './monster-service.js';
 import { renderMonsterStatblock, formatCreatorAndUsage } from './views/monster-detail.js';
 import { calculatePB, calculateXP, calculateMod, formatInitiative, calculatePassivePerception, getMonsterApprovalUrl, escapeHTML } from './monster-utils.js';
-import { renderFeatureList, updateFeatureCardHeader } from './monster-editor-ui.js';
+import { renderFeatureList, updateFeatureCardHeader, renderMonsterTagPicker } from './monster-editor-ui.js';
 import {
     syncMonsterFromForm,
     validateMonster,
@@ -68,6 +68,14 @@ function ensurePreviewModalElements() {
 export function attachEditorEvents(container, currentMonster, lookups) {
     const form = container.querySelector('#monster-form');
     if (!form) return;
+
+    // Compendium Tags multi-select picker
+    const tagPickerContainer = form.querySelector('#monster-tags-picker');
+    if (tagPickerContainer) {
+        renderMonsterTagPicker(tagPickerContainer, currentMonster, lookups?.tags || [], () => {
+            resetAutoSave(currentMonster);
+        });
+    }
 
     // Editable Species combo box. The options are supplied by the existing
     // lookups record (type = "monster", data.species); the input remains free
@@ -402,7 +410,7 @@ export async function handleSave(currentMonster, silent = false) {
     const errors = validateMonster(currentMonster);
     if (errors.length > 0) {
         if (!silent) alert('Cannot save:\n- ' + errors.join('\n- '));
-        return;
+        return false;
     }
 
     try {
@@ -430,9 +438,11 @@ export async function handleSave(currentMonster, silent = false) {
         if (!silent && window.location.hash === '#/new') {
             window.location.hash = `#/edit/${saved.slug}`;
         }
+        return true;
     } catch (err) {
         logError('monster-editor', `Save error: ${err.message}`);
         if (!silent) statusDiv.textContent = 'Error saving!';
+        return false;
     }
 }
 
@@ -475,7 +485,11 @@ export async function handlePreview(currentMonster) {
 export async function handleSubmit(currentMonster) {
     if (!confirm('Submit for staff approval? You will not be able to edit it until it is reviewed.')) return;
     try {
-        await handleSave(currentMonster, false);
+        const saved = await handleSave(currentMonster, false);
+        if (!saved || !currentMonster.row_id) {
+            alert('Cannot submit: Please fix any validation errors and ensure your monster is saved first.');
+            return;
+        }
         await submitMonsterForApproval(currentMonster.row_id);
         currentMonster.status = 'Pending';
         showSubmissionSuccessModal(currentMonster);

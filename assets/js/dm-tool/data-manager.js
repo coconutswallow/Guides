@@ -259,7 +259,7 @@ export async function loadSession(sessionId) {
         return data;
     } catch (err) {
         console.error('Error loading session:', err);
-        return null;
+        throw err;
     }
 }
 

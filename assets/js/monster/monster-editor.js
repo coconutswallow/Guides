@@ -46,7 +46,7 @@ function init() {
                     <h3>Editor Access</h3>
                     <p>Please login with Discord to access the monster editor. Only DMs can submit or edit monsters.</p>
                     <p>This site uses Discord OAuth to faciliate save/load functions and check for Hawthorne roles. No personal information is accessed or saved in the process. For more information please view <a href="${discordLoginUrl}">Discord Login Explanation</a>.</p>
-                    <p><b>Note:</b> This tool is in BETA. For feedback or questions on the tool, please reach out to @coconutswallow. </p>
+                    <p><b>Note:</b> For feedback or questions on the tool, please reach out to @coconutswallow.</p>
                     
                 </div>`;
             return;

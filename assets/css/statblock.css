@@ -365,12 +365,49 @@ blockquote.stat-block hr {
   font-style: italic;
   color: var(--color-primary);
   padding: 5px 8px;
-  margin: 8px 8px;
+  margin: 8px 8px 4px 8px;
   text-align: center;
   border-top: 1.5px solid var(--color-primary);
   border-bottom: none;
   width: calc(100% - 16px);
   transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.statblock-tags {
+  font-family: 'Alegreya Sans', 'Source Sans 3', Arial, sans-serif;
+  font-size: 0.85em;
+  color: var(--color-text-secondary);
+  padding: 2px 8px 6px 8px;
+  margin: 0 8px 6px 8px;
+  text-align: center;
+  width: calc(100% - 16px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.statblock-tags-label {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.5px;
+  color: var(--color-primary);
+  margin-right: 2px;
+}
+
+.statblock-tag-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--color-bg-medium);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
 }
 
 .monster-view-creator {
@@ -718,7 +755,8 @@ blockquote.stat-block hr {
     /* Elements that should span both columns */
     .stat-block.statblock-2-col h2,
     .stat-block.statblock-2-col p:first-of-type,
-    .stat-block.statblock-2-col .statblock-creator {
+    .stat-block.statblock-2-col .statblock-creator,
+    .stat-block.statblock-2-col .statblock-tags {
         column-span: all;
     }
 

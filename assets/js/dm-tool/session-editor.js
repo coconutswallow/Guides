@@ -222,6 +222,29 @@ async function initContext() {
     await cacheDiscordId();
     cachedGameRules = await fetchGameRules();
     calculationEngine = new CalculationEngine(cachedGameRules);
+    if (!cachedGameRules) {
+        showEditorBanner("Warning: Failed to load game calculation rules. Reward calculations (XP, DTP, Max Gold) may be unavailable.", "warning");
+    }
+}
+
+/**
+ * Displays a top-level banner in the session editor for errors or warnings.
+ * @param {string} msg
+ * @param {'error'|'warning'} type
+ */
+export function showEditorBanner(msg, type = 'error') {
+    let banner = document.getElementById('editor-alert-banner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'editor-alert-banner';
+        const main = document.querySelector('.editor-main') || document.body;
+        main.insertBefore(banner, main.firstChild);
+    }
+    const bgColor = type === 'warning' ? '#fff3cd' : '#f8d7da';
+    const textColor = type === 'warning' ? '#856404' : '#721c24';
+    const borderColor = type === 'warning' ? '#ffeeba' : '#f5c6cb';
+    banner.style.cssText = `padding: 12px 16px; margin-bottom: 15px; border-radius: 4px; background: ${bgColor}; color: ${textColor}; border: 1px solid ${borderColor}; font-weight: 500; font-size: 0.95rem; z-index: 1000;`;
+    banner.textContent = msg;
 }
 
 function initUI() {
@@ -833,9 +856,17 @@ async function loadSessionData(sessionId, callbacks) {
                 const directory = path.substring(0, path.lastIndexOf('/'));
                 inpInvite.value = `${window.location.origin}${directory}/player-entry.html?session_id=${sessionId}`;
             }
+        } else {
+            throw new Error("Session record was not found or is empty");
         }
     } catch (error) {
         logError('session-editor', `Error loading session: ${error.message}`, 'error');
+        const btnSave = document.getElementById('btn-save-game');
+        if (btnSave) {
+            btnSave.disabled = true;
+            btnSave.title = "Saving disabled: session failed to load";
+        }
+        showEditorBanner(`Failed to load session data (${error.message}). Saving has been disabled to prevent accidental data loss. Please refresh the page.`, "error");
     }
 }
 
@@ -969,6 +1000,20 @@ function initCopyGameLogic() {
             fullData.session_log.dm_rewards.loot_selected = "";
             fullData.session_log.dm_rewards.incentives = [];
 
+            // Reset Session Player Data for all copies so awards do not bleed into new session
+            if (fullData.session_log.players) {
+                fullData.session_log.players.forEach(p => {
+                    p.hours = 3;
+                    p.xp = "";
+                    p.dtp = "";
+                    p.gold = "";
+                    p.loot = "";
+                    p.items_used = "";
+                    p.notes = "";
+                    p.incentives = [];
+                });
+            }
+
             if (isNextPart) {
                 // FIX: Set Application Type to "Pre-filled" for next part
                 fullData.header.apps_type = "Pre-filled";
@@ -985,18 +1030,10 @@ function initCopyGameLogic() {
                     fullData.dm.games_count = incrementGameString(fullData.dm.games_count);
                 }
 
-                // Reset/Increment Session Player Data
+                // Increment Session Player Games
                 if (fullData.session_log.players) {
                     fullData.session_log.players.forEach(p => {
                         p.games_count = incrementGameString(p.games_count);
-                        p.hours = 3;
-                        p.xp = "";
-                        p.dtp = "";
-                        p.gold = "";
-                        p.loot = "";
-                        p.items_used = "";
-                        p.notes = "";
-                        p.incentives = [];
                     });
                 }
 

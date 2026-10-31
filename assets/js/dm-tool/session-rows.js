@@ -17,6 +17,21 @@ import { fetchMemberMap } from './data-manager.js';
 import { logError } from '../error-logger.js';
 
 /**
+ * Escapes unsafe characters for HTML and attribute contexts.
+ * @param {string|number} str
+ * @returns {string}
+ */
+export function escapeHTML(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+/**
  * Recalculates Party Size, APL (Average Party Level), and Tier based on the Master Roster.
  */
 /**
@@ -92,17 +107,20 @@ export function addPlayerRowToMaster(data = {}) {
     }
     gamesOptions += `<option value="10+" ${data.games_count === '10+' ? 'selected' : ''}>10+</option>`;
 
-    const displayValue = data.display_name || data.discord_id || '';
-    const idValue = data.discord_id || '';
+    const displayValue = escapeHTML(data.display_name || data.discord_id || '');
+    const idValue = escapeHTML(data.discord_id || '');
+    const charName = escapeHTML(data.character_name || '');
+    const levelVal = escapeHTML(data.level || '');
+    const levelPlayAs = escapeHTML(data.level_playing_as || '');
 
     tr.innerHTML = `
         <td>
             <input type="text" class="table-input inp-player-display" placeholder="Player Name (@Name)" value="${displayValue}">
             <input type="hidden" class="inp-discord-id" value="${idValue}">
         </td>
-        <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${data.character_name || ''}"></td>
-        <td><input type="number" class="table-input inp-level" placeholder="" value="${data.level || ''}"></td>
-        <td><input type="number" class="table-input inp-level-play-as" placeholder="" value="${data.level_playing_as || ''}"></td>
+        <td><input type="text" class="table-input inp-char-name" placeholder="Character Name" value="${charName}"></td>
+        <td><input type="number" class="table-input inp-level" placeholder="" value="${levelVal}"></td>
+        <td><input type="number" class="table-input inp-level-play-as" placeholder="" value="${levelPlayAs}"></td>
         <td><select class="table-input inp-games-count">${gamesOptions}</select></td>
         <td style="text-align:center;"><button class="button button-danger btn-sm btn-delete-row">&times;</button></td>
     `;
@@ -272,11 +290,23 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
     }
 
     const currentIncentives = data.incentives || [];
-    const incentivesJson = JSON.stringify(currentIncentives);
+    const incentivesJson = escapeHTML(JSON.stringify(currentIncentives));
     const btnText = currentIncentives.length > 0 ? `+` : '+';
 
     const isForfeit = data.forfeit_xp === true || data.forfeit_xp === "true";
-    const realLevel = data.real_level || data.level || '1';
+    const realLevel = escapeHTML(data.real_level || data.level || '1');
+    const safeDisplayName = escapeHTML(data.display_name || data.discord_id || 'Player');
+    const safeCharName = escapeHTML(data.character_name || '');
+    const safeDiscordId = escapeHTML(data.discord_id || '');
+    const safeLevel = escapeHTML(data.level || '0');
+    const safeGames = escapeHTML(data.games_count || '1');
+    const safeXp = escapeHTML(data.xp || '');
+    const safeDtp = escapeHTML(data.dtp || '');
+    const safeGold = escapeHTML(data.gold || '');
+    const safeGoldUsed = escapeHTML(data.gold_used || '');
+    const safeLoot = escapeHTML(data.loot || '');
+    const safeItems = escapeHTML(data.items_used || '');
+    const safeNotes = escapeHTML(data.notes || '');
 
     const card = document.createElement('div');
     card.className = 'player-card';
@@ -285,9 +315,9 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         <div class="player-card-header" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
                 <span class="step-icon" style="transform:rotate(-90deg); transition:transform 0.2s;"></span>
-                <span class="player-card-title">${data.display_name || data.discord_id || 'Player'}</span>
+                <span class="player-card-title">${safeDisplayName}</span>
                 <span class="player-summary-text" style="font-size:0.8em; color:rgba(255,255,255,0.8); font-weight:normal; margin-left:1rem;">
-                    ${data.character_name ? `(${data.character_name})` : ''}
+                    ${safeCharName ? `(${safeCharName})` : ''}
                 </span>
             </div>
             <button class="btn-delete-card" title="Remove Player" style="z-index:2;">&times;</button>
@@ -295,12 +325,12 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
         
         <div class="player-card-body" style="display:none;">
             <div class="card-row">
-                <input type="hidden" class="s-char-name" value="${data.character_name || ''}">
-                <input type="hidden" class="s-discord-id" value="${data.discord_id || ''}">
-                <input type="hidden" class="s-level" value="${data.level || '0'}">
+                <input type="hidden" class="s-char-name" value="${safeCharName}">
+                <input type="hidden" class="s-discord-id" value="${safeDiscordId}">
+                <input type="hidden" class="s-level" value="${safeLevel}">
                 <input type="hidden" class="s-real-level" value="${realLevel}"> 
-                <input type="hidden" class="s-games" value="${data.games_count || '1'}">
-                <input type="hidden" class="s-display-name" value="${data.display_name || ''}">
+                <input type="hidden" class="s-games" value="${safeGames}">
+                <input type="hidden" class="s-display-name" value="${safeDisplayName}">
                                 
                 <div class="card-field w-20">
                     <label class="field-label">Hours </label>
@@ -309,7 +339,7 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
 
                 <div class="card-field w-25">
                     <label class="field-label">XP Earned ${getHelpIconHTML("You can edit this field, but XP should only be changed in very limited situations, e.g. campaigns with milestone XP/level ups.", "bottom")}</label>
-                    <input type="text" class="table-input s-xp" placeholder="Auto" value="${data.xp || ''}">
+                    <input type="text" class="table-input s-xp" placeholder="Auto" value="${safeXp}">
                 </div>
 
                 <div class="card-field w-15" style="text-align:center;">
@@ -322,8 +352,8 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
                 <div class="card-field w-40">
                     <label class="field-label">DTP / Incentives</label>
                     <div class="dtp-wrapper">
-                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);" value="${data.dtp || ''}">
-                        <button class="button button-secondary s-incentives-btn" data-incentives='${incentivesJson}' title="Select Player Incentives">${btnText}</button>
+                        <input type="text" class="table-input readonly-result s-dtp" readonly placeholder="DTP" style="width:calc(100% - 45px);" value="${safeDtp}">
+                        <button class="button button-secondary s-incentives-btn" data-incentives="${incentivesJson}" title="Select Player Incentives">${btnText}</button>
                     </div>
                 </div>
             </div>
@@ -331,32 +361,32 @@ export function addSessionPlayerRow(listContainer, data = {}, callbacks = {}, su
             <div class="card-row">
                 <div class="card-field w-50">
                     <label class="field-label">Gold Awarded ${getHelpIconHTML("See the max gold above. Awarding max gold is not mandatory/expected; in fact, awarding gold based on the context of the game is recommended.", "bottom")}</label>
-                    <input type="text" class="table-input s-gold" value="${data.gold || ''}" placeholder="GP">
+                    <input type="text" class="table-input s-gold" value="${safeGold}" placeholder="GP">
                 </div>
                 <div class="card-field w-50">
                     <label class="field-label">Gold Used</label>
-                    <input type="text" class="table-input s-gold-used" value="${data.gold_used || ''}" placeholder="GP Spent">
+                    <input type="text" class="table-input s-gold-used" value="${safeGoldUsed}" placeholder="GP Spent">
                 </div>
             </div>
 
             <div class="card-row">
                  <div class="card-field w-100">
                     <label class="field-label">Loot Received</label>
-                    <input type="text" class="table-input s-loot" value="${data.loot || ''}" placeholder="Item Name">
+                    <input type="text" class="table-input s-loot" value="${safeLoot}" placeholder="Item Name">
                 </div>
             </div>
 
             <div class="card-row">
                  <div class="card-field w-100">
                     <label class="field-label">Items Used</label>
-                    <textarea class="table-input s-items" rows="1">${data.items_used || ''}</textarea>
+                    <textarea class="table-input s-items" rows="1">${safeItems}</textarea>
                 </div>
             </div>
 
             <div class="card-row">
                 <div class="card-field w-100">
                     <label class="field-label">Character Outcome Notes</label>
-                    <textarea class="table-input s-notes" rows="1">${data.notes || ''}</textarea>
+                    <textarea class="table-input s-notes" rows="1">${safeNotes}</textarea>
                 </div>
             </div>
         </div>

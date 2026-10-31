@@ -7,7 +7,9 @@ import {
     calculateHPString, 
     formatInitiative,
     calculatePassivePerception,
-    escapeHTML
+    escapeHTML,
+    sanitizeUrl,
+    sanitizeHtml
 } from '../monster-utils.js';
 
 /**
@@ -54,10 +56,11 @@ export async function renderMonsterDetail(container, { slug }) {
             ? `<div class="monster-view-creator" style="margin-top: 0.5rem; font-style: italic; color: var(--color-text-secondary); font-size: 1.1rem;">${creatorUsageText}</div>`
             : '';
 
+        const safeName = escapeHTML(monster.name || 'Unnamed Monster');
         container.innerHTML = `
             <div class="monster-view-header" style="margin-bottom: 2rem;">
                 <a href="#/" class="btn" style="background: var(--color-primary); color: white; margin-bottom: 1rem; text-decoration: none; padding: 0.5rem 1rem; display: inline-block;">&larr; BACK TO MONSTER COMPENDIUM</a>
-                <h1 style="margin: 0; font-family: var(--font-header); color: var(--color-primary); font-size: 2.5rem; text-transform: uppercase;">${monster.name || 'Unnamed Monster'}</h1>
+                <h1 style="margin: 0; font-family: var(--font-header); color: var(--color-primary); font-size: 2.5rem; text-transform: uppercase;">${safeName}</h1>
                 ${creatorHtml}
             </div>
             <div id="monster-statblock-container"></div>
@@ -117,12 +120,22 @@ export function renderMonsterStatblock(container, monster) {
     const res = monster.damage_resistances || monster.resistances;
     const imm = monster.damage_immunities || monster.immunities;
     const conImm = monster.condition_immunities;
+    const skills = typeof monster.skills === 'string'
+        ? monster.skills.trim()
+        : (Array.isArray(monster.skills) ? monster.skills.filter(Boolean).join(', ').trim() : '');
 
     // Helper to format alignment string (e.g. "Typically Neutral" vs "Neutral")
     const alignmentText = monster.alignment_prefix 
         ? `${monster.alignment_prefix} ${monster.alignment}` 
         : monster.alignment;
-    const monster_type_line = `<p><em>${monster.size || 'Medium'} ${monster.species || 'Humanoid'}, ${alignmentText}</em></p>`;
+    const safeAlignment = escapeHTML(alignmentText || '');
+    const safeSize = escapeHTML(monster.size || 'Medium');
+    const safeSpecies = escapeHTML(monster.species || 'Humanoid');
+    const monster_type_line = `<p><em>${safeSize} ${safeSpecies}, ${safeAlignment}</em></p>`;
+
+    const safeImageUrl = sanitizeUrl(monster.image_url);
+    const safeName = escapeHTML(monster.name || 'Unnamed Monster');
+    const safeImageCredit = escapeHTML(monster.image_credit || '');
 
     const template = `
         <div class="monster-detail-layout ${layoutClass} ${is2Col ? 'force-2-col' : ''}">
@@ -130,10 +143,10 @@ export function renderMonsterStatblock(container, monster) {
             ${hasLeftContent ? `
             <div class="left-col">
                 <div class="monster-lore-container">
-                    ${monster.image_url ? `
+                    ${safeImageUrl ? `
                     <div class="monster-image-container" style="margin-bottom: 1.5rem;">
-                        <img src="${monster.image_url}" alt="${monster.name}" style="width: 100%; border-radius: var(--border-radius); border: 4px solid var(--color-primary);">
-                        ${monster.image_credit ? `<p class="image-caption">Art by ${monster.image_credit}</p>` : ''}
+                        <img src="${safeImageUrl}" alt="${safeName}" style="width: 100%; border-radius: var(--border-radius); border: 4px solid var(--color-primary);">
+                        ${safeImageCredit ? `<p class="image-caption">Art by ${safeImageCredit}</p>` : ''}
                     </div>` : ''}
 
                     <div class="monster-description">
@@ -151,7 +164,7 @@ export function renderMonsterStatblock(container, monster) {
 
             <div class="right-col"> 
                 <blockquote class="stat-block ${is2Col ? 'statblock-2-col' : ''}">
-                    <h2>${monster.name || 'Unnamed Monster'}</h2>
+                    <h2>${safeName}</h2>
                     ${monster_type_line}
                     
                     <div class="stats-container">
@@ -176,6 +189,7 @@ export function renderMonsterStatblock(container, monster) {
                     ${abilitiesHTML}
 
                     <div class="vitals-container">
+                        ${skills ? `<div class="stat-row"><strong>Skills</strong> ${escapeHTML(skills)}</div>` : ''}
                         ${vuln ? `<div class="stat-row"><strong>Damage Vulnerabilities</strong> ${vuln}</div>` : ''}
                         ${res ? `<div class="stat-row"><strong>Damage Resistances</strong> ${res}</div>` : ''}
                         ${imm ? `<div class="stat-row"><strong>Damage Immunities</strong> ${imm}</div>` : ''}
@@ -215,6 +229,13 @@ export function renderMonsterStatblock(container, monster) {
                     ${formatCreatorAndUsage(monster) ? `
                         <div class="statblock-creator">
                             ${formatCreatorAndUsage(monster)}
+                        </div>
+                    ` : ''}
+
+                    ${Array.isArray(monster.tags) && monster.tags.length > 0 ? `
+                        <div class="statblock-tags">
+                            <span class="statblock-tags-label">Tags:</span>
+                            ${monster.tags.map(t => `<span class="statblock-tag-badge">${escapeHTML(t)}</span>`).join('')}
                         </div>
                     ` : ''}
                 </blockquote>
@@ -349,7 +370,7 @@ function renderFeatureBucket(list, title, header) {
 function renderFeatureList(list) {
     return list.map(f => {
         let html = parseMarkdown(f.description);
-        const titleHtml = `<strong><em>${f.name}.</em></strong> `;
+        const titleHtml = `<strong><em>${escapeHTML(f.name)}.</em></strong> `;
         if (html.startsWith('<p>')) {
             html = html.replace('<p>', `<p>${titleHtml}`);
         } else {
@@ -360,13 +381,15 @@ function renderFeatureList(list) {
 }
 
 /**
- * Parses markdown text into HTML.
+ * Parses markdown text into HTML with XSS sanitization.
  * @param {string} text - Markdown content.
- * @returns {string} HTML content.
+ * @returns {string} Safe HTML content.
  */
 function parseMarkdown(text) {
     if (!text) return '';
-    if (typeof marked !== 'undefined') return marked.parse(text);
-    if (typeof window !== 'undefined' && window.marked) return window.marked.parse(text);
-    return `<p>${text}</p>`; // Fallback if marked is missing
+    let raw = '';
+    if (typeof marked !== 'undefined') raw = marked.parse(text);
+    else if (typeof window !== 'undefined' && window.marked) raw = window.marked.parse(text);
+    else raw = `<p>${escapeHTML(text)}</p>`;
+    return sanitizeHtml(raw);
 }

@@ -142,6 +142,44 @@ export function escapeHTML(str) {
 }
 
 /**
+ * Validates and sanitizes a URL, allowing only safe protocols (http, https, relative).
+ * Blocks javascript:, data:, vbscript:, etc.
+ * @param {string} url 
+ * @returns {string} Safe URL or empty string.
+ */
+export function sanitizeUrl(url) {
+    if (!url || typeof url !== 'string') return '';
+    const trimmed = url.trim();
+    if (/^(\/|\.\/|\.\.\/)/.test(trimmed)) {
+        return escapeHTML(trimmed);
+    }
+    try {
+        const origin = typeof window !== 'undefined' && window.location?.origin ? window.location.origin : 'http://localhost';
+        const parsed = new URL(trimmed, origin);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+            return escapeHTML(trimmed);
+        }
+    } catch (_) {
+        return '';
+    }
+    return '';
+}
+
+/**
+ * Sanitizes an HTML string by stripping script tags, iframes, inline event handlers, and javascript: links.
+ * @param {string} html 
+ * @returns {string} Safe HTML string.
+ */
+export function sanitizeHtml(html) {
+    if (!html || typeof html !== 'string') return '';
+    return html
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+        .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+        .replace(/href\s*=\s*["']\s*javascript:[^"']*["']/gi, 'href="#"');
+}
+
+/**
  * Constructs the direct approval URL for a monster submission.
  * This URL can be shared with staff to jump straight to reviewing this monster in the approvals queue.
  * 

@@ -8,6 +8,7 @@
 
 import { supabase } from '../supabaseClient.js';
 import { getMyMonsters } from './monster-service.js';
+import { escapeHTML } from './monster-utils.js';
 
 /**
  * Renders the primary dashboard view (My Monsters list).
@@ -191,6 +192,10 @@ export function getEditorTemplate(currentMonster, lookups, defaultCreator) {
                 <div class="form-group">
                     <label>Monster Role / Usage</label>
                     <select name="usage" class="form-control">${renderOptions(lookups?.usages, currentMonster.usage)}</select>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Compendium Tags</label>
+                    <div id="monster-tags-picker" class="monster-tags-picker" style="background: var(--color-bg-page); border: 1px solid var(--color-border); border-radius: 4px; padding: 0.75rem;"></div>
                 </div>
             </div>
 
@@ -634,3 +639,75 @@ export function initMarkdownWidget(container) {
         el.setSelectionRange(urlStart, urlStart + 3);
     }
 }
+
+/**
+ * Renders an interactive chip-based tag picker into the container.
+ * @param {HTMLElement} container - The container element to render into.
+ * @param {Object} currentMonster - Monster data object containing tag_ids and tags.
+ * @param {Array<Object>} availableTags - Array of tag objects ({ id, name }).
+ * @param {Function} onChange - Callback fired when tag selection changes.
+ */
+export function renderMonsterTagPicker(container, currentMonster, availableTags = [], onChange = () => {}) {
+    if (!container) return;
+
+    currentMonster.tag_ids = currentMonster.tag_ids || [];
+    currentMonster.tags = currentMonster.tags || [];
+
+    // Resolve tag objects for currently selected IDs
+    const selectedTagObjects = currentMonster.tag_ids.map(id => {
+        const found = availableTags.find(t => t.id === id);
+        return found ? found : { id, name: id };
+    });
+
+    const unselectedTags = availableTags.filter(t => !currentMonster.tag_ids.includes(t.id));
+
+    container.innerHTML = `
+        <div class="monster-tag-chips" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; min-height: 28px; align-items: center;">
+            ${selectedTagObjects.length === 0 ? `
+                <span style="font-size: 0.85rem; color: var(--color-text-secondary); font-style: italic;">No tags selected. Choose from the dropdown below to add tags.</span>
+            ` : selectedTagObjects.map(t => `
+                <span class="monster-tag-chip" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.6rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; background: var(--color-bg-medium); color: var(--color-primary); border: 1px solid var(--color-border);">
+                    <span>${escapeHTML(t.name)}</span>
+                    <button type="button" class="btn-remove-tag" data-id="${escapeHTML(t.id)}" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer; color: inherit; font-size: 1rem; line-height: 1;" title="Remove tag">&times;</button>
+                </span>
+            `).join('')}
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <select id="select-add-tag" class="form-control" style="font-size: 0.85rem; padding: 0.4rem 0.6rem;">
+                <option value="">+ Add Tag...</option>
+                ${unselectedTags.map(t => `<option value="${escapeHTML(t.id)}">${escapeHTML(t.name)}</option>`).join('')}
+            </select>
+        </div>
+    `;
+
+    // Remove button handlers
+    container.querySelectorAll('.btn-remove-tag').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const tagId = btn.dataset.id;
+            currentMonster.tag_ids = currentMonster.tag_ids.filter(id => id !== tagId);
+            const remainingTagObjs = currentMonster.tag_ids.map(id => availableTags.find(t => t.id === id)).filter(Boolean);
+            currentMonster.tags = remainingTagObjs.map(t => t.name);
+            renderMonsterTagPicker(container, currentMonster, availableTags, onChange);
+            onChange(currentMonster);
+        });
+    });
+
+    // Add select handler
+    const selectEl = container.querySelector('#select-add-tag');
+    if (selectEl) {
+        selectEl.addEventListener('change', (e) => {
+            const tagId = e.target.value;
+            if (tagId && !currentMonster.tag_ids.includes(tagId)) {
+                currentMonster.tag_ids.push(tagId);
+                const tagObj = availableTags.find(t => t.id === tagId);
+                if (tagObj && !currentMonster.tags.includes(tagObj.name)) {
+                    currentMonster.tags.push(tagObj.name);
+                }
+                renderMonsterTagPicker(container, currentMonster, availableTags, onChange);
+                onChange(currentMonster);
+            }
+        });
+    }
+}
+

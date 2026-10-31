@@ -10,6 +10,21 @@
 import { supabase } from '../supabaseClient.js';
 import { logError } from '../error-logger.js';
 
+/**
+ * Escapes unsafe characters for HTML and attribute contexts.
+ * @param {string|number} str
+ * @returns {string}
+ */
+export function escapeHTML(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // GLOBAL STATE
 let currentLookups = null;
 let originalLookups = null;
@@ -128,8 +143,8 @@ const renderEvents = (events) => {
 
     ui.eventsTable.innerHTML = events.map(ev => `
         <tr>
-            <td><strong>${ev.name}</strong></td>
-            <td>${ev.description || '<span style="color:#888;">N/A</span>'}</td>
+            <td><strong>${escapeHTML(ev.name)}</strong></td>
+            <td>${ev.description ? escapeHTML(ev.description) : '<span style="color:#888;">N/A</span>'}</td>
             <td>
                 <span class="badge ${ev.is_active ? 'badge-active' : 'badge-inactive'}">
                     ${ev.is_active ? 'Active' : 'Inactive'}
@@ -254,15 +269,15 @@ const renderLookupsForm = () => {
                             <div>DTP</div>
                             <div></div>
                         </div>
-                        ${Object.entries(data['player incentives']).map(([name, val], idx) => `
-                            <div class="incentive-row">
-                                <input type="text" class="lookup-input" value="${name}" 
-                                    onchange="window.adminController.renameIncentive('player', '${name}', this.value)">
-                                <input type="number" class="lookup-input" value="${val}"
-                                    onchange="window.adminController.updateIncentive('player', '${name}', 'value', this.value)">
-                                <button class="btn-icon" onclick="window.adminController.removeIncentive('player', '${name}')" title="Remove row">🗑️</button>
+                        ${Object.entries(data['player incentives']).map(([name, val], idx) => {
+                            const safeName = escapeHTML(name);
+                            return `
+                            <div class="incentive-row" data-name="${safeName}" data-type="player">
+                                <input type="text" class="lookup-input incentive-name-input" value="${safeName}">
+                                <input type="number" class="lookup-input incentive-val-input" value="${val}">
+                                <button class="btn-icon btn-remove-incentive" title="Remove row">🗑️</button>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                         <button class="btn-add-row" onclick="window.adminController.addIncentive('player')">+ Add Player Incentive</button>
                     </div>
                 </div>
@@ -277,17 +292,16 @@ const renderLookupsForm = () => {
                             <div>Bonus Loot</div>
                             <div></div>
                         </div>
-                        ${Object.entries(data['DM incentives']).map(([name, config], idx) => `
-                            <div class="incentive-row dm-type">
-                                <input type="text" class="lookup-input" value="${name}" 
-                                    onchange="window.adminController.renameIncentive('dm', '${name}', this.value)">
-                                <input type="number" class="lookup-input" value="${config['bonus DTP']}"
-                                    onchange="window.adminController.updateIncentive('dm', '${name}', 'bonus DTP', this.value)">
-                                <input type="number" class="lookup-input" value="${config['bonus loot roll']}"
-                                    onchange="window.adminController.updateIncentive('dm', '${name}', 'bonus loot roll', this.value)">
-                                <button class="btn-icon" onclick="window.adminController.removeIncentive('dm', '${name}')" title="Remove row">🗑️</button>
+                        ${Object.entries(data['DM incentives']).map(([name, config], idx) => {
+                            const safeName = escapeHTML(name);
+                            return `
+                            <div class="incentive-row dm-type" data-name="${safeName}" data-type="dm">
+                                <input type="text" class="lookup-input incentive-name-input" value="${safeName}">
+                                <input type="number" class="lookup-input incentive-dtp-input" value="${config['bonus DTP']}">
+                                <input type="number" class="lookup-input incentive-loot-input" value="${config['bonus loot roll']}">
+                                <button class="btn-icon btn-remove-incentive" title="Remove row">🗑️</button>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                         <button class="btn-add-row" onclick="window.adminController.addIncentive('dm')">+ Add DM Incentive</button>
                     </div>
                 </div>
@@ -327,6 +341,47 @@ const renderLookupsForm = () => {
     `;
 
     ui.lookupsContainer.innerHTML = html;
+
+    // Attach event listeners for dynamic incentive rows (avoids inline JS quotes breakage)
+    ui.lookupsContainer.querySelectorAll('.incentive-row').forEach(row => {
+        const type = row.dataset.type;
+        const origName = row.dataset.name;
+
+        const nameInput = row.querySelector('.incentive-name-input');
+        if (nameInput) {
+            nameInput.addEventListener('change', (e) => {
+                window.adminController.renameIncentive(type, origName, e.target.value);
+            });
+        }
+
+        const valInput = row.querySelector('.incentive-val-input');
+        if (valInput) {
+            valInput.addEventListener('change', (e) => {
+                window.adminController.updateIncentive(type, origName, 'value', e.target.value);
+            });
+        }
+
+        const dtpInput = row.querySelector('.incentive-dtp-input');
+        if (dtpInput) {
+            dtpInput.addEventListener('change', (e) => {
+                window.adminController.updateIncentive(type, origName, 'bonus DTP', e.target.value);
+            });
+        }
+
+        const lootInput = row.querySelector('.incentive-loot-input');
+        if (lootInput) {
+            lootInput.addEventListener('change', (e) => {
+                window.adminController.updateIncentive(type, origName, 'bonus loot roll', e.target.value);
+            });
+        }
+
+        const removeBtn = row.querySelector('.btn-remove-incentive');
+        if (removeBtn) {
+            removeBtn.addEventListener('click', () => {
+                window.adminController.removeIncentive(type, origName);
+            });
+        }
+    });
 };
 
 /**

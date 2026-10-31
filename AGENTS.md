@@ -12,10 +12,15 @@ These rules apply to every AI coding or verification agent working in the `Cocon
   `YYYYMMDD_<description>.sql`
   Example: `20261005_ac_backgrounds_normalization.sql`.
 - **Migration Runner Pattern:** Migration execution and verification scripts (Node.js runners utilizing the `pg` client and `/workspace/git/Coconut/DBSync/.env`) must also reside in `supabase/migrations/` (e.g., `run_20261005_ac_backgrounds_normalization.js`).
-- **Environment Targeting:**
-  - `DEV`: Target database configured via `SOURCE_DB_URL` in `DBSync/.env`.
-  - `PRODUCTION`: Target database configured via `TARGET_DB_URL` / `PROD_DB_URL` in `DBSync/.env` (invoked with `--execute --prod`).
-  - Always execute `--dry-run` first before applying migrations with `--execute`. Apply changes to both DEV and PROD environments when completing database tasks.
+- **Environment Targeting & Restrictions:**
+  - `DEV`: Target database configured via `SOURCE_DB_URL` in `DBSync/.env`. All development, schema experimentation, and migrations are applied and tested here first.
+  - `PRODUCTION`: Target database configured via `TARGET_DB_URL` / `PROD_DB_URL` in `DBSync/.env`.
+  - **CRITICAL RESTRICTION — NO DIRECT PROD MIGRATIONS WITHOUT APPROVAL:** AI agents MUST NEVER run migration scripts in PRODUCTION (neither with `--prod` nor direct connection to `TARGET_DB_URL`) without the user's explicit prior approval.
+  - **Preferred Production Deployment Method:** The catchup command (`npm run migrate:catchup` or `node supabase/migrations/migrate.js catchup --execute`) is the preferred and standard method to synchronize pending migrations to PRODUCTION after DEV testing is verified and explicit user approval is granted.
+  - Always execute `--dry-run` first before applying migrations with `--execute`.
+- **Migration Tracking & Status:**
+  - Database migrations are tracked in `public._schema_migrations`.
+  - Check sync status across environments anytime using `npm run migrate:status`.
 - **Running Migration Log:** All migration steps, verification criteria, and execution statuses must be maintained and appended in `supabase/migrations/MIGRATION_LOG.md`.
 
 ---

@@ -1,0 +1,108 @@
+---
+layout: default
+title: Monster Tags Configuration
+permalink: /monsters/tags/
+extra_css:
+  - /assets/css/admin.css
+---
+
+<div id="admin-auth-guard" class="auth-guard">
+    <div class="card" style="text-align: center; max-width: 450px;">
+        <h2 style="color: var(--color-primary);">🔒 Restrictive Access</h2>
+        <p>You must be logged in as an <strong>Engineer</strong> or <strong>Admin</strong> to access this page.</p>
+        
+        <div class="auth-header-container" style="margin: 1.5rem 0; display: flex; justify-content: center;">
+            {% include auth-header.html %}
+        </div>
+
+        <div id="auth-loading-spinner" style="margin: 1rem 0;">Checking authorization...</div>
+        <div id="auth-failed-msg" class="hidden" style="color: var(--palette-alert-danger-action); font-weight: bold; margin-top: 1rem;">
+            Access Denied. Your account does not have the required permissions.
+        </div>
+    </div>
+</div>
+
+<div class="admin-container">
+    <header class="dashboard-header">
+        <div>
+            <h1>Monster Tags Configuration</h1>
+            <p style="color: var(--color-text-secondary); margin: 0.5rem 0 0 0;">Manage global search and event tags (e.g., "Monster Mash 2026") used to categorize and filter monsters in the Compendium.</p>
+        </div>
+        <div class="header-actions">
+            <div class="auth-header-container">
+                {% include auth-header.html %}
+            </div>
+            <a href="{{ '/staff/' | relative_url }}" class="button button-secondary">Back to Staff</a>
+        </div>
+    </header>
+
+    <div id="tag-alert-container"></div>
+
+    <!-- ADD TAG CARD -->
+    <div class="card" style="margin-bottom: 2rem; padding: 1.5rem; background: var(--color-bg-light); border: 1px solid var(--color-border);">
+        <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--color-primary);">+ Add New Tag</h3>
+        <form id="form-add-tag" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+            <div style="flex: 1 1 300px;">
+                <label for="new-tag-name" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Tag Name</label>
+                <input type="text" id="new-tag-name" class="form-control" placeholder="e.g. Monster Mash 2026" required style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--color-border); border-radius: 4px; font-family: var(--font-body); box-sizing: border-box;">
+            </div>
+            <button type="submit" id="btn-add-tag" class="button" style="padding: 0.65rem 1.5rem; background: var(--color-primary); color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: 600;">
+                Add Tag
+            </button>
+        </form>
+    </div>
+
+    <!-- TAGS TABLE CARD -->
+    <div class="card" style="padding: 1.5rem; background: var(--color-bg-light); border: 1px solid var(--color-border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="margin: 0; color: var(--color-primary);">Active Tags</h3>
+            <span id="tags-count-badge" style="font-size: 0.9rem; color: var(--color-text-secondary); font-weight: 600;">Loading tags...</span>
+        </div>
+
+        <div class="admin-table-container" style="overflow-x: auto;">
+            <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
+                        <th style="padding: 0.75rem;">Tag Name</th>
+                        <th style="padding: 0.75rem; width: 140px; text-align: center;">Monster Usage</th>
+                        <th style="padding: 0.75rem; width: 180px;">Created</th>
+                        <th style="padding: 0.75rem; width: 160px; text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tags-table-body">
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: var(--color-text-secondary);">Loading tags...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT TAG DIALOG -->
+<dialog id="modal-edit-tag" style="border: 1px solid var(--color-border); border-radius: 8px; padding: 2rem; background: var(--color-bg-light); max-width: 450px; width: 90%; box-shadow: var(--shadow-lg);">
+    <h3 style="margin-top: 0; color: var(--color-primary);">Edit Tag</h3>
+    <form id="form-edit-tag" method="dialog">
+        <input type="hidden" id="edit-tag-id">
+        <div style="margin-bottom: 1.5rem;">
+            <label for="edit-tag-name" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Tag Name</label>
+            <input type="text" id="edit-tag-name" class="form-control" required style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--color-border); border-radius: 4px; box-sizing: border-box;">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button type="button" id="btn-cancel-edit" class="button button-secondary" style="padding: 0.5rem 1rem;">Cancel</button>
+            <button type="submit" id="btn-save-edit" class="button" style="padding: 0.5rem 1.2rem; background: var(--color-primary); color: white;">Save Changes</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- DELETE CONFIRMATION DIALOG -->
+<dialog id="modal-delete-tag" style="border: 1px solid var(--color-border); border-radius: 8px; padding: 2rem; background: var(--color-bg-light); max-width: 450px; width: 90%; box-shadow: var(--shadow-lg);">
+    <h3 style="margin-top: 0; color: var(--palette-alert-danger-action, #d9534f);">Confirm Delete</h3>
+    <p id="delete-warning-text" style="line-height: 1.5; color: var(--color-text);"></p>
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+        <button type="button" id="btn-cancel-delete" class="button button-secondary" style="padding: 0.5rem 1rem;">Cancel</button>
+        <button type="button" id="btn-confirm-delete" class="button" style="padding: 0.5rem 1.2rem; background: var(--palette-alert-danger-action, #d9534f); color: white;">Delete Tag</button>
+    </div>
+</dialog>
+
+<script type="module" src="{{ '/assets/js/monster/monster-tags-admin.js' | relative_url }}"></script>

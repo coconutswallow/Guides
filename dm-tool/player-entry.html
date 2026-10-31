@@ -292,6 +292,16 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/6
     patchLogin();
 
     // 1. GLOBAL UI HANDLERS (Theme, Tabs)
+    function escapeHTML(str) {
+        if (str == null) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     const toggleBtn = document.getElementById('theme-toggle');
     const htmlEl = document.documentElement;
     
@@ -328,7 +338,7 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/6
             ui.dmNameContainer.style.display = 'block'; 
 
             fetchSessionMetadata();
-            fetchIncentivesOptions(); // Fetch lookups
+            await fetchIncentivesOptions(); // Fetch lookups before loading player data
 
             try {
                 const { data: userData, error: userError } = await supabase
@@ -347,10 +357,8 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/6
                 discordIdInput.value = userData.discord_id;
                 displayNameInput.value = userData.display_name;
 
-                // Load existing data AFTER fetching incentives to ensure checkboxes exist
-                setTimeout(() => {
-                    loadPlayerData(userData.discord_id);
-                }, 500);
+                // Load existing data with incentives already rendered
+                await loadPlayerData(userData.discord_id);
                 
                 formSection.classList.remove('hidden');
 
@@ -435,10 +443,11 @@ code_documentation: https://github.com/hawthorneguild/HawthorneTeams/issues/6
             // Build Checkboxes
             let html = '';
             incentiveKeys.forEach(key => {
+                const safeKey = escapeHTML(key);
                 html += `
                     <label class="checkbox-item">
-                        <input type="checkbox" name="incentive" value="${key}">
-                        ${key}
+                        <input type="checkbox" name="incentive" value="${safeKey}">
+                        ${safeKey}
                     </label>
                 `;
             });

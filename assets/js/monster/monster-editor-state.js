@@ -49,6 +49,7 @@ export function createEmptyMonster() {
         token_url: '',
         image_credit: '',
         tags: [],
+        tag_ids: [],
         status: 'Draft'
     };
 }
@@ -100,9 +101,13 @@ export function syncMonsterFromForm(form, currentMonster) {
     currentMonster.additional_info = formData.get('additional_info');
     currentMonster.creator_notes = formData.get('creator_notes');
 
-    const tagsStr = formData.get('tags') || '';
-    const tagsArray = tagsStr.split(',').map(t => t.trim()).filter(t => t !== '');
-    currentMonster.tags = tagsArray;
+    const tagsStr = formData.get('tags');
+    if (tagsStr !== null && tagsStr !== undefined) {
+        const tagsArray = tagsStr.split(',').map(t => t.trim()).filter(t => t !== '');
+        currentMonster.tags = tagsArray;
+    }
+    currentMonster.tags = currentMonster.tags || [];
+    currentMonster.tag_ids = currentMonster.tag_ids || [];
 
     currentMonster.ability_scores = {
         STR: parseInt(formData.get('ability_STR')) || 10,

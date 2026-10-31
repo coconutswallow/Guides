@@ -12,15 +12,19 @@ import { logError } from '../error-logger.js';
 export async function getMonsters() {
     let { data, error } = await supabase
         .from('monsters')
-        .select('name, slug, species, cr, image_url, row_id, size, usage, alignment, creator_discord_id, creator')
+        .select('name, slug, species, cr, image_url, row_id, size, usage, alignment, creator_discord_id, creator, monster_tag_relations(tag_id, monster_tags(id, name))')
         .eq('is_live', true)
         .order('name');
 
     if (error) {
         logError('monster-service', `Error fetching monsters: ${error.message}`);
-        return [];
+        throw new Error(error.message);
     }
-    return data;
+    return (data || []).map(m => ({
+        ...m,
+        tags: (m.monster_tag_relations || []).map(r => r.monster_tags?.name).filter(Boolean),
+        tag_ids: (m.monster_tag_relations || []).map(r => r.tag_id).filter(Boolean)
+    }));
 }
 
 export async function getMonsterBySlug(slug) {
@@ -35,13 +39,21 @@ export async function getMonsterBySlug(slug) {
         return null;
     }
 
-    const { data: features } = await supabase
-        .from('monster_features')
-        .select('*')
-        .eq('parent_row_id', monster.row_id)
-        .order('display_order', { ascending: true });
+    const [featuresRes, tagsRes] = await Promise.all([
+        supabase
+            .from('monster_features')
+            .select('*')
+            .eq('parent_row_id', monster.row_id)
+            .order('display_order', { ascending: true }),
+        supabase
+            .from('monster_tag_relations')
+            .select('tag_id, monster_tags(id, name)')
+            .eq('monster_row_id', monster.row_id)
+    ]);
 
-    monster.features = features || [];
+    monster.features = featuresRes.data || [];
+    monster.tags = (tagsRes.data || []).map(r => r.monster_tags?.name).filter(Boolean);
+    monster.tag_ids = (tagsRes.data || []).map(r => r.tag_id).filter(Boolean);
     return monster;
 }
 
@@ -55,7 +67,7 @@ export async function getMonsterBySlug(slug) {
 export async function getMyMonsters(discordId) {
     const { data, error } = await supabase
         .from('monsters')
-        .select('*')
+        .select('*, monster_tag_relations(tag_id, monster_tags(id, name))')
         .eq('creator_discord_id', discordId)
         .order('updated_at', { ascending: false });
 
@@ -63,7 +75,11 @@ export async function getMyMonsters(discordId) {
         logError('monster-service', `Error fetching my monsters: ${error.message}`);
         return [];
     }
-    return data;
+    return (data || []).map(m => ({
+        ...m,
+        tags: (m.monster_tag_relations || []).map(r => r.monster_tags?.name).filter(Boolean),
+        tag_ids: (m.monster_tag_relations || []).map(r => r.tag_id).filter(Boolean)
+    }));
 }
 
 /**
@@ -78,7 +94,7 @@ export async function saveMonsterDraft(monsterData, features = []) {
     if (!userResponse?.user) throw new Error('Not authenticated');
     const user = userResponse.user;
 
-    const { features: rawFeatures, save_proficiencies, ...monsterFields } = monsterData;
+    const { features: rawFeatures, save_proficiencies, tags: rawTags, tag_ids: rawTagIds, ...monsterFields } = monsterData;
     const isNew = !monsterFields.row_id;
     const now = new Date().toISOString();
 
@@ -213,7 +229,44 @@ export async function saveMonsterDraft(monsterData, features = []) {
         upsertedFeatures.sort((a, b) => a.display_order - b.display_order);
     }
 
+    // 3. Sync Monster Tag Relations
+    const targetTagIds = Array.isArray(monsterData.tag_ids)
+        ? monsterData.tag_ids
+        : (Array.isArray(rawTagIds) ? rawTagIds : []);
+
+    if (savedMonster && savedMonster.row_id && (targetTagIds.length > 0 || !isNew)) {
+        const { data: dbRels, error: fetchRelErr } = await supabase
+            .from('monster_tag_relations')
+            .select('tag_id')
+            .eq('monster_row_id', savedMonster.row_id);
+
+        if (!fetchRelErr) {
+            const currentDbTagIds = (dbRels || []).map(r => r.tag_id);
+            const toDelete = currentDbTagIds.filter(id => !targetTagIds.includes(id));
+            const toInsert = targetTagIds.filter(id => !currentDbTagIds.includes(id));
+
+            if (toDelete.length > 0) {
+                await supabase
+                    .from('monster_tag_relations')
+                    .delete()
+                    .eq('monster_row_id', savedMonster.row_id)
+                    .in('tag_id', toDelete);
+            }
+
+            if (toInsert.length > 0) {
+                const insertRows = toInsert.map(tag_id => ({
+                    monster_row_id: savedMonster.row_id,
+                    tag_id
+                }));
+                await supabase
+                    .from('monster_tag_relations')
+                    .insert(insertRows);
+            }
+        }
+    }
+
     savedMonster.features = upsertedFeatures;
+    savedMonster.tag_ids = targetTagIds;
     return savedMonster;
 }
 
@@ -292,6 +345,22 @@ export async function createNewVersion(sourceRowId) {
             .insert(clonedFeatures);
 
         if (featErr) throw featErr;
+    }
+
+    // Clone tag associations
+    const { data: sourceTags } = await supabase
+        .from('monster_tag_relations')
+        .select('tag_id')
+        .eq('monster_row_id', sourceRowId);
+
+    if (sourceTags && sourceTags.length > 0) {
+        const tagRelationsToInsert = sourceTags.map(st => ({
+            monster_row_id: savedMonster.row_id,
+            tag_id: st.tag_id
+        }));
+        await supabase
+            .from('monster_tag_relations')
+            .insert(tagRelationsToInsert);
     }
 
     return savedMonster.slug;
@@ -408,7 +477,7 @@ export async function approveMonster(rowId, reviewerId) {
     if (oldVersions && oldVersions.length > 0) {
         for (const old of oldVersions) {
             const archivedSlug = `${old.slug}-archived-${old.row_id.substring(0, 8)}`;
-            await supabase
+            const { error: arcErr } = await supabase
                 .from('monsters')
                 .update({
                     status: 'Archived',
@@ -417,6 +486,7 @@ export async function approveMonster(rowId, reviewerId) {
                     archived_at: new Date().toISOString()
                 })
                 .eq('row_id', old.row_id);
+            if (arcErr) throw arcErr;
         }
     }
 
@@ -505,26 +575,32 @@ function normalizeMonsterLookups(rawLookups) {
  * @returns {Promise<Object|null>} The combined lookup tables object.
  */
 export async function getMonsterLookups() {
-    let { data, error } = await supabase
-        .from('lookups')
-        .select('data')
-        .eq('type', 'monster')
-        .single();
+    let [lookupRes, tagsRes] = await Promise.all([
+        supabase
+            .from('lookups')
+            .select('data')
+            .eq('type', 'monster')
+            .single(),
+        supabase
+            .from('monster_tags')
+            .select('id, name')
+            .order('name')
+    ]);
 
-    if (error || !data) {
-        logError('monster-service', `Error fetching lookups: ${error?.message || 'No data'}`);
-        return normalizeMonsterLookups(null);
+    let lookupData = {};
+    if (lookupRes.data) {
+        try {
+            lookupData = typeof lookupRes.data.data === 'string'
+                ? JSON.parse(lookupRes.data.data)
+                : lookupRes.data.data;
+        } catch (error) {
+            logError('monster-service', `Error parsing monster lookups: ${error.message}`);
+        }
     }
 
-    try {
-        const lookupData = typeof data.data === 'string'
-            ? JSON.parse(data.data)
-            : data.data;
-        return normalizeMonsterLookups(lookupData);
-    } catch (error) {
-        logError('monster-service', `Error parsing monster lookups: ${error.message}`);
-        return normalizeMonsterLookups(null);
-    }
+    const normalized = normalizeMonsterLookups(lookupData);
+    normalized.tags = (tagsRes.data || []).map(t => ({ id: t.id, name: t.name, value: t.name }));
+    return normalized;
 }
 
 /**
@@ -576,3 +652,125 @@ export async function isSlugUnique(slug, excludeRowId = null) {
     const { data } = await query;
     return !data || data.length === 0;
 }
+
+// --- MONSTER TAGS MANAGEMENT FUNCTIONS ---
+
+/**
+ * Fetches all global monster tags.
+ * @returns {Promise<Array<{id: string, name: string}>>}
+ */
+export async function getMonsterTags() {
+    const { data, error } = await supabase
+        .from('monster_tags')
+        .select('id, name, created_at, updated_at')
+        .order('name');
+
+    if (error) {
+        logError('monster-service', `Error fetching tags: ${error.message}`);
+        return [];
+    }
+    return data || [];
+}
+
+/**
+ * Fetches all global tags along with their monster usage count.
+ * @returns {Promise<Array<{id: string, name: string, monster_count: number}>>}
+ */
+export async function getAllMonsterTagsWithCounts() {
+    const { data, error } = await supabase
+        .from('monster_tags')
+        .select(`
+            id,
+            name,
+            created_at,
+            updated_at,
+            monster_tag_relations (
+                monster_row_id
+            )
+        `)
+        .order('name');
+
+    if (error) {
+        logError('monster-service', `Error fetching monster tags with counts: ${error.message}`);
+        return [];
+    }
+
+    return (data || []).map(tag => ({
+        id: tag.id,
+        name: tag.name,
+        created_at: tag.created_at,
+        updated_at: tag.updated_at,
+        monster_count: (tag.monster_tag_relations || []).length
+    }));
+}
+
+/**
+ * Creates a new global monster tag.
+ * @param {string} name - Name of the tag (e.g. "XMas 2026").
+ * @returns {Promise<Object>} The created tag record.
+ */
+export async function createMonsterTag(name) {
+    const trimmed = (name || '').trim();
+    if (!trimmed) throw new Error('Tag name cannot be empty.');
+
+    const { data, error } = await supabase
+        .from('monster_tags')
+        .insert({ name: trimmed })
+        .select('*')
+        .single();
+
+    if (error) {
+        if (error.code === '23505') {
+            throw new Error(`A tag named "${trimmed}" already exists.`);
+        }
+        logError('monster-service', `Error creating tag: ${error.message}`);
+        throw error;
+    }
+    return data;
+}
+
+/**
+ * Renames an existing monster tag.
+ * @param {string} id - UUID of the tag.
+ * @param {string} newName - New name for the tag.
+ * @returns {Promise<Object>} The updated tag record.
+ */
+export async function updateMonsterTag(id, newName) {
+    const trimmed = (newName || '').trim();
+    if (!trimmed) throw new Error('Tag name cannot be empty.');
+
+    const { data, error } = await supabase
+        .from('monster_tags')
+        .update({ name: trimmed, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select('*')
+        .single();
+
+    if (error) {
+        if (error.code === '23505') {
+            throw new Error(`A tag named "${trimmed}" already exists.`);
+        }
+        logError('monster-service', `Error updating tag: ${error.message}`);
+        throw error;
+    }
+    return data;
+}
+
+/**
+ * Deletes a monster tag and cascades relation removal.
+ * @param {string} id - UUID of the tag.
+ * @returns {Promise<boolean>} True on success.
+ */
+export async function deleteMonsterTag(id) {
+    const { error } = await supabase
+        .from('monster_tags')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        logError('monster-service', `Error deleting tag: ${error.message}`);
+        throw error;
+    }
+    return true;
+}
+

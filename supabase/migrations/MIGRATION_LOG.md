@@ -1618,3 +1618,87 @@ node supabase/migrations/run_20261012_ac_other_rewards_normalization.js --execut
 | DEV | ✅ | ✅ | 2026-10-25 | Re-aligned all 681 notes. All verification checks passed. |
 | PRODUCTION | ✅ | ✅ | 2026-10-25 | Re-aligned all 681 notes. All verification checks passed. |
 
+---
+
+### Step 39: Monster Tags & Relations Schema (`public.monster_tags`, `public.monster_tag_relations`)
+- **Date**: 2026-10-31
+- **Scope**: Create normalized tables `public.monster_tags` and `public.monster_tag_relations` (n:n) with indexes and RLS policies for monster search, tagging, and compendium filtering.
+- **Files**:
+  - `supabase/migrations/20261031_monster_tags.sql`
+  - `supabase/migrations/run_20261031_monster_tags.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261031_monster_tags.js --dry-run`
+  - `node supabase/migrations/run_20261031_monster_tags.js --execute`
+  - `node supabase/migrations/run_20261031_monster_tags.js --dry-run --prod`
+  - `node supabase/migrations/run_20261031_monster_tags.js --execute --prod`
+
+#### Key Changes
+1. **monster_tags**:
+   - `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`
+   - `name TEXT NOT NULL`
+   - Case-insensitive unique index `idx_monster_tags_name_lower` on `LOWER(TRIM(name))`
+   - Timestamps `created_at` and `updated_at`
+2. **monster_tag_relations** (n:n junction):
+   - `monster_row_id UUID NOT NULL REFERENCES public.monsters(row_id) ON DELETE CASCADE`
+   - `tag_id UUID NOT NULL REFERENCES public.monster_tags(id) ON DELETE CASCADE`
+   - Composite PK `(monster_row_id, tag_id)`
+   - Indexes on `monster_row_id` and `tag_id`
+3. **RLS Policies**:
+   - `monster_tags`: Public `SELECT` allowed; `ALL` (insert/update/delete) restricted to `Admin` and `Engineer` roles.
+   - `monster_tag_relations`: Public `SELECT` allowed; `ALL` restricted to monster creators, `is_monster_admin()`, `Admin`, and `Engineer`.
+4. **No Initial Seeding**: Tables initialized empty for manual tag management via Staff Portal.
+
+#### Execution Status
+| Environment | Dry-Run | Execute | Date | Notes |
+| :--- | :---: | :---: | :---: | :--- |
+| DEV | ✅ | ✅ | 2026-10-31 | Schema and RLS policies created. All verification checks passed. |
+| PRODUCTION | ✅ | ✅ | 2026-10-31 | Schema and RLS policies created. All verification checks passed. |
+
+---
+
+### Step 40: Schema Migrations Tracking & Catch-up CLI (`public._schema_migrations`)
+- **Date**: 2026-10-31
+- **Scope**: Establish in-database schema migration tracking table `public._schema_migrations` and unified CLI (`migrate.js`) to track which migrations have run in DEV vs. PROD, detect drift, and perform safe catch-up migrations into PROD upon explicit approval.
+- **Files**:
+  - `supabase/migrations/20261031_schema_migrations_tracking.sql`
+  - `supabase/migrations/run_20261031_schema_migrations_tracking.js`
+  - `supabase/migrations/migrate.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261031_schema_migrations_tracking.js --dry-run`
+  - `node supabase/migrations/run_20261031_schema_migrations_tracking.js --execute`
+  - `node supabase/migrations/migrate.js baseline --execute`
+  - `node supabase/migrations/migrate.js status`
+- **Key Changes**:
+  1. `public._schema_migrations`: `version VARCHAR(120) PRIMARY KEY`, `name TEXT`, `checksum VARCHAR(64)`, `applied_at TIMESTAMPTZ`, `applied_by TEXT`, `execution_time_ms INT`.
+  2. Baseline established for all 76 historical migration scripts.
+  3. CLI commands added to `package.json`: `migrate:status`, `migrate:catchup`, `migrate:baseline`.
+  4. Updated `AGENTS.md` restricting agents from executing PROD migrations without explicit user approval.
+- **Execution Status**:
+  | Environment | Dry-Run | Execute | Date | Notes |
+  | :--- | :---: | :---: | :---: | :--- |
+  | DEV | ✅ | ✅ | 2026-10-31 | Table created and all 76 historical migrations baselined. |
+  | PRODUCTION | ✅ | ✅ | 2026-10-31 | Verified and baselined via migration manager. |
+
+---
+
+### Step 41: Harden Monster & Features RLS Policies (`public.monsters`, `public.monster_features`)
+- **Date**: 2026-10-31
+- **Scope**: Harden database RLS policies on `public.monsters` and `public.monster_features` following security code review:
+  - Enforce `status = 'Draft'` and `is_live = false` on creator INSERTs.
+  - Restrict creator UPDATEs to `Draft` and `Pending` statuses (prevent unauthorized `Approved` or `is_live` promotion).
+  - Codify public SELECT policies for anonymous users on `is_live = true` monsters and their features.
+- **Files**:
+  - `supabase/migrations/20261031_harden_monster_rls.sql`
+  - `supabase/migrations/run_20261031_harden_monster_rls.js`
+- **Commands Executed**:
+  - `node supabase/migrations/run_20261031_harden_monster_rls.js --dry-run`
+  - `node supabase/migrations/run_20261031_harden_monster_rls.js --execute`
+- **Execution Status**:
+  | Environment | Dry-Run | Execute | Date | Notes |
+  | :--- | :---: | :---: | :---: | :--- |
+  | DEV | ✅ | ✅ | 2026-10-31 | Applied and recorded in _schema_migrations. |
+  | PRODUCTION | ✅ | ✅ | 2026-10-31 | Synchronized with DEV. |
+
+
+
+

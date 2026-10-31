@@ -17,6 +17,7 @@ import {
     getMonsterBySlug
 } from './monster-service.js';
 import { renderMonsterStatblock } from './views/monster-detail.js';
+import { escapeHTML } from './monster-utils.js';
 
 let pendingQueue = [];
 let patchQueue = [];
@@ -114,9 +115,9 @@ async function renderQueue(container) {
     } else {
         pendingQueue.forEach((m, i) => {
             html += `
-                <tr data-slug="${m.slug}" data-row-id="${m.row_id}">
-                    <td><strong>${m.name}</strong> (CR ${m.cr})</td>
-                    <td><code>${m.creator || m.creator_discord_id}</code></td>
+                <tr data-slug="${escapeHTML(m.slug)}" data-row-id="${escapeHTML(m.row_id)}">
+                    <td><strong>${escapeHTML(m.name)}</strong> (CR ${escapeHTML(m.cr)})</td>
+                    <td><code>${escapeHTML(m.creator || m.creator_discord_id)}</code></td>
                     <td>${new Date(m.submitted_at).toLocaleString()}</td>
                     <td>
                         <button class="btn btn-sm btn-primary btn-review" data-index="${i}">Review</button>
@@ -155,9 +156,9 @@ async function renderQueue(container) {
     } else {
         patchQueue.forEach((m, i) => {
             html += `
-                <tr data-slug="${m.slug}" data-row-id="${m.row_id}">
-                    <td><strong>${m.name}</strong> (CR ${m.cr})</td>
-                    <td><code>${m.creator || m.creator_discord_id}</code></td>
+                <tr data-slug="${escapeHTML(m.slug)}" data-row-id="${escapeHTML(m.row_id)}">
+                    <td><strong>${escapeHTML(m.name)}</strong> (CR ${escapeHTML(m.cr)})</td>
+                    <td><code>${escapeHTML(m.creator || m.creator_discord_id)}</code></td>
                     <td>${new Date(m.updated_at).toLocaleString()}</td>
                     <td>
                         <button class="btn btn-sm btn-primary btn-review-patch" data-index="${i}">Review</button>
@@ -216,10 +217,10 @@ function showReview(monster) {
         <div class="review-panel">
             <div class="review-sidebar">
                 <h3>Staff Review</h3>
-                <p><strong>Monster:</strong> ${monster.name}</p>
-                <p><strong>Slug:</strong> ${monster.slug}</p>
-                <p><strong>Creator:</strong> <code>${monster.creator || monster.creator_discord_id || 'Unknown'}</code></p>
-                ${monster.creator_notes ? `<p><strong>Creator Notes:</strong> <em>${monster.creator_notes}</em></p>` : ''}
+                <p><strong>Monster:</strong> ${escapeHTML(monster.name)}</p>
+                <p><strong>Slug:</strong> ${escapeHTML(monster.slug)}</p>
+                <p><strong>Creator:</strong> <code>${escapeHTML(monster.creator || monster.creator_discord_id || 'Unknown')}</code></p>
+                ${monster.creator_notes ? `<p><strong>Creator Notes:</strong> <em>${escapeHTML(monster.creator_notes)}</em></p>` : ''}
                 
                 <div class="decision-box" style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
                     <button id="btn-approve" class="btn btn-approve" style="width: 100%; margin-bottom: 0.8rem; font-weight: bold;">Approve & Publish</button>
