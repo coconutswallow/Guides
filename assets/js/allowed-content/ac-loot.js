@@ -124,20 +124,25 @@ export function matchesTierFilter(item, selectedSet) {
     }
     const tCode = item.tier && typeof item.tier === 'object' ? item.tier.code : (typeof item.tier === 'string' ? item.tier : '');
     const tName = item.tier && typeof item.tier === 'object' ? item.tier.name : '';
+    const tGroup = item.tier && typeof item.tier === 'object' ? item.tier.tier_group : '';
     const tId = item.tier_id || (item.tier && typeof item.tier === 'object' ? item.tier.id : '');
     const tDisplay = item.tier_display || '';
 
     for (const filterVal of selectedSet) {
         if (!filterVal || filterVal === 'ALL') return true;
+        const lowerFilter = filterVal.toLowerCase().replace(/_/g, ' ');
+
         // Check exact match with tier code or tier name or tier id
         if (tCode && tCode.toLowerCase() === filterVal.toLowerCase()) return true;
         if (tName && tName.toLowerCase() === filterVal.toLowerCase()) return true;
         if (tId && tId === filterVal) return true;
 
+        // Check tier_group match (e.g. filterVal 'T2' matches any item with tier_group 'T2', like T2, T2 Select, T2+)
+        if (tGroup && (tGroup.toLowerCase() === filterVal.toLowerCase() || tGroup.toLowerCase() === lowerFilter)) return true;
+
         // Check tier_display matches (e.g. filterVal 'T0' matches 'T0 Consumable', 'T2_SELECT' or 'T2 Select' matches 'T2 Select Permanent')
         if (tDisplay) {
             const lowerDisplay = tDisplay.toLowerCase();
-            const lowerFilter = filterVal.toLowerCase().replace(/_/g, ' ');
             if (lowerDisplay === filterVal.toLowerCase() || lowerDisplay === lowerFilter) return true;
             if (lowerDisplay.startsWith(filterVal.toLowerCase() + ' ') || lowerDisplay.startsWith(lowerFilter + ' ')) return true;
             if (lowerDisplay.startsWith(filterVal.toLowerCase() + '(') || lowerDisplay.startsWith(lowerFilter + '(')) return true;

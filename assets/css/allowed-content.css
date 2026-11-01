@@ -1390,7 +1390,8 @@ select.ac-form-input {
     box-sizing: border-box;
 }
 
-.ac-loot-toolbar-main {
+.ac-loot-toolbar-main,
+.ac-other-rewards-toolbar-main {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1400,7 +1401,8 @@ select.ac-form-input {
 }
 
 /* Tier Multi-Select Filter Row */
-.ac-loot-tier-filter-row {
+.ac-loot-tier-filter-row,
+.ac-other-rewards-tier-filter-row {
     display: flex;
     align-items: center;
     gap: 0.65rem;

@@ -11,6 +11,7 @@ permalink: /resources/changelog/
 - BETA:  Web version of the Allowe Content
 
 ## Usability Enhancements
+- Allowed Content: Upgraded Other Rewards with multi-select tier pills (matching Loot) and added tier-group matching so filtering by T2 or T3 correctly displays select rewards such as Charms.
 - Monster Compendium: New Tags features so we can tag monsters to events (e.g. Monster Mash 2026)
 
 --

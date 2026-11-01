@@ -76,7 +76,7 @@ let collapsedSubcategories = new Set();
 // Active toolbar filters
 let selectedCategoryFilter = 'ALL';   // 'ALL' | specific category name
 let selectedSubcategoryFilter = 'ALL'; // 'ALL' | specific subcategory name (for Miscellaneous)
-let selectedTierFilter = 'ALL';       // 'ALL' | specific tier code or group
+let selectedTierFilters = new Set(['ALL']); // Set of tier codes | Set(['ALL'])
 let selectedSourceFilter = 'ALL';     // 'ALL' | specific source key
 let currentSearchTerm = '';
 let pendingRewardTarget = null;
@@ -115,6 +115,78 @@ const MISC_SUBCATEGORY_RULES = {
 };
 
 /**
+ * Checks whether an other reward item matches the active multi-select tier filter.
+ * 
+ * @param {Object} item 
+ * @param {Set<string>} selectedSet 
+ * @returns {boolean}
+ */
+export function matchesTierFilter(item, selectedSet) {
+    if (!selectedSet || selectedSet.size === 0 || selectedSet.has('ALL')) {
+        return true;
+    }
+    const tCode = item.tier && typeof item.tier === 'object' ? item.tier.code : (typeof item.tier === 'string' ? item.tier : '');
+    const tName = item.tier && typeof item.tier === 'object' ? item.tier.name : '';
+    const tGroup = item.tier && typeof item.tier === 'object' ? item.tier.tier_group : '';
+    const tId = item.tier_id || (item.tier && typeof item.tier === 'object' ? item.tier.id : '');
+    const tDisplay = item.tier_display || '';
+
+    for (const filterVal of selectedSet) {
+        if (!filterVal || filterVal === 'ALL') return true;
+        const lowerFilter = filterVal.toLowerCase().replace(/_/g, ' ');
+
+        // Check exact match with tier code, name, or id
+        if (tCode && tCode.toLowerCase() === filterVal.toLowerCase()) return true;
+        if (tName && tName.toLowerCase() === filterVal.toLowerCase()) return true;
+        if (tId && tId === filterVal) return true;
+
+        // Check tier_group match (e.g. filterVal 'T2' matches any item with tier_group 'T2', like T2, T2 Select, T2+)
+        if (tGroup && (tGroup.toLowerCase() === filterVal.toLowerCase() || tGroup.toLowerCase() === lowerFilter)) return true;
+
+        // Check tier_display matches (e.g. filterVal 'T0' matches 'T0', 'T2' matches 'T2 Select' / 'T2 Permanent')
+        if (tDisplay) {
+            const lowerDisplay = tDisplay.toLowerCase();
+            if (lowerDisplay === filterVal.toLowerCase() || lowerDisplay === lowerFilter) return true;
+            if (lowerDisplay.startsWith(filterVal.toLowerCase() + ' ') || lowerDisplay.startsWith(lowerFilter + ' ')) return true;
+            if (lowerDisplay.startsWith(filterVal.toLowerCase() + '(') || lowerDisplay.startsWith(lowerFilter + '(')) return true;
+            if (lowerDisplay.includes(lowerFilter)) return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Sets active multi-select tier filters programmatically.
+ * 
+ * @param {Array<string>|string} tiers
+ */
+export function setSelectedTierFilters(tiers) {
+    const list = Array.isArray(tiers) ? tiers : [tiers];
+    selectedTierFilters = new Set(list.length > 0 ? list : ['ALL']);
+    updateTierPillsUI();
+    applyFilters();
+    updateTableOnly();
+}
+
+/**
+ * Retrieves the currently selected tier filter codes.
+ * 
+ * @returns {Array<string>}
+ */
+export function getSelectedTierFilters() {
+    return Array.from(selectedTierFilters);
+}
+
+/**
+ * Legacy single-select tier filter setter for backward compatibility.
+ * 
+ * @param {string} tier 
+ */
+export function setSelectedTierFilter(tier) {
+    setSelectedTierFilters(tier ? [tier] : ['ALL']);
+}
+
+/**
  * Builds tooltip text for Other Rewards tier badges (incorporates Level 2 & Level 3 rules).
  * 
  * @param {Object} item 
@@ -149,7 +221,8 @@ export async function initOtherRewards(forceRefresh = false) {
     if (forceRefresh) {
         selectedCategoryFilter = 'ALL';
         selectedSubcategoryFilter = 'ALL';
-        selectedTierFilter = 'ALL';
+        selectedTierFilters.clear();
+        selectedTierFilters.add('ALL');
         selectedSourceFilter = 'ALL';
         currentSearchTerm = '';
         collapsedCategories.clear();
@@ -217,63 +290,86 @@ export async function initOtherRewards(forceRefresh = false) {
  */
 function renderShell(container) {
     const isAdmin = getAdminMode();
+    const isAllTiers = selectedTierFilters.size === 0 || selectedTierFilters.has('ALL');
 
     container.innerHTML = `
         <div class="ac-other-rewards-container">
             <!-- Toolbar: Filters and Stats -->
             <div class="ac-other-rewards-toolbar ac-classes-toolbar">
-                <div class="ac-other-rewards-stats ac-classes-stats" id="other-rewards-stats">
-                    Showing <strong>${filteredRewards.length}</strong> ${filteredRewards.length === 1 ? 'Reward' : 'Rewards'}
+                <div class="ac-other-rewards-toolbar-main">
+                    <div class="ac-other-rewards-stats ac-classes-stats" id="other-rewards-stats">
+                        Showing <strong>${filteredRewards.length}</strong> ${filteredRewards.length === 1 ? 'Reward' : 'Rewards'}
+                    </div>
+
+                    <div class="ac-other-rewards-controls ac-classes-controls">
+                        <!-- Category Dropdown -->
+                        <select id="other-rewards-category-filter" class="ac-filter-select" title="Filter by Category" aria-label="Filter by Category">
+                            <option value="ALL">All Categories (${allRewards.length})</option>
+                            ${allCategories.map(cat => {
+                                const count = allRewards.filter(r => r.category_id === cat.id || (r.category && r.category.name === cat.name)).length;
+                                return `<option value="${esc(cat.name)}" ${selectedCategoryFilter === cat.name ? 'selected' : ''}>${esc(cat.name)} (${count})</option>`;
+                            }).join('')}
+                        </select>
+
+                        <!-- Subcategory Dropdown (for Miscellaneous) -->
+                        <select id="other-rewards-subcategory-filter" class="ac-filter-select" title="Filter by Subcategory" aria-label="Filter by Subcategory" style="${selectedCategoryFilter === 'Miscellaneous' ? '' : 'display: none;'}">
+                            <option value="ALL">All Miscellaneous</option>
+                            <option value="Other Miscellaneous Rewards" ${selectedSubcategoryFilter === 'Other Miscellaneous Rewards' ? 'selected' : ''}>Other Misc</option>
+                            <option value="Quirks" ${selectedSubcategoryFilter === 'Quirks' ? 'selected' : ''}>Quirks</option>
+                            <option value="Piety" ${selectedSubcategoryFilter === 'Piety' ? 'selected' : ''}>Piety</option>
+                            <option value="Marks of Prestige" ${selectedSubcategoryFilter === 'Marks of Prestige' ? 'selected' : ''}>Marks of Prestige</option>
+                            <option value="Mounts" ${selectedSubcategoryFilter === 'Mounts' ? 'selected' : ''}>Mounts</option>
+                            <option value="Pets" ${selectedSubcategoryFilter === 'Pets' ? 'selected' : ''}>Pets</option>
+                            <option value="Renown" ${selectedSubcategoryFilter === 'Renown' ? 'selected' : ''}>Renown</option>
+                            <option value="Story Outcomes" ${selectedSubcategoryFilter === 'Story Outcomes' ? 'selected' : ''}>Story Outcomes</option>
+                        </select>
+
+                        <!-- Sourcebook Dropdown -->
+                        <select id="other-rewards-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
+                            <option value="ALL">All Sources (${availableSourceKeys.length})</option>
+                            ${availableSourceKeys.map(src => `<option value="${esc(src)}" ${selectedSourceFilter === src ? 'selected' : ''}>${esc(src)}</option>`).join('')}
+                        </select>
+
+                        <!-- Toggle All Button -->
+                        <button type="button" id="btn-toggle-all-other-rewards-accordion" class="ac-btn-toggle-all" title="Toggle expanding or collapsing all categories">
+                            Collapse All ▲
+                        </button>
+
+                        ${isAdmin ? `
+                            <button type="button" class="ac-btn-admin ac-btn-primary" id="btn-add-other-reward-inline">
+                                + Add Reward
+                            </button>
+                            <button type="button" class="ac-btn-admin ac-btn-secondary" id="btn-manage-other-rewards-categories-inline">
+                                ⚙️ Configure Categories
+                            </button>
+                        ` : ''}
+                    </div>
                 </div>
 
-                <div class="ac-other-rewards-controls ac-classes-controls">
-                    <!-- Category Dropdown -->
-                    <select id="other-rewards-category-filter" class="ac-filter-select" title="Filter by Category" aria-label="Filter by Category">
-                        <option value="ALL">All Categories (${allRewards.length})</option>
-                        ${allCategories.map(cat => {
-                            const count = allRewards.filter(r => r.category_id === cat.id || (r.category && r.category.name === cat.name)).length;
-                            return `<option value="${esc(cat.name)}" ${selectedCategoryFilter === cat.name ? 'selected' : ''}>${esc(cat.name)} (${count})</option>`;
+                <!-- Tier Multi-Select Filter Row -->
+                <div class="ac-other-rewards-tier-filter-row" id="other-rewards-tier-filter-row">
+                    <span class="ac-tier-filter-label">Tiers:</span>
+                    <div class="ac-tier-pills-container" id="other-rewards-tier-pills">
+                        <button type="button" 
+                                class="ac-tier-pill-btn ${isAllTiers ? 'active' : ''}" 
+                                data-tier="ALL"
+                                aria-pressed="${isAllTiers ? 'true' : 'false'}"
+                                title="Show all tiers">
+                            All
+                        </button>
+                        ${allTiers.map(t => {
+                            const isSelected = !isAllTiers && selectedTierFilters.has(t.code);
+                            return `
+                                <button type="button" 
+                                        class="ac-tier-pill-btn ${isSelected ? 'active' : ''}" 
+                                        data-tier="${esc(t.code)}"
+                                        aria-pressed="${isSelected ? 'true' : 'false'}"
+                                        title="Filter by Tier ${esc(t.name)}">
+                                    ${esc(t.name)}
+                                </button>
+                            `;
                         }).join('')}
-                    </select>
-
-                    <!-- Subcategory Dropdown (for Miscellaneous) -->
-                    <select id="other-rewards-subcategory-filter" class="ac-filter-select" title="Filter by Subcategory" aria-label="Filter by Subcategory" style="${selectedCategoryFilter === 'Miscellaneous' ? '' : 'display: none;'}">
-                        <option value="ALL">All Miscellaneous</option>
-                        <option value="Other Miscellaneous Rewards" ${selectedSubcategoryFilter === 'Other Miscellaneous Rewards' ? 'selected' : ''}>Other Misc</option>
-                        <option value="Quirks" ${selectedSubcategoryFilter === 'Quirks' ? 'selected' : ''}>Quirks</option>
-                        <option value="Piety" ${selectedSubcategoryFilter === 'Piety' ? 'selected' : ''}>Piety</option>
-                        <option value="Marks of Prestige" ${selectedSubcategoryFilter === 'Marks of Prestige' ? 'selected' : ''}>Marks of Prestige</option>
-                        <option value="Mounts" ${selectedSubcategoryFilter === 'Mounts' ? 'selected' : ''}>Mounts</option>
-                        <option value="Pets" ${selectedSubcategoryFilter === 'Pets' ? 'selected' : ''}>Pets</option>
-                        <option value="Renown" ${selectedSubcategoryFilter === 'Renown' ? 'selected' : ''}>Renown</option>
-                        <option value="Story Outcomes" ${selectedSubcategoryFilter === 'Story Outcomes' ? 'selected' : ''}>Story Outcomes</option>
-                    </select>
-
-                    <!-- Tier Dropdown -->
-                    <select id="other-rewards-tier-filter" class="ac-filter-select" title="Filter by Tier" aria-label="Filter by Tier">
-                        <option value="ALL">All Tiers</option>
-                        ${allTiers.map(t => `<option value="${esc(t.code)}" ${selectedTierFilter === t.code ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}
-                    </select>
-
-                    <!-- Sourcebook Dropdown -->
-                    <select id="other-rewards-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
-                        <option value="ALL">All Sources (${availableSourceKeys.length})</option>
-                        ${availableSourceKeys.map(src => `<option value="${esc(src)}" ${selectedSourceFilter === src ? 'selected' : ''}>${esc(src)}</option>`).join('')}
-                    </select>
-
-                    <!-- Toggle All Button -->
-                    <button type="button" id="btn-toggle-all-other-rewards-accordion" class="ac-btn-toggle-all" title="Toggle expanding or collapsing all categories">
-                        Collapse All ▲
-                    </button>
-
-                    ${isAdmin ? `
-                        <button type="button" class="ac-btn-admin ac-btn-primary" id="btn-add-other-reward-inline">
-                            + Add Reward
-                        </button>
-                        <button type="button" class="ac-btn-admin ac-btn-secondary" id="btn-manage-other-rewards-categories-inline">
-                            ⚙️ Configure Categories
-                        </button>
-                    ` : ''}
+                    </div>
                 </div>
             </div>
 
@@ -335,10 +431,31 @@ function attachToolbarListeners(container) {
         });
     }
 
-    const tierSelect = container.querySelector('#other-rewards-tier-filter');
-    if (tierSelect) {
-        tierSelect.addEventListener('change', (e) => {
-            selectedTierFilter = e.target.value;
+    const pillsContainer = container.querySelector('#other-rewards-tier-pills');
+    if (pillsContainer) {
+        pillsContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.ac-tier-pill-btn');
+            if (!btn) return;
+
+            const tierCode = btn.dataset.tier;
+            if (!tierCode) return;
+
+            if (tierCode === 'ALL') {
+                selectedTierFilters.clear();
+                selectedTierFilters.add('ALL');
+            } else {
+                selectedTierFilters.delete('ALL');
+                if (selectedTierFilters.has(tierCode)) {
+                    selectedTierFilters.delete(tierCode);
+                    if (selectedTierFilters.size === 0) {
+                        selectedTierFilters.add('ALL');
+                    }
+                } else {
+                    selectedTierFilters.add(tierCode);
+                }
+            }
+
+            updateTierPillsUI();
             applyFilters();
             updateTableOnly();
         });
@@ -377,6 +494,28 @@ function attachToolbarListeners(container) {
 }
 
 /**
+ * Synchronizes the active visual state of the Tier multi-select pills.
+ */
+function updateTierPillsUI() {
+    const pillsContainer = document.getElementById('other-rewards-tier-pills');
+    if (!pillsContainer) return;
+
+    const isAll = selectedTierFilters.size === 0 || selectedTierFilters.has('ALL');
+
+    pillsContainer.querySelectorAll('.ac-tier-pill-btn').forEach(btn => {
+        const tierCode = btn.dataset.tier;
+        if (tierCode === 'ALL') {
+            btn.classList.toggle('active', isAll);
+            btn.setAttribute('aria-pressed', isAll ? 'true' : 'false');
+        } else {
+            const isActive = !isAll && selectedTierFilters.has(tierCode);
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        }
+    });
+}
+
+/**
  * Updates the text and icon of the Toggle All button based on current state.
  */
 function updateToggleAllBtn() {
@@ -412,10 +551,9 @@ function applyFilters() {
             if (sub !== selectedSubcategoryFilter) return false;
         }
 
-        // Tier filter
-        if (selectedTierFilter !== 'ALL') {
-            const tCode = item.tier ? item.tier.code : '';
-            if (tCode !== selectedTierFilter && item.tier_display !== selectedTierFilter) return false;
+        // Tier filter (multi-select)
+        if (selectedTierFilters.size > 0 && !selectedTierFilters.has('ALL')) {
+            if (!matchesTierFilter(item, selectedTierFilters)) return false;
         }
 
         // Source filter
@@ -925,10 +1063,10 @@ export async function highlightOtherRewardItem(identifier) {
         if (sSelect) sSelect.value = 'ALL';
         filtersReset = true;
     }
-    if (selectedTierFilter !== 'ALL') {
-        selectedTierFilter = 'ALL';
-        const tSelect = document.getElementById('other-rewards-tier-filter');
-        if (tSelect) tSelect.value = 'ALL';
+    if (selectedTierFilters.size > 0 && !selectedTierFilters.has('ALL') && !matchesTierFilter(item, selectedTierFilters)) {
+        selectedTierFilters.clear();
+        selectedTierFilters.add('ALL');
+        updateTierPillsUI();
         filtersReset = true;
     }
     if (selectedSourceFilter !== 'ALL') {
