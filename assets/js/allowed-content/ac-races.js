@@ -99,7 +99,8 @@ import {
     renderSourceBadges, 
     renderSourceTagPicker,
     renderRulesetPill,
-    renderMarkdownLinks 
+    renderMarkdownLinks,
+    getSortedSourceOptions 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal } from './ac-options-manager.js';
 
@@ -466,11 +467,9 @@ function renderView() {
                 <!-- Source Filter Dropdown -->
                 <select class="ac-filter-select ac-source-filter-select" id="ac-races-source-filter" aria-label="Filter by Source">
                     <option value="ALL" ${selectedSourceFilter === 'ALL' ? 'selected' : ''}>All Sources (${availableSourceKeys.length})</option>
-                    ${availableSourceKeys.map(k => {
-                        const src = getSourceByKey(k);
-                        const label = src ? `${k} - ${src.name}` : k;
-                        return `<option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(label)}</option>`;
-                    }).join('')}
+                    ${getSortedSourceOptions(availableSourceKeys).map(s => `
+                        <option value="${esc(s.key)}" ${selectedSourceFilter === s.key ? 'selected' : ''}>${esc(s.label)}</option>
+                    `).join('')}
                 </select>
 
                 <button type="button" class="ac-btn-toggle-all" id="accordion-toggle-all-btn" title="Toggle expanding or collapsing all species">

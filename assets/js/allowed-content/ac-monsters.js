@@ -62,7 +62,8 @@ import {
     setModalItem,
     copyDirectLink,
     slugify,
-    showToast 
+    showToast,
+    getSortedSourceOptions 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal, openUsageOptionsModal } from './ac-options-manager.js';
 
@@ -285,7 +286,7 @@ function renderView() {
                 </select>
                 <select class="ac-filter-select" id="monsters-source-filter" aria-label="Filter by Source" title="Filter by Source">
                     <option value="ALL">All Sources (${availableSourceKeys.length})</option>
-                    ${availableSourceKeys.map(k => `<option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(k)}</option>`).join('')}
+                    ${getSortedSourceOptions(availableSourceKeys).map(s => `<option value="${esc(s.key)}" ${selectedSourceFilter === s.key ? 'selected' : ''}>${esc(s.label)}</option>`).join('')}
                 </select>
             </div>
         </div>

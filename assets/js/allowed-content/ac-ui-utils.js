@@ -724,4 +724,41 @@ export function renderFilterSelect({
     `.trim();
 }
 
+/**
+ * Formats a source option display label: "Full Name (Abbreviation)"
+ * E.g., "Tasha's Cauldron of Everything (TCE)"
+ * 
+ * @param {string} sourceKey 
+ * @param {Object|null} sourceObj 
+ * @returns {string}
+ */
+export function formatSourceOptionLabel(sourceKey, sourceObj) {
+    if (!sourceKey) return '';
+    const name = sourceObj?.name || sourceKey;
+    if (name.toLowerCase() === sourceKey.toLowerCase()) {
+        return name;
+    }
+    if (name.endsWith(`(${sourceKey})`)) {
+        return name;
+    }
+    return `${name} (${sourceKey})`;
+}
+
+/**
+ * Returns a sorted list of source objects with keys and labels for dropdown options.
+ * Sorted alphabetically by display label (Full Name).
+ * 
+ * @param {Array<string>} sourceKeys 
+ * @returns {Array<{key: string, label: string}>}
+ */
+export function getSortedSourceOptions(sourceKeys = []) {
+    return (sourceKeys || [])
+        .map(key => {
+            const src = getSourceByKey(key);
+            const label = formatSourceOptionLabel(key, src);
+            return { key, label };
+        })
+        .sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
+}
+
 

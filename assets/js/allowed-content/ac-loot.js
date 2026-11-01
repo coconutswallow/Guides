@@ -58,7 +58,8 @@ import {
     createDirectLink,
     copyDirectLink,
     setModalItem,
-    slugify
+    slugify,
+    getSortedSourceOptions
 } from './ac-ui-utils.js';
 
 export {
@@ -71,6 +72,7 @@ let allLoot = [];
 let filteredLoot = [];
 let allCategories = [];
 let allTiers = [];
+let tierFamilies = [];
 let availableSourceKeys = [];
 let availableItemTypes = [];
 let collapsedCategories = new Set();
@@ -112,6 +114,41 @@ export function matchesTypeFilter(itemType, selectedType) {
 }
 
 /**
+ * Extracts unique ordered tier families from canonical tier list.
+ * Groups variants (T1, T1 Select, T1+) into their primary tier family (T1).
+ * 
+ * @param {Array<Object>} tiers 
+ * @returns {Array<{code: string, name: string}>}
+ */
+export function getTierFamilies(tiers) {
+    const families = [];
+    const seen = new Set();
+    const ordered = (tiers || []).slice().sort((a, b) => (a.display_order ?? 100) - (b.display_order ?? 100));
+    for (const t of ordered) {
+        const group = t.tier_group || t.name || t.code;
+        if (group && !seen.has(group)) {
+            seen.add(group);
+            families.push({
+                code: group,
+                name: group
+            });
+        }
+    }
+    if (families.length === 0) {
+        return [
+            { code: 'T0', name: 'T0' },
+            { code: 'T1', name: 'T1' },
+            { code: 'T2', name: 'T2' },
+            { code: 'T3', name: 'T3' },
+            { code: 'T4', name: 'T4' },
+            { code: 'Tier S', name: 'Tier S' },
+            { code: 'Special', name: 'Special' }
+        ];
+    }
+    return families;
+}
+
+/**
  * Checks whether a loot item matches the active multi-select tier filter.
  * 
  * @param {Object} item 
@@ -147,6 +184,12 @@ export function matchesTierFilter(item, selectedSet) {
             if (lowerDisplay.startsWith(filterVal.toLowerCase() + ' ') || lowerDisplay.startsWith(lowerFilter + ' ')) return true;
             if (lowerDisplay.startsWith(filterVal.toLowerCase() + '(') || lowerDisplay.startsWith(lowerFilter + '(')) return true;
             if (lowerDisplay.includes(lowerFilter)) return true;
+        }
+
+        // Special family matches Varies or items with no tier
+        if (lowerFilter === 'special') {
+            if (tDisplay.toLowerCase() === 'varies' || (tCode && tCode.toLowerCase() === 'varies')) return true;
+            if (tDisplay === '—' || (tCode && tCode.toLowerCase() === 'none') || !tCode) return true;
         }
     }
     return false;
@@ -284,6 +327,7 @@ export async function initLoot(forceRefresh = false) {
         allLoot = sortByDisplayOrder(lootData || []);
         allCategories = sortByDisplayOrder(categoriesData || []);
         allTiers = sortByDisplayOrder(tiersData || []);
+        tierFamilies = getTierFamilies(allTiers);
 
         if (allTiers.length === 0 && allLoot.length > 0) {
             const foundTierCodes = new Set();
@@ -387,7 +431,7 @@ function renderShell(container) {
                         <!-- Sourcebook Dropdown -->
                         <select id="loot-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
                             <option value="ALL">All Sources (${availableSourceKeys.length})</option>
-                            ${availableSourceKeys.map(src => `<option value="${esc(src)}" ${selectedSourceFilter === src ? 'selected' : ''}>${esc(src)}</option>`).join('')}
+                            ${getSortedSourceOptions(availableSourceKeys).map(src => `<option value="${esc(src.key)}" ${selectedSourceFilter === src.key ? 'selected' : ''}>${esc(src.label)}</option>`).join('')}
                         </select>
 
                         <!-- Toggle All Button -->
@@ -417,15 +461,15 @@ function renderShell(container) {
                                 title="Show all tiers">
                             All
                         </button>
-                        ${allTiers.map(t => {
-                            const isSelected = !isAllTiers && selectedTierFilters.has(t.code);
+                        ${tierFamilies.map(fam => {
+                            const isSelected = !isAllTiers && selectedTierFilters.has(fam.code);
                             return `
                                 <button type="button" 
                                         class="ac-tier-pill-btn ${isSelected ? 'active' : ''}" 
-                                        data-tier="${esc(t.code)}"
+                                        data-tier="${esc(fam.code)}"
                                         aria-pressed="${isSelected ? 'true' : 'false'}"
-                                        title="Filter by Tier ${esc(t.name)}">
-                                    ${esc(t.name)}
+                                        title="Filter by Tier ${esc(fam.name)}">
+                                    ${esc(fam.name)}
                                 </button>
                             `;
                         }).join('')}

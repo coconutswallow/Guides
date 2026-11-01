@@ -56,7 +56,8 @@ import {
     attachExpandableTextListeners,
     renderSourceTagPicker,
     renderRulesetPill,
-    showToast 
+    showToast,
+    getSortedSourceOptions 
 } from './ac-ui-utils.js';
 import { openGenericOptionsModal } from './ac-options-manager.js';
 
@@ -256,8 +257,8 @@ function renderView() {
                     <!-- Sourcebook Filter -->
                     <select id="ac-equipment-source-filter" class="ac-filter-select" title="Filter by Source" aria-label="Filter by Source">
                         <option value="ALL">All Sources (${availableSourceKeys.length})</option>
-                        ${availableSourceKeys.map(k => `
-                            <option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(k)}</option>
+                        ${getSortedSourceOptions(availableSourceKeys).map(s => `
+                            <option value="${esc(s.key)}" ${selectedSourceFilter === s.key ? 'selected' : ''}>${esc(s.label)}</option>
                         `).join('')}
                     </select>
 

@@ -56,7 +56,8 @@ import {
     formatExpandableText,
     attachExpandableTextListeners,
     showToast,
-    initTooltips
+    initTooltips,
+    getSortedSourceOptions
 } from './ac-ui-utils.js';
 
 export {
@@ -69,17 +70,49 @@ let allRewards = [];
 let filteredRewards = [];
 let allCategories = [];
 let allTiers = [];
+let tierFamilies = [];
 let availableSourceKeys = [];
 let collapsedCategories = new Set();
 let collapsedSubcategories = new Set();
 
 // Active toolbar filters
-let selectedCategoryFilter = 'ALL';   // 'ALL' | specific category name
-let selectedSubcategoryFilter = 'ALL'; // 'ALL' | specific subcategory name (for Miscellaneous)
+let selectedCategoryFilter = 'ALL';      // 'ALL' | specific category name
+let selectedSubcategoryFilter = 'ALL';   // 'ALL' | specific subcategory name (for Miscellaneous)
 let selectedTierFilters = new Set(['ALL']); // Set of tier codes | Set(['ALL'])
 let selectedSourceFilter = 'ALL';     // 'ALL' | specific source key
 let currentSearchTerm = '';
 let pendingRewardTarget = null;
+
+export const MISC_SUBCATEGORIES = [
+    { key: 'Other Miscellaneous Rewards', label: 'Other Misc' },
+    { key: 'Quirks', label: 'Quirks' },
+    { key: 'Piety', label: 'Piety' },
+    { key: 'Marks of Prestige', label: 'Marks of Prestige' },
+    { key: 'Mounts', label: 'Mounts' },
+    { key: 'Pets', label: 'Pets' },
+    { key: 'Renown', label: 'Renown' },
+    { key: 'Story Outcomes', label: 'Story Outcomes' }
+];
+
+/**
+ * Computes reward counts for each subcategory under Miscellaneous.
+ * 
+ * @returns {{counts: Object<string, number>, total: number}}
+ */
+export function getMiscSubcategoryCounts() {
+    const counts = {};
+    MISC_SUBCATEGORIES.forEach(sub => { counts[sub.key] = 0; });
+    const miscItems = allRewards.filter(r => (r.category && r.category.name === 'Miscellaneous') || r.category_id === 'c0000001-0000-0000-0000-000000000005');
+    miscItems.forEach(item => {
+        const sub = getRewardSubcategory(item);
+        if (counts[sub] !== undefined) {
+            counts[sub]++;
+        } else {
+            counts[sub] = 1;
+        }
+    });
+    return { counts, total: miscItems.length };
+}
 
 /**
  * Returns the subcategory within Miscellaneous for a given item.
@@ -113,6 +146,41 @@ const MISC_SUBCATEGORY_RULES = {
     'Renown': 'Guild factions, organizations, communities, and associated Renown Perks.',
     'Story Outcomes': 'Permanent adventure consequences and story milestones awarded by DMs.'
 };
+
+/**
+ * Extracts unique ordered tier families from canonical tier list.
+ * Groups variants (T1, T1 Select, T1+) into their primary tier family (T1).
+ * 
+ * @param {Array<Object>} tiers 
+ * @returns {Array<{code: string, name: string}>}
+ */
+export function getTierFamilies(tiers) {
+    const families = [];
+    const seen = new Set();
+    const ordered = (tiers || []).slice().sort((a, b) => (a.display_order ?? 100) - (b.display_order ?? 100));
+    for (const t of ordered) {
+        const group = t.tier_group || t.name || t.code;
+        if (group && !seen.has(group)) {
+            seen.add(group);
+            families.push({
+                code: group,
+                name: group
+            });
+        }
+    }
+    if (families.length === 0) {
+        return [
+            { code: 'T0', name: 'T0' },
+            { code: 'T1', name: 'T1' },
+            { code: 'T2', name: 'T2' },
+            { code: 'T3', name: 'T3' },
+            { code: 'T4', name: 'T4' },
+            { code: 'Tier S', name: 'Tier S' },
+            { code: 'Special', name: 'Special' }
+        ];
+    }
+    return families;
+}
 
 /**
  * Checks whether an other reward item matches the active multi-select tier filter.
@@ -150,6 +218,12 @@ export function matchesTierFilter(item, selectedSet) {
             if (lowerDisplay.startsWith(filterVal.toLowerCase() + ' ') || lowerDisplay.startsWith(lowerFilter + ' ')) return true;
             if (lowerDisplay.startsWith(filterVal.toLowerCase() + '(') || lowerDisplay.startsWith(lowerFilter + '(')) return true;
             if (lowerDisplay.includes(lowerFilter)) return true;
+        }
+
+        // Special family matches Varies or items with no tier
+        if (lowerFilter === 'special') {
+            if (tDisplay.toLowerCase() === 'varies' || (tCode && tCode.toLowerCase() === 'varies')) return true;
+            if (tDisplay === '—' || (tCode && tCode.toLowerCase() === 'none') || !tCode) return true;
         }
     }
     return false;
@@ -252,6 +326,7 @@ export async function initOtherRewards(forceRefresh = false) {
         allRewards = sortByDisplayOrder(rewardsData || []);
         allCategories = sortByDisplayOrder(categoriesData || []);
         allTiers = sortByDisplayOrder(tiersData || []);
+        tierFamilies = getTierFamilies(allTiers);
 
         const foundSources = new Set();
         allRewards.forEach(item => {
@@ -291,6 +366,8 @@ export async function initOtherRewards(forceRefresh = false) {
 function renderShell(container) {
     const isAdmin = getAdminMode();
     const isAllTiers = selectedTierFilters.size === 0 || selectedTierFilters.has('ALL');
+    const miscStats = getMiscSubcategoryCounts();
+    const isMiscActive = selectedCategoryFilter === 'Miscellaneous';
 
     container.innerHTML = `
         <div class="ac-other-rewards-container">
@@ -312,22 +389,19 @@ function renderShell(container) {
                         </select>
 
                         <!-- Subcategory Dropdown (for Miscellaneous) -->
-                        <select id="other-rewards-subcategory-filter" class="ac-filter-select" title="Filter by Subcategory" aria-label="Filter by Subcategory" style="${selectedCategoryFilter === 'Miscellaneous' ? '' : 'display: none;'}">
-                            <option value="ALL">All Miscellaneous</option>
-                            <option value="Other Miscellaneous Rewards" ${selectedSubcategoryFilter === 'Other Miscellaneous Rewards' ? 'selected' : ''}>Other Misc</option>
-                            <option value="Quirks" ${selectedSubcategoryFilter === 'Quirks' ? 'selected' : ''}>Quirks</option>
-                            <option value="Piety" ${selectedSubcategoryFilter === 'Piety' ? 'selected' : ''}>Piety</option>
-                            <option value="Marks of Prestige" ${selectedSubcategoryFilter === 'Marks of Prestige' ? 'selected' : ''}>Marks of Prestige</option>
-                            <option value="Mounts" ${selectedSubcategoryFilter === 'Mounts' ? 'selected' : ''}>Mounts</option>
-                            <option value="Pets" ${selectedSubcategoryFilter === 'Pets' ? 'selected' : ''}>Pets</option>
-                            <option value="Renown" ${selectedSubcategoryFilter === 'Renown' ? 'selected' : ''}>Renown</option>
-                            <option value="Story Outcomes" ${selectedSubcategoryFilter === 'Story Outcomes' ? 'selected' : ''}>Story Outcomes</option>
+                        <select id="other-rewards-subcategory-filter" class="ac-filter-select" title="Filter by Subcategory" aria-label="Filter by Subcategory" style="${isMiscActive ? '' : 'display: none;'}">
+                            <option value="ALL">All Miscellaneous (${miscStats.total})</option>
+                            ${MISC_SUBCATEGORIES.map(sub => {
+                                const count = miscStats.counts[sub.key] || 0;
+                                const isSelected = selectedSubcategoryFilter === sub.key;
+                                return `<option value="${esc(sub.key)}" ${isSelected ? 'selected' : ''}>${esc(sub.label)} (${count})</option>`;
+                            }).join('')}
                         </select>
 
                         <!-- Sourcebook Dropdown -->
                         <select id="other-rewards-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
                             <option value="ALL">All Sources (${availableSourceKeys.length})</option>
-                            ${availableSourceKeys.map(src => `<option value="${esc(src)}" ${selectedSourceFilter === src ? 'selected' : ''}>${esc(src)}</option>`).join('')}
+                            ${getSortedSourceOptions(availableSourceKeys).map(src => `<option value="${esc(src.key)}" ${selectedSourceFilter === src.key ? 'selected' : ''}>${esc(src.label)}</option>`).join('')}
                         </select>
 
                         <!-- Toggle All Button -->
@@ -357,15 +431,15 @@ function renderShell(container) {
                                 title="Show all tiers">
                             All
                         </button>
-                        ${allTiers.map(t => {
-                            const isSelected = !isAllTiers && selectedTierFilters.has(t.code);
+                        ${tierFamilies.map(fam => {
+                            const isSelected = !isAllTiers && selectedTierFilters.has(fam.code);
                             return `
                                 <button type="button" 
                                         class="ac-tier-pill-btn ${isSelected ? 'active' : ''}" 
-                                        data-tier="${esc(t.code)}"
+                                        data-tier="${esc(fam.code)}"
                                         aria-pressed="${isSelected ? 'true' : 'false'}"
-                                        title="Filter by Tier ${esc(t.name)}">
-                                    ${esc(t.name)}
+                                        title="Filter by Tier ${esc(fam.name)}">
+                                    ${esc(fam.name)}
                                 </button>
                             `;
                         }).join('')}
@@ -475,8 +549,10 @@ function attachToolbarListeners(container) {
         toggleAllBtn.addEventListener('click', () => {
             if (collapsedCategories.size === allCategories.length) {
                 collapsedCategories.clear();
+                collapsedSubcategories.clear();
             } else {
                 allCategories.forEach(c => collapsedCategories.add(c.id));
+                MISC_SUBCATEGORIES.forEach(s => collapsedSubcategories.add(s.key));
             }
             updateTableOnly();
         });
@@ -743,11 +819,10 @@ function updateTableOnly() {
         `);
 
         if (!isCatCollapsed) {
-            if (category.name === 'Miscellaneous' && selectedSubcategoryFilter === 'ALL') {
+            if (category.name === 'Miscellaneous') {
                 // Partition by Subcategory under Miscellaneous matching spreadsheet
                 const subBuckets = new Map();
-                const subOrder = ['Other Miscellaneous Rewards', 'Quirks', 'Piety', 'Marks of Prestige', 'Mounts', 'Pets', 'Renown', 'Story Outcomes'];
-                subOrder.forEach(so => subBuckets.set(so, []));
+                MISC_SUBCATEGORIES.forEach(so => subBuckets.set(so.key, []));
 
                 items.forEach(item => {
                     const sub = getRewardSubcategory(item);
@@ -757,6 +832,8 @@ function updateTableOnly() {
 
                 subBuckets.forEach((subItems, subName) => {
                     if (subItems.length === 0) return;
+                    if (selectedSubcategoryFilter !== 'ALL' && selectedSubcategoryFilter !== subName) return;
+
                     const isSubCollapsed = collapsedSubcategories.has(subName);
                     const subRule = MISC_SUBCATEGORY_RULES[subName] || '';
                     htmlRows.push(`
@@ -1059,7 +1136,7 @@ export async function highlightOtherRewardItem(identifier) {
     }
     if (selectedSubcategoryFilter !== 'ALL' && selectedSubcategoryFilter !== subName) {
         selectedSubcategoryFilter = 'ALL';
-        const sSelect = document.getElementById('other-rewards-subcat-filter');
+        const sSelect = document.getElementById('other-rewards-subcategory-filter');
         if (sSelect) sSelect.value = 'ALL';
         filtersReset = true;
     }
@@ -1362,4 +1439,38 @@ export function openOtherRewardsOptionsModal() {
             }
         }
     });
+}
+
+/**
+ * Returns active subcategory name or 'ALL'.
+ * @returns {string}
+ */
+export function getSelectedSubcategoryFilter() {
+    return selectedSubcategoryFilter;
+}
+
+/**
+ * Sets active subcategory name or 'ALL'.
+ * @param {string} name
+ */
+export function setSelectedSubcategoryFilter(name) {
+    selectedSubcategoryFilter = name || 'ALL';
+    const sSelect = document.getElementById('other-rewards-subcategory-filter');
+    if (sSelect) sSelect.value = selectedSubcategoryFilter;
+}
+
+/**
+ * Returns the currently active category filter.
+ * @returns {string}
+ */
+export function getSelectedCategoryFilter() {
+    return selectedCategoryFilter;
+}
+
+/**
+ * Sets the active category filter.
+ * @param {string} cat
+ */
+export function setSelectedCategoryFilter(cat) {
+    selectedCategoryFilter = cat;
 }

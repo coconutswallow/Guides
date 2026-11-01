@@ -61,7 +61,8 @@ import {
     attachExpandableTextListeners,
     renderRulesetPill,
     setModalItem,
-    showToast
+    showToast,
+    getSortedSourceOptions
 } from './ac-ui-utils.js';
 
 export {
@@ -289,11 +290,9 @@ function renderView() {
                     <!-- Source Filter -->
                     <select id="misc-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
                         <option value="ALL">All Sources (${availableSourceKeys.length})</option>
-                        ${availableSourceKeys.map(k => {
-                            const src = getSourceByKey(k);
-                            const label = src ? `${k} - ${src.name}` : k;
-                            return `<option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(label)}</option>`;
-                        }).join('')}
+                        ${getSortedSourceOptions(availableSourceKeys).map(s => `
+                            <option value="${esc(s.key)}" ${selectedSourceFilter === s.key ? 'selected' : ''}>${esc(s.label)}</option>
+                        `).join('')}
                     </select>
                 </div>
             </div>

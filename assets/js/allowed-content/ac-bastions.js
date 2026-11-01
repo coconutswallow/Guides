@@ -52,7 +52,8 @@ import {
     renderSourceTagPicker,
     formatExpandableText,
     attachExpandableTextListeners,
-    showToast 
+    showToast,
+    getSortedSourceOptions 
 } from './ac-ui-utils.js';
 
 export {
@@ -230,8 +231,8 @@ function renderShell() {
                     <!-- Sourcebook Dropdown -->
                     <select id="ac-bastions-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
                         <option value="ALL">All Sources (${availableSourceKeys.length})</option>
-                        ${availableSourceKeys.map(k => `
-                            <option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(k)}</option>
+                        ${getSortedSourceOptions(availableSourceKeys).map(s => `
+                            <option value="${esc(s.key)}" ${selectedSourceFilter === s.key ? 'selected' : ''}>${esc(s.label)}</option>
                         `).join('')}
                     </select>
 

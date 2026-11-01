@@ -53,7 +53,8 @@ import {
     resolveSourceLink,
     formatExpandableText,
     attachExpandableTextListeners,
-    renderRulesetPill
+    renderRulesetPill,
+    getSortedSourceOptions
 } from './ac-ui-utils.js';
 
 export {
@@ -287,9 +288,9 @@ function renderView() {
 
                     <!-- Sourcebook Filter -->
                     <select id="ac-feats-source-filter" class="ac-filter-select" title="Filter by Sourcebook" aria-label="Filter by Sourcebook">
-                        <option value="ALL" ${selectedSourceFilter === 'ALL' ? 'selected' : ''}>All Sources</option>
-                        ${availableSourceKeys.map(k => `
-                            <option value="${esc(k)}" ${selectedSourceFilter === k ? 'selected' : ''}>${esc(k)}</option>
+                        <option value="ALL" ${selectedSourceFilter === 'ALL' ? 'selected' : ''}>All Sources (${availableSourceKeys.length})</option>
+                        ${getSortedSourceOptions(availableSourceKeys).map(s => `
+                            <option value="${esc(s.key)}" ${selectedSourceFilter === s.key ? 'selected' : ''}>${esc(s.label)}</option>
                         `).join('')}
                     </select>
                 </div>
