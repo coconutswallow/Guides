@@ -359,6 +359,34 @@ blockquote.stat-block hr {
  * Shows creator name with top border separator
  */
 
+/* DM Notes Section */
+.statblock-dm-notes {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.statblock-dm-notes .dm-notes-content {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.statblock-dm-notes .dm-notes-content p {
+  margin: 6px 0;
+  font-size: 1em;
+  line-height: 1.4;
+  font-style: normal;
+  color: var(--color-text);
+}
+
+.additional-info-dm-notes h3 {
+  font-family: var(--font-header);
+  color: var(--color-primary);
+  font-size: 1.4em;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
+}
+
 .statblock-creator {
   font-family: 'Alegreya Sans', 'Source Sans 3', Arial, sans-serif;
   font-size: 0.9em;

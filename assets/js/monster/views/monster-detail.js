@@ -35,6 +35,64 @@ export function formatCreatorAndUsage(monster) {
 }
 
 /**
+ * Retrieves the DM notes string from a monster data object.
+ * Checks dm_notes, dmNotes, and notes fields.
+ * @param {Object} monster - Monster data object.
+ * @returns {string} Cleaned DM notes content or empty string.
+ */
+export function getDmNotes(monster) {
+    if (!monster) return '';
+    return (monster.dm_notes || monster.dmNotes || monster.notes || '').trim();
+}
+
+/**
+ * Renders the DM Notes section for the monster statblock.
+ * If DM notes content exists, displays a section with header "### DM Notes:".
+ * @param {string} content - DM notes content.
+ * @returns {string} HTML string.
+ */
+export function renderDmNotes(content) {
+    if (!content || !content.trim()) return '';
+    let text = content.trim();
+    text = text.replace(/^(?:#+\s*)?DM Notes:?\s*/i, '');
+    return `
+        <div class="feature-bucket statblock-dm-notes">
+            <h3>DM Notes:</h3>
+            <div class="dm-notes-content">${parseMarkdown(text)}</div>
+        </div>
+    `;
+}
+
+/**
+ * Renders additional info lore content. If the content is unheaded,
+ * renders with a ### DM Notes: header.
+ * @param {string} info - Additional info text.
+ * @returns {string} HTML string.
+ */
+export function renderAdditionalInfo(info) {
+    if (!info || !info.trim()) return '';
+    const trimmed = info.trim();
+    if (/^(?:#+\s*)?DM Notes:?/i.test(trimmed)) {
+        const body = trimmed.replace(/^(?:#+\s*)?DM Notes:?\s*/i, '');
+        return `
+            <div class="additional-info-dm-notes">
+                <h3>DM Notes:</h3>
+                <div>${parseMarkdown(body)}</div>
+            </div>
+        `;
+    }
+    if (!trimmed.startsWith('#')) {
+        return `
+            <div class="additional-info-dm-notes">
+                <h3>DM Notes:</h3>
+                <div>${parseMarkdown(trimmed)}</div>
+            </div>
+        `;
+    }
+    return parseMarkdown(trimmed);
+}
+
+/**
  * Main page view: Fetches monster by slug and renders the statblock.
  * @param {HTMLElement} container - The app container element.
  * @param {Object} params - Router parameters.
@@ -100,6 +158,7 @@ export function renderMonsterStatblock(container, monster) {
         // Calculations
         const pb = calculatePB(monster.cr);
         const xp = calculateXP(monster.cr);
+        const dmNotes = getDmNotes(monster);
         
         // SAFEGUARD: Ensure we have an array before filtering
         const featureList = monster.features || [];
@@ -154,7 +213,7 @@ export function renderMonsterStatblock(container, monster) {
                         
                         ${monster.additional_info ? `
                             <div class="monster-additional-info" style="margin-top: 1.5rem;">
-                                ${parseMarkdown(monster.additional_info)}
+                                ${renderAdditionalInfo(monster.additional_info)}
                             </div>
                         ` : ''}
                     </div>
@@ -224,6 +283,7 @@ export function renderMonsterStatblock(container, monster) {
                         ${renderFeatureBucket(features.Legendary, 'Legendary Actions', monster.legendary_header)}
                         ${renderFeatureBucket(features.Lair, 'Lair Actions', monster.lair_header)}
                         ${renderFeatureBucket(features.Regional, 'Regional Effects', monster.regional_header)}
+                        ${renderDmNotes(dmNotes)}
                     </div>
 
                     ${formatCreatorAndUsage(monster) ? `

@@ -11,6 +11,7 @@ permalink: /resources/changelog/
 - BETA:  Web version of the Allowe Content
 
 ## Usability Enhancements
+- Monster Compendium: Added automatic `### DM Notes:` section header display in the monster statblock view when DM notes content is present.
 - Allowed Content: In Other Rewards, added an inline Subcategory dropdown filter with live item counts exclusively for the **Miscellaneous** category (`All`, `Other Misc`, `Quirks`, `Piety`, `Marks of Prestige`, `Mounts`, `Pets`, `Renown`, `Story Outcomes`), keeping the toolbar clean and focused.
 - Allowed Content: Sourcebook dropdown filters across all 12 modules now display full book names alongside abbreviations formatted as `Full Name (Abbreviation)` (e.g. `Tasha's Cauldron of Everything (TCE)`), sorted alphabetically by full name for effortless browsing.
 - Allowed Content: Streamlined tier filtering across Loot and Other Rewards to show intuitive **Tier Families** (`All`, `T0`, `T1`, `T2`, `T3`, `T4`, `Tier S`, `Special`) instead of 17 cluttered sub-tier variants. Multi-select now uses OR logic and cleanly matches both rolled and select items (like Charms).
